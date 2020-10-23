@@ -13,7 +13,7 @@ export const ERROR_MSG = {
     HAS_NO_EDITING: 'There is no running edit in collection.',
     EDITING_IS_ALREADY_RUNNING: 'Editing is already running. Commit or cancel current before beginning new.',
     NO_FORMAT_FOR_KEY_PROPERTY: 'There is no format for item\'s key property. It is required if trying to add item with empty key. set item\'s key or format of key property.',
-    PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST: 'Parent of adding item doesn\'t exist. Check if the parentProperty field is filled in correctly and parent is displayed.' +
+    PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST: 'Adding in tree error. The parent of adding item doesn\'t exist. Check if the parentProperty field is filled in correctly and parent is displayed.' +
         'If you want to add item to the root, the parentProperty value of the added item must be "null"'
 };
 
@@ -35,9 +35,8 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
     constructor(options: ICollectionEditorOptions) {
         super();
-        if (this._validateOptions(options)) {
-            this._options = options;
-        }
+        this._options = {} as ICollectionEditorOptions;
+        this.updateOptions(options);
     }
 
     /**
@@ -60,9 +59,12 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         return this._editingItem;
     }
 
-    private _validateOptions(options: Partial<ICollectionEditorOptions>): true | never {
+    private _validateOptions(options: Partial<ICollectionEditorOptions>): boolean | never {
         if (!options.collection) {
             throw Error(ERROR_MSG.COLLECTION_IS_REQUIRED);
+        }
+        if (this._options.collection === options.collection) {
+            return false;
         }
         if (!options.collection.getCollection()['[Types/_collection/RecordSet]']) {
             throw Error(ERROR_MSG.SOURCE_COLLECTION_MUST_BE_RECORDSET);
@@ -134,10 +136,19 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
         // У каждого элемента дерева есть родитель. Если его нет, значит конфигурация добавляемого элемента
         // ошибочна. Добавление записи не сможет начаться, если родительская запись отсутствует в дереве.
+        // Родительский элемент может быть корнем, как null, так и реальной записью.
         if (this._editingItem instanceof TreeItem) {
             const parentKey = item.get(this._options.collection.getParentProperty());
-            if (parentKey !== null && !this._options.collection.getItemBySourceKey(parentKey)) {
-                throw Error(ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
+            if (
+                parentKey !== null &&
+                (
+                    this._options.collection.getRoot().getContents() !== parentKey &&
+                    !this._options.collection.getItemBySourceKey(parentKey)
+                )
+            ) {
+                throw Error(
+                    `There is no item with key={${parentKey}} in list. ${ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST}`
+                );
             }
         }
 

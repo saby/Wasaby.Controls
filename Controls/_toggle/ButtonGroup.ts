@@ -14,10 +14,10 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * @class Controls/_toggle/ButtonGroup
  * @extends Core/Control
  * @mixes Controls/_interface/ISingleSelectable
- * @mixes Controls/interface/IItems
- * @control
+ * @mixes Controls/_interface/IItems
+ * 
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @category Toggle
  * @demo Controls-demo/toggle/ButtonGroup/Index
  */

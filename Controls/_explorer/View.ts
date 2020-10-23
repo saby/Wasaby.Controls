@@ -376,7 +376,6 @@ var
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
@@ -388,7 +387,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -397,7 +396,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
     * @category List
     * @author Авраменко А.С.
@@ -427,7 +426,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -435,7 +434,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
     * @category List
     * @author Авраменко А.С.

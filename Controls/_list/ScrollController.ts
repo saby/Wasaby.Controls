@@ -51,7 +51,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  */
@@ -87,7 +87,7 @@ export default class ScrollController {
     constructor(options: any) {
         this._options = {...ScrollController.getDefaultOptions(), ...options};
         if (options.needScrollCalculation) {
-            if (options.useNewModel) {
+            if (options.useNewModel && options.collection) {
                 ScrollController._setCollectionIterator(options.collection, options.virtualScrollConfig.mode);
             }
         }
@@ -106,11 +106,11 @@ export default class ScrollController {
     private updateContainerHeightsData(params: Partial<IScrollParams>):  IScrollControllerResult {
         if (this._virtualScroll && params) {
             let newParams: Partial<IContainerHeights> = {};
-            if (params.clientHeight) {
+            if (params.clientHeight !== void 0) {
                 newParams.viewport = params.clientHeight;
                 this._viewportHeight = params.clientHeight;
             }
-            if (params.scrollHeight) {
+            if (params.scrollHeight !== void 0) {
                 newParams.scroll = params.scrollHeight;
                 this._viewHeight = params.scrollHeight;
             }

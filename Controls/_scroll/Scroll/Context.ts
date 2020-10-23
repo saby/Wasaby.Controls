@@ -7,26 +7,26 @@ import DataContext = require('Core/DataContext');
  * @example
  * Пример настройки постраничной навигации, когда кнопки не отображаются для внутреннего скролл-контейнера.
  *
- * <pre>
- *    Component = Control.extend({
- *       _stickyHeaderContext: null,
- *       _beforeMount: function(options, context, receivedState) {
- *          this._scrollDataContext = new DataContext({
- *              pagingVisible: false
- *          });
- *       },
- *       _getChildContext: function() {
- *          return {
- *             stickyHeader: this._scrollDataContext
- *          };
- *       }
- *    });
+ * <pre class="brush: html">
+ * Component = Control.extend({
+ *    _stickyHeaderContext: null,
+ *    _beforeMount: function(options, context, receivedState) {
+ *       this._scrollDataContext = new DataContext({
+ *          pagingVisible: false
+ *       });
+ *    },
+ *    _getChildContext: function() {
+ *       return {
+ *          stickyHeader: this._scrollDataContext
+ *       };
+ *    }
+ * });
  * </pre>
  *
  * @class Controls/_scroll/Context
  * @extends Core/DataContext
  * @demo Controls-demo/Scroll/Context/Index
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Container
@@ -58,7 +58,7 @@ import DataContext = require('Core/DataContext');
  *
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @category Container

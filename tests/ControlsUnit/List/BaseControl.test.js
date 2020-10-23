@@ -925,11 +925,24 @@ define([
             _options: {}
          };
 
+         baseControl._options.searchValue = 'test';
+         assert.ok(lists.BaseControl._private.isPortionedLoad(baseControl))
+
+         baseControl._options.searchValue = '';
          baseControl._items = null;
-         assert.isFalse(lists.BaseControl._private.isPortionedLoad(baseControl));
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._items = new collection.RecordSet();
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
+
+         baseControl._items = new collection.RecordSet();
+         baseControl._items.setMetaData({
+            iterative: false
+         });
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
 
          baseControl._options.searchValue = 'test';
-         assert.isTrue(lists.BaseControl._private.isPortionedLoad(baseControl));
+         assert.ok(!lists.BaseControl._private.isPortionedLoad(baseControl));
       });
 
 
@@ -2242,6 +2255,10 @@ define([
 
          res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
          assert.isTrue(res, 'Wrong paging state');
+
+         const scrollPagingInst = baseControl._scrollPagingCtr;
+         res = lists.BaseControl._private.needShowPagingByScrollSize(baseControl, 2000, 800);
+         assert.strictEqual(baseControl._scrollPagingCtr, scrollPagingInst, 'ScrollPaging recreated');
       });
 
       it('needShowPagingByScrollSize with virtual scrollHeight', function() {
@@ -2792,23 +2809,42 @@ define([
          });
 
          it('should init when itemActionsProperty is set, but, there are no itemActions and toolbarVisibility is false', async () => {
-            const instance = new lists.BaseControl({ ...cfg, itemActions: null, itemActionsProperty: 'myActions' });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            const localCfg = { ...cfg, itemActions: null, itemActionsProperty: 'myActions' };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
          });
 
          it('should init when toolbarVisibility is true, but, there are no itemActions and no itemActionsProperty', async () => {
-            const instance = new lists.BaseControl({
+            const localCfg = {
                ...cfg,
                itemActions: null,
                editingConfig: {
                   toolbarVisibility: true
                }
-            });
-            instance.saveOptions(cfg);
-            await instance._beforeMount(cfg);
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            await instance._beforeMount(localCfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
+         });
+
+         it('getItemActionsController should be called with options on _beforeMount', () => {
+            const stubGetItemActionsController = sinon
+               .stub(lists.BaseControl._private, 'getItemActionsController')
+               .callsFake((self, options) => {
+                  assert.exists(options);
+               });
+            const localCfg = {
+               ...cfg,
+               itemActionsVisibility: 'visible'
+            };
+            const instance = new lists.BaseControl(localCfg);
+            instance.saveOptions(localCfg);
+            instance._beforeMount(localCfg, {}, {data: localCfg.items});
+            sinon.assert.called(stubGetItemActionsController);
+            stubGetItemActionsController.restore();
          });
       });
 
@@ -3529,6 +3565,68 @@ define([
                   done();
                });
                assert.isTrue(result instanceof Promise);
+            });
+         });
+
+         describe('Fast edit by arrows', () => {
+            let cfg, ctrl, sandbox;
+
+            beforeEach(() => {
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: rs,
+                     keyProperty: 'id',
+                     selectedKeys: [1, 3]
+                  },
+                  viewModelConstructor: lists.ListViewModel,
+                  navigation: {
+                     source: 'page',
+                     sourceConfig: {
+                        pageSize: 6,
+                        page: 0,
+                        hasMore: false
+                     },
+                     view: 'infinity',
+                     viewConfig: {
+                        pagingMode: 'direct'
+                     }
+                  }
+               };
+               ctrl = new lists.BaseControl(cfg);
+               ctrl._editInPlaceController = {
+                  cancel: () => Promise.resolve(),
+                  commit: () => Promise.resolve(),
+                  add: () => Promise.resolve(),
+                  edit: () => Promise.resolve(),
+                  destroy: () => {}
+               };
+               sandbox = sinon.createSandbox();
+               sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
+                  isCloseSwipeCalled = true;
+               });
+               ctrl._editInPlaceInputHelper = {
+                  shouldActivate: () => {}
+               };
+            });
+            afterEach(() => {
+               ctrl._beforeUnmount();
+               sandbox.restore();
+            });
+
+            it('should not close editing if arrow up pressed in first', () => {
+               let isEditingRestarted = false;
+               ctrl._editInPlaceController.getPrevEditableItem = () => null;
+               ctrl.beginEdit = () => {
+                  isEditingRestarted = true;
+               };
+               return ctrl._onEditingRowKeyDown({}, {keyCode: 38}).then(() => {
+                  assert.isFalse(isEditingRestarted);
+               });
             });
          });
 
@@ -5887,6 +5985,18 @@ define([
             });
             assert.isNull(instance._selectionController);
          });
+
+         it('items changed in sourceController', async() => {
+            const sourceController = new dataSource.NewSourceController({ ...cfg });
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               adapter: 'adapter.sbis'
+            });
+            sourceController.setItems(items);
+            const newCfg = { ...cfg, sourceController };
+            instance._beforeUpdate(newCfg);
+            assert.ok(instance._items === items);
+         });
       });
 
       it('should not call _getItemsContainer on error', () => {
@@ -7731,6 +7841,18 @@ define([
                   const notifySpy = sinon.spy(baseControl, '_notify');
                   baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
                   assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+               });
+            });
+
+            it('change selection', () => {
+               const newCfg = { ...cfg, selectedKeys: [1] };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  const notifySpy = sinon.spy(baseControl, '_notify');
+                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1, 2] });
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isSelected());
+                  assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
                });
             });
 

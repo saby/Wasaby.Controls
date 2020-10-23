@@ -234,6 +234,9 @@ class StickyHeaderController {
         return false;
     }
     private _resizeObserverCallback(entries: any): void {
+        if(isHidden(this._container)) {
+                return;
+        }
         let heightChanged = false;
         for (const entry of entries) {
             const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {

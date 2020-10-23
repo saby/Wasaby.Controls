@@ -19,7 +19,7 @@ export interface INotificationBaseOptions extends IControlOptions, INotification
 * @class Controls/_popupTemplate/Notification/Base
 * @extends Core/Control
 * @mixes Controls/_popupTemplate/Notification/interface/INotification
-* @control
+* 
 * @public
 * @category popup
 * @author Красильников А.С.

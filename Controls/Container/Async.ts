@@ -14,7 +14,7 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @class Controls/Container/Async
  * @extends Core/Control
- * @control
+ *
  * @public
  * @author Санников К.А.
  * @category Container
@@ -26,7 +26,7 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @class Controls/Container/Async
  * @extends Core/Control
- * @control
+ *
  * @public
  * @author Санников К.А.
  * @category Container
@@ -76,7 +76,7 @@ import {ViewConfig} from "../_error/Handler";
 const moduleLoader = new ModuleLoader();
 
 function generateErrorMsg(templateName: string, msg?: string): string {
-   const tTemplate = `Ошибка загрузки контрола ${templateName}`;
+   const tTemplate = `Ошибка загрузки контрола "${templateName}"`;
    const tHint = 'Возможны следующие причины:\n\t \
                   • Ошибка в самом контроле\n\t \
                   • Долго отвечал БЛ метод в _beforeUpdate\n\t \
@@ -110,9 +110,9 @@ class Async extends Control<IOptions, TStateRecivied> {
    private errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
 
    _beforeMount(options: IOptions, _: unknown, receivedState: TStateRecivied): Promise<TStateRecivied> {
-      if (typeof options.templateName === 'undefined') {
-         this.error = 'В модуль Async передали не корректное имя шаблона (templateName=undefined)';
-         IoC.resolve('ILogger').warn(this.error);
+      if (!options.templateName) {
+         this.error = 'В модуль Async передали не корректное имя шаблона (templateName=undefined|null|empty)';
+         IoC.resolve('ILogger').error(this.error);
          return Promise.resolve(this.error);
       }
       this.errorCallback = options.errorCallback;
@@ -198,8 +198,10 @@ class Async extends Control<IOptions, TStateRecivied> {
 
       return promise.then<TStateRecivied, TStateRecivied>((loaded) => {
          this.asyncLoading = false;
-         if (loaded === null) {
+         if (!loaded) {
+            this.loadingErrorOccurred = true;
             this.error = generateErrorMsg(name);
+            IoC.resolve('ILogger').warn(this.error);
             this.userErrorMessage = rk('У СБИС возникла проблема');
             return this.error;
          }
@@ -230,6 +232,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    }
 
    _insertComponent(tpl: unknown, opts: IControlOptions, templateName: string): void {
+      this.error = '';
       this.currentTemplateName = templateName;
       this.optionsForComponent = {};
       for (const key in opts) {

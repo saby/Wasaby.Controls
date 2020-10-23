@@ -1,20 +1,42 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require("wml!Controls/_buttons/ArrowButton/ArrowButton");
-import IArrowButton from 'Controls/_buttons/interface/IArrowButton';
+
+type TArrowButtonDirection = 'right' | 'left' | 'up' | 'down';
+
+export interface IArrowButtonOptions extends IControlOptions {
+    direction?: TArrowButtonDirection;
+}
+
 /**
  * Графический контрол в виде стрелки, который предоставляет пользователю возможность простого запуска события при
  * нажатии на него.
  * @class Controls/_buttons/ArrowButton
  * @extends Core/Control
- * @mixes Controls/_buttons/interface/IArrowButton
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Button
  * @demo Controls-demo/Buttons/ArrowButton/Index
  */
-class Component extends Control implements IArrowButton {
-    readonly '[Controls/_buttons/interface/IArrowButton]': boolean = true;
+
+/**
+ * @typedef {Enum} TArrowButtonDirection
+ * @variant left Влево.
+ * @variant right Вправо.
+ * @variant up Вверх.
+ * @variant down Вниз.
+ */
+
+/**
+ * @name Controls/_buttons/ArrowButton#direction
+ * @cfg {TArrowButtonDirection} Выбор стороны, куда будет указывтаь стрелка в кнопке.
+ * @example
+ * <pre>
+ *     <Controls.Buttons:ArrowButton direction="left"/>
+ * </pre>
+ * @demo Controls-demo/Buttons/ArrowButton/Direction/Index
+ */
+class ArrowButton extends Control<IArrowButtonOptions>  {
     protected _template: TemplateFunction = template;
 
     private _clickHandler = (event: Event): void => {
@@ -26,4 +48,4 @@ class Component extends Control implements IArrowButton {
     static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 }
 
-export default Component;
+export default ArrowButton;

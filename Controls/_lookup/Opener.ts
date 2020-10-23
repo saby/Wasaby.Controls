@@ -11,7 +11,7 @@ import template = require('tmpl!Controls/_lookup/Opener');
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  *
  * @class Controls/_lookup/Opener
- * @control
+ * 
  * @extends Controls/_popup/Opener/Stack
  * @author Герасимов А.М.
  * @private
@@ -22,7 +22,7 @@ import template = require('tmpl!Controls/_lookup/Opener');
  * Here you can see <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">demo-example</a>.
  *
  * @class Controls/_lookup/Opener
- * @control
+ * 
  * @extends Controls/_popup/Opener/Stack
  * @author Gerasimov A.M.
  * @private

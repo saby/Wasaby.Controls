@@ -12,6 +12,7 @@ import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
 import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import {tmplNotify} from 'Controls/eventUtils';
+import {isHidden} from './StickyHeader/Utils';
 
 export interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: SCROLL_MODE;
@@ -352,6 +353,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _resizeObserverCallback(entries: any): void {
+        if(isHidden(this._container)) {
+            return;
+        }
         const newState: IScrollState = {};
         for (const entry of entries) {
             if (entry.target === this._children.content) {

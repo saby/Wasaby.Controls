@@ -9,7 +9,7 @@ import template = require('wml!Controls/_menu/Popup/headerTemplate');
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/IIconSize
  * @public
- * @control
+ * 
  * @author Герасимов А.М.
  */
 

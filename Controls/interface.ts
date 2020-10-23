@@ -38,7 +38,8 @@
  * @includes IItems Controls/_interface/IItems
  * @includes IHref Controls/_interface/IHref
  * @includes IBackgroundStyle Controls/_interface/IBackgroundStyle
- * @includes ICaptionFormatter Controls/_interface/ICaptionFormatter
+ * @includes IDraggable Controls/_interface/IDraggable
+ * @includes ICanBeDefaultOpener Controls/_interface/ICanBeDefaultOpener
  * @public
  * @author Крайнов Д.О.
  */
@@ -80,8 +81,8 @@ export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';
 export {default as IFilterChanged} from './_interface/IFilterChanged';
 export {default as INavigation, INavigationOptions, INavigationOptionValue, INavigationPositionSourceConfig, INavigationPageSourceConfig, INavigationSourceConfig, IBaseSourceConfig, IBasePositionSourceConfig, IBasePageSourceConfig} from './_interface/INavigation';
-export {default as ISortingSelectorOptions} from './_interface/ISortingSelector';
-export {default as IDisplayedRanges, IDisplayedRangesOptions} from './_interface/IDisplayedRanges';
+export {ISortingSelectorOptions} from './_interface/ISortingSelector';
+export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';
 export {default as ISearch, ISearchOptions} from './_interface/ISearch';
 export {default as IFormOperation} from './_interface/IFormOperation';
@@ -89,7 +90,6 @@ export {default as ISelectorDialog, ISelectorDialogOptions} from './_interface/I
 export {default as IItems, IItemsOptions, TKey} from './_interface/IItems';
 export {default as IHref, IHrefOptions} from './_interface/IHref';
 export {default as IBackgroundStyle, IBackgroundStyleOptions} from './_interface/IBackgroundStyle';
-export {default as ICaptionFormatter} from './_interface/ICaptionFormatter';
 export {Direction, IQueryParamsMeta, IQueryParams} from './_interface/IQueryParams';
 export {default as IGrouping, IGroupingOptions} from './_interface/IGrouping';
 export {default as IPromiseSelectable, IPromiseSelectableOptions} from './_interface/IPromiseSelectable';

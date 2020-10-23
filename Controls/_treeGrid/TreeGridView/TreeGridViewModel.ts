@@ -262,7 +262,9 @@ var
                             classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
                         }
                     } else {
-                        classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                        if (!current.hasMultiSelect) {
+                            classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                        }
                         classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
                         classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
                     }

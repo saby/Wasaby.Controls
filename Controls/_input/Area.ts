@@ -7,6 +7,8 @@ import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
 import * as Text from 'Controls/_input/Text';
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
@@ -38,6 +40,7 @@ export default class Area extends Text<IAreaOptions> {
     protected _template: TemplateFunction = template;
 
     protected _multiline: boolean = true;
+    protected _resizeObserver: ResizeObserverUtil;
     protected _minLines: number;
     protected _maxLines: number;
 
@@ -46,12 +49,23 @@ export default class Area extends Text<IAreaOptions> {
         this._validateLines(options.minLines, options.maxLines);
     }
 
+    protected _afterMount(): void {
+        this._resizeObserver = new ResizeObserverUtil(
+            this, this._resizeObserverCallback.bind(this));
+        this._resizeObserver.observe(this._container);
+    }
+
     protected _beforeUpdate(newOptions: IAreaOptions): void {
         super._beforeUpdate.apply(this, arguments);
 
         if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
             this._validateLines(newOptions.minLines, newOptions.maxLines);
         }
+    }
+
+    protected _beforeUnmount(): void {
+        super._beforeUnmount.apply(this, arguments);
+        this._resizeObserver.terminate();
     }
 
     protected _inputHandler(): void {
@@ -67,7 +81,12 @@ export default class Area extends Text<IAreaOptions> {
         this._fixSyncFakeArea();
     }
 
+    private _resizeObserverCallback(): void {
+        this._notify('controlResize', [], {bubbling: true});
+    }
+
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        processKeydownEvent(event);
         this._newLineHandler(event, true);
     }
 

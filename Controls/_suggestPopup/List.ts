@@ -114,7 +114,7 @@ const _private = {
  * @class Controls/_suggestPopup/List
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 
@@ -125,7 +125,7 @@ const _private = {
  * @class Controls/_suggestPopup/List
  * @extends Core/Control
  * @author Герасимов Александр
- * @control
+ * 
  * @public
  */
 const List = Control.extend({

@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <Controls.spoiler:View>
         <ws:headerContentTemplate>
             <Controls-demo.Spoiler.HeaderTemplate.Index />

@@ -152,33 +152,6 @@ define([
          });
       });
 
-      describe('_onHomeClick', function() {
-         [{
-            dateConstructor: typesEntity.Date,
-            dateModule: 'Types/entity:Date'
-         }, {
-            dateConstructor: typesEntity.DateTime,
-            dateModule: 'Types/entity:DateTime'
-         }].forEach(function(test) {
-            it('should generate sendResult event with correct date type', function() {
-               const sandbox = sinon.sandbox.create(),
-                  component = calendarTestUtils.createComponent(
-                     PeriodLiteDialog.View, { dateConstructor: test.dateConstructor });
-
-               sandbox.stub(component, '_notify').callsFake(function fakeFn(eventName, eventArgs) {
-                  if (eventName === 'sendResult') {
-                     assert.deepEqual(eventArgs[0]._moduleName, test.dateModule);
-                     assert.deepEqual(eventArgs[1]._moduleName, test.dateModule);
-                  }
-               });
-               component._onHomeClick();
-               sinon.assert.calledWith(component._notify, 'sendResult');
-
-               sandbox.restore();
-            });
-         });
-      });
-
       describe('_onYearClick', function() {
          it('should generate sendResult event', function() {
             const sandbox = sinon.sandbox.create(),
@@ -295,18 +268,18 @@ define([
             chooseMonths: false,
             chooseQuarters: false,
             delta: -1,
-            result: 1989
+            result: 2004
          }, {
             year: new Date(2019, 0),
-            displayedRanges: [[new Date(2013, 0), new Date(2017, 0)], [new Date(2019, 0), new Date(2020, 0)],
+            displayedRanges: [[null, new Date(2017, 0)], [new Date(2019, 0), new Date(2020, 0)],
                [new Date(2022, 0), new Date(2033, 0)]],
             chooseHalfyears: false,
             chooseMonths: false,
             chooseQuarters: false,
             delta: -1,
-            result: 2029
+            result: 2017
          }, {
-            year: new Date(2020, 0),
+            year: new Date(2022, 0),
             displayedRanges: [[new Date(2007, 0), null]],
             chooseHalfyears: false,
             chooseMonths: false,
@@ -314,14 +287,14 @@ define([
             delta: -1,
             result: 2021
          }, {
-            year: new Date(2020, 0),
-            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)], [new Date(2025, 0), new Date(2027, 0)],
+            year: new Date(2025, 0),
+            displayedRanges: [[null, new Date(2022, 0)], [new Date(2025, 0), new Date(2027, 0)],
                [new Date(2030, 0), null]],
             chooseHalfyears: false,
             chooseMonths: false,
             chooseQuarters: false,
             delta: -1,
-            result: 2037
+            result: 2022
          }].forEach(function(options) {
             it('should update year', function() {
                const sandbox = sinon.sandbox.create(),
@@ -383,7 +356,8 @@ define([
             [currentYear + 3, currentYear + 3]
          ].forEach(function(test) {
             it(`should return ${test[1]} for ${test[0]} year`, function() {
-               let result = PeriodLiteDialog.View._private._getYearListPosition({ startValue: new Date(test[0], 0, 1) }, Date).getFullYear();
+               const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {});
+               let result = component._getYearListPosition({ startValue: new Date(test[0], 0, 1) }, Date).getFullYear();
                assert.equal(result, test[1]);
             });
          });

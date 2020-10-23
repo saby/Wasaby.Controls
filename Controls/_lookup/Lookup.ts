@@ -48,7 +48,7 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
@@ -82,7 +82,7 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/input:IValue
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid

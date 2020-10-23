@@ -156,6 +156,11 @@ describe('Controls/list_clean/BaseControl', () => {
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
                 getBoundingClientRect: () => ([{clientHeight: 100, offsetHeight: 0}])
             };
+            baseControl._getItemsContainer = () => {
+                return {
+                    children: []
+                }
+            };
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 400;
             baseControl._viewSize = 800;
@@ -183,7 +188,8 @@ describe('Controls/list_clean/BaseControl', () => {
             navigation: {
                 view: 'infinity',
                 viewConfig: {
-                    pagingMode: 'basic'
+                    pagingMode: 'basic',
+                    showEndButton: false
                 }
             }
         };
@@ -203,24 +209,28 @@ describe('Controls/list_clean/BaseControl', () => {
         });
 
         it('paging mode is basic', async () => {
-            baseControl.saveOptions(baseControlCfg);
-            await baseControl._beforeMount(baseControlCfg);
+            const cfgClone = {...baseControlCfg};
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
             baseControl._container = {
                 clientHeight: 1000
             };
-            baseControl._viewportSize = 400;
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
             baseControl._getItemsContainer = () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
-            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            await baseControl.canScrollHandler(heightParams);
             baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            BaseControl._private.handleListScrollSync(baseControl, 200);
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual(
                 {
                     begin: 'visible',
@@ -228,14 +238,49 @@ describe('Controls/list_clean/BaseControl', () => {
                     next: 'visible',
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
+            assert.isFalse(baseControl._pagingCfg.showEndButton);
 
-            BaseControl._private.handleListScrollSync(baseControl, 600);
+            baseControl.scrollMoveSyncHandler({scrollTop: 600});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'readonly',
                 next: 'readonly',
                 prev: 'visible'
             }, baseControl._pagingCfg.arrowState);
+        });
+
+        it('paging mode is basic showEndButton true', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.showEndButton = true;
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
+            baseControl._getItemsContainer = () => {
+                return {children: []};
+            };
+            baseControl._mouseEnter(null);
+
+            // эмулируем появление скролла
+            await baseControl.canScrollHandler(heightParams);
+            baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
+
+            assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
+
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
+            assert.deepEqual(
+                {
+                    begin: 'visible',
+                    end: 'visible',
+                    next: 'visible',
+                    prev: 'visible'
+                }, baseControl._pagingCfg.arrowState);
+            assert.isTrue(baseControl._pagingCfg.showEndButton);
         });
 
         it('paging mode is edge', async () => {
@@ -246,27 +291,31 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {
                 clientHeight: 1000
             };
-            baseControl._viewportSize = 400;
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
             baseControl._getItemsContainer = () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
-            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            await baseControl.canScrollHandler(heightParams);
             baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            BaseControl._private.handleListScrollSync(baseControl, 200);
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
+            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
-            BaseControl._private.handleListScrollSync(baseControl, 800);
+            baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',
@@ -283,27 +332,31 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {
                 clientHeight: 1000
             };
-            baseControl._viewportSize = 400;
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
             baseControl._getItemsContainer = () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
-            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            await baseControl.canScrollHandler(heightParams);
             baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            BaseControl._private.handleListScrollSync(baseControl, 200);
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
+            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
-            BaseControl._private.handleListScrollSync(baseControl, 800);
+            baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'hidden',
@@ -320,19 +373,22 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._container = {
                 clientHeight: 1040
             };
-            baseControl._viewportSize = 400;
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
             baseControl._getItemsContainer = () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
 
             // эмулируем появление скролла
-            await BaseControl._private.onScrollShow(baseControl, heightParams);
+            await baseControl.canScrollHandler(heightParams);
             baseControl._updateShadowModeHandler({}, {top: 0, bottom: 0});
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            BaseControl._private.handleListScrollSync(baseControl, 200);
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
@@ -340,14 +396,14 @@ describe('Controls/list_clean/BaseControl', () => {
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
-            BaseControl._private.handleListScrollSync(baseControl, 600);
+            baseControl.scrollMoveSyncHandler({scrollTop: 600});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            BaseControl._private.handleListScrollSync(baseControl, 640);
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'hidden',
@@ -358,7 +414,7 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'edge';
             baseControl._pagingVisible = false;
             baseControl._mouseEnter(null);
-            BaseControl._private.handleListScrollSync(baseControl, 200);
+            baseControl.scrollMoveSyncHandler({scrollTop: 200});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
@@ -366,7 +422,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
 
-            BaseControl._private.handleListScrollSync(baseControl, 600);
+            baseControl.scrollMoveSyncHandler({scrollTop: 600});
             assert.deepEqual({
                 begin: 'hidden',
                 end: 'visible',
@@ -425,6 +481,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
+            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             assert.equal(baseControl._currentPage, 1);
 
@@ -487,6 +544,44 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             baseControl._mouseEnter(null);
             assert.isTrue(baseControl._pagingVisible);
+        });
+
+        it('paging getScrollParams', async () => {
+            const cfgClone = {...baseControlCfg};
+            cfgClone.navigation.viewConfig.pagingMode = 'edge';
+            baseControl.saveOptions(cfgClone);
+            await baseControl._beforeMount(cfgClone);
+            baseControl._container = {
+                clientHeight: 1000
+            };
+            baseControl._itemsContainerReadyHandler(null, () => {
+                return {children: []};
+            });
+            baseControl._observeScrollHandler(null, 'viewportResize', {clientHeight: 400});
+            baseControl._mouseEnter(null);
+            await baseControl.canScrollHandler(heightParams);
+            assert.isTrue(baseControl._pagingVisible);
+            baseControl._scrollController.getPlaceholders = () => {
+                return {top: 100, bottom: 100};
+            };
+            const scrollParams = {
+                scrollTop: 0,
+                scrollHeight: 1000,
+                clientHeight: 400
+            };
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            scrollParams.scrollTop = 400;
+            baseControl.scrollMoveSyncHandler({scrollTop: scrollParams.scrollTop});
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+
+            baseControl.scrollMoveSyncHandler({scrollTop: 0});
+            scrollParams.scrollTop = 100;
+            scrollParams.scrollHeight = 1200;
+            cfgClone.navigation.viewConfig.pagingMode = 'numbers';
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            baseControl.scrollMoveSyncHandler({scrollTop: 400});
+            scrollParams.scrollTop = 500;
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
         });
     });
     describe('beforeUnmount', () => {

@@ -94,6 +94,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
     searchValue?: string;
@@ -591,6 +592,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$theme: string;
 
+    protected _$hoverBackgroundStyle: string;
+
     protected _$searchValue: string;
 
     protected _$rowSeparatorSize: string;
@@ -759,6 +762,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
 
         this._$theme = options.theme;
+
+        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
 
         this._$collapsedGroups = options.collapsedGroups;
 
@@ -2277,6 +2282,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$theme;
     }
 
+    getHoverBackgroundStyle(): string {
+        return this._$hoverBackgroundStyle;
+    }
+
     setTheme(theme: string): boolean {
         if (this._$theme !== theme) {
             this._$theme = theme;
@@ -2382,7 +2391,30 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
-        this._$collapsedGroups = collapsedGroups;
+        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
+        this._$collapsedGroups = groupStrategy.collapsedGroups = collapsedGroups;
+        const session = this._startUpdateSession();
+        // Сбрасываем кэш расчётов по всем стратегиям, чтобы спровацировать полный пересчёт с актуальными данными
+        this._getItemsStrategy().invalidate();
+        this._reGroup();
+        this._reSort();
+        this._reFilter();
+        this._finishUpdateSession(session);
+        this._nextVersion();
+    }
+
+    isAllGroupsCollapsed(): boolean {
+        const itemsCount = this.getCount();
+        if (!this.getCollapsedGroups()) {
+            return false;
+        }
+        for (let idx = 0; idx < itemsCount; idx++) {
+            const item = this.at(idx);
+            if (!(item instanceof GroupItem) || item.isExpanded()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     setCompatibleReset(compatible: boolean): void {
@@ -2495,35 +2527,59 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setAddingItem(item: T): void {
+        const groupMethod = this.getGroup();
+        let groupsBefore;
+
+        if (groupMethod) {
+            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+        }
+
         this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
 
+        const itemsForNotify = [item];
         const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
 
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [item],
-            addingIndex,
-            [],
-            0
-        );
+        if (groupMethod) {
+            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+            const itemGroupId = groupMethod(item.contents);
+            if (groupsBefore.length < groupsAfter.length) {
+                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
+            }
+        }
+
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
     }
 
     resetAddingItem(): void {
         const addStrategy = this.getStrategyInstance(AddStrategy);
 
         if (addStrategy) {
+            const groupMethod = this.getGroup();
+            const item = addStrategy?.getAddingItem();
+            let groupsBefore;
+
+            if (groupMethod) {
+                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+            }
+
             this.removeStrategy(AddStrategy);
 
+            const itemsForNotify = [item];
+
+            if (groupMethod) {
+                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+                if (groupsBefore.length > groupsAfter.length) {
+                    const itemGroupId = groupMethod(item.contents);
+                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
+                }
+            }
+
             this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE,
-                [],
-                0,
-                [addStrategy.getAddingItem()],
-                addStrategy.getAddingItemIndex()
+                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
             );
         }
     }
@@ -2580,7 +2636,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.nextVersion();
     }
 
-    getStrategyInstance(strategy: new() => IItemsStrategy<S, T>): IItemsStrategy<S, T> {
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
         return this._composer.getInstance(strategy);
     }
 
@@ -2636,6 +2692,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 const groupStrategy = this._composer.getInstance(GroupItemsStrategy);
                 if (groupStrategy) {
                     groupStrategy.handler = this._$group;
+                    groupStrategy.collapsedGroups = this._$collapsedGroups;
                 }
 
                 // Restore items contents before the _$collection will be affected
@@ -2928,7 +2985,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }).append(UserItemsStrategy, {
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
-            handler: this._$group
+            handler: this._$group,
+            collapsedGroups: this._$collapsedGroups
         });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));

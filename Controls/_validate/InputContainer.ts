@@ -9,7 +9,7 @@ import template = require('wml!Controls/_validate/InputContainer');
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/InputContainer
  * @extends Controls/_validate/Container
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */
@@ -17,8 +17,9 @@ import template = require('wml!Controls/_validate/InputContainer');
 class Input extends Container {
     _template: TemplateFunction = template;
     _shouldValidate: boolean;
-    protected _deactivatedHandler() {
+    protected _deactivatedHandler(): void {
         this._contentActive = false;
+        this._validationStatus = this._getValidStatus(this._contentActive);
         if (!this._options.readOnly) {
             this._shouldValidate = true;
             this._forceUpdate();

@@ -20,10 +20,10 @@ const PADDING_RIGHT = 2;
  * Контрол "Хлебные крошки", отображающиеся в две строки.
  * @class Controls/_breadcrumbs/MultilinePath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @implements Controls/_interface/IFontSize
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/BreadCrumbs/Multiline/Index
  * @remark
  * {@link Controls/breadcrumbs:Path} — хлебные крошки, отображающиеся в одну строку.

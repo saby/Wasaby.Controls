@@ -12,7 +12,7 @@ import entity = require('Types/entity');
  * @class Controls/_list/AddButton
  * @mixes Controls/_buttons/interface/IClick
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */
@@ -31,7 +31,7 @@ import entity = require('Types/entity');
  *
  * @class Controls/_list/AddButton
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  *

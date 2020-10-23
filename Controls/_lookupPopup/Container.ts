@@ -17,6 +17,7 @@ import {ISelectionObject,
         IFilterOptions} from 'Controls/interface';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
+import {error as dataSourceError} from 'Controls/dataSource';
 
 interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    selection: TSelectionRecord;
@@ -39,7 +40,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/ISelectionType
  * @public
@@ -58,7 +59,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
  *
  * @class Controls/_lookupPopup/Container
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_interface/ISource
  * @public
  * @author Герасимов Александр Максимович
@@ -388,9 +389,14 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                   loadItemsPromise = Promise.resolve(selectedItems);
                } else {
                   const crudWrapper = _private.getCrudWrapper(dataOptions.source);
-                  const loadItemsCallback = (loadedItems) => {
+                  const loadItemsCallback = (result) => {
                      _private.hideIndicator(self);
-                     return loadedItems;
+
+                     if (result instanceof Error) {
+                         dataSourceError.process({error: result});
+                     }
+
+                     return result;
                   };
 
                   _private.showIndicator(self);
@@ -489,21 +495,23 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             // здесь будет только формирование фильтра
             if (this._options.selectionLoadMode) {
                loadPromise = new Promise((resolve) => {
-                  _private.loadSelectedItems(this, filter).then((loadedItems) => {
-                     resolve(_private.prepareResult(
-                            loadedItems,
-                            this._initialSelection,
-                            keyProperty,
-                            this._selectCompleteInitiator
-                         )
-                     );
-                  });
+                   _private.loadSelectedItems(this, filter)
+                       .then((loadedItems) => {
+                           resolve(_private.prepareResult(
+                               loadedItems,
+                               this._initialSelection,
+                               keyProperty,
+                               this._selectCompleteInitiator
+                               )
+                           );
+                       });
                });
             } else {
                loadPromise = Promise.resolve(filter);
             }
 
             this._notify('selectionLoad', [loadPromise], {bubbling: true});
+            return loadPromise;
          },
 
          _selectedKeysChanged: function(event, selectedKeys, added, removed) {

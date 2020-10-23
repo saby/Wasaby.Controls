@@ -163,6 +163,25 @@ define([
                });
          });
 
+         it('beforeItemsMove first param should be array of item id\'s', function(done) {
+            let movedItems;
+            let item = recordSet.at(0);
+            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup')
+               .callsFake((openArgs) => Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(1))));
+            mover._notify = (event, args) => {
+               if (event === 'beforeItemsMove') {
+                  movedItems = args[0];
+                  assert.equal(movedItems[0], item.getId());
+                  done();
+               }
+            };
+            mover.moveItemsWithDialog([item])
+               .then(() => {
+                  stubOpenPopup.restore();
+                  done();
+               });
+         });
+
          it('moveItemsWithDialog for newLogic call moveItems', (done) => {
             const params = {
                selectedKeys: [1, 2, 3],

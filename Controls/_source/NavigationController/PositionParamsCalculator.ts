@@ -1,7 +1,7 @@
 import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PositionNavigationStore, IPositionNavigationState} from './PositionNavigationStore';
-import {IBasePositionSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
+import {IBasePositionSourceConfig, IBaseSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
 import {TNavigationDirection, TNavigationPagingMode} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
@@ -40,7 +40,13 @@ class PositionParamsCalculator implements IParamsCalculator {
         switch (direction) {
             case 'forward': queryPosition = storeParams.forwardPosition; break;
             case 'backward': queryPosition = storeParams.backwardPosition; break;
-            default: queryPosition = config.position ? config.position : storeParams.position;
+            default: {
+                queryPosition = config.position ? config.position : storeParams.position;
+
+                if (!Array.isArray(queryPosition)) {
+                    queryPosition = [queryPosition];
+                }
+            }
         }
 
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
@@ -162,15 +168,20 @@ class PositionParamsCalculator implements IParamsCalculator {
     shiftToEdge(
         store: PositionNavigationStore,
         direction: TNavigationDirection,
-        shiftMode: TNavigationPagingMode
-    ): void {
+        shiftMode: TNavigationPagingMode,
+        navigationQueryConfig: IBaseSourceConfig
+    ): IBaseSourceConfig {
+        let position;
+
         if (direction === 'backward') {
             if (shiftMode === 'edge' || shiftMode === 'end') {
-                store.setPosition([EDGE_BACKWARD_POSITION]);
+                position = [EDGE_BACKWARD_POSITION];
             }
         } else if (direction === 'forward') {
-            store.setPosition([EDGE_FORWARD_POSITION]);
+            position = [EDGE_FORWARD_POSITION];
         }
+
+        return {...navigationQueryConfig, position};
     }
 
     updateQueryRange(store: PositionNavigationStore, list: RecordSet): void {

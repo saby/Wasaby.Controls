@@ -19,7 +19,7 @@ import { IItemAction } from 'Controls/itemActions';
  * @class Controls/_lookupPopup/List/Container
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
+ * 
  * @public
  * @author Герасимов Александр Максимович
  */
@@ -37,7 +37,7 @@ import { IItemAction } from 'Controls/itemActions';
  * @class Controls/_lookupPopup/List/Container
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
+ * 
  * @public
  * @author Герасимов Александр Максимович
  */

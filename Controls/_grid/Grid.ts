@@ -6,7 +6,6 @@ import viewName = require('Controls/_grid/GridView');
     *
     * @remark
     * Полезные ссылки:
-    * * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid">демо-пример</a>
     * * <a href="/doc/platform/developmentapl/interface-development/controls/list/">руководство разработчика</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_grid.less">переменные тем оформления grid</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
@@ -22,13 +21,13 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/interface/IGridItemTemplate
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List
@@ -56,15 +55,15 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
     * @category List
-    * @demo Controls-demo/List/Grid/BasePG
+    * @demo Controls-demo/grid/Base/Index
     */
 
 export default class Grid extends List /** @lends Controls/grid:View */ {

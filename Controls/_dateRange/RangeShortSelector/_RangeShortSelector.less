@@ -1,3 +1,9 @@
+// Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока
+// и так же учитываем такое же расстояние у вызывающего эл-та, см.комментарий у метода _getFontSizeClass
+@shift-top_fontSize-m_PeriodDialog-selector: -(@annually_header_height_shortDatePicker + (ceil((@item_height_shortDatePicker - @item_font-size_shortDatePicker)/2)) - floor((@height_rangeShortSelectorLink - @font-size_l) / 2));
+@shift-top_fontSize-s_PeriodDialog-selector: @shift-top_fontSize-m_PeriodDialog-selector - 1;
+@shift-top_fontSize-l_PeriodDialog-selector: @shift-top_fontSize-m_PeriodDialog-selector + 1;
+
 .controls-DateRangeSelectorLite {
    display: inline-flex;
 }
@@ -15,9 +21,16 @@
    margin-top: ceil((@height_rangeShortSelectorLink - @item_height_shortDatePicker)/2) - @border-thickness_shortDatePicker;
 }
 
-// Смещаем на расстояние высоты эл-та со стрелкой + расстояние от верха текста эл-та с годом до начала этого блока и так же учитываем такое же расстояние у вызывающего эл-та
-.controls-DateRangeSelectorLite__picker-years-only {
-   margin-top: -(@annually_header_height_shortDatePicker + (ceil((@item_height_shortDatePicker - @item_font-size_shortDatePicker)/2)) - floor((@height_rangeShortSelectorLink - @font-size_l) / 2));
+.controls-DateRangeSelectorLite__picker-years_fontSize-m_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-m_PeriodDialog-selector;
+}
+
+.controls-DateRangeSelectorLite__picker-years_fontSize-s_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-s_PeriodDialog-selector;
+}
+
+.controls-DateRangeSelectorLite__picker-years_fontSize-l_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-l_PeriodDialog-selector;
 }
 
 // Механизмы рендеринга webkit и FF по-разному реализуют высоту строки.

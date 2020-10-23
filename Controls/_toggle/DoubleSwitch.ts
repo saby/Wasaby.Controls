@@ -24,7 +24,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @extends Core/Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle
@@ -41,7 +41,7 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @extends Core/Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @category Toggle

@@ -27,7 +27,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/interface/IMovableList
  * @mixes Controls/_marker/interface/IMarkerListOptions
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @category List

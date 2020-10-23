@@ -27,9 +27,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     *
     * @class Controls/_filterPopup/DetailPanel
     * @extends Core/Control
-    * @mixes Controls/interface/IFilterPanel
-    * @demo Controls-demo/Filter/Button/PanelVDom
-    * @control
+    * @mixes Controls/_filterPopup/interface/IFilterPanel
+    * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
     * @public
     * @author Золотова Э.Е.
     *
@@ -50,9 +49,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     *
     * @class Controls/_filterPopup/DetailPanel
     * @extends Core/Control
-    * @mixes Controls/interface/IFilterPanel
-    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
-    * @control
+    * @mixes Controls/_filterPopup/interface/IFilterPanel
+    * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
     * @public
     * @author Золотова Э.Е.
     *

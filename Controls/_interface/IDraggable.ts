@@ -2,7 +2,7 @@
  * Интерфейс для перемещения элементов списка с помощью drag'n'drop.
  * Больше информации можно прочитать <a href="/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/">здесь</a>.
  *
- * @interface Controls/interface/IDraggable
+ * @interface Controls/_interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
@@ -11,13 +11,13 @@
  * Interface to move elements of the list by using drag'n'drop.
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  *
- * @interface Controls/interface/IDraggable
+ * @interface Controls/_interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
 
 /**
- * @name Controls/interface/IDraggable#itemsDragNDrop
+ * @name Controls/_interface/IDraggable#itemsDragNDrop
  * @cfg {Boolean} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop. Когда опция установлена в значение true, перемещение разрешено.
  * @default false
  * @example
@@ -30,7 +30,7 @@
  */
 
 /*
- * @name Controls/interface/IDraggable#itemsDragNDrop
+ * @name Controls/_interface/IDraggable#itemsDragNDrop
  * @cfg {Boolean} Determines whether the user can move entries in the list using drag'n'drop.
  * @default false
  * @example
@@ -44,7 +44,7 @@
  */
 
 /**
- * @name Controls/interface/IDraggable#draggingTemplate
+ * @name Controls/_interface/IDraggable#draggingTemplate
  * @cfg {Function} Шаблон перемещаемого элемента.
  * @default undefined
  * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта.
@@ -86,7 +86,7 @@
  */
 
 /*
- * @name Controls/interface/IDraggable#draggingTemplate
+ * @name Controls/_interface/IDraggable#draggingTemplate
  * @cfg {Function} Template of the entity to be moved.
  * @default Controls/dragnDrop:DraggingTemplate
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
@@ -128,7 +128,7 @@
  */
 
 /**
- * @event Controls/interface/IDraggable#dragStart Происходит при начале перемещения элемента.
+ * @event Controls/_interface/IDraggable#dragStart Происходит при начале перемещения элемента.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array<String>} items Идентификаторы перемещаемых элементов.
  * @param {string|number} draggedKey Идентификатор элемента, за который начали drag-n-drop.
@@ -164,7 +164,7 @@
  */
 
 /*
- * @event Controls/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
+ * @event Controls/_interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Array.<String>} items An array of identifiers for items to be moved.
  * @returns {Controls/_dragnDrop/Entity/Items)
@@ -216,7 +216,7 @@
  */
 
 /**
- * @event Controls/interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
+ * @event Controls/_interface/IDraggable#dragEnd Происходит при завершении перемещения элемента в списке.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Объект перемещения.
@@ -242,7 +242,7 @@
  */
 
 /*
- * @event Controls/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
+ * @event Controls/_interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.
@@ -286,7 +286,7 @@
  */
 
 /**
- * @event Controls/interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
+ * @event Controls/_interface/IDraggable#dragEnter Происходит при перемещении элемента из другого контрола.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @returns {DragEnterResult}
@@ -328,7 +328,7 @@
  */
 
 /*
- * @event Controls/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
+ * @event Controls/_interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @returns {DragEnterResult}
@@ -373,7 +373,7 @@
  */
 
 /**
- * @event Controls/interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
+ * @event Controls/_interface/IDraggable#changeDragTarget Происходит перед изменением позиции, в которую будет перемещен элемент.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @param {Types/entity:Record} target Элемент перемещения.
@@ -402,7 +402,7 @@
  */
 
 /*
- * @event Controls/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
+ * @event Controls/_interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Controls/_dragnDrop/Entity/Items} entity Drag'n'drop entity.
  * @param {Types/entity:Record} target Target item to move.

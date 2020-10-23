@@ -16,38 +16,34 @@ import {Record} from 'Types/entity';
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">демо-пример</a>
  * * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less">переменные тем оформления</a>
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
- * @author Бондарь А.В.
- * @demo Controls-demo/BreadCrumbs/PathPG
+ * @author Красильников А.С.
+ * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
  * @see Controls/_breadcrumbs/Path
  */
 
 /*
  * Breadcrumbs with back button.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">Demo</a>.
  *
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  *
- * @demo Controls-demo/BreadCrumbs/PathPG
+ * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
  */
 
 /**

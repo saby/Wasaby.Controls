@@ -133,5 +133,32 @@ define([
             sandbox.restore();
          });
       });
+
+      describe('_getFontSizeClass', function() {
+         [{
+            fontSize: '2xl',
+            result: 'm'
+         }, {
+            fontSize: '3xl',
+            result: 'l'
+         }, {
+            fontSize: 'm',
+            result: 's'
+         }].forEach(function(test) {
+            it(`should return ${test.result} if fontSize: ${test.fontSize}`, function() {
+               const opt = {
+                  rangeModel: new dateRange.DateRangeModel(),
+                  mask: 'DD.MM.YYYY',
+                  startValue: new Date(2018, 0, 1),
+                  endValue: new Date(2018, 0, 1),
+                  replacer: ' ',
+                  fontSize: test.fontSize
+               };
+               const component = calendarTestUtils.createComponent(dateRange.RangeSelector, opt);
+               const fontSizeResult = component._getFontSizeClass();
+               assert.equal(fontSizeResult, test.result);
+            });
+         });
+      });
    });
 });

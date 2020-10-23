@@ -545,10 +545,12 @@ var ItemsViewModel = BaseViewModel.extend({
 
     // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
     setItems(items, cfg): void {
+        const metaData = items.getMetaData();
         if (_private.isEqualItems(this._items, items)) {
-            this._items.setMetaData(items.getMetaData());
+            this._items.setMetaData(metaData);
             this._items.assign(items);
             this._updateSubscriptionOnMetaChange(this._items, items, true);
+            this._display.setHasMoreData(metaData?.more);
         } else {
             if (this._options.itemsReadyCallback) {
                 this._options.itemsReadyCallback(items);
@@ -558,6 +560,7 @@ var ItemsViewModel = BaseViewModel.extend({
             const oldDisplay = this._display;
             this._display = this._prepareDisplay(this._items, cfg);
             this._updateResults(this._items);
+            this._display.setHasMoreData(metaData?.more);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             if (oldDisplay) {
                 oldDisplay.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);

@@ -16,7 +16,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
     * 
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Controls/_dropdown/Input
-    * @control
+    * 
     * @public
     * @author Герасимов А.М.
     */
