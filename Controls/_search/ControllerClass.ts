@@ -25,7 +25,7 @@ export default class ControllerClass implements ISearchController {
       }
    }
 
-   reset(): Promise<RecordSet> {
+   reset(): Promise<RecordSet | Error> {
       const filter = {...this._options.sourceController.getFilter()};
       filter[this._options.searchParam] = this._searchValue = '';
 
@@ -42,7 +42,7 @@ export default class ControllerClass implements ISearchController {
       return this._updateFilterAndLoad(filter);
    }
 
-   search(value: string): Promise<RecordSet> {
+   search(value: string): Promise<RecordSet | Error> {
       const filter: QueryWhereExpression<unknown> = {...this._options.sourceController.getFilter()};
 
       filter[this._options.searchParam] = this._searchValue = this._trim(value);
@@ -92,15 +92,15 @@ export default class ControllerClass implements ISearchController {
       return this._root;
    }
 
-   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<RecordSet> {
+   getSearchValue(): string {
+      return this._searchValue;
+   }
+
+   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error|RecordSet> {
       const sourceController = this._options.sourceController;
 
       sourceController.setFilter(filter);
-      return sourceController.load().then((recordSet) => {
-         if (recordSet instanceof RecordSet) {
-            return recordSet as RecordSet;
-         }
-      });
+      return sourceController.load().then((loadResult) => loadResult);
    }
 
    private _deleteRootFromFilter(filter: QueryWhereExpression<unknown>): void {

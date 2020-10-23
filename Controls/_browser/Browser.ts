@@ -2,11 +2,16 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_browser/resources/BrowserTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
-import {ControllerClass as SearchController} from 'Controls/search';
+import {
+    ControllerClass as SearchController,
+    getSwitcherStrFromData,
+    ISearchResolverOptions,
+    SearchResolver as SearchResolverController
+} from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
 import {tmplNotify} from 'Controls/eventUtils';
 import {RecordSet} from 'Types/collection';
-import { ContextOptions } from 'Controls/context';
+import {ContextOptions} from 'Controls/context';
 
 import {RegisterClass} from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
@@ -24,8 +29,7 @@ import {ISearchControllerOptions} from 'Controls/_search/interface';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
-import { IShadowsOptions } from 'Controls/_scroll/Container/Interface/IShadows';
-import {getSwitcherStrFromData} from 'Controls/search';
+import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
 
 type Key = string|number|null;
@@ -57,25 +61,23 @@ type IFilterControllerOptions = Pick<IBrowserOptions,
 export default class Browser extends Control<IBrowserOptions, IBrowserReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
+
     private _selectedKeysCount: number = null;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
-    private _operationsController: OperationsController = null;
-    private _searchController: SearchController = null;
-    private _filterController: FilterController = null;
+
     private _listMarkedKey: Key = null;
+    private _notifiedMarkedKey: Key = null;
     private _previousViewMode: string = null;
     private _viewMode: string = null;
-    private _searchValue: string = null;
     private _misspellValue: string = null;
     private _root: Key = null;
+    private _path: RecordSet;
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
+    private _searchValue: string = null;
     private _dataOptionsContext: typeof ContextOptions;
-    private _notifiedMarkedKey: Key;
 
-    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
-    private _sourceController: SourceController = null;
     private _itemsReadyCallback: Function;
     private _loading: boolean = false;
     private _items: RecordSet;
@@ -85,7 +87,13 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     private _groupHistoryId: string;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
-    private _path: RecordSet;
+
+    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
+    private _sourceController: SourceController = null;
+    private _searchResolverController: SearchResolverController = null;
+    private _operationsController: OperationsController = null;
+    private _searchController: SearchController = null;
+    private _filterController: FilterController = null;
 
     private _topShadowVisibilityFromOptions: SHADOW_VISIBILITY;
     private _bottomShadowVisibilityFromOptions: SHADOW_VISIBILITY;
@@ -96,7 +104,6 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
                            context?: typeof ContextOptions,
                            receivedState?: IBrowserReceivedState): void | Promise<IBrowserReceivedState> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
-        this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._initShadowVisibility(options);
@@ -116,10 +123,9 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         if (options.useStore) {
             this._searchValue = Store.getState().searchValue as unknown as string;
         }
-        this._getSourceController().then((sourceController) => {
-            const controllerState = sourceController.getState();
-            this._dataOptionsContext = this._createContext(controllerState);
-        });
+
+        const controllerState = this._getSourceController(options).getState();
+        this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState) {
             this._setFilterItems(receivedState.filterItems as IFilterItem[]);
@@ -130,34 +136,31 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         } else {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems as IFilterItem[]);
-                return this._getSourceController(options).then((sourceController) => {
-                    return this._loadItems(options, sourceController.getState()).then((items) => {
-                        this._defineShadowVisibility(items);
-                        return {
-                            filterItems,
-                            items
-                        };
-                    }, (error) => {
-                        this._onDataError(
-                           null,
-                           {
-                               error,
-                               mode: dataSourceError.Mode.include
-                           }
-                        );
 
-                        return error;
-                    });
+                return this._loadItems(options, controllerState).then((items) => {
+                    this._defineShadowVisibility(items);
+                    return {
+                        filterItems,
+                        items
+                    };
+                }, (error) => {
+                    this._onDataError(
+                       null,
+                       {
+                           error,
+                           mode: dataSourceError.Mode.include
+                       }
+                    );
+
+                    return error;
                 });
             });
         }
     }
 
-    private async _getSourceController(options?: IBrowserOptions): Promise<SourceController> {
+    private _getSourceController(options?: IBrowserOptions): SourceController {
         if (!this._sourceController) {
-            this._sourceController = await import('Controls/dataSource').then((result) => {
-                return new result.NewSourceController(options);
-            });
+            this._sourceController = new SourceController(options ?? this._options);
         }
 
         return this._sourceController;
@@ -169,15 +172,9 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
                 this._filterItemsChanged(null, filterSource);
             });
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
-               (filter: QueryWhereExpression<unknown>) => {
-                this._filterChanged(null, filter);
-            });
-            const searchValueCallbackId = Store.onPropertyChanged('searchValue', (searchValue: string) => {
-                // SearchResolver is needed?
-                this._getSearchController(options).then((searchController) => {
-                   this._search(searchValue).then();
-                });
-            });
+               (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
+            const searchValueCallbackId = Store.onPropertyChanged('searchValue',
+               (searchValue: string) => this._resolveSearch(searchValue, options));
 
             this._storeCallbacks = [
                 sourceCallbackId,
@@ -188,11 +185,14 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
+        let methodResult;
+
         this._operationsController.update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
+        // @ts-ignore
         const isFilterOptionsChanged = this._filterController.update({
             ...newOptions,
             searchValue: this._searchValue
@@ -207,41 +207,45 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
             this._source = newOptions.source;
         }
 
-        return this._getSourceController(newOptions).then((sourceController) => {
-            let methodResult;
+        if (this._options.searchDelay !== newOptions.searchDelay && this._searchResolverController) {
+            this._searchResolverController.updateOptions(
+               this._getSearchResolverOptions(newOptions)
+            );
+        }
 
-            const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+        const sourceController = this._getSourceController(newOptions);
 
-            if (sourceChanged) {
-                this._loading = true;
-                methodResult = sourceController.reload()
-                   .then((items) => {
-                       // для того чтобы мог посчитаться новый prefetch Source внутри
-                       if (items instanceof RecordSet) {
-                           if (newOptions.dataLoadCallback instanceof Function) {
-                               newOptions.dataLoadCallback(items);
-                           }
-                           this._items = sourceController.setItems(items);
+        const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+
+        if (sourceChanged) {
+            this._loading = true;
+            methodResult = sourceController.reload()
+               .then((items) => {
+                   // для того чтобы мог посчитаться новый prefetch Source внутри
+                   if (items instanceof RecordSet) {
+                       if (newOptions.dataLoadCallback instanceof Function) {
+                           newOptions.dataLoadCallback(items);
                        }
+                       this._items = sourceController.setItems(items);
+                   }
 
-                       this._afterSourceLoad(sourceController, newOptions);
+                   this._afterSourceLoad(sourceController, newOptions);
 
-                       this._loading = false;
-                       return items;
-                   })
-                   .catch((error) => error);
-            } else if (isChanged) {
-                this._afterSourceLoad(sourceController, newOptions);
-            }
+                   this._loading = false;
+                   return items;
+               })
+               .catch((error) => error);
+        } else if (isChanged) {
+            this._afterSourceLoad(sourceController, newOptions);
+        }
 
-            this._getSearchControllerOptions(newOptions).then((searchControllerOptions) => {
-                this._getSearchController().then((searchController) => {
-                    searchController.update(searchControllerOptions);
-                });
-            });
-
-            return methodResult;
+        this._getSearchController().then((searchController) => {
+            searchController.update(
+               this._getSearchControllerOptions(newOptions)
+            );
         });
+
+        return methodResult;
     }
 
     private _afterSourceLoad(sourceController: SourceController, options: IBrowserOptions): void {
@@ -254,15 +258,17 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     protected _beforeUnmount(): void {
+        if (this._searchResolverController) {
+            this._searchResolverController.clearTimer();
+        }
         if (this._operationsController) {
             this._operationsController.destroy();
             this._operationsController = null;
         }
 
         if (this._searchController) {
-            this._searchController.reset().then(() => {
-                this._searchController = null;
-            });
+            this._searchController.reset();
+            this._searchController = null;
         }
 
         if (this._errorRegister) {
@@ -290,13 +296,11 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     private _loadItems(options: IBrowserOptions, controllerState: IControllerState): Promise<void | RecordSet | Error> {
         return new Promise((resolve) => {
             if (options.source) {
-                this._getSourceController(options).then((sourceController) => {
-                    sourceController.load().then((items) => {
-                        if (items instanceof RecordSet) {
-                            this._setItemsAndUpdateContext(items, options);
-                        }
-                        resolve(items);
-                    });
+                this._getSourceController(options).load().then((items) => {
+                    if (items instanceof RecordSet) {
+                        this._setItemsAndUpdateContext(items, options);
+                    }
+                    resolve(items);
                 });
             } else {
                 this._updateContext(controllerState);
@@ -306,33 +310,33 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     private _setItemsAndUpdateContext(items: RecordSet, options: IBrowserOptions): void {
-        this._getSourceController(options).then((sourceController) => {
-            // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-            this._items = sourceController.setItems(items);
-            const controllerState = sourceController.getState();
-            this._updateContext(controllerState);
-        });
+        const sourceController = this._getSourceController(options);
+
+        // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+        this._items = sourceController.setItems(items);
+        const controllerState = sourceController.getState();
+        this._updateContext(controllerState);
     }
 
     private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
         return import('Controls/search').then((result) => {
-            return this._getSearchControllerOptions(options ?? this._options)
-               .then((searchOptions) => {
-                this._searchController = new result.ControllerClass(searchOptions);
-                this._inputSearchValue = this._searchValue;
-
-                return this._searchController;
+            this._searchController = new result.ControllerClass({
+                ...(options ?? this._options),
+                sourceController: this._getSourceController(options ?? this._options)
             });
+            this._inputSearchValue = this._searchValue;
+
+            return this._searchController;
         });
     }
 
     protected _itemsReadyCallbackHandler(items: RecordSet): void {
         if (this._items !== items) {
-            this._getSourceController().then((sourceController) => {
-                this._items = sourceController.setItems(items);
-                this._dataOptionsContext.items = this._items;
-                this._dataOptionsContext.updateConsumers();
-            });
+            const sourceController = this._getSourceController();
+
+            this._items = sourceController.setItems(items);
+            this._dataOptionsContext.items = this._items;
+            this._dataOptionsContext.updateConsumers();
         }
     }
 
@@ -373,9 +377,7 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         }
         this._filterController.setFilter(filter);
 
-        this._getSourceController().then((sourceController) => {
-            sourceController.setFilter(this._filterController.getFilter() as QueryWhereExpression<unknown>);
-        });
+        this._getSourceController().setFilter(this._filterController.getFilter() as QueryWhereExpression<unknown>);
 
         const controllerState = this._sourceController.getState();
 
@@ -391,26 +393,20 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
-        this._getSourceController(this._options).then((sourceController) => {
-            // search:Cotnroller fires two events after search: itemsChanged, filterChanged
-            // on filterChanged event filter state will updated
-            // on itemChanged event prefetchSource will updated,
-            // but createPrefetchSource method work async becouse of promise,
-            // then we need to create prefetchSource synchronously
+        const sourceController = this._getSourceController(this._options);
 
-            // для того чтобы мог посчитаться новый prefetch Source внутри
-            const newItems = sourceController.setItems(items);
-            const controllerState = sourceController.getState();
+        // для того чтобы мог посчитаться новый prefetch Source внутри
+        const newItems = sourceController.setItems(items);
+        const controllerState = sourceController.getState();
 
-            if (!this._items) {
-                this._items = newItems;
-            } else {
-                controllerState.items = this._items;
-                sourceController.setItems(this._items);
-            }
+        if (!this._items) {
+            this._items = newItems;
+        } else {
+            controllerState.items = this._items;
+            sourceController.setItems(this._items);
+        }
 
-            this._updateContext(controllerState);
-        });
+        this._updateContext(controllerState);
     }
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
@@ -561,47 +557,75 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
     }
 
-    private _getSearchControllerOptions(options: IBrowserOptions): Promise<ISearchControllerOptions> {
-        return this._getSourceController().then((sourceController) => {
-            return {
-                ...options, ...{
-                    sourceController
-                }};
-        });
+    private _getSearchControllerOptions(options: IBrowserOptions): ISearchControllerOptions {
+        return {
+            ...options, ...{sourceController: this._getSourceController(options)}
+        };
     }
 
     private _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
         return {...options, filter: this._filter, source: this._source};
     }
 
-    private _search(value: string): Promise<RecordSet | void> {
+    private _startSearch(value: string): Promise<RecordSet | void> {
         if (this._viewMode !== 'search') {
             return this._getSearchController().then((searchController) => {
-               searchController.search(value).then((result) => {
-                   this._afterSearch(result);
+               return searchController.search(value).then((result) => {
+                   if (result instanceof RecordSet) {
+                       this._afterSearch(result);
+                   } else {
+                       this._handleError(result);
+                   }
                });
             });
         }
     }
 
+    protected _search(event: SyntheticEvent, value: string): void {
+        this._resolveSearch(value);
+    }
+
+    private _getSearchResolverOptions(options: IBrowserOptions): ISearchResolverOptions {
+        return {
+            delayTime: options.searchDelay,
+            minSearchLength: options.minSearchLength,
+            searchCallback: (validatedValue: string) => {
+                this._startSearch(validatedValue);
+            },
+            searchResetCallback: undefined
+        };
+    }
+
+    protected _resolveSearch(value: string, options?: IBrowserOptions): Promise<void> {
+        if (!this._searchResolverController) {
+            return import('Controls/search').then((result) => {
+                this._searchResolverController = new result.SearchResolver(
+                   this._getSearchResolverOptions(options ?? this._options)
+                );
+                return this._searchResolverController.resolve(value);
+            });
+        }
+        this._searchResolverController.resolve(value);
+    }
+
     private _afterSearch(recordSet: RecordSet): void {
-        this._updateSearchParams();
+        this._updateParams();
 
         if (this._options.dataLoadCallback instanceof Function) {
             this._options.dataLoadCallback(recordSet);
         }
-        this._dataLoadCallback(recordSet);
+        this._processResultData(recordSet);
 
         this._itemsChanged(null, recordSet);
 
         const switchedStr = getSwitcherStrFromData(recordSet);
-        this._setMisspellValue(switchedStr);
+        this._misspellValue = switchedStr;
         if (Browser._needChangeSearchValueToSwitchedString(recordSet)) {
             this._searchValue = switchedStr;
         }
     }
 
-    private _updateSearchParams(): void {
+    private _updateParams(): void {
         if (this._viewMode !== 'search') {
             this._updateViewMode('search');
 
@@ -610,9 +634,7 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
             }
         }
         this._loading = false;
-        this._getSourceController().then((sourceController) => {
-            this._searchValue = sourceController.getFilter()[this._options.searchParam];
-        });
+        this._searchValue = this._getSourceController().getFilter()[this._options.searchParam];
     }
 
     private _updateRootAfterSearch(): void {
@@ -631,10 +653,6 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         this._viewMode = newViewMode;
     }
 
-    private _setMisspellValue(value: string): void {
-        this._misspellValue = value;
-    }
-
     private _handleDataLoad(data: RecordSet): void {
         if (this._deepReload) {
             this._deepReload = undefined;
@@ -645,11 +663,11 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
         if (this._isSearchViewMode() && !this._searchValue) {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
-            this._setMisspellValue('');
+            this._misspellValue = '';
         }
     }
 
-    _dataLoadCallback(data: RecordSet, direction: Direction): void {
+    _processResultData(data: RecordSet, direction: Direction): void {
         this._filterController.handleDataLoad(data);
         this._handleDataLoad(data);
 
@@ -661,9 +679,22 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     _dataLoadErrback(error: Error): void {
         this._filterController.handleDataError();
 
-        if (this._options.dataLoadErrback) {
-            this._options.dataLoadErrback(error);
+        this._handleError(error);
+    }
+
+    protected _handleError(error: Error | object): void {
+        const errbackConfig = {
+            error,
+            mode: dataSourceError.Mode.include
+        };
+        if (error instanceof Error) {
+            if (this._options.dataLoadErrback) {
+                this._options.dataLoadErrback(Error);
+            }
+        } else {
+            this._notify('dataError', [errbackConfig]);
         }
+        this._errorRegister.start(errbackConfig);
     }
 
     _afterSetItemsOnReloadCallback(): void {
@@ -674,8 +705,8 @@ export default class Browser extends Control<IBrowserOptions, IBrowserReceivedSt
     }
 
     _misspellCaptionClick(): void {
-        this._search(this._misspellValue).then(() => {
-            this._setMisspellValue('');
+        this._resolveSearch(this._misspellValue).then(() => {
+            this._misspellValue = '';
         });
     }
 
