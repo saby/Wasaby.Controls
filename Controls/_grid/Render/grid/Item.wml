@@ -22,9 +22,20 @@ style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentC
                </ws:else>-->
          </ws:if>
          <ws:else>
-            <ws:partial template="wml!Controls/_grid/Render/grid/Column"
-                        attr:key="{{ column.getInstanceId() }}"
-                        column="{{ column }}" />
+            <div attr:class="{{ column.getContentClasses(theme, cursor, highlightOnHover) }}"
+                 attr:style="{{ column.getCellStyles() }}">
+               <ws:partial template="{{ column.getTemplate() }}"
+                           attr:key="{{ column.getInstanceId() }}"
+                           column="{{ column }}"
+                           item="{{ (item || itemData) }}"
+                           itemData="{{ (item || itemData) }}">
+                  <ws:ladderWrapper>
+                     <ws:partial template="{{ladderWrapper.content}}"
+                                 attr:class="controls-Grid__row-cell__ladder-content"/>
+
+                  </ws:ladderWrapper>
+               </ws:partial>
+            </div>
          </ws:else>
          <ws:if data="{{ column.shouldDisplayItemActions() }}">
             <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">

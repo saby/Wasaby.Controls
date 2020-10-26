@@ -3,9 +3,11 @@
         <ws:for data="cell in header.getCells()">
             <div attr:class="{{ cell.getWrapperClasses(theme, style) }}"
                  attr:style="{{ cell.getWrapperStyles() }}">
-                <ws:partial template="{{ cell.getTemplate() }}"
-                            scope="{{ cell.getTemplateOptions() }}"
-                            colData="{{ cell }}"/>
+                <div attr:class="{{ cell.getContentClasses(theme) }}">
+                    <ws:partial template="{{ cell.getTemplate() }}"
+                                scope="{{ cell.getTemplateOptions() }}"
+                                colData="{{ cell }}"/>
+                </div>
             </div>
         </ws:for>
     </div>

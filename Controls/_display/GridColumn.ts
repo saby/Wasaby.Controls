@@ -11,6 +11,8 @@ import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from '../_grid/interface/IColumn';
 
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/grid/Column';
+
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
     column: IColumn;
@@ -195,7 +197,7 @@ export default class GridColumn<T> extends mixin<
     }
 
     getTemplate(): TemplateFunction|string {
-        return this._$column.template;
+        return this._$column.template || DEFAULT_CELL_TEMPLATE;
     }
 
     getDisplayProperty(): string {
