@@ -104,7 +104,7 @@ export default class Browser extends Control {
                         this._defineShadowVisibility(loadResult);
                         return {
                             filterItems,
-                            loadResult
+                            items: loadResult
                         };
                     } else {
                         this._onDataError(
