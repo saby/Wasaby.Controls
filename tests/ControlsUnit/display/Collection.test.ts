@@ -23,7 +23,7 @@ import {
 
 const ComputeFunctor = functor.Compute;
 
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 import * as coreInstance from 'Core/core-instance';
 
 describe('Controls/_display/Collection', () => {

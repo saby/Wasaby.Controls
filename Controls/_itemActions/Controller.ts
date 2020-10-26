@@ -365,7 +365,7 @@ export class Controller {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
         const assignActionsOnItem = (item): void => {
-            if (!item['[Controls/_display/GroupItem]']) {
+            if (!item['[Controls/_display/GroupItem]'] && !item['[Controls/_display/SearchSeparator]']) {
                 const contents = Controller._getItemContents(item);
                 const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
                 const itemChanged = Controller._setItemActions(item, actionsContainer);

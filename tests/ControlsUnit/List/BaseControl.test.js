@@ -1017,6 +1017,7 @@ define([
          assert.isNull(ctrl._showContinueSearchButtonDirection);
          ctrl._items.assign(items);
          ctrl._hideIndicatorOnTriggerHideDirection = 'down';
+         ctrl._portionedSearchInProgress = true;
 
          // Down trigger became hidden, hide the indicator, show "Continue search" button
          ctrl.triggerVisibilityChangedHandler('down', false);
@@ -1103,7 +1104,9 @@ define([
                {
                   data: [
                      baseControl,
-                     undefined,
+                     {
+                        navigation: undefined
+                     },
                      {}
                   ],
                   result: {
@@ -1113,7 +1116,9 @@ define([
                {
                   data: [
                      baseControl,
-                     {},
+                     {
+                        navigation: {}
+                     },
                      {}
                   ],
                   result: {
@@ -1123,7 +1128,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'page' },
+                     {
+                        navigation: { view: 'page' }
+                     },
                      {}
                   ],
                   result: {
@@ -1133,7 +1140,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return false;
@@ -1147,7 +1156,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1167,7 +1178,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1188,7 +1201,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1215,14 +1230,21 @@ define([
                   getMetaData: () => ({
                      more: test.data[2].getAllDataCount()
                   })
+               }),
+               getDisplay: () => ({
+                  '[Controls/_display/Tree]': false
                })
             };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.equal(test.data[0]._shouldDrawFooter, test.result._shouldDrawFooter, 'Invalid prepare footer on step #' + index);
             assert.equal(test.data[0]._loadMoreCaption, test.result._loadMoreCaption, 'Invalid prepare footer on step #' + index);
 
-            baseControl._options.groupingKeyCallback = () => 123;
-            baseControl._listViewModel = { isAllGroupsCollapsed: () => true };
+            test.data[1].groupingKeyCallback = () => 123;
+            baseControl._listViewModel = {
+               isAllGroupsCollapsed: () => true,
+               getCount: () => undefined,
+               getDisplay: () => ({})
+            };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.isFalse(test.data[0]._shouldDrawFooter, 'Invalid prepare footer on step #' + index + ' with all collapsed groups');
          });
@@ -3179,6 +3201,13 @@ define([
          });
       });
 
+      it('_needBottomPadding without list view model', function() {
+         assert.doesNotThrow(() => {
+            lists.BaseControl._private.needBottomPadding({}, null)
+         });
+         assert.isFalse(lists.BaseControl._private.needBottomPadding({}, null));
+      });
+
       it('setHasMoreData after reload in beforeMount', async function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -3252,27 +3281,27 @@ define([
             })
          };
 
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, padding is needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, padding is needed");
          cfg = {
             itemActionsPosition: 'inside'
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is inside, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is inside, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             footerTemplate: "footer"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, footer exists, padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
             resultsPosition: "bottom"
          };
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, results row is in bottom padding is not needed");
          cfg = {
             itemActionsPosition: 'outside',
          };
          count = 0;
-         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, items, model), "itemActionsPosinon is outside, empty items, padding is not needed");
-         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, items, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
+         assert.isFalse(lists.BaseControl._private.needBottomPadding(cfg, model), "itemActionsPosinon is outside, empty items, padding is not needed");
+         assert.isTrue(lists.BaseControl._private.needBottomPadding(cfg, editingModel), "itemActionsPosinon is outside, empty items, run editing in place padding is needed");
       });
 
       describe('EditInPlace', function() {
@@ -5337,6 +5366,31 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      it('changing source, if sourceController in options', async function() {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source,
+                sourceController: new dataSource.NewSourceController({
+                   source
+                })
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         cfg = {...cfg};
+         cfg.source = new sourceLib.Memory();
+         assert.isTrue(!(instance._beforeUpdate(cfg) instanceof Promise));
+      });
+
       it('should fire "drawItems" with new collection if source item has changed', async function() {
          var
             cfg = {
@@ -6784,7 +6838,7 @@ define([
                   stopPropagation: () => {
                   }
                };
-               const itemData = {item: {}};
+               const itemData = {item: {}, key: 1};
 
                baseControl._items.getCount = () => 1;
 

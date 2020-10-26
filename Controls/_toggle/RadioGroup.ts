@@ -31,7 +31,6 @@ export interface IRadioGroupOptions extends IControlOptions,
     * 
     * @public
     * @author Красильников А.С.
-    * @category Toggle
     * @demo Controls-demo/toggle/RadioGroup/Base/Index
     */
 
@@ -48,7 +47,6 @@ export interface IRadioGroupOptions extends IControlOptions,
     * 
     * @public
     * @author Красильников А.С.
-    * @category Toggle
     * @demo Controls-demo/toggle/RadioGroup/Base/Index
     */
 

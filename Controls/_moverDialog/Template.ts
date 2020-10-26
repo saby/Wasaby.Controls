@@ -47,7 +47,6 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
  * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /**

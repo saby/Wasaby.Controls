@@ -56,7 +56,6 @@ define('Controls-demo/FilterView/FilterView',
        * Template for dropdown of union fast filter.
        * @control
        * @public
-       * @category Popup
        */
 
       var FilterView = Control.extend({

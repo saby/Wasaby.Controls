@@ -14,7 +14,7 @@ import {
 
 import { Model } from 'Types/entity';
 
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 
 interface IData {
     id: number;

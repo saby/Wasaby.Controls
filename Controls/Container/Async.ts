@@ -17,7 +17,6 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @public
  * @author Санников К.А.
- * @category Container
  */
 
 /**
@@ -29,7 +28,6 @@ import {ViewConfig} from "../_error/Handler";
  *
  * @public
  * @author Санников К.А.
- * @category Container
  */
 
 /**
