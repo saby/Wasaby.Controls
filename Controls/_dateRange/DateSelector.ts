@@ -22,7 +22,6 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/Link
  *
@@ -41,7 +40,6 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_interface/IFontColorStyle
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/Link
  *

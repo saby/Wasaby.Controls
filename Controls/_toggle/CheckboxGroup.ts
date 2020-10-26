@@ -30,7 +30,6 @@ import {
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
@@ -46,7 +45,6 @@ import {
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 

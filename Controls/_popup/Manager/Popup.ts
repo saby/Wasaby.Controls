@@ -24,7 +24,6 @@ class Popup extends Control<IPopupControlOptions> {
      * @extends Core/Control
      * 
      * @private
-     * @category Popup
      * @author Красильников А.С.
      */
 

@@ -34,7 +34,6 @@ import {constants} from 'Env/Env';
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
@@ -71,7 +70,6 @@ import {constants} from 'Env/Env';
  * 
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 let ManagerController;

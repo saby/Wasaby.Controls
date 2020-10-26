@@ -39,7 +39,6 @@ import { TreeControl } from 'Controls/tree';
     * 
     * @public
     * @author Авраменко А.С.
-    * @category List
     * @demo Controls-demo/treeGrid/Base/TreeGridView/Index
     */
 
@@ -76,7 +75,6 @@ import { TreeControl } from 'Controls/tree';
     * 
     * @public
     * @author Авраменко А.С.
-    * @category List
     * @demo Controls-demo/treeGrid/Base/TreeGridView/Index
     */
 

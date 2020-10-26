@@ -13,6 +13,7 @@
                           max-width: {{_options.width ? _options.width + 'px'}}"
               icon="{{_headingIcon}}"
               caption="{{_headingCaption}}"
+              searchHeaderTheme="{{_options.theme}}"
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
               dropdownClassName="{{_options.dropdownClassName}}"

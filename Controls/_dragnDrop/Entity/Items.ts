@@ -7,7 +7,6 @@ import Entity from 'Controls/_dragnDrop/Entity';
  * @class Controls/_dragnDrop/Entity/Items
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 /*
@@ -17,7 +16,6 @@ import Entity from 'Controls/_dragnDrop/Entity';
  * @class Controls/_dragnDrop/Entity/Items
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 /**

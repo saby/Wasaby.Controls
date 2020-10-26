@@ -25,6 +25,7 @@ type TItems = RecordSet<TItem>;
  * Интерфейс опций контрола {@link Controls/toolbars:BoxView}.
  * @interface Controls/_toolbars/IToolbarBoxOptions
  * @author Красильников А.С.
+ * @public
  */
 export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IToolbarSourceOptions {
@@ -40,6 +41,7 @@ export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, 
  * @demo Controls-demo/Toolbar/BoxView/Index
  *
  * @author Красильников А.С.
+ * @public
  */
 class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTemplate, IToolbarSource {
     protected _items: TItems = null;

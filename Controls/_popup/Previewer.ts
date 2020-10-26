@@ -221,9 +221,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                     this._debouncedAction('_close', [event]);
                 }
                 break;
-            case 'mousedown':
-                event.stopPropagation();
-                break;
         }
     }
 

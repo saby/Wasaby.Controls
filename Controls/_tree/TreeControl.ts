@@ -490,7 +490,6 @@ const _private = {
  * @extends Controls/_list/ListControl
  * 
  * @private
- * @category List
  */
 
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
@@ -907,7 +906,8 @@ TreeControl.getDefaultOptions = () => {
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
         selectDescendants: true,
-        selectAncestors: true
+        selectAncestors: true,
+        expanderPosition: 'default'
     };
 };
 

@@ -186,4 +186,10 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @variant secondary
      */
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
+
+    /**
+     * @name Controls/grid:ColumnTemplate#expanderTemplate
+     * @cfg {Function} Шаблон позволяет отобразить иконку для узла. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+     */
+    expanderTemplate?: Function;
 }
