@@ -156,9 +156,9 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * 
     * **Пример 5.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки раскрытия узла.
     * <pre class="brush: html; highlight: [3,13]">
-    * <Controls.treeGrid:View>
+    * <Controls.treeGrid:View expanderPosition="custom">
     *    <ws:itemTemplate>
-    *       <ws:partial template="Controls/treeGrid:ItemTemplate" expanderPosition="custom" />
+    *       <ws:partial template="Controls/treeGrid:ItemTemplate" />
     *    </ws:itemTemplate>
     *    <ws:columns>
     *       <ws:Array>
