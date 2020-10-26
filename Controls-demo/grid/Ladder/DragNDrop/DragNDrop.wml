@@ -3,12 +3,11 @@
         <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
             <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
                 <div>
-                    <Controls.list:Mover name="listMover"/>
-                    <Controls.list:Remover name="remover" on:afterItemsRemove="_afterItemsRemove()"/>
                     <Controls.list:Container>
                         <Controls.grid:View
                                 on:dragStart="_dragStart()"
                                 on:dragEnd="_dragEnd()"
+                                name="list"
                                 itemActions="{{_itemActions}}"
                                 itemsReadyCallback="{{_itemsReadyCallback}}"
                                 itemsDragNDrop="{{true}}"

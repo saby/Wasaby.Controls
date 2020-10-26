@@ -31,7 +31,9 @@ export default class extends Control {
         style: 'bordered',
         showType: showType.TOOLBAR,
         handler: function(item: Record): void {
-            this._children.remover.removeItems([item.get('id')]);
+            this._children.list.removeItems({selected: [item.get('id')]}).then(() => {
+                this._children.list.reload();
+            });
         }.bind(this)
     }];
 
@@ -57,7 +59,9 @@ export default class extends Control {
 
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
         this._selectedKeys = [];
-        this._children.listMover.moveItems(entity.getItems(), target, position);
+        this._children.list.moveItems({selected: entity.getItems()}, target.getKey(), position).then(() => {
+            this._children.list.reload();
+        });
     }
 
     protected _afterItemsRemove(): void {
