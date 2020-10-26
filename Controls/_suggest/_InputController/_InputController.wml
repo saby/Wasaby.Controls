@@ -66,6 +66,7 @@
                 on:activated="_inputActivatedHandler()"
                 on:deactivated="_inputDeactivated()"
                 on:click="_inputClicked()"
+                on:mouseenter="_inputMouseEnterHandler()"
                 attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}} controls-Suggest__layout-input"/>
 
     <ws:if data="{{_options.suggestState && (!_dependenciesDeferred || _dependenciesDeferred.isReady())}}">

@@ -29,6 +29,7 @@ import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
+import {DependencyTimer} from "../_utils/fastOpenUtils/FastOpen";
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -133,6 +134,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
 
+   private _dependenciesTimer: DependencyTimer = null;
+
    /**
     * three state flag
     * null - loading is not initiated
@@ -193,7 +196,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _open(): void {
-      this._loadDependencies(this._options).addCallback(() => {
+      this._loadDependencies().addCallback(() => {
          // focus can be moved out while dependencies loading
          if (this._inputActive) {
             this._suggestStateNotify(true);
@@ -432,10 +435,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return templatesToLoad;
    }
 
-   private _loadDependencies(options: IInputControllerOptions): Deferred {
-      const templatesToLoad = this._getTemplatesToLoad(options);
+   private _loadDependencies(options?: IInputControllerOptions): Deferred {
+      const checkedOptions = options ?? this._options;
+
+      const templatesToLoad = this._getTemplatesToLoad(checkedOptions);
       if (!this._dependenciesDeferred || templatesToLoad.length) {
-         this._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([options.layerName])));
+         this._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([checkedOptions.layerName])));
       }
       return this._dependenciesDeferred;
    }
@@ -660,7 +665,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       this._searchValue = value;
       /* preload suggest dependencies on value changed */
-      this._loadDependencies(this._options);
+      this._loadDependencies();
 
       return this._resolveSearch(value);
    }
@@ -795,6 +800,21 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return this._inputActivated();
       }
       return Promise.resolve();
+   }
+
+   protected _inputMouseEnterHandler(event: SyntheticEvent): void {
+      if (!this._options.autoDropDown) {
+         if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+               this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
+         }
+
+         if (!this._filter) {
+            this._resolveLoad();
+         }
+      }
    }
 
    protected async _tabsSelectedKeyChanged(tabId: Key): Promise<void> {
