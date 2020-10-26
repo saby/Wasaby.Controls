@@ -19,6 +19,8 @@ define('Controls/Application',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
+      'Application/Page',
+      'UI/Utils',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -33,7 +35,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
     *
-    * @control
+    * 
     * @public
     * @author Санников К.А.
     */
@@ -50,7 +52,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
     *
-    * @control
+    * 
     * @public
     * @author Санников К.А.
     */
@@ -70,7 +72,9 @@ define('Controls/Application',
       HotKeys,
       TouchDetector,
       dragnDrop,
-      TimeTesterInv) {
+      TimeTesterInv,
+      AppPage,
+      UIUtils) {
       'use strict';
 
       var _private;
@@ -479,6 +483,84 @@ define('Controls/Application',
 
       Page._theme = ['Controls/application'];
       Page._styles = ['Controls/dragnDrop'];
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPrefetchModules = function(modules, force) {
+         _addHeadLinks(modules, { prefetch: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="preload"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPreloadModules = function(modules, force) {
+         _addHeadLinks(modules, { preload: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/> или <link rel="preload"/>
+       * @param modules
+       * @param cfg настройки для ссылок
+       *             {
+       *                'prefetch': <boolean>,  // добавить prefetch-ссылку в head
+       *                'preload': <boolean>  // добавить preload-ссылку в head
+       *                'force': <boolean>  // по умолчанию ресурсы добавляются только на сервисе представления, но
+       *                                    // с этим параметром можно на это повлиять
+       *             }
+       * @private
+       */
+      function _addHeadLinks(modules, cfg) {
+         cfg = cfg || {};
+         if (!Env.constants.isServerSide && !cfg.force) {
+            return;
+         }
+         if (!modules || !modules.length) {
+            return;
+         }
+
+         var API = AppPage.Head.getInstance();
+         modules.forEach(function(moduleName) {
+            var path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
+            path = path.indexOf('/') !== 0 ? '/' + path : path;
+            var _type = _getTypeString(path);
+            if (!_type) {
+               Env.IoC.resolve('ILogger').warn('[Controls/Application.js] Для файла ' + path + ' не удалось получить строку-тип');
+               return;
+            }
+
+            var rel = cfg.preload ? 'preload' : 'prefetch';
+            API.createTag('link', { rel: rel, as: _type, href: path });
+         });
+      }
+
+      /**
+       * Получить строку-тип ресурса по его расширению
+       * @param path
+       * @private
+       */
+      function _getTypeString(path) {
+         var types = {
+            'script': new RegExp('\.js'),
+            'fetch': new RegExp('\.wml'),
+            'style': new RegExp('\.css')
+         };
+         for (var _type in types) {
+            if (types.hasOwnProperty(_type) && types[_type].test(path)) {
+               return _type;
+            }
+         }
+         return null;
+      }
+
 
       return Page;
    });

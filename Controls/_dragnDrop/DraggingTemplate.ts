@@ -25,10 +25,9 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     *
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
-    * @control
+    * 
     * @public
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
    /*
@@ -36,10 +35,9 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
-    * @control
+    * 
     * @private
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
    /**

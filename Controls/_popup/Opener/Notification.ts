@@ -19,10 +19,9 @@ import {Logger} from 'UI/Utils';
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/INotification
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Popup
  * @demo Controls-demo/Popup/Opener/NotificationPG
  */
 

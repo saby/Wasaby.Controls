@@ -10,7 +10,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
  * 
  * @class Controls/_filterPopup/Panel/Link
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  * @example
@@ -25,31 +25,6 @@ import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
  * </pre>
  */
 
-/**
- * @name Controls/_filterPopup/Panel/Link#caption
- * @cfg {Object} Caption Текст кнопки-ссылки.
- */
-
-/**
- * @event Controls/_filterPopup/Panel/Link#visibilityChanged Происходит при клике на элемент.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @remark
- * Событие уведомляет панель, что необходимо переместить контрол в основной блок.
- * @example
- * Пример использования контрола на панели фильтра
- * <pre>
- *    <Controls.filterPopup:Link caption="Author" on:visibilityChanged="_visibilityChangedHandler()"/>
- * </pre>
- *
- * <pre>
- *     private _visibilityChangedHandler(event, value) {
- *          if (options.isVisibleUpdate) {
- *              this._notify('visibilityChanged', [value]);
- *          }
- *     }
- * </pre>
- */
-
 class FilterLink extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected  _clickHandler(): void {
@@ -59,4 +34,29 @@ class FilterLink extends Control<IControlOptions> {
    static _theme: string[] = ['Controls/filterPopup'];
 }
 
+/**
+ * @name Controls/_filterPopup/Panel/Link#caption
+ * @cfg {Object} Текст кнопки-ссылки.
+ */
+
+/**
+ * @event Происходит при клике на элемент.
+ * @name Controls/_filterPopup/Panel/Link#visibilityChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @remark
+ * Событие уведомляет панель, что необходимо переместить контрол в основной блок.
+ * @example
+ * Пример использования контрола на панели фильтра
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Link caption="Author" on:visibilityChanged="_visibilityChangedHandler()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * private _visibilityChangedHandler(event, value) {
+ *      if (options.isVisibleUpdate) {
+ *          this._notify('visibilityChanged', [value]);
+ *      }
+ * }
+ * </pre>
+ */
 export default FilterLink;

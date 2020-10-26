@@ -103,7 +103,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
@@ -114,7 +114,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
@@ -223,10 +223,14 @@ export class NavigationController {
         calculator.updateQueryRange(store, list);
     }
 
-    shiftToEdge(direction: TNavigationDirection, id: TKey = null, shiftMode: TNavigationPagingMode): void {
+    shiftToEdge(
+        direction: TNavigationDirection,
+        id: TKey = null,
+        shiftMode?: TNavigationPagingMode
+    ): IBaseSourceConfig {
         const calculator = this._getCalculator();
         const store = this._getStore(id);
-        calculator.shiftToEdge(store, direction, shiftMode);
+        return calculator.shiftToEdge(store, direction, shiftMode, this._navigationConfig);
     }
 
     hasMoreData(direction?: TNavigationDirection, id: TKey = null): boolean {

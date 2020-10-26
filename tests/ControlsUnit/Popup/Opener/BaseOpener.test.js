@@ -115,6 +115,18 @@ define(
          const indicatorId = '123';
          standartCfg.id = '123';
          assert.deepEqual(standartCfg, popup.BaseOpener.util.getIndicatorConfig(indicatorId));
+         const cfg = {
+            indicatorConfig: {
+               message: 'Error',
+               delay: 0
+            }
+         };
+         const newConfig = {
+            id: '123',
+            message: 'Error',
+            delay: 0
+         };
+         assert.deepEqual(newConfig, popup.BaseOpener.util.getIndicatorConfig(indicatorId, cfg));
       });
 
       it('showDialog remove old id', (done) => {

@@ -12,7 +12,7 @@ import clone = require('Core/core-clone');
  * @class Controls/_filter/View/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 
@@ -27,7 +27,7 @@ import clone = require('Core/core-clone');
  * @class Controls/_filter/View/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 

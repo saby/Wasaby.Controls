@@ -38,8 +38,7 @@ import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOption
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
  * @demo Controls-demo/Menu/Control/Source/Index
- * @control
- * @category Popup
+ * 
  * @author Герасимов А.М.
  */
 

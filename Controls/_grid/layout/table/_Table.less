@@ -75,6 +75,12 @@
   .controls-Grid__header-cell_min-height_theme-@{themeName} {
     // В таблицах функцию min-height выполняет height
     height: @header_cell_min-height_grid;
+
+    // В ie без этого будут не корректно будет определяться высота. Из-за чего будет появится скролл.
+    // https://online.sbis.ru/opendoc.html?guid=91d94bb5-362a-4fd7-9ca5-9a2578fd5abc
+    .controls-Grid__header-cell__content_theme-@{themeName} {
+      min-height: @header_cell_min-height_grid;
+    }
   }
 
    // Этот стиль задаётся для tr и при display: table-row-group ломает вёрстку в IE/Edge

@@ -45,8 +45,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
    const scrollControlNode: HTMLElement = scrollableElement.closest(SCROLL_CONTAINERS_SELECTOR);
    if (scrollControlNode?.controlNodes) {
       for (let component of scrollControlNode.controlNodes) {
-         if (cInstance.instanceOfModule(component.control, 'Controls/scroll:Container') ||
-             cInstance.instanceOfModule(component.control, 'Controls/scroll:_ContainerNew')) {
+         if (cInstance.instanceOfModule(component.control, 'Controls/scroll:Container')) {
             return {
                top: component.control.getHeadersHeight(POSITION.top, TYPE_FIXED_HEADERS.fixed),
                bottom: component.control.getHeadersHeight(POSITION.bottom, TYPE_FIXED_HEADERS.fixed)

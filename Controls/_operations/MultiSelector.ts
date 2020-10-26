@@ -12,7 +12,7 @@ import {IMultiSelectableOptions} from 'Controls/interface';
  *
  * @class Controls/_operations/MultiSelector
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/operations/MultiSelector/Index

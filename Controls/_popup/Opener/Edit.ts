@@ -21,11 +21,10 @@ import Deferred = require('Core/Deferred');
  * @class Controls/_popup/Opener/Edit
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IEdit
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
- * @category Popup
  */
 
 interface IEditOpenerOptions extends IEditOptions, IControlOptions {}

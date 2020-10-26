@@ -8,22 +8,21 @@ const SELECTION_MARKED_FIELD = 'marked';
  * используемых для списочных контролов на окнах выбора.
  * 
  * @remark
- * <h2>Аргументы функции</h2>
+ * Аргументы функции:
  *
  * * item: Model
  * * filter: object - текущий фильтр списочного контрола
  * * keyProperty: string - Имя свойства, содержащего информацию об идентификаторе переданной записи.
  *
- * <h3>Пример использования</h3>
- *
- * <pre>
- *    var myMemory = new Memory({
- *       data: myData,
- *       keyProperty: 'id',
- *       filter: function(item, filter) {
- *          return memorySourceFilter(item, filter, 'id');
- *       }
- *    })
+ * @example
+ * <pre class="brush: js">
+ * var myMemory = new Memory({
+ *    data: myData,
+ *    keyProperty: 'id',
+ *    filter: function(item, filter) {
+ *       return memorySourceFilter(item, filter, 'id');
+ *    }
+ * })
  * </pre>
  *
  * @class Controls/_lookupPopup/List/Utils/memorySourceFilter

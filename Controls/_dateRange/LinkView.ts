@@ -21,10 +21,9 @@ import dateControlsUtils from "./Utils";
  * @extends Core/Control
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/ICaptionFormatter
- * @control
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
+ * 
  * @private
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/LinkView
  *

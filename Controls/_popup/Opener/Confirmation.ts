@@ -19,9 +19,8 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @mixes Controls/_popup/interface/IConfirmation
  * @mixes Controls/_popup/interface/IConfirmationFooter
  * @implements Controls/_popup/interface/IConfirmationFooter
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @demo Controls-demo/Confirmation/Confirmation
  */

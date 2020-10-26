@@ -62,9 +62,8 @@ const INVERTED_SIDES: IInfoBoxSide = {
 /**
  * InfoBox Popup Controller
  * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
- * @control
+ * 
  * @private
- * @category Popup
  */
 class InfoBoxController extends StickyController.constructor {
     _openedPopupId: string = null;

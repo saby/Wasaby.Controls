@@ -42,19 +42,6 @@ export interface IPagingOptions extends IControlOptions {
  * @mixes Controls/_paging/Paging/DigitButtons/Styles
  *
  */
-/**
- * @name Controls/_paging/Paging#pagesCount
- * @cfg {Number} Размер страницы
- */
-
-/**
- * @name Controls/_paging/Paging#showDigits
- * @cfg {Boolean} Отображать кнопки с номерами страницы.
- */
-/**
- * @name Controls/_paging/Paging#selectedPage
- * @cfg {Number} Номер выбранной страницы.
- */
 class Paging extends Control<IPagingOptions> {
     protected _template: TemplateFunction = pagingTemplate;
     protected _stateBackward: TButtonState = 'normal';
@@ -101,21 +88,24 @@ class Paging extends Control<IPagingOptions> {
         if (this._options.arrowState) {
             return this._options.arrowState[state] || 'visible';
         }
-        return 'visible';
+        if (this._isDigit()) {
+            return 'visible';
+        }
+        return 'hidden';
     }
 
     private _initArrowStateBySelectedPage(config: IPagingOptions): void {
         const page = config.selectedPage;
         if (page <= 1) {
-            this._stateBackward = this._getState('hidden');
+            this._stateBackward = this._stateTop = this._getState('hidden');
         } else {
-            this._stateBackward = this._getState('visible');
+            this._stateBackward = this._stateTop = this._getState('visible');
         }
 
         if (page >= config.pagesCount) {
-            this._stateForward = this._getState('hidden');
+            this._stateForward = this._stateBottom = this._getState('hidden');
         } else {
-            this._stateForward = this._getState('visible');
+            this._stateForward = this._stateBottom = this._getState('visible');
         }
     }
 
@@ -182,6 +172,20 @@ class Paging extends Control<IPagingOptions> {
 }
 
 export default Paging;
+
+/**
+ * @name Controls/_paging/Paging#pagesCount
+ * @cfg {Number} Размер страницы
+ */
+
+/**
+ * @name Controls/_paging/Paging#showDigits
+ * @cfg {Boolean} Отображать кнопки с номерами страницы.
+ */
+/**
+ * @name Controls/_paging/Paging#selectedPage
+ * @cfg {Number} Номер выбранной страницы.
+ */
 
 /**
  * @event Происходит при клике по кнопкам перехода к первой, последней, следующей или предыдущей странице.

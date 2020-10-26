@@ -100,6 +100,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
     }
 });
 
+Container.getDefaultOptions = () => ({
+    minSearchLength: 3
+});
+
 Container.getCalculatedFilter = getCalculatedFilter;
 Container.updateFilterHistory = updateFilterHistory;
 export = Container;
@@ -119,7 +123,7 @@ export = Container;
  * @extends Core/Control
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_filter/IPrefetch
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -133,7 +137,7 @@ export = Container;
 * @class Controls/_filter/Controller
 * @extends Core/Control
 * @mixes Controls/_interface/IFilterChanged
-* @control
+* 
 * @public
 * @author Герасимов А.М.
 */

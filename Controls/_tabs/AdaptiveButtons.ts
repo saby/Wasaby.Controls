@@ -29,7 +29,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * Интерфейс для опций контрола адаптивных вкладок.
  * @interface Controls/_tabs/ITabsAdaptiveButtonsOptions
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  */
 /**
  * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#align
@@ -53,10 +53,9 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @mixes Controls/tabs:ITabsAdaptiveButtonsOptions
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
- * @control
+ * 
  * @public
- * @category List
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
  */
 

@@ -12,7 +12,8 @@
    }
 }
 
-.controls-Button__close__icon_toolButton-theme_@{themeName} {
+.controls-Button__close__icon_toolButton-theme_@{themeName},
+.controls-Button__close__icon_functionalButton-theme_@{themeName} {
    background-image: @icon_background-image_closeButton_toolButton;
    height: @icon-size_closeButton_toolButton;
    width: @icon-size_closeButton_toolButton;
@@ -59,7 +60,20 @@
    }
 }
 
-.controls-Button__close_toolButton {
+.controls-Button__close_functionalButton-theme_@{themeName} {
+   width: @width_closeButton_functionalButton;
+   height: @height_closeButton_functionalButton;
+   border-width: @border-thickness_closeButton_functionalButton;
+   border-radius: @border-radius_closeButton_functionalButton;
+   box-shadow: @box-shadow_closeButton_toolButton;
+   background-color: @background-color_closeButton_functionalButton;
+   &:active {
+      box-shadow: @box-shadow_closeButton_toolButton; //none
+   }
+}
+
+.controls-Button__close_toolButton,
+.controls-Button__close_functionalButton {
    border-style: solid;
    box-sizing: border-box;
 }
@@ -71,16 +85,18 @@
    height: @height_closeButton_link;
 }
 
-.ws-is-hover{
+.ws-is-hover {
    .controls-Button__close__icon_link-theme_@{themeName}:hover,
    .controls-Button__close__icon_linkButton-theme_@{themeName}:hover {
       background-image: @icon_hovered_background-image_closeButton_link;
    }
 
    //button and icon must be hovered at the same time
-   .controls-Button__close_toolButton-theme_@{themeName}:hover {
+   .controls-Button__close_toolButton-theme_@{themeName}:hover,
+   .controls-Button__close_functionalButton-theme_@{themeName}:hover {
       border-color: @border-color_hover_closeButton_toolButton;
-      .controls-Button__close__icon_toolButton-theme_@{themeName} {
+      .controls-Button__close__icon_toolButton-theme_@{themeName},
+      .controls-Button__close__icon_functionalButton-theme_@{themeName} {
          background-image: @icon_hovered_background-image_closeButton_toolButton;
       }
    }

@@ -55,10 +55,9 @@ export interface IToggleButtonOptions extends
  * @implements Control
  * s/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
@@ -78,120 +77,11 @@ export interface IToggleButtonOptions extends
  * @implements Controls/_interface/IIconStyle
  * @implements Controls/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
- */
-
-/**
- * @name Controls/_toggle/Button#icons
- * @cfg {Array} Пара иконок.
- * Первая иконка отображается, когда переключатель выключен.
- * Вторая иконка отображается, когда переключатель включен.
- * @example
- * Переключатель с одной иконкой:
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" iconSize="s"  viewMode="link"/>
- * </pre>
- * Переключатель с двумя иконками:
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s"  viewMode="link"/>
- * </pre>
- */
-
-/*
- * @name Controls/_toggle/Button#icons
- * @cfg {Array} Pair of icons.
- * First icon displayed when toggle switch is off.
- * Second icon displayed when toggle switch is on.
- * @example
- * Toggle button with one icon.
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" viewMode="link"/>
- * </pre>
- * Toggle button with two icons.
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s" viewMode="link"/>
- * </pre>
- */
-
-/**
- * @name Controls/_toggle/Button#captions
- * @cfg {Array} Пара заголовков.
- * Первый заголовок отображается, когда переключатель в состоянии "выключено".
- * Второй заголовок отображается, когда переключатель в состоянии "включено".
- * @example
- * Переключатель с двумя заголовками:
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
- * </pre>
- * Переключатель с одним заголовком
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
- * </pre>
- */
-
-/*
- * @name Controls/_toggle/Button#captions
- * @cfg {Array} Pair of captions.
- * First caption displayed when toggle switch is off.
- * Second caption displayed when toggle switch is on.
- * @example
- * Toggle button with two captions.
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
- * </pre>
- * Toggle button with one caption.
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
- * </pre>
- */
-
-/**
- * @name Controls/_toggle/Button#viewMode
- * @cfg {Enum} Режим отображения кнопки.
- * @variant link В виде гиперссылки.
- * @variant toolButton В виде кнопки для панели инструментов.
- * @variant pushButton В виде гиперссылки, которая меняет свой внешний в зажатом состоянии
- * @default link
- * @example
- * Кнопка-переключатель в режиме отображения - 'link'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
- * </pre>
- * Кнопка-переключатель в режиме отображения - 'toolButton'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
- * </pre>
- * Кнопка-переключатель в режиме отображения - 'pushButton'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
- * </pre>
- */
-
-/*
- * @name Controls/_toggle/Button#viewMode
- * @cfg {Enum} Toggle button view mode.
- * @variant link Decorated hyperlink.
- * @variant pushButton Decorated hyperlink transform to toolbar button.
- * @variant toolButton Toolbar button.
- * @default link
- * @example
- * Toggle button with 'link' viewMode.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
- * </pre>
- * Toggle button with 'toolButton' viewMode.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
- * </pre>
- * Toggle button with 'pushButton' viewMode.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
- * </pre>
  */
 class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
     ICheckable,
@@ -286,5 +176,111 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         };
     }
 }
+/**
+ * @name Controls/_toggle/Button#icons
+ * @cfg {Array} Пара иконок.
+ * Первая иконка отображается, когда переключатель выключен.
+ * Вторая иконка отображается, когда переключатель включен.
+ * @example
+ * Переключатель с одной иконкой:
+ * <pre class="brush: html">
+ * <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" iconSize="s"  viewMode="link"/>
+ * </pre>
+ * Переключатель с двумя иконками:
+ * <pre class="brush: html">
+ * <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s"  viewMode="link"/>
+ * </pre>
+ */
 
+/*
+ * @name Controls/_toggle/Button#icons
+ * @cfg {Array} Pair of icons.
+ * First icon displayed when toggle switch is off.
+ * Second icon displayed when toggle switch is on.
+ * @example
+ * Toggle button with one icon.
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" viewMode="link"/>
+ * </pre>
+ * Toggle button with two icons.
+ * <pre>
+ *    <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s" viewMode="link"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_toggle/Button#captions
+ * @cfg {Array} Пара заголовков.
+ * Первый заголовок отображается, когда переключатель в состоянии "выключено".
+ * Второй заголовок отображается, когда переключатель в состоянии "включено".
+ * @example
+ * Переключатель с двумя заголовками:
+ * <pre class="brush: html">
+ * <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ * </pre>
+ * Переключатель с одним заголовком
+ * <pre class="brush: html">
+ * <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toggle/Button#captions
+ * @cfg {Array} Pair of captions.
+ * First caption displayed when toggle switch is off.
+ * Second caption displayed when toggle switch is on.
+ * @example
+ * Toggle button with two captions.
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ * </pre>
+ * Toggle button with one caption.
+ * <pre>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_toggle/Button#viewMode
+ * @cfg {String} Режим отображения кнопки.
+ * @variant link В виде гиперссылки.
+ * @variant toolButton В виде кнопки для панели инструментов.
+ * @variant pushButton В виде гиперссылки, которая меняет свой внешний в зажатом состоянии
+ * @default link
+ * @example
+ * Кнопка-переключатель в режиме отображения - 'link'.
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'toolButton'.
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
+ * </pre>
+ * Кнопка-переключатель в режиме отображения - 'pushButton'.
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_toggle/Button#viewMode
+ * @cfg {Enum} Toggle button view mode.
+ * @variant link Decorated hyperlink.
+ * @variant pushButton Decorated hyperlink transform to toolbar button.
+ * @variant toolButton Toolbar button.
+ * @default link
+ * @example
+ * Toggle button with 'link' viewMode.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
+ * </pre>
+ * Toggle button with 'toolButton' viewMode.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
+ * </pre>
+ * Toggle button with 'pushButton' viewMode.
+ * <pre>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
+ * </pre>
+ */
 export default ToggleButton;

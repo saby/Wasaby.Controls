@@ -13,8 +13,7 @@ import {RecordSet} from 'Types/collection';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
  * 
  * @class Controls/_popup/Opener/Edit/Container
- * @control
- * @category Popup
+ * 
  * @extends Core/Control
  * @see Controls/popup:Edit
  * @see Controls/list:DataContainer

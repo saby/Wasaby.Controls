@@ -14,7 +14,7 @@ import {isEqual} from 'Types/object';
  * @mixes Controls/interface/IPropertyGrid
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
- * @control
+ * 
  * @private
  * @author Золотова Э.Е.
  */

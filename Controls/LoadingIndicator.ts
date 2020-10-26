@@ -29,11 +29,10 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
  *
  * @class Controls/LoadingIndicator
  * @extends Core/Control
- * @control
+ * 
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
@@ -67,10 +66,9 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
  * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
- * @control
+ * 
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 let ManagerController;

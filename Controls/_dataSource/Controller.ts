@@ -138,6 +138,10 @@ export default class Controller {
         this._root = key;
     }
 
+    getRoot(): TKey {
+        return this._root;
+    }
+
     // FIXME, если parentProperty задаётся на списке, а не на data(browser)
     setParentProperty(parentProperty: string): void {
         this._parentProperty = parentProperty;
@@ -147,6 +151,7 @@ export default class Controller {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
+        const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
 
         if (isFilterChanged) {
             this._filter = newOptions.filter;
@@ -156,11 +161,11 @@ export default class Controller {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.root !== undefined && newOptions.root !== this._options.root) {
+        if (rootChanged) {
             this.setRoot(newOptions.root);
         }
 
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+        if (newOptions.expandedItems !== undefined && newOptions.expandedItems !== this._options.expandedItems) {
             this.setExpandedItems(newOptions.expandedItems);
         }
 
@@ -188,7 +193,7 @@ export default class Controller {
             isSourceChanged ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
-            newOptions.root !== this._options.root;
+            rootChanged;
 
         this._options = newOptions;
         return isChanged;
@@ -238,9 +243,9 @@ export default class Controller {
         return !!this._loadPromise;
     }
 
-    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): void {
+    shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options.navigation)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -328,6 +333,7 @@ export default class Controller {
         navigationSourceConfig?: INavigationSourceConfig
     ): Promise<LoadResult> {
         if (this._options.source) {
+            this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
                     // В source может лежать prefetchProxy

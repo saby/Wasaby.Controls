@@ -32,7 +32,7 @@ export interface IHeadingOptions
  *
  * @class Controls/_heading/Heading
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
@@ -41,21 +41,6 @@ export interface IHeadingOptions
  * @implements Controls/_interface/ICaption
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
- */
-
-/**
- * @typedef {String} TTextTransform
- * @variant none Без изменения регистра символов.
- * @variant uppercase Все символы текста становятся прописными (верхний регистр).
- */
-
-/**
- * @name Controls/_heading/Heading#textTransform
- * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
- * @default none
- * @demo Controls-demo/Heading/Title/TextTransform/Index
- * @remark
- * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
  */
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
     protected _template: TemplateFunction = headingTemplate;
@@ -81,5 +66,20 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
         };
     }
 }
+
+/**
+ * @typedef {String} TTextTransform
+ * @variant none Без изменения регистра символов.
+ * @variant uppercase Все символы текста становятся прописными (верхний регистр).
+ */
+
+/**
+ * @name Controls/_heading/Heading#textTransform
+ * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
+ * @default none
+ * @demo Controls-demo/Heading/Title/TextTransform/Index
+ * @remark
+ * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+ */
 
 export default Header;

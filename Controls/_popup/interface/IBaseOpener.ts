@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {IEventHandlers, IPopupItemInfo} from './IPopup';
 import {List} from 'Types/collection';
 import {IControlOptions} from 'UI/Base';
+import {ILoadingIndicatorOptions} from 'Controls/LoadingIndicator';
 
 /**
  * Интерфейс базовых опций опенеров.
@@ -24,6 +25,7 @@ export interface IBasePopupOptions {
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
     showIndicator?: boolean;
+    indicatorConfig?: ILoadingIndicatorOptions;
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
@@ -114,6 +116,16 @@ export interface IBaseOpener {
  * @name Controls/_popup/interface/IBaseOpener#showIndicator
  * @cfg {Boolean} Определяет, будет ли показываться индикатор при открытии окна
  * @default true
+ */
+
+/**
+ * @typedef {String} indicatorConfig
+ * @description Конфигурация {@link Controls/LoadingIndicator/interface/ILoadingIndicator индикатора загрузки}
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#indicatorConfig
+ * @cfg {indicatorConfig} Определяет конфигурацию индикатора загрузки, показываемого при открытии окна
  */
 
 /**

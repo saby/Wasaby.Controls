@@ -1,6 +1,8 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual} from 'assert';
+import {equal, deepStrictEqual, ok, doesNotThrow} from 'assert';
+import { RecordSet } from 'Types/collection';
+import { detection } from 'Env/Env';
 
 const browserData = [
     {
@@ -14,6 +16,24 @@ const browserData = [
     {
         id: 2,
         name: 'Dmitry'
+    }
+];
+
+const browserHierarchyData = [
+    {
+        key: 0,
+        title: 'Интерфейсный фреймворк',
+        parent: null
+    },
+    {
+        key: 1,
+        title: 'Sasha',
+        parent: 0
+    },
+    {
+        key: 2,
+        title: 'Dmitry',
+        parent: null
     }
 ];
 
@@ -95,6 +115,79 @@ describe('Controls/browser:Browser', () => {
             });
         });
 
+        describe('init shadow visibility', () => {
+            const recordSet = new RecordSet({
+                rawData: [{id: 1}],
+                keyProperty: 'id',
+                metaData: {
+                    more: {
+                        before: true,
+                        after: true
+                    }
+                }
+            });
+
+            const options = getBrowserOptions();
+
+            let browser;
+
+            let defaultIsMobilePlatformValue;
+
+            beforeEach(() => {
+                defaultIsMobilePlatformValue = detection.isMobilePlatform;
+            })
+
+            afterEach(() => {
+                detection.isMobilePlatform = defaultIsMobilePlatformValue;
+            })
+
+            it('items in receivedState',() => {
+                const newOptions = {
+                    ...options,
+                    topShadowVisibility: 'auto',
+                    bottomShadowVisibility: 'auto',
+                }
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'visible');
+                equal(browser._bottomShadowVisibility, 'visible');
+
+                equal(browser._topShadowVisibilityFromOptions, 'auto');
+                equal(browser._bottomShadowVisibilityFromOptions, 'auto');
+
+                detection.isMobilePlatform = true;
+
+                browser = new Browser(newOptions)
+                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
+                equal(browser._topShadowVisibility, 'auto');
+                equal(browser._bottomShadowVisibility, 'auto');
+            });
+        });
+
+        it('source returns error', async () => {
+            const options = getBrowserOptions();
+            options.source.query = () => {
+                return Promise.reject(new Error('testError'));
+            };
+            const browser = getBrowser(options);
+
+            const mountResult = await browser._beforeMount(options);
+            ok(mountResult instanceof Error);
+        });
+
+    });
+
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount while sourceController is loading', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+
+            browser._beforeUnmount();
+            ok(!browser._sourceController);
+        });
     });
 
     describe('_beforeUpdate', () => {
@@ -151,6 +244,70 @@ describe('Controls/browser:Browser', () => {
 
         });
 
+        it('update source', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            await browser._beforeMount(options);
+
+            options = {...options};
+            options.source = new Memory({
+                data: browserHierarchyData,
+                keyProperty: 'key'
+            });
+            const browserItems = browser._items;
+
+            await browser._beforeUpdate(options);
+            ok(browser._items !== browserItems);
+        });
+
+        it('source returns error, then _beforeUpdate', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            options.source.query = () => Promise.reject(new Error('testError'));
+            await browser._beforeMount(options);
+
+            function update() {
+                browser._beforeUpdate(options)
+            }
+            options = {...options};
+            doesNotThrow(update);
+        });
+
     });
+
+    describe('_itemsChanged', () => {
+
+        it('itemsChanged, items with new format', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+
+            browser._items = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            const newItems = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }, { n: 'newKey', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            browser._itemsChanged(null, newItems);
+            ok(browser._items === newItems);
+        });
+
+    })
 
 });

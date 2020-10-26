@@ -12,36 +12,9 @@ import entity = require('Types/entity');
  * @class Controls/_list/AddButton
  * @mixes Controls/_buttons/interface/IClick
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- */
-
-/**
- * @name Controls/_list/AddButton#caption
- * @cfg {String} Текст заголовка контрола.
- * @example
- * <pre>
- *    <Controls.list:AddButton caption="add record"/>
- * </pre>
- */
-
-/*
- * Specialized type of button.
- *
- * @class Controls/_list/AddButton
- * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- *
- *
- * @name Controls/_list/AddButton#caption
- * @cfg {String} Control caption text.
- * @example
- * <pre>
- *    <Controls.list:AddButton caption="add record"/>
- * </pre>
  */
 
 var AddButton = Control.extend({
@@ -62,4 +35,30 @@ AddButton.getOptionTypes = function getOptionTypes() {
 
 AddButton._theme = ['Controls/list'];
 
+/**
+ * @name Controls/_list/AddButton#caption
+ * @cfg {String} Текст заголовка контрола.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.list:AddButton caption="add record"/>
+ * </pre>
+ */
+
+/*
+ * Specialized type of button.
+ *
+ * @class Controls/_list/AddButton
+ * @extends Core/Control
+ * 
+ * @public
+ * @author Красильников А.С.
+ *
+ *
+ * @name Controls/_list/AddButton#caption
+ * @cfg {String} Control caption text.
+ * @example
+ * <pre>
+ *    <Controls.list:AddButton caption="add record"/>
+ * </pre>
+ */
 export = AddButton;

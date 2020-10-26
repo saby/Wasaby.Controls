@@ -14,9 +14,9 @@ import rk = require('i18n!Controls');
  * @class Controls/_popupConfirmation/Footer
  * @implements Controls/_popup/interface/IConfirmationFooter
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
 

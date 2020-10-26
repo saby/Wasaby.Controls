@@ -1,8 +1,8 @@
 import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PageNavigationStore, IPageNavigationState} from './PageNavigationStore';
-import {IBasePageSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
-import {TNavigationDirection} from 'Controls/_interface/INavigation';
+import {IBasePageSourceConfig, IBaseSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
+import {TNavigationDirection, TNavigationPagingMode} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
 import IParamsCalculator from './interface/IParamsCalculator';
 
@@ -102,18 +102,39 @@ class PageParamsCalculator implements IParamsCalculator {
         return result;
     }
 
-    shiftToEdge(store: PageNavigationStore, direction: TNavigationDirection): void {
+    shiftToEdge(
+        store: PageNavigationStore,
+        direction: TNavigationDirection,
+        shiftMode: TNavigationPagingMode,
+        navigationQueryConfig: IBasePageSourceConfig
+    ): IBasePageSourceConfig {
+        let config: Partial<IBasePageSourceConfig> = {};
         if (direction === 'backward') {
-            store.setCurrentPage(0);
+            config.page = 0;
         } else if (direction === 'forward') {
             const metaMore = store.getMetaMore();
 
             if (typeof metaMore === 'number') {
-                store.setCurrentPage(metaMore / store.getState().pageSize - 1);
+                config.page = Math.ceil(metaMore / store.getState().pageSize) - 1;
+                
+                // если записей на последней странице будет мало, то загружаем еще и предыдущую. 
+                // Например, если есть 4 полные страницы и последняя с одной записью: 
+                // 0..9, 10..19, 20..29, 30..39, 40..44. 
+                // При переходе в конец, нужно получить загрузку с 30..44, 
+                // так как offset рассчитается как page*pageSize.
+                // ставим page = 1 
+                // а pageSize = 30
+                //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
+                if ((metaMore / store.getState().pageSize) % 1 > 0) {
+                    config.pageSize = store.getState().pageSize * (config.page - 1);
+                    config.page = 1;
+                }
             } else {
-                store.setCurrentPage(-1);
+                config.page = -1;
             }
         }
+
+        return {...navigationQueryConfig, ...config};
     }
 
     updateQueryRange(store: PageNavigationStore): void {

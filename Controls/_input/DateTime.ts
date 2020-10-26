@@ -39,11 +39,10 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  *
  * @ignoreOptions Controls/_input/interface/IBase#placeholder
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/DateTime/DateTime
  * @author Красильников А.С.
- * @category Input
  */
 
 /*
@@ -65,11 +64,10 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/DateTime/DateTime
  * @author Красильников А.С.
- * @category Input
  */
 
 const _private = {

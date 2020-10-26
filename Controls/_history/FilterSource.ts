@@ -6,7 +6,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import entity = require('Types/entity');
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
@@ -344,10 +344,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -368,10 +367,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({

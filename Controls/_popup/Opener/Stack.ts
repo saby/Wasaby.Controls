@@ -16,9 +16,8 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  *
  * @class Controls/popup:Stack
  * @extends Controls/_popup/Opener/BaseOpener
- * @control
+ * 
  * @author Красильников А.С.
- * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IStack
  * @mixes Controls/_interface/IPropStorage
@@ -33,9 +32,8 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  *  <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">Demo-example</a>.
  * @class Controls/_popup/Opener/Stack
  * @extends Controls/_popup/Opener/BaseOpener
- * @control
+ * 
  * @author Красильников А.С.
- * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IStack
  * @mixes Controls/_interface/IPropStorage
@@ -47,7 +45,7 @@ interface IStackOpenerOptions extends IStackPopupOptions, IBaseOpenerOptions {}
 const getStackConfig = (stackOptions: IStackOpenerOptions = {}, popupId?: string) => {
     const config = {...stackOptions};
     // The stack is isDefaultOpener by default.
-    // For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+    // For more information, see  {@link Controls/_interface/ICanBeDefaultOpener}
     config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
     config._type = 'stack'; // TODO: Compatible for compoundArea
     config.id = config.id || popupId;

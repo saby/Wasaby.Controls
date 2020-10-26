@@ -27,7 +27,8 @@ describe('Controls/scroll:ContainerBase', () => {
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children
+               children: children,
+               getBoundingClientRect: () => {}
             }
          };
          control._afterMount();
@@ -163,6 +164,24 @@ describe('Controls/scroll:ContainerBase', () => {
          assert.strictEqual(control._state.scrollHeight, content.scrollHeight);
          assert.strictEqual(control._state.clientWidth, content.clientWidth);
          assert.strictEqual(control._state.scrollWidth, content.scrollWidth);
+      });
+   });
+
+   describe('_resizeObserverCallback', () => {
+      it('should\'t update state if container is invisible', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         control._beforeMount(options);
+
+         control._container = {
+            closest: sinon.stub().returns(true)
+         }
+
+         sinon.stub(control, '_updateStateAndGenerateEvents');
+
+         control._resizeObserverCallback();
+
+         sinon.assert.notCalled(control._updateStateAndGenerateEvents);
+         sinon.restore();
       });
    });
 

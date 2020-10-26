@@ -15,7 +15,7 @@ const LEAF = null;
 /**
  * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
- * @control
+ * 
  * @public
  * @author Панихин К.А.
  */
@@ -39,6 +39,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._rootId = options.rootId;
       this._model = options.model;
       this._entryPath = options.entryPath;
+   }
+
+   setEntryPath(entryPath: IEntryPathItem[]): void {
+      this._entryPath = entryPath;
    }
 
    select(selection: ISelection, key: CrudEntityKey): ISelection {

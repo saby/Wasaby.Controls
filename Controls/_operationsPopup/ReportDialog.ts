@@ -10,7 +10,7 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     *
     * @class Controls/_operationsPopup/ReportDialog
     * @extends Core/Control
-    * @control
+    * 
     * @author Сухоручкин А.С.
     * @public
     *
@@ -20,11 +20,35 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     *
     * @class Controls/_operationsPopup/ReportDialog
     * @extends Core/Control
-    * @control
+    * 
     * @author Сухоручкин А.С.
     * @public
     *
     */
+   var ReportDialog = Control.extend({
+      _template: template,
+      _message: null,
+      _beforeMount: function(cfg) {
+         if (cfg.operationsCount === cfg.operationsSuccess) {
+            this._message = format({
+               count: cfg.operationsCount,
+               record: rk("запись(-и,-ей)", cfg.operationsCount),
+               process: rk("обработана(-ы)", "ReportDialog", cfg.operationsCount)
+            }, rk('$count$s$ $record$s$ успешно $process$s$'));
+         } else if (!cfg.errors || !cfg.errors.length) {
+            this._message = rk('Выполнение операции завершилось ошибкой');
+         } else {
+            this._message = format({
+               count: cfg.operationsCount,
+               errors: cfg.operationsCount - cfg.operationsSuccess
+            }, rk('$errors$s$ из $count$s$ операций были обработаны с ошибкой'));
+         }
+      },
+      _onCloseClick: function() {
+         this._notify('close', [], {bubbling: true});
+      }
+   });
+   ReportDialog._theme = ['Controls/operationsPopup'];
 
    /**
     * @name Controls/_operationsPopup/ReportDialog#title
@@ -52,31 +76,5 @@ import template = require('wml!Controls/_operationsPopup/ReportDialog/ReportDial
     * @name Controls/_operationsPopup/ReportDialog#footerContentTemplate
     * @cfg {Function} Template displayed at the bottom of the dialog.
     */
-
-
-   var ReportDialog = Control.extend({
-      _template: template,
-      _message: null,
-      _beforeMount: function(cfg) {
-         if (cfg.operationsCount === cfg.operationsSuccess) {
-            this._message = format({
-               count: cfg.operationsCount,
-               record: rk("запись(-и,-ей)", cfg.operationsCount),
-               process: rk("обработана(-ы)", "ReportDialog", cfg.operationsCount)
-            }, rk('$count$s$ $record$s$ успешно $process$s$'));
-         } else if (!cfg.errors || !cfg.errors.length) {
-            this._message = rk('Выполнение операции завершилось ошибкой');
-         } else {
-            this._message = format({
-               count: cfg.operationsCount,
-               errors: cfg.operationsCount - cfg.operationsSuccess
-            }, rk('$errors$s$ из $count$s$ операций были обработаны с ошибкой'));
-         }
-      },
-      _onCloseClick: function() {
-         this._notify('close', [], {bubbling: true});
-      }
-   });
-   ReportDialog._theme = ['Controls/operationsPopup'];
    export = ReportDialog;
 

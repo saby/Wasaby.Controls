@@ -365,18 +365,14 @@ var
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
     *
-    * Демо-примеры:
-    * <ul>
-    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
-    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Иерархический проводник в режиме "список" и строкой поиска</a></li>
-    * </ul>
+    * @demo Controls-demo/Explorer/Explorer
+    * @demo Controls-demo/Explorer/Search
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
@@ -388,7 +384,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -397,9 +393,8 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
 
@@ -427,7 +422,7 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
     * @mixes Controls/_list/interface/IVirtualScroll
     * @mixes Controls/interface/IGroupedGrid
@@ -435,66 +430,10 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    * 
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
-
-   /**
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
-    * @remark Поле используется для вывода хлебных крошек.
-    * @example
-    * <pre>
-    * <Controls.explorers:View displayProperty="title">
-    *     ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} sets the property to be displayed in search results
-    * @example
-    * <pre class="brush:html">
-    * <Controls.explorers:View
-    *   ...
-    *   displayProperty="title">
-    *       ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_explorer/View#breadcrumbsDisplayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
-    */
-
-   /**
-    * @name Controls/_explorer/View#tileItemTemplate
-    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
-    * @default undefined
-    * @remark
-    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
-    *
-    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
-    *
-    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
-    *
-    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
-    * @example
-    * <pre class="brush: html;">
-    * <Controls.explorer:View>
-    *     <ws:tileItemTemplate>
-    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
-    *     </ws:tileItemTemplate>
-    * </Controls.explorer:View>
-    * </pre>
-    * @see itemTemplate
-    * @see itemTemplateProprty
-    */
-
     var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
@@ -811,10 +750,63 @@ var
       };
    };
 
-   export = Explorer;
+   /**
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @remark Поле используется для вывода хлебных крошек.
+    * @example
+    * <pre>
+    * <Controls.explorers:View displayProperty="title">
+    *     ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} sets the property to be displayed in search results
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
 
    /**
-    * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
+    * @name Controls/_explorer/View#breadcrumbsDisplayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    */
+
+   /**
+    * @name Controls/_explorer/View#tileItemTemplate
+    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
+    * @default undefined
+    * @remark
+    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
+    *
+    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+    *
+    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    *
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
+    * @example
+    * <pre class="brush: html;">
+    * <Controls.explorer:View>
+    *     <ws:tileItemTemplate>
+    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
+    *     </ws:tileItemTemplate>
+    * </Controls.explorer:View>
+    * </pre>
+    * @see itemTemplate
+    * @see itemTemplateProprty
+    */
+   /**
+    * @event Происходит при клике на кнопку "Просмотр записи".
+    * @name Controls/_explorer/View#arrowClick
     * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     */
+   export = Explorer;

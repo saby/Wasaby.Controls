@@ -51,7 +51,7 @@ export interface IScrollBarOptions extends IControlOptions {
  * @variant inverted противоположная схема
  *
  * @public
- * @control
+ * 
  * @author Красильников А.С.
  */
 

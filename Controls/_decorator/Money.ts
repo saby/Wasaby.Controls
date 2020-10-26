@@ -28,6 +28,7 @@ interface IPaths {
 }
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Money}.
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.

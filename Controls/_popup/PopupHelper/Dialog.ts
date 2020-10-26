@@ -5,9 +5,8 @@ import {IDialogPopupOptions} from 'Controls/_popup/interface/IDialog';
 /**
  * Хелпер для открытия диалоговых окон
  * @class Controls/_popup/PopupHelper/Dialog
- * @control
+ * 
  * @author Красильников А.С.
- * @category Popup
  * @public
  */
 

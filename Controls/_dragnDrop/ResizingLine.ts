@@ -17,10 +17,9 @@ import IResizingLine from 'Controls/_dragnDrop/interface/IResizingLine';
  *
  * @class Controls/_dragnDrop/ResizingLine
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category DragnDrop
  * @demo Controls-demo/ResizingLine/Index
  */
 

@@ -19,7 +19,7 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  *
  * @class Controls/_toggle/Separator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
@@ -36,39 +36,13 @@ export interface ISeparatorOptions extends IControlOptions, ICheckableOptions {
  *
  * @class Controls/_toggle/Separator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/toggle/Separator/Index
  *
- */
-
-/**
- * @name Controls/_toggle/Separator#style
- * @cfg {String} Стиль отображения разделителя.
- * @variant secondary
- * @variant unaccented
- * @variant primary
- */
-
-/*
- * @name Controls/_toggle/Separator#style
- * @cfg {String} Separator display style.
- * @variant secondary
- * @variant additional
- * @variant primary
- */
-
-/**
- * @name Controls/_toggle/Separator#bold
- * @cfg {Boolean} Определяет толщину двойного разделителя.
- */
-
-/*
- * @name Controls/_toggle/Separator#bold
- * @cfg {Boolean} Determines the double separator thickness.
  */
 
 class Separator extends Control<ISeparatorOptions> implements ICheckable {
@@ -122,4 +96,29 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
     }
 }
 
+/**
+ * @name Controls/_toggle/Separator#style
+ * @cfg {String} Стиль отображения разделителя.
+ * @variant secondary
+ * @variant unaccented
+ * @variant primary
+ */
+
+/*
+ * @name Controls/_toggle/Separator#style
+ * @cfg {String} Separator display style.
+ * @variant secondary
+ * @variant additional
+ * @variant primary
+ */
+
+/**
+ * @name Controls/_toggle/Separator#bold
+ * @cfg {Boolean} Определяет толщину двойного разделителя.
+ */
+
+/*
+ * @name Controls/_toggle/Separator#bold
+ * @cfg {Boolean} Determines the double separator thickness.
+ */
 export default Separator;

@@ -247,7 +247,7 @@ const _private = {
         let expandedItemsKeys: Array[number | string | null] = [];
         let isExpandAll: boolean;
 
-        if (baseControl && !self._updateExpandedItemsAfterReload) {
+        if (baseControl && baseControl.getViewModel() && !self._updateExpandedItemsAfterReload) {
             const viewModel = baseControl.getViewModel();
             isExpandAll = viewModel.isExpandAll();
             if (!isExpandAll) {
@@ -486,9 +486,8 @@ const _private = {
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/interface/IMovableList
  * @extends Controls/_list/ListControl
- * @control
+ * 
  * @private
- * @category List
  */
 
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
@@ -556,7 +555,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 updateSourceController = true;
             }
 
-            if (this._options.editingConfig) {
+            if (this.isEditing()) {
                 baseControl.cancelEdit();
             }
         }
@@ -858,7 +857,8 @@ TreeControl.getDefaultOptions = () => {
         root: null,
         columns: DEFAULT_COLUMNS_VALUE,
         selectDescendants: true,
-        selectAncestors: true
+        selectAncestors: true,
+        expanderPosition: 'default'
     };
 };
 

@@ -111,7 +111,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /*ENG
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @remark
  * We recommend to use default template for emptyTemplate: Controls/list:EmptyTemplate
  * The template accepts the following options:
@@ -142,7 +141,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /*ENG
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
 /**
@@ -478,8 +477,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /*ENG
  * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
- * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
@@ -494,8 +491,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /*ENG
  * @event Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
- * @remark
- * See also <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
@@ -518,8 +513,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /*ENG
  * @event Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
- * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 

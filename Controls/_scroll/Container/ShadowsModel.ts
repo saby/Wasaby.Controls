@@ -2,7 +2,7 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {POSITION} from './Type';
 import ShadowModel from './ShadowModel';
-import {IShadowsOptions} from './Interface/IShadows';
+import {IShadowsOptions, IShadowsVisibilityByInnerComponents} from './Interface/IShadows';
 import {IScrollState} from "../Utils/ScrollState";
 
 
@@ -36,6 +36,14 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
             const isStateChanged = this._models[shadow].updateScrollState(scrollState);
             if (isStateChanged) {
                 this._nextVersion();
+            }
+        }
+    }
+
+    updateVisibilityByInnerComponents(shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+        for (const shadowPosition of Object.keys(this._models)) {
+            if (shadowsVisibility[shadowPosition]) {
+                this._models[shadowPosition].updateVisibilityByInnerComponents(shadowsVisibility[shadowPosition]);
             }
         }
     }

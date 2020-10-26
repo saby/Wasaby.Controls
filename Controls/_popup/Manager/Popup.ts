@@ -1,9 +1,10 @@
-import {constants, detection} from 'Env/Env';
-import {debounce, delay as runDelayed} from 'Types/function';
+import {constants} from 'Env/Env';
+import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
 import {RegisterClass} from 'Controls/event';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
@@ -19,11 +20,10 @@ class Popup extends Control<IPopupControlOptions> {
      * Control Popup
      * @class Controls/_popup/Manager/Popup
      * @mixes Controls/interface/IOpenerOwner
-     * @mixes Controls/interface/ICanBeDefaultOpener
+     * @mixes Controls/_interface/ICanBeDefaultOpener
      * @extends Core/Control
-     * @control
+     * 
      * @private
-     * @category Popup
      * @author Красильников А.С.
      */
 
@@ -39,6 +39,7 @@ class Popup extends Control<IPopupControlOptions> {
 
     protected _template: TemplateFunction = template;
     protected _stringTemplate: boolean;
+    protected _resizeObserver: ResizeObserverUtil;
     protected waitForPopupCreated: boolean; // TODO: COMPATBILE
     protected callbackCreated: Function|null; // TODO: COMPATBILE
 
@@ -90,6 +91,7 @@ class Popup extends Control<IPopupControlOptions> {
             ManagerController.notifyToManager('popupCreated', [this._options.id]);
             this.activatePopup();
         }
+        this._checkResizeObserver();
     }
 
     protected _beforeUpdate(options: IPopupControlOptions): void {
@@ -101,6 +103,7 @@ class Popup extends Control<IPopupControlOptions> {
 
         if (this._isResized(oldOptions, this._options)) {
             this._startResizeRegister();
+            this._checkResizeObserver();
         }
     }
 
@@ -117,6 +120,30 @@ class Popup extends Control<IPopupControlOptions> {
     protected _beforeUnmount(): void {
         if (this._resizeRegister) {
             this._resizeRegister.destroy();
+        }
+        this._unregisterResizeObserver();
+    }
+
+    private _checkResizeObserver(): void {
+        if (!this._hasSizes()) {
+            this._registerResizeObserver();
+        } else {
+            this._unregisterResizeObserver();
+        }
+    }
+
+    private _registerResizeObserver(): void {
+        if (!this._resizeObserver) {
+            this._resizeObserver = new ResizeObserverUtil(
+                this, this._resizeObserverCallback.bind(this));
+            this._resizeObserver.observe(this._container);
+        }
+    }
+
+    private _unregisterResizeObserver(): void {
+        if (this._resizeObserver) {
+            this._resizeObserver.terminate();
+            this._resizeObserver = null;
         }
     }
 
@@ -209,9 +236,28 @@ class Popup extends Control<IPopupControlOptions> {
     protected _controlResizeHandler(): void {
         // Children controls can notify events while parent control isn't mounted
         // Because children's afterMount happens before parent afterMount
+
         if (this._isPopupMounted) {
-            ManagerController.notifyToManager('popupResizeInner', [this._options.id]);
+            // Если размеров, ограничивающих контейнер, на окне нет, то
+            // отслеживание изменение размеров окна осуществляется через resizeObserverUtil
+            if (this._hasSizes()) {
+                this._notifyResizeInner();
+            }
         }
+    }
+
+    private _resizeObserverCallback(): void {
+        if (!this._hasSizes()) {
+            this._notifyResizeInner();
+        }
+    }
+
+    private _hasSizes(): boolean {
+        return this._options.position.width !== undefined || this._options.position.height !== undefined;
+    }
+
+    private _notifyResizeInner(): void {
+        ManagerController.notifyToManager('popupResizeInner', [this._options.id]);
     }
 
     /**

@@ -425,6 +425,36 @@ describe('Controls/suggest', () => {
          assert.isTrue(isNotifyShowSelector);
       });
 
+      it('Suggest::_inputActivated - request should call once', async () => {
+         const sandbox = sinon.createSandbox();
+         const inputContainer = getComponentObject({
+            searchParam: 'searchParam',
+            autoDropDown: true,
+            minSearchLength: 3,
+            historyId: 'testFieldHistoryId',
+            keyProperty: 'Identificator',
+            source: getMemorySource()
+         });
+         if (!document) {
+            sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
+               classList: {
+                  contains: () => false
+               }
+            }));
+         }
+
+         const sourceController = inputContainer._getSourceController();
+
+         const loadSpy = sandbox.spy(sourceController, 'load');
+
+         inputContainer._inputActivated();
+         await inputContainer._inputActivated();
+
+         assert.isTrue(loadSpy.calledOnce);
+
+         sandbox.restore();
+      });
+
       it('Suggest::_inputActivated/_inputClicked with autoDropDown', () => {
          const inputContainer = getComponentObject({
             searchParam: 'searchParam',
@@ -950,6 +980,20 @@ describe('Controls/suggest', () => {
          });
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
+
+         suggestComponent._dependenciesDeferred = dependenciesDeferred;
+         suggestComponent._options.suggestState = false;
+         suggestComponent._searchValue = 'testValue';
+         suggestComponent._searchResult = undefined;
+         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad');
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            source: getMemorySource()
+         });
+
+         assert.isTrue(resolveLoadStub.withArgs('testValue').calledOnce);
 
          sandbox.restore();
       });

@@ -1,20 +1,26 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import { Control, TemplateFunction } from 'UI/Base';
 import * as template from 'wml!Controls/_browser/resources/BrowserTemplate';
-import {SyntheticEvent} from 'Vdom/Vdom';
-import {ControllerClass as OperationsController} from 'Controls/operations';
-import {ControllerClass as SearchController} from 'Controls/search';
-import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
-import {tmplNotify} from 'Controls/eventUtils';
-import {RecordSet} from 'Types/collection';
+import { SyntheticEvent } from 'Vdom/Vdom';
+import { ControllerClass as OperationsController } from 'Controls/operations';
+import { ControllerClass as SearchController } from 'Controls/search';
+import { ControllerClass as FilterController, IFilterItem } from 'Controls/filter';
+import { tmplNotify } from 'Controls/eventUtils';
+import { RecordSet } from 'Types/collection';
 
-import {ContextOptions} from 'Controls/context';
-import {RegisterClass} from 'Controls/event';
+import { ContextOptions } from 'Controls/context';
+import { RegisterClass } from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
-import {error as dataSourceError} from 'Controls/dataSource';
-import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
-import {IControllerOptions, IControlerState} from 'Controls/_dataSource/Controller';
-import {TSelectionType} from 'Controls/interface';
+import {
+    error as dataSourceError,
+    ISourceControllerOptions,
+    NewSourceController as SourceController
+} from 'Controls/dataSource';
+import { IControlerState } from 'Controls/_dataSource/Controller';
+import { TSelectionType } from 'Controls/interface';
 import Store from 'Controls/Store';
+import { SHADOW_VISIBILITY } from 'Controls/scroll';
+import {detection} from 'Env/Env';
+import {ICrud, ICrudPlus, IData, PrefetchProxy} from "Types/source";
 
 type Key = string|number|null;
 
@@ -41,6 +47,7 @@ export default class Browser extends Control {
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
 
+    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
     private _itemsReadyCallback: Function;
     private _loading: boolean = false;
@@ -52,7 +59,11 @@ export default class Browser extends Control {
     private _dataOptionsContext: ContextOptions;
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
-    private _hasMoreDataToUp: boolean;
+
+    private _topShadowVisibilityFromOptions: SHADOW_VISIBILITY;
+    private _bottomShadowVisibilityFromOptions: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY;
 
     protected _beforeMount(options,
                            context,
@@ -61,6 +72,7 @@ export default class Browser extends Control {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options);
 
@@ -69,16 +81,18 @@ export default class Browser extends Control {
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
         this._errorRegister = new RegisterClass({register: 'dataError'});
 
+        if (receivedState && options.source instanceof PrefetchProxy) {
+            this._source = options.source.getOriginal();
+        } else {
+            this._source = options.source;
+        }
         this._sourceController = new SourceController(options);
         const controllerState = this._sourceController.getState();
         this._dataOptionsContext = this._createContext(controllerState);
 
         if (receivedState) {
             this._setFilterItems(receivedState.filterItems);
-
-            if (receivedState.items) {
-                this._hasMoreDataToUp = !!receivedState.items.getMetaData().more?.before;
-            }
+            this._defineShadowVisibility(receivedState.items);
             if (isNewEnvironment()) {
                 this._setItemsAndCreateSearchController(receivedState.items, options);
             }
@@ -86,13 +100,14 @@ export default class Browser extends Control {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, this._sourceController.getState()).then((items) => {
-                    if (items) {
-                        this._hasMoreDataToUp = !!items.getMetaData().more?.before;
+                    if (items instanceof RecordSet) {
+                        this._defineShadowVisibility(items);
+                        return {
+                            filterItems,
+                            items
+                        };
                     }
-                    return {
-                        filterItems,
-                        items
-                    };
+                    return items;
                 });
             });
         }
@@ -125,32 +140,36 @@ export default class Browser extends Control {
             this._updateFilterAndFilterItems();
         }
 
+        const sourceChanged = this._options.source !== newOptions.source;
+        if (sourceChanged) {
+            this._source = newOptions.source;
+        }
+
         const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
-        if (this._options.source !== newOptions.source) {
+        if (sourceChanged) {
             this._loading = true;
-            methodResult = this._sourceController.load().then((items) => {
-                // для того чтобы мог посчитаться новый prefetch Source внутри
-                if (items instanceof RecordSet) {
-                    if (newOptions.dataLoadCallback instanceof Function) {
-                        newOptions.dataLoadCallback(items);
+            methodResult = this._sourceController.reload()
+                .then((items) => {
+                    // для того чтобы мог посчитаться новый prefetch Source внутри
+                    if (items instanceof RecordSet) {
+                        if (newOptions.dataLoadCallback instanceof Function) {
+                            newOptions.dataLoadCallback(items);
+                        }
+                        this._items = this._sourceController.setItems(items);
                     }
-                    const newItems = this._sourceController.setItems(items);
-                    if (!this._items) {
-                        this._items = newItems;
-                    }
-                }
 
-                const controllerState = this._sourceController.getState();
+                    const controllerState = this._sourceController.getState();
 
-                // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-                this._filter = controllerState.filter;
-                this._updateContext(controllerState);
+                    // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
+                    this._filter = controllerState.filter;
+                    this._updateContext(controllerState);
 
-                this._loading = false;
-                this._groupHistoryId = newOptions.groupHistoryId;
-                return items;
-            });
+                    this._loading = false;
+                    this._groupHistoryId = newOptions.groupHistoryId;
+                    return items;
+                })
+                .catch((error) => error);
         } else if (isChanged) {
             const controllerState = this._sourceController.getState();
 
@@ -160,10 +179,12 @@ export default class Browser extends Control {
             this._groupHistoryId = newOptions.groupHistoryId;
         }
 
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
+        if (this._searchController) {
+            this._searchController.update(
+                this._getSearchControllerOptions(newOptions),
+                {dataOptions: this._dataOptionsContext}
+            );
+        }
 
         return methodResult;
     }
@@ -188,6 +209,11 @@ export default class Browser extends Control {
             this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
         }
 
+        if (this._sourceController) {
+            this._sourceController.destroy();
+            this._sourceController = null;
+        }
+
         this._filterController = null;
     }
 
@@ -196,19 +222,23 @@ export default class Browser extends Control {
         this._updateFilterAndFilterItems();
     }
 
-    private _loadItems(options, controllerState): Promise<void|RecordSet> {
-        return new Promise((resolve) => {
-            if (options.source) {
-                this._sourceController.load().then((items) => {
-                    this._setItemsAndCreateSearchController(items, options);
-                    resolve(items);
-                });
-            } else {
-                this._updateContext(controllerState);
-                this._createSearchControllerWithContext(options, this._dataOptionsContext);
-                resolve();
-            }
-        });
+    private _loadItems(options, controllerState): Promise<void|RecordSet|Error> {
+        let result;
+
+        if (options.source) {
+            result = this._sourceController.load().then((loadResult) => {
+                if (loadResult instanceof RecordSet) {
+                    this._setItemsAndCreateSearchController(loadResult, options);
+                }
+                return loadResult;
+            });
+        } else {
+            this._updateContext(controllerState);
+            this._createSearchControllerWithContext(options, this._dataOptionsContext);
+            result = Promise.resolve();
+        }
+
+        return result;
     }
 
     private _setItemsAndCreateSearchController(items: RecordSet, options): void {
@@ -259,24 +289,8 @@ export default class Browser extends Control {
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
-        // search:Cotnroller fires two events after search: itemsChanged, filterChanged
-        // on filterChanged event filter state will updated
-        // on itemChanged event prefetchSource will updated,
-        // but createPrefetchSource method work async becouse of promise,
-        // then we need to create prefetchSource synchronously
-
-        // для того чтобы мог посчитаться новый prefetch Source внутри
-        const newItems = this._sourceController.setItems(items);
-        const controllerState = this._sourceController.getState();
-
-        if (!this._items) {
-            this._items = newItems;
-        } else {
-            controllerState.items = this._items;
-            this._sourceController.setItems(this._items);
-        }
-
-        this._updateContext(controllerState);
+        this._items = this._sourceController.setItems(items);
+        this._updateContext(this._sourceController.getState());
     }
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
@@ -370,6 +384,16 @@ export default class Browser extends Control {
         this._getOperationsController(this._options).setOperationsPanelVisible(false);
     }
 
+    protected _onScrollToFirstItemForTopPadding(): void {
+        // Возвращаем в опции значение видимости теней, которое передали прикладники
+        if (this._topShadowVisibility !== this._topShadowVisibilityFromOptions) {
+            this._topShadowVisibility = this._topShadowVisibilityFromOptions;
+        }
+        if (this._bottomShadowVisibility !== this._bottomShadowVisibilityFromOptions) {
+            this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions;
+        }
+    }
+
     private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
@@ -390,6 +414,32 @@ export default class Browser extends Control {
         return this._operationsController;
     }
 
+    private _defineShadowVisibility(items: RecordSet|Error|void): void {
+        if (detection.isMobilePlatform) {
+            // На мобильных устройствах тень верхняя показывается, т.к. там есть уже загруженные данные вверху
+            return;
+        }
+
+        if (items instanceof RecordSet) {
+            const more = items.getMetaData().more;
+            if (more) {
+                if (more.before) {
+                    this._topShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
+
+                if (more.after) {
+                    this._bottomShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
+                }
+            }
+
+        }
+    }
+
+    private _initShadowVisibility(options): void {
+        this._topShadowVisibility = this._topShadowVisibilityFromOptions = options.topShadowVisibility;
+        this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
+    }
+
     _createSearchController(options, context): SearchController {
         return new SearchController(this._getSearchControllerOptions(options), context);
     }
@@ -401,7 +451,7 @@ export default class Browser extends Control {
     }
 
     _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
-        return {...options, filter: this._filter};
+        return {...options, filter: this._filter, source: this._source};
     }
 
     _getSearchController(): SearchController {

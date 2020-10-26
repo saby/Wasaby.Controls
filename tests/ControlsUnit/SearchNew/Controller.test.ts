@@ -65,7 +65,7 @@ const getControllerClass = (options) => {
    });
 };
 
-describe('Controls/search:NewControllerClass', () => {
+describe('Controls/search:ControllerClass', () => {
    const sandbox = createSandbox();
 
    let sourceController: SourceController;
@@ -79,17 +79,62 @@ describe('Controls/search:NewControllerClass', () => {
       });
       getFilterSpy = sandbox.spy(sourceController, 'setFilter');
    });
+
    afterEach(() => {
-      sandbox.restore();
+      sandbox.reset();
    });
+
+   after(() => sandbox.restore());
 
    it('search method', () => {
       const filter: QueryWhereExpression<unknown> = {
-         testParam: 'testValue'
+         testParam: 'testValue',
       };
       controllerClass.search('testValue');
 
       assert.isTrue(getFilterSpy.withArgs(filter).called);
+   });
+
+   describe('with hierarchy', () => {
+      it('default search case and reset', () => {
+         const filter: QueryWhereExpression<unknown> = {
+            testParam: 'testValue',
+            testParent: 'testRoot',
+            'Разворот': 'С разворотом',
+            'usePages': 'full'
+         };
+         controllerClass._options.parentProperty = 'testParent';
+         controllerClass._root = 'testRoot';
+         controllerClass._options.startingWith = 'current';
+
+         controllerClass.search('testValue');
+
+         assert.isTrue(getFilterSpy.withArgs(filter).called);
+         getFilterSpy.resetHistory();
+
+         controllerClass.reset();
+         assert.isTrue(getFilterSpy.withArgs({
+            testParam: ''
+         }).called);
+      });
+
+      it('without parent property', () => {
+         const filter: QueryWhereExpression<unknown> = {
+            testParam: 'testValue'
+         };
+         controllerClass._root = 'testRoot';
+         controllerClass._options.startingWith = 'current';
+
+         controllerClass.search('testValue');
+
+         assert.isTrue(getFilterSpy.withArgs(filter).called);
+         getFilterSpy.resetHistory();
+
+         controllerClass.reset();
+         assert.isTrue(getFilterSpy.withArgs({
+            testParam: ''
+         }).called);
+      });
    });
 
    it('search and reset', () => {
@@ -102,7 +147,9 @@ describe('Controls/search:NewControllerClass', () => {
 
       controllerClass.reset();
 
-      assert.isTrue(getFilterSpy.withArgs({}).called);
+      assert.isTrue(getFilterSpy.withArgs({
+         testParam: ''
+      }).called);
    });
 
    it('search and update', () => {
@@ -117,9 +164,11 @@ describe('Controls/search:NewControllerClass', () => {
       assert.isTrue(getFilterSpy.withArgs(filter).called);
 
       controllerClass.update({
-         searchValue: 'updatedValue'
+         searchValue: 'updatedValue',
+         root: 'newRoot'
       });
 
       assert.isTrue(getFilterSpy.withArgs(updatedFilter).called);
+      assert.equal(controllerClass._root, 'newRoot');
    });
 });

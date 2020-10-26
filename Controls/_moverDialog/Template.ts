@@ -44,10 +44,9 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_explorer/interface/IExplorer
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /**

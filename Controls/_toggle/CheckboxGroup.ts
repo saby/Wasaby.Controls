@@ -27,10 +27,9 @@ import {
  * @implements Controls/_interface/IMultiSelectable
  * @implements Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
@@ -43,10 +42,9 @@ import {
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 

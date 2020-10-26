@@ -1,6 +1,6 @@
 import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
-import {ok} from 'assert';
+import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 
 const filterByEntries = (item, filter): boolean => {
@@ -120,6 +120,18 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 5);
         });
 
+        it('load call while loading',  async () => {
+            const controller = getController();
+            let loadPromiseWasCanceled = false;
+
+            controller.load().catch(() => {
+                loadPromiseWasCanceled = true;
+            });
+
+            await controller.load();
+            ok(loadPromiseWasCanceled);
+        });
+
         it('load with parentProperty and selectedKeys',  async () => {
             let controller = getControllerWithHierarchy({
                 selectedKeys: [0],
@@ -161,15 +173,37 @@ describe('Controls/dataSource:SourceController', () => {
         it('updateOptions with root',  async () => {
             const controller = getControllerWithHierarchy();
             let options = {...getControllerWithHierarchyOptions()};
+            let isChanged;
             options.root = 'testRoot';
 
-            controller.updateOptions(options);
+            isChanged = controller.updateOptions(options);
             ok(controller._root === 'testRoot');
+            ok(isChanged);
 
-            options = {...getControllerWithHierarchyOptions()};
+            options = {...options};
             options.root = undefined;
-            controller.updateOptions(options);
+            isChanged = controller.updateOptions(options);
             ok(controller._root === 'testRoot');
+            ok(!isChanged);
+        });
+
+        it('updateOptions with expandedItems',  async () => {
+            const controller = getControllerWithHierarchy();
+            let options = {...getControllerWithHierarchyOptions()};
+
+            options.expandedItems = [];
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, []);
+
+            options = {...options};
+            options.expandedItems = ['testRoot'];
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, ['testRoot']);
+
+            options = {...options};
+            delete options.expandedItems;
+            controller.updateOptions(options);
+            deepStrictEqual(controller._expandedItems, ['testRoot']);
         });
     });
 });

@@ -20,7 +20,7 @@
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_interface/ISorting
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
@@ -32,14 +32,12 @@
  * @public
  * @example
  * Пример базовой конфигурации:
- * <pre>
+ * <pre class="brush: html;">
  * <Controls.columns:View
- *    keyProperty="id"
- *    useNewModel="{{true}}"
- *    source="{{ _viewSource }}">
- * </Controls.columns:View>
+ *     keyProperty="id"
+ *     useNewModel="{{true}}"
+ *     source="{{_viewSource}}" />
  * </pre>
- *
  * @demo Controls-demo/list_new/ColumnsView/Default/Index
  */
 
@@ -47,18 +45,18 @@
  * @name Controls/columns:View#itemTemplate
  * @cfg {Number} Шаблон записи.
  * @example
- * <pre>
+ * <pre class="brush: html; highlight: [5,6,7,8,9,10,11]">
  * <Controls.columns:View
- *    keyProperty="id"
- *    useNewModel="{{true}}"
- *    source="{{ _viewSource }}">
- *    <ws:itemTemplate>
- *       <ws:partial template="Controls/listRender:ColumnsItemTemplate">
- *          <ws:contentTemplate>
- *             {{itemTemplate.item.getContents().get('title')}}
- *          </ws:contentTemplate>
- *       </ws:partial>
- *    </ws:itemTemplate>
+ *     keyProperty="id"
+ *     useNewModel="{{true}}"
+ *     source="{{_viewSource}}">
+ *     <ws:itemTemplate>
+ *         <ws:partial template="Controls/listRender:ColumnsItemTemplate">
+ *             <ws:contentTemplate>
+ *                 {{itemTemplate.item.getContents().get('title')}}
+ *             </ws:contentTemplate>
+ *         </ws:partial>
+ *     </ws:itemTemplate>
  * </Controls.columns:View>
  * </pre>
  */
@@ -68,15 +66,15 @@
  * @cfg {Number} Минимальная ширина колонки.
  * @default 270
  * @example
- * <pre>
+ * <pre class="brush: html;">
  * <Controls.columns:View
- *    keyProperty="id"
- *    useNewModel="{{true}}"
- *    columnMinWidth="{{300}}"
- *    columnMaxWidth="{{500}}"
- *    source="{{ _viewSource }}">
- * </Controls.columns:View>
+ *     keyProperty="id"
+ *     useNewModel="{{true}}"
+ *     columnMinWidth="{{300}}"
+ *     columnMaxWidth="{{500}}"
+ *     source="{{ _viewSource }}"/>
  * </pre>
+ * @see columnMaxWidth
  */
 
 /**
@@ -84,15 +82,15 @@
  * @cfg {Number} Максимальная ширина колонки.
  * @default 400
  * @example
- * <pre>
+ * <pre class="brush: html;>
  * <Controls.columns:View
- *    keyProperty="id"
- *    useNewModel="{{true}}"
- *    columnMinWidth="{{300}}"
- *    columnMaxWidth="{{500}}"
- *    source="{{ _viewSource }}">
- * </Controls.columns:View>
+ *     keyProperty="id"
+ *     useNewModel="{{true}}"
+ *     columnMinWidth="{{300}}"
+ *     columnMaxWidth="{{500}}"
+ *     source="{{_viewSource}}"/>
  * </pre>
+ * @see columnMinWidth
  */
 
 /**
@@ -103,6 +101,15 @@
 
 /**
  * @name Controls/columns:View#columnsCount
- * @cfg {Number} Используется для первого построения, если не задан параметр initialWidth.
+ * @cfg {Number} Используется для первого построения, если не задана опция {@link initialWidth}.
  * @default 2
+ */
+
+ /**
+ * @name Controls/columns:View#columnsMode
+ * @cfg {String} Режим распределения записей по колонкам.
+ * @default auto
+ * @variant auto Автоматическое распределение записей по колонкам.
+ * @variant fixed Каждая запись располагается в заранее определенную колонку.
+ * Дополнительно необходимо задать значение для опции {@link columnProperty}, а также для каждого элемента данных в соответствующем поле указать номер колонки.
  */
