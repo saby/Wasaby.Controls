@@ -3762,7 +3762,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else {
             _private.doAfterUpdate(self, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
+                if (this._listViewModel) {
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
