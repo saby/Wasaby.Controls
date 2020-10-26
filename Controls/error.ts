@@ -2,7 +2,6 @@
 /**
  * Библиотека компонентов для обработки ошибок.
  * @library Controls/error
- * @includes parking Controls/_dataSource/parking
  * @public
  * @author Северьянов А.А.
  */
