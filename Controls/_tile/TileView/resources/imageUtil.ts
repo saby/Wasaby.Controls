@@ -51,6 +51,9 @@ export function getImageSize(
             height = 0;
             width = tileWidth * DEFAULT_SCALE_COEFFICIENT;
         }
+    } else {
+        height = tileHeight;
+        width = tileWidth;
     }
     return {
         height,

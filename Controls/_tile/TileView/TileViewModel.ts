@@ -64,8 +64,6 @@ var TileViewModel = ListViewModel.extend({
         } else {
             current._tileViewModelCached = true;
         }
-
-        current = cMerge(current, this.getTileItemData(dispItem))
         // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
         // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
         current.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -82,34 +80,6 @@ var TileViewModel = ListViewModel.extend({
         var current = TileViewModel.superclass.getCurrent.apply(this, arguments);
         current = cMerge(current, this.getTileItemData(dispItem));
         return current;
-    },
-
-    getItemWidth(
-        item: Model,
-        tileHeight: number,
-        imageHeightProperty: string,
-        imageWidthProperty: string,
-        tileWidthProperty: string,
-        tileWidth: number,
-        folderWidth: number,
-        tileMode: string,
-        isFolder: boolean,
-        tileFitCoefficient: number = ITEM_COMPRESSION_COEFFICIENT
-    ): number {
-        const imageHeight = imageHeightProperty && Number(item.get(imageHeightProperty));
-        const imageWidth = imageWidthProperty && Number(item.get(imageWidthProperty));
-        const itemWidth = item.get(tileWidthProperty) || (isFolder ? folderWidth : tileWidth) || DEFAULT_ITEM_WIDTH;
-        let widthProportion = DEFAULT_WIDTH_PROPORTION;
-        let resultWidth = null;
-        if (imageHeight && imageWidth && tileMode === 'dynamic' && !isFolder) {
-            const imageProportion = imageWidth / imageHeight;
-            widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
-                              Math.max(tileFitCoefficient, imageProportion));
-        } else {
-            return itemWidth;
-        }
-        resultWidth = Math.floor(Number(tileHeight) * widthProportion);
-        return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
     getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
@@ -148,7 +118,7 @@ var TileViewModel = ListViewModel.extend({
                 imageHeight,
                 imageWidth,
                 imageFit);
-            baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, itemData.item, imageUrlResolver);
+            baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, item, imageUrlResolver);
         }
         return {
             url: baseUrl,
@@ -176,25 +146,10 @@ var TileViewModel = ListViewModel.extend({
         }
         const itemContents = dispItem?.getContents();
         if (itemContents instanceof Model) {
-            resultData.itemWidth = this.getItemWidth(
-                itemContents,
-                this._itemsHeight,
-                this._options.imageHeightProperty,
-                this._options.imageWidthProperty,
-                this._options.tileWidthProperty,
-                this._options.tileWidth,
-                this._options.folderWidth,
-                this._options.tileMode,
-                dispItem.isNode(),
-                this._options.tileFitCoefficient
-            );
-            resultData.imageData = this.getImageData(
-                resultData.itemWidth,
-                resultData,
-                itemContents
-            );
+            resultData.itemWidth = this.getTileWidth(
+                itemContents, this._options.imageWidthProperty, this._options.imageHeightProperty);
         } else {
-            resultData.itemWidth = this._options.tileWidth;
+            resultData.itemWidth = this._options.tileWidth || DEFAULT_ITEM_WIDTH;
         }
         return resultData;
     },
@@ -284,6 +239,31 @@ var TileViewModel = ListViewModel.extend({
         const bottomSpacingClass = `controls-TileView__${classPrefix}_spacingBottom_${bottomSpacing}${theme}`;
 
         return `${leftSpacingClass} ${rightSpacingClass} ${topSpacingClass} ${bottomSpacingClass}`;
+    },
+
+    getTileWidth(
+        item: Model,
+        imageWidthProperty: string,
+        imageHeightProperty: string
+    ): number {
+        const imageHeight = imageHeightProperty && Number(item.get(imageHeightProperty));
+        const imageWidth = imageWidthProperty && Number(item.get(imageWidthProperty));
+        const itemWidth = item.get(this._options.tileWidthProperty) || this._options.tileWidth || DEFAULT_ITEM_WIDTH;
+        let widthProportion = DEFAULT_WIDTH_PROPORTION;
+        let resultWidth = null;
+        if (this.getTileMode() === 'dynamic') {
+            if (imageHeight && imageWidth) {
+                const imageProportion = imageWidth / imageHeight;
+                widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
+                    Math.max(imageProportion, ITEM_COMPRESSION_COEFFICIENT));
+            } else {
+                return this._itemsHeight * (this._options.tileFitProperty || ITEM_COMPRESSION_COEFFICIENT);
+            }
+        } else {
+            return itemWidth;
+        }
+        resultWidth = Math.floor(Number(this._itemsHeight) * widthProportion);
+        return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
     getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {

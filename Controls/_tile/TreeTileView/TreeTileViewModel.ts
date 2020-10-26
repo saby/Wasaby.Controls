@@ -3,6 +3,7 @@ import {TreeViewModel} from 'Controls/tree';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
 import {SyntheticEvent} from 'UI/Vdom';
+import {Model} from 'Types/entity';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
@@ -100,6 +101,23 @@ var TreeTileViewModel = TreeViewModel.extend({
         if (this._options.tileSize) {
             opts.tileSize = this._options.tileSize;
         }
+        const itemContents = dispItem?.getContents();
+        if (itemContents instanceof Model) {
+            opts.itemWidth = this.getItemWidth(
+                itemContents,
+                dispItem.isNode(),
+                this._options.imageWidthProperty,
+                this._options.imageHeightProperty
+            );
+            opts.imageData = this.getImageData(
+                opts.itemWidth,
+                opts,
+                itemContents
+            );
+        } else {
+            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.tileWidth :
+            this._options.folderWidth;
+        }
         return opts;
     },
 
@@ -191,6 +209,23 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemPaddingClasses(): string {
         return this._tileModel.getItemPaddingClasses();
+    },
+
+    getItemWidth(
+        item: Model,
+        isFolder: boolean,
+        imageWidthProperty: string,
+        imageHeightProperty: string
+    ): number {
+        if (isFolder) {
+            return this._options.folderWidth || DEFAULT_FOLDER_WIDTH;
+        } else {
+            return this._tileModel.getTileWidth(item, imageHeightProperty, imageHeightProperty);
+        }
+    },
+
+    getImageData(itemWidth: number, itemData: Record<string, any>,  item: Model): {url: string, class: string} {
+        return this._tileModel.getImageData(itemWidth, itemData, item);
     },
 
     getItemsPaddingContainerClasses(): string {
