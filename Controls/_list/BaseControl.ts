@@ -3651,13 +3651,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = null;
         }
 
+        const loadedBySourceController = newOptions.sourceController && sourceChanged;
         const needReload =
+            !loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            sourceChanged && !newOptions.sourceController ||
-            // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
+            (sourceChanged ||
+                // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
             filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
             sortingChanged ||
-            recreateSource;
+            recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
