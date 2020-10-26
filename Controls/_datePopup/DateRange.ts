@@ -28,6 +28,7 @@ const _private = {
             (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.quantum) &&
                 options.quantum.months[0] === 1));
         self._position = options.position;
+        test
     },
 
     notifyPositionChanged: function(self, date) {
