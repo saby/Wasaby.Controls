@@ -162,10 +162,6 @@ export default class Controller {
         this._parentProperty = parentProperty;
     }
 
-    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key);
-    }
-
     updateOptions(newOptions: IControllerOptions): boolean {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
@@ -240,6 +236,11 @@ export default class Controller {
     // FIXME для работы дерева без bind'a опции expandedItems
     setExpandedItems(expandedItems: TKey[]): void {
         this._expandedItems = expandedItems;
+    }
+
+    // FIXME для поддержки nodeSourceControllers в дереве
+    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
+        this._updateQueryPropertiesByItems(items, key);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
