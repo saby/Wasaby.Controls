@@ -11,7 +11,8 @@ define([
    'wml!Controls/_shortDatePicker/ItemQuarters',
    'Controls/_shortDatePicker/bodyItem',
    "Types/entity",
-   'Core/core-instance'
+   'Core/core-instance',
+   'Env/Env'
 ], function(
    coreMerge,
    PeriodLiteDialog,
@@ -24,7 +25,8 @@ define([
    itemTmplQuarters,
    bodyItem,
    entity,
-   cInstance
+   cInstance,
+   Env
 ) {
    'use strict';
 
@@ -175,7 +177,19 @@ define([
 
       describe('_expandPopup', function() {
          it('should not expand popup', function() {
-            const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {stickyPosition: {position: {top: 10}}});
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {
+               stickyPosition: {
+                  position: {
+                     top: 10
+                  },
+                  targetPosition: {
+                     top: 10
+                  },
+                  margins: {
+                     top: 10
+                  }
+               }
+            });
             component._isExpandButtonVisible = false;
             component._expandPopup();
             assert.deepEqual(component._isExpandedPopup, false);
@@ -183,6 +197,29 @@ define([
             component._isExpandButtonVisible = true;
             component._expandPopup();
             assert.deepEqual(component._isExpandedPopup, true);
+         });
+         it('_getExpandButtonVisibility', function() {
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {
+               stickyPosition: {
+                  position: {
+                     top: 5
+                  },
+                  targetPosition: {
+                     top: 10
+                  },
+                  margins: {
+                     top: 5
+                  }
+               }
+            });
+            //на мобилках скрываем кнопку разворота окна
+            Env.detection.isMobilePlatform = true;
+            component._isExpandButtonVisible = component._getExpandButtonVisibility(component._options);
+            assert.deepEqual(component._isExpandButtonVisible, false);
+
+            Env.detection.isMobilePlatform = false;
+            component._isExpandButtonVisible = component._getExpandButtonVisibility(component._options);
+            assert.deepEqual(component._isExpandButtonVisible, true);
          });
       });
 
