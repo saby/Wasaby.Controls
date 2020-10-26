@@ -52,7 +52,6 @@ import { RecordSet } from 'Types/collection';
  * 
  * @author Авраменко А.С.
  * @public
- * @category List
  * @demo Controls-demo/list_new/Base/Index
  */
 
@@ -87,7 +86,6 @@ import { RecordSet } from 'Types/collection';
  * 
  * @author Авраменко А.С.
  * @public
- * @category List
  * @demo Controls-demo/list_new/Base/Index
  */
 

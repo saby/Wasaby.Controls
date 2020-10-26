@@ -14,7 +14,6 @@ import {RecordSet} from 'Types/collection';
  * 
  * @class Controls/_popup/Opener/Edit/Container
  * 
- * @category Popup
  * @extends Core/Control
  * @see Controls/popup:Edit
  * @see Controls/list:DataContainer

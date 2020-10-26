@@ -41,7 +41,6 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * 
  * @public
  * @author Миронов А.Ю.
- * @category Container
  * @demo Controls-demo/Scroll/Container/Default/Index
  *
  */
@@ -54,7 +53,6 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * 
  * @public
  * @author Красильников А.С.
- * @category Container
  * @demo Controls-demo/Scroll/Container/Default/Index
  *
  */

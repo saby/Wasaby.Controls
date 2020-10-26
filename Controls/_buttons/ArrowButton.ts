@@ -13,7 +13,6 @@ export interface IArrowButtonOptions extends IControlOptions {
  * @extends Core/Control
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ArrowButton/Index
  */
 class ArrowButton extends Control<IArrowButtonOptions>  {
