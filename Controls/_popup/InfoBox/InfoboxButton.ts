@@ -18,7 +18,6 @@ export interface IInfoboxButton extends IControlOptions, IIconSizeOptions {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/InfoBox/InfoboxButtonHelp
  */
 

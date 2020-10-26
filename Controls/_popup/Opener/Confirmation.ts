@@ -21,7 +21,6 @@ import {IConfirmationOpener, IConfirmationOptions} from 'Controls/_popup/interfa
  * @implements Controls/_popup/interface/IConfirmationFooter
  * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @demo Controls-demo/Confirmation/Confirmation
  */

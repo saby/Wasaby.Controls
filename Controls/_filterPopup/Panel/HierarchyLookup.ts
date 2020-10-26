@@ -19,16 +19,6 @@ import {factory} from 'Types/chain';
  *
  */
 
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
- * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
- * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
- */
-
 class HierarchyLookup extends Control {
     protected _template: TemplateFunction = LookupTemplate;
     protected _selectedKeys: number[] | string[];
@@ -58,5 +48,15 @@ class HierarchyLookup extends Control {
 
     static _theme: string[] = ['Controls/filterPopup'];
 }
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
+ * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
+ * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
+ */
 
 export default HierarchyLookup;

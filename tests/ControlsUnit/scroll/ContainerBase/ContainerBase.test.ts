@@ -27,7 +27,8 @@ describe('Controls/scroll:ContainerBase', () => {
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children
+               children: children,
+               getBoundingClientRect: () => {}
             }
          };
          control._afterMount();
@@ -417,6 +418,32 @@ describe('Controls/scroll:ContainerBase', () => {
          };
          assert.isTrue(inst._updateState({ scrollTop: 1 }));
          sandBox.restore();
+      });
+   });
+
+   describe('_onRegisterNewListScrollComponent', () => {
+      it('should propagate event to registered component', () => {
+         const registeredControl: string = 'registeredControl';
+         const control: ContainerBase = new ContainerBase(options);
+         control._beforeMount(options);
+         control._children = {
+            content: {
+               scrollTop: 0,
+               scrollLeft: 0,
+               clientHeight: 100,
+               scrollHeight: 100,
+               clientWidth: 100,
+               scrollWidth: 100,
+               getBoundingClientRect: sinon.fake()
+            }
+         };
+
+         sinon.stub(control._registrars.listScroll, 'startOnceTarget');
+         assert.isFalse(control._isStateInitialized);
+         control._onRegisterNewListScrollComponent(registeredControl);
+         sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'cantScroll');
+         sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'viewportResize');
+         sinon.restore();
       });
    });
 

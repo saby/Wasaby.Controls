@@ -20,7 +20,6 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
- * @includes IInfoBoxPopupOptions Controls/_popup/interface/IInfoBoxOpener
  * @includes StickyOpener Controls/_popup/PopupHelper/Sticky
  * @includes StackOpener Controls/_popup/PopupHelper/Stack
  * @includes DialogOpener Controls/_popup/PopupHelper/Dialog

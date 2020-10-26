@@ -1324,6 +1324,18 @@ const getEditing = () => {
                 align: 'right'
             }
         ],
+        getEditingSizeColumns: (size): IColumn[] => [
+            {
+                displayProperty: 'title',
+                width: '180px',
+                template: `wml!Controls-demo/grid/EditInPlace/Size/${size}/_cellEditor`,
+            },
+            {
+                displayProperty: 'description',
+                width: '100px',
+                template: `wml!Controls-demo/grid/EditInPlace/Size/${size}/_cellEditor`,
+            }
+        ],
         getEditingColumnsValidation: () => [
             {
                 displayProperty: 'email',

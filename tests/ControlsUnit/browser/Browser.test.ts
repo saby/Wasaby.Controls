@@ -1,6 +1,6 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual, ok} from 'assert';
+import {equal, deepStrictEqual, ok, doesNotThrow} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 
@@ -261,6 +261,74 @@ describe('Controls/browser:Browser', () => {
             ok(browser._items !== browserItems);
         });
 
+        it('source returns error, then _beforeUpdate', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            options.source.query = () => Promise.reject(new Error('testError'));
+            await browser._beforeMount(options);
+
+            function update() {
+                browser._beforeUpdate(options)
+            }
+            options = {...options};
+            doesNotThrow(update);
+        });
+
+    });
+
+    describe('_itemsChanged', () => {
+
+        it('itemsChanged, items with new format', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+
+            browser._items = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            const newItems = new RecordSet({
+                rawData: {
+                    _type: 'recordset',
+                    d: [],
+                    s: [{ n: 'key', t: 'Строка' }, { n: 'newKey', t: 'Строка' }]
+                },
+                keyProperty: 'key',
+                adapter: 'adapter.sbis'
+            });
+
+            browser._itemsChanged(null, newItems);
+            ok(browser._items === newItems);
+        });
+
+    });
+
+    describe('_dataLoadCallback', () => {
+        it('check direction', () => {
+            let actualDirection = null;
+            const options = getBrowserOptions();
+
+            const browser = getBrowser(options);
+            browser._options.dataLoadCallback = (items, direction) => {
+                actualDirection = direction;
+            };
+            browser._filterController = {
+                handleDataLoad: () => {}
+            };
+            browser._searchController = {
+                handleDataLoad: () => {}
+            };
+
+            browser._dataLoadCallback(null, 'down');
+            equal(actualDirection, 'down');
+        });
     });
 
 });

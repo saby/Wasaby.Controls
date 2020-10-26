@@ -188,7 +188,7 @@ interface IErrbackConfig {
     error: CancelableError;
 }
 
-type CancelableError = Error & { canceled?: boolean };
+type CancelableError = Error & { canceled?: boolean, isCanceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
@@ -420,7 +420,7 @@ const _private = {
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
                     }
-                    _private.prepareFooter(self, navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                     _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
                     resDeferred.callback({
@@ -473,6 +473,15 @@ const _private = {
         return resDeferred;
     },
 
+    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
+        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
+            (items1.getModel() === items2.getModel()) &&
+            (items1.getKeyProperty() === items2.getKeyProperty()) &&
+            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
+            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
+                Object.getPrototypeOf(items2.getAdapter()).constructor);
+    },
+
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -481,11 +490,17 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // instead of assigning items
             // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-            const modelCollection = listModel.getCollection();
-            listModel.setCompatibleReset(true);
-            modelCollection.setMetaData(items.getMetaData());
-            modelCollection.assign(items);
-            listModel.setCompatibleReset(false);
+            const currentItems = listModel.getCollection();
+            // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
+            // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
+            if (_private.isEqualItemsFormat(currentItems, items)) {
+                listModel.setCompatibleReset(true);
+                currentItems.setMetaData(items.getMetaData());
+                currentItems.assign(items);
+                listModel.setCompatibleReset(false);
+            } else {
+                listModel.setCollection(items);
+            }
             self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
@@ -603,7 +618,6 @@ const _private = {
                     itemContainer, toBottom, force
                 }], {bubbling: true});
             }
-
         };
         return self._scrollController ?
             self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
@@ -698,20 +712,29 @@ const _private = {
     },
     // endregion key handlers
 
-    prepareFooter(self, navigation, sourceController: SourceController): void {
+    prepareFooter(self, options, sourceController: SourceController): void {
         let
             loadedDataCount, allDataCount;
 
-        if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
-            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        if (_private.isDemandNavigation(options.navigation) && _private.hasMoreData(self, sourceController, 'down')) {
+            self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = self._options.root !== undefined ?
-                self._listViewModel?.getChildren(self._options.root)?.length :
-                self._listViewModel?.getCount();
+            if (self._listViewModel) {
+                // Единственный способ однозначно понять, что выводится дерево - проверить что список строится
+                // по проекци для дерева.
+                // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
+                const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
+                loadedDataCount = display && display['[Controls/_display/Tree]'] ?
+                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getCount();
+            } else {
+                loadedDataCount = 0;
+            }
+
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
@@ -772,7 +795,7 @@ const _private = {
                 self.stopBatchAdding();
             }
 
-            _private.prepareFooter(self, self._options.navigation, self._sourceController);
+            _private.prepareFooter(self, self._options, self._sourceController);
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -844,7 +867,7 @@ const _private = {
             }).addErrback((error: CancelableError) => {
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
-                if (!error.canceled) {
+                if (!error.canceled && !error.isCanceled) {
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
                 return _private.crudErrback(self, {
@@ -1045,6 +1068,10 @@ const _private = {
 
     scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
+        let hasMoreData = {
+            up: _private.hasMoreData(self, self._sourceController, 'up'),
+            down: _private.hasMoreData(self, self._sourceController, 'down')
+        };
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             let pagingMode = '';
             if (self._options.navigation && self._options.navigation.viewConfig) {
@@ -1060,9 +1087,6 @@ const _private = {
             _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
-                if (self._scrollPagingCtr) {
-                    self._scrollPagingCtr.setNumbersState(direction);
-                }
                 /**
                  * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
                  * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
@@ -1078,15 +1102,15 @@ const _private = {
                 }
             });
         } else if (direction === 'up') {
-            if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction);
-            }
             self._notify('doScroll', ['top'], { bubbling: true });
-        } else {
             if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction);
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
+        } else {
             _private.jumpToEnd(self);
+            if (self._scrollPagingCtr) {
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+            }
         }
     },
     scrollPage(self, direction) {
@@ -1570,7 +1594,7 @@ const _private = {
                 const moreMetaCount = _private.getAllDataCount(self);
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
-                    _private.prepareFooter(self, self._options.navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                 }
             }
 
@@ -1892,7 +1916,7 @@ const _private = {
     groupsExpandChangeHandler(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
-        _private.prepareFooter(self, self._options.navigation, self._sourceController);
+        _private.prepareFooter(self, self._options, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             groupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
@@ -2026,11 +2050,11 @@ const _private = {
         }
     },
 
-    needBottomPadding(options, items, listViewModel) {
-        const isEditing = listViewModel.isEditing();
+    needBottomPadding(options, listViewModel) {
+        const isEditing = !!listViewModel?.isEditing();
 
         const display = listViewModel ? (options.useNewModel ? listViewModel : listViewModel.getDisplay()) : null;
-        const hasVisibleItems = !!(display && display.getCount());
+        const hasVisibleItems = !!display?.getCount();
 
         return (
             (hasVisibleItems || isEditing) &&
@@ -2184,11 +2208,13 @@ const _private = {
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+            
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
-
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
+        
+            _private.updateScrollPagingButtons(self, self._getScrollParams());            
         });
     },
 
@@ -2881,7 +2907,6 @@ const _private = {
  *
  * @private
  * @author Авраменко А.С.
- * @category List
  */
 
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
@@ -3128,7 +3153,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 } else {
                     self._items = self._listViewModel.getItems();
                 }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, self._items, self._listViewModel);
+                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
                 if (self._pagingNavigation) {
                     const hasMoreData = self._items.getMetaData().more;
                     _private.updatePagingData(self, hasMoreData);
@@ -3147,7 +3172,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.createScrollController(self, newOptions);
 
-                _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                _private.prepareFooter(self, newOptions, self._sourceController);
 
                 _private.initVisibleItemActions(self, newOptions);
 
@@ -3190,12 +3215,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
                         self._shouldNotifyOnDrawItems = true;
-                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                    _private.prepareFooter(self, newOptions, self._sourceController);
                 }
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
                 }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, data, self._listViewModel);
+                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
 
                     _private.createScrollController(self, newOptions);
 
@@ -3469,7 +3494,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         const self = this;
-        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, self._listViewModel);
+        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
 
@@ -3578,7 +3603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._sourceController = newOptions.sourceController;
             }
 
-            if (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items) {
+            if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 _private.assignItemsToModel(this, items, newOptions);
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -3637,13 +3662,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = null;
         }
 
+        const loadedBySourceController = newOptions.sourceController && sourceChanged;
         const needReload =
+            !loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            sourceChanged && !newOptions.sourceController ||
-            // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
+            (sourceChanged ||
+                // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
             filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
             sortingChanged ||
-            recreateSource;
+            recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -3722,7 +3749,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
                         this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
                         this._listViewModel.setSearchValue(newOptions.searchValue);
                     });
@@ -3730,14 +3757,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._items, this._listViewModel);
+                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
                     this._listViewModel.setSearchValue(newOptions.searchValue);
                 });
             }
         } else {
             _private.doAfterUpdate(self, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
+                if (this._listViewModel) {
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -4134,7 +4163,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
-
+        if (this._wasScrollToEnd) {
+            const hasMoreData = {
+                up: _private.hasMoreData(this, this._sourceController, 'up'),
+                down: _private.hasMoreData(this, this._sourceController, 'down')
+            };
+            if (this._scrollPagingCtr) {
+                this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
+            }
+        }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
@@ -4499,6 +4536,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
+        }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
             this.hideIndicator();
@@ -4512,6 +4552,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _commitEdit(commitStrategy?: 'hasChanges' | 'all') {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
+        }
+        if (!this._editInPlaceController) {
+            return Promise.resolve();
         }
         this.showIndicator();
         return this._getEditInPlaceController().commit(commitStrategy).finally(() => {
@@ -4757,7 +4800,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemMouseUp(e, itemData, domEvent): Promise<void>|void {
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
-
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
         // Например, записи в мастере или запись в списке с dragScrolling'ом.
