@@ -52,7 +52,7 @@ export interface IControllerOptions extends
     collapsedGroups?: TArrayGroupId;
 }
 
-export interface ILoadConfig {
+interface ILoadConfig {
     filter?: QueryWhereExpression<unknown>;
     sorting?: QueryOrderSelector;
     key?: TKey;
