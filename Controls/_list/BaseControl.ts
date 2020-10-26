@@ -178,7 +178,7 @@ interface IErrbackConfig {
     error: CancelableError;
 }
 
-type CancelableError = Error & { canceled?: boolean };
+type CancelableError = Error & { canceled?: boolean, isCanceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
@@ -858,7 +858,7 @@ const _private = {
             }).addErrback((error: CancelableError) => {
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
-                if (!error.canceled) {
+                if (!error.canceled && !error.isCanceled) {
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
                 return _private.crudErrback(self, {
