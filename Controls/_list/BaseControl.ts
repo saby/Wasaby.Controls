@@ -420,7 +420,7 @@ const _private = {
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
                     }
-                    _private.prepareFooter(self, navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                     _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
                     resDeferred.callback({
@@ -713,20 +713,29 @@ const _private = {
     },
     // endregion key handlers
 
-    prepareFooter(self, navigation, sourceController: SourceController): void {
+    prepareFooter(self, options, sourceController: SourceController): void {
         let
             loadedDataCount, allDataCount;
 
-        if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
-            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        if (_private.isDemandNavigation(options.navigation) && _private.hasMoreData(self, sourceController, 'down')) {
+            self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = self._options.root !== undefined ?
-                self._listViewModel?.getChildren(self._options.root)?.length :
-                self._listViewModel?.getCount();
+            if (self._listViewModel) {
+                // Единственный способ однозначно понять, что выводится дерево - проверить что список строится
+                // по проекци для дерева.
+                // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
+                const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
+                loadedDataCount = display && display['[Controls/_display/Tree]'] ?
+                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getCount();
+            } else {
+                loadedDataCount = 0;
+            }
+
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
@@ -787,7 +796,7 @@ const _private = {
                 self.stopBatchAdding();
             }
 
-            _private.prepareFooter(self, self._options.navigation, self._sourceController);
+            _private.prepareFooter(self, self._options, self._sourceController);
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -1585,7 +1594,7 @@ const _private = {
                 const moreMetaCount = _private.getAllDataCount(self);
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
-                    _private.prepareFooter(self, self._options.navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                 }
             }
 
@@ -1907,7 +1916,7 @@ const _private = {
     groupsExpandChangeHandler(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
-        _private.prepareFooter(self, self._options.navigation, self._sourceController);
+        _private.prepareFooter(self, self._options, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             groupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
@@ -3162,7 +3171,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.createScrollController(self, newOptions);
 
-                _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                _private.prepareFooter(self, newOptions, self._sourceController);
 
                 _private.initVisibleItemActions(self, newOptions);
 
@@ -3205,7 +3214,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
                         self._shouldNotifyOnDrawItems = true;
-                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                    _private.prepareFooter(self, newOptions, self._sourceController);
                 }
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
