@@ -35,6 +35,8 @@ const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
 
+const DEFAULT_ACTION_MODE = 'showType';
+
 /**
  * @interface Controls/_itemActions/IControllerOptions
  * @public
@@ -110,6 +112,8 @@ export interface IControllerOptions {
      * Редактируемая запись
      */
     editingItem?: IItemActionsItem;
+
+    actionMode: 'showType' | 'adaptive';
 }
 
 /**
@@ -127,7 +131,7 @@ export class Controller {
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
     private _iconSize: TItemActionsSize;
-
+    private _actionMode: 'adaptive' | 'showType';
     // вариант расположения опций в свайпе на момент инициализации
     private _actionsAlignment: 'horizontal' | 'vertical';
 
@@ -157,6 +161,7 @@ export class Controller {
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
+        this._actionMode = options.actionMode || DEFAULT_ACTION_MODE;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
@@ -749,10 +754,9 @@ export class Controller {
         oldContainer: IItemActionsContainer,
         newContainer: IItemActionsContainer
     ): boolean {
-        return (
-            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
-        );
+        const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
+        const isMatchedShowed = this._isMatchingActionLists(oldContainer.all, newContainer.all);
+        return this._actionMode === 'adaptive' ? isMatchedAll : isMatchedAll && isMatchedShowed;
     }
 
     private static _calculateSwipeConfig(

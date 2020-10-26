@@ -167,9 +167,11 @@ var TileView = ListView.extend({
     _onItemMouseMove(event, itemData): void {
         const hoveredItem = this._listModel.getHoveredItem();
         const isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
+        const activeItem = this._listModel.getActiveItem();
         if (!isCurrentItemHovered &&
             _private.shouldProcessHover(this) &&
-            !this._listModel.getDragItemData()
+            !this._listModel.getDragItemData() &&
+            !activeItem
         ) {
             if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
                 _private.clearMouseMoveTimeout(this);
@@ -241,9 +243,6 @@ var TileView = ListView.extend({
     _setHoveredItem: function (itemData, position, startPosition, noZoom, itemWidth?: number): void {
         const needUpdateActions = this._options.actionMode === 'adaptive' && !itemData.dispItem.isNode();
         if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
-            if (needUpdateActions) {
-                this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
-            }
             this._listModel.setHoveredItem({
                 key: itemData.key,
                 canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
@@ -251,11 +250,13 @@ var TileView = ListView.extend({
                 position: _private.getPositionStyle(startPosition || position),
                 endPosition: _private.getPositionStyle(position)
             });
-        } else if (needUpdateActions) {
-            this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
+        } else {
             this._listModel.setHoveredItem({
                 key: itemData.key
             });
+        }
+        if (needUpdateActions) {
+            this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
         }
     },
 

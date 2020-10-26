@@ -2536,6 +2536,7 @@ const _private = {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.hoverBackgroundStyle || options.style,
                 theme: options.theme,
+                actionMode: options.actionMode,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition,
                 itemActionsClass: options.itemActionsClass,
@@ -5101,7 +5102,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopImmediatePropagation();
         const itemActionsController = _private.getItemActionsController(this);
         itemActionsController.updateItemActions(itemKey, itemWidth);
-        this._listViewModel.nextModelVersion();
+        this._listViewModel.nextModelVersion(true);
     },
 
     /**

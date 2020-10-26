@@ -15,14 +15,14 @@
                         controls-TileView__previewTemplate_title_gradient_{{gradientType || 'dark' }}_theme-{{_options.theme}}
                         controls-TileView__previewTemplate_title_text_{{titleStyle || 'light'}}_theme-{{_options.theme}}
                         controls-fontsize-{{itemData.dispItem.isNode() ? 'l' : 'm'}}_theme-{{_options.theme}}">
-               <ws:if data="{{hasTitle || hasTitle === undefined || (itemData.hasVisibleActions() && itemData.canShowActions)}}">
+               <ws:if data="{{hasTitle || hasTitle === undefined || (itemData.hasVisibleActions() && itemData.isHovered)}}">
                   <div class="controls-TileView__previewTemplate_gradient
                            controls-TileView__previewTemplate_gradient_{{gradientType || 'dark'}}_theme-{{_options.theme}}"
                        style="{{gradientType === 'custom' ? 'background: linear-gradient(to top, ' + gradientColor +  ' 0%, ' + gradientColor + ' calc(100% - 4px), rgba(255, 255, 255, 0) 100%);' : ''}}"></div>
                </ws:if>
-               <ws:if data="{{!itemData.isHovered && !itemData.canShowActions && (hasTitle === undefined || hasTitle)}}">
+               <ws:if data="{{(!itemData.isHovered && !itemData.canShowActions || itemData.isHovered && !itemData.hasVisibleActions() || itemData.dispItem.isNode()) && (hasTitle === undefined || hasTitle)}}">
                   <div class="controls-TileView__previewTemplate_title_text" title="{{itemData.item[itemData.displayProperty]}}">
-                     <div class="controls-TileView__text_ellipsis_multiLine" style="-webkit-line-clamp: {{titleLines || 1}};">
+                     <div class="{{titleLines > 1 ? 'controls-TileView__text_ellipsis_multiLine' : 'ws-ellipsis'}}" style="-webkit-line-clamp: {{titleLines || 1}};">
                         {{itemData.item[itemData.displayProperty]}}
                      </div>
                      <ws:if data="{{bottomRightTemplate && !itemData.isHovered}}">
