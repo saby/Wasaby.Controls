@@ -5383,6 +5383,31 @@ define([
          assert.isTrue(fakeNotify.calledOnce);
       });
 
+      it('changing source, if sourceController in options', async function() {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source,
+                sourceController: new dataSource.NewSourceController({
+                   source
+                })
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         cfg = {...cfg};
+         cfg.source = new sourceLib.Memory();
+         assert.isTrue(!(instance._beforeUpdate(cfg) instanceof Promise));
+      });
+
       it('should fire "drawItems" with new collection if source item has changed', async function() {
          var
             cfg = {
