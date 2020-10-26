@@ -179,10 +179,12 @@ export default class Browser extends Control {
             this._groupHistoryId = newOptions.groupHistoryId;
         }
 
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
+        if (this._searchController) {
+            this._searchController.update(
+                this._getSearchControllerOptions(newOptions),
+                {dataOptions: this._dataOptionsContext}
+            );
+        }
 
         return methodResult;
     }
