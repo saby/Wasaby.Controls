@@ -26,7 +26,6 @@ import {delay} from 'Types/function';
     *
     * @class Controls/_decorator/Markup
     * @extends Core/Control
-
     * @author Угриновский Н.В.
     * @public
     */
