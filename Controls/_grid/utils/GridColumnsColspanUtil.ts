@@ -78,6 +78,14 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
         });
     }
 
+    // Колонка под чекбокс
+    if (params.hasMultiSelect) {
+        result.unshift({
+            startIndex: 0,
+            endIndex: 1
+        });
+    }
+
     // Классы колонок и смещение индексов из за колонки под чекбокс.
     result.forEach((resultColumn, index) => {
         resultColumn.startIndex += multiSelectOffset;
@@ -86,13 +94,6 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
             params.afterPrepareCallback(resultColumn, index, result);
         }
     });
-
-    if (params.hasMultiSelect) {
-        result.unshift({
-            startIndex: 1,
-            endIndex: 2
-        });
-    }
 
     return result;
 }

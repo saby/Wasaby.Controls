@@ -50,6 +50,10 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
     };
     const theme = params.theme;
 
+    if (params.emptyColumnIndex === 0 && params.hasMultiSelect) {
+        return `controls-GridView__emptyTemplate__checkBoxCell controls-Grid__row-cell-background-editing_theme-${theme}`;
+    }
+
     let classes = 'controls-GridView__emptyTemplate__cell ';
     classes += `controls-Grid__row-cell-background-editing_theme-${theme} `;
 
@@ -66,7 +70,7 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
     classes += `controls-Grid__row-cell_rowSpacingBottom_${itemPadding.bottom}_theme-${theme} `;
 
     // Левый отступ ячейки
-    if (!(params.emptyColumnIndex === 0 && params.hasMultiSelect)) {
+    if (!(params.emptyColumnIndex < 2 && params.hasMultiSelect)) {
         if (isFirst) {
             classes += `controls-Grid__cell_spacingFirstCol_${itemPadding.left}_theme-${theme} `;
         } else {
