@@ -7,6 +7,7 @@
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
+ * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
  * @public
  * @author Крайнов Д.О.
  */
@@ -19,6 +20,7 @@
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
+ * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
  * @public
  * @author Крайнов Д.О.
  */

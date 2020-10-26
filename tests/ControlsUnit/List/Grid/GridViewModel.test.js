@@ -1079,8 +1079,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setActiveItem', 'appendItems', 'prependItems',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
-                  'createItem', 'mergeItems', 'toggleGroup', 'getMarkedKey',
-                  'getChildren','getStartIndex', 'getActiveItem', 'destroy', 'nextModelVersion', 'isEditing'],
+                  'createItem', 'mergeItems', 'toggleGroup', 'getMarkedKey','getStartIndex',
+                  'getActiveItem', 'destroy', 'nextModelVersion', 'isEditing'],
                callStackMethods = [];
 
             gridViewModel._model = {
@@ -2773,7 +2773,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                const current = {
                   rowSeparatorSize: null,
                   columnSeparatorSize: null,
-                  columnIndex: 0
+                  columnIndex: 0,
+                  columns: [{}, {}]
                };
                [
                   [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],

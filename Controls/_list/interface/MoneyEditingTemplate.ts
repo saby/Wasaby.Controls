@@ -3,7 +3,7 @@
  * В режиме чтения выводит значение с помощью {@link Controls/decorator:Money}.
  * 
  * @class Controls/list:MoneyEditingTemplate
- * @mixes Controls/_list/interface/EditingTemplate
+ * @mixes Controls/list:EditingTemplate
  * @author Авраменко А.С.
  * @see Controls/list:View
  * @example

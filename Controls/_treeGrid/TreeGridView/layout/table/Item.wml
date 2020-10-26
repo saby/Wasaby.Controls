@@ -98,7 +98,7 @@
 
                 <!-- Контент колонки с чекбоксом -->
                 <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
-                    <ws:if data="{{!itemData.isAdd}}">
+                    <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
                         <div class="{{ currentColumn.classList.padding.getAll() }} {{ cellClassName || '' }}">
                             <ws:partial template="multiSelectTemplate"/>
                         </div>

@@ -28,7 +28,6 @@ import { TreeControl } from 'Controls/tree';
     * 
     * @private
     * @author Авраменко А.С.
-    * @category List
     */
 
    /*
@@ -58,7 +57,6 @@ import { TreeControl } from 'Controls/tree';
     * 
     * @private
     * @author Авраменко А.С.
-    * @category List
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{

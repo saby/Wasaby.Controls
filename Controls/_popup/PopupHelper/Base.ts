@@ -12,7 +12,6 @@ interface IOpenerStaticMethods {
  * @class Controls/_popup/PopupHelper/Base
  * 
  * @author Красильников А.С.
- * @category Popup
  * @private
  */
 

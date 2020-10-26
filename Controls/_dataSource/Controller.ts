@@ -224,7 +224,7 @@ export default class Controller {
     }
 
     // FIXME для поддержки nodeSourceControllers в дереве
-    calculateState(items: RecordSet, direction: Direction, key: TKey = this._root): void {
+    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
         this._updateQueryPropertiesByItems(items, key);
     }
 
@@ -361,7 +361,7 @@ export default class Controller {
                 })
                 .catch((error) => {
                     this._loadPromise = null;
-                    return error;
+                    return this._processQueryError(error);
                 });
 
             return this._loadPromise.promise;
@@ -424,13 +424,15 @@ export default class Controller {
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction): LoadResult {
-        if (result instanceof Error) {
-            if (this._options.dataLoadErrback instanceof Function) {
-                this._options.dataLoadErrback(result);
-            }
-        }
-        if (result instanceof RecordSet) {
-            this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        return result;
+    }
+
+    private _processQueryError(
+        result: LoadResult
+    ): LoadResult {
+        if (this._options.dataLoadErrback instanceof Function) {
+            this._options.dataLoadErrback(result);
         }
         return result;
     }

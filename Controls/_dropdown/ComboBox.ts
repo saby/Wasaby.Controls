@@ -48,7 +48,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface/IDropdown
  * 
  * @public
- * @category Input
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Combobox/Source/Index
  */
@@ -68,7 +67,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/interface/IDropdown
  * 
  * @public
- * @category Input
  * @author Золотова Э.Е.
  * @demo Controls-demo/dropdown_new/Combobox/Source/Index
  */

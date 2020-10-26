@@ -18,7 +18,6 @@
             <ws:if data="{{itemData.isEditing() && toolbarVisibility}}">
                 <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                     <ws:partial template="{{content.resolvedTemplate}}"
-                                attr:ws-no-focus="true"
                                 attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
                                 on:applyButtonClick="_commitEditActionHandler(itemData.dispItem)"
                                 on:closeButtonClick="_cancelEditActionHandler(itemData.dispItem)"/>

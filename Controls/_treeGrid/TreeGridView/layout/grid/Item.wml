@@ -88,7 +88,7 @@
 
    <!-- Колонка с чекбоксами -->
    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
-      <ws:if data="{{!itemData.isAdd}}">
+      <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
          <ws:partial template="multiSelectTemplate"/>
       </ws:if>
       <ws:else>
@@ -254,7 +254,6 @@
       </ws:else>
    </ws:if>
 </ws:template>
-
 
 <ws:if data="{{itemData.isStickedMasterItem}}">
    <Controls.scroll:Group>

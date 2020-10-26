@@ -29,7 +29,6 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_input/interface/IValue
  * 
  * @public
- * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Герасимов А.М.
  */
@@ -50,7 +49,6 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_input/interface/IText
  * 
  * @public
- * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Gerasimov A.M.
  */

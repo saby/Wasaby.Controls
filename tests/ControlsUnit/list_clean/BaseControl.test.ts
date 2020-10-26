@@ -687,4 +687,49 @@ describe('Controls/list_clean/BaseControl', () => {
            assert.isTrue(!mountResult);
        })
     });
+
+    describe('Edit in place', () => {
+        const baseControlCfg = {
+            viewName: 'Controls/List/ListView',
+            keyProperty: 'id',
+            viewModelConstructor: ListViewModel,
+            items: new RecordSet({
+                keyProperty: 'id',
+                rawData: []
+            })
+        };
+        let baseControl;
+
+        beforeEach(() => {
+            baseControl = new BaseControl(baseControlCfg);
+        });
+        afterEach(() => {
+            baseControl.destroy();
+            baseControl = undefined;
+        });
+
+        it('should immediately resolve promise if cancel edit called without eipController', () => {
+            let isCancelCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                cancel() {
+                    isCancelCalled = true;
+                }
+            });
+            return baseControl.cancelEdit().then(() => {
+                assert.isFalse(isCancelCalled);
+            });
+        });
+
+        it('should immediately resolve promise if commit edit called without eipController', () => {
+            let isCommitCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                commit() {
+                    isCommitCalled = true;
+                }
+            });
+            return baseControl.commitEdit().then(() => {
+                assert.isFalse(isCommitCalled);
+            });
+        });
+    });
 });
