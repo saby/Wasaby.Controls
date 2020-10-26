@@ -34,6 +34,8 @@ import {IControllerState} from 'Controls/_dataSource/Controller';
 
 type Key = string|number|null;
 
+type TViewMode = 'search' | 'tile' | 'table' | 'list';
+
 export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourceOptions,
     Required<IFilterOptions>, Required<IHierarchyOptions>, IHierarchySearchOptions,
     IMarkerListOptions, IShadowsOptions {
@@ -44,6 +46,7 @@ export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourc
     useStore?: boolean;
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
+    viewMode: TViewMode;
 }
 
 type IReceivedState = {
@@ -68,8 +71,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _listMarkedKey: Key = null;
     private _notifiedMarkedKey: Key = null;
-    private _previousViewMode: string = null;
-    private _viewMode: string = null;
+    private _previousViewMode: TViewMode = null;
+    private _viewMode: TViewMode = null;
     private _misspellValue: string = null;
     private _root: Key = null;
     private _path: RecordSet;
@@ -122,10 +125,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
         if (options.useStore) {
             this._searchValue = Store.getState().searchValue as unknown as string;
+        } else {
+            this._searchValue = options.searchValue;
         }
 
         const controllerState = this._getSourceController(options).getState();
         this._dataOptionsContext = this._createContext(controllerState);
+
+        this._previousViewMode = this._viewMode = options.viewMode;
+        this._updateViewMode(options.viewMode);
 
         if (receivedState) {
             if ('filterItems' in receivedState && 'items' in receivedState) {
@@ -650,7 +658,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _updateViewMode(newViewMode: string): void {
+    private _updateViewMode(newViewMode: TViewMode): void {
         this._previousViewMode = this._viewMode;
         this._viewMode = newViewMode;
     }
