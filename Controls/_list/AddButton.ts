@@ -17,12 +17,30 @@ import entity = require('Types/entity');
  * @author Красильников А.С.
  */
 
+var AddButton = Control.extend({
+    _template: template,
+
+    clickHandler: function (e) {
+        if (this._options.readOnly) {
+            e.stopPropagation();
+        }
+    }
+});
+
+AddButton.getOptionTypes = function getOptionTypes() {
+    return {
+        caption: entity.descriptor(String)
+    };
+};
+
+AddButton._theme = ['Controls/list'];
+
 /**
  * @name Controls/_list/AddButton#caption
  * @cfg {String} Текст заголовка контрола.
  * @example
- * <pre>
- *    <Controls.list:AddButton caption="add record"/>
+ * <pre class="brush: html">
+ * <Controls.list:AddButton caption="add record"/>
  * </pre>
  */
 
@@ -43,23 +61,4 @@ import entity = require('Types/entity');
  *    <Controls.list:AddButton caption="add record"/>
  * </pre>
  */
-
-var AddButton = Control.extend({
-    _template: template,
-
-    clickHandler: function (e) {
-        if (this._options.readOnly) {
-            e.stopPropagation();
-        }
-    }
-});
-
-AddButton.getOptionTypes = function getOptionTypes() {
-    return {
-        caption: entity.descriptor(String)
-    };
-};
-
-AddButton._theme = ['Controls/list'];
-
 export = AddButton;

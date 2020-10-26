@@ -18,16 +18,6 @@ const MOVE_DIALOG_MEASURER_CLASS_TEMPLATE = 'controls-MoveDialog_theme-';
  * @author Авраменко А.С.
  * @category List
  */
-
-/**
- * @name Controls/_moverDialog/BaseTemplate#headerContentTemplate
- * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
- */
-
-/**
- * @name Controls/_moverDialog/BaseTemplate#bodyContentTemplate
- * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
- */
 export default class BaseTemplate extends Control<IControlOptions> {
     _template: TemplateFunction = template;
 
@@ -44,3 +34,12 @@ export default class BaseTemplate extends Control<IControlOptions> {
 
     static _theme = ['Controls/moverDialog'];
 }
+/**
+ * @name Controls/_moverDialog/BaseTemplate#headerContentTemplate
+ * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
+ */
+
+/**
+ * @name Controls/_moverDialog/BaseTemplate#bodyContentTemplate
+ * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
+ */

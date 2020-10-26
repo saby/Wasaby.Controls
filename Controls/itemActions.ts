@@ -1,5 +1,5 @@
 /**
- * Библиотека, которая предоставляет операции с записью коллекции
+ * Библиотека, которая предоставляет операции с записью коллекции.
  * @library Controls/itemActions
  * @includes IItemAction Controls/_itemActions/interface/IItemAction
  * @includes IContextMenuConfig Controls/_itemActions/interface/IContextMenuConfig
