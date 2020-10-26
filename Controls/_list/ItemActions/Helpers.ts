@@ -60,7 +60,6 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 
 /*
@@ -68,7 +67,6 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 var helpers = {
 

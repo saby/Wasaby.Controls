@@ -2905,7 +2905,6 @@ const _private = {
  *
  * @private
  * @author Авраменко А.С.
- * @category List
  */
 
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{

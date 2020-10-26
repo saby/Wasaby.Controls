@@ -13,7 +13,6 @@ export interface IDragOffset {
 
 /**
  * Base Popup Controller
- * @category Popup
  * @class Controls/_popupTemplate/BaseController
  * @author Красильников А.С.
  * @private

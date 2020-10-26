@@ -148,7 +148,6 @@ export function getDefaultOptions(): object {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 
@@ -173,7 +172,6 @@ export function getDefaultOptions(): object {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 class Button extends Control<IButtonControlOptions> implements IHref, ICaption, IIcon, IIconStyle, ITooltip, IIconSize, IClick, IFontColorStyle, IFontSize, IHeight, IButton {

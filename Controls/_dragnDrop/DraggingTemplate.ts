@@ -28,7 +28,6 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * 
     * @public
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
    /*
@@ -39,7 +38,6 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * 
     * @private
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
    /**

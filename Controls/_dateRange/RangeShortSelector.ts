@@ -28,7 +28,6 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/LiteSelector/Index
  *
@@ -43,7 +42,6 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLinkLite
  *

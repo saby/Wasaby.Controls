@@ -200,7 +200,6 @@ const _private = {
  * @class Controls/_popupTemplate/Sticky/StickyController
  * 
  * @private
- * @category Popup
  */
 class StickyController extends BaseController {
     TYPE: string = 'Sticky';

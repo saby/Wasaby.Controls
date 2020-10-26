@@ -395,7 +395,6 @@ var
     * @mixes Controls/_marker/interface/IMarkerListOptions
     * 
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
 
@@ -433,7 +432,6 @@ var
     * @mixes Controls/_marker/interface/IMarkerListOptions
     * 
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
     var Explorer = Control.extend({

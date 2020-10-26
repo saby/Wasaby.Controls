@@ -395,7 +395,6 @@ var _private = {
  *
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /*
@@ -411,7 +410,6 @@ var _private = {
  *
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 var Mover = BaseAction.extend({

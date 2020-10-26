@@ -22,7 +22,6 @@ import {Logger} from 'UI/Utils';
  * 
  * @public
  * @author Красильников А.С.
- * @category Popup
  * @demo Controls-demo/Popup/Opener/NotificationPG
  */
 

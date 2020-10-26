@@ -33,7 +33,6 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
  *
@@ -58,7 +57,6 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
  *

@@ -58,7 +58,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
  * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
  */
 
@@ -85,7 +84,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
  * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
