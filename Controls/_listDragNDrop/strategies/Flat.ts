@@ -12,6 +12,12 @@ export interface IDraggableFlatCollection<T extends IDraggableItem = IDraggableI
     getIndexBySourceItem(sourceItem: Model): number;
 }
 
+/**
+ * Стратегия расчета позиции для драг'н'дропа в плоском списке
+ * @class Controls/_listDragNDrop/strategies/Flat
+ * @author Панихин К.А.
+ */
+
 export default class Flat<
     T extends IDraggableItem = IDraggableItem,
     C extends IDraggableFlatCollection = IDraggableFlatCollection,
@@ -29,6 +35,9 @@ export default class Flat<
         };
     }
 
+    /**
+     * Запускает расчет позиции
+     */
     calculatePosition({currentPosition, targetItem}: IDragStrategyParams<IDragPosition<T>, T>): IDragPosition<T> {
         let prevIndex = -1;
 
