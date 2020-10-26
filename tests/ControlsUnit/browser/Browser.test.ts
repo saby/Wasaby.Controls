@@ -1,6 +1,6 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual, ok} from 'assert';
+import {equal, deepStrictEqual, ok, doesNotThrow} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 
@@ -259,6 +259,20 @@ describe('Controls/browser:Browser', () => {
 
             await browser._beforeUpdate(options);
             ok(browser._items !== browserItems);
+        });
+
+        it('source returns error, then _beforeUpdate', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            options.source.query = () => Promise.reject(new Error('testError'));
+            await browser._beforeMount(options);
+
+            function update() {
+                browser._beforeUpdate(options)
+            }
+            options = {...options};
+            doesNotThrow(update);
         });
 
     });
