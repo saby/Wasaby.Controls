@@ -58,7 +58,6 @@ export interface IToggleButtonOptions extends
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
@@ -81,7 +80,6 @@ export interface IToggleButtonOptions extends
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */

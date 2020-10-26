@@ -20,7 +20,6 @@ import {IDragObject} from './Container';
  * 
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 /*
@@ -34,7 +33,6 @@ import {IDragObject} from './Container';
  * 
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 class Controller extends Control<IControlOptions> {

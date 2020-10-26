@@ -36,7 +36,6 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * 
  * @public
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre class="brush: js">
  *    var source = new history.Source({
@@ -61,7 +60,6 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * 
  * @public
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new history.Source({

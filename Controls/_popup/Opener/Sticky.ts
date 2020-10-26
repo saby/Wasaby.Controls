@@ -29,7 +29,6 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @mixes Controls/_popup/interface/ISticky
  * 
  * @author Красильников А.С.
- * @category Popup
  * @demo Controls-demo/Popup/Opener/StickyPG
  * @public
  */
@@ -43,7 +42,6 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @mixes Controls/_popup/interface/ISticky
  * 
  * @author Красильников А.С.
- * @category Popup
  * @demo Controls-demo/Popup/Opener/StickyPG
  * @public
  */

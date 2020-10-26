@@ -31,7 +31,6 @@ import viewName = require('Controls/_grid/GridView');
     * 
     * @public
     * @author Авраменко А.С.
-    * @category List
     * @demo Controls-demo/grid/Base/Index
     */
 
@@ -63,7 +62,6 @@ import viewName = require('Controls/_grid/GridView');
     * 
     * @public
     * @author Авраменко А.С.
-    * @category List
     * @demo Controls-demo/grid/Base/Index
     */
 

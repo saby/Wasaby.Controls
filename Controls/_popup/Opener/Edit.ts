@@ -25,7 +25,6 @@ import Deferred = require('Core/Deferred');
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
- * @category Popup
  */
 
 interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
