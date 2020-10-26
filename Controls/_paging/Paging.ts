@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TNavigationPagingMode} from '../_interface/INavigation';
-import {Logger} from 'UI/Utils';
 
 type TButtonState = 'normal' | 'disabled';
 type TArrowStateVisibility = 'visible' | 'hidden' | 'readonly';
@@ -50,14 +49,6 @@ class Paging extends Control<IPagingOptions> {
 
     protected _stateTop: TButtonState = 'normal';
     protected _stateBottom: TButtonState = 'normal';
-
-    checkDeprecated(cfg: IPagingOptions): void {
-        // @ts-ignore
-        if (cfg.pagingMode === 'direct') {
-            Logger.warn('\n' +
-                'Paging: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
-        }
-    }
 
     private _initArrowDefaultStates(config: IPagingOptions): void {
         if (config.arrowState) {
@@ -141,7 +132,6 @@ class Paging extends Control<IPagingOptions> {
     }
 
     protected _beforeMount(newOptions: IPagingOptions): void {
-        this.checkDeprecated(newOptions);
         this._initArrowState(newOptions);
     }
 
