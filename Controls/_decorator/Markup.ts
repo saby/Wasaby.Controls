@@ -1,6 +1,3 @@
-/**
- * Created by rn.kondakov on 18.10.2018.
- */
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import template = require('./Markup/resources/template');
@@ -9,8 +6,9 @@ import {delay} from 'Types/function';
 
 
    /**
-    * Создает контрол по данным в json-массиве.
+    * Контрол служит для вставки вёрстки в формате JsonML в шаблон.
     * 
+    * <a href="/doc/platform/developmentapl/service-development/service-contract/logic/json-markup-language/markup/">Руководство разработчика.</a>
     * @remark
     * Полезные ссылки:
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
@@ -19,6 +17,7 @@ import {delay} from 'Types/function';
     * @extends Core/Control
     * @category Decorator
     * @author Угриновский Н.В.
+    * @demo Controls-demo/Decorators/Markup/Markup
     * @public
     */
 
@@ -35,11 +34,6 @@ import {delay} from 'Types/function';
    /**
     * @name Controls/_decorator/Markup#value
     * @cfg {Array} Json-массив на основе JsonML.
-    */
-
-   /*
-    * @name Controls/_decorator/Markup#value
-    * @cfg {Array} Json array, based on JsonML.
     */
 
    /**
@@ -61,33 +55,9 @@ import {delay} from 'Types/function';
     * {@link Controls/decorator:linkDecorate}
     */
 
-   /*
-    * @name Controls/_decorator/Markup#tagResolver
-    * @cfg {Function} Tool to change Json before build, if it need. Applies to every node.
-    * @remark
-    * Function Arguments:
-    * <ol>
-    *    <li>value - Json node to resolve.</li>
-    *    <li>parent - Json node, a parent of "value" argument.</li>
-    *    <li>resolverParams - Object, outer data for tagResolver from resolverParams option.</li>
-    * </ol>
-    * The function should return valid JsonML. If the return value is not equals (!==) to the origin node,
-    * function will not apply to children of the new value.
-    * Note: Function should not change origin value.
-    *
-    * @example
-    * {@link Controls/_decorator/Markup/resolvers/highlight}
-    * {@link Controls/_decorator/Markup/resolvers/linkDecorate}
-    */
-
    /**
     * @name Controls/_decorator/Markup#resolverParams
     * @cfg {Object} Внешние данные для tagResolver.
-    */
-
-   /*
-    * @name Controls/_decorator/Markup#resolverParams
-    * @cfg {Object} Outer data for tagResolver.
     */
 
 
