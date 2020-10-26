@@ -12,7 +12,8 @@
                             keyProperty="id"
                             columns="{{_columns}}"
                             parentProperty="parent"
-                            nodeProperty="type">
+                            nodeProperty="type"
+                            ladderProperties="{{_ladderProperties}}">
                     </Controls.treeGrid:View>
                 </Controls.list:Container>
             </div>

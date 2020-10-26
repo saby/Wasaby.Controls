@@ -7,8 +7,9 @@ import {IColumn} from 'Controls/grid';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: IColumn[] = Gadgets.getGridColumnsWithPhoto();
+    protected _columns: IColumn[] = Gadgets.getGridColumnsWithPhotoSearch();
     protected _filter: object = {};
+    protected _ladderProperties: string[] = ['photo'];
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({

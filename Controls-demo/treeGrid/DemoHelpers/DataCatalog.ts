@@ -1,4 +1,5 @@
 import * as CntTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/content';
+import * as CntTplSearch from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/contentSearch';
 import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/contentTwoLvl';
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 
@@ -495,6 +496,23 @@ export const Gadgets = {
             {
                 displayProperty: 'title',
                 template: CntTpl,
+                width: ''
+            },
+            {
+                displayProperty: 'rating',
+                width: ''
+            },
+            {
+                displayProperty: 'country',
+                width: ''
+            }
+        ];
+    },
+    getGridColumnsWithPhotoSearch(): IColumn[] {
+        return [
+            {
+                displayProperty: 'title',
+                template: CntTplSearch,
                 width: ''
             },
             {
