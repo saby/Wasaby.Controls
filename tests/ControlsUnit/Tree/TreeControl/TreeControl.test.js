@@ -212,6 +212,10 @@ define([
          treeControl._children.baseControl.getSourceController().hasMoreData = function() {
             return false;
          };
+
+         treeControl._children.baseControl.getSourceController().hasLoaded = function(key) {
+            return key === 1;
+         };
          // Test
          await tree.TreeControl._private.toggleExpanded(treeControl, {
             getContents: function() {
@@ -1554,10 +1558,19 @@ define([
                 parentProperty: 'Раздел',
                 nodeProperty: 'Раздел@',
                 filter: {},
-                expandByItemClick: true
+                expandByItemClick: true,
+                navigation: {
+                   source: 'page',
+                   sourceConfig: {
+                      pageSize: 10,
+                      page: 0,
+                      hasMore: true
+                   }
+                }
              },
              treeGridViewModel = new treeGrid.ViewModel(cfg),
-             treeControl;
+             treeControl,
+             sourceController = new dataSource.NewSourceController(cfg);
 
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: data,
