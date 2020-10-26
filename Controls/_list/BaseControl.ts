@@ -1085,12 +1085,12 @@ const _private = {
         } else if (direction === 'up') {
             self._notify('doScroll', ['top'], { bubbling: true });
             if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction, hasMoreData);
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         } else {
             _private.jumpToEnd(self);
             if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction, hasMoreData);
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         }
     },
@@ -4148,7 +4148,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 down: _private.hasMoreData(this, this._sourceController, 'down')
             };
             if (this._scrollPagingCtr) {
-                this._scrollPagingCtr.setNumbersState('down', hasMoreData);
+                this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
             }
         }
         this._wasScrollToEnd = false;

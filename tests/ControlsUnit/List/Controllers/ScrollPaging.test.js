@@ -118,7 +118,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 chai.assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50});
             });
             it('getScrollTopByPage numbersState = up', () => {
-                spInstance.setNumbersState('up', {down: true});
+                spInstance.shiftToEdge('up', {down: true});
                 spInstance.updateScrollParams({
                     scrollTop: 0,
                     scrollHeight: 250,
@@ -129,7 +129,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 chai.assert.equal(spInstance.getScrollTopByPage(3), 100, 'wrong scrollTop for page 3');
             });
             it('getScrollTopByPage numbersState = down', () => {
-                spInstance.setNumbersState('down', {up: true});
+                spInstance.shiftToEdge('down', {up: true});
                 spInstance.updateScrollParams({
                     scrollTop: 50,
                     scrollHeight: 250,
@@ -141,7 +141,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
             });
             describe('getPagingCfg', () => {
                 it('top', () => {
-                   spInstance.setNumbersState('up', {});
+                   spInstance.shiftToEdge('up', {});
                    spInstance.updateScrollParams({
                        scrollTop: 0,
                        scrollHeight: 250,
@@ -151,7 +151,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 });
 
                 it('2 page', () => {
-                    spInstance.setNumbersState('up', {});
+                    spInstance.shiftToEdge('up', {});
                     spInstance.updateScrollParams({
                         scrollTop: 50,
                         scrollHeight: 250,
@@ -161,7 +161,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 });
 
                 it('last page from top', () => {
-                    spInstance.setNumbersState('up', {});
+                    spInstance.shiftToEdge('up', {});
                     spInstance.updateScrollParams({
                         scrollTop: 200,
                         scrollHeight: 250,
@@ -177,7 +177,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 });
 
                 it('last page from bottom', () => {
-                    spInstance.setNumbersState('down', {});
+                    spInstance.shiftToEdge('down', {});
                     spInstance.updateScrollParams({
                         scrollTop: 200,
                         scrollHeight: 250,
@@ -187,7 +187,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 });
 
                 it('prev page from bottom', () => {
-                    spInstance.setNumbersState('down', {});
+                    spInstance.shiftToEdge('down', {});
                     spInstance.updateScrollParams({
                         scrollTop: 150,
                         scrollHeight: 250,
@@ -197,7 +197,7 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 });
 
                 it('first page from bottom', () => {
-                    spInstance.setNumbersState('down', {});
+                    spInstance.shiftToEdge('down', {});
                     spInstance.updateScrollParams({
                         scrollTop: 0,
                         scrollHeight: 250,
