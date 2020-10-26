@@ -67,6 +67,7 @@ interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchyS
    ISourceOptions, IHierarchyOptions {
    dataLoadCallback?: Function;
    sourceController: SourceController;
+   viewMode: string;
 }
 
 type Key = string | number | null;
@@ -86,7 +87,6 @@ export default class Container extends Control<IContainerOptions> {
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';
 
-   private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
    private _searchResolverController: SearchResolver = null;
 
@@ -94,7 +94,11 @@ export default class Container extends Control<IContainerOptions> {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
-      this._getSearchController(options).then((searchController) => {
+
+      this._previousViewMode = this._viewMode = options.viewMode;
+      this._updateViewMode(options.viewMode);
+
+      this._getSearchController({...options, ...context}).then((searchController) => {
          this._searchValue = searchController.getSearchValue();
       });
    }
@@ -111,7 +115,7 @@ export default class Container extends Control<IContainerOptions> {
 
       if (this._options.searchDelay !== newOptions.searchDelay && this._searchResolverController) {
          this._searchResolverController.updateOptions(
-            this._getSearchResolverOptions(newOptions)
+            this._getSearchResolverOptions({...newOptions, ...context})
          );
       }
    }
@@ -121,15 +125,15 @@ export default class Container extends Control<IContainerOptions> {
          delayTime: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => {
-            this._startSearch(validatedValue);
+            this._startSearch(validatedValue, options);
          },
          searchResetCallback: undefined
       };
    }
 
-   private _startSearch(value: string): Promise<RecordSet | Error> | void {
+   private _startSearch(value: string, options?: IContainerOptions): Promise<RecordSet | Error> | void {
       if (this._viewMode !== 'search') {
-         return this._getSearchController().then((searchController) => {
+         return this._getSearchController(options).then((searchController) => {
             return searchController.search(value);
          });
       }
