@@ -62,7 +62,7 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
         result.push(newColumn);
     });
 
-    // Дополнительная колонка слева, если прикладные колонки показываются не сничала
+    // Дополнительная колонка слева, если прикладные колонки показываются не сначала
     if (shouldInsertColumnBefore) {
         result.unshift({
             startIndex: 1,
@@ -86,6 +86,13 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
             params.afterPrepareCallback(resultColumn, index, result);
         }
     });
+
+    if (params.hasMultiSelect) {
+        result.unshift({
+            startIndex: 1,
+            endIndex: 2
+        });
+    }
 
     return result;
 }

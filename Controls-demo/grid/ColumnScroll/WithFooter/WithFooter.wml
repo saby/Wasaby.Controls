@@ -25,7 +25,6 @@
                     columnScroll="{{true}}"
                     backgroundStyle="default"
                     header="{{_header}}"
-                    useNewFooterTemplate="{{ true }}"
                     stickyColumnsCount="{{2}}">
                 <ws:footerTemplate>
                     <ws:partial template="Controls/grid:FooterTemplate">
