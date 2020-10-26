@@ -3078,11 +3078,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
             }
-
-            if (detection.isMobileIOS) {
-                _private.initPaging(this);
-            }
-
             return res;
         });
     },
@@ -3423,6 +3418,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._editInPlaceController.isEditing()) {
                 _private.activateEditingRow(this);
             }
+        }
+
+        // в тач интерфейсе инициализировать пейджер необходимо при загрузке страницы
+        // В beforeMount инициализировать пейджер нельзя, т.к. не корректно посчитаются его размеры
+        if (this._context?.isTouch?.isTouch) {
+            _private.initPaging(this);
         }
 
         // для связи с контроллером ПМО
