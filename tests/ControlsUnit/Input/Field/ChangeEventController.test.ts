@@ -24,42 +24,54 @@ describe('Controls/input:__ChangeEventController', () => {
     it('Вызован обработчик после ухода фокуса у input', () => {
         inst.blurHandler(focusEvent, {
             tag: 'input',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isTrue(handler.called);
     });
     it('Вызован обработчик после ухода фокуса у textarea', () => {
         inst.blurHandler(focusEvent, {
             tag: 'textarea',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isTrue(handler.called);
     });
     it('Вызован обработчик после нажатия на Enter у input', () => {
         inst.keyDownHandler(keyboardEventEnter, {
             tag: 'input',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isTrue(handler.called);
     });
     it('Не вызован обработчик после нажатия на Enter у textarea', () => {
         inst.keyDownHandler(keyboardEventEnter, {
             tag: 'textarea',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isFalse(handler.called);
     });
     it('Не вызован обработчик после нажатия на Space у input', () => {
         inst.keyDownHandler(keyboardEventSpace, {
             tag: 'input',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isFalse(handler.called);
     });
     it('Не вызован обработчик после нажатия на Space у textarea', () => {
         inst.keyDownHandler(keyboardEventSpace, {
             tag: 'textarea',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isFalse(handler.called);
     });
@@ -67,7 +79,9 @@ describe('Controls/input:__ChangeEventController', () => {
         inst.fixed(newDisplayValue);
         inst.blurHandler(focusEvent, {
             tag: 'input',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isFalse(handler.called);
     });
@@ -75,7 +89,9 @@ describe('Controls/input:__ChangeEventController', () => {
         inst.fixed(newDisplayValue);
         inst.blurHandler(focusEvent, {
             tag: 'textarea',
-            displayValue: newDisplayValue
+            model: {
+                displayValue: newDisplayValue
+            }
         });
         assert.isFalse(handler.called);
     });
