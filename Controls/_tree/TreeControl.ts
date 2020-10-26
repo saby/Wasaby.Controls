@@ -726,7 +726,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         _private.toggleExpanded(this, dispItem);
     },
 
-    _onItemClick: function(e, item, originalEvent, columnIndex: number) {
+    _onItemClick: function(e, item, originalEvent, columnIndex: number, returnExpandResult: boolean /* for tests */) {
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
@@ -737,7 +737,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             // После исправления ошибки событие itemClick не будет стрелять при клике на крошку.
             // https://online.sbis.ru/opendoc.html?guid=4017725f-9e22-41b9-adab-0d79ad13fdc9
             if (dispItem) {
-                _private.toggleExpanded(this, dispItem);
+                const expandResult = _private.toggleExpanded(this, dispItem);
+
+                if (returnExpandResult) {
+                    return expandResult;
+                }
             }
         }
         return eventResult;

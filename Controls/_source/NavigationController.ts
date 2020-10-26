@@ -241,7 +241,7 @@ export class NavigationController {
     }
 
     hasLoaded(id: TKey): boolean {
-        return !!this._navigationStores.getIndexByValue('id', id);
+        return this._navigationStores.getIndexByValue('id', id) !== -1;
     }
 
     updateOptions(newOptions: INavigationControllerOptions): void {

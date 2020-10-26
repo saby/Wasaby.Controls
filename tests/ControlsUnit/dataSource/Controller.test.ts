@@ -163,7 +163,7 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 2);
             ok((loadedItems as RecordSet).at(0).get('title') === 'Sasha');
 
-            loadedItems = await controller.load({direction: 'down'});
+            loadedItems = await controller.load('down');
             ok((loadedItems as RecordSet).getCount() === 2);
             ok((loadedItems as RecordSet).at(0).get('title') === 'Aleksey');
         });
