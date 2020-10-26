@@ -1,0 +1,47 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800" style="position: relative">
+    <Controls.scroll:Container attr:class="controlsDemo__height400">
+        <Controls.list:HotKeysContainer>
+            <Controls.list:View
+                    keyProperty="id"
+                    name="list"
+                    attr:class="controlsDemo_line-height18"
+                    moveMarkerOnScrollPaging="{{true}}"
+                    source="{{_viewSource}}"
+                    on:activeElementChanged="_updatePagingArrow()"
+            >
+                <ws:navigation source="page" view="infinity">
+                    <ws:sourceConfig pageSize="{{50}}" page="{{0}}" hasMore="{{false}}"/>
+                    <ws:viewConfig showEndButton="{{true}}" pagingMode="hidden"/>
+                </ws:navigation>
+            </Controls.list:View>
+        </Controls.list:HotKeysContainer>
+    </Controls.scroll:Container>
+    <div style="position: absolute; bottom: 25px; right: 20px;">
+        <Controls.paging:Paging
+                attr:class="controls-BaseControl__scrollPaging_theme-default"
+                attr:style="max-width: 405px"
+                contrastBackground="{{true}}"
+                pagingMode="base"
+                showEndButton="{{true}}"
+                arrowState="{{_arrowState}}"
+                on:onArrowClick="_onPagingArrowClick()">
+            <ws:contentTemplate>
+                <div class="controls-Paging__info_theme-default">
+                    <Controls.buttons:Button
+                            attr:style="margin-right: 15px"
+                            contrastBackground="{{true}}"
+                            icon="icon-TFAttach"
+                            caption="Прикрепить"
+                            viewMode="linkButton"
+                            iconSize="s"
+                            iconStyle="secondary"></Controls.buttons:Button>
+                    <Controls.search:InputContainer>
+                        <Controls.search:Input
+                                contrastBackground="{{true}}"
+                                attr:class="demo-Search__searchinput"/>
+                    </Controls.search:InputContainer>
+                </div>
+            </ws:contentTemplate>
+        </Controls.paging:Paging>
+    </div>
+</div>
