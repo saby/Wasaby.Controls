@@ -13,12 +13,12 @@ type THeaderCells<T> = Array<GridHeaderCell<T>>;
 
 export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridCollection<T>;
-    protected _$headerCells: THeaderCells<T>;
+    protected _$cells: THeaderCells<T>;
 
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._$headerCells = this._prepareCells(options.header);
+        this._$cells = this._prepareCells(options.header);
     }
 
     getBodyClasses(theme: string): string {
@@ -26,15 +26,15 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
     }
 
     getCells(): THeaderCells<T> {
-        return this._$headerCells;
+        return this._$cells;
     }
 
-    getCellIndex(headerCell: GridHeaderCell<T>): number {
-        return this._$headerCells.indexOf(headerCell);
+    getCellIndex(cell: GridHeaderCell<T>): number {
+        return this._$cells.indexOf(cell);
     }
 
     getColumnsCount(): number {
-        return this._$headerCells.length;
+        return this._$cells.length;
     }
 
     getTopPadding(): string {
@@ -62,16 +62,16 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
     }
 
     protected _prepareCells(header: THeader): THeaderCells<T> {
-        const headerCells = [];
+        const cells = [];
         // todo add multiSelect cell
         header.forEach((elem) => {
-            const headerCell = new GridHeaderCell({
+            const cell = new GridHeaderCell({
                 headerCell: elem,
                 owner: this
             });
-            headerCells.push(headerCell);
+            cells.push(cell);
         });
-        return headerCells;
+        return cells;
     }
 }
 

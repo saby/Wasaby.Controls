@@ -28,23 +28,23 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._prepareData();
+        this._prepareDataAndFormat();
     }
 
     getResults(): EntityModel {
         return this._$owner.getResults();
     }
 
-    getResultsCellIndex(): number {
+    getCellIndex(): number {
         return this._$owner.getCellIndex(this);
     }
 
     isFirstColumn(): boolean {
-        return this.getResultsCellIndex() === 0;
+        return this.getCellIndex() === 0;
     }
 
     isLastColumn(): boolean {
-        return this.getResultsCellIndex() === this._$owner.getResultsCellsCount() - 1;
+        return this.getCellIndex() === this._$owner.getCellsCount() - 1;
     }
 
     isMultiSelectColumn(): boolean {
@@ -106,7 +106,7 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
         return {};
     }
 
-    protected _prepareData(): void {
+    protected _prepareDataAndFormat(): void {
         const results = this.getResults();
         const displayProperty = this._$displayProperty;
         if (results && displayProperty) {
@@ -154,7 +154,7 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
 
 Object.assign(GridResultsCell.prototype, {
     _moduleName: 'Controls/display:GridResultsCell',
-    _instancePrefix: 'grid-header-cell-',
+    _instancePrefix: 'grid-results-cell-',
     _$owner: null,
     _$template: null,
     _$align: null,

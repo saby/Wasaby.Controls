@@ -38,16 +38,16 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         OptionsToPropertyMixin.call(this, options);
     }
 
-    getHeaderCellIndex(): number {
+    getCellIndex(): number {
         return this._$owner.getCellIndex(this);
     }
 
     isFirstColumn(): boolean {
-        return this.getHeaderCellIndex() === 0;
+        return this.getCellIndex() === 0;
     }
 
     isLastColumn(): boolean {
-        return this.getHeaderCellIndex() === this._$owner.getColumnsCount() - 1;
+        return this.getCellIndex() === this._$owner.getColumnsCount() - 1;
     }
 
     isMultiSelectColumn(): boolean {

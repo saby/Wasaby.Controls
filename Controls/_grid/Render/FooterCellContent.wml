@@ -1,0 +1,5 @@
+<div attr:class="{{ colData.getContentClasses(theme) }}">
+    <ws:if data="{{ !!contentTemplate }}">
+        <ws:partial template="{{ contentTemplate }}" />
+    </ws:if>
+</div>

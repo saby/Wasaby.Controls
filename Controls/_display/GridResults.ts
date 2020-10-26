@@ -2,7 +2,7 @@ import { TemplateFunction } from 'UI/Base';
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
 import GridCollection from './GridCollection';
-import { IColumn } from '../_grid/interface/IColumn';
+import { TColumns } from '../_grid/interface/IColumn';
 import GridResultsCell from './GridResultsCell';
 import { Model as EntityModel } from 'Types/entity';
 
@@ -16,13 +16,13 @@ export interface IOptions<T> {
 
 export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridCollection<T>;
-    protected _$resultsCells: TResultsCells<T>;
+    protected _$cells: TResultsCells<T>;
     protected _$results: EntityModel;
 
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._$resultsCells = this._prepareCells(this._$owner.getColumns(), options.resultsTemplate);
+        this._$cells = this._prepareCells(this._$owner.getColumns(), options.resultsTemplate);
     }
 
     getBodyClasses(theme: string): string {
@@ -30,19 +30,19 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
     }
 
     getCells(): TResultsCells<T> {
-        return this._$resultsCells;
+        return this._$cells;
     }
 
-    getCellIndex(resultsCell: GridResultsCell<T>): number {
-        return this._$resultsCells.indexOf(resultsCell);
+    getCellIndex(cell: GridResultsCell<T>): number {
+        return this._$cells.indexOf(cell);
     }
 
     getColumnsCount(): number {
         return this._$owner.getColumns().length;
     }
 
-    getResultsCellsCount(): number {
-        return this._$resultsCells.length;
+    getCellsCount(): number {
+        return this._$cells.length;
     }
 
     getTopPadding(): string {
@@ -73,30 +73,30 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
         return this._$results;
     }
 
-    protected _prepareCells(columns: IColumn[], resultsTemplate: TemplateFunction): TResultsCells<T> {
-        const resultsCells = [];
+    protected _prepareCells(columns: TColumns, resultsTemplate: TemplateFunction): TResultsCells<T> {
+        const cells = [];
         // todo add multiSelect cell
         if (resultsTemplate) {
-            const resultsCell = new GridResultsCell({
+            const cell = new GridResultsCell({
                 template: resultsTemplate,
                 owner: this,
                 // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
                 //      | При разработке мультизаговков colspan будет сделан единообразно и для результатов.
                 colspan: true
             });
-            resultsCells.push(resultsCell);
-            return resultsCells;
+            cells.push(cell);
+            return cells;
         }
         columns.forEach((elem) => {
-            const resultsCell = new GridResultsCell({
+            const cell = new GridResultsCell({
                 template: elem.resultTemplate,
                 displayProperty: elem.displayProperty,
                 align: elem.align,
                 owner: this
             });
-            resultsCells.push(resultsCell);
+            cells.push(cell);
         });
-        return resultsCells;
+        return cells;
     }
 }
 
