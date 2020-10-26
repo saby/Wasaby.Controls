@@ -21,18 +21,9 @@ export interface INotificationBaseOptions extends IControlOptions, INotification
 * @mixes Controls/_popupTemplate/Notification/interface/INotification
 * 
 * @public
-* @category popup
 * @author Красильников А.С.
 * @demo Controls-demo/NotificationDemo/NotificationTemplate
 */
-
-/**
- * @name Controls/_popupTemplate/Notification/Base#bodyContentTemplate
- * @cfg {Function|String} Определяет основной контент окна уведомления.
- */
-
-
-
 class Notification extends Control<INotificationBaseOptions> implements INotification{
     protected _template: TemplateFunction = template;
     protected _borderStyle: String;
@@ -73,5 +64,8 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
     }
     static _theme: string[] = ['Controls/popupTemplate'];
 }
-
+/**
+ * @name Controls/_popupTemplate/Notification/Base#bodyContentTemplate
+ * @cfg {Function|String} Определяет основной контент окна уведомления.
+ */
 export default Notification;

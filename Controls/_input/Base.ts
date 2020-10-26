@@ -7,6 +7,7 @@ import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
 import {hasHorizontalScroll} from 'Controls/scroll';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 import {isEqual} from 'Types/object';
 
@@ -537,7 +538,7 @@ var Base = Control.extend({
         // redefinition
     },
     _keyDownHandler: function (event) {
-        // redefinition
+        processKeydownEvent(event);
     },
     _selectHandler: function () {
         // redefinition

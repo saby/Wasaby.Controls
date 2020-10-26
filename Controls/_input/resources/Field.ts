@@ -163,9 +163,12 @@ class Field<Value, ModelOptions>
     private _getConfigForController(name: ControllerName): ChangeEventConfig {
         switch (name) {
             case 'changeEventController':
+                // Нужно отдавать model, а не displayValue. Например, строка поиска наследуется от Input:Base и сама
+                // реализует опцию trim. В этом случае displayValue меняется в родителе и нам нужно получить
+                // новое значение.
                 return {
                     tag: this._options.tag,
-                    displayValue: this._model.displayValue
+                    model: this._model
                 } as ChangeEventConfig;
         }
     }
@@ -351,21 +354,6 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const code: string = event.nativeEvent.key;
-        const processedKeys: string[] = [
-            'End', 'Home', 'Space', 'ArrowLeft', 'ArrowRight',
-            // Поддержка значения key в IE
-            'Spacebar', 'Left', 'Right'
-        ];
-
-        /**
-         * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
-         * Для этого останавливаем всплытие события.
-         */
-        if (processedKeys.includes(code)) {
-            event.stopPropagation();
-        }
-
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 

@@ -135,7 +135,7 @@ var
             const { columns, columnIndex } = params;
             const { cellPadding } = columns[columnIndex];
             const classLists = createClassListCollection('top', 'bottom', 'left', 'right');
-
+            const isRootItemsSeparator = params.dispItem && params.dispItem['[Controls/_display/SearchSeparator]'];
 
             if (columns[columnIndex].isActionCell) {
                 return classLists;
@@ -151,9 +151,12 @@ var
                 classLists.right += ` controls-Grid__cell_spacingRight${getCellPadding('right')}_theme-${theme}`;
             }
 
-            // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
-            if (params.columnIndex === 0 && !params.hasMultiSelectColumn) {
-                classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
+            // Отступ для первой колонки.
+            if (params.columnIndex === 0) {
+                // Если режим мультиселект, то отступ обеспечивается чекбоксом.
+                if (!params.hasMultiSelectColumn) {
+                    classLists.left += ` controls-Grid__cell_spacingFirstCol_${params.itemPadding.left}_theme-${theme}`;
+                }
             }
 
             // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
@@ -165,7 +168,9 @@ var
             if (params.columnIndex === params.columns.length - arrayLengthOffset) {
                 classLists.right += ` controls-Grid__cell_spacingLastCol_${params.itemPadding.right}_theme-${theme}`;
             }
-            if (!params.isHeader && !params.isResult) {
+
+            // У разделителя записей в поиске не должно быть стандартных отступов
+            if (!isRootItemsSeparator && !params.isHeader && !params.isResult) {
                 classLists.top += ` controls-Grid__row-cell_rowSpacingTop_${params.itemPadding.top}_theme-${theme}`;
                 classLists.bottom += ` controls-Grid__row-cell_rowSpacingBottom_${params.itemPadding.bottom}_theme-${theme}`;
             }
@@ -315,6 +320,7 @@ var
         },
 
         getItemColumnCellClasses(self, current, theme, backgroundColorStyle) {
+            const isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]'];
             const checkBoxCell = current.hasMultiSelectColumn && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
             let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
@@ -322,16 +328,18 @@ var
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
             // Стиль колонки
-            if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
-                classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
-            } else {
-                classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
-            }
-            classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
-            _private.prepareSeparatorClasses(current, classLists, theme);
+            if (!isRootItemsSeparator) {
+                if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
+                    classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+                } else {
+                    classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
+                }
+                classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
+                _private.prepareSeparatorClasses(current, classLists, theme);
 
-            if (backgroundColorStyle) {
-                classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+                if (backgroundColorStyle) {
+                    classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
+                }
             }
 
             if (self._options.columnScroll) {
@@ -645,7 +653,7 @@ var
                 classLists.base += ` controls-Grid__rowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
             }
 
-            if (current.columnIndex > current.hasMultiSelectColumn ? 1 : 0) {
+            if (current.columnIndex > (current.hasMultiSelectColumn ? 1 : 0)) {
                 const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
 
                 if (columnSeparatorSize !== null) {
@@ -1784,7 +1792,7 @@ var
                     currentColumn.ladder = self._ladder.ladder[current.index];
                     currentColumn.ladderWrapper = LadderWrapper;
                 }
-                if (current.item.get) {
+                if (current.item && current.item.get) {
                     currentColumn.needSearchHighlight = current.searchValue ?
                         !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue) : false;
                     currentColumn.searchValue = current.searchValue;
@@ -1931,6 +1939,9 @@ var
         },
 
         _calcItemVersion(item, key, index): string {
+            if (item === null) {
+                return;
+            }
             let version: string = this._model._calcItemVersion(item, key) + (item.getId ? item.getId() : '');
 
             if (this.getCount() - 1 === index) {
@@ -2138,10 +2149,6 @@ var
 
         getActiveItem: function() {
             return this._model.getActiveItem();
-        },
-
-        getChildren: function() {
-            return this._model.getChildren.apply(this._model, arguments);
         },
 
         getStartIndex(): number {

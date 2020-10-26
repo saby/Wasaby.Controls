@@ -13,6 +13,7 @@
             model="{{model}}"
             inputCallback="{{inputCallback}}"
             recalculateLocationVisibleArea="{{recalculateLocationVisibleArea}}"
+            on:keydown="_keyDownHandler()"
             attr:spellcheck="{{options.spellCheck}}"
             attr:readOnly="{{readOnly || ''}}"
             attr:autocorrect="off"

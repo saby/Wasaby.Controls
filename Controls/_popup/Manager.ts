@@ -21,7 +21,6 @@ const ORIENTATION_CHANGE_DELAY = 50;
  * @class Controls/_popup/Manager
  * @private
  * @singleton
- * @category Popup
  * @author Красильников Андрей
  */
 

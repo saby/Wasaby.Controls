@@ -7,6 +7,7 @@ import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
 import * as Text from 'Controls/_input/Text';
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
@@ -85,6 +86,7 @@ export default class Area extends Text<IAreaOptions> {
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        processKeydownEvent(event);
         this._newLineHandler(event, true);
     }
 

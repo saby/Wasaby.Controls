@@ -7,7 +7,6 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
  * @class Controls/_popup/PopupHelper/Sticky
  * 
  * @author Красильников А.С.
- * @category Popup
  * @public
  */
 

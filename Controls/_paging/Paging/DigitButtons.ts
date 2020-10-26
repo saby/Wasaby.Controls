@@ -51,7 +51,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
             firstElem = currentDigit - SUR_NUMBERS_ELEMENTS_STEP;
             lastElem = currentDigit + SUR_NUMBERS_ELEMENTS_STEP;
         }
-        if (mode !== 'standard') {
+        if (mode !== 'standard' && mode !== 'numbers') {
             if (currentDigit === 1) {
                 lastElem++;
             }

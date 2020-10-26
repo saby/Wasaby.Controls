@@ -592,6 +592,7 @@
  * @name Controls/_filterPopup/interface/IFilterPanel#applyButtonCaption
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
  * @cfg {String} Текст на кнопке применения фильтрации.
+ */
 
  /**
  * @name Controls/_filterPopup/interface/IFilterPanel#groupProperty
