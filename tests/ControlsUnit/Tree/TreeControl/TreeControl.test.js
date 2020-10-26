@@ -520,6 +520,9 @@ define([
                setHasMoreStorage: function (hms) {
                   vmHasMoreStorage = hms;
                },
+               getHasMoreStorage: () => {
+                  return {};
+               },
                getExpandedItems: function() {
                   return [1];
                },
@@ -815,7 +818,7 @@ define([
                      sourceConfig: {
                         pageSize: 2,
                         page: 0,
-                        hasMore: true
+                        hasMore: false
                      }
                   }
                },
