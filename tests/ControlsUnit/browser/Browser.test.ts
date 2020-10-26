@@ -308,6 +308,27 @@ describe('Controls/browser:Browser', () => {
             ok(browser._items === newItems);
         });
 
-    })
+    });
+
+    describe('_dataLoadCallback', () => {
+        it('check direction', () => {
+            let actualDirection = null;
+            const options = getBrowserOptions();
+
+            const browser = getBrowser(options);
+            browser._options.dataLoadCallback = (items, direction) => {
+                actualDirection = direction;
+            };
+            browser._filterController = {
+                handleDataLoad: () => {}
+            };
+            browser._searchController = {
+                handleDataLoad: () => {}
+            };
+
+            browser._dataLoadCallback(null, 'down');
+            equal(actualDirection, 'down');
+        });
+    });
 
 });

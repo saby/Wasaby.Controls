@@ -16,7 +16,7 @@ import {
     NewSourceController as SourceController
 } from 'Controls/dataSource';
 import { IControlerState } from 'Controls/_dataSource/Controller';
-import { TSelectionType } from 'Controls/interface';
+import { TSelectionType, Direction } from 'Controls/interface';
 import Store from 'Controls/Store';
 import { SHADOW_VISIBILITY } from 'Controls/scroll';
 import {detection} from 'Env/Env';
@@ -462,12 +462,12 @@ export default class Browser extends Control {
         this._searchController.search(value, force);
     }
 
-    _dataLoadCallback(data: RecordSet): void {
+    _dataLoadCallback(data: RecordSet, direction: Direction): void {
         this._filterController.handleDataLoad(data);
         this._getSearchController().handleDataLoad(data);
 
         if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(data);
+            this._options.dataLoadCallback(data, direction);
         }
     }
 
