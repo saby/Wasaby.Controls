@@ -220,7 +220,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         if (isFolder) {
             return this._options.folderWidth || DEFAULT_FOLDER_WIDTH;
         } else {
-            return this._tileModel.getTileWidth(item, imageHeightProperty, imageHeightProperty);
+            return this._tileModel.getTileWidth(item, imageWidthProperty, imageHeightProperty);
         }
     },
 

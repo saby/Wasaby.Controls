@@ -69,6 +69,8 @@ var TileViewModel = ListViewModel.extend({
         current.multiSelectVisibility = this._options.multiSelectVisibility;
         current.multiSelectPosition = this._options.multiSelectPosition;
 
+        current = cMerge(current, this.getTileItemData(dispItem));
+
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ` controls-TileView__checkbox_position-${current.multiSelectPosition}_theme-${current.theme} ` +
                 'controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
@@ -276,7 +278,7 @@ var TileViewModel = ListViewModel.extend({
             let previewHeight = imageWrapper.clientHeight;
             menuOptions.image = itemData.imageData.url;
             menuOptions.title = itemData.item.get(itemData.displayProperty);
-            menuOptions.additionalText = 'test';
+            menuOptions.additionalText = itemData.item.get(templateOptions.headerAdditionalTextProperty);
             if (this._options.tileScalingMode === TILE_SCALING_MODE.NONE) {
                 previewHeight = previewHeight * ZOOM_COEFFICIENT;
                 previewWidth = previewWidth * ZOOM_COEFFICIENT;

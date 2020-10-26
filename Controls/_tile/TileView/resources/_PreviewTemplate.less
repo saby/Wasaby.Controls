@@ -66,7 +66,7 @@
 }
 
 .controls-itemActionsV__action_style_tileDark + .controls-itemActionsV__action_style_tileDark {
-   box-shadow: inset @border-thickness 0 #666666;
+   box-shadow: inset @border-thickness 0 @icon_style_color_tile_dark_preview_tile;
 }
 
 .controls-itemActionsV__action_style_tileLight + .controls-itemActionsV__action_style_tileLight {
@@ -74,10 +74,20 @@
 }
 
 .controls-icon_style-tileDark_theme-@{themeName} {
-   fill: #666666;
-   color: #666666;
+   fill: @icon_style_color_tile_dark_preview_tile;
+   color: @icon_style_color_tile_dark_preview_tile;
 }
 
-.controls-TileView__richTemplate_item {
-   overflow: hidden;
+.ws-is-hover {
+   .controls-BaseControl_showActions_visible .controls-TileView__previewTemplate.controls-ListView__item_showActions .controls-itemActionsV,
+   .controls-BaseControl_showActions_delayed .controls-TileView__previewTemplate.controls-ListView__item_showActions:hover .controls-itemActionsV,
+   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate.controls-ListView__item_showActions:hover .controls-itemActionsV {
+      opacity: 1;
+      visibility: visible;
+   }
+}
+
+.controls-TileView__previewTemplate_footer {
+   position: absolute;
+   bottom: 0;
 }
