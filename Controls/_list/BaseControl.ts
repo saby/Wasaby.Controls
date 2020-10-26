@@ -5117,8 +5117,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            itemActionsController = _private.getItemActionsController(this, this._options);
-            const swipedItem = itemActionsController?.getSwipeItem();
+            // Тут не надо инициализировать контроллер, если он не проинициализирован
+            const swipedItem = this._itemActionsController?.getSwipeItem();
             if (swipedItem) {
                 itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
