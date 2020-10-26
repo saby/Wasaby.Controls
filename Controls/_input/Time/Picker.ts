@@ -15,7 +15,6 @@
  * 
  * @private
  * @author Красильников А.С.
- * @category Input
  */
 
 /*
@@ -34,7 +33,6 @@
  * 
  * @private
  * @author Красильников А.С.
- * @category Input
  */
 
 

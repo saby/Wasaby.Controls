@@ -16,7 +16,6 @@ const MOVE_DIALOG_MEASURER_CLASS_TEMPLATE = 'controls-MoveDialog_theme-';
  * @public
  * @class Controls/_moverDialog/BaseTemplate
  * @author Авраменко А.С.
- * @category List
  */
 
 /**

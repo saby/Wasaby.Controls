@@ -15,7 +15,6 @@ export interface IArrowButtonOptions extends IControlOptions {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ArrowButton/Index
  */
 

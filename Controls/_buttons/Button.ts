@@ -148,7 +148,6 @@ export function getDefaultOptions(): object {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 
@@ -173,7 +172,6 @@ export function getDefaultOptions(): object {
  * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ViewModes/Index
  */
 /**

@@ -30,7 +30,6 @@ import { RecordSet } from 'Types/collection';
  * 
  * @private
  * @author Авраменко А.С.
- * @category List
  */
 
 export default class ListControl extends Control/** @lends Controls/_list/ListControl.prototype */ implements IMovableList {

@@ -26,7 +26,6 @@ import 'Controls/search';
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
  * @author Герасимов А.М.
- * @category Input
  */
 
 /*
@@ -42,7 +41,6 @@ import 'Controls/search';
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
- * @category Input
  */
 
 /**

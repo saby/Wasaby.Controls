@@ -12,7 +12,6 @@ import * as template from 'wml!Controls/_popupConfirmation/template';
  * @extends Core/Control
  * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Template/mixin
  * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG

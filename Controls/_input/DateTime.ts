@@ -43,7 +43,6 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @public
  * @demo Controls-demo/Input/DateTime/DateTime
  * @author Красильников А.С.
- * @category Input
  */
 
 /*
@@ -69,7 +68,6 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @public
  * @demo Controls-demo/Input/DateTime/DateTime
  * @author Красильников А.С.
- * @category Input
  */
 
 const _private = {

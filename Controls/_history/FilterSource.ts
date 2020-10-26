@@ -347,7 +347,6 @@ var _private = {
  * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -371,7 +370,6 @@ var _private = {
  * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({

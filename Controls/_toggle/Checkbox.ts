@@ -29,7 +29,6 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 
@@ -48,7 +47,6 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 

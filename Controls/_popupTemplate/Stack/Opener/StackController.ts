@@ -16,7 +16,6 @@ import {Bus} from 'Env/Event';
  * @class Controls/_popupTemplate/Stack/Opener/StackController
  * 
  * @private
- * @category Popup
  */
 
 const ACCORDEON_MIN_WIDTH = 50;

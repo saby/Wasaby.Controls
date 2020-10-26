@@ -18,7 +18,6 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/ButtonGroup/Index
  */
 

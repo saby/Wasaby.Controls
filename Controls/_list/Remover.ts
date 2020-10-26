@@ -75,7 +75,6 @@ var _private = {
  * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /*
@@ -88,7 +87,6 @@ var _private = {
  * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 var Remover = BaseAction.extend({
