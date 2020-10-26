@@ -16,28 +16,6 @@ import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
     * @public
     * @author Герасимов А.М.
     */
-
-   /**
-    * @name Controls/_filterPopup/Panel/Text#caption
-    * @cfg {String} Caption Текст, который будет отображаться рядом с кнопкой сброса.
-    * @example
-    * <pre>
-    *    <Controls.filterPopup:Text>
-    *        <ws:caption>По удалённым</ws:caption>
-    *    </Controls.filterPopup:Text>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_filterPopup/Panel/Text#value
-    * @cfg {*} [value=true] Значение, которое будет установлено в конфигурацию фильтра после построения контрола.
-    * @example
-    * <pre>
-    *    <Controls.filterPopup:Text>
-    *        <ws:value>-2</ws:value>
-    *    </Controls.filterPopup:Text>
-    * </pre>
-    */
 class Text extends Control<IControlOptions> {
       protected _template: TemplateFunction = template;
       protected  _afterMount(): void {
@@ -57,5 +35,26 @@ class Text extends Control<IControlOptions> {
          };
       }
    }
+/**
+ * @name Controls/_filterPopup/Panel/Text#caption
+ * @cfg {String} Текст, который будет отображаться рядом с кнопкой сброса.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Text>
+ *    <ws:caption>По удалённым</ws:caption>
+ * </Controls.filterPopup:Text>
+ * </pre>
+ */
 
+/**
+ * @name Controls/_filterPopup/Panel/Text#value
+ * @cfg {*} Значение, которое будет установлено в конфигурацию фильтра после построения контрола.
+ * @default true
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Text>
+ *    <ws:value>-2</ws:value>
+ * </Controls.filterPopup:Text>
+ * </pre>
+ */
 export default Text;

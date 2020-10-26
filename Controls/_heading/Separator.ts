@@ -44,22 +44,6 @@ export interface ISeparatorOptions extends IControlOptions {
  * @demo Controls-demo/Heading/Separators/Index
  */
 
-/**
- * @name Controls/_heading/Separator#style
- * @cfg {String} Стиль отображения иконки. В теме онлайна есть только один стиль отображения.
- * @variant primary
- * @variant secondary
- * @default secondary
- */
-
-/*
- * @name Controls/_heading/Separator#style
- * @cfg {String} Icon display style. In the online theme has only one display style.
- * @variant primary
- * @variant secondary
- * @default secondary
- */
-
 class Separator extends Control<ISeparatorOptions> {
     protected _template: TemplateFunction = separatorTemplate;
 
@@ -80,5 +64,19 @@ class Separator extends Control<ISeparatorOptions> {
         };
     }
 }
+/**
+ * @name Controls/_heading/Separator#style
+ * @cfg {String} Стиль отображения иконки. В теме онлайна есть только один стиль отображения.
+ * @variant primary
+ * @variant secondary
+ * @default secondary
+ */
 
+/*
+ * @name Controls/_heading/Separator#style
+ * @cfg {String} Icon display style. In the online theme has only one display style.
+ * @variant primary
+ * @variant secondary
+ * @default secondary
+ */
 export default Separator;
