@@ -105,7 +105,17 @@ export default class Browser extends Control {
                         filterItems,
                         items
                     };
-                }, (error) => error);
+                }, (error) => {
+                    this._onDataError(
+                        null,
+                        {
+                            error,
+                            mode: dataSourceError.Mode.include
+                        }
+                    );
+
+                    return error;
+                });
             });
         }
     }
