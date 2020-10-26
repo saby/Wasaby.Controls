@@ -407,7 +407,7 @@ export default class CollectionItem<T> extends mixin<
         }
         this._$animatedForSelection = animated;
         this._nextVersion();
-        this._notifyItemChangeToOwner('animated');
+        this._notifyItemChangeToOwner('animatedForSelection');
     }
 
     /**
