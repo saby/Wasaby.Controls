@@ -2773,7 +2773,8 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                const current = {
                   rowSeparatorSize: null,
                   columnSeparatorSize: null,
-                  columnIndex: 0
+                  columnIndex: 0,
+                  columns: [{}, {}]
                };
                [
                   [' controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__no-rowSeparator', ''],

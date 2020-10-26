@@ -1,7 +1,7 @@
 define(
    [
       'Controls/_filterPopup/History/List',
-      'Core/Serializer',
+      'UI/State',
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
       'Controls/filter',
@@ -10,7 +10,7 @@ define(
       'Types/collection',
       'Env/Env'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter, entity, history, collection, Env) {
+   function(List, uiState, chain, HistorySourceDemo, filter, entity, history, collection, Env) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},

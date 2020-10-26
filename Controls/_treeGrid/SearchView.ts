@@ -37,6 +37,22 @@ var
            this._notify('itemClick', [item, e], {bubbling: true});
            this._itemClickNotifiedByPathClick = true;
         },
+        _onItemMouseUp(e, itemData) {
+            const dispItem = itemData.dispItem ? itemData.dispItem : itemData;
+            if (dispItem['[Controls/_display/SearchSeparator]']) {
+                e.stopPropagation();
+                return;
+            }
+            SearchView.superclass._onItemMouseUp.apply(this, arguments);
+        },
+        _onItemClick: function(e, itemData) {
+            const dispItem = itemData.dispItem ? itemData.dispItem : itemData;
+            if (dispItem['[Controls/_display/SearchSeparator]']) {
+                e.stopPropagation();
+                return;
+            }
+            SearchView.superclass._onItemClick.apply(this, arguments);
+        },
         getDefaultOptions(): {} {
             return {
                 itemPadding: {
