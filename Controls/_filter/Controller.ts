@@ -327,7 +327,7 @@ export = Container;
 */
 
 /**
- * @event Происходит перед сохранением фильтра в историю
+ * @event Происходит перед сохранением фильтра в историю.
  * @name Controls/_filter/Controller#historySave
  * @param {Env/Event.Object} event Дескриптор события.
  * @param {Array|Function|Types/collection:IList} historyItems Список полей фильтра и их конфигурация, которая будет сохранена в историю.

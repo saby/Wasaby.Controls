@@ -33,6 +33,17 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *
  */
 
+class Component extends Control {
+    protected _template: Function = template;
+
+    _onRangeChanged(event, startValue: Date, endValue: Date): void {
+        this._notify('rangeChanged', [startValue, endValue]);
+        this._notify(
+            'relationWrapperRangeChanged',
+            [startValue, endValue, this._options.number, this._options.relationMode],
+            { bubbling: true });
+    }
+}
 /**
  * @name Controls/_dateRange/RelationWrapper#content
  * @cfg {Content} Содержимое контрола. Контрол реализует {@link Controls/_dateRange/interfaces/IDateRange}.
@@ -160,17 +171,4 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *    });
  * </pre>
  */
-
-class Component extends Control {
-    protected _template: Function = template;
-
-    _onRangeChanged(event, startValue: Date, endValue: Date): void {
-        this._notify('rangeChanged', [startValue, endValue]);
-        this._notify(
-            'relationWrapperRangeChanged',
-            [startValue, endValue, this._options.number, this._options.relationMode],
-            { bubbling: true });
-    }
-}
-
 export default Component;

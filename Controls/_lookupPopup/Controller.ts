@@ -9,10 +9,57 @@ import {Model} from 'Types/entity';
 import {List, RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
+var _private = {
+   prepareItems: function(items) {
+      return items ? Utils.object.clone(items) : new collection.List();
+   },
+
+   addItemToSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
+
+      if (index === -1) {
+         selectedItems.add(item);
+      } else {
+         selectedItems.replace(item, index);
+      }
+   },
+
+   removeFromSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
+
+      if (index !== -1) {
+         selectedItems.removeAt(index);
+      }
+   },
+
+   processSelectionResult(result, selectedItems: List|RecordSet, multiSelect: boolean, keyProp: string|undefined): void {
+      let i;
+      let initialSelection;
+      let resultSelection;
+      let keyProperty;
+
+      if (result) {
+         for (i in result) {
+            if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
+               initialSelection = result[i].initialSelection;
+               resultSelection = result[i].resultSelection;
+               keyProperty = keyProp || result[i].keyProperty;
+
+               chain.factory(initialSelection).each((item) => {
+                  _private.removeFromSelected(item, selectedItems, keyProperty);
+               });
+               chain.factory(resultSelection).each((item) => {
+                  _private.addItemToSelected(item, selectedItems, keyProperty);
+               });
+            }
+         }
+      }
+   }
+};
 /**
  *
- * Контроллер, который позволяет выбирать данные из одного или нескольких списков (например, из {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/list:View} или {@link https://wi.sbis.ru/docs/js/Controls/grid/View/ Controls/grid:View}).
- * Используется вместе с Controls/lookupPopup:Container.
+ * Контроллер, который позволяет выбирать данные из одного или нескольких списков (например, из {@link Controls/list:View} или {@link Controls/grid:View}).
+ * Используется вместе с {@link Controls/lookupPopup:Container}.
  * Можно использовать как плоский, так и иерархический список.
  *
  * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
@@ -23,7 +70,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @extends Core/Control
  * 
  * @public
- * @author Герасимов Александр Максимович
+ * @author Герасимов А.М.
  */
 
 /*
@@ -42,8 +89,80 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * @public
  * @author Герасимов Александр Максимович
  */
+var Controller = Control.extend({
 
+   _template: template,
+   _selectedItems: null,
+   _selectionLoadDef: null,
 
+   _beforeMount: function(options) {
+      this._selectedItems = _private.prepareItems(options.selectedItems);
+   },
+
+   _beforeUpdate: function(newOptions) {
+      if (this._options.selectedItems !== newOptions.selectedItems) {
+         this._selectedItems = _private.prepareItems(newOptions.selectedItems);
+      }
+   },
+
+   _selectComplete(event?: SyntheticEvent<'selectComplete'>, multiSelect?: boolean): void {
+      const selectCallback = (selectResult) => {
+         this._notify('sendResult', [selectResult], {bubbling: true});
+         this._notify('close', [], {bubbling: true});
+      };
+
+      this._children.selectComplete.start();
+
+      if (this._selectionLoadDef) {
+         this._selectionLoadDef.done().getResult().addCallback((result) => {
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // необходимо уйти от опции selectionLoadMode и вынести загрузку
+            // выбранный записей в отдельный слой.
+            // Результат контроллера должен быть однозначный (только фильтры)
+            if (this._options.selectionLoadMode) {
+               if (multiSelect === false) {
+                  // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
+                  // то очистим список выбранных элементов и возьмем только запись из этого справочника
+                  this._selectedItems.clear();
+               }
+               _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
+               selectCallback(this._selectedItems);
+            } else {
+               selectCallback(result);
+            }
+            this._selectionLoadDef = null;
+            return result;
+         });
+      } else {
+         selectCallback(this._selectedItems);
+      }
+   },
+
+   _selectionLoad: function(event, deferred) {
+      if (!this._selectionLoadDef) {
+         this._selectionLoadDef = new ParallelDeferred();
+      }
+      this._selectionLoadDef.push(deferred);
+   },
+
+   _getChildContext: function() {
+      return {
+         selectorControllerContext: new SelectorContext(this._selectedItems)
+      };
+   },
+
+   selectComplete(): void {
+      this._selectComplete();
+   }
+
+});
+
+Controller._private = _private;
+Controller.getDefaultOptions = function getDefaultOptions() {
+   return {
+      selectionLoadMode: true
+   };
+};
 /**
  * @name Controls/_lookupPopup/Controller#selectedItems
  * @cfg {null|Types/collection:RecordSet} Выбранные элементы.
@@ -125,130 +244,4 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  *    </Controls.lookupPopup:Controller>
  * </pre>
  */
-
-
-
-var _private = {
-   prepareItems: function(items) {
-      return items ? Utils.object.clone(items) : new collection.List();
-   },
-
-   addItemToSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
-      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
-
-      if (index === -1) {
-         selectedItems.add(item);
-      } else {
-         selectedItems.replace(item, index);
-      }
-   },
-
-   removeFromSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
-      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
-
-      if (index !== -1) {
-         selectedItems.removeAt(index);
-      }
-   },
-
-   processSelectionResult(result, selectedItems: List|RecordSet, multiSelect: boolean, keyProp: string|undefined): void {
-      let i;
-      let initialSelection;
-      let resultSelection;
-      let keyProperty;
-
-      if (result) {
-         for (i in result) {
-            if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
-               initialSelection = result[i].initialSelection;
-               resultSelection = result[i].resultSelection;
-               keyProperty = keyProp || result[i].keyProperty;
-
-               chain.factory(initialSelection).each((item) => {
-                  _private.removeFromSelected(item, selectedItems, keyProperty);
-               });
-               chain.factory(resultSelection).each((item) => {
-                  _private.addItemToSelected(item, selectedItems, keyProperty);
-               });
-            }
-         }
-      }
-   }
-};
-
-var Controller = Control.extend({
-
-   _template: template,
-   _selectedItems: null,
-   _selectionLoadDef: null,
-
-   _beforeMount: function(options) {
-      this._selectedItems = _private.prepareItems(options.selectedItems);
-   },
-
-   _beforeUpdate: function(newOptions) {
-      if (this._options.selectedItems !== newOptions.selectedItems) {
-         this._selectedItems = _private.prepareItems(newOptions.selectedItems);
-      }
-   },
-
-   _selectComplete(event?: SyntheticEvent<'selectComplete'>, multiSelect?: boolean): void {
-      const selectCallback = (selectResult) => {
-         this._notify('sendResult', [selectResult], {bubbling: true});
-         this._notify('close', [], {bubbling: true});
-      };
-
-      this._children.selectComplete.start();
-
-      if (this._selectionLoadDef) {
-         this._selectionLoadDef.done().getResult().addCallback((result) => {
-            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
-            // необходимо уйти от опции selectionLoadMode и вынести загрузку
-            // выбранный записей в отдельный слой.
-            // Результат контроллера должен быть однозначный (только фильтры)
-            if (this._options.selectionLoadMode) {
-               if (multiSelect === false) {
-                  // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
-                  // то очистим список выбранных элементов и возьмем только запись из этого справочника
-                  this._selectedItems.clear();
-               }
-               _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
-               selectCallback(this._selectedItems);
-            } else {
-               selectCallback(result);
-            }
-            this._selectionLoadDef = null;
-            return result;
-         });
-      } else {
-         selectCallback(this._selectedItems);
-      }
-   },
-
-   _selectionLoad: function(event, deferred) {
-      if (!this._selectionLoadDef) {
-         this._selectionLoadDef = new ParallelDeferred();
-      }
-      this._selectionLoadDef.push(deferred);
-   },
-
-   _getChildContext: function() {
-      return {
-         selectorControllerContext: new SelectorContext(this._selectedItems)
-      };
-   },
-
-   selectComplete(): void {
-      this._selectComplete();
-   }
-
-});
-
-Controller._private = _private;
-Controller.getDefaultOptions = function getDefaultOptions() {
-   return {
-      selectionLoadMode: true
-   };
-};
-
 export = Controller;

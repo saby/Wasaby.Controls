@@ -11,6 +11,10 @@ import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Record} from 'Types/entity';
 
+interface IReceivedState {
+    items: Record[];
+}
+
 /**
  * Хлебные крошки с кнопкой "Назад".
  *
@@ -45,72 +49,6 @@ import {Record} from 'Types/entity';
  *
  * @demo Controls-demo/BreadCrumbs/ScenarioFirst/Index
  */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#backButtonIconStyle
- * @cfg {String} Стиль отображения иконки кнопки "Назад".
- * @see Controls/_heading/Back#iconStyle
- */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#backButtonFontColorStyle
- * @cfg {String} Стиль цвета кнопки "Назад".
- * @see Controls/_heading/Back#fontColorStyle
- */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#displayMode
- * @cfg {Boolean} Отображение крошек в несколько строк
- * @variant default
- * @variant multiline
- * @default default
- * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
- */
-
-/**
- * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Происходит при клике на кнопку "Просмотр записи".
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */
-
-/*
- * @event Controls/_breadcrumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
- * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
- */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#showActionButton
- * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой "Назад".
- * @default
- * true
- */
-
-/*
- * @name Controls/_breadcrumbs/HeadingPath#showActionButton
- * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
- * @default
- * true
- */
-
-/**
- * @name Controls/_breadcrumbs/HeadingPath#afterBackButtonTemplate
- * @cfg {Function|string} Шаблон, который расположен между кнопкой назад и хлебными крошками
- * @example
- * <pre>
- *    <Controls.breadcrumbs:HeadingPath
- *          items="{{_items}}"
- *          parentProperty="parent"
- *          keyProperty="id"
- *          on:itemClick="_onItemClick()">
- *       <ws:afterBackButtonTemplate>
- *          <h3>Custom content</h3>
- *       </ws:afterBackButtonTemplate>
- *    </Controls.breadcrumbs:HeadingPath>
- * </pre>
- */
-interface IReceivedState {
-    items: Record[];
-}
-
 class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _template: TemplateFunction = template;
     protected _backButtonCaption: string = '';
@@ -255,5 +193,67 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         };
     }
 }
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonIconStyle
+ * @cfg {String} Стиль отображения иконки кнопки "Назад".
+ * @see Controls/_heading/Back#iconStyle
+ */
 
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#backButtonFontColorStyle
+ * @cfg {String} Стиль цвета кнопки "Назад".
+ * @see Controls/_heading/Back#fontColorStyle
+ */
+
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#displayMode
+ * @cfg {Boolean} Отображение крошек в несколько строк
+ * @variant default
+ * @variant multiline
+ * @default default
+ * @demo Controls-demo/BreadCrumbs/DisplayMode/Index
+ */
+
+/**
+ * @event Происходит при клике на кнопку "Просмотр записи".
+ * @name Controls/_breadcrumbs/HeadingPath#arrowActivated
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/*
+ * @event Happens after clicking the button "View Model".
+ * @name Controls/_breadcrumbs/HeadingPath#arrowActivated
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
+ */
+
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#showActionButton
+ * @cfg {Boolean} Определяет, должна ли отображаться стрелка рядом с кнопкой "Назад".
+ * @default
+ * true
+ */
+
+/*
+ * @name Controls/_breadcrumbs/HeadingPath#showActionButton
+ * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
+ * @default
+ * true
+ */
+
+/**
+ * @name Controls/_breadcrumbs/HeadingPath#afterBackButtonTemplate
+ * @cfg {Function|string} Шаблон, который расположен между кнопкой назад и хлебными крошками
+ * @example
+ * <pre>
+ *    <Controls.breadcrumbs:HeadingPath
+ *          items="{{_items}}"
+ *          parentProperty="parent"
+ *          keyProperty="id"
+ *          on:itemClick="_onItemClick()">
+ *       <ws:afterBackButtonTemplate>
+ *          <h3>Custom content</h3>
+ *       </ws:afterBackButtonTemplate>
+ *    </Controls.breadcrumbs:HeadingPath>
+ * </pre>
+ */
 export default BreadCrumbsPath;
