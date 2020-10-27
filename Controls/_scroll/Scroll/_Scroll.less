@@ -58,6 +58,14 @@
    pointer-events: none;
 }
 
+.ws-is-desktop-safari {
+   // На MacOS Safari если при подгрузке новых элементов списка поменяется ширина колонок в таблице, то появятся пробелы
+   // в тенях. Применяем аппаратное ускорение.
+   .controls-Scroll__shadow {
+      transform: translate3d(0, 0, 0);
+   }
+}
+
 .controls-Scroll__shadow_horizontal {
    left: 0;
    right: 0;
