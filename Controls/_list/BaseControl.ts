@@ -1085,6 +1085,8 @@ const _private = {
                  */
                 if (!self.__error) {
                     if (direction === 'up') {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                         self._notify('doScroll', ['top'], { bubbling: true });
                     } else {
                         _private.jumpToEnd(self);
@@ -1094,11 +1096,13 @@ const _private = {
         } else if (direction === 'up') {
             self._notify('doScroll', ['top'], { bubbling: true });
             if (self._scrollPagingCtr) {
+                self._currentPage = 1;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         } else {
             _private.jumpToEnd(self);
             if (self._scrollPagingCtr) {
+                self._currentPage = self._pagingCfg.pagesCount;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         }
@@ -1257,6 +1261,15 @@ const _private = {
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
+                if (cfg?.selectedPage !== self._currentPage) {
+                    if (self._selectedPageHasChanged) {
+                        self.__selectedPageChanged(null, self._currentPage);
+                    } else {
+                        self._currentPage = cfg.selectedPage;
+                    }
+                } else {
+                    self._selectedPageHasChanged = false;
+                }
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
@@ -2354,6 +2367,11 @@ const _private = {
             return;
         }
         if (self._isMounted) {
+            _private.doAfterUpdate(self, () => {
+                if (self._applySelectedPage) {
+                    self._applySelectedPage();
+                }
+            });
             if (result.placeholders) {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
 
@@ -4160,6 +4178,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 down: _private.hasMoreData(this, this._sourceController, 'down')
             };
             if (this._scrollPagingCtr) {
+                this._currentPage = this._pagingCfg.pagesCount;
                 this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
             }
         }
@@ -4199,16 +4218,56 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
         }
     },
+    _canScroll(scrollTop, direction) {
+        const placeholder = this._scrollController.getPlaceholders().top;
+        return !(direction === 'down' && scrollTop - placeholder + this._viewportSize > this._viewSize ||
+            direction === 'up' && scrollTop - placeholder < 0)
+    },
     __selectedPageChanged(e, page) {
-        this._currentPage = page;
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        const direction = this._currentPage < page ? 'down' : 'up';
+        this._applySelectedPage = () => {
+            this._currentPage = page;
+            if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                return;
+            }
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            if (!this._canScroll(scrollTop, direction)) {
+                this.handleTriggerVisible(direction);
+            } else {
+                this._applySelectedPage = null;
+            
+                // const itemIndex = this._scrollPagingCtr.getItemIndexByPage(page);
+                // const itemId = this._listViewModel.at(itemIndex)?.getContents().getId();
+                // if (itemId) {
+                //     _private.scrollToItem(this, itemId, true, true, 0);
+                // } else {
+                    this._notify('doScroll', [scrollTop], { bubbling: true });
+                //}
+            }
+            
+            
+        }
+        if (this._currentPage === page) {
+            this._applySelectedPage();
+            return;
+        } else {
+            this._selectedPageHasChanged = true;
+        }
+        
         if (page === 1) {
             _private.scrollToEdge(this, 'up');
+            this._currentPage = page;
         } else if (page === this._pagingCfg.pagesCount) {
             _private.scrollToEdge(this, 'down');
+            this._currentPage = page;
+        } else {
+            if (!this._canScroll(scrollTop, direction)) {
+                this.handleTriggerVisible(direction);
+            } else {
+                this._applySelectedPage();
+            }
         }
-        const scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
-
-        this._notify('doScroll', [scrollTop], { bubbling: true });
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
