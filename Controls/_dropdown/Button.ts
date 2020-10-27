@@ -22,6 +22,11 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
+
+   /**
+    * Размер иконки самой кнопки, чтобы исключить конфликты с размерами иконок внутри popup
+    */
+   buttonIconSize?: string;
 }
 
 /**

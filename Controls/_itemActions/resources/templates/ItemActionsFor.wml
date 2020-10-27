@@ -1,6 +1,7 @@
 <ws:for data="action in showedActions">
     <ws:if data="{{action.isMenu}}">
         <Controls.dropdown:Button scope="{{(itemData.dispItem ? itemData.dispItem : itemData).getMenuButtonConfig()}}"
+                                  attr:class="controls-itemActionsV__action controls-itemActionsV__menuButton_padding_theme-{{theme}}"
                                   on:dropDownOpen="_onActionMenuDropDownOpen(itemData.dispItem ? itemData.dispItem : itemData)"
                                   on:dropDownClose="_onActionMenuDropDownClose()"/>
     </ws:if>

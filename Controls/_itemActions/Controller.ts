@@ -326,7 +326,7 @@ export class Controller {
             icon: parentAction.icon,
             iconSize: baseOptions.iconSize
         } : null;
-        const root = parentAction && !parentAction.id;
+        const root = parentAction && parentAction.id;
         return {
             ...baseOptions,
             root,
@@ -421,7 +421,9 @@ export class Controller {
             viewMode: 'link',
             opener: this._opener,
             closeButtonVisibility: true,
-            showHeader: false
+            buttonIconSize: this._iconSize,
+            showHeader: false,
+            popupClassName: menuConfig.className
         } as Partial<IButtonOptions>;
     }
 
