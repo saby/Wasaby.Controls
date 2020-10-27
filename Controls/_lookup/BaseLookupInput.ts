@@ -243,11 +243,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._notify('closeInfoBox');
     }
 
-    private _onMouseEnterShowSelector(): Promise<boolean | void> {
+    private _onMouseDownShowSelector(): void {
         this.closeSuggest();
-
-        return new Promise((resolve) => resolve(this._loadDependencies()))
-           .then(() => this._showSelector(null));
+        this._showSelector(null);
     }
 
     private _loadDependencies(): Promise<unknown> {
@@ -267,6 +265,10 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
             }
             this._dependenciesTimer.start(this._loadDependencies.bind(this));
         }
+    }
+
+    protected _linkMouseLeaveHandler(): void {
+        this._dependenciesTimer?.stop();
     }
 
     private _onClickClearRecords(): void {

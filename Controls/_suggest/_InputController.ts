@@ -817,6 +817,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
+   protected _inputMouseLeaveHandler(): void {
+      this._dependenciesTimer?.stop();
+   }
+
    protected async _tabsSelectedKeyChanged(tabId: Key): Promise<void> {
       this._setSuggestMarkedKey(null);
 
