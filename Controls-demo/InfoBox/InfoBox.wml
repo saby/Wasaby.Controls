@@ -1,10 +1,11 @@
 <div>
   <div class="controls-InfoBoxDemo-rows">
      <div class="controls-InfoBoxDemo-heading">Наведите на иконку</div>
-   <Controls.popup:InfoboxTarget trigger="hover" attr:style="display:inline-block; vertical-align:bottom;" attr:class="ControlsDemo-InfoBox__hover">
+   <Controls.popup:InfoboxTarget trigger="hover" attr:class="ControlsDemo-InfoBox__hover">
       <ws:content>
          <Controls.buttons:Button viewMode="linkButton" fontColorStyle="link"
-                                   icon="icon-EmptyMessage" iconSize="m" iconStyle="secondary"/>
+                                   icon="icon-EmptyMessage" iconSize="m" iconStyle="secondary"
+                                    attr:style="display:inline-block; vertical-align:bottom;"/>
       </ws:content>
       <ws:template>
          <div>Это всплывающая подсказка по ховеру.</div>
