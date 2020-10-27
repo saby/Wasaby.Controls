@@ -1,3 +1,5 @@
+import {TemplateFunction} from 'UI/Base';
+
 type TComparator = (field1, field2) => boolean;
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
@@ -37,9 +39,19 @@ function isEqual(obj1, obj2, fieldsOptions: Record<string, TComparator>) {
    return true;
 }
 
-function isEqualTemplates(oldTemplate, newTemplate, flatComparator?: (oldFlatOption, newFlatOption) => boolean): boolean {
-   const isOldOptionIsTemplate = oldTemplate instanceof Array && oldTemplate.isWasabyTemplate;
-   const isNewOptionIsTemplate = newTemplate instanceof Array && newTemplate.isWasabyTemplate;
+
+/**
+ * Сравнивает две шаблонные опции Wasaby шаблона. Проверяет все опции, от которых зависит шаблон, аналогично проверке синхронизатора.
+ * @param oldTemplate Стары
+ * @param newTemplate
+ * @param flatComparator
+ */
+function isEqualTemplates(oldTemplate: TemplateFunction, newTemplate: TemplateFunction, flatComparator?: (oldValue, newValue) => boolean): boolean {
+   // @ts-ignore
+   const isWasabyTemplate = (tmpl) => tmpl instanceof Array && tmpl.isWasabyTemplate;
+
+   const isOldOptionIsTemplate = isWasabyTemplate(oldTemplate);
+   const isNewOptionIsTemplate = isWasabyTemplate(newTemplate);
 
    if (isOldOptionIsTemplate !== isNewOptionIsTemplate) {
       return false;
@@ -74,7 +86,13 @@ function isEqualTemplates(oldTemplate, newTemplate, flatComparator?: (oldFlatOpt
    }
 }
 
-function isEqualWithSkip(obj1, obj2, fieldsOptions?: Record<string, true>) {
+/**
+ * Функция выполняет глубокое сравнивание двух объектов, пропуская поля с заданными названиями.
+ * @param obj1 Первый сравниваемый объект
+ * @param obj2 Второй сравниваемый объект
+ * @param fieldsOptions Объект с названиями полей, которые не должны учавствовать в сравнении.
+ */
+function isEqualWithSkip(obj1: object, obj2: object, fieldsOptions?: Record<string, true>) {
    const _fieldsOptions = {};
    if (fieldsOptions) {
       Object.keys(fieldsOptions).forEach((key) => {

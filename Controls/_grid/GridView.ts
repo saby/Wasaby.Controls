@@ -451,13 +451,21 @@ var
 
         _isFooterChanged(oldOptions, newOptions): boolean {
             if (
-                (!oldOptions.footer && newOptions.footer) || // Появился
-                (oldOptions.footer && !newOptions.footer) || // Скрылся
-                (!oldOptions.footerTemplate && newOptions.footerTemplate) || // Появился
-                (oldOptions.footerTemplate && !newOptions.footerTemplate) // Скрылся
+                // Подвал появился/скрылся
+                (!oldOptions.footer && newOptions.footer) ||
+                (oldOptions.footer && !newOptions.footer) ||
+                (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
+                (oldOptions.footerTemplate && !newOptions.footerTemplate)
             ) {
                 return true;
+            } else if (
+                // Подвала не было и нет
+                (!oldOptions.footer && !newOptions.footer) ||
+                (!oldOptions.footerTemplate && !newOptions.footerTemplate)
+            ) {
+                return false;
             } else {
+                // Подвал показывается, необходимо проверить, изменился ли он
                 if (!!newOptions.footer) {
                     return !GridIsEqualUtil.isEqual(oldOptions.footer, newOptions.footer, {
                         template: GridIsEqualUtil.isEqualTemplates
