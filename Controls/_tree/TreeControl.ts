@@ -115,7 +115,7 @@ const _private = {
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
         // загружаем узел только если:
-        // 1. он не был загружен ранее (определяем по наличию его hasMoreStorage'e)
+        // 1. он не был загружен ранее (проверяем через sourceController, была ли выполнена загрузка)
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
