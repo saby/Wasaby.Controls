@@ -320,7 +320,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
      * Save new history
      */
     saveHistory(historyId: string, newHistory: RecordSet): void {
-        DataStorage.write(historyId, object.clone(newHistory));
+        DataStorage.write(historyId, newHistory);
     }
 
     /**
