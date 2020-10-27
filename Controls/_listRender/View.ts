@@ -371,7 +371,7 @@ export default class View extends Control<IViewOptions> {
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
         const menuConfig = this._itemActionsController
-            .prepareActionsMenuConfig(item, clickEvent, action, this, isContextMenu);
+            .prepareActionsMenuConfig(item, clickEvent, action, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -514,7 +514,8 @@ export default class View extends Control<IViewOptions> {
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
+            contextMenuConfig: options.contextMenuConfig,
+            opener: this
         });
     }
 

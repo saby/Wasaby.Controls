@@ -13,7 +13,7 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 
-interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
    lazyItemsLoading?: boolean;
    buttonStyle?: string;
@@ -55,7 +55,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ISearch
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @category Button
@@ -83,7 +83,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_dropdown/interface/IGrouped
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @category Button

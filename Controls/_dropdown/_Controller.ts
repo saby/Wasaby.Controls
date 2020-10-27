@@ -24,7 +24,7 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
 
@@ -35,7 +35,7 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
 
@@ -550,10 +550,11 @@ export default class _Controller implements IDropdownController {
          }
       }
       let templateOptions = {
-         closeButtonVisibility: false,
+         closeButtonVisibility: !!this._options.closeButtonVisibility,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),
          keyProperty: isHistorySource(this._source) ? 'copyOriginalId' : baseConfig.keyProperty,
+         showHeader: this._options.showHeader !== undefined ? this._options.showHeader : true,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
          footerContentTemplate: this._options.footerContentTemplate,
          items: this._items,

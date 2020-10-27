@@ -1812,7 +1812,7 @@ const _private = {
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
         const itemActionsController = _private.getItemActionsController(self, self._options);
-        const menuConfig = itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
