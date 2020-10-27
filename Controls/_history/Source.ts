@@ -510,10 +510,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 const isPinned = item.get('pinned');
                 const isFrequent = item.get('frequent');
 
-                if (isFrequent || isRecent && !isPinned) {
+                if (isFrequent || isRecent && !isPinned || isPinned) {
                     updateResult = true;
 
-                    if (isRecent) {
+                    if (isRecent && !isPinned) {
                         moveRecentItemToTop(item);
                     }
                 }
