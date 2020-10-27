@@ -187,11 +187,11 @@ describe('Controls/_lookup/BaseLookupView', function() {
       ok(!lookup._determineAutoDropDown());
    });
 
-   it('_onClickShowSelector', function() {
+   it('_onMouseEnterShowSelector', function() {
       var lookup = new Lookup();
 
       lookup._suggestState = true;
-      lookup._onClickShowSelector();
+      lookup._onMouseEnterShowSelector();
 
       ok(!lookup._suggestState);
    });

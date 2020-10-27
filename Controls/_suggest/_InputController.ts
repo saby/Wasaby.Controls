@@ -803,7 +803,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _inputMouseEnterHandler(event: SyntheticEvent): void {
-      if (!this._options.autoDropDown) {
+      if (this._options.autoDropDown) {
          if (!this._options.readOnly) {
             if (!this._dependenciesTimer) {
                this._dependenciesTimer = new DependencyTimer();
