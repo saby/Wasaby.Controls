@@ -2979,6 +2979,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
     _pagingLabelData: null,
+    _applySelectedPage: null,
 
     _blockItemActionsByScroll: false,
 
@@ -4219,7 +4220,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
     _canScroll(scrollTop, direction) {
-        const placeholder = this._scrollController.getPlaceholders().top;
+        const placeholder = this._scrollController?.getPlaceholders()?.top || 0;
         return !(direction === 'down' && scrollTop - placeholder + this._viewportSize > this._viewSize ||
             direction === 'up' && scrollTop - placeholder < 0)
     },
@@ -4237,16 +4238,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else {
                 this._applySelectedPage = null;
             
-                // const itemIndex = this._scrollPagingCtr.getItemIndexByPage(page);
-                // const itemId = this._listViewModel.at(itemIndex)?.getContents().getId();
-                // if (itemId) {
-                //     _private.scrollToItem(this, itemId, true, true, 0);
-                // } else {
-                    this._notify('doScroll', [scrollTop], { bubbling: true });
-                //}
+                this._notify('doScroll', [scrollTop], { bubbling: true });
             }
-            
-            
         }
         if (this._currentPage === page) {
             this._applySelectedPage();
