@@ -26,7 +26,6 @@ import 'Controls/search';
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
  * @author Герасимов А.М.
- * @category Input
  */
 
 /*
@@ -42,17 +41,6 @@ import 'Controls/search';
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
- * @category Input
- */
-
-/**
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Определяет, показывать ли иконку поиска.
- */
-
-/*
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Determines whether to show the search icon.
  */
 
 var Suggest = Control.extend({
@@ -121,5 +109,13 @@ Suggest.getDefaultOptions = function() {
       suggestState: false
    };
 };
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ */
 
+/*
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
 export default Suggest;

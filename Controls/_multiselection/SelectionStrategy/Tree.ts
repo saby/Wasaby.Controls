@@ -17,7 +17,7 @@ const LEAF = null;
 /**
  * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
- * 
+ *
  * @public
  * @author Панихин К.А.
  */
@@ -606,7 +606,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       // tslint:disable-next-line:ban-ts-ignore
       // @ts-ignore
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
-         // tslint:disable-next-line:ban-ts-ignore
+         // tslint:disable-next-line
          contents = contents[(contents as any).length - 1];
       }
 

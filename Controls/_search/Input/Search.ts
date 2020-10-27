@@ -31,7 +31,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
- * @category Input
  * @author Золотова Э.Е.
  */
 
@@ -82,7 +81,6 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
- * @category Input
  * @author Золотова Э.Е.
  */
 

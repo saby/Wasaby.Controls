@@ -5,6 +5,7 @@ import {Base as DateUtil} from 'Controls/dateUtils';
  * Модель для представления месяца с поддержкой выделения.
  * @class Controls/_calendar/Month/Model
  * @author Красильников А.С.
+ * @public
  */
 
 var ModuleClass = MonthViewModel.extend({

@@ -7,7 +7,6 @@ import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
  * @class Controls/_popup/PopupHelper/Stack
  * 
  * @author Красильников А.С.
- * @category Popup
  * @public
  */
 

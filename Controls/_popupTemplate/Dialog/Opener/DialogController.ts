@@ -33,7 +33,6 @@ const IPAD_MIN_WIDTH = 1024;
  * @class Controls/_popupTemplate/Dialog/Opener/DialogController
  * 
  * @private
- * @category Popup
  * @extends Controls/_popupTemplate/BaseController
  */
 class DialogController extends BaseController {

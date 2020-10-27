@@ -163,9 +163,12 @@ class Field<Value, ModelOptions>
     private _getConfigForController(name: ControllerName): ChangeEventConfig {
         switch (name) {
             case 'changeEventController':
+                // Нужно отдавать model, а не displayValue. Например, строка поиска наследуется от Input:Base и сама
+                // реализует опцию trim. В этом случае displayValue меняется в родителе и нам нужно получить
+                // новое значение.
                 return {
                     tag: this._options.tag,
-                    displayValue: this._model.displayValue
+                    model: this._model
                 } as ChangeEventConfig;
         }
     }
