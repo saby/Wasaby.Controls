@@ -26,15 +26,9 @@ style="{{currentColumn.gridCellStyles + itemData.getCellStyle(itemData, currentC
                  attr:style="{{ column.getCellStyles() }}">
                <ws:partial template="{{ column.getTemplate() }}"
                            attr:key="{{ column.getInstanceId() }}"
-                           column="{{ column }}"
+                           column="{{ column.getOriginalColumn() }}"
                            item="{{ (item || itemData) }}"
-                           itemData="{{ (item || itemData) }}">
-                  <ws:ladderWrapper>
-                     <ws:partial template="{{ladderWrapper.content}}"
-                                 attr:class="controls-Grid__row-cell__ladder-content"/>
-
-                  </ws:ladderWrapper>
-               </ws:partial>
+                           itemData="{{ (item || itemData) }}"/>
             </div>
          </ws:else>
          <ws:if data="{{ column.shouldDisplayItemActions() }}">

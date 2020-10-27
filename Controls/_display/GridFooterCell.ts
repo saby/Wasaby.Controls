@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import GridFooter from "./GridFooter";
+import GridFooter from './GridFooter';
 
 export interface IOptions<T> {
     owner: GridFooter<T>;

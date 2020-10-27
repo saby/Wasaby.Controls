@@ -191,6 +191,14 @@ export default class GridColumn<T> extends mixin<
         return contentClasses;
     }
 
+    // region compatibility
+
+    getOriginalColumn(): IColumn {
+        return this._$column;
+    }
+
+    // end region compatibility
+
     getCellStyles(): string {
         // There's a lot
         return undefined;
