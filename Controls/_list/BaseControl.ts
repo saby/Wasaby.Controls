@@ -3422,7 +3422,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // в тач интерфейсе инициализировать пейджер необходимо при загрузке страницы
         // В beforeMount инициализировать пейджер нельзя, т.к. не корректно посчитаются его размеры
-        if (this._context?.isTouch?.isTouch) {
+        // Также, в тач интерфейсе может быть включено управление мышью, и мы можем не знать,
+        // как устройство управляется в данный момент, поэтому определяем по isMobilePlatform
+        if (detection.isMobilePlatform) {
             _private.initPaging(this);
         }
 
