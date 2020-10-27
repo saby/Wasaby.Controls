@@ -136,7 +136,8 @@ export default class Button extends BaseDropdown {
             dataLoadCallback: this._dataLoadCallback.bind(this),
             popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
             hasIconPin: this._hasIconPin,
-            allowPin: true
+            allowPin: true,
+            direction: options.direction
          }
       };
    }

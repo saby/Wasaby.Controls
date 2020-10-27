@@ -580,6 +580,7 @@ export default class _Controller implements IDropdownController {
          className: this._options.popupClassName,
          template: 'Controls/menu:Popup',
          actionOnScroll: 'close',
+         direction: this._options.direction,
          target: this.target,
          targetPoint: this._options.targetPoint,
          opener: this._popupOptions.opener || this._options.openerControl,
