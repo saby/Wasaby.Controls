@@ -8,8 +8,8 @@ import {Collection} from 'Controls/display';
 import {Model, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {TItemsReadyCallback} from 'Controls-demo/types';
-import {IItemAction} from '../../../../Controls/_itemActions/interface/IItemAction';
-import {showType} from '../../../../Controls/Utils/Toolbar';
+import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
+import {showType} from 'Controls/Utils/Toolbar';
 
 interface INoStickyLadderColumn {
     template: string;
@@ -26,7 +26,8 @@ export default class extends Control {
     protected _ladderProperties: string[] = ['photo', 'date'];
     protected _itemActions: IItemAction = [{
         id: 1,
-        icon: 'icon-Erase icon-error',
+        icon: 'icon-Erase',
+        iconStyle: 'danger',
         title: 'delete',
         style: 'bordered',
         showType: showType.TOOLBAR,
