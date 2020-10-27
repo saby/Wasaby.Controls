@@ -53,6 +53,9 @@ export interface IMarkerListOptions {
    /**
     * @name Controls/_marker/interface/IMarkerListOptions#markedKey
     * @cfg {CrudEntityKey} Идентификатор элемента, который выделен маркером.
+    * @remark
+    * Если сделан bind на эту опцию, но она передана изначально в значении undefined,
+    * то установка маркера работает аналогично тому, как если бы bind не был задан (по внутреннему состоянию контрола).
     * @demo Controls-demo/List/List/BasePG
     * @see markerVisibility
     */

@@ -2498,7 +2498,11 @@ const _private = {
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         const handleResult = (key) => {
-            if (!self._options.hasOwnProperty('markedKey')) {
+            // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
+            // И при undefined нужно делать так, чтобы markedKey задавался по нашей логике.
+            // Это для трюка от Бегунова когда делают bind на переменную, которая изначально undefined.
+            // В таком случае, чтобы не было лишних синхронизаций - мы работаем по нашему внутреннему state.
+            if (self._options.markedKey === undefined) {
                 markerController.setMarkedKey(key);
             }
             self._notify('markedKeyChanged', [key]);
@@ -3080,7 +3084,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
             }
-
             return res;
         });
     },
@@ -3421,6 +3424,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._editInPlaceController.isEditing()) {
                 _private.activateEditingRow(this);
             }
+        }
+
+        // в тач интерфейсе инициализировать пейджер необходимо при загрузке страницы
+        // В beforeMount инициализировать пейджер нельзя, т.к. не корректно посчитаются его размеры
+        // Также, в тач интерфейсе может быть включено управление мышью, и мы можем не знать,
+        // как устройство управляется в данный момент, поэтому определяем по isMobilePlatform
+        if (detection.isMobilePlatform) {
+            _private.initPaging(this);
         }
 
         // для связи с контроллером ПМО
