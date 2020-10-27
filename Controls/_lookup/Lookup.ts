@@ -428,8 +428,7 @@ export default class Lookup extends BaseLookupInput {
  * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
  * @default false
  * @remark
- *
- When the communication field is in multi-line mode, the height is automatically determined by the selected records. The number of records displayed is set by the {@link Controls/interface/ISelectedCollection#maxVisibleItems} option.
+ * When the communication field is in multi-line mode, the height is automatically determined by the selected records. The number of records displayed is set by the {@link Controls/interface/ISelectedCollection#maxVisibleItems} option.
  * Only relevant with multiSelect: true.
  *
  * @example
