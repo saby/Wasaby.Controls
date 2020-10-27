@@ -4731,10 +4731,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _onActionMenuItemActivate(event: SyntheticEvent<Event>, item: CollectionItem<Model>, actionModel: Model): void {
+        const action = actionModel && actionModel.getRawData();
+        if (action && !action['parent@']) {
+            _private.handleItemActionClick(this, action, event, item, true);
+        }
+    },
+
     _onActionMenuDropDownOpen(e: SyntheticEvent<Event>, item: CollectionItem<Model>): void {
         this._itemActionsMenuId = 'menu_button';
-        // Нельзя устанавливать activeItem раньше, иначе при автокликах
-        // робот будет открывать меню раньше, чем оно закрылось
         this._itemActionsController.setActiveItem(item);
     },
 

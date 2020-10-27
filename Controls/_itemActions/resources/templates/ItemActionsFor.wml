@@ -2,7 +2,8 @@
     <ws:if data="{{action.isMenu}}">
         <Controls.dropdown:Button scope="{{(itemData.dispItem ? itemData.dispItem : itemData).getMenuButtonConfig()}}"
                                   attr:class="controls-itemActionsV__action controls-itemActionsV__menuButton_size_{{size}}_padding_theme-{{theme}}"
-                                  on:dropDownOpen="_onActionMenuDropDownOpen(itemData.dispItem ? itemData.dispItem : itemData)"
+                                  on:menuItemActivate="_onActionMenuItemActivate(itemData.dispItem ? itemData.dispItem : itemData)"
+                                  on:dropDownOpen="_onActionMenuDropDownOpen()"
                                   on:dropDownClose="_onActionMenuDropDownClose()"/>
     </ws:if>
     <ws:else>

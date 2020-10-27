@@ -273,8 +273,25 @@ export default class View extends Control<IViewOptions> {
      * Возвращает видимость опций записи.
      * @private
      */
-    _isVisibleItemActions(itemActionsMenuId: number): boolean {
+    protected _isVisibleItemActions(itemActionsMenuId: number): boolean {
         return !itemActionsMenuId || this._options.itemActionsVisibility === 'visible';
+    }
+
+    protected _onActionMenuItemActivate(event: SyntheticEvent<Event>, item: CollectionItem<Model>, actionModel: Model, nativeEvent: SyntheticEvent<Event>): void {
+        const action = actionModel && actionModel.getRawData();
+        if (action && !action['parent@']) {
+            this._handleItemActionClick(action, nativeEvent, item, true);
+        }
+    }
+
+    protected _onActionMenuDropDownOpen(e: SyntheticEvent<Event>, item: CollectionItem<Model>): void {
+        this._itemActionsMenuId = 'menu_button';
+        this._itemActionsController.setActiveItem(item);
+    }
+
+    protected _onActionMenuDropDownClose(): void {
+        this._itemActionsMenuId = null;
+        this._itemActionsController.setActiveItem(null);
     }
 
     /**
