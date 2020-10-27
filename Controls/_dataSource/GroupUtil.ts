@@ -38,7 +38,7 @@ var
                     result.callback();
                 }
             }).catch((e) => {
-                Logger.error(`GroupUtil: An error occurred while getting data.\nError: ${e.message}\nStack: ${e.stack}`);
+                Logger.warn(`GroupUtil: An error occurred while getting data.\nError: ${e.message}`);
                 result.callback();
             });
             return result;
