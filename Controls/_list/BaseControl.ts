@@ -2198,13 +2198,13 @@ const _private = {
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
-            
+
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
-        
-            _private.updateScrollPagingButtons(self, self._getScrollParams());            
+
+            _private.updateScrollPagingButtons(self, self._getScrollParams());
         });
     },
 
@@ -5130,7 +5130,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // Тут не надо инициализировать контроллер, если он не проинициализирован
             const swipedItem = this._itemActionsController?.getSwipeItem();
             if (swipedItem) {
-                itemActionsController.startSwipeCloseAnimation();
+                this._itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
