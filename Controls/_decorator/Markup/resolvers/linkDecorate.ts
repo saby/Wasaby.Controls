@@ -2,6 +2,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
 
 /**
  * Модуль с функцией замены общей ссылки на декорированную ссылку, если это необходимо.
+ * @remark
  * Распознаватель тегов для {@link Controls/decorator:Markup}.
  * Модуль содержит функцию, которая позволяет преобразовать обычную ссылку в декорированную.
  * Декорация ссылки выполняется через {@link https://wi.sbis.ru/doc/platform/developmentapl/middleware/link-decorator/ Сервис декорирования ссылок}.

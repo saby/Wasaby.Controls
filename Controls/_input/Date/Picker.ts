@@ -26,7 +26,6 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * 
     * @public
     * @demo Controls-demo/Input/Date/Picker
-    * @category Input
     * @author Красильников А.С.
     */
 
@@ -44,7 +43,6 @@ import {Popup as PopupUtil} from 'Controls/dateUtils';
     * 
     * @public
     * @demo Controls-demo/Input/Date/Picker
-    * @category Input
     * @author Красильников А.С.
     */
 

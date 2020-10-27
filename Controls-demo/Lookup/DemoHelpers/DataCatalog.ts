@@ -1,6 +1,7 @@
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 
 const _departmentsDataLong = MemorySourceData.departments.concat(getLongData());
+const _departments = MemorySourceData.departments;
 
 const _equipment =  [
    {id: 1, title: 'Samsung', type: 'manufacturer'},
@@ -96,6 +97,7 @@ function getLongData() {
 }
 export {
    _departmentsDataLong,
+   _departments,
    _equipment,
    _companies
 }

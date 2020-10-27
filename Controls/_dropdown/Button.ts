@@ -58,7 +58,6 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  *
  * @public
  * @author Герасимов А.М.
- * @category Button
  */
 
 /*
@@ -86,7 +85,6 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
  *
  * @public
  * @author Герасимов А.М.
- * @category Button
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  */
 

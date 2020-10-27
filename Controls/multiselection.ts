@@ -4,13 +4,13 @@
  * @includes Controller Controls/_multiselection/Controller
  * @includes FlatSelectionStrategy Controls/_multiselection/SelectionStrategy/Flat
  * @includes TreeSelectionStrategy Controls/_multiselection/SelectionStrategy/Tree
- * @includes ISelectionItem Controls/_multiselection/interface#ISelectionItem
- * @includes ISelectionModel Controls/_multiselection/interface#ISelectionModel
- * @includes ISelectionControllerOptions Controls/_multiselection/interface#ISelectionControllerOptions
- * @includes IFlatSelectionStrategyOptions Controls/_multiselection/interface#IFlatSelectionStrategyOptions
- * @includes ITreeSelectionStrategyOptions Controls/_multiselection/interface#ITreeSelectionStrategyOptions
- * @includes IKeysDifference Controls/_multiselection/interface#IKeysDifference
- * @includes ISelectionDifference Controls/_multiselection/interface#ISelectionDifference
+ * @includes ISelectionItem Controls/multiselection/ISelectionItem
+ * @includes ISelectionModel Controls/multiselection/ISelectionModel
+ * @includes ISelectionControllerOptions Controls/multiselection/ISelectionControllerOptions
+ * @includes IFlatSelectionStrategyOptions Controls/multiselection/IFlatSelectionStrategyOptions
+ * @includes ITreeSelectionStrategyOptions Controls/multiselection/ITreeSelectionStrategyOptions
+ * @includes IKeysDifference Controls/multiselection/IKeysDifference
+ * @includes ISelectionDifference Controls/multiselection/ISelectionDifference
  * @public
  * @author Панихин К.А.
  */

@@ -16,7 +16,7 @@ import {
     NewSourceController as SourceController
 } from 'Controls/dataSource';
 import { IControlerState } from 'Controls/_dataSource/Controller';
-import { TSelectionType } from 'Controls/interface';
+import { TSelectionType, Direction } from 'Controls/interface';
 import Store from 'Controls/Store';
 import { SHADOW_VISIBILITY } from 'Controls/scroll';
 import {detection} from 'Env/Env';
@@ -100,14 +100,21 @@ export default class Browser extends Control {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems);
                 return this._loadItems(options, this._sourceController.getState()).then((items) => {
-                    if (items instanceof RecordSet) {
-                        this._defineShadowVisibility(items);
-                        return {
-                            filterItems,
-                            items
-                        };
-                    }
-                    return items;
+                    this._defineShadowVisibility(items);
+                    return {
+                        filterItems,
+                        items
+                    };
+                }, (error) => {
+                    this._onDataError(
+                        null,
+                        {
+                            error,
+                            mode: dataSourceError.Mode.include
+                        }
+                    );
+
+                    return error;
                 });
             });
         }
@@ -179,10 +186,12 @@ export default class Browser extends Control {
             this._groupHistoryId = newOptions.groupHistoryId;
         }
 
-        this._searchController.update(
-            this._getSearchControllerOptions(newOptions),
-            {dataOptions: this._dataOptionsContext}
-        );
+        if (this._searchController) {
+            this._searchController.update(
+                this._getSearchControllerOptions(newOptions),
+                {dataOptions: this._dataOptionsContext}
+            );
+        }
 
         return methodResult;
     }
@@ -225,9 +234,7 @@ export default class Browser extends Control {
 
         if (options.source) {
             result = this._sourceController.load().then((loadResult) => {
-                if (loadResult instanceof RecordSet) {
-                    this._setItemsAndCreateSearchController(loadResult, options);
-                }
+                this._setItemsAndCreateSearchController(loadResult, options);
                 return loadResult;
             });
         } else {
@@ -465,12 +472,12 @@ export default class Browser extends Control {
         this._searchController.search(value, force);
     }
 
-    _dataLoadCallback(data: RecordSet): void {
+    _dataLoadCallback(data: RecordSet, direction: Direction): void {
         this._filterController.handleDataLoad(data);
         this._getSearchController().handleDataLoad(data);
 
         if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(data);
+            this._options.dataLoadCallback(data, direction);
         }
     }
 

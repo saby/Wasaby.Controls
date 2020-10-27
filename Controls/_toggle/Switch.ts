@@ -23,7 +23,6 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
@@ -39,34 +38,7 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/Switch/Base/Index
- */
-
-/**
- * @name Controls/_toggle/Switch#caption
- * @cfg {String} Текст заголовка кнопки.
- */
-
-/*
- * @name Controls/_toggle/Switch#caption
- * @cfg {String} Caption text.
- */
-
-/**
- * @name Controls/_toggle/Switch#captionPosition
- * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
- * @variant left Заголовок расположен перед кнопкой.
- * @variant right Заголовок расположен после кнопки.
- * @default right
- */
-
-/*
- * @name Controls/_toggle/Switch#captionPosition
- * @cfg {String} Determines on which side of the button caption is located.
- * @variant left Caption before toggle.
- * @variant right Toggle before caption.
- * @default right
  */
 
 class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IValidationStatus {
@@ -102,5 +74,29 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
       };
    }
 }
+/**
+ * @name Controls/_toggle/Switch#caption
+ * @cfg {String} Текст заголовка кнопки.
+ */
 
+/*
+ * @name Controls/_toggle/Switch#caption
+ * @cfg {String} Caption text.
+ */
+
+/**
+ * @name Controls/_toggle/Switch#captionPosition
+ * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
+ * @variant left Заголовок расположен перед кнопкой.
+ * @variant right Заголовок расположен после кнопки.
+ * @default right
+ */
+
+/*
+ * @name Controls/_toggle/Switch#captionPosition
+ * @cfg {String} Determines on which side of the button caption is located.
+ * @variant left Caption before toggle.
+ * @variant right Toggle before caption.
+ * @default right
+ */
 export default Switch;

@@ -490,7 +490,6 @@ const _private = {
  * @extends Controls/_list/ListControl
  * 
  * @private
- * @category List
  */
 
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{

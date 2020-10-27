@@ -29,7 +29,6 @@ import DataContext = require('Core/DataContext');
  * 
  * @private
  * @author Красильников А.С.
- * @category Container
  *
  */
 
@@ -61,7 +60,6 @@ import DataContext = require('Core/DataContext');
  * 
  * @private
  * @author Красильников А.С.
- * @category Container
  *
  */
 const ScrollContext = DataContext.extend({

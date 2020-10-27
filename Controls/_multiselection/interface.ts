@@ -137,7 +137,9 @@ export interface IFlatSelectionStrategyOptions {
 
 /**
  * Изменения в списке ключей
+ * @interface Controls/multiselection/IKeysDifference
  * @public
+ * @author Панихин К.А.
  */
 export interface IKeysDifference {
    /**
@@ -161,7 +163,9 @@ export interface IKeysDifference {
 
 /**
  * Изменения в выбранных элементах
+ * @interface Controls/multiselection/ISelectionDifference
  * @public
+ * @author Панихин К.А.
  */
 export interface ISelectionDifference {
    selectedKeysDifference: IKeysDifference;

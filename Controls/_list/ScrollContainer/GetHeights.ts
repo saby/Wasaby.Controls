@@ -41,7 +41,8 @@ export function getItemsHeightsData(itemsContainer: HTMLElement): {itemsHeights:
 export function getElementByKey(itemsContainer: HTMLElement, key: number | string): HTMLElement {
     let result = null;
     for (let i = 0, len = itemsContainer.children.length; i < len; i++) {
-        // tslint:disable-next-line должно быть именно двойное равно
+        // должно быть именно двойное равно чтоб не приводились типы
+        // tslint:disable-next-line
         if (itemsContainer.children[i].getAttribute('key') == key) {
             result = itemsContainer.children[i];
             break;
