@@ -449,6 +449,25 @@ var
             }
         },
 
+        _isFooterChanged(oldOptions, newOptions): boolean {
+            if (
+                (!oldOptions.footer && newOptions.footer) || // Появился
+                (oldOptions.footer && !newOptions.footer) || // Скрылся
+                (!oldOptions.footerTemplate && newOptions.footerTemplate) || // Появился
+                (oldOptions.footerTemplate && !newOptions.footerTemplate) // Скрылся
+            ) {
+                return true;
+            } else {
+                if (!!newOptions.footer) {
+                    return !GridIsEqualUtil.isEqual(oldOptions.footer, newOptions.footer, {
+                        template: GridIsEqualUtil.isEqualTemplates
+                    })
+                } else {
+                    return !GridIsEqualUtil.isEqualTemplates(oldOptions.footerTemplate, newOptions.footerTemplate);
+                }
+            }
+        },
+
         _afterUpdate(oldOptions): void {
             GridView.superclass._afterUpdate.apply(this, arguments);
 
