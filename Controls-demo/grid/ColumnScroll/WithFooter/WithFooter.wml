@@ -30,7 +30,7 @@
                     <ws:partial template="Controls/grid:FooterTemplate">
                         <ws:columns>
                             <ws:Array>
-                                <ws:Object startIndex="{{ 2 }}">
+                                <ws:Object startColumn="{{ 2 }}">
                                     <ws:template>
                                         <span style="color: darkgrey">Подвал под названием</span>
                                     </ws:template>

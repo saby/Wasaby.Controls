@@ -79,7 +79,7 @@
                     columns="{{_fullColumns}}">
                 <ws:footer>
                     <ws:Array>
-                        <ws:Object startIndex="{{ 2 }}">
+                        <ws:Object startColumn="{{ 2 }}">
                             <ws:template>
                                 <div class="controlsDemo__footer__separatedFooter__content">Подвал, колонка под 1</div>
                             </ws:template>
@@ -107,7 +107,7 @@
                     columns="{{_fullColumns}}">
                 <ws:footer>
                     <ws:Array>
-                        <ws:Object startIndex="{{ 2 }}">
+                        <ws:Object startColumn="{{ 2 }}">
                             <ws:template>
                                 <div class="controlsDemo__footer__separatedFooter__content">Подвал, колонка под 1</div>
                             </ws:template>

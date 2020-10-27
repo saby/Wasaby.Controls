@@ -1,7 +1,7 @@
 interface IColumn {
     template: Function;
-    startIndex?: number;
-    endIndex?: number;
+    startColumn?: number;
+    endColumn?: number;
 }
 
 interface IPreparedColumn extends Required<IColumn> {}
@@ -25,37 +25,37 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
         const newColumn: IColumn = { template: c.template };
 
         // Начальный индекс колонки
-        if (typeof c.startIndex === 'number') {
+        if (typeof c.startColumn === 'number') {
             // Если задали индкс начала колонки, то оставляем его и проверям, нужно ли
             // вставить еще колонку до данной(если начальный индекс больше 1)
-            newColumn.startIndex = c.startIndex;
-            if (index === 0 && c.startIndex !== 1) {
+            newColumn.startColumn = c.startColumn;
+            if (index === 0 && c.startColumn !== 1) {
                 shouldInsertColumnBefore = true;
             }
         } else if (index === 0) {
             // Если не задали индкс начала колонки, то утанавливаем его как конец
             // предыдущей (или как начало, если это первая колонка)
-            newColumn.startIndex = 1;
+            newColumn.startColumn = 1;
         } else {
-            newColumn.startIndex = result[index - 1].endIndex;
+            newColumn.startColumn = result[index - 1].endColumn;
         }
 
         // Конечный индекс колонки
-        if (typeof c.endIndex === 'number') {
+        if (typeof c.endColumn === 'number') {
             // Если задали индкс конца колонки, то оставляем его и проверям, нужно ли
             // вставить еще колонку после данной(если это последняя колонка из шаблона, но ее
             // конечный индекс задан и он меньше чем индекс последней границы грида)
-            newColumn.endIndex = c.endIndex;
-            if (index === params.colspanColumns.length - 1 && newColumn.endIndex !== gridColumnsCount + 1) {
+            newColumn.endColumn = c.endColumn;
+            if (index === params.colspanColumns.length - 1 && newColumn.endColumn !== gridColumnsCount + 1) {
                 shouldInsertColumnAfter = true;
             }
         } else {
             // Если не задали индкс конца колонки, то утанавливаем его либо как индекс последней границы грида,
             // либо как стартовый индекс колонки + 1(по умолчанию, колонка не будет растянута)
             if (index === params.colspanColumns.length - 1) {
-                newColumn.endIndex = gridColumnsCount + 1;
+                newColumn.endColumn = gridColumnsCount + 1;
             } else {
-                newColumn.endIndex = newColumn.startIndex + 1;
+                newColumn.endColumn = newColumn.startColumn + 1;
             }
         }
 
@@ -65,31 +65,31 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
     // Дополнительная колонка слева, если прикладные колонки показываются не сначала
     if (shouldInsertColumnBefore) {
         result.unshift({
-            startIndex: 1,
-            endIndex: result[0].startIndex
+            startColumn: 1,
+            endColumn: result[0].startColumn
         });
     }
 
     // Дополнительная колонка справа, если прикладные колонки показываются не до конца
     if (shouldInsertColumnAfter) {
         result.push({
-            startIndex: result[result.length - 1].endIndex,
-            endIndex: gridColumnsCount + 1
+            startColumn: result[result.length - 1].endColumn,
+            endColumn: gridColumnsCount + 1
         });
     }
 
     // Колонка под чекбокс
     if (params.hasMultiSelect) {
         result.unshift({
-            startIndex: 0,
-            endIndex: 1
+            startColumn: 0,
+            endColumn: 1
         });
     }
 
     // Классы колонок и смещение индексов из за колонки под чекбокс.
     result.forEach((resultColumn, index) => {
-        resultColumn.startIndex += multiSelectOffset;
-        resultColumn.endIndex += multiSelectOffset;
+        resultColumn.startColumn += multiSelectOffset;
+        resultColumn.endColumn += multiSelectOffset;
         if (params.afterPrepareCallback) {
             params.afterPrepareCallback(resultColumn, index, result);
         }

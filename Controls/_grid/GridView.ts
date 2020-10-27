@@ -300,6 +300,32 @@ var
                     self._listModel.setColumns(newOptions.columns);
                 }
             }
+        },
+        isFooterChanged(oldOptions, newOptions): boolean {
+            if (
+                // Подвал появился/скрылся
+                (!oldOptions.footer && newOptions.footer) ||
+                (oldOptions.footer && !newOptions.footer) ||
+                (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
+                (oldOptions.footerTemplate && !newOptions.footerTemplate)
+            ) {
+                return true;
+            } else if (
+                // Подвала не было и нет
+                !oldOptions.footer && !newOptions.footer &&
+                !oldOptions.footerTemplate && !newOptions.footerTemplate
+            ) {
+                return false;
+            } else {
+                // Подвал показывается, необходимо проверить, изменился ли он
+                if (!!newOptions.footer) {
+                    return !GridIsEqualUtil.isEqual(oldOptions.footer, newOptions.footer, {
+                        template: GridIsEqualUtil.isEqualTemplates
+                    })
+                } else {
+                    return !GridIsEqualUtil.isEqualTemplates(oldOptions.footerTemplate, newOptions.footerTemplate);
+                }
+            }
         }
     },
     GridView = ListView.extend({
@@ -349,11 +375,7 @@ var
             this._listModel.setHeader(cfg.header, true);
 
             if (cfg.footer || cfg.footerTemplate) {
-                this._listModel.setFooter(cfg.footer || [
-                    {
-                        template: cfg.footerTemplate
-                    }
-                ], true);
+                this._listModel.setFooter(cfg.footer || [{ template: cfg.footerTemplate }], true);
             }
 
             this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
@@ -423,16 +445,9 @@ var
                 !GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
-            // Вычисления в setHeader зависят от columnScroll.
-            if (
-                !!this._options.footerTemplate !== !!newCfg.footerTemplate ||
-                !GridIsEqualUtil.isEqualWithSkip(this._options.footer, newCfg.footer, { template: true })
-            ) {
-                this._listModel.setFooter(newCfg.footer || [
-                    {
-                        template: newCfg.footerTemplate
-                    }
-                ]);
+
+            if (_private.isFooterChanged(this._options, newCfg) || (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility)) {
+                this._listModel.setFooter(newCfg.footer || [{ template: newCfg.footerTemplate }]);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
                 this._listModel.setStickyColumn(newCfg.stickyColumn);
@@ -838,7 +853,7 @@ var
                 },
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-                colspanColumns: columns,
+                colspanColumns: columns.map((c) => ({...c, startColumn: c.startIndex, endColumn: c.endIndex})),
                 itemPadding: this._options.itemPadding || {},
                 theme: this._options.theme
             });

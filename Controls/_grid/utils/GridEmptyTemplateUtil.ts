@@ -40,7 +40,7 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
 }): string {
     const isFirst = params.emptyColumnIndex === 0 && !params.hasMultiSelect;
     const isLast = params.emptyColumnIndex === params.emptyColumnsLength - 1;
-    const cellPadding = params.gridColumns[params.emptyColumn.startIndex].cellPadding;
+    const cellPadding = params.gridColumns[params.emptyColumn.startColumn].cellPadding;
     const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
     const itemPadding = {
         top: (params.itemPadding.top || 'default').toLowerCase(),

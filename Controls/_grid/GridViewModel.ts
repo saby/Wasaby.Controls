@@ -1917,7 +1917,7 @@ var
                     if (index === 0) {
                         classes += ` controls-GridView__footer__cell__paddingLeft_${itemPadding.left}_theme-${theme}`;
                     } else {
-                        const dataColumnIndex = column.startIndex - +hasMultiSelect - 1;
+                        const dataColumnIndex = column.startColumn - +hasMultiSelect - 1;
                         const leftCellPadding = this._options.columns[dataColumnIndex].cellPadding?.left?.toLowerCase() || 'default';
                         classes += ` controls-GridView__footer__cell__cellPaddingLeft_${leftCellPadding}_theme-${theme}`;
                     }
@@ -1926,7 +1926,7 @@ var
                     if (index === columns.length - 1) {
                         classes += ` controls-GridView__footer__cell__paddingRight_${itemPadding.right}_theme-${theme}`;
                     } else {
-                        const dataColumnIndex = column.endIndex - +hasMultiSelect - 2;
+                        const dataColumnIndex = column.endColumn - +hasMultiSelect - 2;
                         const rightCellPadding = this._options.columns[dataColumnIndex].cellPadding?.right?.toLowerCase() || 'default';
                         classes += ` controls-GridView__footer__cell__cellPaddingRight_${rightCellPadding}_theme-${theme}`;
                     }
@@ -1938,7 +1938,7 @@ var
                     if (!isMultiColumn) {
                         classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
                         classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
-                    } else if ((column.endIndex - 1 - +hasMultiSelect) <= this._options.stickyColumnsCount) {
+                    } else if ((column.endColumn - 1 - +hasMultiSelect) <= this._options.stickyColumnsCount) {
                         classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
                         classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
                     }
@@ -1953,9 +1953,9 @@ var
                 //  в 21.1000
 
                 if (isFullGridSupport) {
-                    styles += `grid-column: ${column.startIndex} / ${column.endIndex};`;
+                    styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
                 } else {
-                    column.colspan = column.endIndex - column.startIndex;
+                    column.colspan = column.endColumn - column.startColumn;
                 }
 
                 column.getWrapperClasses = (backgroundStyle: string = 'default') => {
