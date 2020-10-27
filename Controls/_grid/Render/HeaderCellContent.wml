@@ -8,9 +8,7 @@
                 textOverflow="{{ colData.getTextOverflow() }}"
                 caption="{{ colData.getCaption() }}"
                 attr:class="controls-Grid__sorting-button"
-                property="{{ colData.getSortingProperty() }}"
-                />
-        <!--value="{{ colData.sortingDirection }}"-->
+                property="{{ colData.getSortingProperty() }}"/>
     </ws:if>
     <ws:else>
         <div title="{{ colData.getCaption() }}" class="controls-Grid__header-cell__content__innerWrapper controls-Grid__header-cell__content-{{ colData.getTextOverflow() }}">
