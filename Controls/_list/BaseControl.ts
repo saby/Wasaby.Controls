@@ -2496,6 +2496,10 @@ const _private = {
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         const handleResult = (key) => {
+            // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
+            // И при undefined нужно делать так, чтобы markedKey задавался по нашей логике.
+            // Это для трюка от Бегунова когда делают bind на переменную, которая изначально undefined.
+            // В таком случае, чтобы не было лишних синхронизаций - мы работаем по нашему внутреннему state.
             if (self._options.markedKey === undefined) {
                 markerController.setMarkedKey(key);
             }
