@@ -25,6 +25,7 @@ import {Logger} from 'UI/Utils';
          'usemap': true
       },
       startOfGoodLinks = [
+         'data:image(//|\/)[^;]+;base64[^"]+',
          'http:(//|\\\\)',
          'https:(//|\\\\)',
          'ftp:(//|\\\\)',
