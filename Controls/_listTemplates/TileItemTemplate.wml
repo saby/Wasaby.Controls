@@ -7,6 +7,7 @@
                compressionCoefficient="{{_options.imageCompressionCoefficient || 1}}"
                viewMode="{{_options.imageViewMode}}"
                position="{{_options.imagePosition}}"
+               imageFit="{{_options.imageFit}}"
                gradientColor="{{_options.imageGradientColor}}"
                imageProperty="{{_options.imageProperty}}"
                isNode="{{_options.itemData.dispItem.isNode && _options.itemData.dispItem.isNode()}}"
@@ -64,6 +65,7 @@
                   imagePosition="{{_options.imagePosition}}"
                   imageViewMode="{{_options.imageViewMode}}"
                   imageGradientColor="{{_options.imageGradientColor}}"
+                  imageFit="{{_options.imageFit}}"
                   scope="{{contentTemplate}}"/>
    </ws:contentTemplate>
 </ws:partial>

@@ -118,10 +118,17 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
  * @cfg {Boolean} Определяет, будет ли отображаться граница шапки панели.
  * @default true
  * @remark
- * Позволяет скрыть отображение нижней границы headerContentTemplate. Используется для построения двухуровневых шапок.
- * Необходимо поместить свой контейнер с шапкой в bodeContentTemplate и навесить класс,
- * добавляющий фон для шапки: controls-StackTemplate__top-area-background_theme_{{_options.theme}},
- * и класс, добавляющий нижнюю границу для шапки: controls-StackTemplate__top-area-border_theme_{{_options.theme}}
+ * Позволяет скрыть отображение нижней границы {@link Controls/popupTemplate:IPopupTemplateBaseOptions#headerContentTemplate headerContentTemplate}. Используется для построения двухуровневых шапок.
+ * Необходимо поместить свой контейнер с шапкой в {@link Controls/popupTemplate:IPopupTemplateBaseOptions#bodyContentTemplate bodyContentTemplate} и навесить:
+ * 
+ * 1. класс, добавляющий фон для шапки:
+ * <pre class="brush: css">
+ * controls-StackTemplate__top-area-background_theme_{{_options.theme}}
+ * </pre>
+ * 2. класс, добавляющий нижнюю границу для шапки:
+ * <pre class="brush: css">
+ * controls-StackTemplate__top-area-border_theme_{{_options.theme}}
+ * </pre>
  * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
  */
 
@@ -131,4 +138,5 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
  * @remark
  * Опция только для чтения, значение устанавливается контролом Controls/popup исходя из заданной конфигурации окна
  */
+
 export default StackTemplate;
