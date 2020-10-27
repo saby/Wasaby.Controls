@@ -1381,7 +1381,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             // @ts-ignore
@@ -1405,7 +1404,7 @@ describe('Controls/_itemActions/Controller', () => {
         // T3.3. Если в метод передан contextMenu=true, то в config.direction.horizontal будет right
         it('should set config.direction.horizontal as \'right\' when contextMenu=true', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, true);
             assert.exists(config.direction, 'Direction options were not set');
             assert.equal(config.direction.horizontal, 'right');
         });
@@ -1587,7 +1586,7 @@ describe('Controls/_itemActions/Controller', () => {
         // T3.12. Если в метод передан contextMenu=true, то будет расчитан config.targetPoint
         it('should set config.targetPoint when contextMenu=true', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, true);
             assert.exists(config.targetPoint, 'targetPoint options were not set');
             assert.equal(config.targetPoint.vertical, 'top');
             assert.equal(config.targetPoint.horizontal, 'right');

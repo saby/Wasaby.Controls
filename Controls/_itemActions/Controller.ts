@@ -244,26 +244,31 @@ export class Controller {
             return;
         }
 
-        const isActionMenu: boolean = !!parentAction && !parentAction.isMenu;
-        const templateOptions: IMenuPopupOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, item);
+        const isActionMenu: boolean = !!parentAction;
+        const templateOptions: IMenuPopupOptions = this._getActionsMenuTemplateOptions(isActionMenu, parentAction, item);
         if (!templateOptions) {
             return;
         }
-        const baseMenuConfig: IStickyPopupOptions = this._getBaseMenuConfig();
+        const basePopupConfig: IStickyPopupOptions = this._getBasePopupConfig();
         const target: HTMLElement = !isContextMenu ?
             this._getFakeMenuTarget(clickEvent.target as HTMLElement) as HTMLElement :
             null;
 
-        const menuConfig: IStickyPopupOptions = {
-            ...baseMenuConfig,
+        const popupConfig: IStickyPopupOptions = {
+            ...basePopupConfig,
             target,
             templateOptions
         };
-        // if current menu belongs any action except of isMenu or context menu
+        // if current menu belongs any action
         if (isActionMenu) {
-            return menuConfig;
+            return popupConfig;
         }
-        return this._getAdditionalMenuConfig(menuConfig, isContextMenu);
+        // if current menu is for ContextMenu
+        return {
+            ...this._getAdditionalPopupConfig(popupConfig, isContextMenu),
+            // @ts-ignore
+            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
+        };
     }
 
     /**
@@ -301,13 +306,13 @@ export class Controller {
     }
 
     /**
-     * Возвращает конфиг для шаблона меню опций
+     * Возвращает опции для шаблона контекстного меню или меню опции записи (кроме menuButton)
      * @param isActionMenu
      * @param parentAction
      * @param item
      * @private
      */
-    private _getActionsMenuTemplateConfig(
+    private _getActionsMenuTemplateOptions(
         isActionMenu: boolean,
         parentAction: IItemAction,
         item: IItemActionsItem
@@ -332,7 +337,11 @@ export class Controller {
         };
     }
 
-    private _getBaseMenuConfig(): IStickyPopupOptions {
+    /**
+     * Возвращает общие настройки Popup
+     * @private
+     */
+    private _getBasePopupConfig(): IStickyPopupOptions {
         return {
             opener: this._opener,
             template: 'Controls/menu:Popup',
@@ -348,7 +357,13 @@ export class Controller {
         };
     }
 
-    private _getAdditionalMenuConfig(menuConfig: IStickyPopupOptions, isContextMenu: boolean): IStickyPopupOptions {
+    /**
+     * Возвращает опции настройки Popup для контестного меню и menuButton
+     * @param menuConfig
+     * @param isContextMenu
+     * @private
+     */
+    private _getAdditionalPopupConfig(menuConfig: IStickyPopupOptions, isContextMenu: boolean): IStickyPopupOptions {
         return {
             ...menuConfig,
             direction: {
@@ -358,12 +373,16 @@ export class Controller {
                 vertical: 'top',
                 horizontal: 'right'
             },
-            className: `controls-ItemActions__popup__list_theme-${this._theme}`,
-            // @ts-ignore
-            nativeEvent: isContextMenu ? clickEvent.nativeEvent : null
+            className: `controls-ItemActions__popup__list_theme-${this._theme}`
         };
     }
 
+    /**
+     * Возвращает общие опции для шаблона меню
+     * @param parentAction
+     * @param item
+     * @private
+     */
     private _getBaseMenuTemplateOptions(parentAction: IItemAction, item: IItemActionsItem): IMenuPopupOptions {
         const menuActions = this._getMenuActions(item, parentAction);
         if (!menuActions || menuActions.length === 0) {
@@ -386,11 +405,15 @@ export class Controller {
         };
     }
 
+    /**
+     * Набирает конфигурацию для menuButton
+     * @param parentAction
+     * @param item
+     * @private
+     */
     private _getMenuButtonConfig(parentAction: IItemAction, item: IItemActionsItem): Partial<IButtonOptions> {
         const baseOptions = this._getBaseMenuTemplateOptions(parentAction, item);
-        const menuConfig: IStickyPopupOptions = this._getAdditionalMenuConfig(this._getBaseMenuConfig(), false);
-        // caption: parentAction.title,
-        // buttonStyle="secondary"
+        const menuConfig: IStickyPopupOptions = this._getAdditionalPopupConfig(this._getBasePopupConfig(), false);
         return {
             ...parentAction,
             ...baseOptions,
@@ -398,7 +421,7 @@ export class Controller {
             viewMode: 'link',
             opener: this._opener,
             closeButtonVisibility: true,
-            showHeader: false,
+            showHeader: false
         } as Partial<IButtonOptions>;
     }
 

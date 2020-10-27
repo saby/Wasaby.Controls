@@ -2213,13 +2213,13 @@ const _private = {
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
-            
+
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
-        
-            _private.updateScrollPagingButtons(self, self._getScrollParams());            
+
+            _private.updateScrollPagingButtons(self, self._getScrollParams());
         });
     },
 
@@ -4702,6 +4702,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // endregion
 
+    // region itemActions
+
     /**
      * Обработчик показа контекстного меню
      * @param e
@@ -4729,6 +4731,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _onActionMenuDropDownOpen(e: SyntheticEvent<Event>, item: CollectionItem<Model>): void {
+        this._itemActionsMenuId = 'menu_button';
+        // Нельзя устанавливать activeItem раньше, иначе при автокликах
+        // робот будет открывать меню раньше, чем оно закрылось
+        this._itemActionsController.setActiveItem(item);
+    },
+
+    _onActionMenuDropDownClose(): void {
+        this._itemActionsMenuId = null;
+        this._itemActionsController.setActiveItem(null);
+    },
+
     /**
      * Обработчик клика по операции
      * @param event
@@ -4749,7 +4763,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const item = this._listViewModel.getItemBySourceKey(key) || itemData;
         this.setMarkedKey(key);
 
-        if (action && !action.isMenu && !action['parent@']) {
+        if (action && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);
@@ -4781,6 +4795,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemActionsMenuClose(currentPopup): void {
         _private.closeActionsMenu(this, currentPopup);
     },
+
+    // endregion itemActions
 
     _itemMouseDown(event, itemData, domEvent) {
         let hasDragScrolling = false;

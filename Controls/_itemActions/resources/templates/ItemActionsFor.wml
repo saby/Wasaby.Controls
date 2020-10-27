@@ -1,6 +1,8 @@
 <ws:for data="action in showedActions">
     <ws:if data="{{action.isMenu}}">
-        <Controls.dropdown:Button scope="{{itemData.getMenuButtonConfig()}}"/>
+        <Controls.dropdown:Button scope="{{itemData.getMenuButtonConfig()}}"
+                                  on:dropDownOpen="_onActionMenuDropDownOpen(itemData)"
+                                  on:dropDownClose="_onActionMenuDropDownClose(itemData)"/>
     </ws:if>
     <ws:else>
         <ws:partial
