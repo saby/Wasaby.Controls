@@ -8,6 +8,7 @@
            multiSelectPosition="{{ collection.getMultiSelectPosition() }}"
            itemActionsPosition="{{ _options.itemActionsPosition }}"
            searchValue="{{ collection.getSearchValue() }}"
+           backgroundStyle="{{ _options.backgroundStyle }}"
            style="{{ _options.style }}"
            theme="{{ _options.theme }}"
            multiSelectTpl="{{ multiSelectTpl }}"
