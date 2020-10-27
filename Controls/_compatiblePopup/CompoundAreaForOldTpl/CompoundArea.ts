@@ -1014,7 +1014,9 @@ var CompoundArea = CompoundContainer.extend([
 
    isVisible: function() {
       if (this._options.autoShow === false) {
-         return this._isVisible;
+         const popupContainer = this._container.parentElement;
+         const isHidden = popupContainer?.classList.contains('ws-hidden');
+         return !isHidden && this._isVisible;
       }
       return true;
    },
