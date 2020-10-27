@@ -260,6 +260,11 @@ const _private = {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
+        if (cfg.navigation &&
+            cfg.navigation.viewConfig &&
+            cfg.navigation.viewConfig.pagingMode === 'direct') {
+            Logger.warn('INavigation: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
+        }
     },
 
     // Attention! Вызывать эту функцию запрещено! Исключение - методы reload, onScrollHide, onScrollShow.
