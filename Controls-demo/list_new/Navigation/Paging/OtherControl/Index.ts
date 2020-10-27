@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/ContentTemplate/ContentTemplate';
+import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/OtherControl/OtherControl';
 import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
 
@@ -66,5 +66,8 @@ export default class extends Control {
         return false;
     }
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/list_new/Navigation/Paging/OtherControl/styles'
+    ];
 }
