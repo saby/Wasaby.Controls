@@ -875,7 +875,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
@@ -886,7 +885,7 @@ describe('Controls/_itemActions/Controller', () => {
         // T3.2. Если в метод не передан parentAction, то config.templateOptions.showHeader будет false
         it('should set config.templateOptions.showHeader \'false\' when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, false);
             assert.exists(config.templateOptions, 'Template options were not set when no parent passed');
             // @ts-ignore
             assert.isFalse(config.templateOptions.showHeader, 'showHeader should be false when no parent passed');
@@ -900,7 +899,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set when no isMenu parent passed');
@@ -915,7 +913,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
@@ -939,7 +936,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
@@ -961,7 +957,6 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(
                 item3,
                 clickEvent,
-                null,
                 null,
                 false
             );
@@ -1004,7 +999,7 @@ describe('Controls/_itemActions/Controller', () => {
                     actionAlignment: 'vertical'
                 }));
                 const item3 = collection.getItemBySourceKey(3);
-                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, false);
                 assert.exists(config.templateOptions, 'Template options were not set');
                 // @ts-ignore
                 assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
@@ -1044,7 +1039,7 @@ describe('Controls/_itemActions/Controller', () => {
                     actionAlignment: 'vertical'
                 }));
                 const item3 = collection.getItemBySourceKey(3);
-                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+                const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, false);
                 assert.exists(config.templateOptions, 'Template options were not set');
                 // @ts-ignore
                 assert.exists(config.templateOptions.source, 'Menu actions source hasn\'t set in template options');
@@ -1116,7 +1111,6 @@ describe('Controls/_itemActions/Controller', () => {
                     item3,
                     clickEvent,
                     parentAction,
-                    null,
                     false
                 );
                 assert.exists(config.templateOptions, 'Template options were not set');
@@ -1181,7 +1175,6 @@ describe('Controls/_itemActions/Controller', () => {
                     item3,
                     clickEvent,
                     parentAction,
-                    null,
                     false
                 );
                 assert.notExists(config);
@@ -1224,7 +1217,6 @@ describe('Controls/_itemActions/Controller', () => {
                     item3,
                     clickEvent,
                     parentAction,
-                    null,
                     false
                 );
                 assert.exists(config.templateOptions, 'Template options were not set');
@@ -1285,7 +1277,6 @@ describe('Controls/_itemActions/Controller', () => {
                     clickEvent,
                     // @ts-ignore
                     parentAction,
-                    null,
                     false
                 );
                 assert.exists(config.templateOptions, 'Template options were not set');
@@ -1350,7 +1341,6 @@ describe('Controls/_itemActions/Controller', () => {
                     clickEvent,
                     // @ts-ignore
                     parentAction,
-                    null,
                     false
                 );
                 assert.exists(config.templateOptions, 'Template options were not set');
@@ -1368,7 +1358,7 @@ describe('Controls/_itemActions/Controller', () => {
         // Надо добавлять кнопку закрытия для случая контекстного меню (когда parentAction не задан)
         it('should add close button for template config when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, false);
             // @ts-ignore
             assert.isTrue(config.templateOptions.closeButtonVisibility);
         });
@@ -1394,7 +1384,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             // @ts-ignore
@@ -1417,7 +1406,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.exists(config.direction, 'Direction options were not set');
@@ -1431,7 +1419,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.notExists(config.direction);
@@ -1445,7 +1432,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             // @ts-ignore
@@ -1460,7 +1446,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
@@ -1486,7 +1471,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             // @ts-ignore
@@ -1508,7 +1492,7 @@ describe('Controls/_itemActions/Controller', () => {
                 }
             }));
             const item3 = collection.getItemBySourceKey(3);
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], null, false);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, itemActions[3], false);
             // @ts-ignore
             assert.equal(config.templateOptions.iconSize, 'm', 'default iconSize has not been applied');
         });
@@ -1521,7 +1505,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             // @ts-ignore
@@ -1538,7 +1521,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.exists(config.fittingMode, 'fittingMode options were not set');
@@ -1552,7 +1534,7 @@ describe('Controls/_itemActions/Controller', () => {
         it('should set config.className with value controls-ItemActions__popup__list_theme-default when parentAction isn\'t set', () => {
             const item3 = collection.getItemBySourceKey(3);
             const actionsOf3 = item3.getActions();
-            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, null, true);
+            const config = itemActionsController.prepareActionsMenuConfig(item3, clickEvent, null, true);
             assert.equal(config.className, 'controls-ItemActions__popup__list_theme-default');
         });
 
@@ -1564,7 +1546,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.equal(config.className, 'controls-ItemActions__popup__list_theme-default');
@@ -1577,7 +1558,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.equal(config.className, 'controls-MenuButton_link_iconSize-medium_popup theme_default');
@@ -1600,7 +1580,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             assert.exists(config.targetPoint, 'targetPoint options were not set');
@@ -1615,7 +1594,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             assert.notExists(config.targetPoint);
@@ -1627,7 +1605,6 @@ describe('Controls/_itemActions/Controller', () => {
             const config = itemActionsController.prepareActionsMenuConfig(
                 item3,
                 clickEvent,
-                null,
                 null,
                 true
             );
@@ -1643,7 +1620,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 actionsOf3.showed[actionsOf3.showed.length - 1],
-                null,
                 false
             );
             // @ts-ignore
@@ -1657,7 +1633,6 @@ describe('Controls/_itemActions/Controller', () => {
                 item3,
                 clickEvent,
                 itemActions[3],
-                null,
                 false
             );
             // @ts-ignore
