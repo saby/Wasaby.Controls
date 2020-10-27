@@ -258,8 +258,8 @@ var TileViewModel = ListViewModel.extend({
                 const imageProportion = imageWidth / imageHeight;
                 widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
                     Math.max(imageProportion, ITEM_COMPRESSION_COEFFICIENT));
-            } else {
-                return this._itemsHeight * (this._options.tileFitProperty || ITEM_COMPRESSION_COEFFICIENT);
+            } else if (this._options.tileFitProperty) {
+                return this._itemsHeight * (item.get(this._options.tileFitProperty) || ITEM_COMPRESSION_COEFFICIENT);
             }
         } else {
             return itemWidth;
