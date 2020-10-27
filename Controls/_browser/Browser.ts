@@ -31,7 +31,7 @@ interface IDataChildContext {
 export default class Browser extends Control {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
-    private _selectedKeysCount: number = null;
+    private _selectedKeysCount: number|null;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
     private _operationsController: OperationsController = null;
