@@ -260,6 +260,11 @@ const _private = {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
+        if (cfg.navigation &&
+            cfg.navigation.viewConfig &&
+            cfg.navigation.viewConfig.pagingMode === 'direct') {
+            Logger.warn('INavigation: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
+        }
     },
 
     // Attention! Вызывать эту функцию запрещено! Исключение - методы reload, onScrollHide, onScrollShow.
@@ -843,7 +848,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(direction, self._options.root).addCallback(function(addedItems) {
+            return self._sourceController.load(direction, self._options.root).addCallback((addedItems) => {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -2208,13 +2213,13 @@ const _private = {
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
-            
+
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
-        
-            _private.updateScrollPagingButtons(self, self._getScrollParams());            
+
+            _private.updateScrollPagingButtons(self, self._getScrollParams());
         });
     },
 
@@ -3061,7 +3066,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
-            this._sourceController = newOptions.sourceController;
+            this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
             this._sourceController = _private.getSourceController(newOptions);
@@ -5139,10 +5144,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            itemActionsController = _private.getItemActionsController(this, this._options);
-            const swipedItem = itemActionsController?.getSwipeItem();
+            // Тут не надо инициализировать контроллер, если он не проинициализирован
+            const swipedItem = this._itemActionsController?.getSwipeItem();
             if (swipedItem) {
-                itemActionsController.startSwipeCloseAnimation();
+                this._itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
