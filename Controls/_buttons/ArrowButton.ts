@@ -8,33 +8,12 @@ export interface IArrowButtonOptions extends IControlOptions {
 }
 
 /**
- * Графический контрол в виде стрелки, который предоставляет пользователю возможность простого запуска события при
- * нажатии на него.
+ * Графический контрол в виде стрелки, который предоставляет пользователю возможность простого запуска события при нажатии на него.
  * @class Controls/_buttons/ArrowButton
  * @extends Core/Control
- * 
  * @public
  * @author Красильников А.С.
- * @category Button
  * @demo Controls-demo/Buttons/ArrowButton/Index
- */
-
-/**
- * @typedef {Enum} TArrowButtonDirection
- * @variant left Влево.
- * @variant right Вправо.
- * @variant up Вверх.
- * @variant down Вниз.
- */
-
-/**
- * @name Controls/_buttons/ArrowButton#direction
- * @cfg {TArrowButtonDirection} Выбор стороны, куда будет указывтаь стрелка в кнопке.
- * @example
- * <pre>
- *     <Controls.Buttons:ArrowButton direction="left"/>
- * </pre>
- * @demo Controls-demo/Buttons/ArrowButton/Direction/Index
  */
 class ArrowButton extends Control<IArrowButtonOptions>  {
     protected _template: TemplateFunction = template;
@@ -47,5 +26,23 @@ class ArrowButton extends Control<IArrowButtonOptions>  {
 
     static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 }
+
+/**
+ * @typedef {String} TArrowButtonDirection
+ * @variant left Влево.
+ * @variant right Вправо.
+ * @variant up Вверх.
+ * @variant down Вниз.
+ */
+
+/**
+ * @name Controls/_buttons/ArrowButton#direction
+ * @cfg {TArrowButtonDirection} Выбор стороны, куда будет указывтаь стрелка в кнопке.
+ * @example
+ * <pre class="brush: html">
+ * <Controls.Buttons:ArrowButton direction="left"/>
+ * </pre>
+ * @demo Controls-demo/Buttons/ArrowButton/Direction/Index
+ */
 
 export default ArrowButton;

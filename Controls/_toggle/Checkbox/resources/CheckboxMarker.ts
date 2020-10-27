@@ -14,7 +14,6 @@ export interface ICheckboxMarkerOptions extends IControlOptions {
  * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxMarker/Index
  */
 /**

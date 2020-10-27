@@ -56,7 +56,6 @@ export interface ITabsOptions extends ITabsButtonsOptions, ITabsTemplateOptions 
  * @mixes Controls/tabs:ITabsTemplateOptions
  * 
  * @public
- * @category List
  * @author Красильников А.С.
  * @demo Controls-demo/Tabs/Buttons
  * @cssModifier controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.

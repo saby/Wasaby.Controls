@@ -24,7 +24,6 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  * 
  * @private
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/LinkView
  *

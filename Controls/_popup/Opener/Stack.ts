@@ -18,7 +18,6 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @extends Controls/_popup/Opener/BaseOpener
  * 
  * @author Красильников А.С.
- * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IStack
  * @mixes Controls/_interface/IPropStorage
@@ -35,7 +34,6 @@ import {IStackOpener, IStackPopupOptions} from 'Controls/_popup/interface/IStack
  * @extends Controls/_popup/Opener/BaseOpener
  * 
  * @author Красильников А.С.
- * @category Popup
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IStack
  * @mixes Controls/_interface/IPropStorage

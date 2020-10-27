@@ -188,7 +188,7 @@ interface IErrbackConfig {
     error: CancelableError;
 }
 
-type CancelableError = Error & { canceled?: boolean };
+type CancelableError = Error & { canceled?: boolean, isCanceled?: boolean };
 type LoadingState = null | 'all' | 'up' | 'down';
 
 interface IIndicatorConfig {
@@ -259,6 +259,11 @@ const _private = {
     checkDeprecated(cfg) {
         if (cfg.historyIdCollapsedGroups) {
             Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+        }
+        if (cfg.navigation &&
+            cfg.navigation.viewConfig &&
+            cfg.navigation.viewConfig.pagingMode === 'direct') {
+            Logger.warn('INavigation: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
         }
     },
 
@@ -420,7 +425,7 @@ const _private = {
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
                     }
-                    _private.prepareFooter(self, navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                     _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
                     resDeferred.callback({
@@ -618,7 +623,6 @@ const _private = {
                     itemContainer, toBottom, force
                 }], {bubbling: true});
             }
-
         };
         return self._scrollController ?
             self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
@@ -713,20 +717,29 @@ const _private = {
     },
     // endregion key handlers
 
-    prepareFooter(self, navigation, sourceController: SourceController): void {
+    prepareFooter(self, options, sourceController: SourceController): void {
         let
             loadedDataCount, allDataCount;
 
-        if (_private.isDemandNavigation(navigation) && _private.hasMoreData(self, sourceController, 'down')) {
-            self._shouldDrawFooter = (self._options.groupingKeyCallback || self._options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        if (_private.isDemandNavigation(options.navigation) && _private.hasMoreData(self, sourceController, 'down')) {
+            self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
         } else {
             self._shouldDrawFooter = false;
         }
 
         if (self._shouldDrawFooter) {
-            loadedDataCount = self._options.root !== undefined ?
-                self._listViewModel?.getChildren(self._options.root)?.length :
-                self._listViewModel?.getCount();
+            if (self._listViewModel) {
+                // Единственный способ однозначно понять, что выводится дерево - проверить что список строится
+                // по проекци для дерева.
+                // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
+                const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
+                loadedDataCount = display && display['[Controls/_display/Tree]'] ?
+                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getCount();
+            } else {
+                loadedDataCount = 0;
+            }
+
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
@@ -787,7 +800,7 @@ const _private = {
                 self.stopBatchAdding();
             }
 
-            _private.prepareFooter(self, self._options.navigation, self._sourceController);
+            _private.prepareFooter(self, self._options, self._sourceController);
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -835,7 +848,7 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(direction, self._options.root).addCallback(function(addedItems) {
+            return self._sourceController.load(direction, self._options.root).addCallback((addedItems) => {
                 // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
                 // до реализации функционала и проблемы из новости делаем решение по месту:
                 // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
@@ -859,7 +872,7 @@ const _private = {
             }).addErrback((error: CancelableError) => {
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
-                if (!error.canceled) {
+                if (!error.canceled && !error.isCanceled) {
                     _private.scrollPage(self, (direction === 'up' ? 'Up' : 'Down'));
                 }
                 return _private.crudErrback(self, {
@@ -1060,6 +1073,10 @@ const _private = {
 
     scrollToEdge(self, direction) {
         _private.setMarkerAfterScroll(self);
+        let hasMoreData = {
+            up: _private.hasMoreData(self, self._sourceController, 'up'),
+            down: _private.hasMoreData(self, self._sourceController, 'down')
+        };
         if (_private.hasMoreData(self, self._sourceController, direction)) {
             let pagingMode = '';
             if (self._options.navigation && self._options.navigation.viewConfig) {
@@ -1075,9 +1092,6 @@ const _private = {
             _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
-                if (self._scrollPagingCtr) {
-                    self._scrollPagingCtr.setNumbersState(direction);
-                }
                 /**
                  * Если есть ошибка, то не нужно скроллить, иначе неоднозначное поведение:
                  * иногда скролл происходит раньше, чем показана ошибка, тогда показывается ошибка внутри списка;
@@ -1093,15 +1107,15 @@ const _private = {
                 }
             });
         } else if (direction === 'up') {
-            if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction);
-            }
             self._notify('doScroll', ['top'], { bubbling: true });
-        } else {
             if (self._scrollPagingCtr) {
-                self._scrollPagingCtr.setNumbersState(direction);
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
+        } else {
             _private.jumpToEnd(self);
+            if (self._scrollPagingCtr) {
+                self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
+            }
         }
     },
     scrollPage(self, direction) {
@@ -1585,7 +1599,7 @@ const _private = {
                 const moreMetaCount = _private.getAllDataCount(self);
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
-                    _private.prepareFooter(self, self._options.navigation, self._sourceController);
+                    _private.prepareFooter(self, self._options, self._sourceController);
                 }
             }
 
@@ -1907,7 +1921,7 @@ const _private = {
     groupsExpandChangeHandler(self, changes) {
         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
-        _private.prepareFooter(self, self._options.navigation, self._sourceController);
+        _private.prepareFooter(self, self._options, self._sourceController);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
             groupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
         }
@@ -2199,11 +2213,13 @@ const _private = {
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
         _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+
             // После того как последний item гарантированно отобразился,
             // нужно попросить ScrollWatcher прокрутить вниз, чтобы
             // прокрутить отступ пейджинга и скрыть тень
-
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
+
+            _private.updateScrollPagingButtons(self, self._getScrollParams());
         });
     },
 
@@ -2896,7 +2912,6 @@ const _private = {
  *
  * @private
  * @author Авраменко А.С.
- * @category List
  */
 
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
@@ -3051,7 +3066,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
-            this._sourceController = newOptions.sourceController;
+            this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
             this._sourceController = _private.getSourceController(newOptions);
@@ -3162,7 +3177,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                     _private.createScrollController(self, newOptions);
 
-                _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                _private.prepareFooter(self, newOptions, self._sourceController);
 
                 _private.initVisibleItemActions(self, newOptions);
 
@@ -3205,7 +3220,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
                     }
                         self._shouldNotifyOnDrawItems = true;
-                    _private.prepareFooter(self, newOptions.navigation, self._sourceController);
+                    _private.prepareFooter(self, newOptions, self._sourceController);
                 }
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
@@ -3593,7 +3608,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._sourceController = newOptions.sourceController;
             }
 
-            if (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items) {
+            if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 _private.assignItemsToModel(this, items, newOptions);
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -3652,13 +3667,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = null;
         }
 
+        const loadedBySourceController = newOptions.sourceController && sourceChanged;
         const needReload =
+            !loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            sourceChanged && !newOptions.sourceController ||
-            // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
+            (sourceChanged ||
+                // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
             filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
             sortingChanged ||
-            recreateSource;
+            recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -3752,7 +3769,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else {
             _private.doAfterUpdate(self, () => {
-                this._listViewModel.setSearchValue(newOptions.searchValue);
+                if (this._listViewModel) {
+                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -4149,7 +4168,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
         }
-
+        if (this._wasScrollToEnd) {
+            const hasMoreData = {
+                up: _private.hasMoreData(this, this._sourceController, 'up'),
+                down: _private.hasMoreData(this, this._sourceController, 'down')
+            };
+            if (this._scrollPagingCtr) {
+                this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
+            }
+        }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
@@ -5117,10 +5144,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
-            itemActionsController = _private.getItemActionsController(this, this._options);
-            const swipedItem = itemActionsController?.getSwipeItem();
+            // Тут не надо инициализировать контроллер, если он не проинициализирован
+            const swipedItem = this._itemActionsController?.getSwipeItem();
             if (swipedItem) {
-                itemActionsController.startSwipeCloseAnimation();
+                this._itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись

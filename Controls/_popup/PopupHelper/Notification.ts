@@ -7,7 +7,6 @@ import {INotificationPopupOptions} from '../interface/INotification';
  * @class Controls/_popup/PopupHelper/Notification
  * 
  * @author Красильников А.С.
- * @category Popup
  * @public
  */
 export default class NotificationOpener extends Base {

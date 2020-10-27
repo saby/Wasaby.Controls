@@ -35,7 +35,6 @@ export interface IEditOpener {
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
- * @category Popup
  */
 
 /**

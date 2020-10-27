@@ -39,7 +39,6 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * 
  * @author Авраменко А.С.
  * @public
- * @category List
  */
 
 /*
@@ -71,7 +70,6 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * 
  * @author Авраменко А.С.
  * @public
- * @category List
  */
 
 export default class View extends List {

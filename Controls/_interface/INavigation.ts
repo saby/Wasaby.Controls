@@ -151,7 +151,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
  * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц.
  */
-export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbers' | 'direct';
+export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbers';
 
 /**
  * @typedef {Object} INavigationViewConfig

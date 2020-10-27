@@ -17,7 +17,7 @@ const LEAF = null;
 /**
  * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
- * 
+ *
  * @public
  * @author Панихин К.А.
  */
@@ -27,7 +27,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    // удаляем по задаче https://online.sbis.ru/opendoc.html?guid=51cfa21a-f2ca-436d-b600-da3b22ccb7f2
    // tslint:disable-next-line:ban-ts-ignore
    // @ts-ignore
-   private _nodesSourceControllers: Map<string, SourceController>;
    private _rootId: CrudEntityKey;
    private _model: Tree<Model, TreeItem<Model>>;
    private _entryPath: IEntryPathItem[];
@@ -39,7 +38,6 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    update(options: ITreeSelectionStrategyOptions): void {
       this._selectAncestors = options.selectAncestors;
       this._selectDescendants = options.selectDescendants;
-      this._nodesSourceControllers = options.nodesSourceControllers;
       this._rootId = options.rootId;
       this._model = options.model;
       this._entryPath = options.entryPath;
@@ -236,9 +234,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          for (let index = 0; index < selectedNodes.length; index++) {
             const nodeKey = selectedNodes[index];
-            const nodeSourceController = this._nodesSourceControllers?.get(nodeKey as string);
             let countItemsSelectedInNode;
-            if (nodeSourceController?.hasMoreData('down')) {
+            if (this._model.getHasMoreStorage()[nodeKey]) {
                 countItemsSelectedInNode = null;
             } else {
                const countChildes = this._selectDescendants || this._isAllSelectedInRoot(selection);
@@ -606,7 +603,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       // tslint:disable-next-line:ban-ts-ignore
       // @ts-ignore
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
-         // tslint:disable-next-line:ban-ts-ignore
+         // tslint:disable-next-line
          contents = contents[(contents as any).length - 1];
       }
 

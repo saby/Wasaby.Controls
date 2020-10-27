@@ -697,6 +697,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             }
 
             return recordSet;
+         }, (error) => {
+            this._loadEnd();
+            return error;
          });
       } else {
          return this._getSourceController().load().then((recordSet) => {
@@ -842,7 +845,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   protected _loadEnd(result: RecordSet): void {
+   protected _loadEnd(result?: RecordSet): void {
       if (this._loading) {
          this._loading = false;
 

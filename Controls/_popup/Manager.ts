@@ -21,7 +21,6 @@ const ORIENTATION_CHANGE_DELAY = 50;
  * @class Controls/_popup/Manager
  * @private
  * @singleton
- * @category Popup
  * @author Красильников Андрей
  */
 
@@ -103,6 +102,11 @@ class Manager {
         const Loader = getModuleByName(this._dataLoaderModule);
         if (Loader) {
             return Loader.load(dataLoaders);
+        }
+        if (!this._dataLoaderModule) {
+            const message = 'На приложении не задан загрузчик данных. Опция окна dataLoaders будет проигнорирована';
+            Logger.error(message, this);
+            return Promise.resolve();
         }
 
         return new Promise((resolve) => {

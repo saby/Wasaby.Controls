@@ -1104,7 +1104,9 @@ define([
                {
                   data: [
                      baseControl,
-                     undefined,
+                     {
+                        navigation: undefined
+                     },
                      {}
                   ],
                   result: {
@@ -1114,7 +1116,9 @@ define([
                {
                   data: [
                      baseControl,
-                     {},
+                     {
+                        navigation: {}
+                     },
                      {}
                   ],
                   result: {
@@ -1124,7 +1128,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'page' },
+                     {
+                        navigation: { view: 'page' }
+                     },
                      {}
                   ],
                   result: {
@@ -1134,7 +1140,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return false;
@@ -1148,7 +1156,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1168,7 +1178,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1189,7 +1201,9 @@ define([
                {
                   data: [
                      baseControl,
-                     { view: 'demand' },
+                     {
+                        navigation: { view: 'demand' }
+                     },
                      {
                         hasMoreData: function() {
                            return true;
@@ -1216,14 +1230,21 @@ define([
                   getMetaData: () => ({
                      more: test.data[2].getAllDataCount()
                   })
+               }),
+               getDisplay: () => ({
+                  '[Controls/_display/Tree]': false
                })
             };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.equal(test.data[0]._shouldDrawFooter, test.result._shouldDrawFooter, 'Invalid prepare footer on step #' + index);
             assert.equal(test.data[0]._loadMoreCaption, test.result._loadMoreCaption, 'Invalid prepare footer on step #' + index);
 
-            baseControl._options.groupingKeyCallback = () => 123;
-            baseControl._listViewModel = { isAllGroupsCollapsed: () => true };
+            test.data[1].groupingKeyCallback = () => 123;
+            baseControl._listViewModel = {
+               isAllGroupsCollapsed: () => true,
+               getCount: () => undefined,
+               getDisplay: () => ({})
+            };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
             assert.isFalse(test.data[0]._shouldDrawFooter, 'Invalid prepare footer on step #' + index + ' with all collapsed groups');
          });
@@ -5360,6 +5381,31 @@ define([
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
          assert.isTrue(fakeNotify.calledOnce);
+      });
+
+      it('changing source, if sourceController in options', async function() {
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                viewModelConfig: {
+                   items: [],
+                   keyProperty: 'id'
+                },
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                source: source,
+                sourceController: new dataSource.NewSourceController({
+                   source
+                })
+             },
+             instance = new lists.BaseControl(cfg);
+
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+
+         cfg = {...cfg};
+         cfg.source = new sourceLib.Memory();
+         assert.isTrue(!(instance._beforeUpdate(cfg) instanceof Promise));
       });
 
       it('should fire "drawItems" with new collection if source item has changed', async function() {
