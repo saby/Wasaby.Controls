@@ -158,7 +158,7 @@ export default class extends Control<IMoverDialogTemplateOptions> {
  * Выбор раздела производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
  * Клик по папке не производит выбора раздела для перемещения.
  * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
- * Событие происходит непосредственно перед событием close.
+ * Событие происходит непосредственно перед событием {@link close}.
  * @see close
  */
 

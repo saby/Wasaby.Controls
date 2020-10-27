@@ -94,7 +94,7 @@ export interface IDateRangeOptions {
  */
 
 /**
- * @event Событие происходит при смещении диапазона.
+ * @event Происходит при смещении диапазона.
  * @name Controls/_dateRange/interfaces/IDateRange#rangeChanged
  * @param {Date} startValue верхняя граница диапазона дат
  * @param {Date} endValue нижняя граница диапазона дат
