@@ -64,32 +64,5 @@ export default class extends Control {
         });
     }
 
-    protected _afterItemsRemove(): void {
-        this._toggleAddButton();
-    }
-
-    private _toggleAddButton(): void {
-        // tslint:disable-next-line
-        const self = this;
-        this._viewSource.query().addCallback((items) => {
-            const rawData = items.getRawData();
-            const getSumm = (title) => rawData.items.reduce((acc: number, cur: unknown) => {
-                // tslint:disable-next-line
-                acc += parseInt(cur[title], 10) || 0;
-                return acc;
-            }, 0);
-            const newColumns = self._columns.map((cur) => {
-                if (cur.results || cur.results === 0) {
-                    return {
-                        ...cur, results: getSumm(cur.displayProperty)
-                    };
-                }
-                return cur;
-            });
-            self._columns = newColumns;
-            return items;
-        });
-    }
-
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
