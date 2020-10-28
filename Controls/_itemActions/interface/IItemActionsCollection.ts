@@ -1,6 +1,7 @@
 import {IBaseCollection, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
 import {IItemActionsItem} from './IItemActionsItem';
 import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
+import {EventRaisingMixin} from 'Types/collection';
 
 /**
  * Интерфейс коллекции, элементы которой обладают опциями записи
@@ -15,7 +16,7 @@ import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem> {
+export interface IItemActionsCollection extends IBaseCollection<IItemActionsItem>, Partial<EventRaisingMixin> {
     // '[Controls/_itemActions/interface/IItemActionsCollection]': true;
 
     /**
