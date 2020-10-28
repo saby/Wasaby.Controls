@@ -28,13 +28,13 @@ class SliderBase extends Control<ISliderBaseOptions> {
 
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
-            this._tooltipPosition = this._getValue(event);
+            this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
 
             // На мобилках события ухода мыши не стреляют (если не ткнуть пальцем в какую-то область)
             // В этом случае, по стандарту, скрываю тултип через 3 секунды.
-            if (constants.browser.isMobileIOS || constants.browser.isMobileAndroid) {
+            if (constants.browser.isMobilePlatform) {
                 if (this._hideTooltipTimerId) {
                     clearTimeout(this._hideTooltipTimerId);
                 }

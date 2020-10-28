@@ -7,6 +7,7 @@ import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 import {IScaleData, ILineData, IPointDataList, IPositionedInterval, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IInterval} from './interface/IInterval';
+import {constants} from 'Env/Env';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    value: number;
@@ -209,6 +210,7 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
       }
 
       this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
+      this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._tooltipPosition;
       this._render(options.minValue, options.maxValue, this._value);
       this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
    }
