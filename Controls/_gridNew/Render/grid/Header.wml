@@ -1,0 +1,14 @@
+<Controls.scroll:Group>
+    <div class="{{ header.getBodyClasses(theme) }}">
+        <ws:for data="cell in header.getCells()">
+            <div attr:class="{{ cell.getWrapperClasses(theme, style) }}"
+                 attr:style="{{ cell.getWrapperStyles() }}">
+                <div attr:class="{{ cell.getContentClasses(theme) }}">
+                    <ws:partial template="{{ cell.getTemplate() }}"
+                                scope="{{ cell.getTemplateOptions() }}"
+                                colData="{{ cell }}"/>
+                </div>
+            </div>
+        </ws:for>
+    </div>
+</Controls.scroll:Group>
