@@ -27,6 +27,7 @@ import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
 import {DependencyTimer} from 'Controls/fastOpenUtils';
 import * as mStubs from 'Core/moduleStubs';
+import {getActions} from './measurers/ItemActionMeasurer';
 
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
@@ -36,6 +37,8 @@ const DEFAULT_ACTION_CAPTION_POSITION = 'none';
 const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
+
+const DEFAULT_ACTION_MODE = 'strict';
 
 /**
  * @interface Controls/_itemActions/IControllerOptions
@@ -112,6 +115,8 @@ export interface IControllerOptions {
      * Редактируемая запись
      */
     editingItem?: IItemActionsItem;
+
+    actionMode: 'strict' | 'adaptive';
 }
 
 /**
@@ -129,7 +134,7 @@ export class Controller {
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
     private _iconSize: TItemActionsSize;
-
+    private _actionMode: 'adaptive' | 'strict';
     // вариант расположения опций в свайпе на момент инициализации
     private _actionsAlignment: 'horizontal' | 'vertical';
 
@@ -164,6 +169,7 @@ export class Controller {
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
+        this._actionMode = options.actionMode || DEFAULT_ACTION_MODE;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
@@ -204,6 +210,13 @@ export class Controller {
             this._addEditArrow(item.getActions().showed);
         }
         this._collection.nextVersion();
+    }
+
+    updateItemActions(itemKey: TItemKey, containerWidth: number): void {
+        const item = this._collection.getItemBySourceKey(itemKey);
+        const actions = item.getActions();
+        const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
+        item.setActions(this._fixActionsDisplayOptions(visibleActions), true);
     }
 
     /**
@@ -253,6 +266,10 @@ export class Controller {
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item, clickEvent, opener, templateOptions);
+        if (actionMenuConfig) {
+            return actionMenuConfig;
+        }
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
@@ -300,7 +317,7 @@ export class Controller {
         }
     }
 
-    /**
+        /**
      * Возвращает текущий активный Item
      */
     getActiveItem(): IItemActionsItem {
@@ -309,7 +326,9 @@ export class Controller {
         /**
          * Проверяем что элемент существует, в противном случае пытаемся его найти.
          */
-        if (activeItem === undefined && (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)) {
+        if (activeItem === undefined &&
+           (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)
+        ) {
             activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
         }
         return activeItem;
@@ -317,6 +336,14 @@ export class Controller {
 
     /**
      * Устанавливает текущее сосяние анимации в модель
+     */
+    startSwipeCloseAnimation(): void {
+        const swipeItem = this.getSwipeItem();
+        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+    }
+
+    /**
+     * Устанавливает текущее состояние анимации в модель
      */
     startSwipeCloseAnimation(): void {
         const swipeItem = this.getSwipeItem();
@@ -638,7 +665,7 @@ export class Controller {
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
-                    icon: 'icon-ExpandDown',
+                    icon: 'icon-SettingsNew',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     isMenu: true
@@ -780,10 +807,9 @@ export class Controller {
         oldContainer: IItemActionsContainer,
         newContainer: IItemActionsContainer
     ): boolean {
-        return (
-            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
-        );
+        const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
+        const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
+        return this._actionMode === 'adaptive' ? isMatchedAll : (isMatchedAll && isMatchedShowed);
     }
 
     private static _calculateSwipeConfig(

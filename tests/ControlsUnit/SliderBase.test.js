@@ -1,7 +1,7 @@
 define([
    'Controls/slider',
-   'Controls/_slider/Utils'
-], function(slider, utils) {
+   'Env/Env'
+], function(slider, Env) {
    describe('Controls.slider:Base', function() {
       it('beforeUpdate', function() {
          var cfg = {minValue:0, maxValue: 100, value: 50};
@@ -16,5 +16,18 @@ define([
          sb._beforeUpdate({...cfg, value: newValue});
          assert.equal(sb._value, 100);
       });
-   })
+      it('_mouseMoveAndTouchMoveHandler', () => {
+         const cfg = {
+            minValue: 0,
+            maxValue: 100,
+            value: 50
+         };
+         const sb = new slider.Base(cfg);
+         sb._beforeMount(cfg);
+         Env.constants.browser.isMobilePlatform = true;
+         sb._mouseMoveAndTouchMoveHandler({});
+         assert.equal(sb._tooltipPosition, 50);
+         Env.constants.browser.isMobilePlatform = false;
+      });
+   });
 });
