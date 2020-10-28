@@ -286,6 +286,17 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 gridViewModel.setHasMoreData(true);
                 assert.isFalse(gridViewModel.getCurrent().isLastRow);
             });
+
+            it('MarkerPosition', () => {
+                const current = gridViewModel.getCurrent();
+                assert.isTrue(current.shouldDisplayMarker(0));
+                assert.isFalse(current.shouldDisplayMarker(1));
+                gridViewModel._options.markerPosition = 'right';
+
+                const currentRight = gridViewModel.getCurrent();
+                assert.isFalse(currentRight.shouldDisplayMarker(0));
+                assert.isTrue(currentRight.shouldDisplayMarker(1));
+            });
         });
     });
 });

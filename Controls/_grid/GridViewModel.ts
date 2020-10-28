@@ -1626,10 +1626,24 @@ var
             );
 
             const style = !current.style ? 'default' : current.style;
+
+            current.markerPosition = this._options.markerPosition || 'left';
+            current.shouldDisplayMarker = (columnIndex): boolean => {
+                const isShouldDisplayMarker = (current.markerVisibility !== 'hidden' &&
+                    !current.isEditing() &&
+                    current.isMarked());
+                if (current.markerPosition === 'right') {
+                    return isShouldDisplayMarker && columnIndex === current.columns.length - 1;
+                } else {
+                    return isShouldDisplayMarker && columnIndex === 0;
+                }
+            };
+
             current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}`;
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}
+            controls-GridView__itemV_marker_position-${current.markerPosition}`;
 
             if (current.hasMultiSelectColumn) {
                 current.columns = [{}].concat(this._columns);
