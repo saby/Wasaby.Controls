@@ -1,18 +1,16 @@
 /**
  *
  * Модуль, в котором описана функция <b>hasScrollbar(element, kind)</b>.
- *
+ * @remark
  * Определяет, показаны ли полосы прокрутки (скроллбары) в элементе.
  * Способ не очень быстрый, но надёжный.
  *
- * <h2>Параметры функции</h2>
- * <ul>
- *     <li><b>element</b> {HTML|jQuery} - Элемент HTML DOM или jQuery.</li>
- *     <li><b>[kind]</b> {String} - тип полосы прокрутки (скроллбара): undefined (любой), 'x' (горизонтальный) или 'y' (вертикальный).</li>
- * </ul>
+ * Параметры функции:
+ * 
+ * 1. <b>element</b> {HTML|jQuery} - Элемент HTML DOM или jQuery.
+ * 2. <b>[kind]</b> {String} - тип полосы прокрутки (скроллбара): undefined (любой), 'x' (горизонтальный) или 'y' (вертикальный).
  *
- * <h2>Возвращает</h2>
- * {Boolean}
+ * Возвращает: Boolean
  *
  * @class Controls/_utils/sizeUtils/HasScrollbar
  * @public

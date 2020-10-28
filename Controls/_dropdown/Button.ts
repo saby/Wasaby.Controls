@@ -227,7 +227,8 @@ export default class Button extends BaseDropdown {
 }
 
 /**
- * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
+ * @event Происходит при выборе элемента из списка.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
@@ -235,7 +236,8 @@ export default class Button extends BaseDropdown {
  */
 
 /*
- * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
+ * @event Occurs when an item is selected from the list.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.

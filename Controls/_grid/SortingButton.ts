@@ -11,11 +11,6 @@ import template = require('wml!Controls/_grid/SortingResources/SortingButton');
  * @see Controls/grid:SortingSelector
  */
 
-/**
- * @name Controls/_grid/SortingButton#property
- * @cfg {String} Поле для сортировки.
- */
-
 export interface ISortingButtonOptions extends IControlOptions {
     property: string;
 }
@@ -28,5 +23,8 @@ class SortingButton extends Control<ISortingButtonOptions> {
 
     static _theme: [string] = ['Controls/grid'];
 }
-
+/**
+ * @name Controls/_grid/SortingButton#property
+ * @cfg {String} Поле для сортировки.
+ */
 export default SortingButton;

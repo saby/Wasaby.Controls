@@ -92,13 +92,15 @@
  */
 
 /**
- * @event Controls/_scroll/StickyHeader#fixed Происходит при изменении состояния фиксации.
+ * @event Происходит при изменении состояния фиксации.
+ * @name Controls/_scroll/StickyHeader#fixed
  * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Информация о событии фиксации.
  */
 
 /*
- * @event Controls/_scroll/StickyHeader#fixed Change the fixation state.
+ * @event Change the fixation state.
+ * @name Controls/_scroll/StickyHeader#fixed
  * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */

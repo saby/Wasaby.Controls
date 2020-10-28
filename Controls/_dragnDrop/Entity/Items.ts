@@ -18,6 +18,10 @@ import Entity from 'Controls/_dragnDrop/Entity';
  * @author Авраменко А.С.
  */
 
+interface IItemsOptions {
+    items: Array<string|number>;
+}
+
 /**
  * @name Controls/_dragnDrop/Entity/Items#items
  * @cfg {Array.<String>} Список перемещаемых элементов.
@@ -31,10 +35,6 @@ import Entity from 'Controls/_dragnDrop/Entity';
  * @remark In the process of moving, a thumbnail of the entity being moved is shown near the cursor.
  * @see Controls/_interface/IDraggable#dragStart
  */
-
-interface IItemsOptions {
-    items: Array<string|number>;
-}
 
 export default class Items extends Entity {
     protected _options: IItemsOptions;

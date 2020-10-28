@@ -13,7 +13,8 @@
  */
 
 /**
- * @event Controls/_list/interface/IClickableView#itemClick Происходит при клике на элемент списка.
+ * @event Происходит при клике на элемент списка.
+ * @name Controls/_list/interface/IClickableView#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
  * @param {Types/entity:Record} item Элемент, по которому кликнули.
  * @param {Object} nativeEvent Объект нативного события браузера.
@@ -21,7 +22,8 @@
  */
 
 /*
- * @event Controls/_list/interface/IClickableView#itemClick Occurs when a mouse button is pressed over a list item.
+ * @event Occurs when a mouse button is pressed over a list item.
+ * @name Controls/_list/interface/IClickableView#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} event Event object.
  * @param {Types/entity:Record} item Item that the mouse button was pressed over.
  * @param {Object} nativeEvent Native event object.

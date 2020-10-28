@@ -43,16 +43,6 @@ import {isHistorySource} from 'Controls/_filter/HistoryUtils';
  *
  */
 
-/**
- * @name Controls/_filterPopup/SimplePanel#items
- * @cfg {RecordSet} Список, в котором описана конфигурация для каждого фильтра, отображающегося в SimplePanel.
- * Формируется контролом {@link Controls/filter:View}. При использовании Controls/_filterPopup/SimplePanel в качестве шаблона для фильтра опцию items необходимо прокинуть в контрол.
- * @example
- * WML:
- * <pre>
- *    <Controls.filterPopup:SimplePanel items="{{_options.items}}"/>
- * </pre>
- */
 const DEFAULT_MIN_VISIBLE_ITEMS = 2;
 var _private = {
 
@@ -187,5 +177,14 @@ Panel.getDefaultOptions = (): object => {
 Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
 
 Panel._private = _private;
-
+/**
+ * @name Controls/_filterPopup/SimplePanel#items
+ * @cfg {RecordSet} Список, в котором описана конфигурация для каждого фильтра, отображающегося в SimplePanel.
+ * Формируется контролом {@link Controls/filter:View}. При использовании Controls/_filterPopup/SimplePanel в качестве шаблона для фильтра опцию items необходимо прокинуть в контрол.
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.filterPopup:SimplePanel items="{{_options.items}}"/>
+ * </pre>
+ */
 export = Panel;

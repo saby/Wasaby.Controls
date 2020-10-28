@@ -22,21 +22,6 @@ interface IAdditionalRenderOptions extends IControlOptions {
  * @author Михайлов С.Е
  */
 
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
- * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#keyProperty
- * @cfg {string} Имя свойства, содержащего идентификатор элемента коллекции
- */
-
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#groupProperty
- * @cfg {string} Имя свойства, содержащего идентификатор группы элемента списка.
- */
-
 export default class AdditionalParamsRender extends Control<IAdditionalRenderOptions> {
     protected _template: TemplateFunction = template;
     protected _collection: Collection<IFilterItem> =  null;
@@ -95,3 +80,17 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 
     static _theme: string[] = ['Controls/filterPopup'];
 }
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
+ * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#keyProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор элемента коллекции
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#groupProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор группы элемента списка.
+ */

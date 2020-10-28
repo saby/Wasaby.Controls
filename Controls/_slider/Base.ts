@@ -43,92 +43,6 @@ const maxPercentValue = 100;
  * @demo Controls-demo/Slider/Base/Base/Index
  */
 
-/**
- * @name Controls/_slider/Base#value
- * @cfg {Number} Устанавливает текущее значение слайдера.
- * @remark Должно находиться в диапазоне [minValue..maxValue]
- * @example
- * Слайдер с ползунком, установленным в положение 40.
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:value="{{_value}}"/>
- * </pre>
- * ts:
- * <pre>
- *    this._value = 40;
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Base#value
- * @cfg {Number} sets the current value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:value="{{_value}}"/>
- * </pre>
- * ts:
- * <pre>
- *    this._value = 40;
- * </pre>
- */
-
-/**
- * @name Controls/_slider/Base#intervals
- * @cfg {Array<IInterval>>} Интервалы шкалы выбора значения, закрашенные выбранным цветом.
- * @example
- * Слайдер с закрашенным интервалом.
- * <pre class="brush:html">
- *    <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
- *       <ws:intervals>
- *          <ws:Array>
- *             <ws:Object
- *                color="primary"
- *                start="{{0}}"
- *                end="{{10}}"/>
- *             <ws:Object
- *                color="danger"
- *                start="{{30}}"
- *                end="{{70}}"/>
- *          </ws:Array>
- *       </ws:intervals>
- *    </Controls.slider:Base>
- * </pre>
- * @demo Controls-demo/Slider/Base/Intervals/Index
- */
-
-/*
- * @name Controls/_slider/Base#intervals
- * @cfg {Array<IInterval>>} Colored intervals of the scale for choose value.
- * @example
- * Colored slider.
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
- *       <ws:intervals>
- *          <ws:Array>
- *             <ws:Object
- *                color="primary"
- *                start="{{0}}"
- *                end="{{10}}"
- *             </ws:Object>
- *             <ws:Object
- *                color="danger"
- *                start="{{30}}"
- *                end="{{70}}"
- *             </ws:Object>
- *          </ws:Array>
- *       </ws:intervals>
- *    </Controls.slider:Base>
- * </pre>
- * @demo Controls-demo/Slider/Base/Intervals/Index
- */
-
-/**
- * @event Controls/_slider/Base#valueChanged Происходит при изменении значения слайдера.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {number} value Новое значение.
- */
-
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -256,4 +170,90 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 }
 
+/**
+ * @name Controls/_slider/Base#value
+ * @cfg {Number} Устанавливает текущее значение слайдера.
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер с ползунком, установленным в положение 40.
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
+ * </pre>
+ */
+
+/*
+ * @name Controls/_slider/Base#value
+ * @cfg {Number} sets the current value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#intervals
+ * @cfg {Array<IInterval>>} Интервалы шкалы выбора значения, закрашенные выбранным цветом.
+ * @example
+ * Слайдер с закрашенным интервалом.
+ * <pre class="brush:html">
+ *    <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
+ *       <ws:intervals>
+ *          <ws:Array>
+ *             <ws:Object
+ *                color="primary"
+ *                start="{{0}}"
+ *                end="{{10}}"/>
+ *             <ws:Object
+ *                color="danger"
+ *                start="{{30}}"
+ *                end="{{70}}"/>
+ *          </ws:Array>
+ *       </ws:intervals>
+ *    </Controls.slider:Base>
+ * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
+ */
+
+/*
+ * @name Controls/_slider/Base#intervals
+ * @cfg {Array<IInterval>>} Colored intervals of the scale for choose value.
+ * @example
+ * Colored slider.
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
+ *       <ws:intervals>
+ *          <ws:Array>
+ *             <ws:Object
+ *                color="primary"
+ *                start="{{0}}"
+ *                end="{{10}}"
+ *             </ws:Object>
+ *             <ws:Object
+ *                color="danger"
+ *                start="{{30}}"
+ *                end="{{70}}"
+ *             </ws:Object>
+ *          </ws:Array>
+ *       </ws:intervals>
+ *    </Controls.slider:Base>
+ * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
+ */
+
+/**
+ * @event Происходит при изменении значения слайдера.
+ * @name Controls/_slider/Base#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {number} value Новое значение.
+ */
 export default Base;

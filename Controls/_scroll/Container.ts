@@ -24,6 +24,8 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
     backgroundStyle: string;
 }
 
+const SCROLL_BY_ARROWS = 40;
+const DEFAULT_BACKGROUND_STYLE = 'default';
 /**
  * Контейнер с тонким скроллом.
  *
@@ -56,57 +58,6 @@ interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, I
  * @demo Controls-demo/Scroll/Container/Default/Index
  *
  */
-
-/**
- * @name Controls/_scroll/Container#content
- * @cfg {Content} Содержимое контейнера.
- */
-
-/*
- * @name Controls/_scroll/Container#content
- * @cfg {Content} Container contents.
- */
-
-
-/**
- * @name Controls/_scroll/Container#style
- * @cfg {String} Цветовая схема (цвета тени и скролла).
- * @variant normal Тема по умолчанию (для ярких фонов).
- * @variant inverted Преобразованная тема (для темных фонов).
- */
-
-/*
- * @name Controls/_scroll/Container#style
- * @cfg {String} Color scheme (colors of the shadow and scrollbar).
- * @variant normal Default theme (for bright backgrounds).
- * @variant inverted Inverted theme (for dark backgrounds).
- */
-
-/**
- * @name Controls/_scroll/Container#optimizeShadow
- * @cfg {Boolean} Включает режим быстрой отрисовки тени.
- * @default true
- * @variant true Оптимизированные тени.
- * @variant false Не оптимизированные тени.
- * @remark
- * Отключите оптимизированные тени, если:
- * <ul>
- *     <li> У скролл контейнера непрозрачный фон </li>
- *     <li> Скролл контейнер находится в элементе с непрозрачным фоном </li>
- *     <li> В скролл конейтенере присутствуют изображения. </li>
- * </ul>
- */
-
-/**
- * @name Controls/_scroll/Container#backgroundStyle
- * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
- * @default default
- * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
- */
-
-const SCROLL_BY_ARROWS = 40;
-const DEFAULT_BACKGROUND_STYLE = 'default';
-
 export default class Container extends ContainerBase<IContainerOptions> implements IScrollbars {
     readonly '[Controls/_scroll/Container/Interface/IScrollbars]': boolean = true;
     readonly '[Controls/_scroll/Container/Interface/IShadows]': boolean = true;
@@ -446,3 +397,49 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         };
     }
 }
+/**
+ * @name Controls/_scroll/Container#content
+ * @cfg {Content} Содержимое контейнера.
+ */
+
+/*
+ * @name Controls/_scroll/Container#content
+ * @cfg {Content} Container contents.
+ */
+
+
+/**
+ * @name Controls/_scroll/Container#style
+ * @cfg {String} Цветовая схема (цвета тени и скролла).
+ * @variant normal Тема по умолчанию (для ярких фонов).
+ * @variant inverted Преобразованная тема (для темных фонов).
+ */
+
+/*
+ * @name Controls/_scroll/Container#style
+ * @cfg {String} Color scheme (colors of the shadow and scrollbar).
+ * @variant normal Default theme (for bright backgrounds).
+ * @variant inverted Inverted theme (for dark backgrounds).
+ */
+
+/**
+ * @name Controls/_scroll/Container#optimizeShadow
+ * @cfg {Boolean} Включает режим быстрой отрисовки тени.
+ * @default true
+ * @variant true Оптимизированные тени.
+ * @variant false Не оптимизированные тени.
+ * @remark
+ * Отключите оптимизированные тени, если:
+ * <ul>
+ *     <li> У скролл контейнера непрозрачный фон </li>
+ *     <li> Скролл контейнер находится в элементе с непрозрачным фоном </li>
+ *     <li> В скролл конейтенере присутствуют изображения. </li>
+ * </ul>
+ */
+
+/**
+ * @name Controls/_scroll/Container#backgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
+ * @default default
+ * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
+ */

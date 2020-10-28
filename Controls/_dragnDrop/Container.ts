@@ -80,7 +80,7 @@ export interface IDragObject<T = object> {
 
 /**
  * Контейнер, который отслеживает события мыши и генерирует события перемещения.
- * Контрол-контейнер должен быть встроен в Controls/dragnDrop:Controller.
+ * Контрол-контейнер должен быть встроен в {@link Controls/dragnDrop:Controller}.
  *
  * @remark
  * Полезные ссылки:
@@ -441,7 +441,8 @@ class Container extends Control<IContainerOptions> {
 }
 
 /**
- * @event Controls/_dragnDrop/Container#documentDragStart Происходит при начале перемещения объекта на странице.
+ * @event Происходит при начале перемещения объекта на странице.
+ * @name Controls/_dragnDrop/Container#documentDragStart
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, в котором началось перемещение.
@@ -488,7 +489,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#documentDragEnd Происходит при завершении перемещения объекта на странице.
+ * @event Происходит при завершении перемещения объекта на странице.
+ * @name Controls/_dragnDrop/Container#documentDragEnd
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @remark Событие срабатывает на всех контроллерах на странице, включая контроллер, на котором закончилось перемещение.
@@ -538,7 +540,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#dragStart Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
+ * @event Происходит, когда пользователь начинает перемещение объект в текущем контроллере.
+ * @name Controls/_dragnDrop/Container#dragStart
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @remark Событие срабатывает только на контроллере, где началось перемещение.
@@ -584,7 +587,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#dragEnd Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
+ * @event Происходит после того, как пользователь закончил перемещение объекта в текущем контроллере.
+ * @name Controls/_dragnDrop/Container#dragEnd
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @remark Событие срабатывает только на контроллере, где завершилось перетаскивание.
@@ -629,7 +633,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#dragEnter Происходит после перемещения объекта внутри контроллера.
+ * @event Происходит после перемещения объекта внутри контроллера.
+ * @name Controls/_dragnDrop/Container#dragEnter
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @example
@@ -677,7 +682,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#dragLeave Происходит после перемещения объекта за пределы контроллера.
+ * @event Происходит после перемещения объекта за пределы контроллера.
+ * @name Controls/_dragnDrop/Container#dragLeave
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @example
@@ -725,7 +731,8 @@ class Container extends Control<IContainerOptions> {
 
 
 /**
- * @event Controls/_dragnDrop/Container#dragMove Происходит при перемещении объекта на странице.
+ * @event Происходит при перемещении объекта на странице.
+ * @name Controls/_dragnDrop/Container#dragMove
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {dragObject} dragObject Объект, в котором содержится информация о текущем состоянии Drag'n'drop.
  * @remark Событие срабатывает только на контроллере, где началось перемещение. Событие срабатывает каждый раз, когда на странице происходит событие mousemove(touchmove).
