@@ -115,7 +115,17 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 }
             });
             it('initPagingData', () => {
-                chai.assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50});
+                chai.assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50, averageElementHeight: 25});
+            });
+            it('getItemsCountOnPage', () => {
+                chai.assert.deepEqual(spInstance.getItemsCountOnPage(), 2);
+            });
+            it('getNeededItemsCountForPage', () => {
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(1), 2);
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(2), 4);
+                spInstance.shiftToEdge('down', {up: true});
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(50), 2);
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(49), 4);
             });
             it('getScrollTopByPage numbersState = up', () => {
                 spInstance.shiftToEdge('up', {down: true});

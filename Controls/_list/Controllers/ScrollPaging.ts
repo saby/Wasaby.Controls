@@ -48,6 +48,7 @@ interface IScrollPagingOptions {
 interface IPagingData {
     totalHeight: number;
     pagesCount: number;
+    averageElementHeight: number;
 }
 
 interface IHasMoreData {
@@ -73,7 +74,8 @@ export default class ScrollPagingController {
         const pagesCount = Math.round(totalHeight / this._options.scrollParams.clientHeight);
         this._pagingData = {
             totalHeight,
-            pagesCount
+            pagesCount,
+            averageElementHeight
         };
 
     }
@@ -116,6 +118,23 @@ export default class ScrollPagingController {
             this.handleScrollTop(hasMoreData);
         } else if (!canScrollForward && canScrollBackward && this.isHasMoreData(hasMoreData.down)) {
             this.handleScrollBottom(hasMoreData);
+        }
+    }
+    getItemsCountOnPage() {
+        if (this._options.pagingMode === 'numbers') {
+            return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
+        }
+    }
+    protected getNeededItemsCountForPage(page: number) {
+        if (this._options.pagingMode === 'numbers') {
+            const itemsOnPage = this.getItemsCountOnPage();
+            let neededItems;
+            if (this._numbersState === 'up') {
+                neededItems = page * itemsOnPage;
+            } else {
+                neededItems = (this._pagingData.pagesCount - page + 1) * itemsOnPage;
+            }
+            return Math.min(neededItems, this._options.totalElementsCount)
         }
     }
 

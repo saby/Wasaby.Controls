@@ -174,7 +174,9 @@ export default class ScrollController {
     getScrollTop(): number {
         return this._lastScrollTop;
     }
-
+    setSegmentSize(size: number): void {
+        this._virtualScroll?.setSegmentSize(size);
+    }
     continueScrollToItemIfNeed(): boolean {
         let result = false;
         if (this._continueScrollToItem) {
