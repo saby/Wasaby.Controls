@@ -101,18 +101,23 @@ export default interface IToolbarSource {
  *           id: '1',
  *           showType: showType.TOOLBAR,
  *           icon: 'icon-Time',
+ *           iconStyle: 'secondary',
  *           '@parent': false,
- *           parent: null
+ *           parent: null,
+ *           contrastBackground: true
  *        },
  *        {
  *           id: '2',
  *           title: 'Moscow',
  *           '@parent': false,
- *           parent: null
+ *           parent: null,
+ *           readOnly: true
  *        },
  *        {
  *           id: '3',
- *           title: 'St-Petersburg',
+ *           viewMode: 'button',
+ *           captionPosition: 'left',
+ *           caption: 'St-Petersburg',
  *           '@parent': false,
  *           parent: null
  *        }
