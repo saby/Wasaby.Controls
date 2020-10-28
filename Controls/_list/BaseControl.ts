@@ -1277,6 +1277,9 @@ const _private = {
             }
         };
         self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
+        if (scrollPagingConfig.pagingMode === 'numbers') {
+            self._scrollController.setSegmentSize(self._scrollPagingCtr.getItemsCountOnPage());
+        }
         return Promise.resolve(self._scrollPagingCtr);
     },
 
@@ -3377,7 +3380,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                _private.doAfterUpdate(this, () => {
+                    _private.doAfterUpdate(this, () => {if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                        return;
+                    }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
                 });
             }
@@ -4099,6 +4104,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     handleTriggerVisible(direction: IDirection): void {
         // Вызываем сдвиг диапазона в направлении видимого триггера
+        this._shiftToDirection(direction);
+    },
+    _shiftToDirection(direction): void {
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (result) {
                 _private.handleScrollControllerResult(this, result);
@@ -4219,12 +4227,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
         }
     },
-    _canScroll(scrollTop, direction) {
+    _canScroll(scrollTop: number, direction): boolean {
         const placeholder = this._scrollController?.getPlaceholders()?.top || 0;
         return !(direction === 'down' && scrollTop - placeholder + this._viewportSize > this._viewSize ||
             direction === 'up' && scrollTop - placeholder < 0)
     },
-    __selectedPageChanged(e, page) {
+    _hasEnoughData(page: number): boolean {
+        const neededItemsCount = this._scrollPagingCtr.getNeededItemsCountForPage(page);
+        const itemsCount = this._listViewModel.getCount();
+        return neededItemsCount <= itemsCount;
+    },
+    __selectedPageChanged(e, page: number) {
         let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
         const direction = this._currentPage < page ? 'down' : 'up';
         this._applySelectedPage = () => {
@@ -4234,7 +4247,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
             if (!this._canScroll(scrollTop, direction)) {
-                this.handleTriggerVisible(direction);
+                this._shiftToDirection(direction);
             } else {
                 this._applySelectedPage = null;
             
@@ -4247,7 +4260,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else {
             this._selectedPageHasChanged = true;
         }
-        
+
+        //При выборе первой или последней страницы крутим в край.
         if (page === 1) {
             _private.scrollToEdge(this, 'up');
             this._currentPage = page;
@@ -4255,10 +4269,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.scrollToEdge(this, 'down');
             this._currentPage = page;
         } else {
-            if (!this._canScroll(scrollTop, direction)) {
-                this.handleTriggerVisible(direction);
-            } else {
+
+            // При выборе некрайней страницы, проверяем, 
+            // можно ли проскроллить к ней, по отрисованным записям
+            if (this._canScroll(scrollTop, direction)) {
                 this._applySelectedPage();
+            } else {
+                // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
+                // или нужно подгружать еще.
+                if (this._hasEnoughData(page)) {
+                    this._shiftToDirection(direction);
+                } else {
+                    this.loadMore(direction);
+                }
             }
         }
     },
