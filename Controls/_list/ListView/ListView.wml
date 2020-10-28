@@ -14,7 +14,6 @@
 
              itemTemplate="{{ _itemTemplate }}"
              itemTemplateProperty="{{ _options.itemTemplateProperty }}"
-             groupTemplate="{{ _groupTemplate }}"
 
              itemActionsPosition="{{ _options.itemActionsPosition }}"
              itemActionsTemplate="{{ _options.itemActionsTemplate }}"

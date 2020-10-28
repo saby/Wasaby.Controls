@@ -1,9 +1,10 @@
-import {isEqual} from 'Types/object';
-import {isFullGridSupport} from './GridLayoutUtil';
-import {detection} from 'Env/Env';
+import { isEqual } from 'Types/object';
+import { isFullGridSupport } from './GridLayoutUtil';
+import { detection } from 'Env/Env';
+import { TColumns } from '../interface/IColumn';
 
 interface IStickyColumnsParams {
-    columns: [];
+    columns: TColumns;
     stickyColumn ?: object;
 }
 
@@ -14,7 +15,7 @@ interface IPrepareLadderParams extends IStickyColumnsParams{
     display: any;
 }
 
-export function isSupportLadder(ladderProperties ?: []): boolean {
+export function isSupportLadder(ladderProperties ?: string[]): boolean {
     return !!(ladderProperties && ladderProperties.length);
 }
 

@@ -1,22 +1,32 @@
 import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
 import GridCollection from './GridCollection';
-import GridColumn, { IOptions as IGridColumnOptions, IColumnConfig } from './GridColumn';
+import GridColumn, { IOptions as IGridColumnOptions } from './GridColumn';
+import { IColumn, TColumns } from '../_grid/interface/IColumn';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
-    columns: IColumnConfig[];
+    columns: TColumns;
+    /* todo заготовка для ladder
+    ladder: {};
+     */
 }
 
 export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$owner: GridCollection<T>;
-    protected _$columns: IColumnConfig[];
+    protected _$columns: TColumns;
     protected _$columnItems: Array<GridColumn<T>>;
 
     constructor(options?: IOptions<T>) {
         super(options);
+        const addMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
         if (this._$columns) {
             const factory = this._getColumnsFactory();
             this._$columnItems = this._$columns.map((column) => factory({ column }));
+            if (addMultiSelectColumn) {
+                this._$columnItems = [
+                    factory({ column: {} as IColumn })
+                ].concat(this._$columnItems);
+            }
         }
     }
 
@@ -25,11 +35,27 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     getColumnsCount(): number {
-        return this._$columns.length;
+        return this._$columnItems.length;
     }
 
-    getColumnIndex(column: IColumnConfig): number {
-        return this._$columns.indexOf(column);
+    getColumnIndex(column: GridColumn<T>): number {
+        return this._$columnItems.indexOf(column);
+    }
+
+    getTopPadding(): string {
+        return this._$owner.getTopPadding().toLowerCase();
+    }
+
+    getBottomPadding(): string {
+        return this._$owner.getBottomPadding().toLowerCase();
+    }
+
+    getLeftPadding(): string {
+        return this._$owner.getLeftPadding().toLowerCase();
+    }
+
+    getRightPadding(): string {
+        return this._$owner.getRightPadding().toLowerCase();
     }
 
     getItemSpacing(): { left: string, right: string, row: string } {
@@ -39,6 +65,23 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             row: this._$owner.getTopPadding().toLowerCase()
         };
     }
+
+    /* todo заготовка для ladder
+     в шаблоне добавить:
+                       <ws:ladderWrapper>
+                          <ws:partial template="{{ladderWrapper.content}}"
+                                      attr:class="{{ (item || itemData ).getLadderWrapperClasses(ladderWrapper.ladderProperty) }}"/>
+                       </ws:ladderWrapper>
+
+    ts-код:
+    getLadderWrapperClasses(ladderProperty: string): string {
+        let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
+        const ladder = null; // this._$owner.getIndex(this);
+        if (ladder && ladder[ladderProperty].ladderLength < 1) {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
+        }
+        return ladderWrapperClasses;
+    }*/
 
     // region overrides
 
@@ -89,4 +132,3 @@ Object.assign(GridCollectionItem.prototype, {
     _$columns: null,
     _$columnItems: null
 });
-
