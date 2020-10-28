@@ -265,10 +265,6 @@ export default class Input extends BaseDropdown {
       return tooltips.join(', ');
    }
 
-   private _isItemEmpty(item: Model, emptyText: string, keyProperty: string): boolean {
-      return emptyText && (getPropValue(item, keyProperty) === null || !item);
-   }
-
    private _getText(item: Model,
                     {emptyText, keyProperty, displayProperty}: Partial<IInputOptions>): string {
       let text = '';
