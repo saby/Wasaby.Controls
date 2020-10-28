@@ -27,6 +27,7 @@ define([
          Env.constants.browser.isMobilePlatform = true;
          sb._mouseMoveAndTouchMoveHandler({});
          assert.equal(sb._tooltipPosition, 50);
+         Env.constants.browser.isMobilePlatform = false;
       });
    });
 });
