@@ -71,19 +71,4 @@ export default interface IItemTemplateOptions {
      * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
      */
     levelIndentSize?: string;
-
-    /**
-     * @typedef {String} Position
-     * @variant default Стандартное расположение иконки узла.
-     * @variant right Расположение иконки узла справа.
-     * @variant custom Произвольное расположение иконки узла. При данном значении опции, шаблон иконки передается в прикладной шаблон и может быть выведен в любом месте записи.
-     * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
-     * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
-     */
-    /**
-     * @name Controls/treeGrid:ItemTemplate#expanderPosition
-     * @cfg {Position} Расположение иконки для узла и скрытого узла.
-     * @default default
-     */
-    expanderPosition?: 'default' | 'right' | 'custom';
 }
