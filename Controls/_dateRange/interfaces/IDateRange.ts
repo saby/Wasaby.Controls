@@ -94,13 +94,15 @@ export interface IDateRangeOptions {
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IDateRange#rangeChanged Событие происходит при смещении диапазона.
+ * @event Происходит при смещении диапазона.
+ * @name Controls/_dateRange/interfaces/IDateRange#rangeChanged
  * @param {Date} startValue верхняя граница диапазона дат
  * @param {Date} endValue нижняя граница диапазона дат
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IDateRange#startValueChanged Происходит при изменении начального значения поля.
+ * @event Происходит при изменении начального значения поля.
+ * @name Controls/_dateRange/interfaces/IDateRange#startValueChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
@@ -129,7 +131,8 @@ export interface IDateRangeOptions {
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IDateRange#startValueChanged Occurs when field start value was changed.
+ * @event Occurs when field start value was changed.
+ * @name Controls/_dateRange/interfaces/IDateRange#startValueChanged
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark
@@ -157,7 +160,8 @@ export interface IDateRangeOptions {
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IDateRange#endValueChanged Происходит при изменении конечного значения поля.
+ * @event Происходит при изменении конечного значения поля.
+ * @name Controls/_dateRange/interfaces/IDateRange#endValueChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля.
  * @param {String} displayValue Текстовое значение поля.
@@ -186,7 +190,8 @@ export interface IDateRangeOptions {
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IDateRange#endValueChanged Occurs when field end value was changed.
+ * @event Occurs when field end value was changed.
+ * @name Controls/_dateRange/interfaces/IDateRange#endValueChanged
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark

@@ -54,8 +54,8 @@ export interface IIntersectionObserverContainerOptions extends IControlOptions, 
  */
 
 /**
- * @event Controls/_scroll/IntersectionObserver/Container#intersect Происходит когда цель достигает порогового значения,
- * указанного в опции threshold
+ * @event Происходит когда цель достигает порогового значения, указанного в опции threshold
+ * @name Controls/_scroll/IntersectionObserver/Container#intersect
  * @demo Controls-demo/Scroll/IntersectionObserver/Default/Index
  */
 

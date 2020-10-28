@@ -40,6 +40,15 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * @author Авраменко А.С.
     */
 
+   var DraggingTemplate = Control.extend({
+      _template: template,
+
+      _beforeMount: function(options) {
+         this._itemsCount = _private.getCounterText(options.entity.getItems().length);
+      }
+   });
+
+   DraggingTemplate._theme = ['Controls/dragnDrop'];
    /**
     * @name Controls/_dragnDrop/DraggingTemplate#mainText
     * @cfg {String} Основная информация о перемещаемой сущности.
@@ -483,15 +492,4 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     *   });
     * </pre>
     */
-
-   var DraggingTemplate = Control.extend({
-      _template: template,
-
-      _beforeMount: function(options) {
-         this._itemsCount = _private.getCounterText(options.entity.getItems().length);
-      }
-   });
-
-   DraggingTemplate._theme = ['Controls/dragnDrop'];
-
    export = DraggingTemplate;

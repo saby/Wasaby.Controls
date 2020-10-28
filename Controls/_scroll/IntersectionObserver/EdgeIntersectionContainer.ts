@@ -28,26 +28,26 @@ import template = require('wml!Controls/_scroll/IntersectionObserver/EdgeInterse
  */
 
 /**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topIn Происходит когда верхняя граница контейнера
- * становится видимой.
+ * @event Происходит, когда верхняя граница контейнера становится видимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topIn
  * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
  */
 
 /**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOut Происходит когда верхняя граница контейнера
- * становится невидимой.
+ * @event Происходит, когда верхняя граница контейнера становится невидимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOut
  * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
  */
 
 /**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomIn Происходит когда нижняя граница контейнера
- * становится видимой.
+ * @event Происходит, когда нижняя граница контейнера становится видимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomIn
  * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
  */
 
 /**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOut Происходит когда нижняя граница контейнера
- * становится невидимой.
+ * @event Происходит, когда нижняя граница контейнера становится невидимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOut
  * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
  */
 

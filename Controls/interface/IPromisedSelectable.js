@@ -182,7 +182,8 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /*
-    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
+    * @event Occurs when selection was changed.
+    * @name Controls/interface/IPromisedSelectable#selectedKeysChanged
     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of selected items' keys.
@@ -242,7 +243,8 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /*
-    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when selection was changed.
+    * @event Occurs when selection was changed.
+    * @name Controls/interface/IPromisedSelectable#excludedKeysChanged
     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of keys of items that should be excluded from the selection.

@@ -98,14 +98,16 @@ import {SyntheticEvent} from 'Vdom/Vdom';
     */
 
    /**
-    * @event pendingsFinished Событие произойдет в момент, когда в Controls/Pending не останется пендингов.
+    * @event Событие произойдет в момент, когда в Controls/Pending не останется пендингов.
     * (после того, как последний пендинг завершится).
+    * @name Controls/Pending#pendingsFinished
     * @param {SyntheticEvent} eventObject.
     */
 
    /*
-    * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
+    * @event Event will be notified in moment when no more pendings in Controls/Pending
     * (after moment of last pending is resolving).
+    * @name Controls/Pending#pendingsFinished
     * @param {SyntheticEvent} eventObject.
     */
 

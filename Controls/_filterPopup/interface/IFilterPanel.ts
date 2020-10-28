@@ -716,7 +716,8 @@
  */
 
 /**
- * @event Controls/_filterPopup/interface/IFilterPanel#itemsChanged Событие происходит при изменении опции items.
+ * @event Происходит при изменении опции items.
+ * @name Controls/_filterPopup/interface/IFilterPanel#itemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/_filter/interface/IFilterView#source} items Конфигурация свойств фильтра.
  * @example
@@ -734,7 +735,8 @@
  */
 
 /*
- * @event Controls/_filterPopup/interface/IFilterPanel#itemsChanged Occurs when items options was changed.
+ * @event Occurs when items options was changed.
+ * @name Controls/_filterPopup/interface/IFilterPanel#itemsChanged
  * @param {Event}
  * @param {Controls/_filter/interface/IFilterView#source} items Filter items configuration,
  * @example

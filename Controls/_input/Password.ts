@@ -2,6 +2,29 @@ import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel = require('Controls/_input/Password/ViewModel');
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
+
+
+
+var _private = {
+    calculateType: function (passwordVisible, autoComplete) {
+        return passwordVisible || !autoComplete ? 'text' : 'password';
+    },
+
+    isVisibleButton: function () {
+        return !this._options.readOnly && this._viewModel.displayValue && this._options.revealable;
+    },
+
+    isVisiblePassword: function () {
+        return this._passwordVisible;
+    },
+    getTheme: function () {
+        return this._options.theme;
+    },
+    isAutoComplete: function (autoComplete) {
+        return autoComplete !== 'off';
+    }
+};
+
 /**
  * Поле ввода пароля.
  *
@@ -36,46 +59,6 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/
  *
  * @author Красильников А.С.
  */
-
-/**
- * @name Controls/_input/Password#revealable
- * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
- * @default true
- * @remark
- *
- * Кнопка не отображается в {@link readOnly режиме чтения} и в незаполненном поле.
- */
-
-/*
- * @name Controls/_input/Password#revealable
- * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
- * @default true
- * @remark
- *
- * The button does not appear in {@link readOnly read mode} or in an empty field.
- */
-
-
-var _private = {
-    calculateType: function (passwordVisible, autoComplete) {
-        return passwordVisible || !autoComplete ? 'text' : 'password';
-    },
-
-    isVisibleButton: function () {
-        return !this._options.readOnly && this._viewModel.displayValue && this._options.revealable;
-    },
-
-    isVisiblePassword: function () {
-        return this._passwordVisible;
-    },
-    getTheme: function () {
-        return this._options.theme;
-    },
-    isAutoComplete: function (autoComplete) {
-        return autoComplete !== 'off';
-    }
-};
-
 var Password = Base.extend({
     _passwordVisible: false,
     _defaultValue: '',
@@ -171,4 +154,21 @@ Password.getOptionTypes = function getOptionsTypes() {
     return optionTypes;
 };
 
+/**
+ * @name Controls/_input/Password#revealable
+ * @cfg {Boolean} В значении true в поле ввода присутствует кнопка-переключатель видимости введённых символов.
+ * @default true
+ * @remark
+ *
+ * Кнопка не отображается в {@link readOnly режиме чтения} и в незаполненном поле.
+ */
+
+/*
+ * @name Controls/_input/Password#revealable
+ * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
+ * @default true
+ * @remark
+ *
+ * The button does not appear in {@link readOnly read mode} or in an empty field.
+ */
 export = Password;

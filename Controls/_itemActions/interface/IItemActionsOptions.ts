@@ -387,7 +387,8 @@ export interface IItemActionsOptions {
 }
 
 /**
- * @event Controls/_itemActions/interface/IItemActionsOptions#actionClick Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/index/ опции записи}.
+ * @event Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/index/ опции записи}.
+ * @name Controls/_itemActions/interface/IItemActionsOptions#actionClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/itemActions:IItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
@@ -403,7 +404,8 @@ export interface IItemActionsOptions {
  */
 
 /*ENG
- * @event Controls/_itemActions/interface/IItemActionsOptions#actionClick Occurs when itemAction button is clicked.
+ * @event Occurs when itemAction button is clicked.
+ * @name Controls/_itemActions/interface/IItemActionsOptions#actionClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Controls/itemActions:IItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.

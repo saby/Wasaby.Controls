@@ -108,7 +108,8 @@ class Base extends Control<IMasterDetail> {
      */
 
     /*
-     * @event Controls/_masterDetail/Base#masterWidthChanged Происходит при изменении ширины мастера.
+     * @event Происходит при изменении ширины мастера.
+     * @name Controls/_masterDetail/Base#masterWidthChanged
      * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
      * @param {String} width Ширина мастера.
      * @remark Событие провоцируется через движение границ, или после изменения размеров родительским контролом.

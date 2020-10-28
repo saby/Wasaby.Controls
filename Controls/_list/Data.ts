@@ -71,27 +71,6 @@ export interface IDataContextOptions extends ISourceOptions,
  * @author Герасимов А.М.
  */
 
-/**
- * @name Controls/_list/Data#root
- * @cfg {Number|String} Идентификатор корневого узла.
- * Значение опции root добавляется в фильтре в поле {@link Controls/_interface/IHierarchy#parentProperty parentProperty}.
- * @example
- * <pre class="brush: js; highlight: [5]">
- * <Controls.list:DataContainer
- *     keyProperty="id"
- *     filter="{{_filter}}"
- *     source="{{_source}}"
- *     root="Сотрудники"/>
- * </pre>
- */
-
-/**
- * @event Происходит при изменении корня иерархии.
- * @name Controls/_list/Data#rootChanged
- * @param event {eventObject} Дескриптор события.
- * @param root {String|Number} Идентификатор корневой записи.
- */
-
 class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype */{
    protected _template: TemplateFunction = template;
    private _loading: boolean = false;
@@ -286,5 +265,27 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._errorRegister.start(errbackConfig);
    }
 }
+
+
+/**
+ * @name Controls/_list/Data#root
+ * @cfg {Number|String} Идентификатор корневого узла.
+ * Значение опции root добавляется в фильтре в поле {@link Controls/_interface/IHierarchy#parentProperty parentProperty}.
+ * @example
+ * <pre class="brush: js; highlight: [5]">
+ * <Controls.list:DataContainer
+ *     keyProperty="id"
+ *     filter="{{_filter}}"
+ *     source="{{_source}}"
+ *     root="Сотрудники"/>
+ * </pre>
+ */
+
+/**
+ * @event Происходит при изменении корня иерархии.
+ * @name Controls/_list/Data#rootChanged
+ * @param event {eventObject} Дескриптор события.
+ * @param root {String|Number} Идентификатор корневой записи.
+ */
 
 export default Data;

@@ -58,8 +58,8 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
 
 /**
  * Модуль возвращает функцию, которая позволяет проскроллить содержимое, находящееся внутри родительского скролл-контейнера, к выбранному элементу, сделав его видимым.
- *
- * <h2>Аргументы функции</h2>
+ * @remark
+ * Аргументы функции:
  *
  * * element: HTMLElement — DOM-элемент, к которому нужно проскроллить содержимое
  * * toBottom: boolean — определяет, должен ли быть виден нижний край контейнера
@@ -67,7 +67,7 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  *     * true — позволяет прокручивать элемент вверх/вниз в области прокрутки, безоговорочно.
  *     * false — элемент будет прокручиваться только в случае, если он частично или полностью скрыт за пределами области прокрутки.
  *
- * <h3>Пример использования</h3>
+ * @example
  * <pre>
  * require(['Controls/Utils/scrollToElement'], function(scrollToElement) {
  *    class Component extends Control {

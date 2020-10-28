@@ -186,7 +186,8 @@ export default interface ILookup {
  * </pre>
  */
 /*
- * @event Controls/_interface/ILookup#showSelector Occurs before opening the selector through the interface.
+ * @event Occurs before opening the selector through the interface.
+ * @name Controls/_interface/ILookup#showSelector
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Stack popup options.}
  * @example
