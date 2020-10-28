@@ -1,9 +1,0 @@
-<ws:if data="{{ !!contentTemplate }}">
-   <ws:partial
-           template="{{ contentTemplate }}"
-           column="{{ column }}}"
-           item="{{ item }}"/>
-</ws:if>
-<ws:else>
-   {{ column.getContents()[column.getDisplayProperty()] }}
-</ws:else>

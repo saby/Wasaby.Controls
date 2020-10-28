@@ -5,13 +5,13 @@ import GridFooter from './GridFooter';
 
 export interface IOptions<T> {
     owner: GridFooter<T>;
-    template: TemplateFunction;
+    template?: TemplateFunction;
     // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
     //      | При разработке мультизаговков colspan будет сделан единообразно и для футера.
     colspan?: boolean;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/FooterCellContent';
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/FooterCellContent';
 
 export default class GridFooterCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridFooter<T>;

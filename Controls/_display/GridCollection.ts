@@ -85,6 +85,14 @@ export default class GridCollection<
         });
     }*/
 
+    getEmptyTemplateClasses(theme?: string): string {
+        const rowSeparatorSize = this.getRowSeparatorSize();
+        let emptyTemplateClasses = `controls-GridView__emptyTemplate js-controls-GridView__emptyTemplate`;
+        emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}`;
+        emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
+        return emptyTemplateClasses;
+    }
+
     protected _initializeHeader(options: IOptions<S>): GridHeader<S> {
         return new GridHeader({
             owner: this,

@@ -6,7 +6,7 @@ import { Model as EntityModel } from 'Types/entity';
 
 export interface IOptions<T> {
     owner: GridResults<T>;
-    template: TemplateFunction;
+    template?: TemplateFunction;
     align?: string;
     displayProperty?: string;
     // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
@@ -14,7 +14,7 @@ export interface IOptions<T> {
     colspan?: boolean;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/ResultsCellContent';
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/ResultsCellContent';
 
 export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridResults<T>;
@@ -134,10 +134,12 @@ export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(Op
 
         // left padding
         if (!isMultiSelectColumn) {
-            if (isFirstColumn) {
-                paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
+            if (!this.isFirstColumn()) {
+                if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getCellIndex() > 1) {
+                    paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+                }
             } else {
-                paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+                paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
             }
         }
 

@@ -547,6 +547,10 @@ export default class CollectionItem<T> extends mixin<
         return itemActionClasses;
     }
 
+    getRowSeparatorSize(): string {
+        return this.getOwner().getRowSeparatorSize();
+    }
+
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
@@ -556,7 +560,7 @@ export default class CollectionItem<T> extends mixin<
      * Метод должен уйти в render-модель при её разработке.
      */
     getContentClasses(theme: string, style: string = 'default'): string {
-        const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
+        const rowSeparatorSize = this.getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
         ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
         controls-ListView__itemContent_${style}_theme-${theme}`;

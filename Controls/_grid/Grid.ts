@@ -1,4 +1,5 @@
 import {ListControl as viewTemplate, View as List} from 'Controls/list';
+import GridViewModel = require('Controls/_grid/GridViewModel');
 import viewName = require('Controls/_grid/GridView');
 
    /**
@@ -27,7 +28,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     * @category List
@@ -59,7 +60,7 @@ import viewName = require('Controls/_grid/GridView');
     * @mixes Controls/_grid/interface/IPropStorage
     * @mixes Controls/_marker/interface/IMarkerListOptions
     *
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     * @category List
@@ -69,10 +70,10 @@ import viewName = require('Controls/_grid/GridView');
 export default class Grid extends List /** @lends Controls/grid:View */ {
     _viewName = viewName;
     _viewTemplate = viewTemplate;
-    protected _supportNewModel: boolean = true;
+    protected _supportNewModel: boolean = false;
 
     _getModelConstructor() {
-        return 'Controls/display:GridCollection';
+        return GridViewModel;
     }
 }
 

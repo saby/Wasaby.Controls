@@ -69,7 +69,11 @@ export default class GridFooter<T> extends mixin<OptionsToPropertyMixin>(Options
 
     protected _prepareCells(columns: TColumns, footerTemplate: TemplateFunction): TFooterCells<T> {
         const cells = [];
-        // todo add multiSelect cell
+        if (this._$owner.getMultiSelectVisibility()) {
+            cells.push(new GridFooterCell({
+                owner: this
+            }));
+        }
         if (footerTemplate) {
             const cell = new GridFooterCell({
                 template: footerTemplate,

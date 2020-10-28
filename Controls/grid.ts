@@ -24,24 +24,24 @@
 import {default as View} from 'Controls/_grid/Grid';
 import * as GridLayoutUtil from './_grid/utils/GridLayoutUtil';
 
-import GridLayoutItemTemplate = require('wml!Controls/_grid/Render/grid/Item');
+import GridLayoutItemTemplate = require('wml!Controls/_grid/layout/grid/Item');
 import TableLayoutItemTemplate = require('wml!Controls/_grid/layout/table/Item');
 const ItemTemplate = GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate : TableLayoutItemTemplate;
 
+import ResultsTemplate = require('wml!Controls/_grid/ResultsTemplateResolver');
 import GroupTemplate = require('wml!Controls/_grid/GroupTemplate');
 import LadderWrapper = require('wml!Controls/_grid/LadderWrapper');
-import ColumnTemplate = require('wml!Controls/_grid/Render/grid/Column');
+import ColumnTemplate = require('wml!Controls/_grid/layout/common/ColumnContent');
 import ColumnLightTemplate = require('wml!Controls/_grid/layout/common/ColumnContentLight');
 
-import HeaderContent = require('wml!Controls/_grid/Render/HeaderCellContent');
+import HeaderContent = require('wml!Controls/_grid/HeaderContent');
 import SortingButton from 'Controls/_grid/SortingButton';
 import GridView = require('Controls/_grid/GridView');
 import GridViewModel = require('Controls/_grid/GridViewModel');
 
 import SortingSelector from 'Controls/_grid/SortingSelector';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
-import * as ResultColumnTemplate from 'wml!Controls/_grid/Render/ResultsCellContent';
-import * as ResultsTemplate from 'wml!Controls/_grid/Render/ResultsCellContent';
+import * as ResultColumnTemplate from 'wml!Controls/_grid/layout/common/ResultCellContent';
 
 import * as EditingEmptyTemplate from 'wml!Controls/_grid/emptyTemplates/Editing';
 

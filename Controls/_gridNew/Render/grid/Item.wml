@@ -3,7 +3,8 @@
       <div attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style) }}">
          <div if="{{ column.shouldDisplayMarker(marker) }}" attr:class="{{ column.getMarkerClasses(theme, style) }}"></div>
          <ws:if data="{{ column.isMultiSelectColumn() }}">
-            <ws:partial template="{{ multiSelectTpl }}">
+            <ws:partial template="{{ multiSelectTpl }}"
+                        attr:class="{{ column.getContentClassesMultiSelectCell() }}">
                <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
                                    key="{{ (item || itemData).getContents().getKey() }}"
                                    checkboxReadOnly="{{ checkboxReadOnly }}"/>

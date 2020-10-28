@@ -27,7 +27,7 @@ export interface IOptions<T> {
     headerCell: IHeaderCell;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/HeaderCellContent';
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/HeaderCellContent';
 
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridHeader<T>;
@@ -149,12 +149,13 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         const compatibleRightPadding = rightPadding === 'default' ? '' : rightPadding;
         // todo <<< END >>>
 
-        // left padding
         if (!isMultiSelectColumn) {
-            if (isFirstColumn) {
-                paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
+            if (!this.isFirstColumn()) {
+                if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getCellIndex() > 1) {
+                    paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+                }
             } else {
-                paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+                paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
             }
         }
 

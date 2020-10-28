@@ -11,7 +11,7 @@ import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from '../_grid/interface/IColumn';
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_grid/Render/grid/Column';
+const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/grid/Column';
 
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
@@ -51,17 +51,11 @@ export default class GridColumn<T> extends mixin<
 
         if (topPadding === 'null' && bottomPadding === 'null') {
             wrapperClasses += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
-        } else {
-            if (isMultiSelectColumn) {
-                if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
-                    wrapperClasses += ' controls-ListView__checkbox-onhover';
-                }
-            } else {
-                wrapperClasses += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
-            }
+        } else if (!isMultiSelectColumn) {
+            wrapperClasses += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
         }
 
-        wrapperClasses += `controls-Grid__row-cell controls-Grid__cell_${preparedStyle} controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
+        wrapperClasses += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle} controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
 
         if (hasColumnScroll) {
         } else if (!isMultiSelectColumn) {
@@ -155,6 +149,14 @@ export default class GridColumn<T> extends mixin<
         return wrapperClasses;
     }
 
+    getContentClassesMultiSelectCell(): string {
+        let contentClasses = '';
+        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
+            contentClasses += ' controls-ListView__checkbox-onhover';
+        }
+        return contentClasses;
+    }
+
     getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         let contentClasses = 'controls-Grid__row-cell__content';
 
@@ -173,12 +175,7 @@ export default class GridColumn<T> extends mixin<
             contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
         }
 
-        /*
-+++     controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
-+++     {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
-        {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
-+++     {{itemData.hoverBackgroundStyle ? 'controls-Grid__item_background-hover_' + itemData.hoverBackgroundStyle  + '_theme-' + _options.theme}}
-        */
+        // todo {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
 
         if (this._$owner.isEditing()) {
             contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
@@ -256,18 +253,17 @@ export default class GridColumn<T> extends mixin<
     }
 
     protected _getWrapperSeparatorClasses(theme: string): string {
+        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
         let classes = '';
 
-        if (true/*current.rowSeparatorSize === null*/) {
-
-            // Вспомогательный класс, вешается на ячейку. Через него задаются правильные отступы ячейке
-            // обеспечивает отсутствие "скачков" при динамической смене размера границы.
-            classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        if (rowSeparatorSize) {
+            classes += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
+            classes += ` controls-Grid__rowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
+        } else {
+            // Вспомогательные классы, вешаются на ячейку. Обеспечивают отсутствие "скачков" при смене rowSeparatorSize.
             classes += ' controls-Grid__no-rowSeparator';
-        }/* else {
-            classLists.base += ` controls-Grid__row-cell_withRowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
-            classLists.base += ` controls-Grid__rowSeparator_size-${current.rowSeparatorSize}_theme-${theme}`;
-        }*/
+            classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        }
 
         /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
             const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
