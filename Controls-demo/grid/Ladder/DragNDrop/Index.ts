@@ -21,7 +21,6 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _itemsReadyCallback: TItemsReadyCallback = this._itemsReady.bind(this);
     protected _columns: INoStickyLadderColumn[] = getTasks().getColumns();
-    protected _selectedKeys: Number[] = [];
     private _itemsFirst: RecordSet = null;
     protected _ladderProperties: string[] = ['photo', 'date'];
     protected _itemActions: IItemAction = [{
@@ -59,7 +58,6 @@ export default class extends Control {
     }
 
     protected _dragEnd(_: SyntheticEvent, entity: Collection<Model>, target: unknown, position: string): void {
-        this._selectedKeys = [];
         this._children.list.moveItems({selected: entity.getItems()}, target.getKey(), position).then(() => {
             this._children.list.reload();
         });
