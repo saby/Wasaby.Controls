@@ -4796,6 +4796,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.closeActionsMenu(this, currentPopup);
     },
 
+    _handleMenuActionMouseEnter(event: SyntheticEvent): void {
+        _private.getItemActionsController(this, this._options).startMenuDependenciesTimer();
+    },
+
+    _handleMenuActionMouseLeave(event: SyntheticEvent): void {
+        _private.getItemActionsController(this, this._options).stopMenuDependenciesTimer();
+    },
+
     _itemMouseDown(event, itemData, domEvent) {
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
