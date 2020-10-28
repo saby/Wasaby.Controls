@@ -32,7 +32,7 @@ export default class GridFooter<T> extends mixin<OptionsToPropertyMixin>(Options
             this._options.resultsPosition !== 'bottom') {
             classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
         }*/
-        return `controls-GridView__footer`;
+        return `controls-GridView__footer controls-GridView__footerRow`;
     }
 
     getCells(): TFooterCells<T> {
