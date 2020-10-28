@@ -288,14 +288,14 @@ describe('Controls/grid_clean/GridViewModel', () => {
             });
 
             it('MarkerPosition', () => {
+                gridViewModel.setMarkedKey(1, true);
                 const current = gridViewModel.getCurrent();
                 assert.isTrue(current.shouldDisplayMarker(0));
                 assert.isFalse(current.shouldDisplayMarker(1));
-                gridViewModel._options.markerPosition = 'right';
 
-                const currentRight = gridViewModel.getCurrent();
-                assert.isFalse(currentRight.shouldDisplayMarker(0));
-                assert.isTrue(currentRight.shouldDisplayMarker(1));
+                current.markerPosition = 'right';
+                assert.isFalse(current.shouldDisplayMarker(0));
+                assert.isTrue(current.shouldDisplayMarker(1));
             });
         });
     });
