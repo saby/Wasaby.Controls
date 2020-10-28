@@ -5606,7 +5606,7 @@ BaseControl.contextTypes = function contextTypes() {
         isTouch: TouchContextField
     };
 };
-BaseControl._theme = ['Controls/Classes', 'Controls/list'];
+BaseControl._theme = ['Controls/Classes', 'Controls/list', 'Controls/itemActions'];
 
 BaseControl.getDefaultOptions = function() {
     return {

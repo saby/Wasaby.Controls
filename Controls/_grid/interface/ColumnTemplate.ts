@@ -47,17 +47,17 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * @remark
     * В области видимости шаблона доступны переменные **itemData**, **editArrowTemplate** и **expanderTemplate**.
     * 
-    * Переменная **itemData** позволяет получить доступ к следующими свойствами:
+    * Переменная **itemData** позволяет получить доступ к следующими свойствам:
     *
     * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     * * **index** — порядковый номер строки. Отсчет от 0.
-    * * **isEditing()** — возвращает признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
+    * * **isEditing()** — возвращает true, если для записи выполняется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирование по месту}.
     * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
     * * **column** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     * 
-    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку раскрытия узла в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:ItemTemplate#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
+    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку раскрытия узла в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
     * @example
     * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
     * <pre class="brush: html; highlight: [6,7,8,9,10,11,12]">
@@ -155,7 +155,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * </pre>
     * 
     * **Пример 5.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки раскрытия узла.
-    * <pre class="brush: html; highlight: [3,13]">
+    * <pre class="brush: html; highlight: [1,13]">
     * <Controls.treeGrid:View expanderPosition="custom">
     *    <ws:itemTemplate>
     *       <ws:partial template="Controls/treeGrid:ItemTemplate" />
