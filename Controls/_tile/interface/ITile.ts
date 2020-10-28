@@ -292,7 +292,7 @@
 
 /*
  * @typedef {String} ActionMode
- * @variant showType Опции над записью показываются согласно showType.
+ * @variant strict Опции над записью показываются согласно showType.
  * @variant adaptive Опции над записью будут расчитаны динамически. Количество отображенных команд зависит от ширины плитки.
  */
 
@@ -300,6 +300,7 @@
  * @name Controls/_tile/interface/ITile#actionMode
  * @cfg {ActionMode} Вид отображения опций над записью.
  * @remark Динамический расчет применяется только к плиткам.
+ * @default strict
  * @example
  * <pre class="brush: html">
  *    <Controls.tile:View source="{{_viewSource}}"
