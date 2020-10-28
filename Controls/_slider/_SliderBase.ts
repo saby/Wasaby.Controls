@@ -14,6 +14,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
     private _hideTooltipTimerId: number;
     protected _tooltipValue: string | null = null;
+    protected _value: number | null = null;
     protected _isDrag: boolean = false;
 
     _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
@@ -28,6 +29,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
 
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
+            //На мобильных устройствах положение подсказки и ползунка всегда совпадает
             this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
