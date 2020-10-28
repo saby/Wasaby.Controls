@@ -19,7 +19,6 @@ export default class extends Control {
         }
     });
     private _arrowState: any;
-    protected _count: number;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
