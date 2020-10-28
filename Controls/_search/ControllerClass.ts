@@ -574,8 +574,9 @@ export default class SearchControllerClass {
             filterChangedCallback: (filter) => {
                 if (self._filterChanged) {
                     self._filterChanged(null, filter);
+                } else {
+                    self._notify('filterChanged', [filter]);
                 }
-                self._notify('filterChanged', [filter]);
             },
             dataLoadErrback: (error: Object|Error) => {
                 if (error instanceof Error) {

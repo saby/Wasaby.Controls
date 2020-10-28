@@ -103,6 +103,11 @@ class Manager {
         if (Loader) {
             return Loader.load(dataLoaders);
         }
+        if (!this._dataLoaderModule) {
+            const message = 'На приложении не задан загрузчик данных. Опция окна dataLoaders будет проигнорирована';
+            Logger.error(message, this);
+            return Promise.resolve();
+        }
 
         return new Promise((resolve) => {
             Library.load(this._dataLoaderModule).then((DataLoader) => {

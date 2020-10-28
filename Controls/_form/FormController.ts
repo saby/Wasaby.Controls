@@ -277,7 +277,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this._createMetaDataOnUpdate = null;
                 });
             });
-        } else {
+        } else if (!this._isConfirmShowed) {
             if (newOptions.hasOwnProperty('isNewRecord')) {
                 this._isNewRecord = newOptions.isNewRecord;
             }
