@@ -316,7 +316,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpanded Происходит после развертывания узла.
+ * @event Происходит после развертывания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpanded
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Развёрнутый узел.
  * @remark
@@ -325,7 +326,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#afterItemExpand Происходит после развертывания узла.
+ * @event Происходит после развертывания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#afterItemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Развёрнутый узел.
  * @remark
@@ -333,7 +335,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#beforeItemExpand Происходит перед развертыванием узла.
+ * @event Происходит перед развертыванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#beforeItemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
@@ -341,7 +344,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpand Происходит перед развертыванием узла.
+ * @event Происходит перед развертыванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
@@ -350,13 +354,15 @@ import { RecordSet } from 'Types/collection';
  */
 
 /*
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpanded Occurs after node expansion.
+ * @event Occurs after node expansion.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpanded
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Types/entity:Model} node Expanded node.
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapsed Происходит после сворачивания узла.
+ * @event Происходит после сворачивания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapsed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Свёрнутый узел.
  * @remark
@@ -365,7 +371,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#afterItemCollapse Происходит после сворачивания узла.
+ * @event Происходит после сворачивания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#afterItemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Свёрнутый узел.
  * @remark
@@ -373,7 +380,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapse Происходит перед сворачиванием узла.
+ * @event Происходит перед сворачиванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
@@ -382,7 +390,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse Происходит перед сворачиванием узла.
+ * @event Происходит перед сворачиванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
@@ -390,7 +399,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /*
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapsed Occurs after node collapse.
+ * @event Occurs after node collapse.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapsed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Types/entity:Model} node Collapsed node.
  */

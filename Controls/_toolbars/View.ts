@@ -581,7 +581,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 }
 
 /**
- * @event Controls/_toolbars/View#itemClick Происходит при клике по элементу.
+ * @event Происходит при клике по элементу.
+ * @name Controls/_toolbars/View#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому производим клик.
  * @example

@@ -47,30 +47,6 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @demo Controls-demo/toggle/DoubleSwitch/Base/Index
  *
  */
-
-/**
- * @name Controls/_toggle/DoubleSwitch#captions
- * @cfg {Array.<String>} Массив из двух подписей. Если количество подписей не равно двум, то возникает ошибка.
- */
-
-/*
- * @name Controls/_toggle/DoubleSwitch#captions
- * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
- */
-
-/**
- * @name Controls/_toggle/DoubleSwitch#orientation
- * @cfg {String} Ориентация двойного переключателя в пространстве.
- * @variant horizontal Горизонтальная ориентация. Значение по умолчанию.
- * @variant vertical Вертикальная ориентация.
- */
-
-/*
- * @name Controls/_toggle/DoubleSwitch#orientation
- * @cfg {String} Double switch orientation in space.
- * @variant horizontal Horizontal orientation. It is default value.
- * @variant vertical Vertical orientation.
- */
 const CAPTIONS_LENGTH = 2;
 class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, ITooltip {
    '[Controls/_interface/ITooltip]': true;
@@ -138,5 +114,27 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
       };
    }
 }
+/**
+ * @name Controls/_toggle/DoubleSwitch#captions
+ * @cfg {Array.<String>} Массив из двух подписей. Если количество подписей не равно двум, то возникает ошибка.
+ */
 
+/*
+ * @name Controls/_toggle/DoubleSwitch#captions
+ * @cfg {Array.<String>} Array of two captions. If caption number is not equal to two, then an error occurs.
+ */
+
+/**
+ * @name Controls/_toggle/DoubleSwitch#orientation
+ * @cfg {String} Ориентация двойного переключателя в пространстве.
+ * @variant horizontal Горизонтальная ориентация. Значение по умолчанию.
+ * @variant vertical Вертикальная ориентация.
+ */
+
+/*
+ * @name Controls/_toggle/DoubleSwitch#orientation
+ * @cfg {String} Double switch orientation in space.
+ * @variant horizontal Horizontal orientation. It is default value.
+ * @variant vertical Vertical orientation.
+ */
 export default DoubleSwitch;

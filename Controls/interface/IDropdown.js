@@ -189,7 +189,8 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @event Controls/interface/IDropdown#dropDownOpen Происходит при открытии выпадающего списка.
+    * @event Происходит при открытии выпадающего списка.
+    * @name Controls/interface/IDropdown#dropDownOpen
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
     * WML:
@@ -210,7 +211,8 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /*
-    * @event Controls/interface/IDropdown#dropDownOpen Occurs when dropDown opened.
+    * @event Occurs when dropDown opened.
+    * @name Controls/interface/IDropdown#dropDownOpen
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
     * WML:
@@ -231,7 +233,8 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /**
-    * @event Controls/interface/IDropdown#dropDownClose Происходит при закрытии выпадающего списка.
+    * @event Происходит при закрытии выпадающего списка.
+    * @name Controls/interface/IDropdown#dropDownClose
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
     * WML:
@@ -252,7 +255,8 @@ define('Controls/interface/IDropdown', [], function() {
     */
 
    /*
-    * @event Controls/interface/IDropdown#dropDownClose Occurs when dropDown closed.
+    * @event Occurs when dropDown closed.
+    * @name Controls/interface/IDropdown#dropDownClose
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @example
     * WML:

@@ -229,7 +229,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseEnter Occurs when the cursor is over the list item.
+ * @event Occurs when the cursor is over the list item.
+ * @name Controls/_list/interface/IList#itemMouseEnter
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -244,7 +245,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseLeave Occurs when the cursor leaves the list item.
+ * @event Occurs when the cursor leaves the list item.
+ * @name Controls/_list/interface/IList#itemMouseLeave
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -259,7 +261,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseMove Occurs when the cursor moves over list items.
+ * @event Occurs when the cursor moves over list items.
+ * @name Controls/_list/interface/IList#itemMouseMove
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -457,7 +460,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
+ * @event Occurs when list item is swiped.
+ * @name Controls/_list/interface/IList#itemSwipe
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
@@ -484,7 +488,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+ * @event The event fires when the user hovers over a list item with a cursor.
+ * @name Controls/_list/interface/IList#hoveredItemChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
@@ -498,7 +503,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
+ * @event Occurs when list item was selected (marked).
+ * @name Controls/_list/interface/IList#markedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
@@ -520,7 +526,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
+ * @event Occurs when the next batch of data is drawn.
+ * @name Controls/_list/interface/IList#drawItems
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 

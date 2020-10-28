@@ -2513,7 +2513,11 @@ const _private = {
         const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
 
         const handleResult = (key) => {
-            if (!self._options.hasOwnProperty('markedKey')) {
+            // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
+            // И при undefined нужно делать так, чтобы markedKey задавался по нашей логике.
+            // Это для трюка от Бегунова когда делают bind на переменную, которая изначально undefined.
+            // В таком случае, чтобы не было лишних синхронизаций - мы работаем по нашему внутреннему state.
+            if (self._options.markedKey === undefined) {
                 markerController.setMarkedKey(key);
             }
             self._notify('markedKeyChanged', [key]);
@@ -3031,6 +3035,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
     _validateController: null,
+    _isEditingRowScrollToElement: true,
 
     // Контроллер для перемещения элементов из источника
     _moveController: null,
@@ -3098,7 +3103,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
             }
-
             return res;
         });
     },
@@ -3439,6 +3443,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._editInPlaceController.isEditing()) {
                 _private.activateEditingRow(this);
             }
+        }
+
+        // в тач интерфейсе инициализировать пейджер необходимо при загрузке страницы
+        // В beforeMount инициализировать пейджер нельзя, т.к. не корректно посчитаются его размеры
+        // Также, в тач интерфейсе может быть включено управление мышью, и мы можем не знать,
+        // как устройство управляется в данный момент, поэтому определяем по isMobilePlatform
+        if (detection.isMobilePlatform) {
+            _private.initPaging(this);
         }
 
         // для связи с контроллером ПМО
@@ -4481,7 +4493,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
+            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition, false);
         } else {
             return this.beginEdit({ item: editingConfig.item });
         }
@@ -4491,6 +4503,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        this._isEditingRowScrollToElement = true;
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().edit(options && options.item).then((result) => {
@@ -4507,10 +4520,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._beginAdd(options, this._getEditingConfig().addPosition);
     },
 
-    _beginAdd(options, addPosition) {
+    _beginAdd(options, addPosition, isScroll: boolean = true) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
+        this._isEditingRowScrollToElement = isScroll;
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options && options.item, addPosition).then((addResult) => {

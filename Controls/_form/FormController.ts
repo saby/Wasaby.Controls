@@ -113,51 +113,6 @@ export const enum INITIALIZING_WAY {
  * @author Красильников А.С.
  */
 
-/**
- * Объект с состоянием, полученным при серверном рендеринге.
- * @typedef {Object}
- * @name ReceivedState
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- */
-
-/*
- * Object with state from server side rendering
- * @typedef {Object}
- * @name ReceivedState
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- */
-
-/**
- * @typedef {Object}
- * @name CrudResult
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- * @property {Controls/dataSource:error.ViewConfig} [error]
- */
-
-/**
- * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
- * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
- * @param {CrudResult} crudResult
- * @return {ReceivedState}
- */
-
-
-
-/**
- * Получение результата из обертки <CrudResult>
- * @param {CrudResult} [crudResult]
- * @return {Promise}
- */
-
-/*
- * getting result from <CrudResult> wrapper
- * @param {CrudResult} [crudResult]
- * @return {Promise}
- */
-
 class FormController extends Control<IFormController, IReceivedState> {
     protected _template: TemplateFunction = tmpl;
     private _record: Model = null;
@@ -277,7 +232,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this._createMetaDataOnUpdate = null;
                 });
             });
-        } else {
+        } else if (!this._isConfirmShowed) {
             if (newOptions.hasOwnProperty('isNewRecord')) {
                 this._isNewRecord = newOptions.isNewRecord;
             }
@@ -870,4 +825,49 @@ class FormController extends Control<IFormController, IReceivedState> {
         };
     }
 }
+
+/**
+ * Объект с состоянием, полученным при серверном рендеринге.
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
+
+/*
+ * Object with state from server side rendering
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
+
+/**
+ * @typedef {Object}
+ * @name CrudResult
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ * @property {Controls/dataSource:error.ViewConfig} [error]
+ */
+
+/**
+ * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
+ * @param {CrudResult} crudResult
+ * @return {ReceivedState}
+ */
+
+
+
+/**
+ * Получение результата из обертки <CrudResult>
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+
+/*
+ * getting result from <CrudResult> wrapper
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
 export default FormController;

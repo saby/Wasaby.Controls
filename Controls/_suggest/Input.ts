@@ -52,15 +52,6 @@ import {generateStates} from 'Controls/input';
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Gerasimov A.M.
  */
-
-/**
- * @event Происходит перед открытием окна выбора, которое открывается при клике на "Показать всё".
- * @remark
- * Кнопка "Показать всё" отображается в подвале автодополнения.
- * @name Controls/_suggest/Input#showSelector
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */
-
 var Suggest = Control.extend({
 
    _template: template,
@@ -145,5 +136,11 @@ Suggest.getDefaultOptions = function() {
 };
 
 // </editor-fold>
-
+/**
+ * @event Происходит перед открытием окна выбора, которое открывается при клике на "Показать всё".
+ * @remark
+ * Кнопка "Показать всё" отображается в подвале автодополнения.
+ * @name Controls/_suggest/Input#showSelector
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
 export = Suggest;

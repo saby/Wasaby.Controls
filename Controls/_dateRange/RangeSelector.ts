@@ -37,15 +37,6 @@ import {descriptor} from "Types/entity";
  * @demo Controls-demo/Input/Date/RangeLink
  *
  */
-
-/**
- * @event Происходит при изменении диапазона.
- * @name Controls/_dateRange/RangeSelector#rangeChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Date} startValue верхняя граница диапазона дат
- * @param {Date} endValue нижняя граница диапазона дат
- */
-
 /*
  * Controls that allows user to select date with start and end values in calendar.
  *
@@ -153,3 +144,10 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
 
     EMPTY_CAPTIONS: object = ILinkView.EMPTY_CAPTIONS;
 }
+/**
+ * @event Происходит при изменении диапазона.
+ * @name Controls/_dateRange/RangeSelector#rangeChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Date} startValue верхняя граница диапазона дат
+ * @param {Date} endValue нижняя граница диапазона дат
+ */
