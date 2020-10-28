@@ -268,10 +268,9 @@ var TileViewModel = ListViewModel.extend({
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
-    getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
+    getActionsMenuConfig(itemData, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
         if (this._options.actionMenuViewMode === 'preview') {
             const menuOptions = templateOptions;
-            const itemData = this.getItemDataByItem(item);
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');
             const imageWrapper = itemContainer.querySelector('.controls-TileView__imageWrapper');
             let previewWidth = imageWrapper.clientWidth;

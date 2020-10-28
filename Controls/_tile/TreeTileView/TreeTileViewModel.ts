@@ -232,7 +232,8 @@ var TreeTileViewModel = TreeViewModel.extend({
         return this._tileModel.getItemsPaddingContainerClasses();
     },
     getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
-        return this._tileModel.getActionsMenuConfig(item, clickEvent, opener, templateOptions);
+        const itemData = this.getItemDataByItem(item);
+        return this._tileModel.getActionsMenuConfig(itemData, clickEvent, opener, templateOptions);
     }
 });
 

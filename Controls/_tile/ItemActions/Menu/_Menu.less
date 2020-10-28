@@ -30,7 +30,7 @@
 
 .controls-TileView__itemActions__menu_content {
    display: flex;
-   border-top: 1px solid #EAEAEA;
+   border-top: @item_border-thickness_tile solid @border_content_color_preview_actions;
 }
 
 .contrls-TileView__itemActions_menu_image {
@@ -45,9 +45,13 @@
    overflow: hidden;
    align-items: center;
    justify-content: center;
-   border-right: 1px solid #EAEAEA;
+   border-right: 1px solid @border_content_color_preview_actions;
 }
 
 .controls-TileView__itemActions_menu .controls-StickyTemplate__top-area {
    background: @background-color;
+}
+
+.controls-TileView__itemActions__menu_theme-@{themeName} {
+   min-width: @menu_width_tile_preview_actions;
 }

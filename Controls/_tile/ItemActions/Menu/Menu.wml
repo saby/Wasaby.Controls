@@ -3,10 +3,10 @@
       shadowVisible="{{true}}">
       <ws:headerContentTemplate>
          <div class="controls-TileView__itemActions__menu_header
-                  controls-TileView__itemActions__menu_header_theme-{{theme}}">
-            <div class="controls-TileView__itemActions__menu_header_title_theme-{{theme}}"
+                  controls-TileView__itemActions__menu_header_theme-{{_options.theme}}">
+            <div class="controls-TileView__itemActions__menu_header_title_theme-{{_options.theme}}"
                  title="{{_options.title}}">{{_options.title}}</div>
-            <div class="controls-TileView__itemActions__menu_header_additionalTitle_theme-{{theme}}"
+            <div class="controls-TileView__itemActions__menu_header_additionalTitle_theme-{{_options.theme}}"
                  title="{{_options.additionalTitle}}">{{_options.additionalText}}</div>
          </div>
       </ws:headerContentTemplate>
@@ -19,6 +19,7 @@
             <Controls.Container.Async templateName="Controls/menu:Control">
                <ws:partial
                   template="{{content.resolvedTemplate}}"
+                  attr:class="controls-TileView__itemActions__menu_theme-{{_options.theme}}"
                   source="{{_options.source}}"
                   parentProperty="{{_options.parentProperty}}"
                   on:itemClick="_sendResult('itemClick')"
