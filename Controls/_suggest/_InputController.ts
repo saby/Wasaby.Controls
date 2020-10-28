@@ -29,7 +29,7 @@ import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
-import {DependencyTimer} from "../_utils/fastOpenUtils/FastOpen";
+import {DependencyTimer} from 'Controls/fastOpenUtils';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
