@@ -57,13 +57,6 @@ var _private = {
  * @demo Controls-demo/Calendar/MonthView/NewMode/Index
  *
  */
-/**
- * @event Происходит после клика по элементу дня в календаре.
- * @name Controls/_calendar/MonthView#itemClick
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Date} item Дата элемента, по которому произвели клик.
- * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события onclick, при клике по дню месяца.
- */
 var MonthView = BaseControl.extend({
    _template: dotTplFn,
 
@@ -143,4 +136,11 @@ MonthView.getOptionTypes = function() {
 
 MonthView._theme = ['Controls/calendar'];
 
+/**
+ * @event Происходит после клика по элементу дня в календаре.
+ * @name Controls/_calendar/MonthView#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Date} item Дата элемента, по которому произвели клик.
+ * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события onclick, при клике по дню месяца.
+ */
 export default MonthView;

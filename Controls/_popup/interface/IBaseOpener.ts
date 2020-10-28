@@ -236,7 +236,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#result Происходит, когда дочерний контрол всплывающего окна инициирует событие 'sendResult'
+ * @event Происходит, когда дочерний контрол всплывающего окна инициирует событие 'sendResult'.
+ * @name Controls/_popup/interface/IBaseOpener#result
  * @example
  * В этом примере мы подписываемся на событие 'result' и в его обработчике сохраняем данные с шаблона.
  * <pre>
@@ -268,7 +269,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#result Occurs when child control of popup notify "sendResult" event.
+ * @event Occurs when child control of popup notify "sendResult" event.
+ * @name Controls/_popup/interface/IBaseOpener#result
  * @example
  * In this example, we subscribe to result event and save user data.
  * <pre>
@@ -300,7 +302,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#open Происходит при открытии всплывающего окна
+ * @event Происходит при открытии всплывающего окна.
+ * @name Controls/_popup/interface/IBaseOpener#open
  * @example
  * В этом примере мы подписываемся на событие 'open' и в его обработчике меняем состояние '_popupOpened'
  * <pre>
@@ -320,7 +323,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#open Occurs when popup is opened.
+ * @event Occurs when popup is opened.
+ * @name Controls/_popup/interface/IBaseOpener#open
  * @example
  * In this example, we subscribe to open event and change text at input control
  * <pre>
@@ -340,7 +344,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#close Происходит при закрытии всплывающего окна
+ * @event Происходит при закрытии всплывающего окна.
+ * @name Controls/_popup/interface/IBaseOpener#close
  * @example
  * В этом примере мы подписываемся на событие 'close' и в его обработчике удаляем элемент из списка.
  * <pre>
@@ -359,7 +364,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#close Occurs when popup is closed.
+ * @event Occurs when popup is closed.
+ * @name Controls/_popup/interface/IBaseOpener#close
  * @example
  * In this example, we subscribe to close event and remove item at list
  * <pre>

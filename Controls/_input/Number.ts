@@ -3,6 +3,17 @@ import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
 import ViewModel from './Number/ViewModel';
 
+var _private = {
+    validateOptions: function (options) {
+        if (options.integersLength <= 0) {
+            Logger.error('Number: Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+        }
+    },
+    convertToNumber: function (value) {
+        return value === null ? void 0 : value;
+    }
+};
+
 /**
  * Поле ввода числовых значений.
  *
@@ -26,6 +37,67 @@ import ViewModel from './Number/ViewModel';
  *
  * @author Красильников А.С.
  */
+var NumberInput = Base.extend({
+    _defaultValue: 0,
+    _inputMode: 'decimal',
+
+    _getViewModelOptions: function (options) {
+        _private.validateOptions(options);
+
+        return {
+            precision: _private.convertToNumber(options.precision),
+            useGrouping: options.useGrouping,
+            onlyPositive: options.onlyPositive,
+            integersLength: _private.convertToNumber(options.integersLength),
+            showEmptyDecimals: options.showEmptyDecimals,
+            useAdditionToMaxPrecision: options.showEmptyDecimals
+        };
+    },
+
+    _getViewModelConstructor: function () {
+        return ViewModel;
+    },
+
+    _notifyInputCompleted: function () {
+        if (this._viewModel.trimTrailingZeros(true)) {
+            this._notifyValueChanged();
+        }
+
+        NumberInput.superclass._notifyInputCompleted.apply(this, arguments);
+    },
+
+    _focusOutHandler: function () {
+        if (this._viewModel.trimTrailingZeros(false)) {
+            this._notifyValueChanged();
+        }
+
+        NumberInput.superclass._focusOutHandler.apply(this, arguments);
+    }
+});
+
+NumberInput.getDefaultOptions = function () {
+    var defaultOptions = Base.getDefaultOptions();
+
+    defaultOptions.useGrouping = true;
+    defaultOptions.onlyPositive = false;
+    defaultOptions.showEmptyDecimals = false;
+
+    return defaultOptions;
+};
+
+NumberInput.getOptionTypes = function () {
+    const optionTypes = Base.getOptionTypes();
+
+    optionTypes.value = entity.descriptor(Number, String, null);
+    optionTypes.precision = entity.descriptor(Number, null);
+    optionTypes.integersLength = entity.descriptor(Number, null);
+    optionTypes.useGrouping = entity.descriptor(Boolean);
+    optionTypes.onlyPositive = entity.descriptor(Boolean);
+    optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
+
+    return optionTypes;
+};
+
 
 // TODO: generics https://online.sbis.ru/opendoc.html?guid=ef345c4d-0aee-4ba6-b380-a8ca7e3a557f
 /**
@@ -167,78 +239,5 @@ import ViewModel from './Number/ViewModel';
  * </pre>
  * @see value
  */
-
-var _private = {
-    validateOptions: function (options) {
-        if (options.integersLength <= 0) {
-            Logger.error('Number: Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
-        }
-    },
-    convertToNumber: function (value) {
-        return value === null ? void 0 : value;
-    }
-};
-
-var NumberInput = Base.extend({
-    _defaultValue: 0,
-    _inputMode: 'decimal',
-
-    _getViewModelOptions: function (options) {
-        _private.validateOptions(options);
-
-        return {
-            precision: _private.convertToNumber(options.precision),
-            useGrouping: options.useGrouping,
-            onlyPositive: options.onlyPositive,
-            integersLength: _private.convertToNumber(options.integersLength),
-            showEmptyDecimals: options.showEmptyDecimals,
-            useAdditionToMaxPrecision: options.showEmptyDecimals
-        };
-    },
-
-    _getViewModelConstructor: function () {
-        return ViewModel;
-    },
-
-    _notifyInputCompleted: function () {
-        if (this._viewModel.trimTrailingZeros(true)) {
-            this._notifyValueChanged();
-        }
-
-        NumberInput.superclass._notifyInputCompleted.apply(this, arguments);
-    },
-
-    _focusOutHandler: function () {
-        if (this._viewModel.trimTrailingZeros(false)) {
-            this._notifyValueChanged();
-        }
-
-        NumberInput.superclass._focusOutHandler.apply(this, arguments);
-    }
-});
-
-NumberInput.getDefaultOptions = function () {
-    var defaultOptions = Base.getDefaultOptions();
-
-    defaultOptions.useGrouping = true;
-    defaultOptions.onlyPositive = false;
-    defaultOptions.showEmptyDecimals = false;
-
-    return defaultOptions;
-};
-
-NumberInput.getOptionTypes = function () {
-    const optionTypes = Base.getOptionTypes();
-
-    optionTypes.value = entity.descriptor(Number, String, null);
-    optionTypes.precision = entity.descriptor(Number, null);
-    optionTypes.integersLength = entity.descriptor(Number, null);
-    optionTypes.useGrouping = entity.descriptor(Boolean);
-    optionTypes.onlyPositive = entity.descriptor(Boolean);
-    optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
-
-    return optionTypes;
-};
-
 export = NumberInput;
 

@@ -86,7 +86,8 @@ import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOption
  */
 
 /**
- * @event Controls/_menu/Control#itemClick Происходит при выборе элемента
+ * @event Происходит при выборе элемента.
+ * @name Controls/_menu/Control#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.

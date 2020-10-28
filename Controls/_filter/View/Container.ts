@@ -31,18 +31,6 @@ import clone = require('Core/core-clone');
  * @public
  */
 
-/**
- * @event Controls/_filter/View/Container#filterItemsChanged Происходит при изменении элементов.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Object} items Новые элементы.
- */
-
-/*
- * @event Controls/_filter/View/Container#filterItemsChanged Happens when items changed.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
- * @param {Object} items New items.
- */
-
 var Container = Control.extend(/** @lends Controls/_filter/View/Container.prototype */{
 
     _template: template,
@@ -107,5 +95,17 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
         this._notify('filterHistoryApply', [history], {bubbling: true});
     }
 }, {});
+/**
+ * @event Происходит при изменении элементов.
+ * @name Controls/_filter/View/Container#filterItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Object} items Новые элементы.
+ */
 
+/*
+ * @event Happens when items changed.
+ * @name Controls/_filter/View/Container#filterItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Object} items New items.
+ */
 export default Container;

@@ -133,13 +133,15 @@
  */
 
 /**
- * @event Controls/_filter/interface/IFastFilter#filterChanged Происходит при изменении фильтра.
+ * @event Происходит при изменении фильтра.
+ * @name Controls/_filter/interface/IFastFilter#filterChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Новый фильтр.
  */
 
 /*
- * @event Controls/_filter/interface/IFastFilter#filterChanged Happens when filter changed.
+ * @event Happens when filter changed.
+ * @name Controls/_filter/interface/IFastFilter#filterChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Object} filter New filter.
  */

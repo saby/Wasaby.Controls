@@ -11,20 +11,20 @@ import {tmplNotify} from 'Controls/eventUtils';
  * @demo Controls-demo/EditableArea/Buttons/Index
  */
 
-/**
- * @event Controls/_editableArea/Templates/Buttons#applyButtonClick Происходит при клике на кнопку сохранения редактирования
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */
-
-/**
- * @event Controls/_editableArea/Templates/Buttons#closeButtonClick Происходит при клике на кнопку отмены редактирования
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */
-
 class Buttons extends Control<IControlOptions> {
     protected _template: TemplateFunction = ButtonsTemplate;
     protected _tmplNotify: Function = tmplNotify;
     static _theme: string[] = ['Controls/editableArea'];
 }
+/**
+ * @event Происходит при клике на кнопку сохранения редактирования.
+ * @name Controls/_editableArea/Templates/Buttons#applyButtonClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
 
+/**
+ * @event Происходит при клике на кнопку отмены редактирования.
+ * @name Controls/_editableArea/Templates/Buttons#closeButtonClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
 export default Buttons;

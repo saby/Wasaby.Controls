@@ -216,7 +216,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#createsuccessed Happens when record create successful
+ * @event Happens when record create successful
+ * @name Controls/_form/interface/IFormController#createsuccessed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} Editable record
  */
@@ -230,7 +231,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#createfailed Happens when record create failed
+ * @event Happens when record create failed
+ * @name Controls/_form/interface/IFormController#createfailed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Error} Error
  */
@@ -244,7 +246,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#readsuccessed Happens when record read successful
+ * @event Happens when record read successful
+ * @name Controls/_form/interface/IFormController#readsuccessed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} Editable record
  */
@@ -258,7 +261,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#readfailed Happens when record read failed
+ * @event Happens when record read failed
+ * @name Controls/_form/interface/IFormController#readfailed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Error} Error
  */
@@ -273,7 +277,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#updatesuccessed Happens when record update successful
+ * @event Happens when record update successful
+ * @name Controls/_form/interface/IFormController#updatesuccessed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} Editable record
  * @param {String} Editable record key
@@ -288,7 +293,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#updatefailed Happens when record update failed
+ * @event Happens when record update failed
+ * @name Controls/_form/interface/IFormController#updatefailed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Error} Error
  */
@@ -302,7 +308,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#deletesuccessed Happens when record delete successful
+ * @event Happens when record delete successful
+ * @name Controls/_form/interface/IFormController#deletesuccessed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} Editable record
  */
@@ -316,7 +323,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#deletefailed Happens when record delete failed
+ * @event Happens when record delete failed
+ * @name Controls/_form/interface/IFormController#deletefailed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Error} Error
  */
@@ -329,7 +337,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#isNewRecordChanged Happens when the record is initialized in the data source
+ * @event Happens when the record is initialized in the data source
+ * @name Controls/_form/interface/IFormController#isNewRecordChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Boolean} isNewRecord
  */
@@ -352,7 +361,8 @@
  */
 
 /*
- * @event Controls/_form/interface/IFormController#requestCustomUpdate Happens before saving a record. In the event handler the basic saving logic can be canceled or deferred for user actions before saving. It's used, for example, for asynchronous validation or user saving of a record.
+ * @event Happens before saving a record. In the event handler the basic saving logic can be canceled or deferred for user actions before saving. It's used, for example, for asynchronous validation or user saving of a record.
+ * @name Controls/_form/interface/IFormController#requestCustomUpdate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} record Editable record.
  * @example

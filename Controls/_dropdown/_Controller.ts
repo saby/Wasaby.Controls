@@ -39,7 +39,8 @@ import * as Merge from 'Core/core-merge';
  */
 
 /**
- * @event Controls/_dropdown/_Controller#selectedItemsChanged Происходит при изменении набора выбранных элементов.
+ * @event Происходит при изменении набора выбранных элементов.
+ * @name Controls/_dropdown/_Controller#selectedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/collection:RecordSet} items Выбранные элементы.
  */

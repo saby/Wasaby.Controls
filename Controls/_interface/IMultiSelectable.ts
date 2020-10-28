@@ -68,7 +68,8 @@ export default interface IMultiSelectable {
  */
 
 /**
- * @event Controls/_interface/IMultiSelectable#selectedKeysChanged Происходит при изменении выбранных элементов.
+ * @event Происходит при изменении выбранных элементов.
+ * @name Controls/_interface/IMultiSelectable#selectedKeysChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} keys Набор ключей выбранных элементов.
  * Для плоских списков (см. {@link Controls/list:View Плоский список} и {@link Controls/grid:View таблица}) параметр содержит значение [null], когда выбраны все элементы .
@@ -105,7 +106,8 @@ export default interface IMultiSelectable {
  */
 
 /*
- * @event Controls/_interface/IMultiSelectable#selectedKeysChanged Occurs when selected keys were changed.
+ * @event Occurs when selected keys were changed.
+ * @name Controls/_interface/IMultiSelectable#selectedKeysChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Array.<Number|String>} keys Array of selected items' keys.
  * @param {Array.<Number|String>} added Array of keys added to selection.

@@ -109,7 +109,8 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
  */
 
 /*
- * @event Controls/_breadcrumbs/interface/IBreadCrumbs#itemClick Happens after clicking on breadcrumb.
+ * @event Happens after clicking on breadcrumb.
+ * @name Controls/_breadcrumbs/interface/IBreadCrumbs#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Key of the clicked item.
  */
