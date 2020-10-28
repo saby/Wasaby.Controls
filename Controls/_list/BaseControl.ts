@@ -4753,8 +4753,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onActionMenuDropDownOpen(e: SyntheticEvent<Event>, item: CollectionItem<Model>): void {
+        const contents = _private.getPlainItemContents(item);
+        const key = contents ? contents.getKey() : null;
         this._itemActionsMenuId = 'menu_button';
         this._itemActionsController.setActiveItem(item);
+        this.setMarkedKey(key);
     },
 
     _onActionMenuDropDownClose(): void {
