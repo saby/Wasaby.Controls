@@ -415,7 +415,12 @@ export default class SearchControllerClass {
             if (this._options.startingWith === 'current') {
                 filter[this._options.parentProperty] = this._root;
             } else {
-                delete filter[this._options.parentProperty];
+                const root = SearchControllerClass._getRoot(this._path, this._root, this._options.parentProperty);
+                if (root !== undefined) {
+                    filter[this._options.parentProperty] = root;
+                } else {
+                    delete filter[this._options.parentProperty];
+                }
             }
         }
         this._options.loadingChangedCallback(true);
