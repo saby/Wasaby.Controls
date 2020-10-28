@@ -35,7 +35,7 @@ const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
 
-const DEFAULT_ACTION_MODE = 'showType';
+const DEFAULT_ACTION_MODE = 'strict';
 
 /**
  * @interface Controls/_itemActions/IControllerOptions
@@ -113,7 +113,7 @@ export interface IControllerOptions {
      */
     editingItem?: IItemActionsItem;
 
-    actionMode: 'showType' | 'adaptive';
+    actionMode: 'strict' | 'adaptive';
 }
 
 /**
@@ -131,7 +131,7 @@ export class Controller {
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
     private _iconSize: TItemActionsSize;
-    private _actionMode: 'adaptive' | 'showType';
+    private _actionMode: 'adaptive' | 'strict';
     // вариант расположения опций в свайпе на момент инициализации
     private _actionsAlignment: 'horizontal' | 'vertical';
 

@@ -36,7 +36,7 @@
                            template="{{itemActionsTemplate}}"
                            actionStyle="{{!titleStyle || titleStyle === 'light' ? 'tileLight' : 'tileDark'}}"
                            iconStyle="{{!titleStyle || titleStyle === 'light' ? 'contrast' : 'tileDark'}}"
-                           actionMode="{{itemData.dispItem.isNode() ? 'menu' : 'adaptive'}}"
+                           actionMode="{{itemData.dispItem.isNode() ? 'strict' : 'adaptive'}}"
                            highlightOnHover="{{false}}"
                            itemData="{{itemData}}"
                            itemActionsClass="controls-TileView__previewTemplate_itemActions"/>

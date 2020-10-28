@@ -54,7 +54,23 @@ export const Gadgets = {
             id: 0,
             parent: null,
             type: null,
-            title: 'Конфеты копия',
+            title: 'Очень длинное название для проверки многострочного троеточия Очень длинное название для проверки многострочного троеточия Очень длинное название для проверки многострочного троеточия',
+            image: explorerImages[8],
+            titleStyle: 'light',
+            titleLines: 2,
+            'parent@': true,
+            additionalText: 'папка с песцом',
+            gradientType: 'dark',
+            isDocument: true,
+            width: 300,
+            isShadow: true
+        },
+        {
+            id: 1,
+            parent: null,
+            type: null,
+            title: 'Очень длинное название для проверки однострочного троеточия Очень длинное название для проверки многострочного троеточия Очень длинное название для проверки многострочного троеточия',
+            counter: 110,
             image: explorerImages[8],
             titleStyle: 'light',
             'parent@': true,
@@ -65,7 +81,7 @@ export const Gadgets = {
             isShadow: true
         },
         {
-        id: 1,
+        id: 2,
         parent: null,
         type: null,
         title: 'Очень длинное название для проверки многострочного троеточия Очень длинное название для проверки многострочного троеточия Очень длинное название для проверки многострочного троеточия',
@@ -82,7 +98,7 @@ export const Gadgets = {
         width: 150,
         isShadow: true
     }, {
-        id: 2,
+        id: 3,
         parent: null,
         type: null,
         title: 'Сравнение систем по учету рабочего времени.xlsx',
@@ -98,7 +114,7 @@ export const Gadgets = {
         width: 200,
         isShadow: false
     }, {
-        id: 3,
+        id: 4,
         parent: null,
         type: null,
         title: 'Конфеты копия',
@@ -109,7 +125,7 @@ export const Gadgets = {
         width: 300,
         isShadow: true
     }, {
-        id: 4,
+        id: 5,
         parent: null,
         type: null,
         title: 'Картинка с умным градиентом',
@@ -124,7 +140,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 5,
+        id: 6,
         parent: null,
         type: null,
         title: 'Гепард',
@@ -138,7 +154,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 6,
+        id: 7,
         parent: null,
         type: null,
         title: 'Мост',
@@ -153,7 +169,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 7,
+        id: 8,
         parent: null,
         type: null,
         title: 'Машина',
@@ -168,7 +184,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 8,
+        id: 9,
         parent: null,
         type: null,
         title: 'Лев с короной',
@@ -183,7 +199,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 9,
+        id: 10,
         parent: null,
         type: null,
         title: 'Лев стоит',
@@ -198,7 +214,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 10,
+        id: 11,
         parent: null,
         type: null,
         title: 'Просто лев',
@@ -213,7 +229,7 @@ export const Gadgets = {
         isShadow: true
     },
     {
-        id: 11,
+        id: 12,
         parent: null,
         type: null,
         title: 'Медведь',

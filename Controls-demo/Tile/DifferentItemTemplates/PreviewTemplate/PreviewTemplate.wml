@@ -29,7 +29,7 @@
                <div>{{itemTemplate.itemData.item.additionalText}}</div>
             </ws:topTemplate>
             <ws:bottomRightTemplate>
-               <div>20</div>
+               <div>{{itemTemplate.itemData.item.counter}}</div>
             </ws:bottomRightTemplate>
          </ws:partial>
       </ws:itemTemplate>
