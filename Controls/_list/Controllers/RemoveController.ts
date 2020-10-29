@@ -1,8 +1,12 @@
-import { ICrud } from 'Types/source';
+import {ICrud, ICrudPlus, SbisService} from 'Types/source';
+import { Record } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 import { Confirmation } from 'Controls/popup';
 import { Logger } from 'UI/Utils';
 import * as rk from 'i18n!*';
+
+// @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
+type TSource = SbisService|ICrudPlus;
 
 /**
  * Контроллер для удаления элементов списка в dataSource.
@@ -12,7 +16,7 @@ import * as rk from 'i18n!*';
  * @author Аверкиев П.А.
  */
 export class RemoveController {
-    private _source: ICrud;
+    private _source: TSource;
 
     constructor(source: ICrud) {
         this.updateOptions(source);
@@ -56,6 +60,28 @@ export class RemoveController {
         if (error) {
             Logger.error(error);
             return Promise.reject(new Error(error));
+        }
+        /**
+         * https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
+         * При использовании ICrudPlus.destroy() мы не можем передать filter и folder_id, т.к. такой контракт
+         * не соответствует стандартному контракту SbisService.move(). Поэтому здесь вызывается call
+         */
+        if ((this._source as SbisService).call) {
+            const source: SbisService = this._source as SbisService;
+            return new Promise((resolve) => {
+                import('Controls/operations').then((operations) => {
+                    const sourceAdapter = source.getAdapter();
+                    const callFilter = {
+                        selection: operations.selectionToRecord(selection, sourceAdapter)
+                    };
+                    source.call(source.getBinding().destroy, {
+                        method: source.getBinding().list,
+                        filter: Record.fromObject(callFilter, sourceAdapter)
+                    }).then(() => {
+                        resolve();
+                    });
+                });
+            });
         }
         return this._source.destroy(selection.selected);
     }
