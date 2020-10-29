@@ -620,7 +620,7 @@ export default class CollectionItem<T> extends mixin<
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
+        if (this.getOwner().getMultiSelectVisibility() !== 'hidden' && this.getOwner().getMultiSelectPosition() !== 'custom') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;

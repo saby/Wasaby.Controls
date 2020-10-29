@@ -496,6 +496,7 @@ describe('Controls/_display/CollectionItem', () => {
             getLeftPadding(): string { return '#leftSpacing#'; },
             getRightPadding(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectPosition(): string { return 'default'; },
             getRowSeparatorSize: function () { return ''; }
         };
         const defaultClasses = [
