@@ -348,7 +348,7 @@ export default class Browser extends Control {
     }
 
     protected _unregisterHandler(event, registerType, component, config): void {
-        this._errorRegister.unregister(event, component, config);
+        this._errorRegister.unregister(event, registerType, component, config);
         this._getOperationsController().unregisterHandler(event, registerType, component, config);
     }
 
