@@ -4054,8 +4054,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
-
-            const itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            let itemsUpdated = false;
+            if (!this._modelRecreated) {
+                itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+            } 
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
