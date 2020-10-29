@@ -86,7 +86,7 @@
                         {{itemData.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}">
                 <!-- Маркер активной записи -->
                 <ws:if data="{{ marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0 }}">
-                    <div class="{{itemData.getMarkerClasses()}}"></div>
+                    <div class="{{itemData.getMarkerClasses()}} controls-ListView__itemV_marker_{{((markerClassName || 'default') === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}}"></div>
                 </ws:if>
 
                 <!-- Какая то запись перемещается в данную папку. Обводка -->
