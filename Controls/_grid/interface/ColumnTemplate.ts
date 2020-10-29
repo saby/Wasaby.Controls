@@ -7,6 +7,22 @@
 export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
+ * @typedef {String} TMarkerClassName
+ * @variant default Размер маркера соответствует 100%.
+ * @variant image-l Размер маркера соответствует размеру изображения l + отступ
+ * @variant image-m Размер маркера соответствует размеру изображения m + отступ
+ * @variant image-s Размер маркера соответствует размеру изображения s + отступ
+ * @variant image-xs Размер маркера соответствует размеру изображения xs + отступ
+ * @variant text-2xl Размер маркера соответствует размеру шрифта 2xl + отступ
+ * @variant text-xl Размер маркера соответствует размеру шрифта xl + отступ
+ * @variant text-l Размер маркера соответствует размеру шрифта l + отступ
+ * @variant text-m Размер маркера соответствует размеру шрифта m + отступ
+ * @variant text-xs Размер маркера соответствует размеру шрифта xм + отступ
+ */
+type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-xl' |
+    'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
+
+/**
  * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
  *
  * @class Controls/grid:ColumnTemplate
@@ -46,7 +62,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * @see Controls/grid:IGridControl#showEditArrow
     * @remark
     * В области видимости шаблона доступны переменные **itemData**, **editArrowTemplate** и **expanderTemplate**.
-    * 
+    *
     * Переменная **itemData** позволяет получить доступ к следующими свойствам:
     *
     * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
@@ -56,7 +72,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     * * **column** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
     *
     * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
-    * 
+    *
     * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку раскрытия узла в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
     * @example
     * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
@@ -153,7 +169,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     *    </ws:columns>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * **Пример 5.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки раскрытия узла.
     * <pre class="brush: html; highlight: [1,13]">
     * <Controls.treeGrid:View expanderPosition="custom">
@@ -168,7 +184,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     *                <ws:partial template="Controls/grid:ColumnTemplate">
     *                   <ws:contentTemplate>
     *                      ...
-    *                      <ws:partial template="{{ contentTemplate.expanderTemplate }}" scope="{{ contentTemplate }}"/> 
+    *                      <ws:partial template="{{ contentTemplate.expanderTemplate }}" scope="{{ contentTemplate }}"/>
     *                   </ws:contentTemplate>
     *                </ws:partial>
     *             </ws:template>
@@ -220,4 +236,10 @@ export type TCursor = 'default' | 'pointer' | 'right';
      * @cfg {Function} Шаблон позволяет отобразить иконку для узла. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
      */
     expanderTemplate?: Function;
+
+    /**
+     * @name Controls/grid:ColumnTemplate#markerClassName
+     * @cfg {TMarkerClassName}[markerClassName=default] Опция управляет размером маркера.
+     */
+    markerClassName?: TMarkerClassName;
 }

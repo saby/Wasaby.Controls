@@ -7,6 +7,22 @@
 export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
+ * @typedef {String} TMarkerClassName
+ * @variant default Размер маркера соответствует 100%.
+ * @variant image-l Размер маркера соответствует размеру изображения l + отступ
+ * @variant image-m Размер маркера соответствует размеру изображения m + отступ
+ * @variant image-s Размер маркера соответствует размеру изображения s + отступ
+ * @variant image-xs Размер маркера соответствует размеру изображения xs + отступ
+ * @variant text-2xl Размер маркера соответствует размеру шрифта 2xl + отступ
+ * @variant text-xl Размер маркера соответствует размеру шрифта xl + отступ
+ * @variant text-l Размер маркера соответствует размеру шрифта l + отступ
+ * @variant text-m Размер маркера соответствует размеру шрифта m + отступ
+ * @variant text-xs Размер маркера соответствует размеру шрифта xм + отступ
+ */
+type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-xl' |
+    'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
+
+/**
  * Интерфейс для шаблона отображения элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
  * @interface Controls/list:BaseItemTemplate
  * @author Авраменко А.С.
@@ -71,4 +87,10 @@ export default interface IBaseItemTemplateOptions {
     * @cfg {backgroundColorStyle} Стиль фона элемента.
     */
    backgroundColorStyle?: string;
+
+   /**
+    * @name Controls/interface/IItemTemplate#markerClassName
+    * @cfg {TMarkerClassName}[markerClassName=default] Опция управляет размером маркера.
+    */
+   markerClassName?: TMarkerClassName;
 }
