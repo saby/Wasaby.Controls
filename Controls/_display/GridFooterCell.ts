@@ -11,7 +11,7 @@ export interface IOptions<T> {
     colspan?: boolean;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:FooterCellContent';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:FooterContent';
 
 export default class GridFooterCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridFooter<T>;
