@@ -3,13 +3,13 @@
         <Controls.list:HotKeysContainer>
             <Controls.list:View
                     keyProperty="id"
+                    name="list"
                     attr:class="controlsDemo_line-height18"
                     moveMarkerOnScrollPaging="{{true}}"
-                    source="{{_viewSource}}"
-            >
+                    source="{{_viewSource}}">
                 <ws:navigation source="page" view="infinity">
-                    <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
-                    <ws:viewConfig showEndButton="{{true}}" pagingMode="edge"/>
+                    <ws:sourceConfig pageSize="{{60}}" page="{{0}}" hasMore="{{false}}"/>
+                    <ws:viewConfig pagingMode="end"/>
                 </ws:navigation>
             </Controls.list:View>
         </Controls.list:HotKeysContainer>
