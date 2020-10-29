@@ -615,6 +615,10 @@ export default class CollectionItem<T> extends mixin<
         return this.getOwner().getMultiSelectVisibility();
     }
 
+    getMultiSelectPosition(): string {
+        return this.getOwner().getMultiSelectPosition();
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -628,7 +632,7 @@ export default class CollectionItem<T> extends mixin<
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getMultiSelectVisibility() !== 'hidden') {
+        if (this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;

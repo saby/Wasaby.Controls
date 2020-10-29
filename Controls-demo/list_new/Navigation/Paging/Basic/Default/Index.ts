@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/BasicFull/BasicFull';
+import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/Basic/Default/Basic';
 import {Memory} from 'Types/source';
-import {generateData} from '../../../DemoHelpers/DataCatalog';
+import {generateData} from '../../../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
