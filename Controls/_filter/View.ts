@@ -13,7 +13,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
-import {factory as CollectionFactory, RecordSet} from 'Types/collection';
+import {factory as CollectionFactory, RecordSet, List} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
@@ -41,7 +41,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/View/interface/IFilterView
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
@@ -60,7 +60,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/interface/IFilterView
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @see Controls/filterPopup:SimplePanel
@@ -80,7 +80,7 @@ var _private = {
     },
 
     isFrequentItem: function(item) {
-      return item.viewMode === 'frequent';
+      return item.viewMode === 'frequent' && item.type !== 'dateRange';
     },
 
     resolveItems: function(self, items) {
@@ -760,7 +760,8 @@ var Filter = Control.extend({
 
     _openPanel(event: SyntheticEvent<'click'>, name?: string) {
         const isLoading = this._loadDeferred && !this._loadDeferred.isReady();
-        if (this._options.panelTemplateName && _private.sourcesIsLoaded(this._configs) && !isLoading) {
+        const itemClickResult = this._notify('itemClick', [name]);
+        if (this._options.panelTemplateName && _private.sourcesIsLoaded(this._configs) && !isLoading && itemClickResult !== false) {
             const clickOnFrequentItem = !!name;
             const target = clickOnFrequentItem && event.currentTarget;
             return _private.loadUnloadedFrequentItems(this, this._configs, this._source).then(() => {
@@ -882,6 +883,46 @@ var Filter = Control.extend({
         _private.updateText(this, this._source, this._configs);
     },
 
+    showSelector(name: string) {
+        const item = _private.getItemByName(this._source, name);
+        const isLoading = !this._loadDeferred.isReady();
+        if (item && _private.isFrequentItem(item) && item.editorOptions?.selectorTemplate && !isLoading) {
+            return _private.loadUnloadedFrequentItems(this, this._configs, [item]).then(() => {
+                const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
+                const selectedItems = [];
+                const items = this._configs[name]?.popupItems || this._configs[name].items;
+                if (items) {
+                    factory(selectedKeys).each(function(key) {
+                        const item = items.getRecordById(key);
+                        if (key !== undefined && key !== null && item) {
+                            selectedItems.push(item);
+                        }
+                    });
+                }
+                const selectorTemplate = item.editorOptions.selectorTemplate;
+                const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
+                templateOptions.multiSelect = item.editorOptions.multiSelect;
+                templateOptions.selectedItems = new List({
+                    items: selectedItems
+                });
+                this._idOpenSelector = name;
+                return this._children.selectorOpener.open({
+                    template: item.editorOptions.selectorTemplate.templateName,
+                    templateOptions,
+                    eventHandlers: {
+                        onSelectComplete: (event, result): void => {
+                            this._onSelectorTemplateResult(event, result);
+                            this._children.selectorOpener.close();
+                        }
+                    }
+                }).then(() => {
+                    this._configs[name].initSelectorItems = templateOptions.selectedItems;
+                });
+            });
+        }
+
+    },
+
     _resetFilterText: function() {
         if (this._children.StickyOpener.isOpened()) {
             this._children.StickyOpener.close();
@@ -906,8 +947,7 @@ Filter.getDefaultOptions = function() {
     return {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
-        itemTemplate: defaultItemTemplate,
-        emptyText: rk('Все')
+        itemTemplate: defaultItemTemplate
     };
 };
 

@@ -1341,6 +1341,71 @@ define(
                sinon.assert.calledOnce(filter.View._private.loadItemsFromSource);
                sandBox.restore();
             });
+            describe('showSelector', () => {
+               it('not try open dialog with not frequent item', () => {
+                  let openFired = false;
+                  const view2 = getView(defaultConfig);
+                  view2._source = defaultConfig.source;
+                  view2._children = {
+                     selectorOpener: {
+                        open: () => {
+                           openFired = true;
+                        }
+                     }
+                  };
+                  view2._loadDeferred = {
+                     isReady: () => true
+                  };
+                  view2.showSelector('notExistId');
+                  assert.isFalse(openFired);
+               });
+
+               it('dialog opened', (done) => {
+                  let openFired = false;
+                  let source = [{
+                     name: 'document',
+                     value: null,
+                     resetValue: null,
+                     viewMode: 'frequent',
+                     editorOptions: {
+                        multiSelect: false,
+                        source: new sourceLib.Memory({
+                           data: [{
+                              id: 0,
+                              title: 'Мой документ'
+                           }]
+                        }),
+                        selectorTemplate: {
+                           templateName: 'templateName',
+                           templateOptions: {
+                              option1: 'option'
+                           }
+                        }
+                     }
+                  }];
+                  const view2 = getView({
+                     source
+                  });
+                  view2._configs = {};
+                  view2._source = source;
+                  view2._loadDeferred = {
+                     isReady: () => true
+                  };
+                  view2._children = {
+                     selectorOpener: {
+                        open: () => {
+                           openFired = true;
+                           return Promise.resolve();
+                        }
+                     }
+                  };
+                  view2.showSelector('document').then(() => {
+                     assert.isTrue(openFired);
+                     assert.isTrue(!!view2._configs.document, 'data loaded');
+                     done();
+                  });
+               });
+            });
             afterEach(function() {
                Env.getStore = originalGetStore;
                Env.setStore = originalSetStore;
