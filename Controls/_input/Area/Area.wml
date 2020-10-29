@@ -41,7 +41,7 @@
                         isBrowserPlatform="{{_isBrowserPlatform}}"
                         inputKey="{{ _inputKey }}"
                         hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
-                        isEdge="{{_isEdge}}" />
+                        isEdge="{{_isEdge}}"/>
          </ws:else>
       </Controls.scroll:Container>
    </ws:content>
