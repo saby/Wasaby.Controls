@@ -1,3 +1,7 @@
+export interface ICaptionFormatterOptions {
+    captionFormatter?: Function;
+}
+
 /**
  * Интерфейс для контролов ввода или выбора дат, которые поддерживают возможность форматирования выводимого заголовка
  *
@@ -6,8 +10,8 @@
  * @author Красильников А.С.
  */
 
-export interface ICaptionFormatterOptions {
-    captionFormatter?: Function;
+export default interface ICaptionFormatter {
+    readonly '[Controls/_dateRange/interfaces/ICaptionFormatter]': boolean;
 }
 
 /**
@@ -34,7 +38,3 @@ export interface ICaptionFormatterOptions {
  * </pre>
  * @demo Controls-demo/dateRange/LiteSelector/CaptionFormatter/Index
  */
-
-export default interface ICaptionFormatter {
-    readonly '[Controls/_dateRange/interfaces/ICaptionFormatter]': boolean;
-}
