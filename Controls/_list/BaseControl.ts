@@ -2895,7 +2895,7 @@ const _private = {
  */
 
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
-    _updateShadowModeAfterMount: null,
+    _updateShadowModeBeforePaint: null,
 
     // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
     // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -3286,15 +3286,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
-        if (this._isMounted) {
-            this._updateShadowModeAfterPaint = () => {
-                _private.updateShadowMode(this, shadowVisibility);
-            };
-        } else {
-            this._updateShadowModeAfterMount = () => {
-                _private.updateShadowMode(this, shadowVisibility);
-            };
-        }
+
+        // scrollTop пересчитывается в beforePaint поэтому и тень должны изменять тоже в beforePaint,
+        // чтобы не было моргания тени
+        this._updateShadowModeBeforePaint = () => {
+            _private.updateShadowMode(this, shadowVisibility);
+        };
     },
 
     loadMore(direction: IDirection): void {
@@ -3426,10 +3423,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // для связи с контроллером ПМО
         this._notify('register', ['selectedTypeChanged', this, _private.onSelectedTypeChanged], {bubbling: true});
         this._notifyOnDrawItems();
-        if (this._updateShadowModeAfterMount) {
-            this._updateShadowModeAfterMount();
-            this._updateShadowModeAfterMount = null;
-        }
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
@@ -4043,9 +4036,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._scrollToFirstItemIfNeed();
 
-        if (this._updateShadowModeAfterPaint instanceof Function) {
-            this._updateShadowModeAfterPaint();
-            this._updateShadowModeAfterPaint = null;
+        if (this._updateShadowModeBeforePaint) {
+            this._updateShadowModeBeforePaint();
+            this._updateShadowModeBeforePaint = null;
         }
     },
 
