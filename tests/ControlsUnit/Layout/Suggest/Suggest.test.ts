@@ -1302,5 +1302,18 @@ describe('Controls/suggest', () => {
          suggestComponent._openSelector(templateOptions);
          assert.isFalse(isOpenPopup);
       });
+
+      describe('_beforeUnmount', () => {
+
+         it('_beforeUnmount while load dependencies', () => {
+            const suggestComponent = getComponentObject(_InputController.getDefaultOptions());
+            suggestComponent._loadDependencies(suggestComponent._options);
+            assert.ok(suggestComponent._dependenciesDeferred);
+
+            suggestComponent._beforeUnmount();
+            assert.ok(!suggestComponent._dependenciesDeferred);
+         });
+
+      });
    });
 });
