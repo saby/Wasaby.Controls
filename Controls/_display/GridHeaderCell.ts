@@ -27,7 +27,7 @@ export interface IOptions<T> {
     headerCell: IHeaderCell;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/HeaderCellContent';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
 
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridHeader<T>;

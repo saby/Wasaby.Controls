@@ -11,7 +11,7 @@ export interface IOptions<T> {
     colspan?: boolean;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/FooterCellContent';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:FooterCellContent';
 
 export default class GridFooterCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridFooter<T>;
