@@ -569,7 +569,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._dependenciesDeferred = null;
       }
       if (this._sourceController) {
-         this._sourceController.cancelLoading();
+         this._sourceController.destroy();
          this._sourceController = null;
       }
       this._searchResult = null;
