@@ -564,6 +564,14 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
+      if (this._dependenciesDeferred && !this._dependenciesDeferred.isReady()) {
+         this._dependenciesDeferred.cancel();
+         this._dependenciesDeferred = null;
+      }
+      if (this._sourceController) {
+         this._sourceController.cancelLoading();
+         this._sourceController = null;
+      }
       this._searchResult = null;
       this._loadStart = null;
       this._loadEnd = null;
