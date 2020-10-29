@@ -1,4 +1,4 @@
-import {Controller} from 'Controls/searchNew';
+import {ControllerClass} from 'Controls/search';
 import {assert} from 'chai';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
@@ -59,7 +59,7 @@ const defaultOptionsControllerClass = {
 };
 
 const getControllerClass = (options) => {
-   return new Controller({
+   return new ControllerClass({
       ...defaultOptionsControllerClass,
       ...options
    });
@@ -69,7 +69,7 @@ describe('Controls/search:ControllerClass', () => {
    const sandbox = createSandbox();
 
    let sourceController: SourceController;
-   let controllerClass: Controller;
+   let controllerClass: ControllerClass;
    let getFilterSpy: SinonSpy;
 
    beforeEach(() => {
@@ -88,7 +88,7 @@ describe('Controls/search:ControllerClass', () => {
 
    it('search method', () => {
       const filter: QueryWhereExpression<unknown> = {
-         testParam: 'testValue',
+         testParam: 'testValue'
       };
       controllerClass.search('testValue');
 
