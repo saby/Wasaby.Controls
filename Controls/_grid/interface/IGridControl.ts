@@ -208,6 +208,107 @@
  */
 
 /**
+ * @typedef {IFooterColumn}
+ * @description Тип колонки подваалов таблицы
+ * @property {Number} [startColumn] Индекс колонки таблицы, с которой начинается ячейка подвала. Необязательное поле, если неопределено, берется endColumn предыдущей ячейки или 1(если это первая колонка).
+ * @property {Number} [endColumn] Индекс колонки таблицы, на которой заканчивается ячейка подвала. Необязательное поле, если неопределено, берется startColumn текущей ячейки увеличенный на один.
+ * @property {Number} [template] Шаблон содержимого ячейки подвала. Необязательное поле, если неопределено, содержимое ячейки будет пустым.
+ * @remark
+ * Значения опций startColumn и endColumn задаются в соответствии с GridLayout CSS, т.е. с единицы. Индексы считаются по границам колонок.
+ * Например, чтобы отобразить объединенную ячейку подвала под второй и третей колонкой таблицы, нужно задать startColumn и endColumn в значения
+ * 2 и 4 соответственно.
+ * @public
+ */
+
+/*
+ * @typedef {IFooterColumn}
+ * @description Table footer column type.
+ * @property {Number} [startColumn] The index of the table column that the footer cell starts with. An optional field, if undefined, is taken from the endColumn of the previous cell or 1 (if this is the first column).
+ * @property {Number} [endColumn] The index of the table column that the footer cell ends with. An optional field, if undefined, the startColumn of the current cell is taken, incremented by one.
+ * @property {Number} [template] Footer cell content template. Optional field, if undefined, cell content will be empty.
+ * @remark
+ * The startColumn and endColumn options are set according to the GridLayout CSS, i.e. from one. Indexes are calculated along the column boundaries.
+ * For example, to display the merged footer cell under the second and third columns of the table, you need to set startColumn and endColumn to values
+ * 2 and 4 respectively.
+ * @public
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#footer
+ * @cfg {Array.<IFooterColumn>} Описывает колонки подвала таблицы.
+ * @example
+ * В примере показана настройка колонок подвала для таблицы с десятью колонками.
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = getGridColumns();
+ *    // this._columns.length === 10
+ * }
+ * </pre>
+ *
+ * <pre class="brush: html">
+ *  <Controls.grid:View ...>
+ *      <ws:footer>
+ *          <ws:Array>
+ *              <ws:Object startColumn="{{ 2 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 2 - 4</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 4 - 6</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object endColumn="{{ 8 }}" >
+ *                  <ws:template>
+ *                      <div>Footer column 6 - 8</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              </ws:Array>
+ *          </ws:footer>
+ *      </Controls.grid:View>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#footer
+ * @cfg {TColumns} Describes the columns in the footer of the table.
+ * @example
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = getGridColumns();
+ *    // this._columns.length === 10
+ * }
+ * </pre>
+ *
+ * <pre class="brush: html">
+ *  <Controls.grid:View ...>
+ *      <ws:footer>
+ *          <ws:Array>
+ *              <ws:Object startColumn="{{ 2 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 2 - 4</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 4 - 6</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object endColumn="{{ 8 }}" >
+ *                  <ws:template>
+ *                      <div>Footer column 6 - 8</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              </ws:Array>
+ *          </ws:footer>
+ *      </Controls.grid:View>
+ * </pre>
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Закрепляет заголовок таблицы.
  * @demo Controls-demo/grid/Header/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
