@@ -296,8 +296,8 @@ export default class Area extends Text<IAreaOptions> {
             input._children.input.selectionEnd = 0;
         } else if (position === 'end') {
             const textLength = this._options.value.length;
-            input._children.input.selectionStart = textLength + 1;
-            input._children.input.selectionEnd = textLength + 1;
+            input._children.input.selectionStart = textLength;
+            input._children.input.selectionEnd = textLength;
         }
     }
 
