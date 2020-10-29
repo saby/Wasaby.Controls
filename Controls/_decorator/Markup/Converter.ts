@@ -147,7 +147,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @param json {Array} Json based on JsonML.
     * @param tagResolver {Function} exactly like in {@link Controls/_decorator/Markup#tagResolver}.
     * @param resolverParams {Object} exactly like in {@link Controls/_decorator/Markup#resolverParams}.
-    * @param unsafe {Boolean} Unsafe HTML
+    * @param unsafe {Boolean} Unsafe HTML.
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver?, resolverParams?, unsafe?) {

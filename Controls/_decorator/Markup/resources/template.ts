@@ -123,7 +123,7 @@ import {Logger} from 'UI/Utils';
    }
 
    function recursiveMarkup(value, attrsToDecorate, key, parent?, unsafe?) {
-      var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
+      var valueToBuild = resolverMode && resolver && !unsafe ? resolver(value, parent, resolverParams) : value,
          wasResolved,
          i;
       if (isString(valueToBuild)) {
