@@ -14,7 +14,7 @@ export interface IOptions<T> {
     colspan?: boolean;
 }
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/ResultsCellContent';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ResultColumnTemplate';
 
 export default class GridResultsCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridResults<T>;
