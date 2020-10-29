@@ -7,11 +7,11 @@ import {default as SearchController} from 'Controls/_search/ControllerClass';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {ISearchOptions} from 'Controls/_interface/ISearch';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
-import {ISearchControllerOptions, ISearchResolverOptions} from './interface';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ISourceOptions} from 'Controls/_interface/ISource';
 import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
-import {SearchResolver} from 'Controls/search';
+import {
+   NewSourceController as SourceController
+} from 'Controls/dataSource';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -33,7 +33,7 @@ import {SearchResolver} from 'Controls/search';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
- * 
+ *
  * @public
  */
 
@@ -59,15 +59,15 @@ import {SearchResolver} from 'Controls/search';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/interface/IHierarchySearch
  * @author Герасимов А.М.
- * 
+ *
  * @public
  */
 
 interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchySearchOptions,
    ISourceOptions, IHierarchyOptions {
    dataLoadCallback?: Function;
-   sourceController: SourceController;
    viewMode: string;
+   root?: Key;
 }
 
 type Key = string | number | null;
@@ -88,7 +88,8 @@ export default class Container extends Control<IContainerOptions> {
    private _inputSearchValue: string = '';
 
    private _searchController: SearchController = null;
-   private _searchResolverController: SearchResolver = null;
+
+   private _sourceController: SourceController = null;
 
    protected _beforeMount(options: IContainerOptions, context: typeof DataOptions): void {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
@@ -98,9 +99,15 @@ export default class Container extends Control<IContainerOptions> {
       this._previousViewMode = this._viewMode = options.viewMode;
       this._updateViewMode(options.viewMode);
 
-      this._getSearchController({...options, ...context}).then((searchController) => {
-         this._searchValue = searchController.getSearchValue();
+      this._sourceController = context.dataOptions.sourceController;
+
+      this._getSearchController({...options, ...context.dataOptions}).then((searchController) => {
+         this._setSearchValue(searchController.getSearchValue());
       });
+
+      if (options.root !== undefined) {
+         this._root = options.root;
+      }
    }
 
    protected _beforeUnmount(): void {
@@ -111,48 +118,52 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      this._searchController.update({...newOptions, ...context});
-
-      if (this._options.searchDelay !== newOptions.searchDelay && this._searchResolverController) {
-         this._searchResolverController.updateOptions(
-            this._getSearchResolverOptions({...newOptions, ...context})
-         );
-      }
+      this._searchController.update({...newOptions, ...context.dataOptions});
    }
 
-   private _getSearchResolverOptions(options: IContainerOptions): ISearchResolverOptions {
-      return {
-         delayTime: options.searchDelay,
-         minSearchLength: options.minSearchLength,
-         searchCallback: (validatedValue: string) => {
-            this._startSearch(validatedValue, options);
-         },
-         searchResetCallback: undefined
-      };
+   private _setSearchValue(value: string): void {
+      this._searchValue = value;
+      this._notify('searchValueChanged', [value]);
    }
 
-   private _startSearch(value: string, options?: IContainerOptions): Promise<RecordSet | Error> | void {
+   private _startSearch(value: string, options?: IContainerOptions): Promise<RecordSet | Error> {
+      return this._getSearchController(options).then((searchController) => {
+         return searchController.search(value);
+      });
+   }
+
+   private _updateParams(searchValue: string): void {
       if (this._viewMode !== 'search') {
-         return this._getSearchController(options).then((searchController) => {
-            return searchController.search(value);
+         this._updateViewMode('search');
+
+         if (this._options.parentProperty) {
+            this._updateRootAfterSearch();
+         }
+      }
+      this._setSearchValue(searchValue);
+   }
+
+   private _updateRootAfterSearch(): void {
+      if (this._options.startingWith === 'root') {
+         const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
+
+         this._getSearchController().then((searchController) => {
+            this._root = newRoot;
+            searchController.setRoot(newRoot);
          });
       }
    }
 
-   protected _search(event: SyntheticEvent, value: string): void {
-      this._resolveSearch(value);
-   }
+   protected _search(event: SyntheticEvent, validatedValue: string): void {
+      this._inputSearchValue = validatedValue;
+      this._startSearch(validatedValue, this._options).then((result) => {
+         if (result instanceof RecordSet) {
+            this._updateParams(validatedValue);
+            this._handleDataLoad(result);
 
-   protected _resolveSearch(value: string, options?: IContainerOptions): Promise<void> {
-      if (!this._searchResolverController) {
-         return import('Controls/search').then((result) => {
-            this._searchResolverController = new result.SearchResolver(
-               this._getSearchResolverOptions(options ?? this._options)
-            );
-            return this._searchResolverController.resolve(value);
-         });
-      }
-      this._searchResolverController.resolve(value);
+            this._sourceController.setItems(result);
+         }
+      });
    }
 
    private _isSearchViewMode(): boolean {
@@ -179,17 +190,33 @@ export default class Container extends Control<IContainerOptions> {
             searchController.setRoot(root);
          }
          if (root !== dataRoot) {
-            searchController.reset().then(() => {
-               this._inputSearchValue = '';
-            });
+            this._updateFilter(searchController);
+
+            this._inputSearchValue = '';
          }
       });
    }
 
-   private _getSearchController(options?: IContainerOptions): Promise<SearchController> {
-      return import('Controls/search').then((result) => {
-         return this._searchController = new result.ControllerClass(options ?? this._options);
+   private _searchReset(event: SyntheticEvent): void {
+      this._getSearchController().then((searchController) => {
+         this._updateFilter(searchController);
+         this._handleDataLoad(null);
       });
+   }
+
+   private _updateFilter(searchController: SearchController): void {
+      const filter = searchController.reset(true);
+      this._notify('filterChanged', [filter]);
+      this._setSearchValue('');
+   }
+
+   private _getSearchController(options?: IContainerOptions & typeof DataOptions): Promise<SearchController> {
+      if (!this._searchController) {
+         return import('Controls/search').then((result) => {
+            return this._searchController = new result.ControllerClass(options ?? this._options);
+         });
+      }
+      return Promise.resolve(this._searchController);
    }
 
    private _dataLoadCallback(data: RecordSet): void {
@@ -205,7 +232,7 @@ export default class Container extends Control<IContainerOptions> {
          this._deepReload = undefined;
       }
 
-      this._path = data.getMetaData().path;
+      this._path = data?.getMetaData().path ?? null;
 
       if (this._isSearchViewMode() && !this._searchValue) {
          this._updateViewMode(this._previousViewMode);
@@ -227,9 +254,8 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _misspellCaptionClick(): void {
-      this._resolveSearch(this._misspellValue).then(() => {
-         this._misspellValue = '';
-      });
+      this._search(null, this._misspellValue);
+      this._misspellValue = '';
    }
 
    private static _prepareExpandedItems(
@@ -250,6 +276,18 @@ export default class Container extends Control<IContainerOptions> {
       return expandedItems;
    }
 
+   static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
+      let root;
+
+      if (path && path.getCount() > 0) {
+         root = path.at(0).get(parentProperty);
+      } else {
+         root = currentRoot;
+      }
+
+      return root;
+   }
+
    static contextTypes(): object {
       return {
          dataOptions: DataOptions
@@ -258,14 +296,14 @@ export default class Container extends Control<IContainerOptions> {
 
    static getDefaultOptions(): IContainerOptions {
       return {
+         viewMode: undefined,
          keyProperty: undefined,
          searchNavigationMode: undefined,
          searchParam: undefined,
          searchValueTrim: undefined,
          minSearchLength: 3,
          searchDelay: 500,
-         startingWith: 'root',
-         sourceController: undefined
+         startingWith: 'root'
       };
    }
 }

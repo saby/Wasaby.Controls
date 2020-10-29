@@ -5,7 +5,6 @@ import {ControllerClass as OperationsController} from 'Controls/operations';
 import {
     ControllerClass as SearchController,
     getSwitcherStrFromData,
-    ISearchResolverOptions,
     SearchResolver as SearchResolverController
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
@@ -47,6 +46,7 @@ export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourc
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
     viewMode: TViewMode;
+    root?: Key;
 }
 
 type IReceivedState = {
@@ -124,9 +124,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = options.source;
         }
         if (options.useStore) {
-            this._searchValue = Store.getState().searchValue as unknown as string;
+            this._setSearchValue(Store.getState().searchValue as unknown as string);
         } else {
-            this._searchValue = options.searchValue;
+            this._setSearchValue(options.searchValue);
         }
 
         const controllerState = this._getSourceController(options).getState();
@@ -134,6 +134,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
+
+        if (options.root !== undefined) {
+            this._root = options.root;
+        }
 
         if (receivedState) {
             if ('filterItems' in receivedState && 'items' in receivedState) {
@@ -184,7 +188,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
                (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
             const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => this._resolveSearch(searchValue, options));
+               (searchValue: string) => this._search(null, searchValue));
 
             this._storeCallbacks = [
                 sourceCallbackId,
@@ -215,12 +219,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const sourceChanged = this._options.source !== newOptions.source;
         if (sourceChanged) {
             this._source = newOptions.source;
-        }
-
-        if (this._options.searchDelay !== newOptions.searchDelay && this._searchResolverController) {
-            this._searchResolverController.updateOptions(
-               this._getSearchResolverOptions(newOptions)
-            );
         }
 
         const sourceController = this._getSourceController(newOptions);
@@ -277,7 +275,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (this._searchController) {
-            this._searchController.reset();
+            this._updateFilter(this._searchController);
             this._searchController = null;
         }
 
@@ -329,15 +327,19 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
-        return import('Controls/search').then((result) => {
-            this._searchController = new result.ControllerClass({
-                ...(options ?? this._options),
-                sourceController: this._getSourceController(options ?? this._options)
-            });
-            this._inputSearchValue = this._searchValue;
+        if (!this._searchController) {
+            return import('Controls/search').then((result) => {
+                this._searchController = new result.ControllerClass({
+                    ...(options ?? this._options),
+                    sourceController: this._getSourceController(options ?? this._options)
+                });
+                this._inputSearchValue = this._searchValue;
 
-            return this._searchController;
-        });
+                return this._searchController;
+            });
+        }
+
+        return Promise.resolve(this._searchController);
     }
 
     protected _itemsReadyCallbackHandler(items: RecordSet): void {
@@ -370,9 +372,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 searchController.setRoot(root);
             }
             if (root !== dataRoot) {
-                searchController.reset().then(() => {
-                    this._inputSearchValue = '';
-                });
+                this._updateFilter(searchController);
+
+                this._inputSearchValue = '';
             }
         });
     }
@@ -577,65 +579,64 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         return {...options, filter: this._filter, source: this._source};
     }
 
-    private _startSearch(value: string): Promise<RecordSet | void> {
+    private _startSearch(value: string): Promise<RecordSet | Error> {
         if (this._viewMode !== 'search') {
             return this._getSearchController().then((searchController) => {
-               return searchController.search(value).then((result) => {
-                   if (result instanceof RecordSet) {
-                       this._afterSearch(result);
-                   } else {
-                       this._handleError(result);
-                   }
-               });
+               return searchController.search(value);
             });
         }
     }
 
-    protected _search(event: SyntheticEvent, value: string): void {
-        this._resolveSearch(value);
+    protected _search(event: SyntheticEvent, validatedValue: string): void {
+        this._startSearch(validatedValue).then((result) => {
+            if (result instanceof RecordSet) {
+                this._handleDataLoad(result);
+                this._afterSearch(result, validatedValue);
+
+                this._getSourceController().setItems(result);
+            } else {
+                this._handleError(result);
+            }
+        });
     }
 
-    private _getSearchResolverOptions(options: IBrowserOptions): ISearchResolverOptions {
-        return {
-            delayTime: options.searchDelay,
-            minSearchLength: options.minSearchLength,
-            searchCallback: (validatedValue: string) => {
-                this._startSearch(validatedValue);
-            },
-            searchResetCallback: undefined
-        };
+    private _searchReset(event: SyntheticEvent): void {
+        this._getSearchController().then((searchController) => {
+            this._updateFilter(searchController);
+            this._handleDataLoad(null);
+        });
     }
 
-    protected _resolveSearch(value: string, options?: IBrowserOptions): Promise<void> {
-        if (!this._searchResolverController) {
-            return import('Controls/search').then((result) => {
-                this._searchResolverController = new result.SearchResolver(
-                   this._getSearchResolverOptions(options ?? this._options)
-                );
-                return this._searchResolverController.resolve(value);
-            });
-        }
-        this._searchResolverController.resolve(value);
+    private _updateFilter(searchController: SearchController): void {
+        const filter = searchController.reset(true);
+        this._notify('filterChanged', [filter]);
+        this._setSearchValue('');
     }
 
-    private _afterSearch(recordSet: RecordSet): void {
-        this._updateParams();
+    private _afterSearch(recordSet: RecordSet, value: string): void {
+        this._updateParams(value);
 
         if (this._options.dataLoadCallback instanceof Function) {
             this._options.dataLoadCallback(recordSet);
         }
-        this._processResultData(recordSet);
+        // TODO: direction???
+        this._processResultData(recordSet, undefined);
 
         this._itemsChanged(null, recordSet);
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
         if (Browser._needChangeSearchValueToSwitchedString(recordSet)) {
-            this._searchValue = switchedStr;
+            this._setSearchValue(switchedStr);
         }
     }
 
-    private _updateParams(): void {
+    private _setSearchValue(value: string): void {
+        this._searchValue = value;
+        this._notify('searchValueChanged', [value]);
+    }
+
+    private _updateParams(value: string): void {
         if (this._viewMode !== 'search') {
             this._updateViewMode('search');
 
@@ -644,7 +645,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }
         }
         this._loading = false;
-        this._searchValue = this._getSourceController().getFilter()[this._options.searchParam];
+        this._setSearchValue(value);
     }
 
     private _updateRootAfterSearch(): void {
@@ -668,7 +669,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        this._path = data.getMetaData().path;
+        this._path = data?.getMetaData().path ?? null;
 
         if (this._isSearchViewMode() && !this._searchValue) {
             this._updateViewMode(this._previousViewMode);
@@ -686,13 +687,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    _dataLoadErrback(error: Error): void {
-        this._filterController.handleDataError();
-
-        this._handleError(error);
-    }
-
     protected _handleError(error: Error | object): void {
+        this._filterController.handleDataError();
         if (error instanceof Error) {
             if (this._options.dataLoadErrback) {
                 this._options.dataLoadErrback(Error);
@@ -711,9 +707,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     _misspellCaptionClick(): void {
-        this._resolveSearch(this._misspellValue).then(() => {
-            this._misspellValue = '';
-        });
+        this._search(null, this._misspellValue);
+        this._misspellValue = '';
     }
 
     resetPrefetch(): void {

@@ -3,6 +3,7 @@ import {IHierarchyOptions, ISearchOptions} from 'Controls/interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
+import {QueryWhereExpression} from 'Types/source';
 
 type Key = string | number | null;
 
@@ -15,7 +16,9 @@ export interface ISearchResolverOptions {
 
 export interface ISearchInputContainerOptions extends IControlOptions {
    delayTime?: number | null;
-   minSearchValueLength?: number;
+   minSearchLength?: number;
+   inputSearchValue?: string;
+   useStore?: boolean;
 }
 
 export interface ISearchControllerOptions extends ISearchOptions,
@@ -27,7 +30,7 @@ export interface ISearchControllerOptions extends ISearchOptions,
 }
 
 export interface ISearchController {
-   reset(): Promise<RecordSet|Error>;
+   reset(needLoadData?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown>;
    search(value: string): Promise<RecordSet|Error>;
    update(options: Partial<ISearchControllerOptions>): void;
    setRoot(value: Key): void;
