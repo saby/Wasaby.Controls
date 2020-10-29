@@ -107,7 +107,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                            context?: typeof ContextOptions,
                            receivedState?: IReceivedState): void | Promise<IReceivedState | Error | void> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
-        this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
@@ -124,9 +123,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = options.source;
         }
         if (options.useStore) {
-            this._setSearchValue(Store.getState().searchValue as unknown as string);
+            this._searchValue = Store.getState().searchValue as unknown as string;
         } else {
-            this._setSearchValue(options.searchValue);
+            this._searchValue = options.searchValue;
         }
 
         const controllerState = this._getSourceController(options).getState();
