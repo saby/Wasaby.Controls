@@ -117,7 +117,7 @@ var Controller = Control.extend({
    },
 
    _unregisterHandler(event, registerType, component, config): void {
-      this._selectCompleteRegister.unregister(event, component, config);
+      this._selectCompleteRegister.unregister(event, registerType, component, config);
    },
 
    _beforeUnmount(): void {
