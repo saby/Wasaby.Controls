@@ -2,6 +2,7 @@ import { isEqual } from 'Types/object';
 import { isFullGridSupport } from './GridLayoutUtil';
 import { detection } from 'Env/Env';
 import { TColumns } from '../interface/IColumn';
+import { ListItemTemplate } from 'Controls/listTemplates';
 
 interface IStickyColumnsParams {
     columns: TColumns;
@@ -81,7 +82,16 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
     for (idx = params.stopIndex - 1; idx >= params.startIndex; idx--) {
         const dispItem = params.display.at(idx);
         item = dispItem.getContents();
-        prevItem = idx - 1 >= params.startIndex ? params.display.at(idx - 1).getContents() : null;
+        let prevDispItem = idx - 1 >= params.startIndex ? params.display.at(idx - 1) : null;
+
+        // Если запись редактируетсяя, то она не участвует в рассчете лесенки.
+        if (prevDispItem && prevDispItem.isEditing()) {
+            prevDispItem = null;
+        }
+        if (dispItem.isEditing()) {
+            continue;
+        }
+        prevItem = prevDispItem ? prevDispItem.getContents() : null;
 
         if (supportLadder) {
             ladder[idx] = {};
