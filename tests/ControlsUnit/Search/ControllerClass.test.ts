@@ -1,7 +1,8 @@
 import {ControllerClass} from 'Controls/search';
 import {Memory} from 'Types/source';
+import {RecordSet} from 'Types/collection';
 import {assert} from 'chai';
-import {createSandbox, assert as sinonAssert} from 'sinon';
+import {createSandbox} from 'sinon';
 
 function getMemorySource(): Memory {
     return new Memory({
@@ -199,6 +200,31 @@ describe('Controls/search:ControllerClass', () => {
                     resolve();
                 });
             });
+        });
+
+        it('root is added to filter', async () => {
+            const options = getDefaultOptions();
+            let searchFilter;
+
+            options.parentProperty = 'parent';
+            options.searchStartCallback = (filter) => {
+                searchFilter = filter;
+            };
+            const searchController = new ControllerClass(options, {});
+            searchController._dataOptions = options;
+            searchController._root = 'testRoot';
+            searchController._path = new RecordSet({
+                rawData: [
+                    {
+                        key: 'testKey',
+                        parent: 'testParent'
+                    }
+                ],
+                keyProperty: 'key'
+            });
+
+            await searchController.search('test', true);
+            assert.isTrue(searchFilter.parent === 'testParent');
         });
     });
 });

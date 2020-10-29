@@ -310,11 +310,11 @@ export default class CollectionItem<T> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectClasses(theme): string {
+    getMultiSelectClasses(theme: string): string {
         let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme} `;
         classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+        if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
         return classes;
@@ -547,6 +547,10 @@ export default class CollectionItem<T> extends mixin<
         return itemActionClasses;
     }
 
+    getRowSeparatorSize(): string {
+        return this.getOwner().getRowSeparatorSize();
+    }
+
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
@@ -556,7 +560,7 @@ export default class CollectionItem<T> extends mixin<
      * Метод должен уйти в render-модель при её разработке.
      */
     getContentClasses(theme: string, style: string = 'default'): string {
-        const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
+        const rowSeparatorSize = this.getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
         ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
         controls-ListView__itemContent_${style}_theme-${theme}`;
@@ -607,6 +611,10 @@ export default class CollectionItem<T> extends mixin<
         return templateFromProperty || userTemplate;
     }
 
+    getMultiSelectVisibility(): string {
+        return this.getOwner().getMultiSelectVisibility();
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -620,7 +628,7 @@ export default class CollectionItem<T> extends mixin<
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
+        if (this.getMultiSelectVisibility() !== 'hidden') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;

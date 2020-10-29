@@ -451,9 +451,9 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             cfgClone.source = new Memory({
                 keyProperty: 'id',
-                data: getData(100)
+                data: getData(1000)
             });
-
+            let expectedScrollTop = 400;
             await baseControl._beforeMount(cfgClone);
             baseControl.saveOptions(cfgClone);
 
@@ -461,7 +461,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 clientHeight: 1000
             };
             baseControl._sourceController = {
-                getAllDataCount: () => 100,
+                getAllDataCount: () => 1000,
                 hasMoreData: () => false
             };
             baseControl._listViewModel._startIndex = 0;
@@ -482,7 +482,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            assert.equal(baseControl._pagingCfg.pagesCount, 3);
+            assert.equal(baseControl._pagingCfg.pagesCount, 25);
 
             BaseControl._private.handleListScrollSync(baseControl, 100);
             assert.deepEqual({
@@ -494,9 +494,17 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             assert.equal(baseControl._currentPage, 1);
-
+            expectedScrollTop = 400;
             await baseControl.__selectedPageChanged(null, 2);
             assert.equal(baseControl._currentPage, 2);
+            expectedScrollTop = 800;
+            assert.isNull(baseControl._applySelectedPage);
+            await baseControl.__selectedPageChanged(null, 3);
+            assert.equal(baseControl._currentPage, 2);
+            assert.isOk(baseControl._applySelectedPage);
+            baseControl._container.clientHeight = 1500;
+            await baseControl._viewResize();
+            baseControl._applySelectedPage();
         });
 
         it('visible paging padding', async () => {

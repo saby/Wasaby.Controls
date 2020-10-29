@@ -2,6 +2,7 @@ import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
+import { Model as EntityModel } from 'Types/entity';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
@@ -91,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
+    stickyHeader?: boolean;
     theme?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
@@ -598,13 +600,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$stickyMarkedItem: boolean;
 
+    protected _$stickyHeader: boolean;
+
     protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
 
-    protected _$metaResults: {};
+    protected _$metaResults: EntityModel;
 
     protected _$collapsedGroups: TArrayGroupKey;
 
@@ -771,6 +775,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._$stickyMarkedItem = options.stickyMarkedItem;
         }
 
+        if (options.stickyHeader !== undefined) {
+            this._$stickyHeader = options.stickyHeader;
+        }
+
         if (!this._$collection) {
             throw new Error(`${this._moduleName}: source collection is empty`);
         }
@@ -780,6 +788,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (!this._$collection['[Types/_collection/IEnumerable]']) {
             throw new TypeError(`${this._moduleName}: source collection should implement Types/collection:IEnumerable`);
         }
+
+        this.setMetaResults(this.getMetaData().results);
 
         this._$sort = normalizeHandlers(this._$sort);
         this._$filter = normalizeHandlers(this._$filter);
@@ -2225,6 +2235,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$stickyMarkedItem;
     }
 
+    isStickyHeader(): boolean {
+        return this._$stickyHeader;
+    }
+
     getRowSeparatorSize(): string {
         return this._$rowSeparatorSize;
     }
@@ -2373,16 +2387,16 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$hasMoreData = hasMoreData;
     }
 
-    setMetaResults(metaResults: {}): void {
+    setMetaResults(metaResults: EntityModel): void {
         this._$metaResults = metaResults;
     }
 
-    getMetaResults(): {} {
+    getMetaResults(): EntityModel {
         return this._$metaResults;
     }
 
-    getMetaData(): {} {
-        return this._$collection ? this._$collection.getMetaData() : {};
+    getMetaData(): any {
+        return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
     }
 
     getCollapsedGroups(): TArrayGroupKey {
