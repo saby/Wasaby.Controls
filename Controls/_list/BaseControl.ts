@@ -3287,7 +3287,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
         if (this._isMounted) {
-            _private.updateShadowMode(this, shadowVisibility);
+            this._updateShadowModeAfterPaint = () => {
+                _private.updateShadowMode(this, shadowVisibility);
+            };
         } else {
             this._updateShadowModeAfterMount = () => {
                 _private.updateShadowMode(this, shadowVisibility);
@@ -4040,6 +4042,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._actualPagingVisible = this._pagingVisible;
 
         this._scrollToFirstItemIfNeed();
+
+        if (this._updateShadowModeAfterPaint instanceof Function) {
+            this._updateShadowModeAfterPaint();
+            this._updateShadowModeAfterPaint = null;
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
