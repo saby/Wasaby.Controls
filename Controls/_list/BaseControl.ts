@@ -4403,7 +4403,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return;
         }
 
-        const canEditByClick = this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
+        const canEditByClick = !this._options.readOnly && this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
         if (canEditByClick) {
             e.stopPropagation();
             this.beginEdit({ item }).then((result) => {
