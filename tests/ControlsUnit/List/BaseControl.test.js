@@ -3353,7 +3353,8 @@ define([
                   cancel: () => Promise.resolve()
                };
                ctrl._editInPlaceInputHelper = {
-                  shouldActivate: () => {}
+                  shouldActivate: () => {},
+                  setClickInfo: () => {}
                };
             });
 
@@ -3372,6 +3373,38 @@ define([
                await ctrl.beginAdd(opt).then((beginRes) => {
                   assert.isUndefined(beginRes);
                });
+            });
+
+            it('should not start editing if control in readonly mode', () => {
+               const defaultCfg = {
+                  ...opt,
+                  editingConfig: {
+                     editOnClick: true
+                  }
+               };
+               const readOnlyCfg = {...defaultCfg, readOnly: true};
+               const event = {
+                  stopPropagation() {},
+                  isStopped() { return true },
+                  original: {
+                     target: { closest() {} }
+                  }
+               };
+               let beginEditStarted = false;
+
+               ctrl.beginEdit = () => {
+                  beginEditStarted = true;
+                  return Promise.resolve();
+               };
+
+               ctrl.saveOptions(defaultCfg);
+               ctrl._onItemClick(event, {}, event.original);
+               assert.isTrue(beginEditStarted);
+               beginEditStarted = false;
+
+               ctrl.saveOptions(readOnlyCfg);
+               ctrl._onItemClick(event, {}, event.original);
+               assert.isFalse(beginEditStarted);
             });
          });
 
