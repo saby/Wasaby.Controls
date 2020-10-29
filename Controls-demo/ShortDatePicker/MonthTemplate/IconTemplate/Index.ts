@@ -5,7 +5,7 @@ class DemoControl extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     private _state: boolean = true;
     protected _startValue: Date = new Date(2020, 0);
-    protected _endValue: Date = new Date(2020, 0);
+    protected _endValue: Date = new Date(2021, 0);
     protected _periods: [Date[]] = [
         [new Date(2017, 0), new Date(2021, 0)]
     ];
