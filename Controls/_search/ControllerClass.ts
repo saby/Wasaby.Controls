@@ -26,7 +26,7 @@ export default class ControllerClass implements ISearchController {
       }
    }
 
-   reset(): Promise<RecordSet | Error> {
+   reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       const filter = {...this._options.sourceController.getFilter()};
       filter[this._options.searchParam] = this._searchValue = '';
 
@@ -40,7 +40,11 @@ export default class ControllerClass implements ISearchController {
          this._deleteRootFromFilter(filter);
       }
 
-      return this._updateFilterAndLoad(filter);
+      if (!dontLoad) {
+         return this._updateFilterAndLoad(filter);
+      }
+
+      return filter;
    }
 
    search(value: string): Promise<RecordSet | Error> {
@@ -80,7 +84,7 @@ export default class ControllerClass implements ISearchController {
             if (options.searchValue) {
                this.search(options.searchValue).then();
             } else {
-               this.reset().then();
+               this.reset();
             }
          }
       }
