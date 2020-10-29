@@ -11,7 +11,7 @@ import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from '../_grid/interface/IColumn';
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/grid/Column';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
