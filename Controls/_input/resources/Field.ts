@@ -407,6 +407,10 @@ class Field<Value, ModelOptions>
      * END OF HANDLERS SECTION
      */
 
+    protected _setCursorPosition(): void {
+        console.log("hello");
+    }
+
     setValue(value: string): boolean {
         const field: HTMLInputElement = this._getField();
 

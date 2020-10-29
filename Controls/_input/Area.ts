@@ -6,6 +6,7 @@ import {descriptor} from 'Types/entity';
 import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
+import {ISelection} from 'Controls/_input/interface/ISelection';
 import * as Text from 'Controls/_input/Text';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
@@ -285,6 +286,19 @@ export default class Area extends Text<IAreaOptions> {
          */
         if (detection.isMacOSDesktop || detection.chrome) {
             this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
+        }
+    }
+
+    setCursorPosition(position: string): void {
+        const input = this._children.input;
+
+        if (position === 'start') {
+            input._children.input.selectionStart = 0;
+            input._children.input.selectionEnd = 0;
+        } else if (position === 'end') {
+            const textLength = this._options.value.length;
+            input._children.input.selectionStart = textLength + 1;
+            input._children.input.selectionEnd = textLength + 1;
         }
     }
 
