@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/End/default/End';
+import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/End/Default/End';
 import {Memory} from 'Types/source';
 import {generateData} from '../../../../DemoHelpers/DataCatalog';
 
