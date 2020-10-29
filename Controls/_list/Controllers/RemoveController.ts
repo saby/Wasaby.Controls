@@ -1,12 +1,26 @@
 import {ICrud, ICrudPlus, SbisService} from 'Types/source';
 import { Record } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
-import { Confirmation } from 'Controls/popup';
+import {Confirmation, IBasePopupOptions} from 'Controls/popup';
 import { Logger } from 'UI/Utils';
 import * as rk from 'i18n!*';
 
 // @todo https://online.sbis.ru/opendoc.html?guid=2f35304f-4a67-45f4-a4f0-0c928890a6fc
 type TSource = SbisService|ICrudPlus;
+
+/**
+ * Интерфейс опций контроллера
+ * @interface Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
+ * @public
+ * @author Аверкиев П.А.
+ */
+export interface IRemoveControllerOptions {
+    /**
+     * @name Controls/_list/interface/IRemoveControllerOptions#source
+     * @cfg {TSource} Источник данных, в котором производится удаление
+     */
+    source: TSource;
+}
 
 /**
  * Контроллер для удаления элементов списка в dataSource.
@@ -18,17 +32,16 @@ type TSource = SbisService|ICrudPlus;
 export class RemoveController {
     private _source: TSource;
 
-    constructor(source: ICrud) {
-        this.updateOptions(source);
+    constructor(options: IRemoveControllerOptions) {
+        this.updateOptions(options);
     }
 
     /**
      * Обновляет поля контроллера
      * @function Controls/_list/Controllers/RemoveController#updateOptions
-     * @param {Types/source:ICrud} source источник данных
      */
-    updateOptions(source: ICrud): void {
-        this._source = source;
+    updateOptions(options: IRemoveControllerOptions): void {
+        this._source = options.source;
     }
 
     /**
