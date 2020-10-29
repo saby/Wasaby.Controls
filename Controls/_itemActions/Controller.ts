@@ -335,14 +335,6 @@ export class Controller {
     }
 
     /**
-     * Устанавливает текущее сосяние анимации в модель
-     */
-    startSwipeCloseAnimation(): void {
-        const swipeItem = this.getSwipeItem();
-        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
-    }
-
-    /**
      * Устанавливает текущее состояние анимации в модель
      */
     startSwipeCloseAnimation(): void {
