@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('tmpl!Controls/_lookupPopup/Controller');
+import template = require('wml!Controls/_lookupPopup/Controller');
 import Utils = require('Types/util');
 import SelectorContext = require('Controls/_lookupPopup/__ControllerContext');
 import collection = require('Types/collection');
@@ -8,6 +8,9 @@ import chain = require('Types/chain');
 import {Model} from 'Types/entity';
 import {List, RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import { IFormOperation } from 'Controls/interface';
+import * as Deferred from 'Core/Deferred';
+import {RegisterClass} from "Controls/event";
 
 var _private = {
    prepareItems: function(items) {
@@ -94,14 +97,33 @@ var Controller = Control.extend({
    _template: template,
    _selectedItems: null,
    _selectionLoadDef: null,
+   _formOperationsStorage: null,
+   _selectCompleteRegister: null,
 
    _beforeMount: function(options) {
       this._selectedItems = _private.prepareItems(options.selectedItems);
+      this._formOperationsStorage = [];
+      this._selectCompleteRegister = new RegisterClass({register: 'selectComplete'});
    },
 
    _beforeUpdate: function(newOptions) {
       if (this._options.selectedItems !== newOptions.selectedItems) {
          this._selectedItems = _private.prepareItems(newOptions.selectedItems);
+      }
+   },
+
+   _registerHandler(event, registerType, component, callback, config): void {
+      this._selectCompleteRegister.register(event, registerType, component, callback, config);
+   },
+
+   _unregisterHandler(event, registerType, component, config): void {
+      this._selectCompleteRegister.unregister(event, component, config);
+   },
+
+   _beforeUnmount(): void {
+      if (this._selectCompleteRegister) {
+         this._selectCompleteRegister.destroy();
+         this._selectCompleteRegister = null;
       }
    },
 
@@ -111,31 +133,52 @@ var Controller = Control.extend({
          this._notify('close', [], {bubbling: true});
       };
 
-      this._children.selectComplete.start();
+      this._startFormOperations().then(() => {
+         this._selectCompleteRegister.start();
 
-      if (this._selectionLoadDef) {
-         this._selectionLoadDef.done().getResult().addCallback((result) => {
-            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
-            // необходимо уйти от опции selectionLoadMode и вынести загрузку
-            // выбранный записей в отдельный слой.
-            // Результат контроллера должен быть однозначный (только фильтры)
-            if (this._options.selectionLoadMode) {
-               if (multiSelect === false) {
-                  // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
-                  // то очистим список выбранных элементов и возьмем только запись из этого справочника
-                  this._selectedItems.clear();
+         if (this._selectionLoadDef) {
+            this._selectionLoadDef.done().getResult().addCallback((result) => {
+               // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f
+               // необходимо уйти от опции selectionLoadMode и вынести загрузку
+               // выбранный записей в отдельный слой.
+               // Результат контроллера должен быть однозначный (только фильтры)
+               if (this._options.selectionLoadMode) {
+                  if (multiSelect === false) {
+                     // toDO !KONGO Если выбрали элемент из справочника в режиме единичного выбора,
+                     // то очистим список выбранных элементов и возьмем только запись из этого справочника
+                     this._selectedItems.clear();
+                  }
+                  _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
+                  selectCallback(this._selectedItems);
+               } else {
+                  selectCallback(result);
                }
-               _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
-               selectCallback(this._selectedItems);
-            } else {
-               selectCallback(result);
+               this._selectionLoadDef = null;
+               return result;
+            });
+         } else {
+            selectCallback(this._selectedItems);
+         }
+      });
+   },
+
+   _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
+      this._formOperationsStorage.push(operation);
+   },
+
+   _startFormOperations(): Promise<unknown> {
+      const resultPromises = [];
+
+      this._formOperationsStorage.forEach((operation: IFormOperation) => {
+         if (!operation.isDestroyed()) {
+            const result = operation.save();
+            if (result instanceof Promise || result instanceof Deferred) {
+               resultPromises.push(result);
             }
-            this._selectionLoadDef = null;
-            return result;
-         });
-      } else {
-         selectCallback(this._selectedItems);
-      }
+         }
+      });
+
+      return Promise.all(resultPromises);
    },
 
    _selectionLoad: function(event, deferred) {
