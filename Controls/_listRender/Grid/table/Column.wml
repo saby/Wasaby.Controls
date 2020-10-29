@@ -2,7 +2,7 @@
    attr:class="{{ column.getCellClasses(highlightOnHover) }}"
    attr:style="{{ column.getCellStyles() }}">
    <ws:if data="{{ column.shouldDisplayMarker() }}">
-      <div attr:class="{{ column.getMarkerClasses() }} controls-ListView__itemV_marker_{{((markerClassName || 'default') === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}}"></div>
+      <div attr:class="{{ column.getMarkerClasses(markerClassName || 'default') }}"></div>
    </ws:if>
    <!-- valign, halign -->
    <ws:if data="{{ column.getTemplate() }}">

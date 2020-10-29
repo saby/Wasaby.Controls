@@ -78,7 +78,7 @@
    <!-- Маркер, не смотрим на него, если выводим фейковую стики ячейку для лесенки -->
    <ws:if data="{{ !isLadderHeader }}">
       <div if="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}"
-           class="{{itemData.getMarkerClasses()}} controls-ListView__itemV_marker_{{((markerClassName || 'default') === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}}"></div>
+           class="{{itemData.getMarkerClasses(markerClassName || 'default')}}"></div>
 
       <div if="{{!!itemData.dragTargetNode}}"
            class="controls-TreeGridView__dragTargetNode_theme-{{itemData.theme}}
