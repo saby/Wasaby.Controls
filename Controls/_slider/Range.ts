@@ -93,6 +93,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeMount(options: ISliderRangeOptions): void {
+      super._beforeMount(options);
       this._checkOptions(options);
       this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
           options.scaleLabelFormatter);
@@ -106,6 +107,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeUpdate(options: ISliderRangeOptions): void {
+      super._beforeUpdate(options);
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
          this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep,

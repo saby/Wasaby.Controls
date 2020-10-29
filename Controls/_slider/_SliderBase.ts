@@ -14,8 +14,17 @@ class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
     private _hideTooltipTimerId: number;
     protected _tooltipValue: string | null = null;
+    protected _viewMode: string = '';
     protected _value: number | null = null;
     protected _isDrag: boolean = false;
+
+    protected _beforeMount(options: ISliderBaseOptions): void {
+        this._viewMode = this._getViewMode(options.viewMode);
+    }
+
+    protected _beforeUpdate(newOptions: ISliderBaseOptions): void {
+        this._viewMode = this._getViewMode(newOptions.viewMode);
+    }
 
     _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
         const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(event) :
@@ -25,6 +34,10 @@ class SliderBase extends Control<ISliderBaseOptions> {
             Utils.getRatio(target, box.top + window.pageYOffset, box.height) :
             Utils.getRatio(target, box.left + window.pageXOffset, box.width);
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
+    }
+
+    _getViewMode(viewMode: string): string {
+        return viewMode === 'default' ? '' : '_' + viewMode;
     }
 
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
@@ -71,6 +84,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
     static getDefaultOptions() {
         return {
             size: 'm',
+            viewMode: 'default',
             direction: 'horizontal',
             borderVisible: false,
             tooltipVisible: true,
@@ -97,6 +111,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
             minValue: EntityDescriptor(Number).required,
             maxValue: EntityDescriptor(Number).required,
             scaleStep: EntityDescriptor(Number),
+            viewMode: EntityDescriptor(String),
             precision: EntityDescriptor(Number)
         };
     }
