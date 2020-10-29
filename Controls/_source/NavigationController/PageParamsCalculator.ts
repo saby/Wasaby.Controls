@@ -65,13 +65,14 @@ class PageParamsCalculator implements IParamsCalculator {
                     }
 
                     // если мы загрузили 0 страницу размера 30 , то мы сейчас на 2 странице размера 10
-                    let newCurrentPage = (config.page + 1) * pageSizeCoef - 1
-
+                    let newCurrentPage = (config.page + 1) * pageSizeCoef - 1;
+                    let newPrevPage = config.page * pageSizeCoef - 1;
                     if (typeof metaMore === 'number') {
                         const maxPage = Math.ceil(metaMore / storeParams.pageSize) - 1;
                         newCurrentPage = Math.min(maxPage, newCurrentPage);
                     }
                     store.setCurrentPage(newCurrentPage);
+                    store.setPrevPage(newPrevPage);
                 }
             }
         }

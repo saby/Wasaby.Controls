@@ -1085,6 +1085,8 @@ const _private = {
                  */
                 if (!self.__error) {
                     if (direction === 'up') {
+                        self._currentPage = 1;
+                        self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                         self._notify('doScroll', ['top'], { bubbling: true });
                     } else {
                         _private.jumpToEnd(self);
@@ -1094,11 +1096,13 @@ const _private = {
         } else if (direction === 'up') {
             self._notify('doScroll', ['top'], { bubbling: true });
             if (self._scrollPagingCtr) {
+                self._currentPage = 1;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         } else {
             _private.jumpToEnd(self);
             if (self._scrollPagingCtr) {
+                self._currentPage = self._pagingCfg.pagesCount;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
             }
         }
@@ -1257,6 +1261,15 @@ const _private = {
             totalElementsCount: elementsCount,
             loadedElementsCount: self._listViewModel.getStopIndex() - self._listViewModel.getStartIndex(),
             pagingCfgTrigger: (cfg) => {
+                if (cfg?.selectedPage !== self._currentPage) {
+                    if (self._selectedPageHasChanged) {
+                        self.__selectedPageChanged(null, self._currentPage);
+                    } else {
+                        self._currentPage = cfg.selectedPage;
+                    }
+                } else {
+                    self._selectedPageHasChanged = false;
+                }
                 if (!isEqual(self._pagingCfg, cfg)) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
@@ -1264,6 +1277,9 @@ const _private = {
             }
         };
         self._scrollPagingCtr = new ScrollPagingController(scrollPagingConfig, hasMoreData);
+        if (scrollPagingConfig.pagingMode === 'numbers') {
+            self._scrollController.setSegmentSize(self._scrollPagingCtr.getItemsCountOnPage());
+        }
         return Promise.resolve(self._scrollPagingCtr);
     },
 
@@ -2354,6 +2370,11 @@ const _private = {
             return;
         }
         if (self._isMounted) {
+            _private.doAfterUpdate(self, () => {
+                if (self._applySelectedPage) {
+                    self._applySelectedPage();
+                }
+            });
             if (result.placeholders) {
                 self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
 
@@ -2579,6 +2600,7 @@ const _private = {
                 itemActionsPosition: options.itemActionsPosition,
                 style: options.hoverBackgroundStyle || options.style,
                 theme: options.theme,
+                actionMode: options.actionMode,
                 actionAlignment: options.actionAlignment,
                 actionCaptionPosition: options.actionCaptionPosition,
                 itemActionsClass: options.itemActionsClass,
@@ -2965,6 +2987,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _pagingNavigation: false,
     _pagingNavigationVisible: false,
     _pagingLabelData: null,
+    _applySelectedPage: null,
 
     _blockItemActionsByScroll: false,
 
@@ -3362,7 +3385,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                _private.doAfterUpdate(this, () => {
+                    _private.doAfterUpdate(this, () => {if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                        return;
+                    }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
                 });
             }
@@ -4092,6 +4117,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
     handleTriggerVisible(direction: IDirection): void {
         // Вызываем сдвиг диапазона в направлении видимого триггера
+        this._shiftToDirection(direction);
+    },
+    _shiftToDirection(direction): void {
         this._scrollController.shiftToDirection(direction).then((result) => {
             if (result) {
                 _private.handleScrollControllerResult(this, result);
@@ -4172,6 +4200,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 down: _private.hasMoreData(this, this._sourceController, 'down')
             };
             if (this._scrollPagingCtr) {
+                this._currentPage = this._pagingCfg.pagesCount;
                 this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
             }
         }
@@ -4211,16 +4240,63 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 break;
         }
     },
-    __selectedPageChanged(e, page) {
-        this._currentPage = page;
+    _canScroll(scrollTop: number, direction): boolean {
+        const placeholder = this._scrollController?.getPlaceholders()?.top || 0;
+        return !(direction === 'down' && scrollTop - placeholder + this._viewportSize > this._viewSize ||
+            direction === 'up' && scrollTop - placeholder < 0)
+    },
+    _hasEnoughData(page: number): boolean {
+        const neededItemsCount = this._scrollPagingCtr.getNeededItemsCountForPage(page);
+        const itemsCount = this._listViewModel.getCount();
+        return neededItemsCount <= itemsCount;
+    },
+    __selectedPageChanged(e, page: number) {
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        const direction = this._currentPage < page ? 'down' : 'up';
+        this._applySelectedPage = () => {
+            this._currentPage = page;
+            if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                return;
+            }
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            if (!this._canScroll(scrollTop, direction)) {
+                this._shiftToDirection(direction);
+            } else {
+                this._applySelectedPage = null;
+            
+                this._notify('doScroll', [scrollTop], { bubbling: true });
+            }
+        }
+        if (this._currentPage === page) {
+            this._applySelectedPage();
+            return;
+        } else {
+            this._selectedPageHasChanged = true;
+        }
+
+        //При выборе первой или последней страницы крутим в край.
         if (page === 1) {
             _private.scrollToEdge(this, 'up');
+            this._currentPage = page;
         } else if (page === this._pagingCfg.pagesCount) {
             _private.scrollToEdge(this, 'down');
-        }
-        const scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            this._currentPage = page;
+        } else {
 
-        this._notify('doScroll', [scrollTop], { bubbling: true });
+            // При выборе некрайней страницы, проверяем, 
+            // можно ли проскроллить к ней, по отрисованным записям
+            if (this._canScroll(scrollTop, direction)) {
+                this._applySelectedPage();
+            } else {
+                // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
+                // или нужно подгружать еще.
+                if (this._hasEnoughData(page)) {
+                    this._shiftToDirection(direction);
+                } else {
+                    this.loadMore(direction);
+                }
+            }
+        }
     },
 
     __needShowEmptyTemplate(emptyTemplate: Function | null, listViewModel: ListViewModel): boolean {
@@ -5169,6 +5245,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!this._options.itemActions && item.isSwiped()) {
             this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
         }
+    },
+
+    _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
+        event.stopImmediatePropagation();
+        const itemActionsController = _private.getItemActionsController(this);
+        itemActionsController.updateItemActions(itemKey, itemWidth);
+        this._listViewModel.nextModelVersion(true);
     },
 
     /**

@@ -5,6 +5,7 @@ export interface ISliderOptions {
     precision: number;
     tooltipFormatter?: Function;
     size?: string;
+    direction?: string;
     minValue: number;
     maxValue: number;
     scaleLabelFormatter?: Function;
