@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
-import {SearchResolver} from 'Controls/search';
+import SearchResolver from 'Controls/_search/SearchResolver';
 import {ISearchInputContainerOptions} from '../interface';
 import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
