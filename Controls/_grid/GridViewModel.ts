@@ -545,7 +545,7 @@ var
                 startIndex,
                 stopIndex,
                 display: self.getDisplay(),
-                columns: self._options.columns,
+                columns: self._columns,
                 stickyColumn: self._options.stickyColumn
             });
             return newLadder;
@@ -587,7 +587,7 @@ var
         hasStickyColumn(self): boolean {
             return !!getStickyColumn({
                 stickyColumn: self._options.stickyColumn,
-                columns: self._options.columns
+                columns: self._columns
             });
         },
 
@@ -957,7 +957,7 @@ var
          */
         stickyLadderCellsCount(): number {
             return stickyLadderCellsCount(
-                this._options.columns,
+                this._columns,
                 this._options.stickyColumn,
                 this.getDragItemData());
         },
@@ -1598,7 +1598,7 @@ var
 
             stickyColumn = getStickyColumn({
                 stickyColumn: this._options.stickyColumn,
-                columns: this._options.columns
+                columns: this._columns
             });
 
             current.showEditArrow = this._options.showEditArrow;
@@ -1649,7 +1649,7 @@ var
                 current.index !== -1 &&
                 self._ladder.stickyLadder[current.index]) {
 
-                    let stickyProperties = self._options.columns[0]?.stickyProperty;
+                    let stickyProperties = self._columns[0]?.stickyProperty;
                     if (stickyProperties && !(stickyProperties instanceof Array)) {
                         stickyProperties = [stickyProperties];
                     }
@@ -1894,7 +1894,7 @@ var
                 getContentStyles(containerSize: number): string;
                 colspan: number;
             } & IPreparedColumn>({
-                gridColumns: this._options.columns,
+                gridColumns: this._columns,
                 colspanColumns: footerColumns,
                 hasMultiSelect
             });
@@ -1918,7 +1918,7 @@ var
                         classes += ` controls-GridView__footer__cell__paddingLeft_${itemPadding.left}_theme-${theme}`;
                     } else {
                         const dataColumnIndex = column.startColumn - +hasMultiSelect - 1;
-                        const leftCellPadding = this._options.columns[dataColumnIndex].cellPadding?.left?.toLowerCase() || 'default';
+                        const leftCellPadding = this._columns[dataColumnIndex].cellPadding?.left?.toLowerCase() || 'default';
                         classes += ` controls-GridView__footer__cell__cellPaddingLeft_${leftCellPadding}_theme-${theme}`;
                     }
                 }
@@ -1927,7 +1927,7 @@ var
                         classes += ` controls-GridView__footer__cell__paddingRight_${itemPadding.right}_theme-${theme}`;
                     } else {
                         const dataColumnIndex = column.endColumn - +hasMultiSelect - 2;
-                        const rightCellPadding = this._options.columns[dataColumnIndex].cellPadding?.right?.toLowerCase() || 'default';
+                        const rightCellPadding = this._columns[dataColumnIndex].cellPadding?.right?.toLowerCase() || 'default';
                         classes += ` controls-GridView__footer__cell__cellPaddingRight_${rightCellPadding}_theme-${theme}`;
                     }
                 }
