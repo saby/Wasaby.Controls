@@ -299,6 +299,12 @@ export default class CollectionItem<T> extends mixin<
         );
     }
 
+    getMarkerClasses(theme: string, style: string, markerPosition: 'left' | 'right' = 'left'): string {
+        return `controls-ListView__itemV_marker
+                controls-ListView__itemV_marker_${style}_theme-${theme} controls-ListView__itemV_marker_theme-${theme}
+                controls-ListView__itemV_marker-${markerPosition}`;
+    }
+
     increaseCounter(name: string): number {
         if (typeof this._counters[name] === 'undefined') {
             this._counters[name] = 0;

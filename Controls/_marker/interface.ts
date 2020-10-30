@@ -66,4 +66,20 @@ export interface IMarkerListOptions {
     * @demo Controls-demo/List/List/BasePG
     */
    markedKey?: CrudEntityKey;
+
+   /**
+    * @typedef {String} MarkerPosition
+    * @variation left Расположение маркера слева
+    * @variation right Расположение маркера справа
+    */
+   /**
+    * Опция сделана для master. Опция непубличная, т.к. в стандарт её вносить пока не будут
+    * https://online.sbis.ru/opendoc.html?guid=b0bc13cd-986e-44fc-ab6a-93bcd0465ba1
+    *
+    * @name Controls/_marker/interface/IMarkerListOptions#markerPosition
+    * @cfg {MarkerPosition} Расположение маркера.
+    * @default left
+    * @private
+    */
+   markerPosition?: 'left' | 'right';
 }
