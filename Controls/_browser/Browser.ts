@@ -107,6 +107,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                            context?: typeof ContextOptions,
                            receivedState?: IReceivedState): void | Promise<IReceivedState | Error | void> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
+        this._dataLoadCallback = this._dataLoadCallback.bind(this);
+        this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
@@ -150,7 +152,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
                 this._setFilterItems(filterItems as IFilterItem[]);
 
-                return this._loadItems(options, controllerState).then((items) => {
+                return this._loadItems(options, this._getSourceController(options).getState()).then((items) => {
                     this._defineShadowVisibility(items);
                     return {
                         filterItems,
@@ -167,7 +169,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
                     return error;
                 });
-            });
+            }, (error) => error);
         }
     }
 
@@ -240,19 +242,26 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
                    this._loading = false;
                    return items;
-               })
-               .catch((error) => error);
+               }, (error) => error)
+               .then((result) => {
+                   this._updateSearchController(newOptions);
+
+                   return result;
+               });
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+            methodResult = this._updateSearchController(newOptions);
         }
 
-        this._getSearchController().then((searchController) => {
+        return methodResult;
+    }
+
+    private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
+        return this._getSearchController().then((searchController) => {
             searchController.update(
                this._getSearchControllerOptions(newOptions)
             );
         });
-
-        return methodResult;
     }
 
     private _afterSourceLoad(sourceController: SourceController, options: IBrowserOptions): void {
@@ -301,19 +310,19 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _loadItems(options: IBrowserOptions, controllerState: IControllerState): Promise<void | RecordSet | Error> {
-        return new Promise((resolve) => {
-            if (options.source) {
-                this._getSourceController(options).load().then((items) => {
-                    if (items instanceof RecordSet) {
-                        this._setItemsAndUpdateContext(items, options);
-                    }
-                    resolve(items);
-                });
-            } else {
-                this._updateContext(controllerState);
-                resolve();
-            }
-        });
+        let result;
+
+        if (options.source) {
+            result = this._getSourceController(options).load().then((loadResult) => {
+                this._setItemsAndUpdateContext(loadResult as unknown as RecordSet, options);
+                return loadResult;
+            });
+        } else {
+            this._updateContext(controllerState);
+            result = Promise.resolve();
+        }
+
+        return result;
     }
 
     private _setItemsAndUpdateContext(items: RecordSet, options: IBrowserOptions): void {
@@ -618,8 +627,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (this._options.dataLoadCallback instanceof Function) {
             this._options.dataLoadCallback(recordSet);
         }
-        // TODO: direction???
-        this._processResultData(recordSet, undefined);
+        this._dataLoadCallback(recordSet);
 
         this._itemsChanged(null, recordSet);
 
@@ -677,7 +685,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    _processResultData(data: RecordSet, direction: Direction): void {
+    private _dataLoadCallback(data: RecordSet, direction?: Direction): void {
         this._filterController.handleDataLoad(data);
         this._handleDataLoad(data);
 
@@ -687,7 +695,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _handleError(error: Error | object): void {
-        this._filterController.handleDataError();
         if (error instanceof Error) {
             if (this._options.dataLoadErrback) {
                 this._options.dataLoadErrback(Error);
@@ -696,6 +703,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._notify('dataError', [error]);
             this._errorRegister.start(error);
         }
+    }
+
+    private _dataLoadErrback(error: Error): void {
+        this._filterController.handleDataError();
+
+        this._handleError(error);
     }
 
     _afterSetItemsOnReloadCallback(): void {
