@@ -1643,7 +1643,7 @@ var
                 }
             };
 
-            current.getMarkerClasses = (markerClassName) => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
+            current.getMarkerClasses = (markerClassName = 'default') => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}
