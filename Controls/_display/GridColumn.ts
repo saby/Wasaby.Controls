@@ -10,6 +10,8 @@ import {
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from '../_grid/interface/IColumn';
+import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
+import {IItemPadding} from '../_list/interface/IList';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
@@ -253,10 +255,18 @@ export default class GridColumn<T> extends mixin<
         return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
     }
 
-    getMarkerClasses(theme: string, style: string = 'default'): string {
+    getMarkerClasses(theme: string, style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {}): string {
+        let markerClass = 'controls-ListView__itemV_marker_';
+        if (markerClassName === 'default') {
+            markerClass += 'default';
+        } else {
+            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
+        }
         return `
             controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
             controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
+            ${markerClass}
         `;
     }
 

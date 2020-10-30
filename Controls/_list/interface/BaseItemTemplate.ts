@@ -7,6 +7,22 @@
 export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
+ * @typedef {String} TMarkerClassName
+ * @variant default Маркер по высоте растягивается на весь контейнер записи.
+ * @variant image-l Используется для размещения маркера рядом с изображением размера "l".
+ * @variant image-m Используется для размещения маркера рядом с изображением размера "m".
+ * @variant image-s Используется для размещения маркера рядом с изображением размера "s".
+ * @variant image-xs Используется для размещения маркера рядом с изображением размера "xs".
+ * @variant text-2xl Используется для размещения маркера рядом с текстом размера "2xl".
+ * @variant text-xl Используется для размещения маркера рядом с текстом размера "xl".
+ * @variant text-l Используется для размещения маркера рядом с текстом размера "l".
+ * @variant text-m Используется для размещения маркера рядом с текстом размера "m".
+ * @variant text-xs Используется для размещения маркера рядом с текстом размера "xs".
+ */
+type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-xl' |
+    'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
+
+/**
  * Интерфейс для шаблона отображения элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
  * @interface Controls/list:BaseItemTemplate
  * @author Авраменко А.С.
@@ -71,4 +87,10 @@ export default interface IBaseItemTemplateOptions {
     * @cfg {backgroundColorStyle} Стиль фона элемента.
     */
    backgroundColorStyle?: string;
+
+   /**
+    * @name Controls/interface/IItemTemplate#markerClassName
+    * @cfg {TMarkerClassName}[markerClassName=default] Опция управляет размером маркера.
+    */
+   markerClassName?: TMarkerClassName;
 }

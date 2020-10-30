@@ -4077,7 +4077,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let itemsUpdated = false;
             if (!this._modelRecreated) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            } 
+            }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -4290,7 +4290,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._shiftToDirection(direction);
             } else {
                 this._applySelectedPage = null;
-            
+
                 this._notify('doScroll', [scrollTop], { bubbling: true });
             }
         }
@@ -4310,7 +4310,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._currentPage = page;
         } else {
 
-            // При выборе некрайней страницы, проверяем, 
+            // При выборе некрайней страницы, проверяем,
             // можно ли проскроллить к ней, по отрисованным записям
             if (this._canScroll(scrollTop, direction)) {
                 this._applySelectedPage();

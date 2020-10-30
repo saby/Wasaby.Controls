@@ -228,12 +228,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
 
-        itemsModelCurrent.getMarkerClasses = (): string => {
+        itemsModelCurrent.getMarkerClasses = (markerClassName): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker
                     controls-ListView__itemV_marker_${style}_theme-${theme}
                     controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${theme}
-                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${theme}`;
+                    controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${theme}x
+                    controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemsModelCurrent.itemPadding.top || 'l') + '_' + markerClassName)}`;
         };
 
         if (itemsModelCurrent.isGroup) {
