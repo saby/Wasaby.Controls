@@ -4987,11 +4987,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // region remove
 
     removeItems(selection: ISelectionObject): Promise<void> {
-        return _private.getRemoveController(this).remove(selection);
+        return _private.getRemoveController(this).remove(selection, this._options.filter);
     },
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
-        return _private.getRemoveController(this).removeWithConfirmation(selection);
+        return _private.getRemoveController(this).removeWithConfirmation(selection, this._options.filter);
     },
 
     // endregion remove

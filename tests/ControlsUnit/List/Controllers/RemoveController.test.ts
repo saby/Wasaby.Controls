@@ -1,14 +1,16 @@
 import {assert} from 'chai';
-import {stub, assert as sinonAssert} from 'sinon';
+import {spy, stub, assert as sinonAssert} from 'sinon';
 
 import {Logger} from 'UI/Utils';
 import {Control} from 'UI/Base';
 import * as clone from 'Core/core-clone';
-import {CrudEntityKey, DataSet, Memory, SbisService} from 'Types/source';
+import {Memory} from 'Types/source';
 import {RemoveController} from 'Controls/list';
 import {ISelectionObject} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
-import {adapter, Record} from 'Types/entity';
+import {EntityKey} from "Types/_source/ICrud";
+import Query from "Types/_source/Query";
+import DataSet from "Types/_source/DataSet";
 
 const data = [
     {
@@ -42,24 +44,6 @@ const data = [
         'folder@': null
     }
 ];
-
-const sbisServiceSource: Partial<SbisService> = {
-    getAdapter(): any {
-        return new adapter.Json();
-    },
-    getBinding(): any {
-        return {
-            move: 'move',
-            list: 'list'
-        }
-    },
-    destroy(keys: CrudEntityKey | CrudEntityKey[], meta?: object): Promise<void> {
-        return Promise.resolve();
-    },
-    call(command: string, data?: object): Promise<DataSet> {
-        return Promise.resolve(undefined);
-    }
-}
 
 function resolveRemoveWithConfirmation(controller: RemoveController, selectionObject: ISelectionObject) {
     return new Promise((resolve) => {
@@ -211,10 +195,20 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
+        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({ rawData: [1, 5]})));
+        const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+            assert.equal(keys[1], 5);
+            return Promise.resolve();
+        })
+
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
+            sinonAssert.called(stubQuery);
+            sinonAssert.called(stubDestroy);
+            stubQuery.restore();
+            stubDestroy.restore();
         });
     });
 
@@ -224,6 +218,8 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
+        const spyQuery = spy(source, 'query');
+        const spyDestroy = spy(source, 'destroy')
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
@@ -232,6 +228,10 @@ describe('Controls/list_clean/RemoveController', () => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
+            sinonAssert.called(spyQuery);
+            sinonAssert.called(spyDestroy);
+            spyQuery.restore();
+            spyDestroy.restore();
             stubConfirmation.restore()
         });
     });
@@ -241,11 +241,20 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [],
             excluded: [3]
         };
+        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({ rawData: [1, 2, 5]})));
+        const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
+            assert.equal(keys[1], 2);
+            return Promise.resolve();
+        })
         controller = new RemoveController({source});
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
+            sinonAssert.called(stubQuery);
+            sinonAssert.called(stubDestroy);
+            stubQuery.restore();
+            stubDestroy.restore();
         });
     });
 
@@ -255,6 +264,8 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
+        const spyQuery = spy(source, 'query');
+        const spyDestroy = spy(source, 'destroy')
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
@@ -263,60 +274,11 @@ describe('Controls/list_clean/RemoveController', () => {
 
             // Ожидаем, что удаление пройдёт успешно
             assert.isTrue(result);
+            sinonAssert.called(spyQuery);
+            sinonAssert.called(spyDestroy);
+            spyQuery.restore();
+            spyDestroy.restore();
             stubConfirmation.restore()
-        });
-    });
-
-    describe('SbisService', () => {
-        beforeEach(() => {
-            controller = new RemoveController({source: (sbisServiceSource as SbisService)});
-        });
-
-        it('remove() should remove with empty selection', () => {
-            const correctSelection = {
-                selected: [],
-                excluded: [3]
-            };
-            const stubCall = stub(sbisServiceSource, 'call')
-                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
-                    assert.exists(data.filter, 'filter should exist');
-                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
-                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
-                    return Promise.resolve({} as DataSet);
-                });
-            return resolveRemove(controller, correctSelection).then((result: boolean) => {
-
-                // Ожидаем, что удаление пройдёт успешно
-                sinonAssert.called(stubCall);
-                assert.isTrue(result);
-                stubCall.restore();
-            });
-        });
-
-        it('removeWithConfirmation() should remove with empty selection', () => {
-            const correctSelection = {
-                selected: [],
-                excluded: [3]
-            };
-            const stubCall = stub(sbisServiceSource, 'call')
-                .callsFake((command: string, data?: { method: string, filter: Record, folder_id: number }) => {
-                    assert.exists(data.filter, 'filter should exist');
-                    assert.deepEqual(data.filter.get('selection').get('marked'), correctSelection.selected.map((key) => `${key}`));
-                    assert.deepEqual(data.filter.get('selection').get('excluded'), correctSelection.excluded.map((key) => `${key}`));
-                    return Promise.resolve({} as DataSet);
-                });
-            const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
-            return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
-
-                // Ожидаем, что пользователь увидит окно подтверждения
-                sinonAssert.called(stubConfirmation);
-
-                // Ожидаем, что удаление пройдёт успешно
-                sinonAssert.called(stubCall);
-                assert.isTrue(result);
-                stubCall.restore();
-                stubConfirmation.restore()
-            });
         });
     });
 });
