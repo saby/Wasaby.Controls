@@ -195,7 +195,10 @@ describe('Controls/list_clean/RemoveController', () => {
             excluded: [3]
         };
         controller = new RemoveController({source});
-        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({ rawData: [1, 5]})));
+        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
+            keyProperty: 'id',
+            rawData: [{id: 1}, {id: 5}]
+        })));
         const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 5);
             return Promise.resolve();
@@ -241,7 +244,10 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [],
             excluded: [3]
         };
-        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({ rawData: [1, 2, 5]})));
+        const stubQuery = stub(source, 'query').callsFake((query?: Query) => Promise.resolve(new DataSet({
+            keyProperty: 'id',
+            rawData: [{id: 1}, {id: 2}, {id: 5}]
+        })));
         const stubDestroy = stub(source, 'destroy').callsFake((keys: EntityKey | EntityKey[], meta?: object) => {
             assert.equal(keys[1], 2);
             return Promise.resolve();

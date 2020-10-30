@@ -77,7 +77,9 @@ export class RemoveController {
             Logger.error(error);
             return Promise.reject(new Error(error));
         }
-        // TODO не можем избавиться от getItemsBySelection по крайней мере до тех пор, пока не будет везде внедрён
+
+        // TODO
+        //  не можем избавиться от getItemsBySelection по крайней мере до тех пор, пока не будет везде внедрён
         //  DeleteSelected https://online.sbis.ru/opendoc.html?guid=9ddef508-29e2-4acf-ac76-7afe03509c4c
         return getItemsBySelection(selection, this._source, null, filter)
             .then((selection) => this._source.destroy(selection));
