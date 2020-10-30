@@ -87,7 +87,7 @@ export class RemoveController {
                     const callFilter = {
                         selection: operations.selectionToRecord(selection, sourceAdapter)
                     };
-                    source.call(source.getBinding().destroy, {
+                    source.call('DeleteSelected', {
                         method: source.getBinding().list,
                         filter: Record.fromObject(callFilter, sourceAdapter)
                     }).then(() => {
