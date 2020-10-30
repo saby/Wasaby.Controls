@@ -168,7 +168,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед началом {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования}.
+    * @event Происходит перед началом {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} по месту.
     * @name Controls/interface/IEditableList#beforeBeginEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {ItemEditOptions} options Параметры редактирования.
@@ -176,8 +176,8 @@ define('Controls/interface/IEditableList', [
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
-    *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
-    *     * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
+    *    * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
+    *    * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @returns {ItemEditResult}
     * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
     * @example
@@ -308,7 +308,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит после начала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления}.
+    * @event Происходит после начала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} по месту.
     * @name Controls/interface/IEditableList#afterBeginEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
@@ -543,6 +543,8 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Параметры редактирования.
     * @returns {Core/Deferred}
     * @remark
+    * Перед запуском редактирования по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
+    * 
     * Используйте этот метод в ситуациях, когда вы хотите начать редактирование из нестандартного места, например, из {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/ панели действий элемента}.
     * @example
     * В следующем примере показано, как начать редактирование элемента.
@@ -561,6 +563,8 @@ define('Controls/interface/IEditableList', [
     * @see beginAdd
     * @see commitEdit
     * @see cancelEdit
+    * @see beforeBeginEdit
+    * @see afterBeginEdit
     */
 
    /*
@@ -590,12 +594,13 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавление элемента по месту}.
+    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавление по месту}.
     * @function Controls/interface/IEditableList#beginAdd
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
-    * В процессе добавления элемента вызываются события {@link beforeBeginEdit} и {@link afterBeginEdit}.
+    * Перед запуском добавления по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
+    *  
     * Чтобы задать позицию добавления элемента, установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
