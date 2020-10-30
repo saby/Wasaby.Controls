@@ -377,6 +377,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         let widthValue = 0;
         for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
             heigthValue += children[childrenIndex].offsetHeight;
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginTop);
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginBottom) ;
+
         }
         newState.scrollHeight = heigthValue;
         if (newState.scrollHeight < newState.clientHeight) {
