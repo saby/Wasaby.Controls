@@ -102,7 +102,7 @@ export default class Container extends Control<IContainerOptions> {
       this._sourceController = context.dataOptions.sourceController;
 
       this._getSearchController({...options, ...context.dataOptions}).then((searchController) => {
-         this._setSearchValue(searchController.getSearchValue());
+         this._searchValue = searchController.getSearchValue();
       });
 
       if (options.root !== undefined) {
