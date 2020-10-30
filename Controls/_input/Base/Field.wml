@@ -17,6 +17,7 @@
             attr:spellcheck="{{options.spellCheck}}"
             attr:readOnly="{{readOnly || ''}}"
             attr:autocorrect="off"
+            attr:autocapitalize="off"
             attr:type="{{type}}"
             attr:inputmode="{{inputMode}}"
             attr:placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
