@@ -4,6 +4,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 import SearchResolver from './SearchResolver';
 import {ISearchInputContainerOptions} from './interface';
 import {default as Store} from 'Controls/Store';
+import {constants} from "Env/Env";
 
 export default class InputContainer extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
@@ -62,6 +63,12 @@ export default class InputContainer extends Control<ISearchInputContainerOptions
       if (this._value !== value) {
          this._value = value;
          this._searchResolverController.resolve(value);
+      }
+   }
+
+   protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
+      if (event.nativeEvent.which === constants.key.enter) {
+         event.stopPropagation();
       }
    }
 }

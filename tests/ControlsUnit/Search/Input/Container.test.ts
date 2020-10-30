@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {InputContainer} from 'Controls/search';
+import {InputContainer, SearchResolver} from 'Controls/search';
 import * as sinon from 'sinon';
 
 describe('Controls/_search/Input/Container', () => {
@@ -39,51 +39,42 @@ describe('Controls/_search/Input/Container', () => {
       assert.isTrue(stub.notCalled);
    });
 
-   // it('_keyDown', () => {
-   //    var cont = new searchMod.InputContainer();
-   //    let propagationStopped = false;
-   //    let event = {
-   //       stopPropagation: () => {
-   //          propagationStopped = true;
-   //       },
-   //       nativeEvent: {
-   //          which: 13 //enter
-   //       }
-   //    };
-   //
-   //    cont._keyDown(event);
-   //    assert.isTrue(propagationStopped);
-   // });
-
-   describe('_valueChanged', () => {
+   it('_keyDown', () => {
       const cont = new InputContainer({});
-      let notified = false;
-
-      const resolveStub = sandbox.stub(cont._searchResolverController, 'resolve');
-
-      cont._value = '';
-      cont._notify = (eventName, args) => {
-         if (eventName === 'search') {
-            notified = true;
+      let propagationStopped = false;
+      const event = {
+         stopPropagation: () => {
+            propagationStopped = true;
+         },
+         nativeEvent: {
+            which: 13 // enter
          }
       };
 
+      cont._keyDown(event);
+      assert.isTrue(propagationStopped);
+   });
+
+   describe('_valueChanged', () => {
+      const cont = new InputContainer({});
+      let called = false;
+      cont._searchResolverController = {resolve: (value) => {
+         called = true;
+      }};
+
       it('new value not equally old value', () => {
+         cont._value = '';
          cont._valueChanged(null, 'newValue');
 
          assert.equal(cont._value, 'newValue');
-         assert.isTrue(resolveStub.withArgs('').calledOnce);
-         assert.isTrue(notified);
-
-         resolveStub.reset();
+         assert.isTrue(called);
       });
 
       it('new value equally old value', () => {
-         notified = false;
+         called = false;
          cont._valueChanged(null, 'newValue');
 
-         assert.isTrue(resolveStub.notCalled);
-         assert.isFalse(notified);
+         assert.isFalse(called);
       });
    });
 });
