@@ -371,13 +371,24 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
+        const children = this._children.content.children;
+        let childrenIndex: number;
+        let heigthValue = 0;
+        let widthValue = 0;
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            heigthValue += children[childrenIndex].offsetHeight;
         }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
+        newState.scrollHeight = heigthValue;
+        if (newState.scrollHeight < newState.clientHeight) {
+            newState.scrollHeight = newState.clientHeight;
         }
-
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            widthValue += children[childrenIndex].offsetWidth;
+        }
+        newState.scrollWidth = widthValue;
+        if (newState.scrollWidth <  newState.clientWidth) {
+            newState.scrollWidth = newState.clientWidth;
+        }
         this._updateStateAndGenerateEvents(newState);
     }
 
@@ -526,10 +537,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _onRegisterNewListScrollComponent(component: any): void {
-        // Списку нужны события canScroll и cantScroll в момент инициализации до того,
-        // как у нас отработают обработчики и инициализируются состояние.
+        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
         if (!this._isStateInitialized) {
-            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+            return;
         }
         this._sendByListScrollRegistrarToComponent(
             component,
