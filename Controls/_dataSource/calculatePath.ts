@@ -23,14 +23,10 @@ function getPath(data: RecordSet|[]): Path {
     return breadCrumbs;
 }
 
-function isBackButtonNeeded(path: Path): boolean {
-    return path && path.length > 1;
-}
-
 function getBackButtonCaption(path: Path, displayProperty?: string): string {
     let caption = '';
 
-    if (isBackButtonNeeded(path) && displayProperty) {
+    if (path && path.length >= 1 && displayProperty) {
         caption = path[path.length - 1].get(displayProperty);
     }
 
@@ -40,7 +36,7 @@ function getBackButtonCaption(path: Path, displayProperty?: string): string {
 function getPathWithoutItemForBackButton(breadCrumbs: Path): Path {
     let breadCrumbsWithoutItemForBackButton = null;
 
-    if (isBackButtonNeeded(breadCrumbs)) {
+    if (breadCrumbs && breadCrumbs.length > 1) {
         breadCrumbsWithoutItemForBackButton = breadCrumbs.slice(0, breadCrumbs.length - 1);
     }
 

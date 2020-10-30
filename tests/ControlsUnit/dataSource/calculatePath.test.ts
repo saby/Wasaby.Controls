@@ -24,7 +24,7 @@ describe('Controls/dataSource/calculatePath', () => {
         const pathOptions = calculatePath(recordSet, 'caption');
         ok(pathOptions.path.length === 1);
         ok(!pathOptions.pathWithoutItemForBackButton);
-        ok(!pathOptions.backButtonCaption);
+        ok(pathOptions.backButtonCaption === 'folder 0');
     });
 
     it('two items in path', () => {
