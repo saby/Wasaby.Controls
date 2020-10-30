@@ -383,7 +383,6 @@ var _private = {
  * В случае использования {@link Controls/operations:Controller} для корректной обработки событий необходимо помещать Controls/list:Mover внутри Controls/operations:Controller.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FtreeGrid%2FMover%2FBase%2FIndex">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  *
@@ -391,8 +390,8 @@ var _private = {
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * @deprecated {@link Controls/list:Mover Mover} will be removed soon. Use {@link Controls/list:IMovableList IMovableList} interface instead
- *
+ * @deprecated Класс устарел и буден удалён. Используйте методы интерфейса {@link Controls/list:IMovableList}, который по умолчанию подключен в списки.
+ * @demo Controls-demo/treeGrid/Mover/Base/Index
  * @public
  * @author Авраменко А.С.
  */
