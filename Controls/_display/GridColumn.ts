@@ -259,7 +259,7 @@ export default class GridColumn<T> extends mixin<
 
     getMarkerClasses(theme: string, style: string = 'default', markerPosition: 'left' | 'right' = 'left'): string {
         return `
-            controls-ListView__itemV_marker-${markerPosition || 'left'}
+            controls-ListView__itemV_marker-${markerPosition}
             controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
             controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
         `;
