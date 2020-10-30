@@ -158,10 +158,11 @@ export default class Container extends Control<IContainerOptions> {
       this._inputSearchValue = validatedValue;
       this._startSearch(validatedValue, this._options).then((result) => {
          if (result instanceof RecordSet) {
+            const sourceController = this._sourceController;
             this._updateParams(validatedValue);
             this._handleDataLoad(result);
-
-            this._sourceController.setItems(result);
+            this._notify('filterChanged', [sourceController.getFilter()]);
+            sourceController.setItems(result);
          }
       });
    }
