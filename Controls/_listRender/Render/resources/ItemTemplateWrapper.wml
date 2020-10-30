@@ -5,7 +5,7 @@
       </ws:partial>
    </ws:if>
    <ws:if data="{{item.shouldDisplayMarker(marker) }}">
-      <div class="controls-ListView__itemV_marker controls-ListView__itemV_marker_theme-{{theme}} controls-ListView__itemV_marker-{{ markerPosition || 'left' }}"></div>
+      <div class="{{item.getMarkerClasses()}}"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
       <div attr:class="{{ item.getContentClasses(theme, style) }}">

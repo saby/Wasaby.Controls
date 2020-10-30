@@ -233,7 +233,7 @@ export default class GridColumn<T> extends mixin<
         return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
     }
 
-    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right'): boolean {
+    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
             return marker !== false && this._$owner.isMarked() && this.isLastColumn();
         } else {
