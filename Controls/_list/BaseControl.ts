@@ -2923,6 +2923,7 @@ const _private = {
  */
 
 const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
+    _updateShadowModeBeforePaint: null,
     _updateShadowModeAfterMount: null,
 
     // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
@@ -3315,8 +3316,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _updateShadowModeHandler(shadowVisibility: { down: boolean, up: boolean }): void {
         this._shadowVisibility = shadowVisibility;
+
         if (this._isMounted) {
-            _private.updateShadowMode(this, shadowVisibility);
+            // scrollTop пересчитывается в beforePaint поэтому и тень должны изменять тоже в beforePaint,
+            // чтобы не было моргания тени
+            this._updateShadowModeBeforePaint = () => {
+                _private.updateShadowMode(this, shadowVisibility);
+            };
         } else {
             this._updateShadowModeAfterMount = () => {
                 _private.updateShadowMode(this, shadowVisibility);
@@ -4081,6 +4087,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._actualPagingVisible = this._pagingVisible;
 
         this._scrollToFirstItemIfNeed();
+
+        if (this._updateShadowModeBeforePaint) {
+            this._updateShadowModeBeforePaint();
+            this._updateShadowModeBeforePaint = null;
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
