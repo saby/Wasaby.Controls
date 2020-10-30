@@ -300,6 +300,32 @@ var
                     self._listModel.setColumns(newOptions.columns);
                 }
             }
+        },
+        isFooterChanged(oldOptions, newOptions): boolean {
+            if (
+                // Подвал появился/скрылся
+                (!oldOptions.footer && newOptions.footer) ||
+                (oldOptions.footer && !newOptions.footer) ||
+                (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
+                (oldOptions.footerTemplate && !newOptions.footerTemplate)
+            ) {
+                return true;
+            } else if (
+                // Подвала не было и нет
+                !oldOptions.footer && !newOptions.footer &&
+                !oldOptions.footerTemplate && !newOptions.footerTemplate
+            ) {
+                return false;
+            } else {
+                // Подвал показывается, необходимо проверить, изменился ли он
+                if (!!newOptions.footer) {
+                    return !GridIsEqualUtil.isEqual(oldOptions.footer, newOptions.footer, {
+                        template: GridIsEqualUtil.isEqualTemplates
+                    })
+                } else {
+                    return !GridIsEqualUtil.isEqualTemplates(oldOptions.footerTemplate, newOptions.footerTemplate);
+                }
+            }
         }
     },
     GridView = ListView.extend({
@@ -348,12 +374,14 @@ var
             this._listModel.setColumns(cfg.columns, true);
             this._listModel.setHeader(cfg.header, true);
 
+            if (cfg.footer || cfg.footerTemplate) {
+                this._listModel.setFooter(cfg.footer || [{ template: cfg.footerTemplate }], true);
+            }
+
             this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
 
             // При прокидывании функции через шаблон и последующем вызове, она вызывается с областью видимости шаблона, а не контрола.
             // https://online.sbis.ru/opendoc.html?guid=756c49a6-13da-4e54-9333-fdd7a7fb6461
-            this._getFooterClasses = this._getFooterClasses.bind(this);
-            this._getFooterStyles = this._getFooterStyles.bind(this);
             this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
 
             return resultSuper;
@@ -417,6 +445,10 @@ var
                 !GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                 this._listModel.setHeader(newCfg.header);
             }
+
+            if (_private.isFooterChanged(this._options, newCfg) || (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility)) {
+                this._listModel.setFooter(newCfg.footer || [{ template: newCfg.footerTemplate }]);
+            }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
                 this._listModel.setStickyColumn(newCfg.stickyColumn);
             }
@@ -462,45 +494,6 @@ var
         _beforeUnmount(): void {
             GridView.superclass._beforeUnmount.apply(this, arguments);
             _private.destroyColumnScroll(this);
-        },
-
-        /**
-         * Производит расчёт CSS классов для футера grid'а
-         * @protected
-         */
-        _getFooterClasses(): string {
-            let leftPadding;
-            if (this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default') {
-                leftPadding = 'withCheckboxes';
-            } else {
-                leftPadding = (this._options.itemPadding && this._options.itemPadding.left || 'default').toLowerCase();
-            }
-            let classList = CssClassList
-                .add('controls-GridView__footer')
-                .add(COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT, !!this._options.columnScroll)
-                .add(`controls-GridView__footer__paddingLeft_${leftPadding}_theme-${this._options.theme}`);
-
-            // Для предотвращения скролла одной записи в таблице с экшнами.
-            // _options._needBottomPadding почему-то иногда не работает.
-            if ((this._listModel.getCount() || this._listModel.isEditing()) &&
-                this._options.itemActionsPosition === 'outside' &&
-                !this._options._needBottomPadding &&
-                this._options.resultsPosition !== 'bottom') {
-                classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
-            }
-            return classList.compile();
-        },
-
-        /**
-         * @protected
-         */
-        _getFooterStyles(): string {
-            let styles = '';
-
-            if (this._containerSize && this._isColumnScrollVisible()) {
-                styles += `width: ${this._containerSize}px;`;
-            }
-            return styles;
         },
 
         resizeNotifyOnListChanged(): void {
@@ -860,7 +853,7 @@ var
                 },
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-                emptyTemplateColumns: columns,
+                colspanColumns: columns.map((c) => ({...c, startColumn: c.startIndex, endColumn: c.endIndex})),
                 itemPadding: this._options.itemPadding || {},
                 theme: this._options.theme
             });

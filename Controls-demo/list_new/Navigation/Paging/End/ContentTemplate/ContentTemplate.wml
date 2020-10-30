@@ -9,19 +9,28 @@
         <Controls.list:HotKeysContainer>
             <Controls.list:View
                     keyProperty="id"
+                    name="list"
                     attr:class="controlsDemo_line-height18"
                     moveMarkerOnScrollPaging="{{true}}"
                     source="{{_viewSource}}"
                     on:activeElementChanged="_updateCount()"
+                    on:pagingArrowClick="_onPagingArrowClick()"
             >
                 <ws:pagingContentTemplate>
                     <ws:partial template="contentTemplate"/>
                 </ws:pagingContentTemplate>
                 <ws:navigation source="page" view="infinity">
-                    <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
-                    <ws:viewConfig showEndButton="{{true}}" pagingMode="end"/>
+                    <ws:sourceConfig pageSize="{{99}}" page="{{0}}" hasMore="{{false}}"/>
+                    <ws:viewConfig pagingMode="end"/>
                 </ws:navigation>
             </Controls.list:View>
         </Controls.list:HotKeysContainer>
     </Controls.scroll:Container>
+
+    <div class="controlsDemo__cell">
+        <Controls.buttons:Button caption="Очистить" on:click="_clear()"></Controls.buttons:Button>
+    </div>
+    <ws:if data="{{_textInfo}}">
+        <div class="controlsDemo__cell">{{ _textInfo }}</div>
+    </ws:if>
 </div>

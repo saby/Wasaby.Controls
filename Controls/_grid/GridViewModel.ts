@@ -29,10 +29,12 @@ import {Logger} from 'UI/Utils';
 import {IItemActionsTemplateConfig} from 'Controls/itemActions';
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
+import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from './resources/DragScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { IDragPosition } from 'Controls/display';
+import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -1599,7 +1601,9 @@ var
                 columns: this._options.columns
             });
 
-            current.showEditArrow = this._options.showEditArrow;
+            current.showEditArrow = this._options.showEditArrow && 
+            (!this._options.editArrowVisibilityCallback || 
+              this._options.editArrowVisibilityCallback(dispItem.getContents()));
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
@@ -1867,6 +1871,124 @@ var
 
         getColumnScrollVisibility(): boolean {
             return this._options.columnScrollVisibility;
+        },
+
+        setFooter: function(footerColumns, silent: boolean = false): void {
+            this._setFooter(footerColumns);
+            if (!silent) {
+                this._nextModelVersion();
+            }
+        },
+
+        getFooter() {
+            return this._footer;
+        },
+
+        _setFooter(footerColumns): void {
+            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
+            const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
+
+            const prepared = prepareColumns<{
+                isFullGridSupport: boolean;
+                getWrapperClasses(backgroundStyle: string): string;
+                getWrapperStyles(containerSize: number): string;
+                getContentClasses(containerSize: number): string;
+                getContentStyles(containerSize: number): string;
+                colspan: number;
+            } & IPreparedColumn>({
+                gridColumns: this._options.columns,
+                colspanColumns: footerColumns,
+                hasMultiSelect
+            });
+
+            const isMultiColumn = prepared.length > 1;
+
+            const itemPadding = this._model.getItemPadding();
+            const theme = this._options.theme;
+
+            prepared.forEach((column, index, columns) => {
+                column.isFullGridSupport = isFullGridSupport;
+                let styles = '';
+                let classes = `controls-GridView__footer__cell controls-GridView__footer__cell_theme-${theme}`;
+
+                if (this._options.footer) {
+                    classes += ` controls-GridView__newFooter__cell_theme-${theme}`;
+                }
+
+                if (!(index < 2 && hasMultiSelect)) {
+                    if (index === 0) {
+                        classes += ` controls-GridView__footer__cell__paddingLeft_${itemPadding.left}_theme-${theme}`;
+                    } else {
+                        const dataColumnIndex = column.startColumn - +hasMultiSelect - 1;
+                        const leftCellPadding = this._options.columns[dataColumnIndex].cellPadding?.left?.toLowerCase() || 'default';
+                        classes += ` controls-GridView__footer__cell__cellPaddingLeft_${leftCellPadding}_theme-${theme}`;
+                    }
+                }
+                if (!(index === 0 && hasMultiSelect)) {
+                    if (index === columns.length - 1) {
+                        classes += ` controls-GridView__footer__cell__paddingRight_${itemPadding.right}_theme-${theme}`;
+                    } else {
+                        const dataColumnIndex = column.endColumn - +hasMultiSelect - 2;
+                        const rightCellPadding = this._options.columns[dataColumnIndex].cellPadding?.right?.toLowerCase() || 'default';
+                        classes += ` controls-GridView__footer__cell__cellPaddingRight_${rightCellPadding}_theme-${theme}`;
+                    }
+                }
+
+                if (this._options.columnScroll) {
+
+                    // Не скроллируем 1) растянутый подвал; 2) фиксированную часть разбитого на колонки подвала.
+                    if (!isMultiColumn) {
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+                    } else if ((column.endColumn - 1 - +hasMultiSelect) <= this._options.stickyColumnsCount) {
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`;
+                        classes += ` ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+                    }
+                }
+
+                // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
+                //  под плашку операций над записью вне строки обеспечивался не только блоком
+                //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
+                //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
+                //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
+                //  Данный код должен быть неактуальным. Если его удаление н вызывает проблем, можно удалить
+                //  в 21.1000
+
+                if (isFullGridSupport) {
+                    styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
+                } else {
+                    column.colspan = column.endColumn - column.startColumn;
+                }
+
+                column.getWrapperClasses = (backgroundStyle: string = 'default') => {
+                    return `${classes} controls-background-${backgroundStyle}_theme-${theme}`;
+                };
+
+                column.getWrapperStyles = (containerSize: number) => {
+                    // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
+                    if (isFullGridSupport && prepared.length === 1 && containerSize) {
+                        return `${styles} width: ${containerSize}px;`;
+                    }
+                    return styles
+                };
+
+                column.getContentClasses = (containerSize: number) => {
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                        return 'controls-GridView__footer__cell-content_colspan';
+                    }
+                };
+
+                column.getContentStyles = (containerSize: number) => {
+                    // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
+                    // При табличной верстке выводится td который игнорирует width. Ограничивать необходимо контент
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                        return `width: ${containerSize}px;`;
+                    }
+                    return '';
+                };
+            });
+
+            this._footer = prepared;
         },
 
         setLadderProperties: function(ladderProperties) {
@@ -2181,19 +2303,6 @@ var
 
         _hasMultiSelectColumn(): boolean {
             return this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
-        },
-
-        getFooterStyles(): string {
-            if (GridLayoutUtil.isFullGridSupport()) {
-                const offsetForMultiSelect: number = +(this._hasMultiSelectColumn());
-                const offsetForStickyColumn: number = +(this.stickyLadderCellsCount());
-
-                return GridLayoutUtil.getColumnStyles({
-                    columnStart: 0,
-                    columnSpan: this._columns.length + offsetForMultiSelect + offsetForStickyColumn
-                });
-            }
-            return '';
         },
 
         getEmptyTemplateStyles(): string {

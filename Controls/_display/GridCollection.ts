@@ -20,6 +20,7 @@ export interface IOptions<
     header: THeader;
     resultsTemplate: TemplateFunction;
     resultsPosition: TResultsPosition;
+    headerInEmptyListVisible: boolean;
     /* todo заготовка для ladder
     ladderProperties: string[];*/
 }
@@ -35,17 +36,20 @@ export default class GridCollection<
     /* todo заготовка для ladder
     protected _$ladder: {}; */
     protected _$resultsPosition: TResultsPosition;
+    protected _$headerInEmptyListVisible: boolean;
 
     constructor(options: IOptions<S, T>) {
         super(options);
-        if (options.header && options.header.length) {
+        this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
+        this._$resultsPosition = options.resultsPosition;
+
+        if (this._headerIsVisible(options)) {
             this._$header = this._initializeHeader(options);
         }
         if (options.footerTemplate) {
             this._$footer = this._initializeFooter(options);
         }
-        this._$resultsPosition = options.resultsPosition;
-        if (this._$resultsPosition) {
+        if (this._resultsIsVisible()) {
             this._$results = this._initializeResults(options);
         }
         /* todo заготовка для ladder
@@ -93,6 +97,17 @@ export default class GridCollection<
         return emptyTemplateClasses;
     }
 
+    protected _headerIsVisible(options: IOptions<S>): boolean {
+        const hasHeader = options.header && options.header.length;
+        return hasHeader && (this._$headerInEmptyListVisible || this.getCollectionCount() > 0);
+    }
+
+    protected _resultsIsVisible(): boolean {
+        const hasResultsPosition = !!this._$resultsPosition;
+        const hasMoreData = this.getHasMoreData();
+        return hasResultsPosition && (hasMoreData || this.getCollectionCount() > 1);
+    }
+
     protected _initializeHeader(options: IOptions<S>): GridHeader<S> {
         return new GridHeader({
             owner: this,
@@ -131,5 +146,7 @@ Object.assign(GridCollection.prototype, {
     '[Controls/_display/GridCollection]': true,
     _moduleName: 'Controls/display:GridCollection',
     _itemModule: 'Controls/display:GridCollectionItem',
-    _$columns: null
+    _$columns: null,
+    _$headerInEmptyListVisible: false,
+    _$resultsPosition: null
 });
