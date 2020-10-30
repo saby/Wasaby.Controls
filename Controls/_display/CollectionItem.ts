@@ -17,6 +17,8 @@ import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/IColl
 import {ICollectionItem} from './interface/ICollectionItem';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
+import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
+import {IItemPadding} from '../_list/interface/IList';
 
 export interface IOptions<T> {
     contents?: T;
@@ -299,10 +301,19 @@ export default class CollectionItem<T> extends mixin<
         );
     }
 
-    getMarkerClasses(style: string, theme: string, markerPosition: 'left' | 'right' = 'left'): string {
+    getMarkerClasses(theme: string, style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
+                     markerPosition: 'left' | 'right' = 'left'): string {
+        let markerClass = 'controls-ListView__itemV_marker_';
+        if (markerClassName === 'default') {
+            markerClass += 'default';
+        } else {
+            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
+        }
         return `controls-ListView__itemV_marker
                 controls-ListView__itemV_marker_${style}_theme-${theme} controls-ListView__itemV_marker_theme-${theme}
-                controls-ListView__itemV_marker-${markerPosition}`;
+                controls-ListView__itemV_marker-${markerPosition}
+                ${markerClass}`;
     }
 
     increaseCounter(name: string): number {
