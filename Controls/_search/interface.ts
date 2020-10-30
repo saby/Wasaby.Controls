@@ -15,7 +15,7 @@ export interface ISearchResolverOptions {
 }
 
 export interface ISearchInputContainerOptions extends IControlOptions {
-   delayTime?: number | null;
+   searchDelay?: number | null;
    minSearchLength?: number;
    inputSearchValue?: string;
    useStore?: boolean;

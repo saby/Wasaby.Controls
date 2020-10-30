@@ -29,7 +29,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _initSearchDelayController(options: ISearchInputContainerOptions): void {
       if (!this._searchResolverController) {
          this._searchResolverController = new SearchResolver({
-            delayTime: options.delayTime,
+            delayTime: options.searchDelay,
             minSearchLength: options.minSearchLength,
             searchCallback: this._notifySearch.bind(this),
             searchResetCallback: this._notifySearchReset.bind(this)
@@ -70,5 +70,12 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (event.nativeEvent.which === constants.key.enter) {
          event.stopPropagation();
       }
+   }
+
+   static getDefaultOptions(): ISearchInputContainerOptions {
+      return {
+         minSearchLength: 3,
+         searchDelay: 500
+      };
    }
 }
