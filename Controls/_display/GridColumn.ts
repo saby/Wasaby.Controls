@@ -11,7 +11,7 @@ import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from '../_grid/interface/IColumn';
 
-const DEFAULT_CELL_TEMPLATE = 'wml!Controls/_gridNew/Render/grid/Column';
+const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
@@ -43,6 +43,7 @@ export default class GridColumn<T> extends mixin<
     getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
         let wrapperClasses = '';
         const isEditing = this._$owner.isEditing();
+        const isDragged = this._$owner.isDragged();
         const preparedStyle = style === 'masterClassic' ? 'default' : style;
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
@@ -71,6 +72,14 @@ export default class GridColumn<T> extends mixin<
                     ' controls-GridView__checkbox_position-default_theme-default' +
                     ` controls-Grid__row-cell-background-hover-default_theme-${theme}` +
                     ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}_theme-${theme}`;
+        }
+
+        if (isEditing) {
+            wrapperClasses += ` controls-ListView__item_editing_theme-${theme}`;
+        }
+
+        if (isDragged) {
+            wrapperClasses += ` controls-ListView__item_dragging_theme-${theme}`;
         }
 
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
@@ -149,10 +158,13 @@ export default class GridColumn<T> extends mixin<
         return wrapperClasses;
     }
 
-    getContentClassesMultiSelectCell(): string {
+    getContentClassesMultiSelectCell(theme: string): string {
         let contentClasses = '';
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
             contentClasses += ' controls-ListView__checkbox-onhover';
+        }
+        if (this._$owner.isEditing()) {
+            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
         }
         return contentClasses;
     }

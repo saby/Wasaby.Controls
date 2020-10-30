@@ -4,7 +4,7 @@
          <div if="{{ column.shouldDisplayMarker(marker, markerPosition) }}" attr:class="{{ column.getMarkerClasses(theme, style, markerPosition) }}"></div>
          <ws:if data="{{ column.isMultiSelectColumn() }}">
             <ws:partial template="{{ multiSelectTpl }}"
-                        attr:class="{{ column.getContentClassesMultiSelectCell() }}">
+                        attr:class="{{ column.getContentClassesMultiSelectCell(theme) }}">
                <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
                                    key="{{ (item || itemData).getContents().getKey() }}"
                                    checkboxReadOnly="{{ checkboxReadOnly }}"/>

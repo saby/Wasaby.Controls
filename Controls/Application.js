@@ -19,8 +19,6 @@ define('Controls/Application',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
-      'Application/Page',
-      'UI/Utils',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -72,9 +70,7 @@ define('Controls/Application',
       HotKeys,
       TouchDetector,
       dragnDrop,
-      TimeTesterInv,
-      AppPage,
-      UIUtils) {
+      TimeTesterInv) {
       'use strict';
 
       var _private;
