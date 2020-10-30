@@ -4839,7 +4839,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param itemData
      * @private
      */
-    _onItemActionsClick(
+    _onItemActionMouseDown(
         event: SyntheticEvent<MouseEvent>,
         action: IShownItemAction,
         itemData: CollectionItem<Model>
