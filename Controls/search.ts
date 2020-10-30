@@ -37,7 +37,7 @@ export {default as _Search} from './_search/_Search';
 export {default as _SearchController} from './_search/_SearchController';
 
 export {default as ControllerClass} from './_search/ControllerClass';
-export {default as InputContainer} from './_search/InputContainer';
+export {default as InputContainer} from './_search/Input/Container';
 export {default as SearchResolver} from './_search/SearchResolver';
 export {ISearchResolverOptions} from './_search/interface';
 
