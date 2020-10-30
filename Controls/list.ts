@@ -27,6 +27,7 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
+ * @includes IRemoveControllerOptions Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
