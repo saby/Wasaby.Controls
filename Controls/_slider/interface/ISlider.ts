@@ -9,6 +9,7 @@ export interface ISliderOptions {
     minValue: number;
     maxValue: number;
     scaleLabelFormatter?: Function;
+    viewMode?: string;
 }
 /**
  * Интерфейс для контрола Слайдер.
