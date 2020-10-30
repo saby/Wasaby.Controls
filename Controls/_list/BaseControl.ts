@@ -2878,7 +2878,7 @@ const _private = {
 
     getRemoveController(self): RemoveController {
         if (!self._removeController) {
-            self._removeController = new RemoveController(self._options.source);
+            self._removeController = new RemoveController({source: self._options.source});
         }
         return self._removeController;
     },
@@ -3563,7 +3563,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._removeController) {
-            this._removeController.updateOptions(newOptions);
+            this._removeController.updateOptions({source: newOptions.source});
         }
 
         if (this._moveController) {
@@ -5022,11 +5022,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // region remove
 
     removeItems(selection: ISelectionObject): Promise<void> {
-        return _private.getRemoveController(this).remove(selection);
+        return _private.getRemoveController(this).remove(selection, this._options.filter);
     },
 
     removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
-        return _private.getRemoveController(this).removeWithConfirmation(selection);
+        return _private.getRemoveController(this).removeWithConfirmation(selection, this._options.filter);
     },
 
     // endregion remove

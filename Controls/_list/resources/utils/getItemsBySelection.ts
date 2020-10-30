@@ -17,14 +17,18 @@ export function getItemsBySelection(selection: ISelectionObject, dataSource, ite
     let item;
     let query: Query;
     let result;
-    const selectedItems = [];
+    let selectedItems = [];
 
-    selection.selected.forEach((key) => {
-        item = items.getRecordById(key);
-        if (item) {
-            selectedItems.push(item.getId());
-        }
-    });
+    if(items) {
+        selection.selected.forEach((key) => {
+            item = items.getRecordById(key);
+            if (item) {
+                selectedItems.push(item.getId());
+            }
+        });
+    } else {
+        selectedItems = selection.selected;
+    }
 
     // Do not load the data if they are all in the current recordSet.
     if (selectedItems.length === selection.selected.length && !selection.excluded.length) {
