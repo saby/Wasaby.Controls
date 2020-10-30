@@ -127,7 +127,7 @@ export default interface ISource {
  *          })
  *     }
  * </pre>
- * @see Types/sourc:/ICrudPlus
+ * @see Types/source:ICrudPlus
  * @see Types/source:ICrud
  * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/
  */
