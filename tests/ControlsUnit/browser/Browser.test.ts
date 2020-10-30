@@ -1,10 +1,8 @@
 import {Browser} from 'Controls/browser';
 import {Memory} from 'Types/source';
-import {equal, deepStrictEqual, ok, doesNotThrow} from 'assert';
 import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
-import {ControllerClass} from "../../../Controls/search";
-import {assert} from "chai";
+import {assert} from 'chai';
 
 const browserData = [
     {
@@ -69,7 +67,7 @@ describe('Controls/browser:Browser', () => {
                     const browser = getBrowser(options);
                     return new Promise((resolve) => {
                         browser._beforeMount(options, {}).then(() => {
-                            equal(browser._searchValue, 'Sash');
+                            assert.equal(browser._searchValue, 'Sash');
                             resolve();
                         });
                     });
@@ -85,9 +83,8 @@ describe('Controls/browser:Browser', () => {
 
                     const browser = getBrowser(options);
                     await browser._beforeMount(options, {});
-                    deepStrictEqual(browser._dataOptionsContext.filter, filter);
-                    deepStrictEqual(browser._filter, filter);
-                    deepStrictEqual(browser._searchController._dataOptions.filter, filter);
+                    assert.deepStrictEqual(browser._dataOptionsContext.filter, filter);
+                    assert.deepStrictEqual(browser._filter, filter);
                 });
 
                 it('filterButtonSource and filter in context without source on _beforeMount', async () => {
@@ -109,9 +106,8 @@ describe('Controls/browser:Browser', () => {
 
                     const browser = getBrowser(options);
                     await browser._beforeMount(options, {});
-                    deepStrictEqual(browser._dataOptionsContext.filter, expectedFilter);
-                    deepStrictEqual(browser._filter, expectedFilter);
-                    deepStrictEqual(browser._searchController._dataOptions.filter, expectedFilter);
+                    assert.deepStrictEqual(browser._dataOptionsContext.filter, expectedFilter);
+                    assert.deepStrictEqual(browser._filter, expectedFilter);
                 });
 
             });
@@ -137,33 +133,33 @@ describe('Controls/browser:Browser', () => {
 
             beforeEach(() => {
                 defaultIsMobilePlatformValue = detection.isMobilePlatform;
-            })
+            });
 
             afterEach(() => {
                 detection.isMobilePlatform = defaultIsMobilePlatformValue;
-            })
+            });
 
-            it('items in receivedState',() => {
+            it('items in receivedState', () => {
                 const newOptions = {
                     ...options,
                     topShadowVisibility: 'auto',
-                    bottomShadowVisibility: 'auto',
-                }
+                    bottomShadowVisibility: 'auto'
+                };
 
-                browser = new Browser(newOptions)
+                browser = new Browser(newOptions);
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
-                equal(browser._topShadowVisibility, 'visible');
-                equal(browser._bottomShadowVisibility, 'visible');
+                assert.equal(browser._topShadowVisibility, 'visible');
+                assert.equal(browser._bottomShadowVisibility, 'visible');
 
-                equal(browser._topShadowVisibilityFromOptions, 'auto');
-                equal(browser._bottomShadowVisibilityFromOptions, 'auto');
+                assert.equal(browser._topShadowVisibilityFromOptions, 'auto');
+                assert.equal(browser._bottomShadowVisibilityFromOptions, 'auto');
 
                 detection.isMobilePlatform = true;
 
-                browser = new Browser(newOptions)
+                browser = new Browser(newOptions);
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
-                equal(browser._topShadowVisibility, 'auto');
-                equal(browser._bottomShadowVisibility, 'auto');
+                assert.equal(browser._topShadowVisibility, 'auto');
+                assert.equal(browser._bottomShadowVisibility, 'auto');
             });
         });
 
@@ -174,8 +170,8 @@ describe('Controls/browser:Browser', () => {
             };
             const browser = getBrowser(options);
 
-            const mountResult = await browser._beforeMount(options);
-            ok(mountResult instanceof Error);
+            const result = await browser._beforeMount(options);
+            assert.ok(result instanceof Error);
         });
 
     });
@@ -188,26 +184,13 @@ describe('Controls/browser:Browser', () => {
             await browser._beforeMount(options);
 
             browser._beforeUnmount();
-            ok(!browser._sourceController);
+            assert.ok(!browser._sourceController);
         });
     });
 
     describe('_beforeUpdate', () => {
 
         describe('searchController', () => {
-
-            it('context in searchController updated', async () => {
-                const options = getBrowserOptions();
-                const filter = {
-                    testField: 'testValue'
-                };
-                options.filter = filter;
-                const browser = getBrowser(options);
-                await browser._beforeMount(options);
-
-                browser._beforeUpdate(options);
-                deepStrictEqual(browser._searchController._dataOptions.filter, filter);
-            });
 
             it('filter in searchController updated', async () => {
                 const options = getBrowserOptions();
@@ -223,8 +206,8 @@ describe('Controls/browser:Browser', () => {
                 };
                 browser._options.source = options.source;
                 browser._sourceController.updateOptions = () => { return true; };
-                browser._beforeUpdate(options);
-                deepStrictEqual(browser._searchController._options.filter, filter);
+                await browser._beforeUpdate(options);
+                assert.deepStrictEqual(browser._searchController._options.filter, filter);
             });
 
         });
@@ -237,11 +220,11 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 browser._beforeUpdate(options);
-                deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
+                assert.deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
 
                 options.markedKey = undefined;
                 browser._beforeUpdate(options);
-                deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
+                assert.deepStrictEqual(browser._operationsController._savedListMarkedKey, 'testMarkedKey');
             });
 
         });
@@ -260,7 +243,7 @@ describe('Controls/browser:Browser', () => {
             const browserItems = browser._items;
 
             await browser._beforeUpdate(options);
-            ok(browser._items !== browserItems);
+            assert.ok(browser._items !== browserItems);
         });
 
         it('source returns error, then _beforeUpdate', async () => {
@@ -274,7 +257,7 @@ describe('Controls/browser:Browser', () => {
                 browser._beforeUpdate(options)
             }
             options = {...options};
-            doesNotThrow(update);
+            assert.doesNotThrow(update);
         });
 
     });
@@ -284,6 +267,7 @@ describe('Controls/browser:Browser', () => {
         it('itemsChanged, items with new format', async () => {
             const options = getBrowserOptions();
             const browser = getBrowser(options);
+
             await browser._beforeMount(options);
 
             browser._items = new RecordSet({
@@ -307,7 +291,7 @@ describe('Controls/browser:Browser', () => {
             });
 
             browser._itemsChanged(null, newItems);
-            ok(browser._items === newItems);
+            assert.deepStrictEqual(browser._items.getRawData(), newItems.getRawData());
         });
 
     });
@@ -329,7 +313,7 @@ describe('Controls/browser:Browser', () => {
             };
 
             browser._dataLoadCallback(null, 'down');
-            equal(actualDirection, 'down');
+            assert.equal(actualDirection, 'down');
         });
     });
 
