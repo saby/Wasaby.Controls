@@ -10,12 +10,14 @@ interface IPathResult {
     backButtonCaption: string|null;
 }
 
-function getPath(data: RecordSet): Path {
-    const path = data && data.getMetaData().path;
+function getPath(data: RecordSet|[]): Path {
+    const path = data instanceof RecordSet && data.getMetaData().path;
     let breadCrumbs = null;
 
     if (path && path.getCount() > 0) {
         breadCrumbs = factory(path).toArray();
+    } else if (Array.isArray(data)) {
+        breadCrumbs = data;
     }
 
     return breadCrumbs;
