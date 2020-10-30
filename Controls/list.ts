@@ -27,6 +27,7 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
+ * @includes IRemoveControllerOptions Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
@@ -65,6 +66,7 @@
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
+ * @includes IRemoveControllerOptions Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
@@ -133,7 +135,7 @@ export {
 export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 export {IMovableList} from 'Controls/_list/interface/IMovableList';
 
-export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
+export {RemoveController, IRemoveControllerOptions} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {

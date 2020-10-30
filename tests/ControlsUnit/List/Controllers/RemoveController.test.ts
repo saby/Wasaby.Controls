@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {spy, stub, assert as sinonAssert} from 'sinon';
+import {stub, assert as sinonAssert} from 'sinon';
 
 import {Logger} from 'UI/Utils';
 import {Control} from 'UI/Base';
@@ -85,7 +85,7 @@ describe('Controls/list_clean/RemoveController', () => {
     })
 
     it('remove() should not remove without source', () => {
-        controller = new RemoveController(undefined);
+        controller = new RemoveController({source: undefined});
         return resolveRemove(controller, selectionObject).then((result: boolean) => {
 
             // Ожидаем, что упадёт из-за ошибки, брошенной в контроллере
@@ -94,7 +94,7 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('removeWithConfirmation() should not remove without source', () => {
-        controller = new RemoveController(undefined);
+        controller = new RemoveController({source: undefined});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, selectionObject).then((result: boolean) => {
 
@@ -108,8 +108,8 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('remove() should remove when correct source set via update', () => {
-        controller = new RemoveController(undefined);
-        controller.updateOptions(source);
+        controller = new RemoveController({source: undefined});
+        controller.updateOptions({source: source});
         return resolveRemove(controller, selectionObject).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
@@ -118,8 +118,8 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('removeWithConfirmation() should remove when correct source set via update', () => {
-        controller = new RemoveController(undefined);
-        controller.updateOptions(source);
+        controller = new RemoveController({source: undefined});
+        controller.updateOptions({source: source});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, selectionObject).then((result: boolean) => {
 
@@ -133,7 +133,7 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('remove() should not remove with incorrect selection', () => {
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
 
         // @ts-ignore
         return resolveRemove(controller, [0, 1, 2]).then((result: boolean) => {
@@ -144,7 +144,7 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('removeWithConfirmation() should not remove with incorrect selection', () => {
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
 
         // @ts-ignore
@@ -160,7 +160,7 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('remove() should not remove with undefined selection', () => {
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
 
         // @ts-ignore
         return resolveRemove(controller, undefined).then((result: boolean) => {
@@ -171,7 +171,7 @@ describe('Controls/list_clean/RemoveController', () => {
     });
 
     it('removeWithConfirmation() should not remove with undefined selection', () => {
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
 
         // @ts-ignore
@@ -191,7 +191,7 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [1, 3, 5],
             excluded: [3]
         };
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
@@ -204,7 +204,7 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [1, 3, 5],
             excluded: [3]
         };
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 
@@ -222,7 +222,7 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [],
             excluded: [3]
         };
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         return resolveRemove(controller, correctSelection).then((result: boolean) => {
 
             // Ожидаем, что удаление пройдёт успешно
@@ -235,7 +235,7 @@ describe('Controls/list_clean/RemoveController', () => {
             selected: [],
             excluded: [3]
         };
-        controller = new RemoveController(source);
+        controller = new RemoveController({source});
         const stubConfirmation = stub(Confirmation, 'openPopup').callsFake(() => Promise.resolve(true));
         return resolveRemoveWithConfirmation(controller, correctSelection).then((result: boolean) => {
 

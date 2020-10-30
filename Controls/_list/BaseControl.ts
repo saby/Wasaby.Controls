@@ -2860,7 +2860,7 @@ const _private = {
 
     getRemoveController(self): RemoveController {
         if (!self._removeController) {
-            self._removeController = new RemoveController(self._options.source);
+            self._removeController = new RemoveController({source: self._options.source});
         }
         return self._removeController;
     },
@@ -3539,7 +3539,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._removeController) {
-            this._removeController.updateOptions(newOptions);
+            this._removeController.updateOptions({source: newOptions.source});
         }
 
         if (this._moveController) {
@@ -4057,7 +4057,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let itemsUpdated = false;
             if (!this._modelRecreated) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            } 
+            }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -4265,7 +4265,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._shiftToDirection(direction);
             } else {
                 this._applySelectedPage = null;
-            
+
                 this._notify('doScroll', [scrollTop], { bubbling: true });
             }
         }
@@ -4285,7 +4285,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._currentPage = page;
         } else {
 
-            // При выборе некрайней страницы, проверяем, 
+            // При выборе некрайней страницы, проверяем,
             // можно ли проскроллить к ней, по отрисованным записям
             if (this._canScroll(scrollTop, direction)) {
                 this._applySelectedPage();

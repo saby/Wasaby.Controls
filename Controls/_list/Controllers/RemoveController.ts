@@ -5,6 +5,20 @@ import { Logger } from 'UI/Utils';
 import * as rk from 'i18n!*';
 
 /**
+ * Интерфейс опций контроллера
+ * @interface Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
+ * @public
+ * @author Аверкиев П.А.
+ */
+export interface IRemoveControllerOptions {
+    /**
+     * @name Controls/_list/interface/IRemoveControllerOptions#source
+     * @cfg {TSource} Источник данных, в котором производится удаление
+     */
+    source: ICrud;
+}
+
+/**
  * Контроллер для удаления элементов списка в dataSource.
  *
  * @class Controls/_list/Controllers/RemoveController
@@ -14,17 +28,17 @@ import * as rk from 'i18n!*';
 export class RemoveController {
     private _source: ICrud;
 
-    constructor(source: ICrud) {
-        this.updateOptions(source);
+    constructor(options: IRemoveControllerOptions) {
+        this.updateOptions(options);
     }
 
     /**
      * Обновляет поля контроллера
      * @function Controls/_list/Controllers/RemoveController#updateOptions
-     * @param {Types/source:ICrud} source источник данных
+     * @param {IRemoveControllerOptions} options источник данных
      */
-    updateOptions(source: ICrud): void {
-        this._source = source;
+    updateOptions(options: IRemoveControllerOptions): void {
+        this._source = options.source;
     }
 
     /**
