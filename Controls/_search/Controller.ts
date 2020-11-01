@@ -189,6 +189,7 @@ export default class Container extends Control<IContainerOptions> {
             }
          } else {
             searchController.setRoot(root);
+            this._root = root;
          }
          if (root !== dataRoot) {
             this._updateFilter(searchController);
