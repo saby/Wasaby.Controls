@@ -13,8 +13,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _searchResolverController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
-      this._initSearchDelayController(options);
-
       if (this._options.inputSearchValue !== options.inputSearchValue) {
          this._value = options.inputSearchValue;
       }
@@ -26,15 +24,17 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       }
    }
 
-   protected _initSearchDelayController(options: ISearchInputContainerOptions): void {
+   protected _getSearchDelayController(): SearchResolver {
       if (!this._searchResolverController) {
          this._searchResolverController = new SearchResolver({
-            delayTime: options.searchDelay,
-            minSearchLength: options.minSearchLength,
+            delayTime: this._options.searchDelay,
+            minSearchLength: this._options.minSearchLength,
             searchCallback: this._notifySearch.bind(this),
             searchResetCallback: this._notifySearchReset.bind(this)
          });
       }
+
+      return this._searchResolverController;
    }
 
    protected _notifySearch(value: string): void {
@@ -55,6 +55,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _searchClick(event: SyntheticEvent): void {
       if (this._value) {
+         this._getSearchDelayController().setSearchStarted(true);
          this._resolve(this._value);
       }
    }
@@ -62,7 +63,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _valueChanged(event: SyntheticEvent, value: string): void {
       if (this._value !== value) {
          this._value = value;
-         this._searchResolverController.resolve(value);
+         this._getSearchDelayController().resolve(value);
       }
    }
 

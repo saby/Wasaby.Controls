@@ -378,6 +378,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 }
             } else {
                 searchController.setRoot(root);
+                this._root = root;
             }
             if (root !== dataRoot) {
                 this._updateFilter(searchController);
