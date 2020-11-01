@@ -46,7 +46,7 @@ export function getActions(
         showedActions = allActions;
     }
     return {
-        all: allActions,
+        all: actions.all,
         showed: showedActions
     };
 }

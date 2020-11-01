@@ -387,7 +387,7 @@ export class Controller {
             if (!item['[Controls/_display/GroupItem]'] && !item['[Controls/_display/SearchSeparator]']) {
                 const contents = Controller._getItemContents(item);
                 const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
-                const itemChanged = Controller._setItemActions(item, actionsContainer);
+                const itemChanged = Controller._setItemActions(item, actionsContainer, this._actionMode);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -556,7 +556,7 @@ export class Controller {
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
-        Controller._setItemActions(item, swipeConfig.itemActions);
+        Controller._setItemActions(item, swipeConfig.itemActions, this._actionMode);
 
         if (swipeConfig.twoColumns) {
             const visibleActions = swipeConfig.itemActions.showed;
@@ -736,14 +736,16 @@ export class Controller {
      * Устанавливает операции с записью для конкретного элемента коллекции
      * @param item
      * @param actions
+     * @param actionMode
      * @private
      */
     private static _setItemActions(
         item: IItemActionsItem,
-        actions: IItemActionsContainer
+        actions: IItemActionsContainer,
+        actionMode: string
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
+        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions, actionMode))) {
             item.setActions(actions, true);
             return true;
         }
@@ -752,11 +754,12 @@ export class Controller {
 
     private static _isMatchingActions(
         oldContainer: IItemActionsContainer,
-        newContainer: IItemActionsContainer
+        newContainer: IItemActionsContainer,
+        actionMode: string
     ): boolean {
         const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
         const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
-        return this._actionMode === 'adaptive' ? isMatchedAll : (isMatchedAll && isMatchedShowed);
+        return actionMode === 'adaptive' ? isMatchedAll : (isMatchedAll && isMatchedShowed);
     }
 
     private static _calculateSwipeConfig(
