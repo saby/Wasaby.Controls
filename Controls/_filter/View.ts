@@ -13,7 +13,7 @@ import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
 import {factory} from 'Types/chain';
-import {factory as CollectionFactory, RecordSet} from 'Types/collection';
+import {factory as CollectionFactory, RecordSet, List} from 'Types/collection';
 import {getItemsWithHistory, isHistorySource, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
 import {hasResetValue} from 'Controls/_filter/resetFilterUtils';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
@@ -22,6 +22,7 @@ import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {DependencyTimer} from 'Controls/fastOpenUtils';
 import {load} from 'Core/library';
+import {IFilterItem} from './View/interface/IFilterView';
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -41,7 +42,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/View/interface/IFilterView
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @demo Controls-demo/FilterView/ItemTemplates/Index
@@ -60,7 +61,7 @@ import {load} from 'Core/library';
  * @class Controls/_filter/View
  * @extends Core/Control
  * @mixes Controls/_filter/interface/IFilterView
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  * @see Controls/filterPopup:SimplePanel
@@ -68,6 +69,7 @@ import {load} from 'Core/library';
  * @see Controls/filter:FastContainer
  */
 
+const DEFAULT_FILTER_NAME = 'all_frequent';
 var _private = {
     getItemByName: function(items, name) {
         var result;
@@ -80,7 +82,7 @@ var _private = {
     },
 
     isFrequentItem: function(item) {
-      return item.viewMode === 'frequent';
+      return item.viewMode === 'frequent' && item.type !== 'dateRange';
     },
 
     resolveItems: function(self, items) {
@@ -344,19 +346,18 @@ var _private = {
         });
     },
 
-    loadItems: function(self, item) {
-        var options = item.editorOptions;
-        /* FIXME: Костыль, dataLoadCallback не должен попадать в receivedState.
-           Т.к прикладники биндят на контекст, то эта функция становится анонимной и она не может сериализоваться
-           Нужно все переписать по задаче:
-           https://online.sbis.ru/opendoc.html?guid=50fcb57f-2934-4f6f-b4f0-ea1c92309737
-         */
+    getConfigByItem(self, item: IFilterItem): Record<string, any> {
+        const options = item.editorOptions;
         self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options), {ignoreRegExp: /dataLoadCallback/});
         self._configs[item.name].emptyText = item.emptyText;
         self._configs[item.name].emptyKey = item.hasOwnProperty('emptyKey') ? item.emptyKey : null;
         self._configs[item.name].sourceController = null;
         self._configs[item.name].popupItems = null;
+    },
 
+    loadItems: function(self, item) {
+        const options = item.editorOptions;
+        _private.getConfigByItem(self, item);
         if (options.source) {
             return _private.loadItemsFromSource(self._configs[item.name], options.source, options.filter, options.navigation, options.dataLoadCallback);
         } else {
@@ -389,12 +390,21 @@ var _private = {
         });
     },
 
-    reload: function(self, onlyChangedItems: boolean = false) {
+    reload: function(self, onlyChangedItems: boolean = false, hasSimplePanel = true) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
-            if (_private.isFrequentItem(item) && (!onlyChangedItems || onlyChangedItems && _private.isItemChanged(item))) {
-                var result = _private.loadItems(self, item);
-                pDef.push(result);
+            if (_private.isFrequentItem(item)) {
+                if ((!onlyChangedItems || _private.isItemChanged(item))) {
+                    if (hasSimplePanel) {
+                        var result = _private.loadItems(self, item);
+                        pDef.push(result);
+                    } else {
+                        if (!self._configs?.[item.name]) {
+                            self._configs[item.name] = {};
+                        }
+                        pDef.push(_private.loadSelectedItems([item], self._configs));
+                    }
+                }
             }
         });
 
@@ -679,7 +689,7 @@ var Filter = Control.extend({
             _private.updateText(this, this._source, this._configs);
         } else if (options.source) {
             _private.resolveItems(this, options.source);
-            resultDef = _private.reload(this, true);
+            resultDef = _private.reload(this, true, options.panelTemplateName);
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
         return resultDef;
@@ -701,11 +711,11 @@ var Filter = Control.extend({
             _private.resolveItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
-                resultDef = _private.reload(this).addCallback(() => {
+                resultDef = _private.reload(this, null, newOptions.panelTemplateName).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._source);
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
-                resultDef = _private.reload(this);
+                resultDef = _private.reload(this,null, newOptions.panelTemplateName);
             } else if (this._loadDeferred && !this._loadDeferred.isReady()) {
                 resultDef = this._loadDeferred.addCallback((): void => {
                     _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
@@ -792,6 +802,8 @@ var Filter = Control.extend({
                 this._configs = {};
                 dataSourceError.process({ error })
             });
+        } else if (!this._options.panelTemplateName) {
+            this._showSelector(name);
         }
     },
 
@@ -840,6 +852,14 @@ var Filter = Control.extend({
     },
 
     _onSelectorTemplateResult: function(event, items) {
+        const config = this._configs[this._idOpenSelector];
+        if (!config.items && items.getCount()) {
+            config.items = new RecordSet({
+                keyProperty: items.at(0).getKeyProperty(),
+                rawData: [],
+                format: items.at(0).getFormat()
+            })
+        }
         let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
         this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
     },
@@ -882,6 +902,52 @@ var Filter = Control.extend({
         _private.updateText(this, this._source, this._configs);
     },
 
+    _showSelector(filterName?: string): void {
+        let item = null;
+        if (filterName && filterName !== DEFAULT_FILTER_NAME) {
+            item = _private.getItemByName(this._source, filterName);
+        } else {
+            item = factory(this._source).filter((item) => _private.isFrequentItem(item)).first();
+        }
+        if (item) {
+            const name = item.name;
+
+            if (!this._configs[name]) {
+                _private.getConfigByItem(this, item);
+            }
+            if (item?.editorOptions.selectorTemplate) {
+                const selectedItems = [];
+                const items = this._configs[name]?.popupItems || this._configs[name]?.items;
+                const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
+                const selectorTemplate = item.editorOptions.selectorTemplate;
+                const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
+                if (items) {
+                    factory(selectedKeys).each((key) => {
+                        if (key !== undefined && key !== null && items.getRecordById(key)) {
+                            selectedItems.push(items.getRecordById(key));
+                        }
+                    });
+                }
+                templateOptions.multiSelect = item.editorOptions.multiSelect;
+                templateOptions.selectedItems = items || new List({
+                    items: selectedItems
+                });
+                this._idOpenSelector = name;
+                this._configs[name].initSelectorItems = templateOptions.selectedItems;
+                return this._children.selectorOpener.open({
+                    template: item.editorOptions.selectorTemplate.templateName,
+                    templateOptions,
+                    eventHandlers: {
+                        onSelectComplete: (event, result): void => {
+                            this._onSelectorTemplateResult(event, result);
+                            this._children.selectorOpener.close();
+                        }
+                    }
+                });
+            }
+        }
+    },
+
     _resetFilterText: function() {
         if (this._children.StickyOpener.isOpened()) {
             this._children.StickyOpener.close();
@@ -906,8 +972,7 @@ Filter.getDefaultOptions = function() {
     return {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
-        itemTemplate: defaultItemTemplate,
-        emptyText: rk('Все')
+        itemTemplate: defaultItemTemplate
     };
 };
 

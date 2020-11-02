@@ -40,7 +40,7 @@ const DEFAULT_BACKGROUND_STYLE = 'default';
  * @extends Controls/_scroll/ContainerBase
  * @mixes Controls/_scroll/Interface/IScrollbars
  * @mixes Controls/_scroll/Interface/IShadows
- * 
+ *
  * @public
  * @author Миронов А.Ю.
  * @demo Controls-demo/Scroll/Container/Default/Index
@@ -52,7 +52,7 @@ const DEFAULT_BACKGROUND_STYLE = 'default';
  *
  * @class Controls/_scroll/Container
  * @extends Controls/_scroll/ContainerBase
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Scroll/Container/Default/Index
@@ -329,7 +329,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _intersectionObserverUnregisterHandler(event: SyntheticEvent, instId: string, observerName: string): void {
-        this._intersectionObserverController.unregister(instId, observerName);
+        if (this._intersectionObserverController) {
+            this._intersectionObserverController.unregister(instId, observerName);
+        }
         if (!observerName) {
             event.stopImmediatePropagation();
         }

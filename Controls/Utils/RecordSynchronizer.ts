@@ -111,8 +111,13 @@ const _private = {
     mergeRecord(editRecord: Model, items: RecordSet, editKey: string): void {
         const syncRecord = _private.getSyncRecord(items, editKey);
         if (syncRecord) {
+            const isChanged = syncRecord.isChanged();
             const changedValues = _private.getChangedValues(syncRecord, editRecord);
             _private.setRecordValues(syncRecord, changedValues);
+            // После сета в запись оставляем состояние измененности такое же, как до вызова метода.
+            if (!isChanged) {
+                syncRecord.acceptChanges();
+            }
         }
 
     },

@@ -4063,7 +4063,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let itemsUpdated = false;
             if (!this._modelRecreated) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            } 
+            }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
@@ -5264,7 +5264,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopImmediatePropagation();
         const itemActionsController = _private.getItemActionsController(this);
         itemActionsController.updateItemActions(itemKey, itemWidth);
-        this._listViewModel.nextModelVersion(true);
+        this._listViewModel.nextModelVersion(true, 'itemActionsUpdated');
     },
 
     /**

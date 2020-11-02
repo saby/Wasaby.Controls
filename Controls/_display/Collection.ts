@@ -855,9 +855,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setCollection(newCollection: ISourceCollection<S>): void {
+        const projectionOldItems = toArray(this) as [];
         this._deinitializeCollection();
         this._$collection = newCollection;
         this._initializeCollection();
+        const projectionNewItems = toArray(this) as [];
+        this._notifyBeforeCollectionChange();
+        this._notifyCollectionChange(
+            IObservable.ACTION_RESET,
+            projectionNewItems,
+            0,
+            projectionOldItems,
+            0
+        );
+        this._notifyAfterCollectionChange();
     }
 
     destroy(): void {
