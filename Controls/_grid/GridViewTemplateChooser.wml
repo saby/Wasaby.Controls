@@ -79,7 +79,8 @@
 
         <ws:if data="{{ _showFakeGridWithColumnScroll }}">
             <ws:partial template="gridTemplate" attr:class="controls-Grid__ColumnScroll__fixedPart"/>
-            <div name="columnScrollShadowStartFake" class="{{ _getColumnScrollShadowClasses(_options, 'start') }}" style="{{ _getColumnScrollShadowStyles(_options, 'start') }}"></div>
+            <div class="{{ _getColumnScrollShadowClasses(_options, 'start') }}"
+                 style="{{ _getColumnScrollShadowStyles(_options, 'start') }}"></div>
             <div class="controls-Grid__ColumnScroll__scrollablePart">
                 <ws:partial template="gridTemplate"/>
             </div>

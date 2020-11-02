@@ -393,8 +393,9 @@ var
                 // Второй - все остальные колонки, абсолютный блок, прижат к правому краю релативной обертки.
                 // При построении настоящая таблица скрывается с помощью visibility и строится в обыччном порядке.
                 // Затем проскроливается вконец и только после этого заменяет фейковую.
-                // preventServerSideColumnScroll - временный непубличный костыль, отключает поведение построения на сервере.
-                // Удалится по https://online.sbis.ru/opendoc.html?guid=8d7eaa54-5fa9-405a-aba4-9cccd58f3fd6
+                // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
+                // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
+                // списочного контрола.
                 this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
             }
 
@@ -683,7 +684,11 @@ var
 
         _getColumnScrollShadowClasses(options, position: 'start' | 'end'): string {
             if (this._showFakeGridWithColumnScroll && options.columnScrollStartPosition === 'end') {
-                return ColumnScroll.getShadowClasses({
+                let classes = '';
+                if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
+                    classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
+                }
+                return classes + ColumnScroll.getShadowClasses({
                     position,
                     isVisible: position === 'start',
                     theme: options.theme,
