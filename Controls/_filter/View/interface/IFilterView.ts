@@ -552,6 +552,7 @@ import {INavigationOptionValue} from 'Controls/interface';
  * </pre>
  * @see Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
  */
+
 /**
  * Сбрасывает объединенный фильтр к значениям по умолчанию.
  * Для каждого фильтра такие значения задаются через свойство resetValue при настройке структуры фильтров (см. {@link source}).
