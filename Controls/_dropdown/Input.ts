@@ -50,7 +50,7 @@ interface IDropdownInputChildren {
  * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_dropdown/interface/IBaseDropdown
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/interface/ISelectorDialog
@@ -81,8 +81,6 @@ interface IDropdownInputChildren {
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ITextValue
  * 
