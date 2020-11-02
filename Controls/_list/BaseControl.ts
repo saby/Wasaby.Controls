@@ -402,7 +402,7 @@ const _private = {
                     if (listModel) {
                         if (self._groupingLoader) {
                             self._groupingLoader.resetLoadedGroups(listModel);
-                        }if (!listModel && cfg.useNewModel && list) {
+                        }
 
                         _private.assignItemsToModel(self, list, cfg);
 
