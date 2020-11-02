@@ -108,6 +108,21 @@ describe('Controls/_lookup/BaseControllerClass', () => {
         });
     });
 
+    describe('update', () => {
+        it('source is changed while loading', async () => {
+            const controller = getLookupControllerWithSelectedKeys();
+            const isLoadCanceled = false;
+            controller.loadItems();
+            controller._sourceController.cancelLoading = () => {
+                isLoadCanceled = true;
+            };
+            const options = getControllerOptions();
+            options.source = getSource();
+            await controller.update(options);
+            ok(isLoadCanceled);
+        });
+    });
+
     it('setItems', () => {
         const controller = getLookupControllerWithEmptySelectedKeys();
         controller.setItems(getRecordSet());
