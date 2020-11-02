@@ -52,7 +52,7 @@ var
             }
         },
 
-        getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean, isOnlyFixedColumns: boolean): string {
+        getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
             if (!columns) {
                 Logger.warn('You must set "columns" option to make grid work correctly!', self);
                 return '';
@@ -67,7 +67,7 @@ var
             } else {
                 columnsWidths = initialWidths;
             }
-            if (!isOnlyFixedColumns && shouldAddActionsCell({
+            if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasColumns: !!columns.length,
@@ -393,7 +393,9 @@ var
                 // Второй - все остальные колонки, абсолютный блок, прижат к правому краю релативной обертки.
                 // При построении настоящая таблица скрывается с помощью visibility и строится в обыччном порядке.
                 // Затем проскроливается вконец и только после этого заменяет фейковую.
-                this._showFakeGridWithColumnScroll = true;
+                // preventServerSideColumnScroll - временный непубличный костыль, отключает поведение построения на сервере.
+                // Удалится по https://online.sbis.ru/opendoc.html?guid=8d7eaa54-5fa9-405a-aba4-9cccd58f3fd6
+                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
             }
 
             return resultSuper;
@@ -569,12 +571,11 @@ var
             return classes.compile();
         },
 
-        _getGridViewStyles(isOnlyFixedColumns: boolean = false): string {
+        _getGridViewStyles(): string {
             let styles = '';
             if (GridLayoutUtil.isFullGridSupport()) {
                 const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
-                const columns = isOnlyFixedColumns ? this._options.columns.slice(0, this._options.stickyColumnsCount) : this._options.columns;
-                styles += _private.getGridTemplateColumns(this, columns, hasMultiSelect, isOnlyFixedColumns);
+                styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
             }
             return styles;
         },

@@ -3,14 +3,13 @@
                 _listModel="{{_listModel}}"
                 _isFullGridSupport="{{ _listModel.isFullGridSupport() }}"
                 _gridViewClasses="{{_getGridViewClasses(_options)}}"
-                _gridViewStyles="{{ _getGridViewStyles(onlyFixedColumns) }}"
+                _gridViewStyles="{{_getGridViewStyles()}}"
                 _baseHeaderTemplate="{{_baseHeaderTemplate}}"
                 _resultsTemplate="{{_resultsTemplate}}"
                 _baseResultsTemplate="{{_baseResultsTemplate}}"
                 _headerContentTemplate="{{_headerContentTemplate}}"
                 _itemTemplate="{{_itemTemplate}}"
                 _groupTemplate="{{_groupTemplate}}"
-                _onlyFixedColumns="{{ onlyFixedColumns }}"
 
                 _trackVisible="{{ __trackVisible }}"
                 _isColumnScrollVisible="{{ __isColumnScrollVisible }}"
@@ -68,8 +67,7 @@
                     _horizontalScrollWidth="{{ _horizontalScrollWidth }}"
                     __isColumnScrollVisible="{{ _isColumnScrollVisible() }}"
 
-                    attr:class="{{ _viewGrabbingClasses }}"
-                    attr:style="{{ _showFakeGridWithColumnScroll ? 'visibility: hidden;' }}"
+                    attr:class="{{ _viewGrabbingClasses }} {{ _showFakeGridWithColumnScroll ? 'controls-Grid__ColumnScroll_hidden' }}"
                     on:newPositionRendered="_onNewHorizontalPositionRendered()"
 
                     on:mousedown="_startDragScrolling('mouse')"
@@ -80,7 +78,7 @@
                     on:touchend="_stopDragScrolling('touch')"/>
 
         <ws:if data="{{ _showFakeGridWithColumnScroll }}">
-            <ws:partial template="gridTemplate" onlyFixedColumns="{{ true }}" attr:class="controls-Grid__ColumnScroll__fixedPart"/>
+            <ws:partial template="gridTemplate" attr:class="controls-Grid__ColumnScroll__fixedPart"/>
             <div name="columnScrollShadowStartFake" class="{{ _getColumnScrollShadowClasses(_options, 'start') }}" style="{{ _getColumnScrollShadowStyles(_options, 'start') }}"></div>
             <div class="controls-Grid__ColumnScroll__scrollablePart">
                 <ws:partial template="gridTemplate"/>
