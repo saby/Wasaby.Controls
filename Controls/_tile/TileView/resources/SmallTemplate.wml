@@ -1,8 +1,7 @@
 <ws:if data="{{invisible}}">
-   <div
-      attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} {{itemData.itemClasses}} controls-TileView__item_invisible"
-      attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px; ' +
-                     'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
+   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} {{itemData.itemClasses}} controls-TileView__item_invisible"
+      attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (width || itemWidth || itemData.defaultItemWidth) : (width || folderWidth || itemData.defaultFolderWidth)) + 'px; ' +
+                     'flex-basis: ' + (type === 'leaf' ? (width || itemWidth || itemData.defaultItemWidth) : (width || folderWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <div attr:class="controls-TileView__item controls-TileView__smallTemplate_item_theme-{{theme}} controls-TileView__item_theme-{{theme}} {{itemData.itemClasses}}  js-controls-TileView__withoutZoom controls-ListView__itemV controls-ListView__itemV_cursor-{{cursor || 'pointer'}} js-controls-ItemActions__swipeMeasurementContainer
@@ -16,7 +15,7 @@
          {{!!itemData.isActive() ? ' controls-TileView__smallTemplate_item_active_them' + theme}}
          {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
          {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme' + theme}}"
-        attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.dispItem.isNode() ? itemData.defaultFolderWidth : itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.dispItem.isNode() ? itemData.defaultFolderWidth : itemData.defaultItemWidth)+ 'px;'}}">
+        attr:style="{{'-ms-flex-preferred-size: ' + (width || (itemData.dispItem.isNode() ? itemData.defaultFolderWidth : itemData.defaultItemWidth)) + 'px; flex-basis: ' + (width || (itemData.dispItem.isNode() ? itemData.defaultFolderWidth : itemData.defaultItemWidth)) + 'px;'}}">
       <ws:partial if="{{itemData.hasMultiSelect}}"
                   template="{{multiSelectTpl}}"
                   attr:class="{{itemData.multiSelectClassList}}">

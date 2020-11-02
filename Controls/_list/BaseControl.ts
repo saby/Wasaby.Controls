@@ -5289,7 +5289,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopImmediatePropagation();
         const itemActionsController = _private.getItemActionsController(this);
         itemActionsController.updateItemActions(itemKey, itemWidth);
-        this._listViewModel.nextModelVersion(true);
+        this._listViewModel.nextModelVersion(true, 'itemActionsUpdated');
     },
 
     /**

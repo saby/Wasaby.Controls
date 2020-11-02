@@ -28,6 +28,7 @@
                      on:itemClick="_sendResult('itemClick')"
                      keyProperty="id"
                      displayProperty="title"
+                     scope="{{_options}}"
                   />
                </Controls.Container.Async>
             </div>
