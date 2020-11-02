@@ -87,7 +87,6 @@
                 if="{{ !_onlyFixedColumns }}"
                 columns="{{ _listModel.getFooter() }}"
                 containerSize="{{ _containerSize }}"
-                _onlyFixedColumns="{{ _onlyFixedColumns }}"
                 hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"
                 hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
                 attr:class="{{ _options.footer ? 'controls-GridView__footer' }}"
