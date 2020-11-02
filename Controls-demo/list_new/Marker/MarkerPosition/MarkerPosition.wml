@@ -1,0 +1,7 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            markerPosition="right"
+            markerVisibility="visible"/>
+</div>

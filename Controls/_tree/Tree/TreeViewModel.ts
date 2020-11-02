@@ -616,7 +616,6 @@ var
                 current._treeViewModelCached = true;
             }
 
-
             current.getExpanderIcon = (tmplExpanderIcon) => tmplExpanderIcon || this._options.expanderIcon;
             current.getExpanderPosition = () => this._options.expanderPosition;
             current.getExpanderSize = (tmplExpanderSize) => tmplExpanderSize || this._options.expanderSize;

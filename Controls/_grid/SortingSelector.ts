@@ -4,6 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';
 import {Memory} from 'Types/source';
 import {isEqual} from 'Types/object';
+import {RecordSet} from 'Types/collection';
 import {ISortingSelectorOptions, ISortingParam} from 'Controls/_interface/ISortingSelector';
 
 type Order = 'ASC'|'DESC'|'';
@@ -16,8 +17,11 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
     protected _source: Memory;
     // когда выбран пункт с иконкой, в вызывающем элементе отображается только иконка. У нее другой отступ.
     protected _nocaption: boolean = false;
+    protected _saveLinkToItems: Function;
+    protected _items: RecordSet;
 
     protected _beforeMount(options: ISortingSelectorOptions): void {
+        this._saveLinkToItems = this._saveLinkToItemsFnc.bind(this);
         this.updateConfig(options.sortingParams, options.value);
     }
 
@@ -25,6 +29,19 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         if (!isEqual(this._options.value, newOptions.value) ||
             !isEqual(this._options.sortingParams, newOptions.sortingParams)) {
             this.updateConfig(newOptions.sortingParams, newOptions.value);
+        }
+    }
+
+    protected _saveLinkToItemsFnc(items: RecordSet): void {
+        this._items = items;
+    }
+
+    // надо сбросить стрелку, которая показывает текущее выбранное значение. Остальные оставляем
+    protected _resetSelectedArrow(): void {
+        if (this._options.value && this._options.value.length) {
+            const curArrowValue = this._options.value[0][this._currentParamName] || 'ASC';
+            this._items?.getRecordById(this._currentParamName)?.set('value', curArrowValue);
+            this._orders[this._currentParamName] = curArrowValue;
         }
     }
 
@@ -87,7 +104,7 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         e.stopPropagation();
         const value = item.get('value') || 'ASC';
         const key = item.get('paramName');
-        const newValue = this._getOppositeOrder(value);
+        const newValue = SortingSelector._getOppositeOrder(value);
         // для хранения текущих значений стрелок в выпадающем списке используем _orders
         // но список строится ТОЛЬКО по source и record полученным из него
         // для того чтобы перерисовать стрелку в списке пишем еще в и рекорд
@@ -95,14 +112,14 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
         this._orders[key] = newValue;
     }
 
-    protected _getOppositeOrder = (order: Order) => {
+    static _theme: [string] = ['Controls/grid'];
+
+    protected static _getOppositeOrder = (order: Order) => {
         if (order === 'DESC' || !order) {
             return 'ASC';
         }
         return 'DESC';
     }
-
-    static _theme: [string] = ['Controls/grid'];
 }
 
 export default SortingSelector;

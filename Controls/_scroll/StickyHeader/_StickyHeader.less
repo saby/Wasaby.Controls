@@ -1,3 +1,11 @@
+// Прилипающий заголовок изначально не имеет z-index, он задается после того как stickyHeader застикается.
+// Если z-index'а нет, заголовок находится ниже контента до тех пор, пока не рассчитает свои стили.
+// При тупняках на странице время на эти расчеты увеличивается и визуально видно дерганье.
+// Задаем z-index: 1, т.к. элементы у списков имеют такой z-index и этого достаточно
+.controls-StickyHeader {
+   z-index: 1;
+}
+
 /*A double selector is needed so that the "position" specified on the block that wraps the StickyHeader does not work.*/
 /*Will be fixed by: https://online.sbis.ru/opendoc.html?guid=2c58d954-7fd6-4cb0-8f6a-f17d89622004*/
 .controls-StickyHeader.controls-StickyHeader_position {
