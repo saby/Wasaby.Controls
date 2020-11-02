@@ -76,6 +76,7 @@
     <!-- Подвал таблицы -->
     <ws:partial template="wml!Controls/_grid/FooterTemplate"
                 columns="{{ _listModel.getFooter() }}"
+                _columns="{{ _options.footer }}"
                 containerSize="{{ _containerSize }}"
                 hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"
                 hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
