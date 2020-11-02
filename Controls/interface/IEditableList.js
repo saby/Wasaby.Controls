@@ -601,9 +601,7 @@ define('Controls/interface/IEditableList', [
     * @remark
     * Перед запуском добавления по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
     * 
-    * Вы можете задать позицию, в которой отображается шаблон редактирования строки.
-    * Для этого в опции {@link editingConfig} установите значение в параметре {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}.
-    * Шаблон редактирования строки может отображаться в начале и в конце списка, группы (если включена {@link Controls/interface/IGroupedList#groupProperty группировка}) или узла (для иерархических списков).
+    * Вы можете задать позицию, в которой отображается шаблон редактирования строки. Для этого в опции {@link editingConfig} установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}. Шаблон редактирования строки может отображаться в начале и в конце списка, группы (если включена {@link Controls/interface/IGroupedList#groupProperty группировка}) или узла (для иерархических списков).
     * 
     * Если вы не передадите параметры, будет вызван метод {@link Types/source:ICrud#create create} источника списка, и результат будет добавлен в список.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
