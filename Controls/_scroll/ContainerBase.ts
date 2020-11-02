@@ -1,4 +1,4 @@
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
+// import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -35,7 +35,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _registrars: any = [];
 
     private _resizeObserver: ResizeObserverUtil;
-    private _observedElements: HTMLElement[] = [];
+    // private _observedElements: HTMLElement[] = [];
 
     private _resizeObserverSupported: boolean;
     // private _edgeObservers: IntersectionObserver[] = [];
@@ -75,8 +75,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._controlResizeHandler();
         }
         this._resizeObserver.observe(this._children.content);
+        this._resizeObserver.observe(this._children.contentWrapper);
 
-        this._observeContentSize();
+        // this._observeContentSize();
 
         // this._createEdgeIntersectionObserver();
 
@@ -93,8 +94,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     protected _afterUpdate(oldOptions?: IContainerBaseOptions): void {
-        this._observeContentSize();
-        this._unobserveDeleted();
+        // this._observeContentSize();
+        // this._unobserveDeleted();
         if (!this._resizeObserverSupported) {
             this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
         }
@@ -116,28 +117,28 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._resizeObserver.controlResizeHandler();
     }
 
-    _observeContentSize(): void {
-        for (const element of this._children.content.children) {
-            if (!this._observedElements.includes(element)) {
-                this._resizeObserver.observe(element);
-                this._observedElements.push(element);
-            }
-        }
-    }
-    _unobserveDeleted(): void {
-        const contentElements: HTMLElement[] = [...this._children.content.children];
-        this._observedElements = this._observedElements.filter((element: HTMLElement) => {
-            if (!contentElements.includes(element)) {
-                this._resizeObserver.unobserve(element);
-                return false;
-            }
-            return true;
-        });
-    }
-
-    _isObserved(element: HTMLElement): boolean {
-        return this._observedElements.includes(element);
-    }
+    // _observeContentSize(): void {
+    //     for (const element of this._children.content.children) {
+    //         if (!this._observedElements.includes(element)) {
+    //             this._resizeObserver.observe(element);
+    //             this._observedElements.push(element);
+    //         }
+    //     }
+    // }
+    // _unobserveDeleted(): void {
+    //     const contentElements: HTMLElement[] = [...this._children.content.children];
+    //     this._observedElements = this._observedElements.filter((element: HTMLElement) => {
+    //         if (!contentElements.includes(element)) {
+    //             this._resizeObserver.unobserve(element);
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+    // }
+    //
+    // _isObserved(element: HTMLElement): boolean {
+    //     return this._observedElements.includes(element);
+    // }
 
     _resizeHandler(e: SyntheticEvent): void {
         this._onResizeContainer(this._getFullStateFromDOM());
@@ -362,6 +363,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
             }
+            if (entry.target === this._children.contentWrapper) {
+                newState.scrollHeight = entry.contentRect.height;
+                newState.scrollWidth = entry.contentRect.width;
+            }
         }
 
         // Если контент был меньше скролируемой области, то его размер может не поменяться, когда меняется размер
@@ -371,12 +376,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
-        }
+        // if (newState.scrollHeight === undefined) {
+        //     newState.scrollHeight = this._children.content.scrollHeight;
+        // }
+        // if (newState.scrollWidth === undefined) {
+        //     newState.scrollWidth = this._children.content.scrollWidth;
+        // }
 
         this._updateStateAndGenerateEvents(newState);
     }
