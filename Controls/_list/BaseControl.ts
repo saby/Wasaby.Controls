@@ -3802,6 +3802,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._listViewModel.setSearchValue(newOptions.searchValue);
                 }
                 if (this._sourceController) {
+                    const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
+                    if (this._listViewModel.getHasMoreData() !== hasMore) {
+                        _private.setHasMoreData(this._listViewModel, hasMore);
+                    }
                     _private.setHasMoreData(this._listViewModel,
                         _private.hasMoreDataInAnyDirection(this, this._sourceController));
                 }
