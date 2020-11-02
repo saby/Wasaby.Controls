@@ -38,9 +38,11 @@ class SortingSelector extends Control<ISortingSelectorOptions> {
 
     // надо сбросить стрелку, которая показывает текущее выбранное значение. Остальные оставляем
     protected _resetSelectedArrow(): void {
-        const curArrowValue = this._options.value ? this._options.value[0][this._currentParamName] : 'ASC';
-        this._items?.getRecordById(this._currentParamName)?.set('value', curArrowValue);
-        this._orders[this._currentParamName] = curArrowValue;
+        if (this._options.value && this._options.value.length) {
+            const curArrowValue = this._options.value[0][this._currentParamName] || 'ASC';
+            this._items?.getRecordById(this._currentParamName)?.set('value', curArrowValue);
+            this._orders[this._currentParamName] = curArrowValue;
+        }
     }
 
     private updateConfig(sortingParams: [ISortingParam], value: [object]|undefined): void {
