@@ -299,10 +299,12 @@ export default class CollectionItem<T> extends mixin<
         );
     }
 
-    getMarkerClasses(theme: string, style: string, markerPosition: 'left' | 'right' = 'left'): string {
-        return `controls-ListView__itemV_marker
-                controls-ListView__itemV_marker_${style}_theme-${theme} controls-ListView__itemV_marker_theme-${theme}
-                controls-ListView__itemV_marker-${markerPosition}`;
+    getMarkerClasses(theme: string, style: string = 'default', markerPosition: 'left' | 'right' = 'left'): string {
+        let markerClasses = 'controls-ListView__itemV_marker';
+        markerClasses += ` controls-ListView__itemV_marker_${style}_theme-${theme}`;
+        markerClasses += ` controls-ListView__itemV_marker_theme-${theme}`;
+        markerClasses += ` controls-ListView__itemV_marker-${markerPosition}`;
+        return markerClasses;
     }
 
     increaseCounter(name: string): number {
