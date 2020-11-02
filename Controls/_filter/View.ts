@@ -909,40 +909,42 @@ var Filter = Control.extend({
         } else {
             item = factory(this._source).filter((item) => _private.isFrequentItem(item)).first();
         }
-        const name = item.name;
+        if (item) {
+            const name = item.name;
 
-        if (!this._configs[name]) {
-            _private.getConfigByItem(this, item);
-        }
-        if (item?.editorOptions.selectorTemplate) {
-            const selectedItems = [];
-            const items = this._configs[name]?.popupItems || this._configs[name]?.items;
-            const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
-            const selectorTemplate = item.editorOptions.selectorTemplate;
-            const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
-            if (items) {
-                factory(selectedKeys).each((key) => {
-                    if (key !== undefined && key !== null && items.getRecordById(key)) {
-                        selectedItems.push(items.getRecordById(key));
+            if (!this._configs[name]) {
+                _private.getConfigByItem(this, item);
+            }
+            if (item?.editorOptions.selectorTemplate) {
+                const selectedItems = [];
+                const items = this._configs[name]?.popupItems || this._configs[name]?.items;
+                const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
+                const selectorTemplate = item.editorOptions.selectorTemplate;
+                const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
+                if (items) {
+                    factory(selectedKeys).each((key) => {
+                        if (key !== undefined && key !== null && items.getRecordById(key)) {
+                            selectedItems.push(items.getRecordById(key));
+                        }
+                    });
+                }
+                templateOptions.multiSelect = item.editorOptions.multiSelect;
+                templateOptions.selectedItems = items || new List({
+                    items: selectedItems
+                });
+                this._idOpenSelector = name;
+                this._configs[name].initSelectorItems = templateOptions.selectedItems;
+                return this._children.selectorOpener.open({
+                    template: item.editorOptions.selectorTemplate.templateName,
+                    templateOptions,
+                    eventHandlers: {
+                        onSelectComplete: (event, result): void => {
+                            this._onSelectorTemplateResult(event, result);
+                            this._children.selectorOpener.close();
+                        }
                     }
                 });
             }
-            templateOptions.multiSelect = item.editorOptions.multiSelect;
-            templateOptions.selectedItems = items || new List({
-                items: selectedItems
-            });
-            this._idOpenSelector = name;
-            this._configs[name].initSelectorItems = templateOptions.selectedItems;
-            return this._children.selectorOpener.open({
-                template: item.editorOptions.selectorTemplate.templateName,
-                templateOptions,
-                eventHandlers: {
-                    onSelectComplete: (event, result): void => {
-                        this._onSelectorTemplateResult(event, result);
-                        this._children.selectorOpener.close();
-                    }
-                }
-            });
         }
     },
 

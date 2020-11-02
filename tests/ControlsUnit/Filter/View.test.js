@@ -1356,7 +1356,7 @@ define(
                   view2._loadDeferred = {
                      isReady: () => true
                   };
-                  view2.showSelector('notExistId');
+                  view2._showSelector('notExistId');
                   assert.isFalse(openFired);
                });
 
@@ -1399,7 +1399,52 @@ define(
                         }
                      }
                   };
-                  view2.showSelector('document').then(() => {
+                  view2._showSelector('document').then(() => {
+                     assert.isTrue(openFired);
+                     assert.isTrue(!!view2._configs.document, 'data loaded');
+                     done();
+                  });
+               });
+               it('dialog opened with first frequent item', (done) => {
+                  let openFired = false;
+                  let source = [{
+                     name: 'document',
+                     value: null,
+                     resetValue: null,
+                     viewMode: 'frequent',
+                     editorOptions: {
+                        multiSelect: false,
+                        source: new sourceLib.Memory({
+                           data: [{
+                              id: 0,
+                              title: 'Мой документ'
+                           }]
+                        }),
+                        selectorTemplate: {
+                           templateName: 'templateName',
+                           templateOptions: {
+                              option1: 'option'
+                           }
+                        }
+                     }
+                  }];
+                  const view2 = getView({
+                     source
+                  });
+                  view2._configs = {};
+                  view2._source = source;
+                  view2._loadDeferred = {
+                     isReady: () => true
+                  };
+                  view2._children = {
+                     selectorOpener: {
+                        open: () => {
+                           openFired = true;
+                           return Promise.resolve();
+                        }
+                     }
+                  };
+                  view2._showSelector().then(() => {
                      assert.isTrue(openFired);
                      assert.isTrue(!!view2._configs.document, 'data loaded');
                      done();
