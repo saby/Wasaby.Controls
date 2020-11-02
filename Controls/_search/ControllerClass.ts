@@ -347,7 +347,7 @@ export default class SearchControllerClass {
 
                 if (searchResult instanceof Promise) {
                     searchResult.then((result) => {
-                        if (result instanceof Error) {
+                        if (result instanceof Error && !result.canceled) {
                             this._options.dataLoadErrback({
                                 error: result,
                                 mode: dataSourceError.Mode.include
