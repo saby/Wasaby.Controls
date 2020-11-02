@@ -250,6 +250,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                });
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+        }
+
+        if (this._searchController) {
+            if (this._options.searchValue !== newOptions.searchValue) {
+                this._inputSearchValue = newOptions.searchValue;
+            }
             methodResult = this._updateSearchController(newOptions);
         }
 
@@ -258,9 +264,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
         return this._getSearchController().then((searchController) => {
-            searchController.update(
-               this._getSearchControllerOptions(newOptions)
-            );
+            const updateResult = searchController.update(this._getSearchControllerOptions(newOptions));
+
+            if (updateResult instanceof Promise) {
+                this._loading = true;
+                updateResult.then((result) => {
+                    this._searchDataLoad(result, newOptions.searchValue);
+                });
+            }
         });
     }
 
@@ -595,15 +606,19 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _search(event: SyntheticEvent, validatedValue: string): void {
         this._startSearch(validatedValue).then((result) => {
-            if (result instanceof RecordSet) {
-                this._handleDataLoad(result);
-                this._afterSearch(result, validatedValue);
-
-                this._getSourceController().setItems(result);
-            } else {
-                this._handleError(result);
-            }
+            this._searchDataLoad(result, validatedValue);
         });
+    }
+
+    protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
+        if (result instanceof RecordSet) {
+            this._handleDataLoad(result);
+            this._afterSearch(result, searchValue);
+
+            this._getSourceController().setItems(result);
+        } else {
+            this._handleError(result);
+        }
     }
 
     private _searchReset(event: SyntheticEvent): void {

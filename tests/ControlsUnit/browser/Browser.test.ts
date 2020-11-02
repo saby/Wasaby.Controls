@@ -206,6 +206,7 @@ describe('Controls/browser:Browser', () => {
                 };
                 browser._options.source = options.source;
                 browser._sourceController.updateOptions = () => { return true; };
+                await browser._getSearchController(browser._options);
                 await browser._beforeUpdate(options);
                 assert.deepStrictEqual(browser._searchController._options.filter, filter);
             });
