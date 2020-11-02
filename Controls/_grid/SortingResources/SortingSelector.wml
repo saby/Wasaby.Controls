@@ -15,7 +15,9 @@
                 footerContentTemplate="{{_options.footerContentTemplate}}"
                 fontColorStyle="{{_options.fontColorStyle}}"
                 emptyTemplate="{{_options.emptyTemplate}}"
-                headerTemplate="{{headerTemplate}}">
+                headerTemplate="{{headerTemplate}}"
+                on:dropDownClose="_resetSelectedArrow()"
+                dataLoadCallback="{{_saveLinkToItems}}">
             <ws:itemTemplate>
                 <ws:partial template="wml!Controls/_grid/SortingResources/SortingSelectorItemTemplate" scope="{{itemTemplate}}"></ws:partial>
             </ws:itemTemplate>
