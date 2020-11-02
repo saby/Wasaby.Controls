@@ -17,7 +17,7 @@ export interface IMovableList {
      * @param targetKey
      * @param position
      */
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void>;
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<CrudEntityKey>;
 
     /**
      * Перемещаетодин элемент вверх и возвращает результат перемещения
@@ -25,7 +25,7 @@ export interface IMovableList {
      * @public
      * @param selectedKey
      */
-    moveItemUp(selectedKey: CrudEntityKey): Promise<void>;
+    moveItemUp(selectedKey: CrudEntityKey): Promise<CrudEntityKey>;
 
     /**
      * Перемещает один элемент вниз и возвращает результат перемещения
@@ -33,7 +33,7 @@ export interface IMovableList {
      * @public
      * @param selectedKey
      */
-    moveItemDown(selectedKey: CrudEntityKey): Promise<void>;
+    moveItemDown(selectedKey: CrudEntityKey): Promise<CrudEntityKey>;
 
     /**
      * Перемещает указанные элементы при помощи диалога MoveDialog, и
@@ -42,5 +42,5 @@ export interface IMovableList {
      * @public
      * @param selection
      */
-    moveItemsWithDialog(selection: ISelectionObject): Promise<void>;
+    moveItemsWithDialog(selection: ISelectionObject): Promise<CrudEntityKey>;
 }
