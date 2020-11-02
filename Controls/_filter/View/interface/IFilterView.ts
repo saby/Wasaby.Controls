@@ -510,14 +510,6 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @see sourceChanged
  */
 
-/**
- * @event Происходит при клике на элемент
- * @name Controls/_filter/View/interface/IFilterView#itemClick
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {String} name Имя фильтра, на который кликнули.
- * @see itemClick
- */
-
 /*
  * @event Happens when filter changed.
  * @name Controls/_filter/View/interface/IFilterView#filterChanged
@@ -556,25 +548,6 @@ import {INavigationOptionValue} from 'Controls/interface';
  * <pre>
  * <!-- WML -->
  * <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
- * <Controls.filter:View name='filterView' />
- * </pre>
- * @see Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
- */
-
-/**
- * Открыть диалог выбора записей у фильтра.
- * @name Controls/_filter/View/interface/IFilterView#showSelector
- * @function
- * @example
- * <pre>
- * // TS
- * private _openPanel(): void {
- *    this._children.filterView.showSelector('document');
- * }
- * </pre>
- * <pre>
- * <!-- WML -->
- * <Controls.buttons:Button caption='open panel' on:click='_openFilter()'/>
  * <Controls.filter:View name='filterView' />
  * </pre>
  * @see Controls/_filter/View/interface/IFilterView#detailPanelTemplateName

@@ -29,7 +29,7 @@
                      on:rangeChanged="_rangeValueChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_needShowFastFilter(_source)}}">
-         <ws:if data="{{_options.panelTemplateName && _isFastReseted() && _options.detailPanelTemplateName}}">
+         <ws:if data="{{_isFastReseted() && _options.detailPanelTemplateName}}">
             <ws:partial template="itemTemplate"
                         name="all_frequent"
                         itemName="all_frequent"
