@@ -31,7 +31,16 @@ var TreeTileViewModel = TreeViewModel.extend({
             current._treeTileViewModelCached = true;
         }
         hoveredItem = this._tileModel.getHoveredItem();
-
+        // New Model compatibility
+        if (!(current.isHiddenGroup instanceof Function)) {
+            const isHiddenGroup = current.isHiddenGroup;
+            current.isHiddenGroup = () => isHiddenGroup;
+        }
+        current.getGroupPaddingClasses = (theme: string, direction: string) => current.groupPaddingClasses[direction];
+        if (!(current.isExpanded instanceof Function)) {
+            const collapsedGroups = this.getCollapsedGroups() || [];
+            current.isExpanded = () => !collapsedGroups.includes(dispItem.getContents());
+        }
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ' controls-TileView__checkbox js-controls-TileView__withoutZoom';
             current.multiSelectClassList += !current.isGroup && dispItem.isNode() ? ' controls-TreeTileView__checkbox' : '';
