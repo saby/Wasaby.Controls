@@ -341,7 +341,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                     ...(options ?? this._options),
                     sourceController: this._getSourceController(options ?? this._options)
                 });
-                this._inputSearchValue = this._searchValue;
 
                 return this._searchController;
             });
@@ -589,11 +588,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _startSearch(value: string): Promise<RecordSet | Error> {
-        if (this._viewMode !== 'search') {
-            return this._getSearchController().then((searchController) => {
-               return searchController.search(value);
-            });
-        }
+        return this._getSearchController().then((searchController) => {
+           return searchController.search(value);
+        });
     }
 
     protected _search(event: SyntheticEvent, validatedValue: string): void {
@@ -721,6 +718,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     _misspellCaptionClick(): void {
         this._search(null, this._misspellValue);
+        this._inputSearchValue = this._misspellValue;
         this._misspellValue = '';
     }
 
