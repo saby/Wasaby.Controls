@@ -9,8 +9,9 @@
         on:touchmove="_mouseMoveAndTouchMoveHandler()"
         on:mouseleave="_mouseLeaveAndTouchEndHandler()"
         on:touchend="_mouseLeaveAndTouchEndHandler()">
-      <div class="controls-Slider__mainSlider{{_options.size=='m' ? '_big' : '_small'}}_{{_options.direction}}_theme-{{_options.theme}}
-         controls-Slider__mainSlider_{{_options.size}}__offset_{{_options.borderVisible ? 'withBorder' : 'withoutBorder'}}_{{_options.direction}}_theme-{{_options.theme}}"
+      <div class="controls-Slider__mainSlider
+                  controls-Slider__mainSlider_{{_options.size}}_{{_options.direction}}{{_viewMode}}_theme-{{_options.theme}}
+                  controls-Slider__mainSlider_{{_options.size}}__offset_{{_options.borderVisible ? 'withBorder' : 'withoutBorder'}}_{{_options.direction}}_theme-{{_options.theme}}"
            name="area">
          <ws:for data="key, point in _pointData">
             <ws:if data="{{point.name=='tooltip' && (_tooltipValue || _tooltipValue==0) && !_options.readOnly || point.name!='tooltip'}}">
