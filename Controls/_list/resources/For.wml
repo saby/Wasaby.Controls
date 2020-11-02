@@ -28,7 +28,6 @@
                         backgroundStyle="{{ backgroundStyle }}"
                         isColumnScrollVisible="{{ isColumnScrollVisible }}"
                         tagTemplate="{{ tagTemplate }}"
-                        _onlyFixedColumns="{{ _onlyFixedColumns }}"
 
                         on:contextmenu="_onItemContextMenu(itemData)"
                         on:swipe="_onItemSwipe(itemData)"
@@ -53,7 +52,6 @@
                     backgroundStyle="{{ backgroundStyle }}"
                     isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{ tagTemplate }}"
-                    _onlyFixedColumns="{{ _onlyFixedColumns }}"
 
                     on:click="_onItemClick(itemData.dispItem)"
                     on:contextmenu="_onItemContextMenu(itemData)"

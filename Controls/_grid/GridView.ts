@@ -52,7 +52,7 @@ var
             }
         },
 
-        getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean, isOnlyFixedColumns: boolean): string {
+        getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
             if (!columns) {
                 Logger.warn('You must set "columns" option to make grid work correctly!', self);
                 return '';
@@ -67,7 +67,7 @@ var
             } else {
                 columnsWidths = initialWidths;
             }
-            if (!isOnlyFixedColumns && shouldAddActionsCell({
+            if (shouldAddActionsCell({
                 hasColumnScroll: !!self._options.columnScroll,
                 isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 hasColumns: !!columns.length,
@@ -569,12 +569,11 @@ var
             return classes.compile();
         },
 
-        _getGridViewStyles(isOnlyFixedColumns: boolean = false): string {
+        _getGridViewStyles(): string {
             let styles = '';
             if (GridLayoutUtil.isFullGridSupport()) {
                 const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
-                const columns = isOnlyFixedColumns ? this._options.columns.slice(0, this._options.stickyColumnsCount) : this._options.columns;
-                styles += _private.getGridTemplateColumns(this, columns, hasMultiSelect, isOnlyFixedColumns);
+                styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
             }
             return styles;
         },

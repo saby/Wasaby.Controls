@@ -1004,13 +1004,8 @@ var
             obj.goToNextHeaderColumn = function() {
                 this.curHeaderColumnIndex++;
             };
-            obj.isEndHeaderColumn = function(isOnlyFixedColumns: boolean) {
-                if (isOnlyFixedColumns) {
-                    const multiSelectOffset = self._options.multiSelectVisibility !== 'hidden' && self._options.multiSelectPosition !== 'custom' ? 1 : 0;
-                    return this.curHeaderColumnIndex < (self._options.stickyColumnsCount + multiSelectOffset);
-                } else {
-                    return this.curHeaderColumnIndex < this.headerCells.length;
-                }
+            obj.isEndHeaderColumn = function() {
+                return this.curHeaderColumnIndex < this.headerCells.length;
             };
             return obj;
         },
@@ -1070,7 +1065,6 @@ var
                     hasMultiSelectColumn,
                     stickyColumnsCount: this._options.stickyColumnsCount
                 };
-                headerColumn.stickyColumnsCount = this._options.stickyColumnsCount;
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
                 if (this._options.columnScrollVisibility) {
                     cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
@@ -1384,13 +1378,8 @@ var
             this._curResultsColumnIndex++;
         },
 
-        isEndResultsColumn: function(isOnlyFixedColumns: boolean) {
-            if (isOnlyFixedColumns) {
-                const multiSelectOffset = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition !== 'custom' ? 1 : 0;
-                return this._curResultsColumnIndex < (this._options.stickyColumnsCount + multiSelectOffset);
-            } else {
-                return this._curResultsColumnIndex < this._resultsColumns.length;
-            }
+        isEndResultsColumn: function() {
+            return this._curResultsColumnIndex < this._resultsColumns.length;
         },
 
         getResults() {
@@ -1727,10 +1716,7 @@ var
             current.getLastColumnIndex = () => {
                 return current.columns.length - 1;
             };
-            current.hasNextColumn = (isColumnColspaned: boolean, isOnlyFixedColumns: boolean) => {
-                if (isOnlyFixedColumns) {
-                    return current.columnIndex < (current.stickyColumnsCount + (current.hasMultiSelectColumn ? 1 : 0));
-                }
+            current.hasNextColumn = (isColumnColspaned: boolean) => {
                 if (isColumnColspaned) {
                     return current.columnIndex <= (current.hasMultiSelectColumn ? 1 : 0);
                 } else {
@@ -1920,7 +1906,6 @@ var
 
             prepared.forEach((column, index, columns) => {
                 column.isFullGridSupport = isFullGridSupport;
-
                 let styles = '';
                 let classes = `controls-GridView__footer__cell controls-GridView__footer__cell_theme-${theme}`;
 
@@ -1978,10 +1963,9 @@ var
                 };
 
                 column.getWrapperStyles = (containerSize: number) => {
-                    let styles = '';
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
                     if (isFullGridSupport && prepared.length === 1 && containerSize) {
-                        styles += `${styles} width: ${containerSize}px; `;
+                        return `${styles} width: ${containerSize}px;`;
                     }
                     return styles
                 };
