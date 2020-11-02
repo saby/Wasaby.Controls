@@ -371,13 +371,27 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
-        }
+        const children = this._children.content.children;
+        let childrenIndex: number;
+        let heigthValue = 0;
+        let widthValue = 0;
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            heigthValue += children[childrenIndex].offsetHeight;
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginTop);
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginBottom) ;
 
+        }
+        newState.scrollHeight = heigthValue;
+        if (newState.scrollHeight < newState.clientHeight) {
+            newState.scrollHeight = newState.clientHeight;
+        }
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            widthValue += children[childrenIndex].offsetWidth;
+        }
+        newState.scrollWidth = widthValue;
+        if (newState.scrollWidth <  newState.clientWidth) {
+            newState.scrollWidth = newState.clientWidth;
+        }
         this._updateStateAndGenerateEvents(newState);
     }
 
