@@ -46,3 +46,28 @@
    right: 0;
    transform: scaleX(-1);
 }
+
+.controls-Grid__ColumnScroll__fixedPart {
+   // Зафиксированные колонки при серверной верстке таблицы проскроленной в конец прижимаются к
+   // левому краю с помощью position: absolute
+   position: absolute;
+   top: 0;
+   left: 0;
+
+   // На такой таблице не должны срабатывать события, например, ховер по строке
+   pointer-events: none;
+
+   // Такая таблица должна перекрыть скроллируемые колонки с z индексом 4
+   z-index: 5;
+}
+
+.controls-Grid__ColumnScroll__scrollablePart {
+   // Скроллируемые колонки при серверной верстке таблицы проскроленной в конец прижимаются к
+   // правому краю с помощью position: absolute
+   position: absolute;
+   top: 0;
+   right: 0;
+
+   // На такой таблице не должны срабатывать события, например, ховер по строке
+   pointer-events: none;
+}

@@ -728,7 +728,7 @@ var
                     }
                 }
 
-                return `left: ${offsetLeft}px;`
+                return `left: ${offsetLeft}px; z-index: 5;`
             }
             return this._columnScrollController.getShadowStyles(position);
         },
