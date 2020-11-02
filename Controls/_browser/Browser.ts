@@ -630,7 +630,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _updateFilter(searchController: SearchController): void {
         const filter = searchController.reset(true);
-        this._notify('filterChanged', [filter]);
+        this._filterChanged(null, filter);
         this._setSearchValue('');
     }
 
