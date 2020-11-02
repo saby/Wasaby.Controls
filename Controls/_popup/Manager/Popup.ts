@@ -1,6 +1,7 @@
 import {constants} from 'Env/Env';
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {detection} from 'Env/Env';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
 import {RegisterClass} from 'Controls/event';
@@ -125,7 +126,7 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     private _checkResizeObserver(): void {
-        if (!this._hasSizes()) {
+        if (this._needListenResizeObserver()) {
             this._registerResizeObserver();
         } else {
             this._unregisterResizeObserver();
@@ -238,22 +239,23 @@ class Popup extends Control<IPopupControlOptions> {
         // Because children's afterMount happens before parent afterMount
 
         if (this._isPopupMounted) {
-            // Если размеров, ограничивающих контейнер, на окне нет, то
-            // отслеживание изменение размеров окна осуществляется через resizeObserverUtil
-            if (this._hasSizes()) {
+            if (!this._needListenResizeObserver()) {
                 this._notifyResizeInner();
             }
         }
     }
 
     private _resizeObserverCallback(): void {
-        if (!this._hasSizes()) {
+        if (this._needListenResizeObserver()) {
             this._notifyResizeInner();
         }
     }
 
-    private _hasSizes(): boolean {
-        return this._options.position.width !== undefined || this._options.position.height !== undefined;
+    private _needListenResizeObserver(): boolean {
+        // Если размеров, ограничивающих контейнер, на окне нет, то
+        // отслеживание изменение размеров окна осуществляется через resizeObserverUtil
+        const hasSizes = this._options.position.width !== undefined || this._options.position.height !== undefined;
+        return !hasSizes && !detection.isIE;
     }
 
     private _notifyResizeInner(): void {
