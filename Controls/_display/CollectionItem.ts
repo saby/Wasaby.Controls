@@ -304,16 +304,16 @@ export default class CollectionItem<T> extends mixin<
     getMarkerClasses(theme: string, style: string = 'default',
                      markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
                      markerPosition: 'left' | 'right' = 'left'): string {
-        let markerClass = 'controls-ListView__itemV_marker_';
+        let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
         if (markerClassName === 'default') {
             markerClass += 'default';
         } else {
             markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
         }
-        return `controls-ListView__itemV_marker
-                controls-ListView__itemV_marker_${style}_theme-${theme} controls-ListView__itemV_marker_theme-${theme}
-                controls-ListView__itemV_marker-${markerPosition}
-                ${markerClass}`;
+        markerClass += ` controls-ListView__itemV_marker_${style}_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker-${markerPosition}`;
+        return markerClass;
     }
 
     increaseCounter(name: string): number {
