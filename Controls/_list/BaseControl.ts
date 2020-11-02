@@ -3801,6 +3801,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (this._listViewModel) {
                     this._listViewModel.setSearchValue(newOptions.searchValue);
                 }
+                if (this._sourceController) {
+                    _private.setHasMoreData(this._listViewModel,
+                        _private.hasMoreDataInAnyDirection(this, this._sourceController));
+                }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -4063,7 +4067,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             let itemsUpdated = false;
             if (!this._modelRecreated) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
-            } 
+            }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
