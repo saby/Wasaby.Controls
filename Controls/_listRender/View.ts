@@ -209,7 +209,7 @@ export default class View extends Control<IViewOptions> {
      * @param clickEvent
      * @private
      */
-    protected _onItemActionClick(
+    protected _onItemActionMouseDown(
         e: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         action: IShownItemAction,

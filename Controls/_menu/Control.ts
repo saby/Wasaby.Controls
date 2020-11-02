@@ -38,7 +38,7 @@ import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOption
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
  * @demo Controls-demo/Menu/Control/Source/Index
- * 
+ *
  * @author Герасимов А.М.
  */
 
@@ -296,7 +296,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
      * @param clickEvent
      * @private
      */
-    protected _itemActionClick(event: SyntheticEvent<MouseEvent>,
+    protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
                                item: CollectionItem<Model>,
                                action: IItemAction,
                                clickEvent: SyntheticEvent<MouseEvent>): void {

@@ -99,6 +99,7 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 import {RemoveController} from './Controllers/RemoveController';
+import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -4839,11 +4840,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param itemData
      * @private
      */
-    _onItemActionsClick(
+    _onItemActionMouseDown(
         event: SyntheticEvent<MouseEvent>,
         action: IShownItemAction,
         itemData: CollectionItem<Model>
     ): void {
+        if (!isLeftMouseButton(event)) {
+            return;
+        }
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
         //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13

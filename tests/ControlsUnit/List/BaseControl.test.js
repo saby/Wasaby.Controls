@@ -4500,6 +4500,7 @@ define([
                immediatePropagating: true,
                propagating: true,
                nativeEvent: {
+                  button: 0,
                   prevented: false,
                   preventDefault: function() {
                      this.prevented = true;
@@ -4678,7 +4679,7 @@ define([
                   parent: 1
                })
             };
-            await instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            await instance._onItemActionMouseDown(fakeEvent, action, instance._listViewModel.at(0));
 
             // popup.Sticky.openPopup called in openItemActionsMenu is an async function
             // we cannot determine that it has ended
@@ -4946,7 +4947,7 @@ define([
                showType: 0
             };
             instance._listViewModel.getIndex = (item) => 0;
-            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            instance._onItemActionMouseDown(fakeEvent, action, instance._listViewModel.at(0));
             assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
             assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
@@ -4960,7 +4961,7 @@ define([
                showType: 0
             };
             instance._listViewModel.getIndex = (item) => 0;
-            instance._onItemActionsClick(fakeEvent, action, instance._listViewModel.at(0));
+            instance._onItemActionMouseDown(fakeEvent, action, instance._listViewModel.at(0));
             assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
             assert.exists(outgoingEventsMap.actionClick[3], 'Third argument has not been set');
             assert.exists(outgoingEventsMap.actionClick[3].preventDefault, 'Third argument should be nativeEvent');
