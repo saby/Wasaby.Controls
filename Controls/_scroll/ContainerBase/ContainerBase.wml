@@ -15,7 +15,7 @@ https://online.sbis.ru/opendoc.html?guid=10a3ac25-9b67-4b76-9706-ba8e73415246
     on:updatePlaceholdersSize="_updatePlaceholdersSize()"
     on:controlResize="_controlResizeHandler()"
     >
-    <div name="contentWrapper">
+    <div class="controls-Scroll-ContainerBase_contentWrapper" name="contentWrapper">
         <ws:partial
             attr:class="controls-Scroll-containerBase_userContent"
             template="{{_options.content}}"
