@@ -5,7 +5,8 @@ import {SCROLL_DIRECTION} from 'Controls/_scroll/Utils/Scroll';
 
 describe('Controls/scroll:ContainerBase', () => {
    const options: IContainerBaseOptions = {
-      scrollMode: SCROLL_MODE.VERTICAL
+      scrollMode: SCROLL_MODE.VERTICAL,
+      scrollable: true
    };
 
    describe('_beforeMount', () => {
@@ -24,6 +25,7 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
+         sinon.stub(control, '_isHeight100Percent');
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
@@ -31,9 +33,8 @@ describe('Controls/scroll:ContainerBase', () => {
                getBoundingClientRect: () => {}
             }
          };
-         control._afterMount();
+         control._afterMount(options);
          sinon.assert.called(control._resizeObserver.observe);
-         assert.sameMembers(control._observedElements, children);
          sinon.restore();
       });
    });
@@ -79,8 +80,6 @@ describe('Controls/scroll:ContainerBase', () => {
 
       it('should update state from dom if resize observer unavailable', () => {
          control._resizeObserverSupported = false;
-         sinon.stub(control, '_observeContentSize');
-         sinon.stub(control, '_unobserveDeleted');
 
          control._afterUpdate();
 
@@ -94,8 +93,6 @@ describe('Controls/scroll:ContainerBase', () => {
 
       it("should't update state from dom if resize observer available", () => {
          control._resizeObserverSupported = true;
-         sinon.stub(control, '_observeContentSize');
-         sinon.stub(control, '_unobserveDeleted');
 
          control._afterUpdate();
 
@@ -105,20 +102,6 @@ describe('Controls/scroll:ContainerBase', () => {
          assert.isUndefined(control._state.scrollHeight);
          assert.isUndefined(control._state.clientWidth);
          assert.isUndefined(control._state.scrollWidth);
-      });
-
-      it('should update observed containers', () => {
-         const children: string[] = ['children1', 'children2'];
-         control._beforeMount(options);
-         control._resizeObserverSupported = true;
-
-         sinon.stub(control._resizeObserver, 'observe');
-         control._children.content.children = children;
-         control._observedElements = ['children1', 'children3'];
-
-         control._afterUpdate();
-
-         assert.sameMembers(control._observedElements, children);
       });
    });
 
