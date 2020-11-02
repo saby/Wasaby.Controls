@@ -1,4 +1,5 @@
-<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}} controls-ComboBox-{{_options.readOnly? 'readOnly' : 'borderStyle-' + _borderStyle}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
+<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}}
+            controls-ComboBox-{{_readOnly ? 'readOnly' : 'borderStyle-' + _borderStyle}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
             {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
             controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
             controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
@@ -20,7 +21,7 @@
                 {{_value}}
             </ws:else>
         </div>
-        <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
+        <span if="{{!_readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
             <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpened ? 'CollapseLight' : 'ExpandLight'}}"></span>
         </span>
     </div>
