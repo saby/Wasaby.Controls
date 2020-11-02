@@ -124,7 +124,7 @@ var ListView = BaseControl.extend(
         },
 
         _beforeUnmount: function() {
-            if (this._listModel && !this._listModel._destroyed) {
+            if (this._listModel && !this._listModel.destroyed) {
                 this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
             }
         },
