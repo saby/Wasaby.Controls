@@ -1,9 +1,10 @@
-import * as isEmpty from 'Core/helpers/Object/isEmpty';
+// import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {RegisterClass, RegisterUtil, Registrar, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Logger} from 'UI/Utils';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
 import {scrollToElement} from './Utils/scrollToElement';
@@ -16,9 +17,12 @@ import {isHidden} from './StickyHeader/Utils';
 
 export interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: SCROLL_MODE;
+    scrollable: boolean;
 }
 
 const KEYBOARD_SHOWING_DURATION: number = 500;
+
+const CONTENT_WRAPPER_STRETCH = 'controls-Scroll-ContainerBase_contentWrapper-stretch';
 
 export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _template: TemplateFunction = template;
@@ -35,7 +39,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _registrars: any = [];
 
     private _resizeObserver: ResizeObserverUtil;
-    private _observedElements: HTMLElement[] = [];
+    // private _observedElements: HTMLElement[] = [];
 
     private _resizeObserverSupported: boolean;
     // private _edgeObservers: IntersectionObserver[] = [];
@@ -52,6 +56,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
 
+    protected _contentWrapperCssClass: string = '';
+
     _beforeMount(options: IContainerBaseOptions): void {
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
@@ -67,7 +73,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._registrars.scroll = new RegisterClass({register: 'scroll'});
     }
 
-    _afterMount(): void {
+    _afterMount(options: IContainerBaseOptions): void {
         if (!this._resizeObserver.isResizeObserverSupported()) {
             RegisterUtil(this, 'controlResize', this._controlResizeHandler, { listenAll: true });
             // ResizeObserver при инициализации контрола стрелнет событием ресайза.
@@ -75,8 +81,19 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._controlResizeHandler();
         }
         this._resizeObserver.observe(this._children.content);
+        this._resizeObserver.observe(this._children.contentWrapper);
 
-        this._observeContentSize();
+        if (!options.scrollable) {
+            this._contentWrapperCssClass = CONTENT_WRAPPER_STRETCH;
+        } else if (this._isHeight100Percent()) {
+            Logger.warn('Controls.scroll:Container: скролл контейнер сконфигурирован так, что контент в нем ' +
+                'никогда не скролится. Необходимо избавиться от такого использования скролл контейнера, либо' +
+                'временно устноввить опцию scrollable: false.');
+            this._contentWrapperCssClass = CONTENT_WRAPPER_STRETCH;
+        }
+
+
+        // this._observeContentSize();
 
         // this._createEdgeIntersectionObserver();
 
@@ -93,8 +110,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     protected _afterUpdate(oldOptions?: IContainerBaseOptions): void {
-        this._observeContentSize();
-        this._unobserveDeleted();
+        // this._observeContentSize();
+        // this._unobserveDeleted();
         if (!this._resizeObserverSupported) {
             this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
         }
@@ -112,32 +129,57 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._oldState = null;
     }
 
+    _isHeight100Percent(): boolean {
+        let is100Percent = false;
+        const contentWrapper = this._children.contentWrapper;
+        const content: HTMLElement = contentWrapper.children[0];
+        if (content) {
+            if (content.computedStyleMap) {
+                const styleMap = content.computedStyleMap();
+                const heightValue = styleMap.get('height');
+                if ((heightValue.value === 100 && heightValue.unit === 'percent') || styleMap.get('flex-shrink').value === 1) {
+                    is100Percent = true;
+                }
+            } else {
+                // Если не поддерживается computedStyleMap, то проверяем не оптимальным способом.
+                const originalDisplay = contentWrapper.style.display;
+                contentWrapper.style.display = 'none';
+                const style = getComputedStyle(content);
+                if (style.height === '100%' || style.flexGrow === '1') {
+                    is100Percent = true;
+                }
+                contentWrapper.style.display = originalDisplay;
+            }
+        }
+        return is100Percent;
+    }
+
     _controlResizeHandler(): void {
         this._resizeObserver.controlResizeHandler();
     }
 
-    _observeContentSize(): void {
-        for (const element of this._children.content.children) {
-            if (!this._observedElements.includes(element)) {
-                this._resizeObserver.observe(element);
-                this._observedElements.push(element);
-            }
-        }
-    }
-    _unobserveDeleted(): void {
-        const contentElements: HTMLElement[] = [...this._children.content.children];
-        this._observedElements = this._observedElements.filter((element: HTMLElement) => {
-            if (!contentElements.includes(element)) {
-                this._resizeObserver.unobserve(element);
-                return false;
-            }
-            return true;
-        });
-    }
-
-    _isObserved(element: HTMLElement): boolean {
-        return this._observedElements.includes(element);
-    }
+    // _observeContentSize(): void {
+    //     for (const element of this._children.content.children) {
+    //         if (!this._observedElements.includes(element)) {
+    //             this._resizeObserver.observe(element);
+    //             this._observedElements.push(element);
+    //         }
+    //     }
+    // }
+    // _unobserveDeleted(): void {
+    //     const contentElements: HTMLElement[] = [...this._children.content.children];
+    //     this._observedElements = this._observedElements.filter((element: HTMLElement) => {
+    //         if (!contentElements.includes(element)) {
+    //             this._resizeObserver.unobserve(element);
+    //             return false;
+    //         }
+    //         return true;
+    //     });
+    // }
+    //
+    // _isObserved(element: HTMLElement): boolean {
+    //     return this._observedElements.includes(element);
+    // }
 
     _resizeHandler(e: SyntheticEvent): void {
         this._onResizeContainer(this._getFullStateFromDOM());
@@ -362,6 +404,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
             }
+            if (entry.target === this._children.contentWrapper) {
+                newState.scrollHeight = entry.contentRect.height;
+                newState.scrollWidth = entry.contentRect.width;
+            }
         }
 
         // Если контент был меньше скролируемой области, то его размер может не поменяться, когда меняется размер
@@ -371,12 +417,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
-        }
+        // if (newState.scrollHeight === undefined) {
+        //     newState.scrollHeight = this._children.content.scrollHeight;
+        // }
+        // if (newState.scrollWidth === undefined) {
+        //     newState.scrollWidth = this._children.content.scrollWidth;
+        // }
 
         this._updateStateAndGenerateEvents(newState);
     }
@@ -683,6 +729,12 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (!event.propagating()) {
             return this._notify(eventName, args) || event.result;
         }
+    }
+
+    static getDefaultOptions() {
+        return {
+            scrollable: true
+        };
     }
 
     static _theme: string[] = ['Controls/scroll'];

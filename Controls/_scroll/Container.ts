@@ -99,7 +99,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._scrollCssClass = this._getScrollContainerCssClass(options);
         }
 
-        super._afterMount();
+        super._afterMount(...arguments);
 
         this._stickyHeaderController.init(this._container);
     }
@@ -390,6 +390,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     static getDefaultOptions() {
         return {
             ...getScrollbarsDefaultOptions(),
+            ...ContainerBase.getDefaultOptions(),
             topShadowVisibility: SHADOW_VISIBILITY.AUTO,
             bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
             shadowStyle: 'default',
