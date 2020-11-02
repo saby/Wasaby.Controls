@@ -245,16 +245,21 @@ export default class GridColumn<T> extends mixin<
         return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
     }
 
-    shouldDisplayMarker(marker: boolean): boolean {
-        return marker !== false && this._$owner.isMarked() && this.isFirstColumn();
+    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
+        if (markerPosition === 'right') {
+            return marker !== false && this._$owner.isMarked() && this.isLastColumn();
+        } else {
+            return marker !== false && this._$owner.isMarked() && this.isFirstColumn();
+        }
     }
 
     shouldDisplayItemActions(): boolean {
         return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
     }
 
-    getMarkerClasses(theme: string, style: string = 'default'): string {
+    getMarkerClasses(theme: string, style: string = 'default', markerPosition: 'left' | 'right' = 'left'): string {
         return `
+            controls-ListView__itemV_marker-${markerPosition}
             controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
             controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
         `;

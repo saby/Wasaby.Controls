@@ -270,6 +270,7 @@ var TileViewModel = ListViewModel.extend({
 
     getActionsMenuConfig(itemData, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
         if (this._options.actionMenuViewMode === 'preview') {
+            const MENU_MAX_WIDTH = 200;
             const menuOptions = templateOptions;
             /* TODO Вынести этот код из модели в контрол плитки
                https://online.sbis.ru/opendoc.html?guid=7f6ac2cf-15e6-4b75-afc6-928a86ade83e */
@@ -289,6 +290,8 @@ var TileViewModel = ListViewModel.extend({
 
             return {
                 templateOptions,
+                closeOnOutsideClick: true,
+                maxWidth: menuOptions.previewWidth + MENU_MAX_WIDTH,
                 target: imageWrapper,
                 className: 'controls-TileView__itemActions_menu_popup',
                 targetPoint: {
