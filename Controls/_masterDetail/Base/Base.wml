@@ -4,6 +4,7 @@
          <Controls.event:Register name="resizeDetectMaster" register="controlResize" attr:fixCompatible="1">
             <ws:partial
                template="{{_options.master}}"
+               backgroundStyle="master"
                attr:class="controls-MasterDetail_master-template controls-MasterDetail_{{_options.style || 'master'}}-template_theme-{{_options.theme}}
                            controls-MasterDetail_{{_options.style || 'master'}}-template-{{_options.contrastBackground ? 'contrast' : 'same'}}_theme-{{_options.theme}}"
                on:selectedMasterValueChanged="_selectedMasterValueChangedHandler()"/>
