@@ -110,7 +110,9 @@ export default class ControllerClass implements ISearchController {
       const sourceController = this._options.sourceController;
 
       sourceController.setFilter(filter);
-      return sourceController.load().then((recordSet) => {
+
+      // TODO: Без прямой передачи фильтра в load фильтр не учитывается в sourceController (setFilter тут бесполезен)
+      return sourceController.load(undefined, undefined, filter).then((recordSet) => {
          if (recordSet instanceof RecordSet) {
             this._path = recordSet.getMetaData().path;
 

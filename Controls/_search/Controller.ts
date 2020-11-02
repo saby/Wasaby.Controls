@@ -257,6 +257,7 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _misspellCaptionClick(): void {
       this._search(null, this._misspellValue);
+      this._inputSearchValue = this._misspellValue;
       this._misspellValue = '';
    }
 
