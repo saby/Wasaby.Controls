@@ -83,6 +83,7 @@
 
     <!-- Подвал таблицы -->
     <ws:partial template="wml!Controls/_grid/FooterTemplate"
+                if="{{ !_onlyFixedColumns }}"
                 columns="{{ _listModel.getFooter() }}"
                 containerSize="{{ _containerSize }}"
                 hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"

@@ -23,7 +23,7 @@
 </ws:template>
 
 <ws:if data="{{_options.columnScroll}}">
-    <div name="columnScrollContainer" class="{{ _columnScrollContainerClasses }}" on:wheel="_columnScrollWheelHandler()">
+    <div name="columnScrollContainer" class="{{ _columnScrollContainerClasses }}" on:wheel="_columnScrollWheelHandler()" on:mouseenter="_onViewMouseEnter()">
         <style name="columnScrollStylesContainer" data-vdom-ignore="true"></style>
 
         <!-- Тени -->

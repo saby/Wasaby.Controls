@@ -603,6 +603,17 @@ var
             _private.setHoveredCell(this, itemData.item, event.nativeEvent);
         },
 
+        _onViewMouseEnter: function() {
+            // При загрузке таблицы с проскроленным в конец горизонтальным скролом следует оживить таблицу при
+            // вводе в нее указателя мыши, но после отрисовки thumb'а (скрыт через visibility) во избежание скачков
+            if (this._showFakeGridWithColumnScroll) {
+                if (this._canShowRealGridWithColumnScroll) {
+                    this._showFakeGridWithColumnScroll = false;
+                }
+                this._canShowRealGridWithColumnScroll = true;
+            }
+        },
+
         _onItemMouseLeave: function() {
             GridView.superclass._onItemMouseLeave.apply(this, arguments);
             _private.setHoveredCell(this, null, null);
