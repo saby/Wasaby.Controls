@@ -3,7 +3,7 @@ import {Memory, SbisService} from 'Types/source';
 import {RecordSet, List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {deepStrictEqual, ok} from 'assert';
-import {stub} from 'sinon';
+import {stub, spy} from 'sinon';
 import {error} from 'Controls/dataSource';
 import {Service} from 'Controls/history';
 
@@ -111,15 +111,14 @@ describe('Controls/_lookup/BaseControllerClass', () => {
     describe('update', () => {
         it('source is changed while loading', async () => {
             const controller = getLookupControllerWithSelectedKeys();
-            const isLoadCanceled = false;
             controller.loadItems();
-            controller._sourceController.cancelLoading = () => {
-                isLoadCanceled = true;
-            };
+            const spyCancelLoading = spy(controller._sourceController, 'cancelLoading');
+
             const options = getControllerOptions();
             options.source = getSource();
             await controller.update(options);
-            ok(isLoadCanceled);
+            ok(spyCancelLoading.calledOnce);
+            spyCancelLoading.restore();
         });
     });
 

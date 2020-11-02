@@ -44,7 +44,7 @@ export default class LookupBaseControllerClass {
         this._options = newOptions;
 
         if (sourceIsChanged && this._sourceController) {
-            this._sourceController.cancelLoading();
+            this._sourceController.destroy();
             this._sourceController = null;
         }
 
