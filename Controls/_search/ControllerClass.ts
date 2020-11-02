@@ -72,19 +72,20 @@ export default class ControllerClass implements ISearchController {
       return this._updateFilterAndLoad(filter);
    }
 
-   update(options: Partial<ISearchControllerOptions>): void {
+   update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> {
       const needUpdateRoot = this._options.root !== options.root;
+      let updateResult;
 
       if (needUpdateRoot) {
          this.setRoot(options.root);
       }
 
-      if (options.hasOwnProperty('searchValue')) {
+      if (options.searchValue !== undefined) {
          if (options?.searchValue !== this._searchValue) {
             if (options.searchValue) {
-               this.search(options.searchValue).then();
+               updateResult = this.search(options.searchValue).then();
             } else {
-               this.reset();
+               updateResult = this.reset();
             }
          }
       }
@@ -92,6 +93,7 @@ export default class ControllerClass implements ISearchController {
          ...this._options,
          ...options
       };
+      return updateResult;
    }
 
    setRoot(value: Key): void {
