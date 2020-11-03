@@ -295,9 +295,11 @@ var
                         // то без перерисовки мы не можем корректно отобразить данные в новых колонках.
                         // правка конфликтует с https://online.sbis.ru/opendoc.html?guid=a8429971-3a3c-44d0-8cca-098887c9c717
                         self._listModel.setColumns(newOptions.columns, false);
+                        self._listModel.setFooter(newOptions.footer || [{ template: newOptions.footerTemplate }], true);
                     });
                 } else {
                     self._listModel.setColumns(newOptions.columns);
+                    self._listModel.setFooter(newOptions.footer || [{ template: newOptions.footerTemplate }], true);
                 }
             }
         },
@@ -446,7 +448,7 @@ var
                 this._listModel.setHeader(newCfg.header);
             }
 
-            if (_private.isFooterChanged(this._options, newCfg) || (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility)) {
+            if (!self._columnsHaveBeenChanged && (_private.isFooterChanged(this._options, newCfg) || (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility))) {
                 this._listModel.setFooter(newCfg.footer || [{ template: newCfg.footerTemplate }]);
             }
             if (this._options.stickyColumn !== newCfg.stickyColumn) {
