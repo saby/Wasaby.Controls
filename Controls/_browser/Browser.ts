@@ -675,6 +675,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._getSearchController().then((searchController) => {
                 this._root = newRoot;
                 searchController.setRoot(newRoot);
+                this._notify('rootChanged', [newRoot]);
             });
         }
     }

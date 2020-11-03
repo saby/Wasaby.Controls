@@ -150,6 +150,7 @@ export default class Container extends Control<IContainerOptions> {
          this._getSearchController().then((searchController) => {
             this._root = newRoot;
             searchController.setRoot(newRoot);
+            this._notify('rootChanged', [newRoot]);
          });
       }
    }
