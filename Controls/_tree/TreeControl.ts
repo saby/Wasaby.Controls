@@ -497,7 +497,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
-            if ((newOptions.source === this._options.source && isEqual(newOptions.filter, this._options.filter)) ||
+            if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
                 (searchValueChanged && newOptions.sourceController)) {
                 viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
