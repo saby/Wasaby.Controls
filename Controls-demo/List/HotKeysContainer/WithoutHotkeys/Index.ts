@@ -3,9 +3,9 @@ import { Memory } from 'Types/source';
 import { getData } from '../resources/DataSource';
 
 // @ts-ignore
-import template = require('wml!Controls-demo/HotKeys/ScrollHotKey/ScrollHotKey');
+import template = require('wml!Controls-demo/List/HotKeysContainer/WithoutHotkeys/Template');
 
-class ScrollHotKey extends Control {
+class ListWithoutHotKey extends Control {
    _template: TemplateFunction = template;
 
    protected _viewSource: Memory;
@@ -13,12 +13,12 @@ class ScrollHotKey extends Control {
    protected _beforeMount(): void {
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: getData(50)
+         data: getData(10)
       });
    }
 
 }
 
-ScrollHotKey._styles = ['Controls-demo/HotKeys/resources/HotKeys'];
+ListWithoutHotKey._styles = ['Controls-demo/List/HotKeysContainer/resources/HotKeys'];
 
-export default ScrollHotKey;
+export default ListWithoutHotKey;

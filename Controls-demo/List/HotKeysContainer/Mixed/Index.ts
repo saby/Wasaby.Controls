@@ -3,9 +3,9 @@ import { Memory } from 'Types/source';
 import { getData } from '../resources/DataSource';
 
 // @ts-ignore
-import template = require('wml!Controls-demo/HotKeys/ListHotKey/ListHotKey');
+import template = require('wml!Controls-demo/List/HotKeysContainer/Mixed/Template');
 
-class ListHotKey extends Control {
+class Index extends Control {
    _template: TemplateFunction = template;
 
    protected _viewSource: Memory;
@@ -13,12 +13,12 @@ class ListHotKey extends Control {
    protected _beforeMount(): void {
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: getData(10)
+         data: getData( 10)
       });
    }
 
 }
 
-ListHotKey._styles = ['Controls-demo/HotKeys/resources/HotKeys'];
+Index._styles = ['Controls-demo/List/HotKeysContainer/resources/HotKeys'];
 
-export default ListHotKey;
+export default Index;
