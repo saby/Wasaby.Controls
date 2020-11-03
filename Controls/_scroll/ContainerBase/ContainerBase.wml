@@ -1,5 +1,7 @@
 <div class="controls-Scroll-ContainerBase {{_scrollCssClass}}"
     name="content"
+    on:enableVirtualNavigation="_enableVirtualNavigationHandler()"
+    on:disableVirtualNavigation="_disableVirtualNavigationHandler()"
     on:scroll="_scrollHandler()">
     <ws:partial
         attr:class="controls-Scroll-containerBase_userContent"
