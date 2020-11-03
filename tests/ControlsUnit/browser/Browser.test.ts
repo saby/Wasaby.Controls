@@ -156,7 +156,7 @@ describe('Controls/browser:Browser', () => {
                 equal(browser._topShadowVisibilityFromOptions, 'auto');
                 equal(browser._bottomShadowVisibilityFromOptions, 'auto');
 
-                browser.this._items._metaData.more = {
+                browser._items._metaData.more = {
                     before: false, after: false
                 };
                 browser._beforeUpdate(newOptions);
