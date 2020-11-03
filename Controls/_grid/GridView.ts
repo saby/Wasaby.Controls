@@ -317,14 +317,7 @@ var
             ) {
                 return false;
             } else {
-                // Подвал показывается, необходимо проверить, изменился ли он
-                if (!!newOptions.footer) {
-                    return !GridIsEqualUtil.isEqual(oldOptions.footer, newOptions.footer, {
-                        template: GridIsEqualUtil.isEqualTemplates
-                    })
-                } else {
-                    return !GridIsEqualUtil.isEqualTemplates(oldOptions.footerTemplate, newOptions.footerTemplate);
-                }
+                return false;
             }
         }
     },
