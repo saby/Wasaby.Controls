@@ -177,7 +177,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         const item = this.options.display.createItem({
             contents: protoItem?.getContents()
         });
-        if (item) {
+        if (item && protoItem) {
             item.setDragged(true, true);
             item.setMarked(protoItem.isMarked(), true);
             item.setSelected(protoItem.isSelected(), true);
