@@ -4,11 +4,18 @@ export const enum SHADOW_VISIBILITY {
    AUTO = 'auto'
 }
 
+export const enum SHADOW_MODE {
+    JS = 'js',
+    MIXED = 'mixed',
+    CSS = 'css'
+}
+
 export interface IShadowsOptions {
     topShadowVisibility: SHADOW_VISIBILITY;
     bottomShadowVisibility: SHADOW_VISIBILITY;
     leftShadowVisibility: SHADOW_VISIBILITY;
     rightShadowVisibility: SHADOW_VISIBILITY;
+    shadowMode: SHADOW_MODE;
 }
 
 export interface IShadowsVisibilityByInnerComponents {
@@ -23,7 +30,8 @@ export function getDefaultOptions(): IShadowsOptions {
         topShadowVisibility: SHADOW_VISIBILITY.AUTO,
         bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
         leftShadowVisibility: SHADOW_VISIBILITY.AUTO,
-        rightShadowVisibility: SHADOW_VISIBILITY.AUTO
+        rightShadowVisibility: SHADOW_VISIBILITY.AUTO,
+        shadowMode: SHADOW_MODE.MIXED
     };
 }
 
