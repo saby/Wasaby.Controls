@@ -1,12 +1,12 @@
 import {Container} from 'Controls/scroll';
 import {constants} from 'Env/Env';
-import {SHADOW_VISIBILITY} from 'Controls/_scroll/Container/Interface/IShadows';
+import {SHADOW_VISIBILITY, SHADOW_MODE} from 'Controls/_scroll/Container/Interface/IShadows';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
 
 function createComponent(Component, cfg) {
     let cmp;
     if (Component.getDefaultOptions) {
-        cfg = { ...Component.getDefaultOptions(), ...cfg };
+        cfg = { theme: 'default', ...Component.getDefaultOptions(), ...cfg };
     }
     cmp = new Component(cfg);
     cmp.saveOptions(cfg);
@@ -20,6 +20,38 @@ describe('Controls/scroll:Container', () => {
             const component = createComponent(Container, {});
 
             assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
+        });
+    });
+
+    describe('shadowMode', () => {
+        [{
+            shadowMode: SHADOW_MODE.JS,
+            isOptimizeShadowEnabled: false,
+            isOptimizeShadowEnabledAfterMouseEnter: false,
+            optimizeShadowClass: '',
+            optimizeShadowClassAfterMouseEnter: ''
+        }, {
+            shadowMode: SHADOW_MODE.MIXED,
+            isOptimizeShadowEnabled: true,
+            isOptimizeShadowEnabledAfterMouseEnter: false,
+            optimizeShadowClass: 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default_theme-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-default',
+            optimizeShadowClassAfterMouseEnter: ''
+        }, {
+            shadowMode: SHADOW_MODE.CSS,
+            isOptimizeShadowEnabled: true,
+            isOptimizeShadowEnabledAfterMouseEnter: true,
+            optimizeShadowClass: 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default_theme-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-default',
+            optimizeShadowClassAfterMouseEnter: 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default_theme-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-default'
+        }].forEach((test) => {
+            it(test.shadowMode, () => {
+                const component = createComponent(Container, {shadowMode: test.shadowMode});
+                assert.strictEqual(component._isOptimizeShadowEnabled, test.isOptimizeShadowEnabled);
+                assert.strictEqual(component._optimizeShadowClass, test.optimizeShadowClass);
+
+                component._mouseenterHandler();
+                assert.strictEqual(component._isOptimizeShadowEnabled, test.isOptimizeShadowEnabledAfterMouseEnter);
+                assert.strictEqual(component._optimizeShadowClass, test.optimizeShadowClassAfterMouseEnter);
+            });
         });
     });
 

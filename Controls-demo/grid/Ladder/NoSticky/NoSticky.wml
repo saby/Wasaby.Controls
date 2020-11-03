@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls.scroll:Container attr:class="controlsDemo__height400">
+    <Controls.scroll:Container attr:class="controlsDemo__height400" shadowMode="js">
             <Controls.grid:View
                     keyProperty="id"
                     source="{{_viewSource}}"

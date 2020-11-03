@@ -12,7 +12,7 @@
                   <Controls.search:Input placeholder="Введите"
                                          attr:class="controls-demo_MasterDetail_master_search_input"/>
                </div>
-               <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
+               <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master" shadowMode="js">
                   <Controls.masterDetail:List bind:markedKey="_markedKey" selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                      <Controls.grid:View
                              source="{{_masterSource}}"
@@ -67,7 +67,7 @@
                <Controls.search:Input placeholder="Введите"
                                       attr:class="controls-demo_MasterDetail_master_search_input"/>
             </div>
-            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
+            <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master" shadowMode="js">
                <Controls.masterDetail:List bind:markedKey="_markedKey2" selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                   <Controls.list:View
                           style="master"
@@ -129,7 +129,7 @@
                   <Controls.search:Input placeholder="Введите"
                                          attr:class="controls-demo_MasterDetail_master_search_input"/>
                </div>
-               <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master">
+               <Controls.scroll:Container attr:class="controls-demo_MasterDetail_master" shadowMode="js">
                   <Controls.masterDetail:List bind:markedKey="_markedKey3" selectedField="sourceType" attr:class="controls-demo_MasterDetail_master_list">
                      <Controls.treeGrid:View
                              source="{{_masterSource}}"
