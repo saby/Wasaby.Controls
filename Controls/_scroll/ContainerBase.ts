@@ -174,6 +174,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _unRegisterIt(event: SyntheticEvent, registerType: string, component: any): void {
         this._registrars.scrollStateChanged.unregister(event, registerType, component);
         this._registrars.scroll.unregister(event, registerType, component);
+        this._registrars.listScroll.unregister(event, registerType, component);
         this._virtualNavigationRegistrar.unregister(event, registerType, component);
     }
 
