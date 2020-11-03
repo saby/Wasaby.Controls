@@ -464,8 +464,27 @@ const _private = {
     },
 
     isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
+        const items1Model = items1.getModel();
+        const items2Model = items2.getModel();
+        let isModelEqual = items1Model === items2Model;
+
+        function getModelModuleName(model: string|Function): string {
+            let name;
+
+            if (typeof model === 'function') {
+                name = model.prototype._moduleName;
+            } else {
+                name = model;
+            }
+
+            return name;
+        }
+
+        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
+            isModelEqual = true;
+        }
         return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            (items1.getModel() === items2.getModel()) &&
+            isModelEqual &&
             (items1.getKeyProperty() === items2.getKeyProperty()) &&
             (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
             (Object.getPrototypeOf(items1.getAdapter()).constructor ===
