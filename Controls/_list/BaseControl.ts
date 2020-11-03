@@ -386,19 +386,6 @@ const _private = {
                         self._cachedPagingState = false;
                     }
 
-                    // Модели могло изначально не создаться (не передали receivedState и source)
-                    // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-                    if (!self._destroyed && !listModel && cfg.useNewModel && list) {
-                        self._listViewModel = listModel = self._createNewModel(
-                            list,
-                            { ...cfg },
-                            cfg.viewModelConstructor
-                        );
-                        if (cfg.itemsReadyCallback) {
-                            cfg.itemsReadyCallback(listModel.getCollection());
-                        }
-                    }
-
                     if (listModel) {
                         if (self._groupingLoader) {
                             self._groupingLoader.resetLoadedGroups(listModel);
@@ -418,6 +405,18 @@ const _private = {
                             self._shouldNotifyOnDrawItems = true;
                         }
 
+                    } else if (!self._destroyed && cfg.useNewModel && list) {
+                        // Модели могло изначально не создаться (не передали receivedState и source)
+                        // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
+                        self._listViewModel = listModel = self._createNewModel(
+                            list,
+                            { ...cfg },
+                            cfg.viewModelConstructor
+                        );
+                        if (cfg.itemsReadyCallback) {
+                            cfg.itemsReadyCallback(listModel.getCollection());
+                        }
+                        self._shouldNotifyOnDrawItems = true;
                     }
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
