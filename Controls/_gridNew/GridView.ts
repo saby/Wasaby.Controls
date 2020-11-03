@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridLayoutUtil } from 'Controls/grid';
+import { GridLadderUtil, GridLayoutUtil } from 'Controls/grid';
 import * as Template from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as Item from 'wml!Controls/_gridNew/Render/grid/Item';
 import { prepareEmptyEditingColumns } from "../_grid/utils/GridEmptyTemplateUtil";
@@ -16,6 +16,15 @@ const _private = {
         const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
         let columnsWidths: string[] = [];
         columnsWidths = initialWidths;
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns
+        });
+        if (ladderStickyColumn) {
+            if (ladderStickyColumn.property.length === 2) {
+                columnsWidths.splice(1, 0, '0px');
+            }
+            columnsWidths = ['0px'].concat(columnsWidths);
+        }
         if (hasMultiSelect) {
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
@@ -43,7 +52,10 @@ const GridView = ListView.extend({
     },
 
     _getGridViewClasses(): string {
-        const classes = `controls-Grid controls-Grid_${this._options.style}_theme-${this._options.theme}`;
+        let classes = `controls-Grid controls-Grid_${this._options.style}_theme-${this._options.theme}`;
+        if (GridLadderUtil.isSupportLadder(this._options.ladderProperties)) {
+            classes += ' controls-Grid_support-ladder';
+        }
         return classes;
     },
 

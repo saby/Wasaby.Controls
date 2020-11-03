@@ -2,7 +2,11 @@ import { isEqual } from 'Types/object';
 import { isFullGridSupport } from './GridLayoutUtil';
 import { detection } from 'Env/Env';
 import { TColumns } from '../interface/IColumn';
-import { ListItemTemplate } from 'Controls/listTemplates';
+
+export interface IStickyColumn {
+    index: number;
+    property: string;
+}
 
 interface IStickyColumnsParams {
     columns: TColumns;
@@ -127,7 +131,7 @@ export function prepareLadder(params: IPrepareLadderParams): {} {
     };
 }
 
-export function getStickyColumn(params: IStickyColumnsParams): object {
+export function getStickyColumn(params: IStickyColumnsParams): IStickyColumn {
     let result;
     if (params.stickyColumn) {
         result = {

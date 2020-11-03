@@ -1,15 +1,11 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
-import { TColumns } from '../_grid/interface/IColumn';
-import { THeader } from '../_grid/interface/IHeaderCell';
 import GridHeader from './GridHeader';
-import GridResults from './GridResults';
+import GridResults, { TResultsPosition } from './GridResults';
 import GridFooter from './GridFooter';
-/* todo заготовка для ladder
-import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn } from '../_grid/utils/GridLadderUtil';*/
-
-type TResultsPosition = 'top' | 'bottom';
+import { TColumns, THeader } from 'Controls/grid';
+import { GridLadderUtil } from 'Controls/gridNew';
 
 export interface IOptions<
     S,
@@ -21,8 +17,8 @@ export interface IOptions<
     resultsTemplate: TemplateFunction;
     resultsPosition: TResultsPosition;
     headerInEmptyListVisible: boolean;
-    /* todo заготовка для ladder
-    ladderProperties: string[];*/
+    ladderProperties: string[];
+    stickyColumn: {};
 }
 
 export default class GridCollection<
@@ -33,13 +29,17 @@ export default class GridCollection<
     protected _$header: GridHeader<S>;
     protected _$footer: GridFooter<S>;
     protected _$results: GridResults<S>;
-    /* todo заготовка для ladder
-    protected _$ladder: {}; */
+    protected _$ladder: {};
+    protected _$ladderProperties: string[];
+    protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
     protected _$headerInEmptyListVisible: boolean;
 
     constructor(options: IOptions<S, T>) {
         super(options);
+
+        this._initializeLadder(this._$ladderProperties, this._$columns);
+
         this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
         this._$resultsPosition = options.resultsPosition;
 
@@ -52,10 +52,6 @@ export default class GridCollection<
         if (this._resultsIsVisible()) {
             this._$results = this._initializeResults(options);
         }
-        /* todo заготовка для ladder
-        if (isSupportLadder(options.ladderProperties)) {
-            this._$ladder = this._initializeLadder(options);
-        }*/
     }
 
     getColumns(): TColumns {
@@ -78,23 +74,47 @@ export default class GridCollection<
         return this._$resultsPosition;
     }
 
-    /*  todo заготовка для ladder
-    protected _initializeLadder(options: IOptions<S>): {} {
-        return prepareLadder({
-            columns: options.columns,
-            ladderProperties: options.ladderProperties,
-            startIndex: this.getStartIndex(),
-            stopIndex: this.getStopIndex(),
-            display: this
-        });
-    }*/
-
     getEmptyTemplateClasses(theme?: string): string {
         const rowSeparatorSize = this.getRowSeparatorSize();
         let emptyTemplateClasses = `controls-GridView__emptyTemplate js-controls-GridView__emptyTemplate`;
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}`;
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
         return emptyTemplateClasses;
+    }
+
+    getLadder(item: T): {} {
+        let result;
+        if (this._$ladder && this._$ladder.ladder) {
+            result = this._$ladder.ladder[this.getIndex(item)];
+        }
+        return result;
+    }
+
+    getStickyColumn(): GridLadderUtil.IStickyColumn {
+        return GridLadderUtil.getStickyColumn({
+            stickyColumn: this._$stickyColumn,
+            columns: this._$columns
+        });
+    }
+
+    getStickyLadder(item: T): {} {
+        let result;
+        if (this._$ladder && this._$ladder.stickyLadder) {
+            result = this._$ladder.stickyLadder[this.getIndex(item)];
+        }
+        return result;
+    }
+
+    protected _initializeLadder(ladderProperties: string[], columns: TColumns): void {
+        if (GridLadderUtil.isSupportLadder(ladderProperties)) {
+            this._$ladder = GridLadderUtil.prepareLadder({
+                columns: columns,
+                ladderProperties: ladderProperties,
+                startIndex: this.getStartIndex(),
+                stopIndex: this.getStopIndex() || this.getCollectionCount(),
+                display: this
+            });
+        }
     }
 
     protected _headerIsVisible(options: IOptions<S>): boolean {
@@ -133,9 +153,6 @@ export default class GridCollection<
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
-            /* todo заготовка для ladder
-            options.ladder = this._$ladder;
-             */
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
@@ -148,5 +165,7 @@ Object.assign(GridCollection.prototype, {
     _itemModule: 'Controls/display:GridCollectionItem',
     _$columns: null,
     _$headerInEmptyListVisible: false,
-    _$resultsPosition: null
+    _$resultsPosition: null,
+    _$ladderProperties: null,
+    _$stickyColumn: null
 });
