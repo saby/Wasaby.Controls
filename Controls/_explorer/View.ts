@@ -191,6 +191,7 @@ var
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
             _private.setViewConfig(self, self._viewMode);
+            _private.applyNewVisualOptions(self);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
             var result;
@@ -210,6 +211,12 @@ var
             }
 
             return result;
+         },
+         applyNewVisualOptions(self): void {
+            if (self._newItemPadding) {
+               self._itemPadding = self._newItemPadding;
+               self._newItemPadding = null;
+            }
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -382,7 +389,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     */
@@ -419,7 +426,7 @@ var
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     */
@@ -440,12 +447,16 @@ var
       _markerForRestoredScroll: null,
       _navigation: null,
       _resetScrollAfterViewModeChange: false,
+      _itemPadding: {},
 
       _resolveItemsPromise() {
          this._itemsResolver();
       },
 
       _beforeMount: function(cfg) {
+         if (cfg.itemPadding) {
+            this._itemPadding = cfg.itemPadding;
+         }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -484,7 +495,9 @@ var
          const isRootChanged = cfg.root !== this._options.root;
          const loadedBySourceController = isSearchViewMode && cfg.sourceController;
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
-
+         if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
+            this._newItemPadding = cfg.itemPadding;
+         }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
          * Чтобы список мог восстановить позицию скрола по отмеченой записи, она должна быть в наборе данных.
@@ -521,6 +534,8 @@ var
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
+         } else {
+            _private.applyNewVisualOptions(this);
          }
       },
       _beforeRender(): void {
