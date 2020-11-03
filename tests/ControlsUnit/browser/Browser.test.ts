@@ -318,4 +318,23 @@ describe('Controls/browser:Browser', () => {
         });
     });
 
+    it('_startSearch', async () => {
+        const searchController = getBrowser(getBrowserOptions());
+        let errorProcessed = false;
+        const error = new Error('error');
+        error.canceled = true;
+        searchController._getSearchController = () => {
+            return Promise.resolve({
+                search: () => {
+                    return Promise.resolve(error);
+                }
+            });
+        };
+        searchController._options.dataLoadErrback = () => {
+            errorProcessed = true;
+        };
+        await searchController._startSearch('testValue');
+        assert.isFalse(errorProcessed);
+    });
+
 });
