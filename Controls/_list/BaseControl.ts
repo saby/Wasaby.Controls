@@ -388,7 +388,7 @@ const _private = {
 
                     // Модели могло изначально не создаться (не передали receivedState и source)
                     // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-                    if (!listModel && cfg.useNewModel && list) {
+                    if (!self._destroyed && !listModel && cfg.useNewModel && list) {
                         self._listViewModel = listModel = self._createNewModel(
                             list,
                             { ...cfg },
