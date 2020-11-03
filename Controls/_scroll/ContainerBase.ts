@@ -52,7 +52,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
 
+    private _virtualNavigationRegistrar: RegisterClass;
+
     _beforeMount(options: IContainerBaseOptions): void {
+        this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
@@ -167,12 +170,22 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
 
         this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
+        this._virtualNavigationRegistrar.register(event, registerType, component, callback);
     }
 
-    _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
-        this._registrars.scrollStateChanged.unregister(e, registerType, component);
-        this._registrars.listScroll.unregister(e, registerType, component);
-        this._registrars.scroll.unregister(e, registerType, component);
+    _unRegisterIt(event: SyntheticEvent, registerType: string, component: any): void {
+        this._registrars.scrollStateChanged.unregister(event, registerType, component);
+        this._registrars.scroll.unregister(event, registerType, component);
+        this._registrars.listScroll.unregister(event, registerType, component);
+        this._virtualNavigationRegistrar.unregister(event, registerType, component);
+    }
+
+    protected _enableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(true);
+    }
+
+    protected _disableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(false);
     }
 
     // _createEdgeIntersectionObserver() {
@@ -371,13 +384,27 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
-        }
+        const children = this._children.content.children;
+        let childrenIndex: number;
+        let heigthValue = 0;
+        let widthValue = 0;
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            heigthValue += children[childrenIndex].offsetHeight;
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginTop);
+            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginBottom) ;
 
+        }
+        newState.scrollHeight = heigthValue;
+        if (newState.scrollHeight < newState.clientHeight) {
+            newState.scrollHeight = newState.clientHeight;
+        }
+        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
+            widthValue += children[childrenIndex].offsetWidth;
+        }
+        newState.scrollWidth = widthValue;
+        if (newState.scrollWidth <  newState.clientWidth) {
+            newState.scrollWidth = newState.clientWidth;
+        }
         this._updateStateAndGenerateEvents(newState);
     }
 
