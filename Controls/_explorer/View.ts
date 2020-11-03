@@ -482,6 +482,7 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+         const loadedBySourceController = isSearchViewMode && cfg.sourceController;
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
 
          /*
@@ -501,7 +502,7 @@ var
             this._navigation = cfg.navigation;
          }
 
-         if ((isViewModeChanged && isRootChanged && !isSearchViewMode) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+         if ((isViewModeChanged && isRootChanged && !loadedBySourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
@@ -515,7 +516,7 @@ var
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
             const recreateSource = cfg.source !== this._options.source;
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
-            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !isSearchViewMode) {
+            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
