@@ -14,7 +14,12 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import {IShadows, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
+import {
+    IShadows,
+    IShadowsVisibilityByInnerComponents,
+    SHADOW_MODE,
+    SHADOW_VISIBILITY
+} from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
@@ -82,7 +87,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController();
-        this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
+        // При инициализации оптимизированные тени не включаем только если явно включены тени на js.
+        // В режиме mixed используем тени на css что бы не вызывать лишние синхронизации. Когда пользователь наведет
+        // мышкой на скролл контейнер или по другим обнавлениям тени начнут работать через js.
+        this._isOptimizeShadowEnabled = options.shadowMode !== SHADOW_MODE.JS && !detection.isMobileIOS;
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
         super._beforeMount(...arguments);
@@ -284,6 +292,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (this._isStateInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
+            const isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(this._options);
+            if (this._isOptimizeShadowEnabled !== isOptimizeShadowEnabled) {
+                this._isOptimizeShadowEnabled = isOptimizeShadowEnabled;
+                this._optimizeShadowClass = this._getOptimizeShadowClass();
+                this._shadows.updateScrollState(this._state);
+            }
         }
 
         if (this._scrollbars.take()) {
@@ -352,7 +366,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
-        return options.optimizeShadow && !detection.isMobileIOS;
+        return options.shadowMode === SHADOW_MODE.CSS && !detection.isMobileIOS;
     }
 
     // StickyHeaderController
@@ -361,7 +375,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.fixedHandler(event, fixedHeaderData);
         const top = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const bottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: top, bottom: bottom });
+        this._scrollbars.setOffsets({ top: top, bottom: bottom }, !this._isScrollbarsInitialized);
+        // Если включены оптимизированные тени, то мы не обновляем состояние теней при изменении состояния скрола
+        // если нет зафиксированных заголовков. Что бы тени на заголовках отображались правильно, рассчитаем состояние
+        // теней в скролл контейнере.
+        if (this._isOptimizeShadowEnabled) {
+            this._shadows.updateScrollState(this._state);
+        }
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
             this._shadows.bottom.isStickyHeadersShadowsEnabled());
@@ -394,8 +414,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
             shadowStyle: 'default',
             backgroundStyle: DEFAULT_BACKGROUND_STYLE,
-            scrollMode: 'vertical',
-            optimizeShadow: false
+            scrollMode: 'vertical'
         };
     }
 }

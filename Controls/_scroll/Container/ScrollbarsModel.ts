@@ -167,12 +167,12 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    setOffsets(offsets: Offsets): void {
+    setOffsets(offsets: Offsets, dontUpdateView: boolean): void {
         let changed: boolean = false;
         for (let scrollbar of Object.keys(this._models)) {
             changed = this._models[scrollbar].setOffsets(offsets) || changed;
         }
-        if (changed) {
+        if (changed && !dontUpdateView) {
             this._nextVersion();
         }
     }
