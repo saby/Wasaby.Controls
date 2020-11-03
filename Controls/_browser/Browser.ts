@@ -165,6 +165,7 @@ export default class Browser extends Control {
                             newOptions.dataLoadCallback(items);
                         }
                         this._items = this._sourceController.setItems(items);
+                        this._defineShadowVisibility(this._items);
                     }
 
                     const controllerState = this._sourceController.getState();
