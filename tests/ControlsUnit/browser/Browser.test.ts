@@ -141,7 +141,7 @@ describe('Controls/browser:Browser', () => {
                 detection.isMobilePlatform = defaultIsMobilePlatformValue;
             });
 
-            it('items in receivedState', () => {
+            it('items in receivedState', async () => {
                 const newOptions = {
                     ...options,
                     topShadowVisibility: 'auto',
@@ -149,7 +149,7 @@ describe('Controls/browser:Browser', () => {
                 };
 
                 browser = new Browser(newOptions);
-                browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {}});
+                await browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {}});
                 equal(browser._topShadowVisibility, 'visible');
                 equal(browser._bottomShadowVisibility, 'visible');
 
