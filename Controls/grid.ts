@@ -39,7 +39,7 @@ import SortingButton from 'Controls/_grid/SortingButton';
 import GridView = require('Controls/_grid/GridView');
 import GridViewModel = require('Controls/_grid/GridViewModel');
 
-import SortingSelector from 'Controls/_grid/SortingSelector';
+import {default as SortingSelector, ISortingSelectorOptions} from 'Controls/_grid/SortingSelector';
 import RowEditor = require('wml!Controls/_grid/RowEditor');
 import * as ResultColumnTemplate from 'wml!Controls/_grid/layout/common/ResultCellContent';
 
@@ -62,6 +62,7 @@ export {
 
     RowEditor,
     SortingSelector,
+    ISortingSelectorOptions,
 
     EditingEmptyTemplate,
 
