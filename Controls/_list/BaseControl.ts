@@ -368,8 +368,7 @@ const _private = {
                         const hasMoreDataDown = list.getMetaData().more;
                         _private.updatePagingData(self, hasMoreDataDown);
                     }
-                    const
-                        listModel = self._listViewModel;
+                    let listModel = self._listViewModel;
 
                     if (cfg.afterReloadCallback) {
                         cfg.afterReloadCallback(cfg, list);
@@ -405,7 +404,14 @@ const _private = {
                         if (self._itemsChanged) {
                             self._shouldNotifyOnDrawItems = true;
                         }
-
+                    } else if (!self._destroyed && cfg.useNewModel && list) {
+                        // Модели могло изначально не создаться (не передали receivedState и source)
+                        // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
+                        self._initNewModel(cfg, list, cfg);
+                        if (self._groupingLoader) {
+                            self._groupingLoader.resetLoadedGroups(listModel);
+                        }
+                        self._shouldNotifyOnDrawItems = true;
                     }
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
@@ -3132,6 +3138,27 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
+    _initNewModel(cfg, data, viewModelConfig) {
+        this._items = data;
+        this._listViewModel = this._createNewModel(
+            data,
+            viewModelConfig,
+            cfg.viewModelConstructor
+        );
+
+        _private.setHasMoreData(this._listViewModel,
+            _private.hasMoreDataInAnyDirection(this, this._sourceController), true);
+
+        if (cfg.itemsReadyCallback) {
+            cfg.itemsReadyCallback(this._listViewModel.getCollection());
+        }
+        if (this._listViewModel) {
+            _private.initListViewModelHandler(this, this._listViewModel, true);
+        }
+        this._shouldNotifyOnDrawItems = true;
+        _private.prepareFooter(this, cfg, this._sourceController);
+    },
+
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
@@ -3232,25 +3259,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 this._sourceController.setItems(data);
 
-                    if (newOptions.useNewModel && !self._listViewModel) {
-                        self._items = data;
-                        self._listViewModel = self._createNewModel(
-                            data,
-                            viewModelConfig,
-                            newOptions.viewModelConstructor
-                        );
-
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
-
-                    if (newOptions.itemsReadyCallback) {
-                        newOptions.itemsReadyCallback(self._listViewModel.getCollection());
-                    }
-                    if (self._listViewModel) {
-                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-                    }
-                        self._shouldNotifyOnDrawItems = true;
-                    _private.prepareFooter(self, newOptions, self._sourceController);
+                if (newOptions.useNewModel && !self._listViewModel) {
+                    self._initNewModel(newOptions, data, viewModelConfig);
                 }
+
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
                 }
