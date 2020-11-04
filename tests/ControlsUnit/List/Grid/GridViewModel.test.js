@@ -1418,20 +1418,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             });
             it('without main cell with header', () => {
                ladderViewModel._model._curIndex = 1;
-               ladderViewModel._header = {};
+               ladderViewModel._headerModel = {};
                let current = ladderViewModel.getCurrent();
                assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_theme-default', 'wrong classes');
             });
             it('without main cell with results', () => {
                ladderViewModel._model._curIndex = 1;
-               ladderViewModel._header = null;
+               ladderViewModel._headerModel = null;
+               ladderViewModel._options.resultsVisibility = 'visible'
                ladderViewModel._options.resultsPosition = 'top';
                let current = ladderViewModel.getCurrent();
                assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withResults_theme-default', 'wrong classes');
             });
-            it('without main cell with results', () => {
+            it('without main cell with results and header', () => {
                ladderViewModel._model._curIndex = 1;
-               ladderViewModel._header = {};
+               ladderViewModel._headerModel = {};
+               ladderViewModel._options.resultsVisibility = 'visible'
                ladderViewModel._options.resultsPosition = 'top';
                let current = ladderViewModel.getCurrent();
                assert.equal(current.getAdditionalLadderClasses(), ' controls-Grid__row-cell__ladder-spacing_withHeader_withResults_theme-default', 'wrong classes');
