@@ -374,7 +374,7 @@ define(['Controls/_tile/TileView/TileView',
          });
 
          hoveredItem = tileView._listModel.getHoveredItem();
-         assert.isTrue(hoveredItem.key === 'itemKey1');
+         assert.isNull(hoveredItem);
 
 
          cfg.tileScalingMode = 'overlap';
