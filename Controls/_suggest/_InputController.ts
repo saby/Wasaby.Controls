@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_suggest/_InputController/_InputController';
-import {descriptor, Model} from 'Types/entity';
+import {descriptor, Model, CancelablePromise} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -133,6 +133,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
+   private _searchLibraryLoader: CancelablePromise<typeof import('Controls/search')> = null;
 
    private _dependenciesTimer: DependencyTimer = null;
 
@@ -577,6 +578,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._sourceController.destroy();
          this._sourceController = null;
       }
+      if (this._searchLibraryLoader) {
+         this._searchLibraryLoader.cancel();
+         this._searchLibraryLoader = null;
+      }
       this._searchResult = null;
       this._loadStart = null;
       this._loadEnd = null;
@@ -678,14 +683,36 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._resolveSearch(value);
    }
 
-   protected async _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
-      if (!this._searchResolverController) {
-         const result = await import('Controls/search');
-         this._searchResolverController = new result.SearchResolver(
-            this._getSearchResolverOptions(options ?? this._options)
-         );
+   private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
+      return this._getSearchResolver(options)
+          .then((searchResolver) => searchResolver.resolve(value))
+          .catch((error) => error);
+   }
+
+   private _getSearchLibrary(): Promise<typeof import('Controls/search')> {
+      if (!this._searchLibraryLoader) {
+         this._searchLibraryLoader = new CancelablePromise(import('Controls/search'));
       }
-      this._searchResolverController.resolve(value);
+      return this._searchLibraryLoader.promise;
+   }
+
+   private _getSearchResolver(options?: IInputControllerOptions): Promise<SearchResolverController> {
+      let result;
+
+      if (!this._searchResolverController) {
+         result = this._getSearchLibrary()
+             .then((searchLibrary) => {
+                this._searchResolverController = new searchLibrary.SearchResolver(
+                    this._getSearchResolverOptions(options ?? this._options)
+                );
+                return this._searchResolverController;
+             })
+             .catch((error) => error);
+      } else {
+         result = Promise.resolve(this._searchResolverController);
+      }
+
+      return result;
    }
 
    private async _setFilterAndLoad(filter: QueryWhereExpression<unknown>,
@@ -749,7 +776,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected async _getSearchController(): Promise<SearchController> {
       if (!this._searchController) {
-         return import('Controls/search').then((result) => {
+         return this._getSearchLibrary().then((result) => {
             this._searchController = new result.ControllerClass({
                sourceController: this._getSourceController(),
                minSearchLength: this._options.minSearchLength,
