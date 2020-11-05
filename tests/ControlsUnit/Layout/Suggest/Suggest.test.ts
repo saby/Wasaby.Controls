@@ -463,12 +463,17 @@ describe('Controls/suggest', () => {
             readOnly: true,
             historyId: 'testFieldHistoryId',
             keyProperty: 'Identificator',
-            source: getMemorySource()
+            source: getMemorySource(),
+            emptyTemplate: 'test'
          });
          let suggestState = false;
          const event = {
             stopPropagation: () => {}
          };
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          if (!document) {
             inputContainer._getActiveElement = () => {
@@ -557,6 +562,9 @@ describe('Controls/suggest', () => {
                                                       sandBox.restore();
                                                       inputContainer._historyLoad.addCallback(() => {
                                                          assert.isTrue(suggestState);
+
+                                                         stub.restore();
+
                                                          Promise.resolve();
                                                       });
                                                    });
