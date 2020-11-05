@@ -3835,7 +3835,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (needReload) {
-            this._hideTopTrigger = true;
+            if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                _private.needAttachLoadTopTriggerToNull(this)) {
+                    this._hideTopTrigger = true;
+            }
             this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
