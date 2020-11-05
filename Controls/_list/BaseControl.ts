@@ -1334,7 +1334,7 @@ const _private = {
 
     getViewSize(self, update = false): number {
         if (self._container && (!self._viewSize || update)) {
-            const container = this._children?.viewContainer || self._container[0] || self._container;
+            const container = self._children?.viewContainer || self._container[0] || self._container;
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
