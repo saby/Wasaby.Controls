@@ -2890,7 +2890,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._keyProperty
+                        keyProperty: self._options.keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
