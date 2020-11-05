@@ -228,4 +228,9 @@ export default Money;
  * @cfg
  * @default default
  * @example Controls-demo/Decorator/Money/FontColorStyle/Index
+ */ 
+/**
+ * @name Controls/_decorator/Money#showEmptyDecimals
+ * @cfg
+ * @default true
  */
