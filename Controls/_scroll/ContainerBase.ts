@@ -385,19 +385,23 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
         let children = this._children.content.children;
-
-        // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
-        // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
-        for (const child of children) {
-            if (child.className.includes('Hint-ListWrapper')) {
-                children = child.children;
-                break;
-            };
-        }
-
+        let heigthValue = 0;
         let widthValue = 0;
 
-        newState.scrollHeight = this._calculateScrollHeight(children);
+        for (const child of children) {
+            // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
+            // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
+            if (child.className.includes('Hint-ListWrapper')) {
+                const hintListWrapperChildren = child.children;
+                for (const child of hintListWrapperChildren) {
+                    heigthValue+= this._calculateScrollHeight(child);
+                }
+            } else {
+                heigthValue+= this._calculateScrollHeight(child);
+            }
+        }
+
+        newState.scrollHeight = heigthValue;
 
         if (newState.scrollHeight < newState.clientHeight) {
             newState.scrollHeight = newState.clientHeight;
@@ -412,13 +416,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._updateStateAndGenerateEvents(newState);
     }
 
-    _calculateScrollHeight(children: HTMLElement[]): number {
+    _calculateScrollHeight(element: HTMLElement): number {
         let heigthValue = 0;
-        for (child in children) {
-            heigthValue += child.offsetHeight;
-            heigthValue += parseFloat(window.getComputedStyle(child).marginTop);
-            heigthValue += parseFloat(window.getComputedStyle(child).marginBottom);
-        }
+        heigthValue += element.offsetHeight;
+        heigthValue += parseFloat(window.getComputedStyle(element).marginTop);
+        heigthValue += parseFloat(window.getComputedStyle(element).marginBottom);
         return heigthValue;
     }
 
