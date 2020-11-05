@@ -1314,6 +1314,17 @@ describe('Controls/suggest', () => {
             assert.ok(!suggestComponent._dependenciesDeferred);
          });
 
+         it('_beforeUnmount while load searchLib', () => {
+            const suggestComponent = getComponentObject(_InputController.getDefaultOptions());
+            suggestComponent._getSearchLibrary();
+            assert.ok(suggestComponent._searchLibraryLoader);
+
+            const spy = sinon.spy(suggestComponent._searchLibraryLoader, 'cancel');
+            suggestComponent._beforeUnmount();
+            assert.ok(spy.callCount === 1);
+            assert.ok(!suggestComponent._searchLibraryLoader);
+         });
+
       });
    });
 });
