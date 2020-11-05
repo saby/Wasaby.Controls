@@ -222,4 +222,9 @@ export default Money;
  * @name Controls/_decorator/Money#useGrouping
  * @cfg
  * @default true
+ */ 
+/** @name Controls/_decorator/Money#fontSize
+ * @cfg
+ * @default m
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
  */
