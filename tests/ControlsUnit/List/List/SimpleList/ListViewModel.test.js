@@ -640,7 +640,7 @@ define([
             assert.isUndefined(item.dragTargetPosition);
             assert.isUndefined(item.isDragging);
 
-            lvm.setDraggedItems(dragItemData.key, dragEntity.items);
+            lvm.setDraggedItems(lvm.getItemBySourceKey(2), dragEntity.items);
             lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
@@ -771,7 +771,7 @@ define([
             });
 
             it('without dragItemData', function() {
-               lvm.setDraggedItems(dragItemData.key, dragEntity.items);
+               lvm.setDraggedItems(dragItemData.dispItem, dragEntity.items);
                lvm.setDragTargetPosition(null);
 
                current = lvm.getItemDataByItem(lvm.at(0));
@@ -794,7 +794,7 @@ define([
 
             it('with dragTarget', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDraggedItems(dragItemData.key, dragEntity.items);
+               lvm.setDraggedItems(dragItemData.dispItem, dragEntity.items);
 
                // move up
                lvm.setDragPosition({
