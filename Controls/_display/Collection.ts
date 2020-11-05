@@ -2197,12 +2197,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndexByKey(avatarItemKey);
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+        const avatarStartIndex = this.getIndex(draggableItem);
 
         this.appendStrategy(this._dragStrategy, {
             draggedItemsKeys,
-            avatarItemKey,
+            draggableItem,
             avatarIndex: avatarStartIndex
         });
     }
