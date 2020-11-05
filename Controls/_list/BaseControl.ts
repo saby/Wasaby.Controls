@@ -1904,6 +1904,22 @@ const _private = {
         }
     },
 
+    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+        event.stopPropagation();
+        // TODO нужно заменить на item.getContents() при переписывании моделей.
+        //  item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        self.setMarkedKey(key);
+
+        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
+        if (!!self._itemActionsController) {
+            const item = self._listViewModel.getItemBySourceKey(key) || itemData;
+            _private.openItemActionsMenu(self, null, event, item, true);
+        }
+    },
+
     /**
      * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
      *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
@@ -4833,18 +4849,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         clickEvent.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей.
-        //  item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
-        const key = contents ? contents.getKey() : itemData.key;
-        this.setMarkedKey(key);
+        _private.openContextMenu(this, clickEvent, itemData);
+    },
 
-        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
-        if (!!this._itemActionsController) {
-            const item = this._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        }
+    /**
+     * Обработчик долгого тапа
+     * @param e
+     * @param itemData
+     * @param tapEvent
+     * @private
+     */
+    _onItemLongTap(
+        e: SyntheticEvent<Event>,
+        itemData: CollectionItem<Model>,
+        tapEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        _private.updateItemActionsOnce(this, this._options);
+        _private.openContextMenu(this, tapEvent, itemData);
     },
 
     /**
