@@ -222,8 +222,9 @@ export default Money;
  * @name Controls/_decorator/Money#fontSize
  * @cfg
  * @default m
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
  * @example
  * <pre class="brush: html">
- * <Controls.decorator:Money value="{{100000}}" useGrouping="{{false}}" fontSize="s" />
+ * <Controls.decorator:Money value="{{_value}}" fontSize="xs" />
  * </pre>
  */
