@@ -197,7 +197,7 @@ var ListView = BaseControl.extend(
         _onItemContextMenu: function(event, itemData) {
            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
                 this._notify('itemContextMenu', [itemData, event, false]);
-            }
+           }
         },
 
         /**
@@ -207,7 +207,9 @@ var ListView = BaseControl.extend(
          * @private
          */
         _onItemLongTap(event, itemData): void {
-            this._onItemContextMenu(event, itemData);
+            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
+                this._notify('itemLongTap', [itemData, event]);
+            }
         },
 
         _onItemSwipe: function(event, itemData) {
