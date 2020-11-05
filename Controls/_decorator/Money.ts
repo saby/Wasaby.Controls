@@ -218,3 +218,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 }
 
 export default Money;
+/**
+ * @name Controls/_decorator/Money#useGrouping
+ * @cfg
+ * @default true
+ */
