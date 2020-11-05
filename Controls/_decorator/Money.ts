@@ -218,3 +218,12 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 }
 
 export default Money;
+/**
+ * @name Controls/_decorator/Money#fontSize
+ * @cfg
+ * @default m
+ * @example
+ * <pre class="brush: html">
+ * <Controls.decorator:Money value="{{100000}}" useGrouping="{{false}}" fontSize="s" />
+ * </pre
+ */
