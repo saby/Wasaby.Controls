@@ -225,5 +225,5 @@ export default Money;
  * @example
  * <pre class="brush: html">
  * <Controls.decorator:Money value="{{100000}}" useGrouping="{{false}}" fontSize="s" />
- * </pre
+ * </pre>
  */
