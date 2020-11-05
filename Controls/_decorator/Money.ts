@@ -223,7 +223,8 @@ export default Money;
  * @cfg
  * @default true
  */ 
-/** @name Controls/_decorator/Money#fontSize
+/**
+ * @name Controls/_decorator/Money#fontSize
  * @cfg
  * @default m
  * @demo Controls-demo/Decorator/Money/FontSize/Index
