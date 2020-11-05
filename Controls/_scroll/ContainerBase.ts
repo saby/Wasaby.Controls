@@ -417,11 +417,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _calculateScrollHeight(element: HTMLElement): number {
-        let heigthValue = 0;
-        heigthValue += element.offsetHeight;
-        heigthValue += parseFloat(window.getComputedStyle(element).marginTop);
-        heigthValue += parseFloat(window.getComputedStyle(element).marginBottom);
-        return heigthValue;
+        return element.offsetHeight + parseFloat(window.getComputedStyle(element).marginTop) +
+            parseFloat(window.getComputedStyle(element).marginBottom);
     }
 
     _getFullStateFromDOM(): IScrollState {
