@@ -233,4 +233,10 @@ export default Money;
  * @name Controls/_decorator/Money#showEmptyDecimals
  * @cfg
  * @default true
+ */ 
+/**
+ * @name Controls/_decorator/Money#fontSize
+ * @cfg
+ * @default m
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
  */
