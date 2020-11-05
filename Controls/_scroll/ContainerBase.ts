@@ -52,7 +52,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
 
+    private _virtualNavigationRegistrar: RegisterClass;
+
     _beforeMount(options: IContainerBaseOptions): void {
+        this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
@@ -167,12 +170,22 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
 
         this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
+        this._virtualNavigationRegistrar.register(event, registerType, component, callback);
     }
 
-    _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
-        this._registrars.scrollStateChanged.unregister(e, registerType, component);
-        this._registrars.listScroll.unregister(e, registerType, component);
-        this._registrars.scroll.unregister(e, registerType, component);
+    _unRegisterIt(event: SyntheticEvent, registerType: string, component: any): void {
+        this._registrars.scrollStateChanged.unregister(event, registerType, component);
+        this._registrars.scroll.unregister(event, registerType, component);
+        this._registrars.listScroll.unregister(event, registerType, component);
+        this._virtualNavigationRegistrar.unregister(event, registerType, component);
+    }
+
+    protected _enableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(true);
+    }
+
+    protected _disableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(false);
     }
 
     // _createEdgeIntersectionObserver() {
@@ -371,14 +384,41 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
+        let children = this._children.content.children;
+        let heigthValue = 0;
+        let widthValue = 0;
+
+        for (const child of children) {
+            // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
+            // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
+            if (child.className.includes('Hint-ListWrapper')) {
+                const hintListWrapperChildren = child.children;
+                for (const child of hintListWrapperChildren) {
+                    heigthValue+= this._calculateScrollHeight(child);
+                }
+            } else {
+                heigthValue+= this._calculateScrollHeight(child);
+            }
         }
 
+        newState.scrollHeight = heigthValue;
+
+        if (newState.scrollHeight < newState.clientHeight) {
+            newState.scrollHeight = newState.clientHeight;
+        }
+        for (child of children) {
+            widthValue += child.offsetWidth;
+        }
+        newState.scrollWidth = widthValue;
+        if (newState.scrollWidth <  newState.clientWidth) {
+            newState.scrollWidth = newState.clientWidth;
+        }
         this._updateStateAndGenerateEvents(newState);
+    }
+
+    _calculateScrollHeight(element: HTMLElement): number {
+        return element.offsetHeight + parseFloat(window.getComputedStyle(element).marginTop) +
+            parseFloat(window.getComputedStyle(element).marginBottom);
     }
 
     _getFullStateFromDOM(): IScrollState {

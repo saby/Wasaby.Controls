@@ -250,10 +250,6 @@ var TileView = ListView.extend({
                 position: _private.getPositionStyle(startPosition || position),
                 endPosition: _private.getPositionStyle(position)
             });
-        } else {
-            this._listModel.setHoveredItem({
-                key: itemData.key
-            });
         }
         if (needUpdateActions) {
             this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});

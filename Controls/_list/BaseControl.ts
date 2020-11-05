@@ -368,8 +368,7 @@ const _private = {
                         const hasMoreDataDown = list.getMetaData().more;
                         _private.updatePagingData(self, hasMoreDataDown);
                     }
-                    const
-                        listModel = self._listViewModel;
+                    let listModel = self._listViewModel;
 
                     if (cfg.afterReloadCallback) {
                         cfg.afterReloadCallback(cfg, list);
@@ -405,7 +404,14 @@ const _private = {
                         if (self._itemsChanged) {
                             self._shouldNotifyOnDrawItems = true;
                         }
-
+                    } else if (!self._destroyed && cfg.useNewModel && list) {
+                        // Модели могло изначально не создаться (не передали receivedState и source)
+                        // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
+                        self._initNewModel(cfg, list, cfg);
+                        if (self._groupingLoader) {
+                            self._groupingLoader.resetLoadedGroups(listModel);
+                        }
+                        self._shouldNotifyOnDrawItems = true;
                     }
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
@@ -464,8 +470,27 @@ const _private = {
     },
 
     isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
+        const items1Model = items1.getModel();
+        const items2Model = items2.getModel();
+        let isModelEqual = items1Model === items2Model;
+
+        function getModelModuleName(model: string|Function): string {
+            let name;
+
+            if (typeof model === 'function') {
+                name = model.prototype._moduleName;
+            } else {
+                name = model;
+            }
+
+            return name;
+        }
+
+        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
+            isModelEqual = true;
+        }
         return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            (items1.getModel() === items2.getModel()) &&
+            isModelEqual &&
             (items1.getKeyProperty() === items2.getKeyProperty()) &&
             (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
             (Object.getPrototypeOf(items1.getAdapter()).constructor ===
@@ -1293,7 +1318,7 @@ const _private = {
 
     getViewSize(self, update = false): number {
         if (self._container && (!self._viewSize || update)) {
-            const container = this._children?.viewContainer || self._container[0] || self._container;
+            const container = self._children?.viewContainer || self._container[0] || self._container;
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
@@ -1876,6 +1901,22 @@ const _private = {
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
             }
+        }
+    },
+
+    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+        event.stopPropagation();
+        // TODO нужно заменить на item.getContents() при переписывании моделей.
+        //  item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        self.setMarkedKey(key);
+
+        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
+        if (!!self._itemActionsController) {
+            const item = self._listViewModel.getItemBySourceKey(key) || itemData;
+            _private.openItemActionsMenu(self, null, event, item, true);
         }
     },
 
@@ -2830,7 +2871,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._keyProperty
+                        keyProperty: self._options.keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
@@ -3113,6 +3154,27 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
+    _initNewModel(cfg, data, viewModelConfig) {
+        this._items = data;
+        this._listViewModel = this._createNewModel(
+            data,
+            viewModelConfig,
+            cfg.viewModelConstructor
+        );
+
+        _private.setHasMoreData(this._listViewModel,
+            _private.hasMoreDataInAnyDirection(this, this._sourceController), true);
+
+        if (cfg.itemsReadyCallback) {
+            cfg.itemsReadyCallback(this._listViewModel.getCollection());
+        }
+        if (this._listViewModel) {
+            _private.initListViewModelHandler(this, this._listViewModel, true);
+        }
+        this._shouldNotifyOnDrawItems = true;
+        _private.prepareFooter(this, cfg, this._sourceController);
+    },
+
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
@@ -3213,25 +3275,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 this._sourceController.setItems(data);
 
-                    if (newOptions.useNewModel && !self._listViewModel) {
-                        self._items = data;
-                        self._listViewModel = self._createNewModel(
-                            data,
-                            viewModelConfig,
-                            newOptions.viewModelConstructor
-                        );
-
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
-
-                    if (newOptions.itemsReadyCallback) {
-                        newOptions.itemsReadyCallback(self._listViewModel.getCollection());
-                    }
-                    if (self._listViewModel) {
-                        _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
-                    }
-                        self._shouldNotifyOnDrawItems = true;
-                    _private.prepareFooter(self, newOptions, self._sourceController);
+                if (newOptions.useNewModel && !self._listViewModel) {
+                    self._initNewModel(newOptions, data, viewModelConfig);
                 }
+
                 if (viewModelConfig.collapsedGroups) {
                     self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
                 }
@@ -3649,7 +3696,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (recreateSource || sourceChanged) {
+        if ((recreateSource || sourceChanged) && !newOptions.sourceController) {
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
             } else {
@@ -3696,15 +3743,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = null;
         }
 
-        const loadedBySourceController = newOptions.sourceController && sourceChanged;
+        const loadedBySourceController = newOptions.sourceController &&
+            // Если изменился поиск, то данные меняет контроллер поиска через sourceController
+            (sourceChanged || searchValueChanged && newOptions.searchValue);
         const needReload =
             !loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            (sourceChanged ||
-                // Если изменился поиск и фильтр, то данные меняет контроллер поиска через sourceController
-            filterChanged && (!searchValueChanged || !newOptions.searchValue || !newOptions.sourceController) ||
-            sortingChanged ||
-            recreateSource);
+            (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -3775,7 +3820,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (needReload) {
-            this._hideTopTrigger = true;
+            if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                _private.needAttachLoadTopTriggerToNull(this)) {
+                    this._hideTopTrigger = true;
+            }
             this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -4812,18 +4860,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         clickEvent.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей.
-        //  item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
-        const key = contents ? contents.getKey() : itemData.key;
-        this.setMarkedKey(key);
+        _private.openContextMenu(this, clickEvent, itemData);
+    },
 
-        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
-        if (!!this._itemActionsController) {
-            const item = this._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        }
+    /**
+     * Обработчик долгого тапа
+     * @param e
+     * @param itemData
+     * @param tapEvent
+     * @private
+     */
+    _onItemLongTap(
+        e: SyntheticEvent<Event>,
+        itemData: CollectionItem<Model>,
+        tapEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        _private.updateItemActionsOnce(this, this._options);
+        _private.openContextMenu(this, tapEvent, itemData);
     },
 
     /**
@@ -5272,7 +5325,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopImmediatePropagation();
         const itemActionsController = _private.getItemActionsController(this);
         itemActionsController.updateItemActions(itemKey, itemWidth);
-        this._listViewModel.nextModelVersion(true, 'itemActionsUpdated');
     },
 
     /**

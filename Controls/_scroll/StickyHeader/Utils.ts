@@ -125,7 +125,7 @@ export function validateIntersectionEntries(entries: IntersectionObserverEntry[]
 const CONTENTS_STYLE: string = 'contents';
 
 export function isHidden(element: HTMLElement): boolean {
-    return !!element.closest('.ws-hidden');
+    return !!element && !!element.closest('.ws-hidden');
 }
 
 // For android, use a large patch, because 1 pixel is not enough. For all platforms we use the minimum values since
