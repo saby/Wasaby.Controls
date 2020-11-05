@@ -347,7 +347,7 @@ export default class FilterControllerClass {
         let result;
         this._updateMeta = null;
 
-        this._findItemInHistory(historyId, items);
+        result = this._findItemInHistory(historyId, items);
 
         // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
         // Если элемент запинен или добавлен в избранное, его нельзя удалять.
@@ -398,6 +398,8 @@ export default class FilterControllerClass {
                 }
             });
         }
+
+        return result;
     }
 
     private _minimizeFilterItems(items: IFilterItem[]): IFilterItem[] {
