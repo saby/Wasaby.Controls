@@ -1318,7 +1318,7 @@ const _private = {
 
     getViewSize(self, update = false): number {
         if (self._container && (!self._viewSize || update)) {
-            const container = this._children?.viewContainer || self._container[0] || self._container;
+            const container = self._children?.viewContainer || self._container[0] || self._container;
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
@@ -1901,6 +1901,22 @@ const _private = {
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
             }
+        }
+    },
+
+    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+        event.stopPropagation();
+        // TODO нужно заменить на item.getContents() при переписывании моделей.
+        //  item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        self.setMarkedKey(key);
+
+        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
+        if (!!self._itemActionsController) {
+            const item = self._listViewModel.getItemBySourceKey(key) || itemData;
+            _private.openItemActionsMenu(self, null, event, item, true);
         }
     },
 
@@ -2855,7 +2871,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._keyProperty
+                        keyProperty: self._options.keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
@@ -3804,7 +3820,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (needReload) {
-            this._hideTopTrigger = true;
+            if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                _private.needAttachLoadTopTriggerToNull(this)) {
+                    this._hideTopTrigger = true;
+            }
             this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -4833,18 +4852,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         clickEvent.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей.
-        //  item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
-        const key = contents ? contents.getKey() : itemData.key;
-        this.setMarkedKey(key);
+        _private.openContextMenu(this, clickEvent, itemData);
+    },
 
-        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
-        if (!!this._itemActionsController) {
-            const item = this._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        }
+    /**
+     * Обработчик долгого тапа
+     * @param e
+     * @param itemData
+     * @param tapEvent
+     * @private
+     */
+    _onItemLongTap(
+        e: SyntheticEvent<Event>,
+        itemData: CollectionItem<Model>,
+        tapEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        _private.updateItemActionsOnce(this, this._options);
+        _private.openContextMenu(this, tapEvent, itemData);
     },
 
     /**
