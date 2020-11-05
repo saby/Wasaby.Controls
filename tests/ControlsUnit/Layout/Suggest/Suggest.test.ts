@@ -1039,9 +1039,14 @@ describe('Controls/suggest', () => {
             filter: {},
             searchParam: 'testSearchParam',
             minSearchLength: 3,
-            historyId: 'historyField'
+            historyId: 'historyField',
+            emptyTemplate: 'test'
          });
          let suggestOpened = false;
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          inputContainer._searchValue = 'te';
          inputContainer._historyKeys = [1, 2];
@@ -1080,6 +1085,17 @@ describe('Controls/suggest', () => {
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
+
+         suggestOpened = false;
+         inputContainer._options.autoDropDown = true;
+         inputContainer._options.historyId = null;
+         inputContainer._filter = {};
+         inputContainer._options.emptyTemplate = undefined;
+         await inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {});
+         assert.isFalse(suggestOpened);
+
+         stub.restore();
       });
 
       it('Suggest::_misspellClick', async () => {
