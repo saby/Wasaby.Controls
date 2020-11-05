@@ -15,12 +15,12 @@ import * as merge from 'Core/core-merge';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {CrudWrapper} from '../_dataSource/CrudWrapper';
 import {factory} from 'Types/chain';
-import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
-import {PrefetchProxy, Rpc, ICrud} from 'Types/source';
+import {ICrud, PrefetchProxy, Rpc} from 'Types/source';
+import Utils = require('Types/util');
 
 export interface IFilterHistoryData {
     items: IFilterItem[];
@@ -29,7 +29,7 @@ export interface IFilterHistoryData {
 
 type THistoryData = IFilterHistoryData | IFilterItem[];
 
-interface IFilterControllerOptions {
+export interface IFilterControllerOptions {
     prefetchParams?: IPrefetchHistoryParams;
     filter: object;
     useStore?: boolean;
@@ -37,10 +37,10 @@ interface IFilterControllerOptions {
     fastFilterSource?: IFilterItem[];
     historyItems?: IFilterItem[];
     historyId?: string;
-    searchValue: string;
-    searchParam: string;
-    minSearchLength: number;
-    parentProperty: string;
+    searchValue?: string;
+    searchParam?: string;
+    minSearchLength?: number;
+    parentProperty?: string;
     selectedKeys?: TKeysSelection;
     excludedKeys?: TKeysSelection;
     source?: ICrud;
@@ -51,6 +51,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
 const ACTIVE_HISTORY_FILTER_INDEX = 0;
+const SELECTION_PATH_FILTER_FIELD = 'SelectionWithPath';
 
 export default class FilterControllerClass {
     private _options: Partial<IFilterControllerOptions> = null;
@@ -111,10 +112,13 @@ export default class FilterControllerClass {
         let filterButtonChanged;
         let fastFilterChanged;
         let filterChanged;
+        let selectionViewModeChanged;
+
         if (!this._options.useStore) {
             filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
             fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
             filterChanged = !isEqual(this._options.filter, newOptions.filter);
+            selectionViewModeChanged = this._options.selectionViewMode !== newOptions.selectionViewMode;
 
             if (filterButtonChanged || fastFilterChanged) {
                 this._setFilterItems(
@@ -144,7 +148,7 @@ export default class FilterControllerClass {
             }
         }
         this._options = newOptions;
-        if (filterChanged) {
+        if (filterChanged || selectionViewModeChanged) {
             this._updateFilter(this._options);
         }
         return filterChanged || filterButtonChanged || fastFilterChanged;
@@ -672,24 +676,22 @@ export default class FilterControllerClass {
                                          selectedKeys= [],
                                          excludedKeys= [],
                                          source,
-                                         selectionViewMode,
-                                         parentProperty
+                                         selectionViewMode
                                      }: Partial<IFilterControllerOptions>): object {
         const preparedFilter = {...filter};
-        const addSelectionToFilter = selectionViewMode === 'selected' || (selectedKeys.length && parentProperty);
 
-        if (addSelectionToFilter) {
+        if (selectionViewMode === 'selected') {
             const listSource = (source as PrefetchProxy).getOriginal ? (source as PrefetchProxy).getOriginal() : source;
-            const selection = selectionToRecord({
+            preparedFilter[SELECTION_PATH_FILTER_FIELD] = selectionToRecord({
                 selected: selectedKeys || [],
                 excluded: excludedKeys || []
             }, (listSource as Rpc).getAdapter(), 'all', false);
-            const filterField = selectionViewMode === 'selected' ? 'SelectionWithPath' : 'entries';
-
-            preparedFilter[filterField] = selection;
+        } else {
+            delete preparedFilter[SELECTION_PATH_FILTER_FIELD];
         }
 
         this._setFilter(preparedFilter);
+        return preparedFilter;
     }
 
     private _setFilter(filter: object): void {
