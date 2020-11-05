@@ -223,3 +223,9 @@ export default Money;
  * @cfg
  * @default true
  */
+/**
+ * @name Controls/_decorator/Money#fontColorStyle
+ * @cfg
+ * @default default
+ * @example Controls-demo/Decorator/Money/FontColorStyle/Index
+ */
