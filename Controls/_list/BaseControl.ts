@@ -524,8 +524,8 @@ const _private = {
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
             // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-            if (self._options.task1178907511) {
-                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+            if (self._options.task1178907511 && _private.hasMarkerController(self)) {
+                self._markedKeyForRestoredScroll = _private.getMarkerController(self).getMarkedKey();
             }
         }
     },
@@ -701,9 +701,13 @@ const _private = {
      * @param event
      */
     keyDownDel(self, event): void {
+        if (!_private.hasMarkerController(self)) {
+            return;
+        }
+
         const model = self.getViewModel();
-        let toggledItemId = model.getMarkedKey();
-        let toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
+        const toggledItemId = _private.getMarkerController(self).getMarkedKey();
+        const toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
         if (!toggledItem) {
             return;
         }
@@ -3683,7 +3687,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (!newOptions.sourceController && this._sourceController) {
+        if (filterChanged && !newOptions.sourceController && this._sourceController) {
             this.updateSourceController(newOptions);
         }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -3818,6 +3822,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.doAfterUpdate(self, () => {
                 if (this._listViewModel) {
                     this._listViewModel.setSearchValue(newOptions.searchValue);
+                }
+                if (this._sourceController) {
+                    const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
+                    if (this._listViewModel.getHasMoreData() !== hasMore) {
+                        _private.setHasMoreData(this._listViewModel, hasMore);
+                    }
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {

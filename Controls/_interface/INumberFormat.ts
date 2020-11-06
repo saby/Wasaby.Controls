@@ -6,14 +6,16 @@
  */
 export interface INumberFormatOptions {
     /**
-     * Определяет, следует ли использовать разделители группы.
+     * @name Controls/_interface/INumberFormat#useGrouping
+     * @cfg {Boolean} Определяет, следует ли использовать разделители группы.
      * @remark
      * true - число разделено на группы.
      * false - разделения не происходит.
      */
     useGrouping?: boolean;
     /**
-     * Определяет, отображать ли нули в конце десятичной части.
+     * @name Controls/_interface/INumberFormat#showEmptyDecimals
+     * @cfg {Boolean} Определяет, отображать ли нули в конце десятичной части.
      * @remark
      * true -  Отображать нули в десятичной части.
      * false - Не отображать нули в десятичной части.

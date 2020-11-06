@@ -25,7 +25,6 @@ var _private = {
  *
  * @class Controls/_input/Number
  * @extends Controls/_input/Base
- * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * @ignoreOptions Controls/_input/Base#value
  *
  * @mixes Controls/interface/IOnlyPositive
@@ -37,6 +36,7 @@ var _private = {
  *
  * @author Красильников А.С.
  */
+// TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 var NumberInput = Base.extend({
     _defaultValue: 0,
     _inputMode: 'decimal',

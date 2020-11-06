@@ -410,7 +410,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
          state = true;
-      } else if (shouldSearch || this._options.autoDropDown && !this._options.suggestState) {
+      } else if ((shouldSearch || this._options.autoDropDown && !this._options.suggestState)
+         && this._shouldShowSuggest(this._getSourceController().getItems())) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
@@ -726,6 +727,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
+               if (this._options.dataLoadCallback) {
+                  this._options.dataLoadCallback(recordSet);
+               }
                this._setFilter(this._options.filter, this._options);
                this._open();
                this._markerVisibility = 'visible';
