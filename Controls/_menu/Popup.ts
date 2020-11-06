@@ -60,7 +60,8 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
         if (newOptions.stickyPosition.direction &&
             this._options.stickyPosition.direction !== newOptions.stickyPosition.direction) {
-            this._verticalDirection = newOptions.stickyPosition.direction.vertical;
+            this._verticalDirection = newOptions.footerContentTemplate ? 'bottom' :
+                newOptions.stickyPosition.direction.vertical;
             this._horizontalDirection = newOptions.stickyPosition.direction.horizontal;
         }
     }
@@ -149,10 +150,10 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     private _prepareHeaderConfig(options: IMenuPopupOptions): void {
-        if (options.headerContentTemplate) {
-            this._headerTemplate = options.headerContentTemplate;
-        } else if (options.searchParam) {
+        if (options.searchParam) {
             this._headerTemplate = searchHeaderTemplate;
+        } else if (options.headerContentTemplate) {
+            this._headerTemplate = options.headerContentTemplate;
         } else if (options.showHeader && options.headerTemplate !== null || options.headerTemplate) {
             if (options.headConfig) {
                 this._headingCaption = options.headConfig.caption;

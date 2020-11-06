@@ -26,7 +26,8 @@ class PositionParamsCalculator implements IParamsCalculator {
     getQueryParams(
         store: PositionNavigationStore,
         config: INavigationPositionSourceConfig,
-        direction?: TNavigationDirection
+        direction?: TNavigationDirection,
+        paramsCallback?: Function
     ): IQueryParams {
         const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Position};
@@ -68,7 +69,13 @@ class PositionParamsCalculator implements IParamsCalculator {
             additionalFilter[queryField[i] + sign] = queryPosition[i];
         }
         addParams.filter = additionalFilter;
-        // TODO callback
+
+        if (paramsCallback) {
+            paramsCallback({
+                position: queryPosition,
+                limit: storeParams.limit
+            });
+        }
         // TODO lastpage
 
         return addParams;
