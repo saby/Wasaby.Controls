@@ -18,7 +18,7 @@
 
 <div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}"
    on:mouseenter="_mouseEnterHandler()">
-   <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
+   <div class="controls-FilterView__wrapper_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
          <ws:partial template="Controls/_filter/Editors/DateRange"
                      scope="{{_dateRangeItem.editorOptions}}"
@@ -70,7 +70,6 @@
       <ws:if data="{{!_options.emptyText || _options.detailPanelTemplateName}}">
          <div name="detailPanelTarget" class="controls-FilterView__icon
                                               controls-FilterView__icon_theme-{{_options.theme}}
-                                              controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
                                               controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
                                               icon-FilterBig"
               on:mousedown="openDetailPanel()">
