@@ -3071,8 +3071,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Контроллер для перемещения элементов из источника
     _moveController: null,
 
-    _newNavigation: null,
-
     // Контроллер для удаления элементов из источника
     _removeController: null,
     constructor(options) {
@@ -3682,21 +3680,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        const sourceOptions = {...newOptions};
-        if (!navigationChanged && newOptions.navigation && this._newNavigation) {
-            sourceOptions.navigation = this._newNavigation;
-        }
         if ((recreateSource || sourceChanged) && !newOptions.sourceController) {
             if (this._sourceController) {
-                this.updateSourceController(sourceOptions);
+                this.updateSourceController(newOptions);
             } else {
                 this._sourceController = _private.getSourceController(newOptions);
             }
         }
 
-        if (!newOptions.sourceController && this._sourceController) {
-            this.updateSourceController(sourceOptions);
-        }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
@@ -5170,7 +5161,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
-        this._newNavigation = newNavigation;
         options.navigation = newNavigation;
         this._sourceController.updateOptions(options);
         _private.reload(this, this._options);
