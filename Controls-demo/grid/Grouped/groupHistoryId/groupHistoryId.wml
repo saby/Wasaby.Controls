@@ -15,7 +15,7 @@
                     rowSeparatorSize="s"
                     columns="{{_columns}}"
                     groupHistoryId="{{_groupHistoryId}}"
-                    groupingKeyCallback="{{_groupingKeyCallback}}">
+                    groupProperty="fullName">
                 <ws:groupTemplate>
                     <ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderAlign="right">
                     </ws:partial>

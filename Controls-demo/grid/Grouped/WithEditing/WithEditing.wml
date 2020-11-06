@@ -7,7 +7,7 @@
                     source="{{_viewSource}}"
                     rowSeparatorSize="s"
                     columns="{{_columns}}"
-                    groupingKeyCallback="{{_groupingKeyCallback}}">
+                    groupProperty="fullName">
                 <ws:groupTemplate>
                     <ws:partial template="Controls/grid:GroupTemplate" itemData="{{itemData}}" expanderAlign="right">
                     </ws:partial>

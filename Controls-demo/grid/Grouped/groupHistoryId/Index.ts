@@ -2,7 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/grid/Grouped/groupHistoryId/groupHistoryId';
 import {Memory} from 'Types/source';
 import {getTasks} from '../../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/grid';
+import {IColumn} from 'Controls/grid';
 import * as Config from 'Env/Config';
 
 interface IItem {
@@ -28,10 +28,6 @@ export default class extends Control {
     ];
     protected _groupHistoryId: string = '';
     protected readonly GROUP_HISTORY_ID_NAME: string = 'MY_NEWS';
-
-    protected _groupingKeyCallback = (item: IItem): string => {
-        return item.get('fullName');
-    }
 
     protected _beforeMount(): void {
         Config.UserConfig.setParam('LIST_COLLAPSED_GROUP_' + this.GROUP_HISTORY_ID_NAME, JSON.stringify(['Крайнов Дмитрий']));
