@@ -262,7 +262,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
             const count = receivedState.items.getCount();
             for (let i = 0; i < count; i++) {
                 const item = receivedState.items.at(i);
-                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
+                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData(true) : item;
                 for (const key in value) {
                     //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
                     if (isTemplate(value[key]) || isTemplateArray(value[key]) || isTemplateObject(value[key])) {
