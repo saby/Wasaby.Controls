@@ -124,7 +124,7 @@ export class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
-    private _navigationParamsChangedCallback: () => ;
+    private _navigationParamsChangedCallback: Function;
     private _navigationStores: List<INavigationStoresListItem> = null;
     private _paramsCalculator: IParamsCalculator = null;
 
