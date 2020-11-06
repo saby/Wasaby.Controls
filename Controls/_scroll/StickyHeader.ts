@@ -261,11 +261,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
+    protected _afterUpdate(options: IStickyHeaderOptions): void {
+        this._updateComputedStyle();
+    }
+
     protected _afterMount(): void {
         if (!this._isStickySupport) {
             return;
         }
         const children = this._children;
+
+        this._updateComputedStyle();
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
         // отказаться от closest.
@@ -775,12 +781,25 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return  this._isShadowVisibleByController && (shadowVisible || oldShadowVisible);
     }
 
-    private _getComputedStyle(): CSSStyleDeclaration {
+    _updateComputedStyle(): void {
         const container: HTMLElement = this._getNormalizedContainer();
         if (this._cssClassName !== container.className) {
             this._cssClassName = container.className;
-            this._cachedStyles = getComputedStyle(container);
+            const styles = getComputedStyle(container);
+            // Сразу запрашиваем и сохраняем нужные стили. Recalculate Style происходит не в момент вызова
+            // getComputedStyle, а при обращении к стилям в из полученного объекта.
+            this._cachedStyles = {
+                'border-top-width': styles['border-top-width'],
+                'border-bottom-width': styles['border-bottom-width'],
+                'padding-top': styles['padding-top'],
+                'padding-bottom': styles['padding-bottom'],
+                minHeight: styles.minHeight,
+                boxSizing: styles.boxSizing
+            };
         }
+    }
+
+    private _getComputedStyle(): CSSStyleDeclaration {
         return this._cachedStyles;
     }
 
