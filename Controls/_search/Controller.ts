@@ -163,6 +163,9 @@ export default class Container extends Control<IContainerOptions> {
             this._updateParams(validatedValue);
             this._handleDataLoad(result);
             this._notify('filterChanged', [sourceController.getFilter()]);
+            if (this._options.dataLoadCallback) {
+               this._options.dataLoadCallback(result);
+            }
             sourceController.setItems(result);
          }
       });
