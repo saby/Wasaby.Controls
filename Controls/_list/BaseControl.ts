@@ -3708,7 +3708,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (!newOptions.sourceController && this._sourceController) {
+        if (filterChanged && !newOptions.sourceController && this._sourceController) {
             this.updateSourceController(newOptions);
         }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
