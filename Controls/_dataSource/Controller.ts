@@ -226,7 +226,7 @@ export default class Controller {
 
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key);
+        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
