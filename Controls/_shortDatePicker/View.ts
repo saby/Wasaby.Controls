@@ -188,13 +188,18 @@ class View extends Control<IDateLitePopupOptions> {
 
     protected _updateCloseBtnPosition(options: IDateLitePopupOptions): void {
         if (options.stickyPosition) {
-            const openerLeft = options.stickyPosition.targetPosition.left;
-            const popupLeft = options.stickyPosition.position.left;
-            // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
-            const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
-            this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
-                POSITION.RIGHT :
-                POSITION.LEFT;
+            // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
+            if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
+                this._closeBtnPosition =  POSITION.RIGHT;
+            } else {
+                const openerLeft = options.stickyPosition.targetPosition.left;
+                const popupLeft = options.stickyPosition.position.left;
+                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
+                const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
+                this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
+                    POSITION.RIGHT :
+                    POSITION.LEFT;
+            }
         }
     }
 
@@ -416,6 +421,10 @@ class View extends Control<IDateLitePopupOptions> {
         } else {
             return currentDate;
         }
+    }
+
+    private getWindowInnerWidth(): number {
+        return window?.innerWidth;
     }
 
     static _theme: string[] = ['Controls/shortDatePicker'];
