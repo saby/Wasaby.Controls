@@ -3701,7 +3701,7 @@ define([
                _editInPlaceController: {
                   isEditing: () => true
                },
-               cancelEdit: function() {
+               _cancelEdit: function() {
                   isCanceled = true;
                },
             };
@@ -5251,7 +5251,7 @@ define([
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._viewModelConstructor = {};
-         instance.cancelEdit = () => {
+         instance._cancelEdit = () => {
             cancelClosed = true;
          };
          instance._editInPlaceController = {
