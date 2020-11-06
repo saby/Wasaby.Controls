@@ -1,1 +1,1 @@
-export {default as Diagram} from './_process/Diagram';
+export {default as Diagram, IDiagramCategory, IDiagramOptions} from './_process/Diagram';

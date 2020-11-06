@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell" attr:style="width: 300px">
         <div class="controls-text-label_theme-{{_options.theme}}">diagram with 3 categories</div>
-        <Controls.process:Diagram data="{{_data}}"></Controls.process:Diagram>
+        <Controls.process:Diagram data="{{_data}}" borderVisible="{{true}}"></Controls.process:Diagram>
     </div>
 </div>

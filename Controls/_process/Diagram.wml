@@ -1,1 +1,9 @@
-<div>Diagram</div>
+<div attr:class="controls-Diagram controls-Diagram_theme-{{_options.theme}}
+    {{_options.borderVisible ? ' controls-Diagram_bordered_theme-' + _options.theme : '' }}">
+    <div attr:class="controls-Diagram__wrapper">
+        <ws:for data="index, item in _viewData">
+            <div attr:class="controls-Diagram__category controls-Diagram__category__{{index}}_theme-{{_options.theme}}"
+                 attr:style="width:{{item}}%" attr:title="{{item}}%"></div>
+        </ws:for>
+    </div>
+</div>

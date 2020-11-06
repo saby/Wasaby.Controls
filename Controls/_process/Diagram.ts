@@ -24,5 +24,7 @@ class Diagram extends Control<IDiagramOptions> {
             this._viewData = calculateViewData(options.data);
         }
     }
+
+    static _theme: string[] = ['Controls/process'];
 }
 export default Diagram;

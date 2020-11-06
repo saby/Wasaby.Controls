@@ -1,3 +1,33 @@
-.class {
-  width: 10px;
+.controls-Diagram {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.controls-Diagram_theme-@{themeName} {
+  height: @inline_height_diagram;
+}
+
+.controls-Diagram__wrapper {
+  display: flex;
+  height: 100%;
+}
+
+.controls-Diagram__category {
+  height: 100%;
+}
+
+.controls-Diagram__category__0_theme-@{themeName} {
+  background-color: @first_color_diagram;
+}
+
+.controls-Diagram__category__1_theme-@{themeName} {
+  background-color: @second_color_diagram;
+}
+
+.controls-Diagram__category__2_theme-@{themeName} {
+  background-color: @third_color_diagram;
+}
+
+.controls-Diagram_bordered_theme-@{themeName} {
+  border: @border-thickness_diagram solid @border-color_diagram;
+  border-radius: @border-radius_diagram;
 }
