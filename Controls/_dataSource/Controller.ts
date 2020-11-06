@@ -259,7 +259,7 @@ export default class Controller {
         let loadedResult = false;
 
         if (this._hasNavigationBySource()) {
-            loadedResult = this._getNavigationController(this._options.navigation).hasLoaded(key);
+            loadedResult = this._getNavigationController(this._options).hasLoaded(key);
         }
 
         return loadedResult;
