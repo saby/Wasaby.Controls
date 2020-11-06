@@ -8,6 +8,28 @@ const position: string = `display: inline;
    //Вроде самый безопасный способ вынести элемент на отдельный слой
    backface-visibility: hidden;`;
 
+/**
+ * Модуль, в котором реализована функция <b>getWidth(element)</b>.
+ * Высчитывает ширину переданного элемента в пикселях.
+ *
+ * @remark
+ * <h2>Параметры функции</h2>
+ * * {HTMLElement} element Переданный HTML-элемент
+ *
+ * <h2>Возвращает</h2>
+ * * {Number} Ширина переданного текста в пикселях.
+ *
+ * @example
+ * <pre class="brush: js">
+ *     import {getWidth} from 'Controls/sizeUtils';
+ *      getTextWidth(fakeElement);
+ * </pre>
+ *
+ * @class Controls/_utils/sizeUtils/getWidth
+ * @public
+ * @author Красильников А.С.
+ */
+
 export function getWidth(element: HTMLElement | string): number {
     const measurer = document.createElement('div');
     let width: number;

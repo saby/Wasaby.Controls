@@ -1,10 +1,11 @@
 /**
+ * Утилиты для работы с текстом.
  * @library Controls/inputUtils
  * @includes splitIntoTriads Controls/_utils/inputUtils/splitIntoTriads
  * @includes toString Controls/_utils/inputUtils/toString
  * @includes numberToString Controls/_utils/inputUtils/numberToString
  * @includes RegExp Controls/_utils/inputUtils/RegExp
- * @public
+ * @private
  * @author Журавлев М.С.
  */
 
