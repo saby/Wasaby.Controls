@@ -126,6 +126,10 @@ define(
                   items: ['testItems'],
                   historyId: 'testHistoryId'
                },
+               autofocus: true,
+               eventHandlers: {
+                  onResult: filterMod.Selector._onFilterChanged
+               },
                fittingMode: {
                   horizontal: 'overflow',
                   vertical: 'adaptive'

@@ -418,8 +418,8 @@ define(
          it('onResult footerClick', function() {
             let closed = false;
             let fastFilter = getFastFilter(configWithItems);
-            fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
             fastFilter._beforeMount(configWithItems);
+            fastFilter._stickyOpener = { close: ()=> {closed = true;} };
             fastFilter._onResult({}, 'footerClick');
             assert.isTrue(closed);
          });
@@ -491,7 +491,7 @@ define(
             let instance = getFastFilterWithItems(configItems);
             let opened = true;
             let notifyFire = false;
-            instance._children.DropdownOpener = {
+            instance._stickyOpener = {
                close: () => { opened = false }
             };
             instance._notify = () => {
@@ -621,7 +621,7 @@ define(
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   let isOpened = false, closed = false;
                   fastData.lastOpenIndex = 0;
-                  fastData._children = {DropdownOpener: {isOpened: () => {return isOpened;}, close: () => {closed = true;}}};
+                  fastData._stickyOpener = {isOpened: () => {return isOpened;}, close: () => {closed = true;}};
                   fastData._reset(null, fastData._items.at(0), 0);
                   assert.equal(fastData._items.at(0).get('resetValue'), 'все страны');
                   assert.isFalse(closed);
@@ -639,9 +639,7 @@ define(
             let fastFilter = new filterMod.Fast(config);
             fastFilter._options.theme = 'default';
             let expectedConfig, isOpened, isLoading = false;
-            fastFilter._children = {
-               DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} }
-            };
+            fastFilter._stickyOpener = { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} };
             fastFilter._container = {children: []};
             fastFilter._configs = [{_items: new collection.RecordSet({
                   keyProperty: 'key',

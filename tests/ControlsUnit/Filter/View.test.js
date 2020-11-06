@@ -273,9 +273,7 @@ define(
          it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
-            view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
-            };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} };
             view._container = {};
             view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
             view._source = defaultConfig.source;
@@ -302,8 +300,8 @@ define(
                   getElementsByClassName: () => [filterClassName]
                }
             };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} };
             view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} },
                state: 'div_state_filter'
             };
             view._container = {
@@ -390,9 +388,7 @@ define(
             let view = getView(defaultConfig),
                popupOptions,
                isOpened = true;
-            view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} }
-            };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} };
             view._container = {};
 
             view._open();
@@ -423,9 +419,7 @@ define(
             let view = getView(defaultConfig),
                isOpened = true, closed,
                filterChanged, itemsChanged;
-            view._children = {
-               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
-            };
+            view._stickyOpener = { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
             view._notify = (event, data) => {
               if (event === 'filterChanged') {
                  filterChanged = data[0];
@@ -469,9 +463,7 @@ define(
             let view = getView(defaultConfig),
                isOpened = true, closed,
                filterChanged, itemsChanged;
-            view._children = {
-               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
-            };
+            view._stickyOpener = { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
                   filterChanged = data[0];
@@ -907,9 +899,7 @@ define(
                      sourceController: {hasMoreData: () => {return true;}}
                   }
                };
-               view._children = {
-                  StickyOpener: { close: () => {} }
-               };
+               view._stickyOpener: { close: () => {} };
             });
 
             it('_resultHandler itemClick', function() {
