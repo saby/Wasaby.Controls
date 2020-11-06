@@ -899,7 +899,7 @@ define(
                      sourceController: {hasMoreData: () => {return true;}}
                   }
                };
-               view._stickyOpener: { close: () => {} };
+               view._stickyOpener = { close: () => {} };
             });
 
             it('_resultHandler itemClick', function() {
