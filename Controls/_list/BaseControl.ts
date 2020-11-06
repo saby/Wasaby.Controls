@@ -2091,8 +2091,11 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController(options): SourceController {
-        return new SourceController(options);
+    getSourceController(self, options): SourceController {
+        return new SourceController({
+            ...options,
+            navigationParamsChangedCallback: self._notifyNavigationParamsChanged
+        });
     },
 
     checkRequiredOptions(options) {
@@ -2115,7 +2118,7 @@ const _private = {
         );
     },
 
-    notifyNavigationParamsChanged(actualParams) {
+    notifyNavigationParamsChanged(actualParams): void {
         if (this._isMounted) {
             this._notify('navigationParamsChanged', [actualParams]);
         }
@@ -3125,7 +3128,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._sourceController = newOptions.sourceController;
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
-            this._sourceController = _private.getSourceController(newOptions);
+            this._sourceController = _private.getSourceController(this, newOptions);
         }
 
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -3704,7 +3707,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
             } else {
-                this._sourceController = _private.getSourceController(newOptions);
+                this._sourceController = _private.getSourceController(this, newOptions);
             }
         }
 
@@ -3905,7 +3908,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        const sourceController = _private.getSourceController(this._options);
+        const sourceController = _private.getSourceController(this, this._options);
 
         let reloadItemDeferred;
         let filter;
@@ -5208,7 +5211,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._sourceController) {
             this._sourceController.destroy();
         }
-        this._sourceController = _private.getSourceController(options);
+        this._sourceController = _private.getSourceController(this, options);
     },
 
     updateSourceController(options): void {
