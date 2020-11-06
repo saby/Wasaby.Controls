@@ -65,6 +65,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
 
+    private _isMounted: boolean;
     private _selectedKeysCount: number | null;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
@@ -110,6 +111,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+
         this._initShadowVisibility(options);
         this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options as IFilterControllerOptions);
@@ -130,7 +133,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._searchValue = options.searchValue;
         }
 
-        const controllerState = this._getSourceController(options).getState();
+        const controllerState = this._getSourceController(this._getSourceControllerOptions(options)).getState();
         this._dataOptionsContext = this._createContext(controllerState);
 
         this._previousViewMode = this._viewMode = options.viewMode;
@@ -182,6 +185,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _afterMount(options: IBrowserOptions): void {
+        this._isMounted = true;
         if (options.useStore) {
             const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
@@ -595,7 +599,18 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
-        return {...options, filter: this._filter, source: this._source};
+        return {
+            ...options,
+            filter: this._filter,
+            source: this._source,
+            navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+        };
+    }
+
+    private _notifyNavigationParamsChanged(params): void {
+        if (this._isMounted) {
+            this._notify('navigationParamsChanged', [params]);
+        }
     }
 
     private _startSearch(value: string): Promise<RecordSet | Error> {
