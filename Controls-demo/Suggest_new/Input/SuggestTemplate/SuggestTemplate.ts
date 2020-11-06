@@ -1,6 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
+import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
 import {_departmentsDataLong, _treeData} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/SuggestTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplate');
@@ -24,12 +25,11 @@ export default class extends Control {
          filter: MemorySourceFilter()
       });
 
-      this._treeSource = new SearchMemory({
+      this._treeSource = new ExplorerMemory({
          keyProperty: 'id',
-         searchParam: 'title',
-         filter: MemorySourceFilter(),
          data: _treeData
       });
+
       this._navigation = {
          source: 'page',
          view: 'page',

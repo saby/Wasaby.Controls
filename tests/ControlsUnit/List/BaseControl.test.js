@@ -4921,6 +4921,23 @@ define([
             assert.equal(instance._itemActionsMenuId, null);
          });
 
+         // Необходимо показать контекстное меню по longTap, если не был инициализирован itemActionsController
+         it('should display context menu on longTap', () => {
+            const spyOpenContextMenu = sinon.spy(lists.BaseControl._private, 'openContextMenu');
+            const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
+            const spyOpenItemActionsMenu = sinon.spy(lists.BaseControl._private, 'openItemActionsMenu');
+            const fakeEvent = initFakeEvent();
+            instance._listViewModel.setActionsAssigned(false);
+            instance._itemActionsController = undefined;
+            instance._onItemLongTap(null, item, fakeEvent);
+            sinon.assert.called(spyOpenContextMenu);
+            sinon.assert.called(spyUpdateItemActions);
+            sinon.assert.called(spyOpenItemActionsMenu);
+            spyOpenContextMenu.restore();
+            spyUpdateItemActions.restore();
+            spyOpenItemActionsMenu.restore();
+         });
+
          // Клик по ItemAction в тулбаре должен приводить к расчёту контейнера
          it('should calculate container to send it in event on toolbar action click', () => {
             const fakeEvent = initFakeEvent();

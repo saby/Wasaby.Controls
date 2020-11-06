@@ -250,7 +250,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
      * @function Controls/_scroll/Container#scrollToTop
      */
     scrollToTop() {
-        this.setScrollTop(0);
+        this._setScrollTop(0);
     }
 
     /**
@@ -276,7 +276,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
      * @function Controls/_scroll/Container#scrollToBottom
      */
     scrollToBottom() {
-        this.setScrollTop(
+        this._setScrollTop(
             this._children.content.scrollHeight - this._children.content.clientHeight + this._topPlaceholderSize);
     }
 
@@ -384,28 +384,41 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        const children = this._children.content.children;
-        let childrenIndex: number;
+        let children = this._children.content.children;
         let heigthValue = 0;
         let widthValue = 0;
-        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
-            heigthValue += children[childrenIndex].offsetHeight;
-            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginTop);
-            heigthValue += parseFloat(window.getComputedStyle(children[childrenIndex]).marginBottom) ;
 
+        for (const child of children) {
+            // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
+            // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
+            if (child.className.includes('Hint-ListWrapper')) {
+                const hintListWrapperChildren = child.children;
+                for (const child of hintListWrapperChildren) {
+                    heigthValue+= this._calculateScrollHeight(child);
+                }
+            } else {
+                heigthValue+= this._calculateScrollHeight(child);
+            }
         }
+
         newState.scrollHeight = heigthValue;
+
         if (newState.scrollHeight < newState.clientHeight) {
             newState.scrollHeight = newState.clientHeight;
         }
-        for (childrenIndex = 0; childrenIndex < children.length; childrenIndex++) {
-            widthValue += children[childrenIndex].offsetWidth;
+        for (child of children) {
+            widthValue += child.offsetWidth;
         }
         newState.scrollWidth = widthValue;
         if (newState.scrollWidth <  newState.clientWidth) {
             newState.scrollWidth = newState.clientWidth;
         }
         this._updateStateAndGenerateEvents(newState);
+    }
+
+    _calculateScrollHeight(element: HTMLElement): number {
+        return element.offsetHeight + parseFloat(window.getComputedStyle(element).marginTop) +
+            parseFloat(window.getComputedStyle(element).marginBottom);
     }
 
     _getFullStateFromDOM(): IScrollState {
@@ -464,20 +477,20 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     protected _doScroll(scrollParam) {
         if (scrollParam === 'top') {
-            this.setScrollTop(0);
+            this._setScrollTop(0);
         } else {
             const
                 clientHeight = this._state.clientHeight,
                 scrollHeight = this._state.scrollHeight,
                 currentScrollTop = this._state.scrollTop + (this._isVirtualPlaceholderMode() ? this._topPlaceholderSize : 0);
             if (scrollParam === 'bottom') {
-                this.setScrollTop(scrollHeight - clientHeight);
+                this._setScrollTop(scrollHeight - clientHeight);
             } else if (scrollParam === 'pageUp') {
-                this.setScrollTop(currentScrollTop - clientHeight);
+                this._setScrollTop(currentScrollTop - clientHeight);
             } else if (scrollParam === 'pageDown') {
-                this.setScrollTop(currentScrollTop + clientHeight);
+                this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
-                this.setScrollTop(scrollParam);
+                this._setScrollTop(scrollParam);
             }
         }
     }
@@ -611,7 +624,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
+    protected _setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
         if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
             const scrollState: IScrollState = this._state;
@@ -679,7 +692,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
             this._savedScrollTop - heightDifference + correctingHeight;
 
-        this.setScrollTop(newPosition, true);
+        this._setScrollTop(newPosition, true);
     }
 
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
