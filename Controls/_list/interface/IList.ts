@@ -101,9 +101,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Шаблон отображения контрола без элементов.
+ * @cfg {Function} Пользовательский шаблон отображения пустого списка.
  * @demo Controls-demo/list_new/EmptyList/Default/Index
- * @default Controls/list:EmptyTemplate
+ * @default undefined
  * @example
  * <pre class="brush: html">
  * <Controls.list:View>
@@ -114,6 +114,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  *     </ws:emptyTemplate>
  * </Controls.list:View>
  * </pre>
+ * @remark
+ * Пользовательский шаблон получается путем конфигурации базового шаблона {@link Controls/list:EmptyTemplate}.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/empty-list/">руководство разработчика</a>.
  */
 
 /*ENG
@@ -601,6 +604,10 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @cfg {ItemPadding} Конфигурация отступов внутри элементов списка.
  * @name Controls/_list/interface/IList#itemPadding
+ * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
+ * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
+ * @remark
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/paddings/">руководство разработчика</a>.
  */
 
 /*ENG
@@ -659,7 +666,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
+ * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
+ * @remark
+ * Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
  * @default default
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
