@@ -50,5 +50,12 @@
          highlightOnHover="{{highlightOnHover}}"
          itemData="{{itemData}}"
          itemActionsClass="{{itemActionsClass ? itemActionsClass : 'controls-TileView__itemActions_theme-' + theme + ' controls-TreeTileView__itemActions_center'}}"/>
+      <ws:if data="{{footerTemplate}}">
+         <ws:partial
+            attr:class="controls-TileView__item_footer"
+            template="{{footerTemplate}}"
+            itemData="{{itemData}}"
+         />
+      </ws:if>
    </div>
 </ws:else>

@@ -51,7 +51,7 @@
       </ws:partial>
       <ws:if data="{{footerTemplate}}">
          <ws:partial
-            attr:class="controls-TileView__previewTemplate_footer"
+            attr:class="controls-TileView__item_footer"
             template="{{footerTemplate}}"
             itemData="{{itemData}}"
          />
