@@ -3854,8 +3854,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
-                    _private.setHasMoreData(this._listViewModel,
-                        _private.hasMoreDataInAnyDirection(this, this._sourceController));
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
