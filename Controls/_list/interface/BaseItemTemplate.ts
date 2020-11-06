@@ -96,7 +96,7 @@ export default interface IBaseItemTemplateOptions {
 
    /**
     * @name Controls/interface/IItemTemplate#markerClassName
-    * @cfg {TMarkerClassName} Размером маркера.
+    * @cfg {TMarkerClassName} Размер маркера.
     * @default default
     */
    markerClassName?: TMarkerClassName;
