@@ -1479,7 +1479,8 @@ define([
          it('should work when itemActions are not initialized', async () => {
             await initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
 
-            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
+            const controller = lists.BaseControl._private.getMarkerController(instance);
+            controller.setMarkedKey(1);
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
             lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.called(spyUpdateItemActions);
@@ -1490,7 +1491,7 @@ define([
          it('should work when itemActions are initialized', async () => {
             await initTest({ itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }] });
             lists.BaseControl._private.updateItemActions(instance, cfg);
-            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
+            instance.setMarkedKey(1);
             const spyUpdateItemActions = sinon.spy(lists.BaseControl._private, 'updateItemActions');
             lists.BaseControl._private.keyDownDel(instance, event);
             sinon.assert.notCalled(spyUpdateItemActions);
@@ -1500,14 +1501,14 @@ define([
 
          it('should not work when no itemActions passed', async () => {
             await initTest();
-            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
+            instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
 
          it('should not work when itemAction "delete" is not passed', async () => {
             await initTest({ itemActions: [{ id: 1 }, { id: 2 }] });
-            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
+            instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
@@ -1517,7 +1518,7 @@ define([
                itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }],
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
-            await lists.BaseControl._private.getMarkerControllerAsync(instance).then((controller) => controller.setMarkedKey(1));
+            instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
             assert.isFalse(isHandlerCalled);
          });
@@ -7718,15 +7719,14 @@ define([
                assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 1);
                assert.equal(baseControl.getViewModel().getVersion(), 6);
 
-               return lists.BaseControl._private.moveMarkerToNext(baseControl, event).then(() => {
-                  assert.isTrue(preventDefaultCalled);
-                  assert.isTrue(activateCalled);
-                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-                  assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 2);
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
-                  assert.equal(baseControl.getViewModel().getItemBySourceKey(3).getVersion(), 1);
-                  assert.equal(baseControl.getViewModel().getVersion(), 8);
-               });
+               lists.BaseControl._private.moveMarkerToNext(baseControl, event)
+               assert.isTrue(preventDefaultCalled);
+               assert.isTrue(activateCalled);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+               assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 2);
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
+               assert.equal(baseControl.getViewModel().getItemBySourceKey(3).getVersion(), 1);
+               assert.equal(baseControl.getViewModel().getVersion(), 8);
             });
 
             it('to prev', function() {
@@ -7734,24 +7734,22 @@ define([
                assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 1);
                assert.equal(baseControl.getViewModel().getVersion(), 6);
 
-               return lists.BaseControl._private.moveMarkerToPrevious(baseControl, event).then(() => {
-                  assert.isTrue(preventDefaultCalled);
-                  assert.isTrue(activateCalled);
-                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-                  assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 2);
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-                  assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 3);
-                  assert.equal(baseControl.getViewModel().getVersion(), 8);
-               });
+               lists.BaseControl._private.moveMarkerToPrevious(baseControl, event)
+               assert.isTrue(preventDefaultCalled);
+               assert.isTrue(activateCalled);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+               assert.equal(baseControl.getViewModel().getItemBySourceKey(2).getVersion(), 2);
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.equal(baseControl.getViewModel().getItemBySourceKey(1).getVersion(), 3);
+               assert.equal(baseControl.getViewModel().getVersion(), 8);
             });
          });
 
          describe('onCollectionChanged', () => {
             beforeEach(() => {
-               return baseControl.setMarkedKey(1).then(() => {
-                  let item = baseControl.getViewModel().getItemBySourceKey(1);
-                  assert.isTrue(item.isMarked());
-               });
+               baseControl.setMarkedKey(1)
+               let item = baseControl.getViewModel().getItemBySourceKey(1);
+               assert.isTrue(item.isMarked());
             });
 
             it('reset marker for removed items', () => {
@@ -8052,10 +8050,9 @@ define([
 
          it('spaceHandler', () => {
             const notifySpy = sinon.spy(baseControl, '_notify');
-            return lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null }).then(() => {
-               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
-               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
-            });
+            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
+            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
          });
 
          it('spaceHandler and multiselection hidden', () => {
