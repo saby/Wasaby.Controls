@@ -30,7 +30,12 @@ export default class Base {
         config.id = this._popupId;
         config._events = {
             onClose: () => {
-                this._popupId = null;
+                // Защита. Могут позвать close и сразу open. В этом случае мы
+                // инициируем закрытие окна, откроем новое и после стрельнет onCLose, который очистит id нового окна.
+                // В итоге повторый вызов метода close ничего не сделает, т.к. popupId уже почищен.
+                if (!this.isOpened()) {
+                    this._popupId = null;
+                }
             }
         };
         if (config.dataLoaders) {
@@ -41,7 +46,8 @@ export default class Base {
     }
 
     close(): void {
-        return this._opener.closePopup(this._popupId);
+        this._opener.closePopup(this._popupId);
+        this._popupId = null;
     }
 
     isOpened(): boolean {
