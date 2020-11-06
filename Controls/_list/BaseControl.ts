@@ -2188,7 +2188,7 @@ const _private = {
         const newSourceCfg = newNavigation && newNavigation.sourceConfig ? newNavigation.sourceConfig : {};
         if (oldSourceCfg.page !== newSourceCfg.page) {
             if (_private.isEditing(self)) {
-                self.cancelEdit();
+                self._cancelEdit();
             }
         }
     },
@@ -2916,7 +2916,7 @@ const _private = {
     registerFormOperation(self): void {
         self._notify('registerFormOperation', [{
             save: self._commitEdit.bind(self, 'hasChanges'),
-            cancel: self.cancelEdit.bind(self),
+            cancel: self._cancelEdit.bind(self),
             isDestroyed: () => self._destroyed
         }], {bubbling: true});
     },
@@ -3609,7 +3609,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
             if (_private.isEditing(this)) {
-                this.cancelEdit();
+                this._cancelEdit();
             }
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
@@ -4626,19 +4626,44 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.isEditing(this);
     },
 
+    beginEdit(options) {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        return this._beginEdit(options);
+    },
+
+    beginAdd(options) {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        return this._beginAdd(options, this._getEditingConfig().addPosition);
+    },
+
+    cancelEdit() {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        return this._cancelEdit();
+    },
+
+    commitEdit() {
+        if (this._options.readOnly) {
+            return Promise.reject('Control is in readOnly mode.');
+        }
+        return this._commitEdit();
+    },
+
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
             return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition, false);
         } else {
-            return this.beginEdit({ item: editingConfig.item });
+            return this._beginEdit({ item: editingConfig.item });
         }
     },
 
-    beginEdit(options) {
-        if (this._options.readOnly) {
-            return Promise.reject('Control is in readOnly mode.');
-        }
+    _beginEdit(options) {
         this._isEditingRowScrollToElement = true;
         _private.closeSwipe(this);
         this.showIndicator();
@@ -4652,14 +4677,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    beginAdd(options) {
-        return this._beginAdd(options, this._getEditingConfig().addPosition);
-    },
-
     _beginAdd(options, addPosition, isScroll: boolean = true) {
-        if (this._options.readOnly) {
-            return Promise.reject('Control is in readOnly mode.');
-        }
         this._isEditingRowScrollToElement = isScroll;
         _private.closeSwipe(this);
         this.showIndicator();
@@ -4687,10 +4705,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    cancelEdit() {
-        if (this._options.readOnly) {
-            return Promise.reject('Control is in readOnly mode.');
-        }
+    _cancelEdit() {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
@@ -4700,14 +4715,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    commitEdit() {
-        return this._commitEdit();
-    },
-
     _commitEdit(commitStrategy?: 'hasChanges' | 'all') {
-        if (this._options.readOnly) {
-            return Promise.reject('Control is in readOnly mode.');
-        }
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
@@ -4741,7 +4749,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return Promise.resolve();
             }
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            return this.beginEdit({ item })
+            return this._beginEdit({ item });
         };
 
         switch (nativeEvent.keyCode) {
@@ -4750,7 +4758,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             case 27: // Esc
                 // Если таблица находится в другой таблице, событие из внутренней таблицы не должно всплывать до внешней
                 e.stopPropagation();
-                return this.cancelEdit();
+                return this._cancelEdit();
             case 38: // ArrowUp
                 const prev = this._getEditInPlaceController().getPrevEditableItem();
                 return editNext(prev?.contents, 'top');
@@ -4791,12 +4799,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _tryContinueEditing(shouldEdit, shouldAdd, item?: Model) {
-        return this.commitEdit().then((result) => {
+        return this._commitEdit().then((result) => {
             if (result && result.canceled) {
                 return result;
             }
             if (shouldEdit) {
-                return this.beginEdit({ item });
+                return this._beginEdit({ item });
             } else if (shouldAdd) {
                 return this._beginAdd({}, this._getEditingConfig().addPosition);
             }
