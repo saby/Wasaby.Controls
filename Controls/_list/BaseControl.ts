@@ -5622,10 +5622,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.hideActions(this);
         }
 
-        const changeMarkedKey = () => {
+        const endDrag = () => {
             if (this._options.markerVisibility !== 'hidden') {
-                _private.changeMarkedKey(this, this._draggedKey);
+                const targetPosition = this._dndListController.getDragPosition();
+                if (targetPosition) {
+                    const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
+                    if (!moveToCollapsedNode) {
+                        _private.changeMarkedKey(this, this._draggedKey);
+                    }
+                }
             }
+
+            this._dndListController.endDrag();
         };
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
@@ -5635,13 +5643,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (dragEndResult instanceof Promise) {
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
-                    this._dndListController.endDrag();
-                    changeMarkedKey();
+                    endDrag();
                     _private.hideIndicator(this);
                 });
             } else {
-                this._dndListController.endDrag();
-                changeMarkedKey();
+                endDrag();
             }
         }
 
