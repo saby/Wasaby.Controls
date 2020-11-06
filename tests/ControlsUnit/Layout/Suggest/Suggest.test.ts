@@ -1094,6 +1094,9 @@ describe('Controls/suggest', () => {
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
 
+         stub.callsFake(() => ({
+            getCount: () => 0
+         }));
          suggestOpened = false;
          inputContainer._options.autoDropDown = true;
          inputContainer._options.historyId = null;
