@@ -19,6 +19,7 @@ import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
 import {POSITION} from './Container/Type';
+import {SCROLL_DIRECTION} from "./Utils/Scroll";
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
     backgroundStyle: string;
@@ -199,8 +200,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // }
     }
 
-    protected _positionChangedHandler(event, direction, position): void {
-        this.scrollTo(position, direction);
+    protected _positionChangedHandler(event, direction, scrollPosition): void {
+        // В вертикальном направлении скролим с учетом виртуального скрола.
+        if (direction === SCROLL_DIRECTION.VERTICAL) {
+            this._setScrollTop(scrollPosition);
+        } else {
+            this.scrollTo(scrollPosition, direction);
+        }
     }
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
