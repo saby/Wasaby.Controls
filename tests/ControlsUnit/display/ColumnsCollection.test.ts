@@ -56,7 +56,7 @@ describe('Controls/_display/ColumnsCollection', () => {
     it('should set column for dragged item avatar', () => {
         const item = model.at(2);
         item.setColumn(1);
-        model.setDraggedItems(3, [3]);
+        model.setDraggedItems(model.getItemBySourceKey(3), [3]);
         const strategy = model.getStrategyInstance(ColumnsDrag);
         assert.equal(strategy.avatarItem.getColumn(), 1);
     });

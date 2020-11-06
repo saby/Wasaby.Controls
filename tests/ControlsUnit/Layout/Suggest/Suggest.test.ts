@@ -581,6 +581,7 @@ describe('Controls/suggest', () => {
          let inputContainer;
          let searchCallbackSpy;
          let loadEndSpy;
+         let dataLoadCallbackSpy;
          const setItemsSpy = sandbox.spy(SourceController.prototype, 'setItems');
 
          const recordSet = new RecordSet({
@@ -595,6 +596,7 @@ describe('Controls/suggest', () => {
                dataLoadCallback: () => {}
             });
             searchCallbackSpy = sandbox.spy(inputContainer._options, 'searchStartCallback');
+            dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
             loadEndSpy = sandbox.spy(inputContainer, '_loadEnd');
          });
          afterEach(() => sandbox.reset());
@@ -604,7 +606,6 @@ describe('Controls/suggest', () => {
          it('value is not specified', async () => {
             sandbox.stub(SourceController.prototype, 'load')
                .callsFake(() => Promise.resolve(recordSet));
-            const dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
             const result = await inputContainer._resolveLoad();
 
             assert.isTrue(searchCallbackSpy.calledOnce);
@@ -625,6 +626,7 @@ describe('Controls/suggest', () => {
 
             assert.equal(inputContainer._searchValue, value);
             assert.equal(recordSet, result);
+            assert.isTrue(dataLoadCallbackSpy.withArgs(recordSet).calledOnce);
             assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
             assert.deepEqual(inputContainer._filter, {testtt: 'test1'});
             assert.equal(inputContainer._markerVisibility, 'visible');
@@ -633,12 +635,6 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_resolveSearch', async () => {
-         const opts = {
-            delayTime: 300,
-            minSearchLength: 3,
-            searchCallback: (value: string) => {},
-            searchResetCallback: () => {}
-         };
          const inputContainer = getComponentObject({
             searchDelay: 300,
             minSearchLength: 3
@@ -649,7 +645,6 @@ describe('Controls/suggest', () => {
          await inputContainer._resolveSearch('test');
 
          assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
-
          assert.isTrue(resolverSpy.calledWith('test'));
 
          resolverSpy.restore();
@@ -1312,6 +1307,17 @@ describe('Controls/suggest', () => {
 
             suggestComponent._beforeUnmount();
             assert.ok(!suggestComponent._dependenciesDeferred);
+         });
+
+         it('_beforeUnmount while load searchLib', () => {
+            const suggestComponent = getComponentObject(_InputController.getDefaultOptions());
+            suggestComponent._getSearchLibrary();
+            assert.ok(suggestComponent._searchLibraryLoader);
+
+            const spy = sinon.spy(suggestComponent._searchLibraryLoader, 'cancel');
+            suggestComponent._beforeUnmount();
+            assert.ok(spy.callCount === 1);
+            assert.ok(!suggestComponent._searchLibraryLoader);
          });
 
       });
