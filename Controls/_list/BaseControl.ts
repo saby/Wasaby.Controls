@@ -5623,17 +5623,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         const endDrag = () => {
-            if (this._options.markerVisibility !== 'hidden') {
-                const targetPosition = this._dndListController.getDragPosition();
-                if (targetPosition) {
-                    const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
-                    if (!moveToCollapsedNode) {
-                        _private.changeMarkedKey(this, this._draggedKey);
-                    }
+            const targetPosition = this._dndListController.getDragPosition();
+            this._dndListController.endDrag();
+
+            if (this._options.markerVisibility !== 'hidden' && targetPosition) {
+                const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
+                if (!moveToCollapsedNode) {
+                    _private.changeMarkedKey(this, this._draggedKey);
                 }
             }
-
-            this._dndListController.endDrag();
         };
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
