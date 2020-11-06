@@ -1688,6 +1688,10 @@ const _private = {
                         self._notify('listSelectedKeysCountChanged', [selectionController.getCountOfSelected(), selectionController.isAllSelected()], {bubbling: true});
                         break;
                     case IObservable.ACTION_RESET:
+                        // TODO удалить после того как перейдем полностью на новую модель
+                        //  на reset пересоздается display, поэтому нужно обновить модель в контроллере
+                        _private.updateSelectionController(self, self._options);
+
                         const entryPath = self._listViewModel.getCollection().getMetaData().ENTRY_PATH;
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
@@ -2314,6 +2318,20 @@ const _private = {
             _private.createSelectionController(self, options);
         }
         return self._selectionController;
+    },
+
+    updateSelectionController(self: typeof BaseControl, newOptions: IList): void {
+        const selectionController = _private.getSelectionController(self);
+        const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
+        selectionController.updateOptions({
+            model: collection,
+            searchValue: newOptions.searchValue,
+            strategyOptions: _private.getSelectionStrategyOptions(
+                newOptions,
+                collection,
+                collection.getMetaData().ENTRY_PATH
+            )
+        });
     },
 
     getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
@@ -3639,17 +3657,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (_private.hasSelectionController(this)) {
             const selectionController = _private.getSelectionController(self, newOptions);
-            const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
 
-            selectionController.updateOptions({
-                model: collection,
-                searchValue: newOptions.searchValue,
-                strategyOptions: _private.getSelectionStrategyOptions(
-                    newOptions,
-                    collection,
-                    collection.getMetaData().ENTRY_PATH
-                )
-            });
+            _private.updateSelectionController(this, newOptions);
 
             const allowClearSelectionBySelectionViewMode =
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
