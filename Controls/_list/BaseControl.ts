@@ -2549,7 +2549,7 @@ const _private = {
                 markerController.setMarkedKey(key);
             }
             self._notify('markedKeyChanged', [key]);
-        }
+        };
 
         let result = eventResult;
         if (eventResult instanceof Promise) {
@@ -4939,7 +4939,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
 
-        if (canBeMarked) {
+        if (canBeMarked && !this._onLastMouseUpWasDrag) {
             this.setMarkedKey(key);
         }
     },
@@ -5612,13 +5612,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.hideActions(this);
         }
 
-        this._insideDragging = false;
-        this._documentDragging = false;
-
-        const restoreMarker = () => {
-            if (_private.hasMarkerController(this)) {
-                const controller = _private.getMarkerController(this);
-                controller.setMarkedKey(controller.getMarkedKey());
+        const changeMarkedKey = () => {
+            if (this._options.markerVisibility !== 'hidden') {
+                _private.changeMarkedKey(this, this._draggedKey);
             }
         };
 
@@ -5630,14 +5626,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.showIndicator(this);
                 dragEndResult.finally(() => {
                     this._dndListController.endDrag();
-                    restoreMarker();
+                    changeMarkedKey();
                     _private.hideIndicator(this);
                 });
             } else {
                 this._dndListController.endDrag();
-                restoreMarker();
+                changeMarkedKey();
             }
         }
+
+        this._insideDragging = false;
+        this._documentDragging = false;
+        this._draggedKey = null;
     },
 
     _getDragObject(mouseEvent?, startEvent?): object {
