@@ -32,7 +32,7 @@ type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-x
 export default interface IBaseItemTemplateOptions {
    /**
     * @name Controls/list:BaseItemTemplate#highlightOnHover
-    * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши
+    * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
     * @remark
     * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
     * @default true
