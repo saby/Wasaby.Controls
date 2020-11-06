@@ -463,12 +463,17 @@ describe('Controls/suggest', () => {
             readOnly: true,
             historyId: 'testFieldHistoryId',
             keyProperty: 'Identificator',
-            source: getMemorySource()
+            source: getMemorySource(),
+            emptyTemplate: 'test'
          });
          let suggestState = false;
          const event = {
             stopPropagation: () => {}
          };
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          if (!document) {
             inputContainer._getActiveElement = () => {
@@ -557,6 +562,9 @@ describe('Controls/suggest', () => {
                                                       sandBox.restore();
                                                       inputContainer._historyLoad.addCallback(() => {
                                                          assert.isTrue(suggestState);
+
+                                                         stub.restore();
+
                                                          Promise.resolve();
                                                       });
                                                    });
@@ -1034,9 +1042,14 @@ describe('Controls/suggest', () => {
             filter: {},
             searchParam: 'testSearchParam',
             minSearchLength: 3,
-            historyId: 'historyField'
+            historyId: 'historyField',
+            emptyTemplate: 'test'
          });
          let suggestOpened = false;
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          inputContainer._searchValue = 'te';
          inputContainer._historyKeys = [1, 2];
@@ -1075,6 +1088,20 @@ describe('Controls/suggest', () => {
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
+
+         stub.callsFake(() => ({
+            getCount: () => 0
+         }));
+         suggestOpened = false;
+         inputContainer._options.autoDropDown = true;
+         inputContainer._options.historyId = null;
+         inputContainer._filter = {};
+         inputContainer._options.emptyTemplate = undefined;
+         await inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {});
+         assert.isFalse(suggestOpened);
+
+         stub.restore();
       });
 
       it('Suggest::_misspellClick', async () => {
