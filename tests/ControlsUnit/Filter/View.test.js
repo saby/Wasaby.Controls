@@ -1106,8 +1106,9 @@ define(
                      sourceController: {hasMoreData: () => {return true;}}
                   }
                };
-               view._children = {
-                  StickyOpener: { close: () => {} }
+               view._stickyOpener = {
+                  close: () => {},
+                  open: () => {}
                };
             });
 
@@ -1178,9 +1179,7 @@ define(
                   action: 'moreButtonClick',
                   id: 'document'
                };
-               view._children = {
-                  StickyOpener: { close: () => {isClosed = true;} }
-               };
+               view._stickyOpener = { close: () => {isClosed = true;} };
                view._resultHandler('resultEvent', eventResult);
                assert.strictEqual(view._idOpenSelector, 'document');
                assert.isTrue(isClosed);
@@ -1381,12 +1380,10 @@ define(
                   view2._loadDeferred = {
                      isReady: () => true
                   };
-                  view2._children = {
-                     selectorOpener: {
-                        open: () => {
-                           openFired = true;
-                           return Promise.resolve();
-                        }
+                  view2._stackOpener = {
+                     open: () => {
+                        openFired = true;
+                        return Promise.resolve();
                      }
                   };
                   view2._showSelector('document').then(() => {
@@ -1426,12 +1423,10 @@ define(
                   view2._loadDeferred = {
                      isReady: () => true
                   };
-                  view2._children = {
-                     selectorOpener: {
-                        open: () => {
-                           openFired = true;
-                           return Promise.resolve();
-                        }
+                  view2._stackOpener = {
+                     open: () => {
+                        openFired = true;
+                        return Promise.resolve();
                      }
                   };
                   view2._showSelector().then(() => {
