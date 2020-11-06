@@ -524,8 +524,8 @@ const _private = {
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
             // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-            if (self._options.task1178907511) {
-                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+            if (self._options.task1178907511 && _private.hasMarkerController(self)) {
+                self._markedKeyForRestoredScroll = _private.getMarkerController(self).getMarkedKey();
             }
         }
     },
@@ -702,9 +702,13 @@ const _private = {
      * @param event
      */
     keyDownDel(self, event): void {
+        if (!_private.hasMarkerController(self)) {
+            return;
+        }
+
         const model = self.getViewModel();
-        let toggledItemId = model.getMarkedKey();
-        let toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
+        const toggledItemId = _private.getMarkerController(self).getMarkedKey();
+        const toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
         if (!toggledItem) {
             return;
         }
