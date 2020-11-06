@@ -316,6 +316,30 @@ describe('Controls/_source/NavigationController', () => {
                 hasMore = nc.hasMoreData('backward');
                 assert.isFalse(hasMore, 'Wrong more value');
             });
+
+            it('navigationParamsChangedCallback called with new params', () => {
+                const START_PAGE = 0;
+                let newNavigationParams;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE
+                    },
+                    navigationParamsChangedCallback: (newParams) => {
+                        newNavigationParams = newParams;
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+                nc.updateQueryProperties(rs);
+                nc.getQueryParams({filter: {}}, null, null, 'forward');
+                assert.ok(newNavigationParams.page === START_PAGE + 1);
+                assert.ok(newNavigationParams.pageSize === TEST_PAGE_SIZE);
+            });
         });
 
     });
@@ -693,6 +717,34 @@ describe('Controls/_source/NavigationController', () => {
                 assert.isFalse(hasMore, 'Wrong more value');
                 hasMore = nc.hasMoreData('backward');
                 assert.isTrue(hasMore, 'Wrong more value');
+            });
+
+            it('navigationParamsChangedCallback called with new params', () => {
+                const QUERY_LIMIT = 3;
+                let newNavigationParams;
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: null,
+                        field: 'id',
+                        direction: 'forward',
+                        limit: QUERY_LIMIT
+                    },
+                    navigationParamsChangedCallback: (newParams) => {
+                        newNavigationParams = newParams;
+                    }
+                });
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more : true});
+                nc.updateQueryProperties(rs);
+                nc.getQueryParams({filter: {}}, null, null, 'forward');
+
+                assert.ok(newNavigationParams.limit === QUERY_LIMIT);
+                assert.deepStrictEqual(newNavigationParams.position, [6]);
             });
 
         });

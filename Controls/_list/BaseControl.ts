@@ -524,8 +524,8 @@ const _private = {
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
             // Удалить после выполнения https://online.sbis.ru/opendoc.html?guid=83127138-bbb8-410c-b20a-aabe57051b31
-            if (self._options.task1178907511) {
-                self._markedKeyForRestoredScroll = listModel.getMarkedKey();
+            if (self._options.task1178907511 && _private.hasMarkerController(self)) {
+                self._markedKeyForRestoredScroll = _private.getMarkerController(self).getMarkedKey();
             }
         }
     },
@@ -702,9 +702,13 @@ const _private = {
      * @param event
      */
     keyDownDel(self, event): void {
+        if (!_private.hasMarkerController(self)) {
+            return;
+        }
+
         const model = self.getViewModel();
-        let toggledItemId = model.getMarkedKey();
-        let toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
+        const toggledItemId = _private.getMarkerController(self).getMarkedKey();
+        const toggledItem: CollectionItem<Model> = model.getItemBySourceKey(toggledItemId);
         if (!toggledItem) {
             return;
         }
@@ -1318,7 +1322,7 @@ const _private = {
 
     getViewSize(self, update = false): number {
         if (self._container && (!self._viewSize || update)) {
-            const container = this._children?.viewContainer || self._container[0] || self._container;
+            const container = self._children?.viewContainer || self._container[0] || self._container;
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
@@ -1904,6 +1908,22 @@ const _private = {
         }
     },
 
+    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+        event.stopPropagation();
+        // TODO нужно заменить на item.getContents() при переписывании моделей.
+        //  item.getContents() должен возвращать Record
+        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
+        const contents = _private.getPlainItemContents(itemData);
+        const key = contents ? contents.getKey() : itemData.key;
+        self.setMarkedKey(key);
+
+        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
+        if (!!self._itemActionsController) {
+            const item = self._listViewModel.getItemBySourceKey(key) || itemData;
+            _private.openItemActionsMenu(self, null, event, item, true);
+        }
+    },
+
     /**
      * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
      *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
@@ -2071,8 +2091,11 @@ const _private = {
         return pagingLabelData;
     },
 
-    getSourceController(options): SourceController {
-        return new SourceController(options);
+    getSourceController(self, options): SourceController {
+        return new SourceController({
+            ...options,
+            navigationParamsChangedCallback: self._notifyNavigationParamsChanged
+        });
     },
 
     checkRequiredOptions(options) {
@@ -2095,7 +2118,7 @@ const _private = {
         );
     },
 
-    notifyNavigationParamsChanged(actualParams) {
+    notifyNavigationParamsChanged(actualParams): void {
         if (this._isMounted) {
             this._notify('navigationParamsChanged', [actualParams]);
         }
@@ -2855,7 +2878,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._keyProperty
+                        keyProperty: self._options.keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
@@ -3105,7 +3128,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._sourceController = newOptions.sourceController;
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
-            this._sourceController = _private.getSourceController(newOptions);
+            this._sourceController = _private.getSourceController(this, newOptions);
         }
 
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -3684,11 +3707,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._sourceController) {
                 this.updateSourceController(newOptions);
             } else {
-                this._sourceController = _private.getSourceController(newOptions);
+                this._sourceController = _private.getSourceController(this, newOptions);
             }
         }
 
-        if (!newOptions.sourceController && this._sourceController) {
+        if (filterChanged && !newOptions.sourceController && this._sourceController) {
             this.updateSourceController(newOptions);
         }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
@@ -3804,7 +3827,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (needReload) {
-            this._hideTopTrigger = true;
+            if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
+                _private.needAttachLoadTopTriggerToNull(this)) {
+                    this._hideTopTrigger = true;
+            }
             this._scrollPagingCtr = null;
             _private.resetPagingNavigation(this, newOptions.navigation);
             _private.closeActionsMenu(this);
@@ -3829,6 +3855,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.doAfterUpdate(self, () => {
                 if (this._listViewModel) {
                     this._listViewModel.setSearchValue(newOptions.searchValue);
+                }
+                if (this._sourceController) {
+                    const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
+                    if (this._listViewModel.getHasMoreData() !== hasMore) {
+                        _private.setHasMoreData(this._listViewModel, hasMore);
+                    }
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -3876,7 +3908,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
         const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-        const sourceController = _private.getSourceController(this._options);
+        const sourceController = _private.getSourceController(this, this._options);
 
         let reloadItemDeferred;
         let filter;
@@ -4833,18 +4865,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         clickEvent.stopPropagation();
-        // TODO нужно заменить на item.getContents() при переписывании моделей.
-        //  item.getContents() должен возвращать Record
-        //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-        const contents = _private.getPlainItemContents(itemData);
-        const key = contents ? contents.getKey() : itemData.key;
-        this.setMarkedKey(key);
+        _private.openContextMenu(this, clickEvent, itemData);
+    },
 
-        // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
-        if (!!this._itemActionsController) {
-            const item = this._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(this, null, clickEvent, item, true);
-        }
+    /**
+     * Обработчик долгого тапа
+     * @param e
+     * @param itemData
+     * @param tapEvent
+     * @private
+     */
+    _onItemLongTap(
+        e: SyntheticEvent<Event>,
+        itemData: CollectionItem<Model>,
+        tapEvent: SyntheticEvent<MouseEvent>
+    ): void {
+        _private.updateItemActionsOnce(this, this._options);
+        _private.openContextMenu(this, tapEvent, itemData);
     },
 
     /**
@@ -5174,7 +5211,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._sourceController) {
             this._sourceController.destroy();
         }
-        this._sourceController = _private.getSourceController(options);
+        this._sourceController = _private.getSourceController(this, options);
     },
 
     updateSourceController(options): void {
