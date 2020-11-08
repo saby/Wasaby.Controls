@@ -115,10 +115,11 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
-      it('getPaddingClasses', () => {
-         assert.equal(tileViewModel.getPaddingClasses('itemPaddingContainer'), 'controls-TileView__itemPaddingContainer_spacingLeft_default_theme-default controls-TileView__itemPaddingContainer_spacingRight_default_theme-default controls-TileView__itemPaddingContainer_spacingTop_default_theme-default controls-TileView__itemPaddingContainer_spacingBottom_default_theme-default');
+      it('getItemsPaddingContainerClasses', () => {
+         assert.equal(tileViewModel.getItemsPaddingContainerClasses(), 'controls-TileView__itemsPaddingContainer_spacingLeft_default_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingRight_default_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingTop_default_itemPadding_d' +
+             'efault_theme-default controls-TileView__itemsPaddingContainer_spacingBottom_default_itemPadding_default_theme-default');
          tileViewModel.setItemPadding({left: 's', right: 'null'});
-         assert.equal(tileViewModel.getPaddingClasses('itemPaddingContainer'), 'controls-TileView__itemPaddingContainer_spacingLeft_s_theme-default controls-TileView__itemPaddingContainer_spacingRight_null_theme-default controls-TileView__itemPaddingContainer_spacingTop_default_theme-default controls-TileView__itemPaddingContainer_spacingBottom_default_theme-default');
+         assert.equal(tileViewModel.getItemsPaddingContainerClasses(), 'controls-TileView__itemsPaddingContainer_spacingLeft_default_itemPadding_s_theme-default controls-TileView__itemsPaddingContainer_spacingRight_default_itemPadding_null_theme-default controls-TileView__itemsPaddingContainer_spacingTop_default_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingBottom_default_itemPadding_default_theme-default');
       });
 
       describe('getTileWidth', () => {
