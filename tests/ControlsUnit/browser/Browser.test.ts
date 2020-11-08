@@ -203,6 +203,7 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
 
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
@@ -215,6 +216,7 @@ describe('Controls/browser:Browser', () => {
                 options.filter = filter;
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
 
                 browser._filter = {
                     testField: 'oldFilterValue'
