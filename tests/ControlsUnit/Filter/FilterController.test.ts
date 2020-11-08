@@ -209,6 +209,8 @@ describe('Controls/filter:ControllerClass', () => {
             controller._options.selectionViewMode = 'selected';
             controller.update({
                 filter,
+                selectedKeys: [1, 2],
+                excludedKeys: [3],
                 selectionViewMode: 'selected',
                 source: new SbisService({
                     endpoint: {contract: '123'},

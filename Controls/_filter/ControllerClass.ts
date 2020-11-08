@@ -11,10 +11,8 @@ import {selectionToRecord} from 'Controls/operations';
 import {TKeysSelection} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
-import * as merge from 'Core/core-merge';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {CrudWrapper} from '../_dataSource/CrudWrapper';
-import {factory} from 'Types/chain';
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
@@ -66,7 +64,7 @@ export default class FilterControllerClass {
 
     constructor(options: Partial<IFilterControllerOptions>) {
         this._options = options;
-        this._filter = options.filter;
+        this._filter = options.filter || {};
 
         if (options.prefetchParams) {
             this._filter = Prefetch.prepareFilter(this._filter, options.prefetchParams);
@@ -253,8 +251,12 @@ export default class FilterControllerClass {
     }
 
     private _updateFilter(options: Partial<IFilterControllerOptions>): void {
-        this._prepareSearchFilter(this._filter, options);
-        this._prepareOperationsFilter(this._filter, options);
+        if (options.searchParam && options.searchValue) {
+            this._prepareSearchFilter(this._filter, options);
+        }
+        if (options.selectedKeys && options.selectedKeys.length) {
+            this._prepareOperationsFilter(this._filter, options);
+        }
     }
 
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
@@ -402,7 +404,7 @@ export default class FilterControllerClass {
 
     private _minimizeFilterItems(items: IFilterItem[]): IFilterItem[] {
         const minItems = [];
-        factory(items).each((item) => {
+        items.forEach((item) => {
             minItems.push(FilterControllerClass._minimizeItem(item));
         });
         return minItems;
@@ -518,7 +520,7 @@ export default class FilterControllerClass {
         let historyItems;
 
         if (history) {
-            historyItems = history.items || history;
+            historyItems = history.items || (Array.isArray(history) ? history : []);
         }
 
         this._filterButtonItems = FilterControllerClass._getItemsByOption(filterButtonOption, historyItems);
@@ -579,7 +581,7 @@ export default class FilterControllerClass {
     private _calculateFilterByItems(filter: object,
                                     filterButtonItems: IFilterItem[],
                                     fastFilterItems: IFilterItem[]): object {
-        const filterClone = clone(filter || {});
+        const filterClone = {...filter} || {};
         const itemsFilter = this._getFilterByItems(filterButtonItems, fastFilterItems);
         const emptyFilterKeys = this._getEmptyFilterKeys(filterButtonItems, fastFilterItems);
 
@@ -587,9 +589,7 @@ export default class FilterControllerClass {
             delete filterClone[key];
         });
 
-        // FIXME when using merge witout {rec: false} we will get wrong data:
-        // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
-        merge(filterClone, itemsFilter, {rec: false});
+        Object.assign(filterClone, itemsFilter);
 
         return filterClone;
     }
@@ -626,7 +626,7 @@ export default class FilterControllerClass {
                            differentCallback: Function | null,
                            equalCallback?: Function): void {
         const processItems = (items) => {
-            factory(items).each((elem) => {
+            items.forEach((elem) => {
                 const value = getPropValue(elem, 'value');
                 const visibility = getPropValue(elem, 'visibility');
                 const viewMode = getPropValue(elem, 'viewMode');
@@ -658,7 +658,7 @@ export default class FilterControllerClass {
                                      minSearchLength,
                                      parentProperty
                                  }: Partial<IFilterControllerOptions>): void {
-        const preparedFilter = clone(filter) || {};
+        const preparedFilter = {...filter} || {};
         if (searchValue && searchParam &&
             searchValue.length >= minSearchLength) {
             preparedFilter[searchParam] = searchValue;
@@ -675,7 +675,7 @@ export default class FilterControllerClass {
                                          selectionViewMode,
                                          parentProperty
                                      }: Partial<IFilterControllerOptions>): object {
-        const preparedFilter = {...filter};
+        const preparedFilter = {...filter} || {};
         const addSelectionToFilter = selectionViewMode === 'selected' || (selectedKeys.length && parentProperty);
 
         if (addSelectionToFilter) {
@@ -761,8 +761,8 @@ export default class FilterControllerClass {
     private static _equalItemsIterator(filterButtonItems: IFilterItem[],
                                        fastFilterItems: IFilterItem[],
                                        prepareCallback: Function): void {
-        factory(filterButtonItems).each((buttonItem, index) => {
-            factory(fastFilterItems).each((fastItem) => {
+        filterButtonItems.forEach((buttonItem, index) => {
+            fastFilterItems.forEach((fastItem) => {
                 if (isEqualItems(buttonItem, fastItem)
                     && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                     prepareCallback(index, fastItem);
@@ -771,11 +771,18 @@ export default class FilterControllerClass {
         });
     }
 
-    private static _cloneItems(items: IFilterItem[]): IFilterItem[] {
+    private static _cloneItems(items: IFilterItem[]|RecordSet<IFilterItem>): IFilterItem[] {
+        let resultItems;
+
         if (items['[Types/_entity/CloneableMixin]']) {
-            return items.clone();
+            resultItems = (items as RecordSet<IFilterItem>).clone();
+        } else {
+            resultItems = [];
+            items.forEach((item) => {
+                resultItems.push({...item});
+            });
         }
-        return clone(items);
+        return resultItems;
     }
 }
 
