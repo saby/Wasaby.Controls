@@ -3840,6 +3840,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
+
+                    if (this._pagingNavigation && this._items) {
+                        _private.updatePagingData(this, _this._items.getCount());
+                    }
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
