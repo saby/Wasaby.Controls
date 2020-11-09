@@ -110,10 +110,14 @@ describe('Controls/suggest', () => {
          let state;
          let isReady = true;
          let isCallCancel = false;
+         let isSourceControllerNulled = false;
 
          const inputContainer = getComponentObject({
             suggestState: true
          });
+         inputContainer._sourceController = {
+            destroy: () => isSourceControllerNulled = true
+         };
 
          inputContainer._notify = (eventName, args) => {
             state = args[0];
@@ -125,6 +129,10 @@ describe('Controls/suggest', () => {
          inputContainer._close();
          assert.isFalse(state);
          assert.isFalse(isCallCancel);
+
+         assert.isTrue(isSourceControllerNulled);
+         assert.isNull(inputContainer._sourceController);
+         assert.isNull(inputContainer._searchResult);
 
          isReady = false;
          inputContainer._close();
@@ -806,7 +814,7 @@ describe('Controls/suggest', () => {
 
          assert.equal(inputContainer._suggestMarkedKey, null);
          assert.notEqual(inputContainer._searchResult, queryRecordSet);
-         assert.equal(inputContainer._searchResult, queryRecordSetEmpty);
+         assert.isNull(inputContainer._searchResult);
          assert.equal(inputContainer._tabsSelectedKey, 'testId2');
          assert.equal(inputContainer._misspellingCaption, null);
       });
