@@ -420,7 +420,7 @@ define(
             let fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeMount(configWithItems);
             fastFilter._stickyOpener = { close: ()=> {closed = true;} };
-            fastFilter._onResult({}, 'footerClick');
+            fastFilter._onResult('footerClick');
             assert.isTrue(closed);
          });
 
@@ -429,7 +429,7 @@ define(
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult(null, 'itemClick', fastData._configs[0]._items.at(2));
+                  fastData._onResult('itemClick', fastData._configs[0]._items.at(2));
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -443,10 +443,10 @@ define(
                { key: 1, title: 'Россия' },
                { key: 3, title: 'Великобритания' }
             ];
-            fastData2._onResult(null, 'applyClick', selectedItems);
+            fastData2._onResult('applyClick', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult(null, 'applyClick',  []);
+            fastData2._onResult('applyClick',  []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
@@ -460,7 +460,7 @@ define(
                ]
             });
             fastData2._afterSelectorOpenCallback([]);
-            fastData2._onResult(null, 'selectorResult', selectedItems);
+            fastData2._onResult('selectorResult', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
@@ -497,7 +497,7 @@ define(
             instance._notify = () => {
                notifyFire = true;
             };
-            instance._onResult(null, 'selectorDialogOpened', []);
+            instance._onResult('selectorDialogOpened', []);
             assert.isFalse(notifyFire);
             assert.isFalse(opened);
          });
@@ -637,6 +637,7 @@ define(
 
          it('open dropdown', function() {
             let fastFilter = new filterMod.Fast(config);
+            fastFilter._beforeMount({});
             fastFilter._options.theme = 'default';
             let expectedConfig, isOpened, isLoading = false;
             fastFilter._stickyOpener = { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} };
@@ -672,6 +673,7 @@ define(
          it('open dropdown _needQuery', function() {
             let fastFilter = new filterMod.Fast(config);
             let opened = false;
+            fastFilter._beforeMount({});
             fastFilter._children = {
                DropdownOpener: { open: () => {opened = true;} }
             };

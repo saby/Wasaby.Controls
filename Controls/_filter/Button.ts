@@ -143,6 +143,7 @@ var _private = {
    },
    getPopupConfig: function(self) {
       return { ...{
+            opener: self,
             templateOptions: {
                template: self._options.templateName,
                items: self._options.items,
@@ -155,7 +156,7 @@ var _private = {
             template: 'Controls/filterPopup:_FilterPanelWrapper',
             target: self._children.panelTarget,
             eventHandlers: {
-               onResult: this._onFilterChanged
+               onResult: self._onFilterChanged.bind(self)
             },
             autofocus: true
          }, ...self._popupOptions
@@ -219,7 +220,7 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
       }
    },
 
-   _onFilterChanged: function(event, data) {
+   _onFilterChanged: function(data) {
       this._notify('filterChanged', [data.filter]);
       if (data.history) {
          this._notify('historyApply', [data.history,  {bubbling: true}]);

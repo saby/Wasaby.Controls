@@ -819,12 +819,13 @@ var Filter = Control.extend({
             return;
         }
         var popupOptions = {
+            opener: this,
             templateOptions: {
                 items: items,
                 historyId: this._options.historyId
             },
             eventHandlers: {
-                onResult: this._resultHandler
+                onResult: this._resultHandler.bind(this)
             },
             target: this._container[0] || this._container,
             actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
@@ -846,7 +847,7 @@ var Filter = Control.extend({
         _private.notifyChanges(this, this._source);
     },
 
-    _resultHandler: function(event, result) {
+    _resultHandler: function(result) {
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.resolveItems(this, mergeSource(this._source, filterSource));
@@ -863,7 +864,7 @@ var Filter = Control.extend({
         this._stickyOpener.close();
     },
 
-    _onSelectorTemplateResult: function(event, items) {
+    _onSelectorTemplateResult: function(items) {
         const config = this._configs[this._idOpenSelector];
         if (!config.items && items.getCount()) {
             config.items = new RecordSet({
@@ -873,7 +874,7 @@ var Filter = Control.extend({
             })
         }
         let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
-        this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
+        this._resultHandler({action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
     },
 
     _isFastReseted: function() {
@@ -951,10 +952,10 @@ var Filter = Control.extend({
                     templateOptions,
                     eventHandlers: {
                         onSelectComplete: (event, result): void => {
-                            this._onSelectorTemplateResult(event, result);
+                            this._onSelectorTemplateResult(result);
                             this._children.selectorOpener.close();
                         },
-                        onResult: this._onSelectorTemplateResult
+                        onResult: this._onSelectorTemplateResult.bind(this)
                     }
                 });
             }

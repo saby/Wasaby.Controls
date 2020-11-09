@@ -251,7 +251,7 @@ import {StickyOpener} from 'Controls/popup';
             }
          },
 
-         onResult: function(event, action, data) {
+         onResult: function(action, data) {
              if (action === 'footerClick') {
                  this._stickyOpener.close();
              } else if (data && action !== 'menuOpened') {
@@ -480,6 +480,7 @@ import {StickyOpener} from 'Controls/popup';
                selectorOpenCallback: this._selectorOpenCallback
             };
             const config = {
+               opener: this,
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
                className: (this._configs[index].multiSelect ? 'controls-FastFilter_multiSelect-popup' : 'controls-FastFilter-popup') + '_theme_' + this._options.theme,
                fittingMode: {
@@ -490,7 +491,7 @@ import {StickyOpener} from 'Controls/popup';
                closeOnOutsideClick: true,
                actionOnScroll: 'close',
                eventHandlers: {
-                  onResult: this._onResult
+                  onResult: this._onResult.bind(this)
                },
 
                // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
@@ -514,7 +515,7 @@ import {StickyOpener} from 'Controls/popup';
 
          _onSelectorTemplateResult: function(event, items) {
             let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
-            this._onResult(event, 'selectorResult', resultSelectedItems);
+            this._onResult('selectorResult', resultSelectedItems);
          },
 
          _afterSelectorOpenCallback: function(selectedItems) {
