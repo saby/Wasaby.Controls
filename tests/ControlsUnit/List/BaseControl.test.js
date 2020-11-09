@@ -6568,7 +6568,7 @@ define([
             it('isPagingNavigationVisible', () => {
                let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
 
-               let baseControlOptions = {
+               const baseControlOptions = {
                    _options: {
                        navigation: {
                            viewConfig: {
@@ -6601,9 +6601,9 @@ define([
 
 
 
-             baseControlOptions._options.navigation.totalInfo = undefined
+             baseControlOptions._options.navigation.totalInfo = undefined;
              // Известно общее количество  записей, записей 0
-             let result = isPagingNavigationVisible(baseControlOptions, 0);
+             result = isPagingNavigationVisible(baseControlOptions, 0);
              assert.isFalse(result, 'paging should not be visible');
 
              // Известно общее количество записей, записей 6
