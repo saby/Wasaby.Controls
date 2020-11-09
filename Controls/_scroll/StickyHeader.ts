@@ -584,7 +584,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _getStyle(position: POSITION, fixedZIndex: number, task1177692247?): string {
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, task1177692247?): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -611,13 +611,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
         const isIosOptimizedMode = this._isMobileIOS;
 
-        if (position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
+        if (positionFromOptions.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
             const checkOffset = fixedPosition || isIosOptimizedMode;
             style += 'top: ' + (top - (checkOffset ? offset : 0)) + 'px;';
         }
 
-        if (position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
+        if (positionFromOptions.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
             style += 'bottom: ' + (bottom - offset) + 'px;';
         }
