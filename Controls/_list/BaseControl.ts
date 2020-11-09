@@ -3837,7 +3837,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 if (this._sourceController) {
                     const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
-                    if (this._listViewModel.getHasMoreData() !== hasMore) {
+                    if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
                 }
