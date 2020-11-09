@@ -1,17 +1,17 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__secondary">
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=secondary</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="secondary"></Controls.buttons:Button>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__primary">
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=primary</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="primary"></Controls.buttons:Button>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__warning">
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=warning</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="warning"></Controls.buttons:Button>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__success">
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=success, buttonStyle=success</div>
         <Controls.buttons:Button viewMode="toolButton" buttonStyle="success" iconSize="s" icon="icon-Author" iconStyle="success"></Controls.buttons:Button>
     </div>
@@ -27,7 +27,7 @@
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=unaccented</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="unaccented"></Controls.buttons:Button>
     </div>
-    <div class="controlsDemo__cell">
+    <div class="controlsDemo__cell ControlsDemo-IconStyle__label">
         <div class="controls-text-label_theme-{{_options.theme}}">iconStyle=label</div>
         <Controls.buttons:Button viewMode="toolButton" icon="icon-Author" iconSize="s" iconStyle="label"></Controls.buttons:Button>
     </div>
