@@ -73,7 +73,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _listMarkedKey: Key = null;
     private _notifiedMarkedKey: Key = null;
     private _previousViewMode: TViewMode = null;
-    private _viewMode: TViewMode = null;
+    private _viewMode: TViewMode = undefined;
     private _misspellValue: string = null;
     private _root: Key = null;
     private _path: RecordSet;
