@@ -3841,8 +3841,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
 
-                    if (this._pagingNavigation && this._items) {
-                        _private.updatePagingData(this, this._items.getCount());
+                    if (this._pagingNavigation && !this._pagingNavigationVisible && this._items && sourceChanged) {
+                        _private.updatePagingData(this,
+                            this._listViewModel.getHasMoreData() || this._items.getCount());
                     }
                 }
             });
