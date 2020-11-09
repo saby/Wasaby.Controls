@@ -6601,7 +6601,7 @@ define([
 
 
 
-             baseControlOptions._options.navigation.totalInfo = undefined;
+             baseControlOptions._options.navigation = {};
              // Известно общее количество  записей, записей 0
              result = isPagingNavigationVisible(baseControlOptions, 0);
              assert.isFalse(result, 'paging should not be visible');
