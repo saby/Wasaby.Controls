@@ -2258,8 +2258,8 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-            this._model.setDraggedItems(avatarItemKey, draggedItemsKeys);
+        setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
+            this._model.setDraggedItems(draggableItem, draggedItemsKeys);
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);

@@ -34,6 +34,7 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
+import SearchSeparator from "./SearchSeparator";
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -2199,12 +2200,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndexByKey(avatarItemKey);
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+        const avatarStartIndex = this.getIndex(draggableItem);
 
         this.appendStrategy(this._dragStrategy, {
             draggedItemsKeys,
-            avatarItemKey,
+            draggableItem,
             avatarIndex: avatarStartIndex
         });
     }
@@ -3322,7 +3323,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else {
+            } else if (!(item instanceof SearchSeparator)) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;

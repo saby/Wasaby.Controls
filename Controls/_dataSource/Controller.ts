@@ -50,6 +50,7 @@ export interface IControllerOptions extends
     expandedItems?: TKey[];
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
+    navigationParamsChangedCallback?: Function;
 }
 
 interface ILoadConfig {
@@ -130,7 +131,7 @@ export default class Controller {
         this._setItems(items);
 
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._root);
+            this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
 
         return this._items;
@@ -196,7 +197,7 @@ export default class Controller {
                         navigationConfig: newOptions.navigation.sourceConfig
                     });
                 } else {
-                    this._navigationController = this._getNavigationController(newOptions.navigation);
+                    this._navigationController = this._getNavigationController(newOptions);
                 }
             }
 
@@ -240,14 +241,14 @@ export default class Controller {
 
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key);
+        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
         let hasMoreData = false;
 
         if (this._hasNavigationBySource()) {
-            hasMoreData = this._getNavigationController(this._options.navigation)
+            hasMoreData = this._getNavigationController(this._options)
                 .hasMoreData(NAVIGATION_DIRECTION_COMPATIBILITY[direction], key);
         }
 
@@ -258,7 +259,7 @@ export default class Controller {
         let loadedResult = false;
 
         if (this._hasNavigationBySource()) {
-            loadedResult = this._getNavigationController(this._options.navigation).hasLoaded(key);
+            loadedResult = this._getNavigationController(this._options).hasLoaded(key);
         }
 
         return loadedResult;
@@ -270,7 +271,7 @@ export default class Controller {
 
     shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            return this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -300,12 +301,16 @@ export default class Controller {
     }
 
     private _getNavigationController(
-        navigationOption: INavigationOptionValue<INavigationSourceConfig>
+        {
+            navigation,
+            navigationParamsChangedCallback
+        }: Partial<IControllerOptions>
     ): NavigationController {
         if (!this._navigationController) {
             this._navigationController = new NavigationController({
-                navigationType: navigationOption.source,
-                navigationConfig: navigationOption.sourceConfig
+                navigationType: navigation.source,
+                navigationConfig: navigation.sourceConfig,
+                navigationParamsChangedCallback
             });
         }
 
@@ -319,7 +324,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            this._getNavigationController(this._options)
                 .updateQueryProperties(list, id, navigationConfig, NAVIGATION_DIRECTION_COMPATIBILITY[direction]);
         }
     }
@@ -330,7 +335,7 @@ export default class Controller {
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
         ): IQueryParams {
-        const navigationController = this._getNavigationController(this._options.navigation);
+        const navigationController = this._getNavigationController(this._options);
         return navigationController.getQueryParams(
             {
                 filter: queryParams.filter,
@@ -477,7 +482,7 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._root);
+            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
         }
     }
 

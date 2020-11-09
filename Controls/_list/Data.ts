@@ -4,7 +4,11 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {RegisterClass} from 'Controls/event';
 import {RecordSet} from 'Types/collection';
 import {QueryWhereExpression, PrefetchProxy, ICrud, ICrudPlus, IData} from 'Types/source';
-import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
+import {
+   error as dataSourceError,
+   ISourceControllerOptions,
+   NewSourceController as SourceController
+} from 'Controls/dataSource';
 import {IControllerOptions, IControllerState} from 'Controls/_dataSource/Controller';
 import {ContextOptions} from 'Controls/context';
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
@@ -73,6 +77,7 @@ export interface IDataContextOptions extends ISourceOptions,
 
 class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype */{
    protected _template: TemplateFunction = template;
+   private _isMounted: boolean;
    private _loading: boolean = false;
    private _itemsReadyCallback: Function = null;
    private _errorRegister: RegisterClass = null;
@@ -90,6 +95,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    ): Promise<RecordSet|Error>|void {
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+      this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
       this._errorRegister = new RegisterClass({register: 'dataError'});
 
@@ -125,6 +131,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } else {
          this._updateContext(controllerState);
       }
+   }
+
+   protected _afterMount(): void {
+      this._isMounted = true;
    }
 
    _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
@@ -192,8 +202,18 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._updateContext(controllerState);
    }
 
-   _getSourceControllerOptions(options: IDataOptions): IControllerOptions {
-      return {...options, source: this._source} as IControllerOptions;
+   private _getSourceControllerOptions(options: IDataOptions): ISourceControllerOptions {
+      return {
+         ...options,
+         source: this._source,
+         navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+      } as ISourceControllerOptions;
+   }
+
+   private _notifyNavigationParamsChanged(params): void {
+      if (this._isMounted) {
+         this._notify('navigationParamsChanged', [params]);
+      }
    }
 
    _beforeUnmount(): void {

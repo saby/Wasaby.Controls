@@ -32,7 +32,7 @@ export interface IDraggableItem<S extends Model = Model> {
  */
 export interface IDraggableCollection<P = IDragPosition<IDraggableItem>> {
    setDragPosition(position: P): void;
-   setDraggedItems(draggedItemKey: CrudEntityKey, draggedItemKeys: CrudEntityKey[]): void;
+   setDraggedItems(draggableItem: IDraggableItem, draggedItemKeys: CrudEntityKey[]): void;
    resetDraggedItems(): void;
 }
 

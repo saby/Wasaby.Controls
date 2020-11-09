@@ -65,6 +65,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
 
+    private _isMounted: boolean;
     private _selectedKeysCount: number | null;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
@@ -110,14 +111,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+
         this._initShadowVisibility(options);
-        this._operationsController = this._createOperationsController(options);
-        this._filterController = new FilterController(options as IFilterControllerOptions);
+        this._filterController = new FilterController(options  as IFilterControllerOptions);
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
-        this._errorRegister = new RegisterClass({register: 'dataError'});
 
         if (receivedState && options.source instanceof PrefetchProxy) {
             this._source = options.source.getOriginal();
@@ -130,7 +131,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._searchValue = options.searchValue;
         }
 
-        const controllerState = this._getSourceController(options).getState();
+        const controllerState = this._getSourceController(this._getSourceControllerOptions(options)).getState();
         this._dataOptionsContext = this._createContext(controllerState);
 
         this._previousViewMode = this._viewMode = options.viewMode;
@@ -182,6 +183,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _afterMount(options: IBrowserOptions): void {
+        this._isMounted = true;
         if (options.useStore) {
             const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
@@ -202,7 +204,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
         let methodResult;
 
-        this._operationsController.update(newOptions);
+        this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
@@ -313,6 +315,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         this._filterController = null;
+    }
+
+    private _getErrorRegister(): RegisterClass {
+        if (!this._errorRegister) {
+            this._errorRegister = new RegisterClass({register: 'dataError'});
+        }
+        return this._errorRegister;
     }
 
     private _setFilterItems(filterItems: IFilterItem[]): void {
@@ -481,17 +490,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
-        this._errorRegister.start(errbackConfig);
+        this._getErrorRegister().start(errbackConfig);
     }
 
     protected _registerHandler(event: Event, registerType: string,
                                component: any, callback: Function, config: object): void {
-        this._errorRegister.register(event, registerType, component, callback, config);
+        this._getErrorRegister().register(event, registerType, component, callback, config);
         this._getOperationsController().registerHandler(event, registerType, component, callback, config);
     }
 
     protected _unregisterHandler(event: Event, registerType: string, component: any, config: object): void {
-        this._errorRegister.unregister(event, registerType, component, config);
+        this._getErrorRegister().unregister(event, registerType, component, config);
         this._getOperationsController().unregisterHandler(event, registerType, component, config);
     }
 
@@ -595,7 +604,18 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
-        return {...options, filter: this._filter, source: this._source};
+        return {
+            ...options,
+            filter: this._filter,
+            source: this._source,
+            navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+        };
+    }
+
+    private _notifyNavigationParamsChanged(params): void {
+        if (this._isMounted) {
+            this._notify('navigationParamsChanged', [params]);
+        }
     }
 
     private _startSearch(value: string): Promise<RecordSet | Error> {

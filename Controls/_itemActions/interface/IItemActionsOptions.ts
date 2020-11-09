@@ -4,9 +4,9 @@ import {TActionAlignment} from './IItemActionsTemplateConfig';
 
 /**
  * @typedef {String} TItemActionsVisibility
- * @variant onhover Операции над записью отображаются при наведении на запись;
- * @variant visible Операции над записью отображены изначально.
- * @variant delayed Операции над записью отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
+ * @variant onhover Опции записи отображаются при наведении на запись.
+ * @variant visible Опции записи отображены изначально.
+ * @variant delayed Опции записи отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
  */
 /*
  * @typedef {String} TItemActionsVisibility
@@ -17,7 +17,7 @@ import {TActionAlignment} from './IItemActionsTemplateConfig';
 type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 
 /**
- * Интерфейс опций контрола, который работает с {@link Controls/_itemActions/Controller контроллером опций записи}
+ * Интерфейс опций контрола, который работает с {@link Controls/_itemActions/Controller контроллером опций записи}.
  * @interface Controls/_itemActions/interface/IItemActionsOptions
  * @public
  * @author Аверкиев П.А.
@@ -34,9 +34,8 @@ export interface IItemActionsOptions {
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#contextMenuVisibility
      * @cfg {Boolean} Определяет доступность контекстного меню строки при нажатии на правую кнопку мыши.
-     * @remark
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>
      * @default true
+     * @see contextMenuConfig
      */
 
     /*ENG
@@ -59,6 +58,7 @@ export interface IItemActionsOptions {
      * * footerTemplate — шаблон футера.
      * * headerTemplate — шаблон шапки.
      * * iconSize — размер иконок в выпадающем меню.
+     * @see contextMenuVisibility
      */
 
     /*ENG
@@ -74,7 +74,7 @@ export interface IItemActionsOptions {
      * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
      * @remark
      * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View#keyProperty keyProperty}.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Inside/Index
      * @see itemActionsPosition
      * @see itemActionVisibilityCallback
@@ -93,15 +93,17 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition
-     * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/position/ опциями записи}.
+     * @cfg {Controls/_itemActions/interface/IItemAction/TItemActionsPosition.typedef} Позиционирование панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опциями записи}.
      * @remark
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">демо-пример</a>.
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FItemActionsCustom">демо-пример</a>.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
-     * Пример использования значения custom можно посмотреть в {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-template/config/#item-actions-position статье}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
+     * Пример использования значения custom можно посмотреть в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/actions-position/position-class/#custom статье}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Outside/Index Панель с опциями записи отображается под элементом.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Custom/Hidden/Index Панель с опциями записи не отображается. Опции записи доступны через контекстное меню.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Custom/CustomPosition/Index Панель с опциями записи расположена в произвольном месте элемента.
      * @example
      * Размещаем опции записи в шаблоне с использованием itemActionsTemplate:
-     * <pre class="brush: html; highlight: [5]">
+     * <pre class="brush: html; highlight: [2,6]">
+     * <!-- WML -->
      * <Controls.list:View itemActionsPosition="custom" itemActions="{{_itemActions}}">
      *    <ws:itemTemplate>
      *      <ws:partial template="Controls/list:ItemTemplate">
@@ -113,7 +115,7 @@ export interface IItemActionsOptions {
      * </Controls.list:View>
      * </pre>
      *
-     * <pre class="brush: html; highlight: [4, 5, 6, 7]">
+     * <pre class="brush: html; highlight: [4,5,6,7]">
      * <!-- customTemplateName.wml -->
      * <div>{{itemData.item.title}}</div>
      *    <ws:if data="{{!itemData.isSwiped()}}">
@@ -177,7 +179,7 @@ export interface IItemActionsOptions {
      * @remark
      * Функционал используют в тех случаях, когда опции записи привязаны к отображаемым данным.
      * Настройка для опций записи извлекается из данных самого элемента.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @example
      * <pre class="brush: js">
      * _beforeMount: function(newOptions) {
@@ -229,9 +231,9 @@ export interface IItemActionsOptions {
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#actionAlignment
      * @cfg {Controls/_itemActions/interface/IItemActionsTemplateConfig/TActionAlignment.typedef} Выравнивание опций записи, когда они отображаются в режиме swipe.
+     * @demo Controls-demo/List/Swipe/Scenarios
      * @remark
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @see itemActions
      * @see itemActionsPosition
      * @see itemActionVisibilityCallback
@@ -243,7 +245,7 @@ export interface IItemActionsOptions {
     /*ENG
      * @name Controls/_itemActions/interface/IItemActionsOptions#actionAlignment
      * @cfg {Controls/_itemActions/interface/IItemActionsTemplateConfig/TActionAlignment.typedef} Determines how item actions will be aligned on swipe.
-     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
+     * @demo Controls-demo/List/Swipe/Scenarios
      * @variant horizontal Actions will be displayed in a line.
      * @variant vertical Actions will be displayed in a line.
      */
@@ -252,9 +254,9 @@ export interface IItemActionsOptions {
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#actionCaptionPosition
      * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+     * @demo Controls-demo/List/Swipe/Scenarios
      * @remark
-     * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">демо-пример</a>.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @see itemActions
      * @see itemActionsPosition
      * @see itemActionVisibilityCallback
@@ -275,19 +277,13 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
-     * @cfg {TItemActionsVisibility} Настройка способа отображения опций записи
-     * @variant onhover Опции записи отображаются при наведении на запись.
-     * @variant visible Опции записи отображены изначально.
-     * @variant delayed Опции записи отображаются при наведении на запись и удержании над ней курсора мыши в течение 500 мс.
-     * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * @cfg {TItemActionsVisibility} Отображение опций записи с задержкой или без.
+     * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      */
 
     /*
      * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsVisibility
      * @cfg {TItemActionsVisibility} Setting of ItemActions visibility
-     * @variant onhover ItemActions will be Initialized and displayed right after mouseenter over Item
-     * @variant visible ItemActions will be Initialized and displayed on control mount
-     * @variant delayed ItemActions will be Initialized and displayed after mouseenter with 500ms delay over Item
      */
     itemActionsVisibility?: TItemActionsVisibility;
 
@@ -301,7 +297,7 @@ export interface IItemActionsOptions {
      * * item — модель (см. {@link Types/entity:Model}), содержащая данные записи.
      *
      * Чтобы опция записи отображалась, из функции следует вернуть true.
-     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+     * Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @example
      * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
      *
@@ -372,7 +368,7 @@ export interface IItemActionsOptions {
 
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemActionsOptions#itemActionsClass
-     * @cfg {String} CSS класс, позволяющий задать отступы и позицию панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опциями записи} внутри элемента.
+     * @cfg {String} CSS класс, позволяющий задать отступы и позицию панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
      * @default controls-itemActionsV_position_bottomRight
      * @deprecated Используйте {@link Controls/list:ItemTemplate#itemActionsClass itemActionsClass} как опцию {@link Controls/list:ItemTemplate}.
      */
@@ -387,14 +383,14 @@ export interface IItemActionsOptions {
 }
 
 /**
- * @event Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/index/ опции записи}.
+ * @event Происходит при клике по {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
  * @name Controls/_itemActions/interface/IItemActionsOptions#actionClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/itemActions:IItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
  * @param {Event} nativeEvent Дескриптор исходного события браузера. Может использоваться для получения информации о том, какие клавиши-модификаторы были использованы при клике (Ctrl etc.)
- * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ здесь}.
+ * @remark Подробнее о работе с опциями записи читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback

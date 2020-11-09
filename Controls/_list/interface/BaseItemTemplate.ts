@@ -32,13 +32,16 @@ type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-x
 export default interface IBaseItemTemplateOptions {
    /**
     * @name Controls/list:BaseItemTemplate#highlightOnHover
-    * @cfg {Boolean} В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
+    * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
+    * @remark
+    * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
     * @default true
+    * @demo Controls-demo/list_new/ItemTemplate/NoHighlightOnHover/Index
     */
    highlightOnHover?: boolean;
    /**
     * @name Controls/list:BaseItemTemplate#cursor
-    * @cfg {TCursor} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}, когда он находится в пределах элемента списка.
+    * @cfg {TCursor} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
     * @default pointer
     */
    cursor?: TCursor;
@@ -55,7 +58,7 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/list:BaseItemTemplate#itemActionsClass
-    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/item-actions/ опциями записи} внутри элемента.
+    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
     * @default controls-itemActionsV_position_bottomRight
     */
    itemActionsClass?: string;
@@ -84,13 +87,17 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/interface/IItemTemplate#backgroundColorStyle
-    * @cfg {backgroundColorStyle} Стиль фона элемента.
+    * @cfg {backgroundColorStyle} Настройка фона строки.
+    * @remark 
+    * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight">руководство разработчика</a>.
+    * @demo Controls-demo/list_new/ItemTemplate/BackgroundColorStyle/Index
     */
    backgroundColorStyle?: string;
 
    /**
     * @name Controls/interface/IItemTemplate#markerClassName
-    * @cfg {TMarkerClassName}[markerClassName=default] Опция управляет размером маркера.
+    * @cfg {TMarkerClassName} Размер маркера.
+    * @default default
     */
    markerClassName?: TMarkerClassName;
 }

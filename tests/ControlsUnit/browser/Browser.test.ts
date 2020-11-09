@@ -200,7 +200,6 @@ describe('Controls/browser:Browser', () => {
                 options.filter = filter;
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
-
                 browser._filter = {
                     testField: 'oldFilterValue'
                 };

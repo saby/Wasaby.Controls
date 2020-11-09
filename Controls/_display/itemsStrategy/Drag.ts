@@ -12,7 +12,7 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> extends IItemsS
     display: Collection<S, T>;
 
     draggedItemsKeys: TKey[];
-    avatarItemKey: TKey;
+    draggableItem: T;
     avatarIndex: number;
 }
 
@@ -163,9 +163,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
     }
 
     protected _getProtoItem(): T {
-        return this.source.items.find((item) =>
-            !(item instanceof GroupItem) && item.getContents().getKey() === this._options.avatarItemKey
-        );
+        return this._options.draggableItem;
     }
 
     protected _createAvatarItem(): T {

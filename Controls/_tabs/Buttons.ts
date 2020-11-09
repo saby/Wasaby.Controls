@@ -9,14 +9,14 @@ import {Model} from 'Types/entity';
 import {SbisService} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
-import {IItems} from 'Controls/interface';
+import {IItems, IHeight} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 import { constants } from 'Env/Env';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
 
-import {IItemTemplateOptions} from 'Controls/interface';
+import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
 
 /**
  * Интерфейс для шаблонных опций контрола вкладок.
@@ -28,7 +28,7 @@ export interface ITabsTemplate {
     readonly '[Controls/_tabs/ITabsTemplate]': boolean;
 }
 
-export interface ITabsTemplateOptions extends IItemTemplateOptions {
+export interface ITabsTemplateOptions extends IItemTemplateOptions, IHeightOptions {
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
     tabSpaceTemplate?: TemplateFunction;
@@ -52,9 +52,10 @@ export interface ITabsOptions extends ITabsButtonsOptions, ITabsTemplateOptions 
  * @mixes Controls/interface:ISingleSelectable
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
+ * @mixes Controls/interface:IHeight
  * @mixes Controls/_tabs/interface/ITabsButtons
  * @mixes Controls/tabs:ITabsTemplateOptions
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Tabs/Buttons
@@ -79,9 +80,10 @@ const isTemplateObject = (tmpl: any): boolean => {
     return isTemplate(tmpl);
 };
 
-class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate {
+class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate, IHeight {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
+    readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_tabs/ITabsTemplate]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
@@ -131,7 +133,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     protected _prepareItemClass(item: Model, index: number): string {
         const order: number = this._itemsOrder[index];
         const options: ITabsButtonsOptions = this._options;
-        const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme];
+        const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme +
+        ' controls-Tabs__item_inlineHeight-' + options.inlineHeight + '_theme-' + options.theme];
 
         const itemAlign: string = item.get('align');
         const align: string = itemAlign ? itemAlign : 'right';
@@ -259,7 +262,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
             const count = receivedState.items.getCount();
             for (let i = 0; i < count; i++) {
                 const item = receivedState.items.at(i);
-                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData() : item;
+                const value = cInstance.instanceOfModule(item, 'Types/entity:Record') ? item.getRawData(true) : item;
                 for (const key in value) {
                     //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
                     if (isTemplate(value[key]) || isTemplateArray(value[key]) || isTemplateObject(value[key])) {
@@ -275,6 +278,9 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     static getDefaultOptions(): ITabsOptions {
         return {
             style: 'primary',
+            inlineHeight: 's',
+            borderThickness: 's',
+            separatorVisible: true,
             displayProperty: 'title'
         };
     }

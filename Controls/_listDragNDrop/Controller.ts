@@ -43,13 +43,13 @@ export default class Controller<P> {
     * Отображает перетаскивание в списке.
     * Позволяет отобразить перетаскиеваемые элементы особым образом, отличным от остальных элементов.
     * @param entity - сущность перемещения, содержит весь список перемещаемых записей
-    * @param draggedItem - запись, за которую осуществляется перетаскивание
+    * @param draggableItem - запись, за которую осуществляется перетаскивание
     */
-   setDraggedItems(entity: ItemsEntity, draggedItem: IDraggableItem = null): void {
+   setDraggedItems(entity: ItemsEntity, draggableItem: IDraggableItem = null): void {
       this._entity = entity;
-      this._draggableItem = draggedItem;
-      if (draggedItem) {
-         this._model.setDraggedItems(draggedItem.getContents().getKey(), entity.getItems());
+      this._draggableItem = draggableItem;
+      if (draggableItem) {
+         this._model.setDraggedItems(draggableItem, entity.getItems());
       }
    }
 

@@ -94,7 +94,7 @@ export const enum INITIALIZING_WAY {
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
- * 
+ *
  * @public
  * @author Красильников А.С.
  */
@@ -108,7 +108,7 @@ export const enum INITIALIZING_WAY {
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
- * 
+ *
  * @public
  * @author Красильников А.С.
  */
@@ -710,7 +710,10 @@ class FormController extends Control<IFormController, IReceivedState> {
             theme: this._options.theme,
             mode: mode || dataSourceError.Mode.include
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            this._showError(errorConfig);
+            if (errorConfig) {
+                this._showError(errorConfig);
+            }
+
             return {
                 error,
                 errorConfig

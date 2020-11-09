@@ -317,10 +317,6 @@ const _private = {
         });
     },
 
-    getItems(): RecordSet {
-        return this._children.baseControl.getItems();
-    },
-
     getReloadableNodes: function(viewModel, nodeKey, keyProp, nodeProp) {
         var nodes = [];
         _private.nodeChildsIterator(viewModel, nodeKey, nodeProp, function(elem) {
@@ -601,6 +597,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         //вызываем обновление, так как, если нет биндинга опции, то контрол не обновится. А обновление нужно, чтобы отдать в модель нужные collapsedItems
         this._forceUpdate();
     },
+
+    getItems(): RecordSet {
+        return this._children.baseControl.getItems();
+    },
+
     reload: function(keepScroll, sourceConfig) {
         var self = this;
 

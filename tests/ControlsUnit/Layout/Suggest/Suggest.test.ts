@@ -463,12 +463,17 @@ describe('Controls/suggest', () => {
             readOnly: true,
             historyId: 'testFieldHistoryId',
             keyProperty: 'Identificator',
-            source: getMemorySource()
+            source: getMemorySource(),
+            emptyTemplate: 'test'
          });
          let suggestState = false;
          const event = {
             stopPropagation: () => {}
          };
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          if (!document) {
             inputContainer._getActiveElement = () => {
@@ -557,6 +562,9 @@ describe('Controls/suggest', () => {
                                                       sandBox.restore();
                                                       inputContainer._historyLoad.addCallback(() => {
                                                          assert.isTrue(suggestState);
+
+                                                         stub.restore();
+
                                                          Promise.resolve();
                                                       });
                                                    });
@@ -581,6 +589,7 @@ describe('Controls/suggest', () => {
          let inputContainer;
          let searchCallbackSpy;
          let loadEndSpy;
+         let dataLoadCallbackSpy;
          const setItemsSpy = sandbox.spy(SourceController.prototype, 'setItems');
 
          const recordSet = new RecordSet({
@@ -595,6 +604,7 @@ describe('Controls/suggest', () => {
                dataLoadCallback: () => {}
             });
             searchCallbackSpy = sandbox.spy(inputContainer._options, 'searchStartCallback');
+            dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
             loadEndSpy = sandbox.spy(inputContainer, '_loadEnd');
          });
          afterEach(() => sandbox.reset());
@@ -604,7 +614,6 @@ describe('Controls/suggest', () => {
          it('value is not specified', async () => {
             sandbox.stub(SourceController.prototype, 'load')
                .callsFake(() => Promise.resolve(recordSet));
-            const dataLoadCallbackSpy = sandbox.spy(inputContainer._options, 'dataLoadCallback');
             const result = await inputContainer._resolveLoad();
 
             assert.isTrue(searchCallbackSpy.calledOnce);
@@ -625,6 +634,7 @@ describe('Controls/suggest', () => {
 
             assert.equal(inputContainer._searchValue, value);
             assert.equal(recordSet, result);
+            assert.isTrue(dataLoadCallbackSpy.withArgs(recordSet).calledOnce);
             assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
             assert.deepEqual(inputContainer._filter, {testtt: 'test1'});
             assert.equal(inputContainer._markerVisibility, 'visible');
@@ -633,12 +643,6 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_resolveSearch', async () => {
-         const opts = {
-            delayTime: 300,
-            minSearchLength: 3,
-            searchCallback: (value: string) => {},
-            searchResetCallback: () => {}
-         };
          const inputContainer = getComponentObject({
             searchDelay: 300,
             minSearchLength: 3
@@ -649,7 +653,6 @@ describe('Controls/suggest', () => {
          await inputContainer._resolveSearch('test');
 
          assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
-
          assert.isTrue(resolverSpy.calledWith('test'));
 
          resolverSpy.restore();
@@ -1039,9 +1042,14 @@ describe('Controls/suggest', () => {
             filter: {},
             searchParam: 'testSearchParam',
             minSearchLength: 3,
-            historyId: 'historyField'
+            historyId: 'historyField',
+            emptyTemplate: 'test'
          });
          let suggestOpened = false;
+
+         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+            getCount: () => 1
+         }));
 
          inputContainer._searchValue = 'te';
          inputContainer._historyKeys = [1, 2];
@@ -1080,6 +1088,20 @@ describe('Controls/suggest', () => {
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
+
+         stub.callsFake(() => ({
+            getCount: () => 0
+         }));
+         suggestOpened = false;
+         inputContainer._options.autoDropDown = true;
+         inputContainer._options.historyId = null;
+         inputContainer._filter = {};
+         inputContainer._options.emptyTemplate = undefined;
+         await inputContainer._updateSuggestState();
+         assert.deepEqual(inputContainer._filter, {});
+         assert.isFalse(suggestOpened);
+
+         stub.restore();
       });
 
       it('Suggest::_misspellClick', async () => {
@@ -1312,6 +1334,17 @@ describe('Controls/suggest', () => {
 
             suggestComponent._beforeUnmount();
             assert.ok(!suggestComponent._dependenciesDeferred);
+         });
+
+         it('_beforeUnmount while load searchLib', () => {
+            const suggestComponent = getComponentObject(_InputController.getDefaultOptions());
+            suggestComponent._getSearchLibrary();
+            assert.ok(suggestComponent._searchLibraryLoader);
+
+            const spy = sinon.spy(suggestComponent._searchLibraryLoader, 'cancel');
+            suggestComponent._beforeUnmount();
+            assert.ok(spy.callCount === 1);
+            assert.ok(!suggestComponent._searchLibraryLoader);
          });
 
       });
