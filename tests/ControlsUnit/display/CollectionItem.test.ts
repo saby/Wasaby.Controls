@@ -463,7 +463,7 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getWrapperClasses()', () => {
         const owner = {
             notifyItemChange(): void {},
-            getHoverBackgroundStyle: function() {}
+            getHoverBackgroundStyle: function() {},
             getEipBackgroundStyle: () => 'default'
         };
 
