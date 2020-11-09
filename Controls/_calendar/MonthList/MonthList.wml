@@ -10,6 +10,7 @@
          attachLoadTopTriggerToNull="{{_options.attachLoadTopTriggerToNull}}"
          topShadowVisibility="{{ _topShadowVisibility }}"
          bottomShadowVisibility="{{ _bottomShadowVisibility }}"
+         shadowMode="js"
          on:scrollStateChanged="_scrollStateChangedHandler()"
          on:scroll="_scrollHandler()">
          <Controls.list:View
