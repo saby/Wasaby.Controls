@@ -125,6 +125,7 @@ var List = Control.extend({
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
         selectorOpener.open(Merge({
+            opener: this._options.opener,
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate

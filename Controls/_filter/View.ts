@@ -167,6 +167,7 @@ var _private = {
                     popupItem.sourceController = configs[item.name].sourceController;
                     popupItem.selectorOpener = self._stackOpener;
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
+                    popupItem.opener = self;
                 }
                 popupItems.push(popupItem);
             }
@@ -963,7 +964,7 @@ var Filter = Control.extend({
                     eventHandlers: {
                         onSelectComplete: (event, result): void => {
                             this._onSelectorTemplateResult(result);
-                            this._children.selectorOpener.close();
+                            this._stackOpener.close();
                         },
                         onResult: this._onSelectorTemplateResult.bind(this)
                     }
