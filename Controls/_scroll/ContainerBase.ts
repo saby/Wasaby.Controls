@@ -217,8 +217,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     /**
      * Возвращает true если есть возможность вроскролить к позиции offset.
-     * @function Controls/_scroll/Container#canScrollTo
-     * @param offset Позиция в пикселях
+     * @name Controls/_scroll/Container#canScrollTo
+     * @function
+     * @param {Number} offset Позиция в пикселях
      * @noshow
      */
     canScrollTo(offset: number): boolean {
@@ -227,8 +228,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     /**
      * Скроллит к выбранной позиции по горизонтале. Позиция определяется в пикселях от левого края контейнера.
-     * @function Controls/_scroll/Container#horizontalScrollTo
-     * @param {Number} Позиция в пикселях
+     * @name Controls/_scroll/Container#horizontalScrollTo
+     * @function
+     * @param {Number} offset Позиция в пикселях.
      */
 
     /*
@@ -241,39 +243,54 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к верху контейнера
-     * @function Controls/_scroll/Container#scrollToTop
+     * Скроллит к верху контейнера.
+     * @name Controls/_scroll/Container#scrollToTop
+     * @function 
+     * @see scrollToBottom
+     * @see scrollToLeft
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the top of the container.
-     * @function Controls/_scroll/Container#scrollToTop
+     * @name Controls/_scroll/Container#scrollToTop
+     * @function
      */
     scrollToTop() {
         this._setScrollTop(0);
     }
 
     /**
-     * Скроллит к левому краю контейнера
-     * @function Controls/_scroll/Container#scrollToTop
+     * Скроллит к левому краю контейнера.
+     * @name Controls/_scroll/Container#scrollToLeft
+     * @function
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the lefе of the container.
-     * @function Controls/_scroll/Container#scrollToTop
+     * @name Controls/_scroll/Container#scrollToLeft
+     * @function
      */
     scrollToLeft() {
         this.scrollTo(0, SCROLL_DIRECTION.HORIZONTAL);
     }
 
     /**
-     * Скроллит к низу контейнера
-     * @function Controls/_scroll/Container#scrollToBottom
+     * Скроллит к низу контейнера.
+     * @name Controls/_scroll/Container#scrollToBottom
+     * @function
+     * @see scrollToTop
+     * @see scrollToLeft
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the bottom of the container.
-     * @function Controls/_scroll/Container#scrollToBottom
+     * @name Controls/_scroll/Container#scrollToBottom
+     * @function
      */
     scrollToBottom() {
         this._setScrollTop(
@@ -281,13 +298,18 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к правому краю контейнера
-     * @function Controls/_scroll/Container#scrollToBottom
+     * Скроллит к правому краю контейнера.
+     * @name Controls/_scroll/Container#scrollToRight
+     * @function
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToLeft
      */
 
     /*
      * Scrolls to the right of the container.
-     * @function Controls/_scroll/Container#scrollToBottom
+     * @name Controls/_scroll/Container#scrollToRight
+     * @function
      */
     scrollToRight() {
         this.scrollTo(this._state.scrollWidth - this._state.clientWidth, SCROLL_DIRECTION.HORIZONTAL);
