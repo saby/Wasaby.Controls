@@ -252,11 +252,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
-            this._updateStyle(options);
+            this._updateStyle(options.position, options.fixedZIndex, options.task1177692247);
         }
         if (context?.stickyHeader?.shadowPosition !== this._scrollShadowPosition) {
             this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
-            this._updateShadowStyles();
+            this._updateShadowStyles(options.mode, options.shadowVisibility);
         }
     }
 
