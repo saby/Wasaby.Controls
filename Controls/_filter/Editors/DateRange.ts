@@ -58,7 +58,8 @@ class DateRangeEditor extends Control<IControlOptions> {
     }
 
     private getCaption(startValue, endValue): string {
-        return this._dateRangeModule.Utils.formatDateRangeCaption(startValue, endValue, this._options.emptyCaption);
+        const captionFormatter = this._options.captionFormatter || this._dateRangeModule.Utils.formatDateRangeCaption;
+        return captionFormatter(startValue, endValue, this._options.emptyCaption);
     }
 
     static getDefaultOptions() {
