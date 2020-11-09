@@ -227,11 +227,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
 
-        this._options = options;
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
         this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
-        this._updateStyles();
+        this._updateStyles(options);
     }
 
     protected _beforePaintOnMount(): void {
@@ -424,7 +423,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
 
         if (changed) {
-            this._updateStyles();
+            this._updateStyles(this._options);
         }
     }
 
@@ -450,7 +449,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._scrollState = scrollState;
 
         if (changed) {
-            this._updateStyles();
+            this._updateStyles(this._options);
         }
     }
 
@@ -539,7 +538,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
             if (this._canScroll) {
-                this._updateStyles();
+                this._updateStyles(this._options);
             }
         }
     }
@@ -572,21 +571,20 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._notify('fixed', [information], {bubbling: true});
     }
 
-    private _updateStyles(): void {
-        this._updateStyle();
-        this._updateShadowStyles();
-        this._updateObserversStyles();
+    private _updateStyles(options: IStickyHeaderOptions): void {
+        this._updateStyle(options.position, options.fixedZIndex, options.task1177692247);
+        this._updateShadowStyles(options.mode, options.shadowVisibility);
+        this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(options?: IStickyHeaderOptions): void {
-        const style = this._getStyle(options);
+    private _updateStyle(position: POSITION, fixedZIndex: number, task1177692247): void {
+        const style = this._getStyle(position, fixedZIndex, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(options?: IStickyHeaderOptions): string {
-        const opts: IStickyHeaderOptions = options || this._options;
+    protected _getStyle(position: POSITION, fixedZIndex: number, task1177692247): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -613,13 +611,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
         const isIosOptimizedMode = this._isMobileIOS;
 
-        if (opts.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
+        if (position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
             const checkOffset = fixedPosition || isIosOptimizedMode;
             style += 'top: ' + (top - (checkOffset ? offset : 0)) + 'px;';
         }
 
-        if (opts.position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
+        if (position.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
             bottom = this._stickyHeadersHeight.bottom;
             style += 'bottom: ' + (bottom - offset) + 'px;';
         }
@@ -666,29 +664,29 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 style += 'margin-' + position + ': -' + offset + 'px;';
             }
 
-            style += 'z-index: ' + opts.fixedZIndex + ';';
+            style += 'z-index: ' + fixedZIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
-        if (opts.task1177692247 && opts.fixedZIndex && !fixedPosition) {
-            style += 'z-index: ' + opts.fixedZIndex + ';';
+        if (task1177692247 && fixedZIndex && !fixedPosition) {
+            style += 'z-index: ' + fixedZIndex + ';';
         }
 
         return style;
     }
 
-    private _updateObserversStyles(): void {
-        this._topObserverStyle = this._getObserverStyle(POSITION.top);
-        this._bottomObserverStyle = this._getObserverStyle(POSITION.bottom);
+    private _updateObserversStyles(offsetTop: number, shadowVisibility: SHADOW_VISIBILITY): void {
+        this._topObserverStyle = this._getObserverStyle(POSITION.top, offsetTop, shadowVisibility);
+        this._bottomObserverStyle = this._getObserverStyle(POSITION.bottom, offsetTop, shadowVisibility);
     }
 
-    protected _getObserverStyle(position: POSITION): string {
+    protected _getObserverStyle(position: POSITION, offsetTop: number, shadowVisibility: SHADOW_VISIBILITY): string {
         // The top observer has a height of 1 pixel. In order to track when it is completely hidden
         // beyond the limits of the scrollable container, taking into account round-off errors,
         // it should be located with an offset of -3 pixels from the upper border of the container.
         let coord: number = this._stickyHeadersHeight[position] + 3;
-        if (position === POSITION.top && this._options.offsetTop && this._options.shadowVisibility === SHADOW_VISIBILITY.visible) {
-            coord += this._options.offsetTop;
+        if (position === POSITION.top && offsetTop && shadowVisibility === SHADOW_VISIBILITY.visible) {
+            coord += offsetTop;
         }
         // Учитываем бордеры на фиксированных заголовках
         // Во время серверной верстки на страницах на ws3 в this._container находится какой то объект...
@@ -734,9 +732,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    private _updateShadowStyles() {
-        this._isTopShadowVisible = this._isShadowVisible(POSITION.top);
-        this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom);
+    private _updateShadowStyles(mode: MODE, shadowVisibility: SHADOW_VISIBILITY): void {
+        this._isTopShadowVisible = this._isShadowVisible(POSITION.top, mode, shadowVisibility);
+        this._isBottomShadowVisible = this._isShadowVisible(POSITION.bottom, mode, shadowVisibility);
     }
 
     protected updateShadowVisibility(isVisible: boolean): void {
@@ -746,7 +744,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _isShadowVisible(shadowPosition: POSITION): boolean {
+    protected _isShadowVisible(shadowPosition: POSITION, mode: MODE, shadowVisibility: SHADOW_VISIBILITY): boolean {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
@@ -754,8 +752,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
-            (this._options.shadowVisibility === SHADOW_VISIBILITY.visible || this._options.shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
-            (this._options.mode === MODE.stackable || this._isFixed));
+            (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
+            (mode === MODE.stackable || this._isFixed));
     }
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
@@ -795,7 +793,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     private _updateStylesIfCanScroll(): void {
         if (this._canScroll) {
-            this._updateStyles();
+            this._updateStyles(this._options);
         }
     }
 
