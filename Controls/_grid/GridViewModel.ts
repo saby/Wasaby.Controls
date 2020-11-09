@@ -756,12 +756,16 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            this._onAfterCollectionChangeFn = function() {
+                this._notify('onAfterCollectionChange');
+            }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
             this._options.rowSeparatorSize = separatorSizes.row;
             this._options.columnSeparatorSize = separatorSizes.column;
@@ -2380,6 +2384,7 @@ var
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         },

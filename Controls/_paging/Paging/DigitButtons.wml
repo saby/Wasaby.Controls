@@ -1,6 +1,6 @@
 <div class="controls-DigitButtons">
 <ws:for data="digit in _digits">
-   <ws:if data="{{digit == '...'}}">
+   <ws:if data="{{digit == '. . .'}}">
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}} controls-DigitButtons__ellipsis controls-DigitButtons__ellipsis_theme-{{_options.theme}}">{{digit}}</span>
    </ws:if>
    <ws:else>

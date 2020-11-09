@@ -8144,6 +8144,7 @@ define([
                const item = viewModel.getItemBySourceKey(1);
                viewModel.getCollection().remove(item.getContents());
                lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], undefined, [item], 0);
+               lists.BaseControl._private.onAfterCollectionChanged(baseControl);
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
             });
          });

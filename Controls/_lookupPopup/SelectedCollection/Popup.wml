@@ -6,7 +6,7 @@
          {[Выбрано]}
       </span>
    </div>
-   <Controls.scroll:Container attr:class="controls-SelectedCollection__scroll">
+   <Controls.scroll:Container attr:class="controls-SelectedCollection__scroll" shadowMode="js">
       <Controls.lookup:Collection
             items="{{_items}}"
             displayProperty="{{_options.displayProperty}}"
