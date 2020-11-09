@@ -222,10 +222,10 @@ class StickyHeaderController {
             this._stickyHeaderResizeObserver.unobserve(elem);
         });
     }
-    private _deleteElementFromElementsHeightStack(entry): boolean {
-        if (entry.contentRect.height === 0) {
+    private _deleteElementFromElementsHeightStack(element: HTMLElement, height: number): boolean {
+        if (height === 0) {
             this._elementsHeight.forEach((item, index) => {
-                if (item.key === entry.target) {
+                if (item.key === element) {
                     this._elementsHeight.splice(index, 1);
                     return true;
                 }
@@ -233,31 +233,38 @@ class StickyHeaderController {
         }
         return false;
     }
+
+    private _updateElementsHeight(element: HTMLElement, height: number) {
+        let heightChanged: boolean = false;
+        const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
+                return item.key === element;
+        });
+        // Если у элемента высота ровна нулю, то удаляем его из массива высот.
+        // Так мы избавимся от утечки в _elementsHeight.
+        const isElementDeleted = this._deleteElementFromElementsHeightStack(element, height);
+        if (!isElementDeleted) {
+            if (heightEntry) {
+                if (heightEntry.value !== height) {
+                    heightEntry.value = height;
+                    heightChanged = true;
+                }
+            } else {
+                // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                // этого элемента мы еще не сохранили.
+                this._elementsHeight.push({key: element, value: height});
+            }
+        }
+        return heightChanged;
+    }
+
     private _resizeObserverCallback(entries: any): void {
         if(isHidden(this._container)) {
                 return;
         }
         let heightChanged = false;
         for (const entry of entries) {
-            const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
-                return item.key === entry.target;
-            });
-            // Если у элемента высота ровна нулю, то удаляем его из массива высот.
-            // Так мы избавимся от утечки в _elementsHeight.
-            const isElementDeleted = this._deleteElementFromElementsHeightStack(entry);
-            if (!isElementDeleted) {
-                if (heightEntry) {
-                    if (heightEntry.value !== entry.contentRect.height) {
-                        heightEntry.value = entry.contentRect.height;
-                        heightChanged = true;
-                    }
-                } else {
-                    // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
-                    // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
-                    // этого элемента мы еще не сохранили.
-                    this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
-                }
-            }
+            heightChanged = this._updateElementsHeight(entry.target, entry.contentRect.height) || heightChanged;
         }
         if (heightChanged) {
             this.resizeHandler();
@@ -542,7 +549,11 @@ class StickyHeaderController {
                                     parentElementOfNextHeader = parentElementOfNextHeader.parentElement;
                                 }
                                 if (parentElementOfNextHeader === parentElementOfPrevHeader) {
-                                    return offset + header.inst.height;
+                                    const height: number = header.inst.height;
+                                    // Сохраним высоты по которым рассчитали позицию заголовков,
+                                    // что бы при последующих изменениях понимать, надо ли пересчитывать их позиции.
+                                    this._updateElementsHeight(header.container, height)
+                                    return offset + height;
                                 }
                             }
                             return 0;
@@ -552,7 +563,7 @@ class StickyHeaderController {
                 }, 0);
             }
         });
-        fastUpdate.mutate(() => {
+        const promise = fastUpdate.mutate(() => {
             for (const position of [POSITION.top, POSITION.bottom]) {
                 let positionOffsets = offsets[position];
                 for (const headerId in offsets[position]) {
@@ -562,6 +573,7 @@ class StickyHeaderController {
         });
 
         this._updateTopBottomInitialized = false;
+        return promise;
     }
 }
 
