@@ -4,11 +4,18 @@ export const enum SHADOW_VISIBILITY {
    AUTO = 'auto'
 }
 
+export const enum SHADOW_MODE {
+    JS = 'js',
+    MIXED = 'mixed',
+    CSS = 'css'
+}
+
 export interface IShadowsOptions {
     topShadowVisibility: SHADOW_VISIBILITY;
     bottomShadowVisibility: SHADOW_VISIBILITY;
     leftShadowVisibility: SHADOW_VISIBILITY;
     rightShadowVisibility: SHADOW_VISIBILITY;
+    shadowMode: SHADOW_MODE;
 }
 
 export interface IShadowsVisibilityByInnerComponents {
@@ -23,7 +30,8 @@ export function getDefaultOptions(): IShadowsOptions {
         topShadowVisibility: SHADOW_VISIBILITY.AUTO,
         bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
         leftShadowVisibility: SHADOW_VISIBILITY.AUTO,
-        rightShadowVisibility: SHADOW_VISIBILITY.AUTO
+        rightShadowVisibility: SHADOW_VISIBILITY.AUTO,
+        shadowMode: SHADOW_MODE.MIXED
     };
 }
 
@@ -59,4 +67,16 @@ export interface IShadows {
  * @name Controls/_scroll/Interface/IShadows#bottomShadowVisibility
  * @cfg {shadowVisibility} Устанавливает режим отображения тени снизу.
  * @demo Controls-demo/Scroll/Container/BottomShadowVisibility/Index
+ */
+
+/**
+ * @name Controls/_scroll/Interface/IShadows#shadowMode
+ * @cfg {String} Устанавливает режим отображения тени снизу.
+ * @variant mixed При построении контрола тени работают полностью через стили как в режиме css.
+ * Это позволяет избавиться от лишнего цикла синхронизации при построение скролируемой области.
+ * При наведении курсора переключаются в режим js.
+ * @variant js Управление тенями осуществляется через js.
+ * @variant css Управление тенями работает полностью через css. У этого режима есть ограничения.
+ * Тени рисуются под контентом, по этому их могут перекрывать фоны, картинки и прочие элементы расположенные
+ * внутри скролируемой области.
  */
