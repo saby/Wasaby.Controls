@@ -629,7 +629,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // Повсеместно включать нельзя, на заголовках где есть бордеры или в контенте есть разные цвета фона
         // могут наблюдаться проблемы.
         let position = fixedPosition;
-        if (!position && isIosOptimizedMode && this._options.position !== 'topbottom') {
+        if (!position && isIosOptimizedMode && positionFromOptions !== 'topbottom') {
             position = this._options.position;
         }
         if (position && this._container) {
