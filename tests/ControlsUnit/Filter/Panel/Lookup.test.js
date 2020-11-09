@@ -72,5 +72,13 @@ define(['Controls/_filterPopup/Panel/Lookup'
          options.selectedKeys = [1];
          assert.equal(PanelLookup._private.getCaption({}, options), 'caption');
       });
+
+      it('init _passed state with keys', () => {
+         const pLookup = new PanelLookup();
+         pLookup._beforeMount({
+            selectedKeys: [1]
+         });
+         assert.isTrue(pLookup._passed);
+      });
    });
 });
