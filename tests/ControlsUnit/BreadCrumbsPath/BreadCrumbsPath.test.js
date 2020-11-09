@@ -225,5 +225,18 @@ define([
          assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 3);
          assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 1);
       });
+
+      it('path caption', () => {
+         const hPath = new HeadingPath();
+         const record = {
+            get: () => '123'
+         };
+         const items = ['111', record];
+         let result = hPath._getCounterCaption(items);
+         assert.equal(result, '123');
+
+         result = hPath._getCounterCaption([]);
+         assert.equal(result, undefined);
+      });
    });
 });

@@ -156,8 +156,9 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
     }
 
-    private _getCounterCaption(items): void{
-        return items[items.length - 1].get('counterCaption');
+    private _getCounterCaption(items: Record[] = []): void {
+        const lastItem = items[items.length - 1];
+        return lastItem?.get('counterCaption');
     }
 
     private _prepareItems(options): void {
