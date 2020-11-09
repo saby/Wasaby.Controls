@@ -60,6 +60,7 @@ import { RecordSet } from 'Types/collection';
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FBasePG">демо-пример</a>
  * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент — "null". В этом случае предполагается, что все данные будут загружены сразу.
+ * Настройка не работает, если источник данных задан через {@link https://wi.sbis.ru/docs/js/Types/source/Memory/ Memory}.
  * @see expandByItemClick
  * @see expanderVisibility
  */
