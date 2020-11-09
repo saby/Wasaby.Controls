@@ -354,7 +354,9 @@ var
             }
 
             if (current.isEditing()) {
-                classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+                const eipBackgroundStyle = current.eipBackgroundStyle || 'default';
+                classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}
+                controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
             } else {
                 let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
                 classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
@@ -1759,6 +1761,12 @@ var
             };
 
             _private.setRowClassesGettersOnItemData(this, current);
+
+            if (self._options.editingConfig) {
+                current.eipBackgroundStyle = self._options.editingConfig.backgroundStyle || 'default';
+            } else {
+                current.eipBackgroundStyle = 'default';
+            }
 
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {

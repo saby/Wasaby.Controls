@@ -50,6 +50,7 @@ export default class GridColumn<T> extends mixin<
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
         const isMultiSelectColumn = this.isMultiSelectColumn();
+        const eipBackgroundStyle = this._$owner.getEipBackgroundStyle();
         const hasColumnScroll = false;
 
         if (topPadding === 'null' && bottomPadding === 'null') {
@@ -77,7 +78,7 @@ export default class GridColumn<T> extends mixin<
         }
 
         if (isEditing) {
-            wrapperClasses += ` controls-ListView__item_editing_theme-${theme}`;
+            wrapperClasses += ` controls-ListView__item_editing_${eipBackgroundStyle}_theme-${theme}`;
         }
 
         if (isDragged) {
@@ -166,7 +167,9 @@ export default class GridColumn<T> extends mixin<
             contentClasses += ' controls-ListView__checkbox-onhover';
         }
         if (this._$owner.isEditing()) {
-            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+            const eipBackgroundStyle = this._$owner.getEipBacgroundStyle();
+            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}
+             controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
         }
         return contentClasses;
     }
@@ -192,7 +195,9 @@ export default class GridColumn<T> extends mixin<
         // todo {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
 
         if (this._$owner.isEditing()) {
-            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+            const eipBackgroundStyle = this._$owner.getEipBacgroundStyle();
+            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}
+             controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
         } else {
             contentClasses += ` controls-Grid__row-cell-background-hover-default_theme-${theme}`;
         }
