@@ -51,13 +51,14 @@
    <ws:if data="{{ item.isEditing() }}">
       <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
       <Controls._list.EditInPlace.EditingRow isScrollToElement="{{isScrollToElement}}" name="editingRow" on:deactivated="_onRowDeactivated()">
-              <ws:partial template="localItemTemplate"/>
+              <ws:partial template="localItemTemplate" __notExcessiveRender="{{ true }}" />
       </Controls._list.EditInPlace.EditingRow>
    </ws:if>
    <ws:else>
       <ws:partial template="localItemTemplate"
                   on:click="_onItemClick(item)"
                   on:mouseup="_onItemMouseUp(item)"
+                  __notExcessiveRender="{{ true }}"
       />
    </ws:else>
 </ws:for>
