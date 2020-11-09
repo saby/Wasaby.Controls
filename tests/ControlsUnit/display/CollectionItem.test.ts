@@ -464,6 +464,7 @@ describe('Controls/_display/CollectionItem', () => {
         const owner = {
             notifyItemChange(): void {},
             getHoverBackgroundStyle: function() {}
+            getEipBackgroundStyle: () => 'default'
         };
 
         const defaultClasses = [
