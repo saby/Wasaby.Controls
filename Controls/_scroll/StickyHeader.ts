@@ -584,7 +584,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _getStyle(position: POSITION, fixedZIndex: number, task1177692247): string {
+    protected _getStyle(position: POSITION, fixedZIndex: number, task1177692247?): string {
         let
             offset: number = 0,
             container: HTMLElement,
