@@ -3,8 +3,14 @@
    cursor: pointer;
 }
 
-.controls-BigSeparator-iconColor {
-   fill: #999999;
+.controls-BigSeparator-iconColor_theme-@{themeName} {
+   fill: @icon-color_toggleBigSeparator;
+   background-color: @icon-color_background-color-BigSeparator;
+   border-radius: 8px;
+}
+
+.controls-BigSeparator-iconColor_theme-@{themeName}:hover {
+   fill: @icon-color_hover_toggleBigSeparator;
 }
 
 .controls-BigSeparator_theme-@{themeName} {

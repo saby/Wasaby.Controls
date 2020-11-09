@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {INavigationOptionValue, INavigationPageSourceConfig} from 'Controls/interface';
+import {INavigation} from 'Controls/interface';
 import {IExpandable, IExpandableOptions} from 'Controls/interface';
 import * as template from 'wml!Controls/_spoiler/ListCut/ListCut';
 
@@ -16,12 +16,12 @@ export interface IListCutOptions extends IControlOptions, IExpandableOptions {
     * Навигация при свернутом списке.
     * @demo Controls-demo/Spoiler/ListCut/Index
     */
-   expandedNavigation: INavigationOptionValue<INavigationPageSourceConfig>;
+   expandedNavigation: INavigation;
    /**
     * Навигация при развернутом списке.
     * @demo Controls-demo/Spoiler/ListCut/Index
     */
-   collapsedNavigation: INavigationOptionValue<INavigationPageSourceConfig>;
+   collapsedNavigation: INavigation;
 }
 
 /**
