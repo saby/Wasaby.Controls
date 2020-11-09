@@ -47,7 +47,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
- * @cfg {IFontColorStyle}[moreFontColorStyle=listMore] Опция управляет стилем цвета текста для кнопки ещё.
+ * @cfg {IFontColorStyle} Опция управляет стилем цвета текста для кнопки ещё.
+ * @default listMore
  * @see IFontColorStyle
  */
 
