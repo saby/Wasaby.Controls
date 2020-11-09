@@ -13,7 +13,7 @@ const ITEM_COMPRESSION_COEFFICIENT = 0.7;
 const DEFAULT_SCALE_COEFFICIENT = 1.5;
 const DEFAULT_WIDTH_PROPORTION = 1;
 const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
-const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 's', 'm', 'l', 'xl', '2xl'];
+const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
 const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
 
 interface IItemPadding {
@@ -328,6 +328,9 @@ var TileViewModel = ListViewModel.extend({
                https://online.sbis.ru/opendoc.html?guid=7f6ac2cf-15e6-4b75-afc6-928a86ade83e */
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');
             const imageWrapper = itemContainer.querySelector('.controls-TileView__imageWrapper');
+            if (!imageWrapper) {
+                return null;
+            }
             let previewWidth = imageWrapper.clientWidth;
             let previewHeight = imageWrapper.clientHeight;
             menuOptions.image = itemData.imageData.url;
