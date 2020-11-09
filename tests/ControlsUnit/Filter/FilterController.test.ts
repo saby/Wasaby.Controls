@@ -194,6 +194,7 @@ describe('Controls/filter:ControllerClass', () => {
 
             const controllerOptions = {...controller._options};
             controllerOptions.selectionViewMode = 'selected';
+            controllerOptions.selectedKeys = [1, 2];
             controller.update(controllerOptions as IFilterControllerOptions);
             assert.isTrue('SelectionWithPath' in controller.getFilter());
         });
