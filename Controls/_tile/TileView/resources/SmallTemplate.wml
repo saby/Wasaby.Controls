@@ -24,19 +24,20 @@
                              multiSelectStatus="{{itemData.isSelected()}}"
                              key="{{itemData.key}}"/>
       </ws:partial>
-      <div class="controls-TileView__smallTemplate_imageWrapper">
          <ws:if data="{{itemData.dispItem.isNode()}}">
             <span attr:class="controls-TileView__smallTemplate_nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
          </ws:if>
          <ws:else>
-            <img class="controls-TileView__smallTemplate_image  controls-TileView__smallTemplate_image_size_{{_options.imageSize}}_theme-{{_options.theme}}"
-                 src="{{itemData.item[itemData.imageProperty]}}"/>
+            <div class="controls-TileView__smallTemplate_imageWrapper">
+               <img class="controls-TileView__smallTemplate_image  controls-TileView__smallTemplate_image_size_{{_options.imageSize}}_theme-{{_options.theme}}"
+                    src="{{itemData.item[itemData.imageProperty]}}"/>
+            </div>
          </ws:else>
-      </div>
       <ws:if data="{{!!itemData.dragTargetNode}}">
          <div attr:class="controls-TileView__smallTemplate_dragTargetNode_theme-{{theme}}"></div>
       </ws:if>
-      <div attr:class="controls-TileView__smallTemplate_title_theme-{{_options.theme}}"
+      <div attr:class="controls-TileView__smallTemplate_title_theme-{{_options.theme}}
+                       {{itemData.dispItem.isNode() ? 'controls-TileView__smallTemplate_title_node_theme-' + _options.theme}}"
            title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}
       </div>
       <ws:partial if="{{itemData.isSwiped() && (itemData.hasVisibleActions() || itemData.isEditing())}}"

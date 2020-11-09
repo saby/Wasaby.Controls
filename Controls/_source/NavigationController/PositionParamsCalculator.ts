@@ -109,7 +109,11 @@ class PositionParamsCalculator implements IParamsCalculator {
             }
         }
 
-        const metaNextPosition = list.getMetaData().nextPosition;
+        const metaData = list.getMetaData();
+        const metaNextPosition = metaData.nextPosition;
+        const metaIterative = metaData.iterative;
+
+        store.setIterative(metaIterative);
 
         if (metaNextPosition) {
             if (metaNextPosition instanceof Array) {
@@ -144,7 +148,7 @@ class PositionParamsCalculator implements IParamsCalculator {
 
         } else {
             let edgeElem;
-            if ((list as RecordSet).getCount()) {
+            if ((list as RecordSet).getCount() && !(metaIterative && metaIterative !== storeParams.iterative)) {
                 if (queryDirection !== 'forward') {
                     edgeElem = (list as RecordSet).at(0);
                     store.setBackwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
@@ -152,6 +156,14 @@ class PositionParamsCalculator implements IParamsCalculator {
                 if (queryDirection !== 'backward') {
                     edgeElem = (list as RecordSet).at((list as RecordSet).getCount() - 1);
                     store.setForwardPosition(PositionParamsCalculator._resolvePosition(edgeElem, queryField));
+                }
+            } else {
+                if (queryDirection !== 'forward') {
+                    store.setBackwardPosition([null]);
+                }
+
+                if (queryDirection !== 'backward') {
+                    store.setForwardPosition([null]);
                 }
             }
         }
@@ -193,16 +205,25 @@ class PositionParamsCalculator implements IParamsCalculator {
 
     updateQueryRange(store: PositionNavigationStore, list: RecordSet): void {
         const metaNextPosition = list.getMetaData().nextPosition;
-        const queryField = PositionParamsCalculator._resolveField(store.getState().field);
         const listCount = list.getCount();
 
         if (!metaNextPosition && listCount) {
-            store.setBackwardPosition(
-                PositionParamsCalculator._resolvePosition(list.at(0), queryField)
-            );
-            store.setForwardPosition(
-                PositionParamsCalculator._resolvePosition(list.at(listCount - 1), queryField)
-            );
+            const storeState = store.getState();
+            const queryField = PositionParamsCalculator._resolveField(storeState.field);
+            // TODO поправить, как будет вынесено добавление данных из BaseControl
+            // https://online.sbis.ru/opendoc.html?guid=228eaa69-00f6-4ab0-83de-1e6c7fa47817
+            const isIterative = storeState.iterative;
+
+            if (!isIterative || storeState.backwardPosition[0] !== null) {
+                store.setBackwardPosition(
+                    PositionParamsCalculator._resolvePosition(list.at(0), queryField)
+                );
+            }
+            if (!isIterative || storeState.forwardPosition[0] !== null) {
+                store.setForwardPosition(
+                    PositionParamsCalculator._resolvePosition(list.at(listCount - 1), queryField)
+                );
+            }
         }
     }
 

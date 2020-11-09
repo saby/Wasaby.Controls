@@ -53,8 +53,8 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-            if (!columns) {
-                Logger.warn('You must set "columns" option to make grid work correctly!', self);
+            if (!columns || columns.length === 0) {
+                Logger.warn('You must set "columns" option as not empty array to make grid work correctly!', self);
                 return '';
             }
             let initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
