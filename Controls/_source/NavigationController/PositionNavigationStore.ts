@@ -39,12 +39,14 @@ export interface IPositionNavigationState {
     limit: number;
     backwardPosition: TPosition;
     forwardPosition: TPosition;
+    iterative: boolean;
 }
 class PositionNavigationStore implements INavigationStore {
     private _field: TFieldValue;
     private _position: TPositionValue;
     private _direction: CursorDirection;
     private _limit: number;
+    private _iterative: boolean = false;
 
     protected _backwardPosition: TPositionValue = [null];
     protected _forwardPosition: TPositionValue = [null];
@@ -79,7 +81,8 @@ class PositionNavigationStore implements INavigationStore {
             direction: this._direction,
             limit: this._limit,
             backwardPosition: this._backwardPosition,
-            forwardPosition: this._forwardPosition
+            forwardPosition: this._forwardPosition,
+            iterative: this._iterative
         };
     }
 
@@ -93,6 +96,10 @@ class PositionNavigationStore implements INavigationStore {
 
     setPosition(value: TPositionValue): void {
         this._position = value;
+    }
+
+    setIterative(iterative: boolean): void {
+        this._iterative = iterative;
     }
 
     setMetaMore(more: IPositionHasMoreCompatible): void {
