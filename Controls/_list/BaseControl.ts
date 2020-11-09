@@ -3842,7 +3842,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     }
 
                     if (this._pagingNavigation && this._items) {
-                        _private.updatePagingData(this, _this._items.getCount());
+                        _private.updatePagingData(this, this._items.getCount());
                     }
                 }
             });
