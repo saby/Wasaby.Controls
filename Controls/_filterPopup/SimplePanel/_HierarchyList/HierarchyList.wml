@@ -16,6 +16,7 @@
               selectorTemplate="{{_options.selectorTemplate}}"
               selectorOpener="{{_options.selectorOpener}}"
               opener="{{_options.opener}}"
+              selectorDialogResult="{{_options.selectorDialogResult}}"
               isCompoundTemplate="{{_options.isCompoundTemplate}}"
               selectedKeys="{{_selectedKeys[index] || []}}"
               resetValue="{{_options.resetValue}}"
