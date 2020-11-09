@@ -2136,7 +2136,10 @@ const _private = {
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
-        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        if (this._options.navigation.viewConfig.totalInfo === 'extended') {
+            return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        }
+        return hasMoreData === true;
     },
 
     updatePagingData(self, hasMoreData) {
