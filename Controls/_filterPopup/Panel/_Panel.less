@@ -77,8 +77,13 @@
    margin-right: @header-content_padding-right_filterPanel;
 }
 
-.controls-FilterPanel__resetButton {
+.controls-FilterPanel__resetButton_theme-@{themeName} {
    margin-right: @reset-button_offset-right_filterPanel;
+   color: @reset-button_color_filterPanel;
+}
+
+.controls-FilterPanel__resetButton {
+   display: inline-block;
 }
 
 .controls-FilterPanel__filterButton {
@@ -159,6 +164,10 @@
 .ws-is-hover {
    .controls-text-filterPanelItem_theme-@{themeName}:hover {
       color: @item_hover_text-color_filterPanel;
+   }
+   .controls-FilterPanel__resetButton_theme-@{themeName}:hover {
+      text-decoration: underline;
+      cursor: pointer;
    }
 }
 
