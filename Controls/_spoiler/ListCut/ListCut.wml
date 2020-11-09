@@ -1,0 +1,6 @@
+<div>
+   <ws:partial template="{{_options.content}}" navigation="{{ _expanded ?_options.collapsedNavigation : _options.expandedNavigation }}"/>
+   <Controls.toggle:BigSeparator 
+         value="{{_expanded}}"
+         on:valueChanged="_clickHandler()"/>
+</div>

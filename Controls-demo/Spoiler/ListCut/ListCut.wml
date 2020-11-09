@@ -1,0 +1,14 @@
+<Controls.spoiler:ListCut bind:extended="_extended"
+               attr:class="spoiler__listCut-margin"
+					collapsedNavigation="{{_collapsedNavigation}}" 		
+					expandedNavigation="{{_expandedNavigation}}">
+      <Controls.list:View source="{{_source}}" keyProperty="id" attr:class="spoiler__listCut-items">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+               <ws:contentTemplate>
+                  {{contentTemplate.itemData.item.title}}
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>
+      </Controls.list:View>
+</Controls.spoiler:ListCut>
