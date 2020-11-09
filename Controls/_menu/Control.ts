@@ -800,8 +800,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 },
                 (error: Error): Promise<void | dataSourceError.ViewConfig> => {
                     return Promise.reject(this._processError(error));
-            }
-        );
+                }
+            );
     }
 
         return result;
