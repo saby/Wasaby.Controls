@@ -933,7 +933,8 @@ var
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
                 colspanColumns: columns.map((c) => ({...c, startColumn: c.startIndex, endColumn: c.endIndex})),
                 itemPadding: this._options.itemPadding || {},
-                theme: this._options.theme
+                theme: this._options.theme,
+                eipBackgroundStyle: (this._options.editingConfig ? this._options.editingConfig.backgroundStyle : 'default')
             });
         }
     });
