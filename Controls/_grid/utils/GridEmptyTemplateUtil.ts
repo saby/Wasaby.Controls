@@ -59,7 +59,7 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
 
     let classes = 'controls-GridView__emptyTemplate__cell ';
     classes += `controls-Grid__row-cell-background-editing_theme-${theme}
-    controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
+    controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme} `;
 
     if (params.isFullGridSupport) {
         classes += `controls-Grid__row-cell__content_baseline_default_theme-${theme} `;
