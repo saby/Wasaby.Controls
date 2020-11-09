@@ -42,7 +42,7 @@ export default class Browser extends Control {
     private _listMarkedKey: Key = null;
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
-    private _viewMode: string = null;
+    private _viewMode: string = undefined;
     private _searchValue: string = null;
     private _misspellValue: string = null;
     private _root: Key = null;
