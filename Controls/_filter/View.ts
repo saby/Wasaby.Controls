@@ -24,6 +24,7 @@ import {DependencyTimer} from 'Controls/fastOpenUtils';
 import {load} from 'Core/library';
 import {IFilterItem} from './View/interface/IFilterView';
 import {StickyOpener, StackOpener} from 'Controls/popup';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 /**
  * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
@@ -743,6 +744,7 @@ var Filter = Control.extend({
         }
         this._configs = null;
         this._displayText = null;
+        UnregisterUtil(this, 'scroll');
         this._stickyOpener.destroy();
         this._stackOpener.destroy();
     },
@@ -818,7 +820,10 @@ var Filter = Control.extend({
         if (this._options.readOnly) {
             return;
         }
-        var popupOptions = {
+        if (!detection.isMobileIOS) {
+            RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
+        }
+        const popupOptions = {
             opener: this,
             templateOptions: {
                 items: items,
@@ -828,11 +833,16 @@ var Filter = Control.extend({
                 onResult: this._resultHandler.bind(this)
             },
             target: this._container[0] || this._container,
-            actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
             className: 'controls-FilterView-popup',
             closeOnOutsideClick: true
         };
         this._stickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
+    },
+
+    _handleScroll(): void {
+        if (this._stickyOpener.isOpened()) {
+            this._stickyOpener.close();
+        }
     },
 
     _rangeTextChangedHandler: function(event, textValue) {

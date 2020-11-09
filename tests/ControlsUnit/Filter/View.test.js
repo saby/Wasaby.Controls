@@ -398,7 +398,6 @@ define(
             view._open([1, 2, 4], {template: 'templateName'});
 
             assert.strictEqual(popupOptions.template, 'templateName');
-            assert.strictEqual(popupOptions.actionOnScroll, 'close');
             assert.deepStrictEqual(popupOptions.templateOptions.items, [1, 2, 4]);
          });
 
