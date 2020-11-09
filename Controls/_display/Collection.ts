@@ -2314,7 +2314,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     getEipBackgroundStyle(): string {
-        return this.getEditingConfig().backgroundStyle || 'default';
+        const editingConfig = this.getEditingConfig();
+        if (editingConfig) {
+            return editingConfig.backgroundStyle || 'default'
+        }
+        return 'default';
     }
 
     setTheme(theme: string): boolean {
