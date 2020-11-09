@@ -239,7 +239,8 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
 
     /**
      * @name Controls/grid:ColumnTemplate#markerClassName
-     * @cfg {TMarkerClassName}[markerClassName=default] Опция управляет размером маркера.
+     * @cfg {TMarkerClassName} Размер маркера.
+     * @default default
      */
     markerClassName?: TMarkerClassName;
 }
