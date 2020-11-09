@@ -90,7 +90,7 @@ define(
                let combobox = getCombobox(config);
                combobox._beforeMount(config);
                assert.equal(combobox._value, 'New text');
-               assert.equal(combobox._placeholder, 'This is placeholder'); 
+               assert.equal(combobox._placeholder, 'This is placeholder');
             });
 
             it('beforeMount without source', () => {
@@ -113,10 +113,14 @@ define(
 
 
          it('dataLoadCallback option', function() {
+            let isCalled = false;
             let combobox = getCombobox(config);
-            const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
+            combobox._options.dataLoadCallback = () => {
+               isCalled = true;
+            };
+            combobox._dataLoadCallback(itemsRecords);
 
-            assert.equal(result.dataLoadCallback, 'testDataLoadCallback');
+            assert.isTrue(isCalled);
          });
 
          it('_getMenuPopupConfig', () => {
@@ -129,6 +133,43 @@ define(
             combobox._container.offsetWidth = null;
             result = combobox._getMenuPopupConfig();
             assert.equal(result.templateOptions.width, null);
+         });
+
+         describe('check readOnly state', () => {
+            let combobox;
+            beforeEach(() => {
+               combobox = getCombobox(config);
+               combobox._controller = {
+                  update: () => {}
+               };
+            });
+
+            it('count of items = 1', () => {
+               const itemsCallback = { getCount: () => 1 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+            });
+
+            it('count of items = 1, with emptyText', () => {
+               combobox._options.emptyText = 'test';
+               combobox._options.readOnly = false;
+               const itemsCallback = { getCount: () => 1 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+            });
+
+            it('count of items = 2', () => {
+               const itemsCallback = { getCount: () => 2 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+            });
+
+            it('count of items = 2, with options.readOnly', () => {
+               combobox._options.readOnly = true;
+               const itemsCallback = { getCount: () => 2 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+            });
          });
       });
    }
