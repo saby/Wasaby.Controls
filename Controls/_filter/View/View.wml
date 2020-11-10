@@ -42,7 +42,7 @@
                            _configs[item.name].items.getCount() &&
                            _displayText[item.name].text !== undefined ||
                            _options.lazyLoading &&
-                           _displayText[item.name].text !== undefined}}">
+                           _displayText[item.name].text}}">
                <ws:partial template="itemTemplate"
                            text="{{_displayText[item.name].text}}"
                            title="{{_displayText[item.name].title}}"

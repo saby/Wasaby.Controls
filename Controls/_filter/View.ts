@@ -309,7 +309,7 @@ var _private = {
     loadSelectedItems: function(items, configs) {
         let pDef = new ParallelDeferred();
         factory(items).each(function(item) {
-            if (_private.isFrequentItem(item) && configs[item.name] && configs[item.name].items) {
+            if (_private.isFrequentItem(item) && configs[item.name]) {
                 const config = configs[item.name];
                 let keys = _private.getKeysUnloadedItems(config, item.value);
                 if (keys.length) {
