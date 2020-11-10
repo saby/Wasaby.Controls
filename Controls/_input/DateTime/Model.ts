@@ -31,7 +31,6 @@ import {Base as dateUtils} from 'Controls/dateUtils';
     *
     * @author Красильников А.С.
     * @public
-    * @noShow
     */
 
    /*
@@ -41,7 +40,6 @@ import {Base as dateUtils} from 'Controls/dateUtils';
     *
     * @author Красильников А.С.
     * @public
-    * @noShow
     */
    var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
