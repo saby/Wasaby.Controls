@@ -5660,7 +5660,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController && this._dndListController.isDragging()) {
             const draggableItem = this._dndListController.getDraggableItem();
-            if (this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+            if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
                 const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
                 this._dndListController.setDragPosition(newPosition);
             } else {
