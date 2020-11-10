@@ -1,7 +1,7 @@
 import { isEqual } from 'Types/object';
-import { isFullGridSupport } from './GridLayoutUtil';
+import isFullGridSupport from './GridSupportUtil';
 import { detection } from 'Env/Env';
-import { TColumns } from '../interface/IColumn';
+import { TColumns } from 'Controls/grid';
 
 export interface IStickyColumn {
     index: number;

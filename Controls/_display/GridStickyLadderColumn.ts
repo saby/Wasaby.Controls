@@ -89,7 +89,7 @@ export default class GridStickyLadderColumn<T> extends GridColumn<T> {
 
 Object.assign(GridStickyLadderColumn.prototype, {
     '[Controls/_display/GridStickyLadderColumn]': true,
-    _moduleName: 'Controls/display:GridLadderColumn',
+    _moduleName: 'Controls/display:GridStickyLadderColumn',
     _instancePrefix: 'grid-ladder-column-',
     _$wrapperStyle: '',
     _$contentStyle: '',
