@@ -64,12 +64,12 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
 
                 await browser._beforeMount(options);
-                ok(browser._root === null);
+                assert.ok(browser._root === null);
 
                 options = {...options};
                 options.root = 'testRoot';
                 await browser._beforeMount(options);
-                ok(browser._root === 'testRoot');
+                assert.ok(browser._root === 'testRoot');
             });
 
             it('viewMode', async() => {
@@ -77,12 +77,12 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
 
                 await browser._beforeMount(options);
-                ok(browser._viewMode === undefined);
+                assert.ok(browser._viewMode === undefined);
 
                 options = {...options};
                 options.viewMode = 'table';
                 await browser._beforeMount(options);
-                ok(browser._viewMode === 'table');
+                assert.ok(browser._viewMode === 'table');
             });
 
         });
