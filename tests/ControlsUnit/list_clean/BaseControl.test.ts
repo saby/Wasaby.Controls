@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import {BaseControl, ListViewModel} from 'Controls/list';
+import {IEditableListOption} from 'Controls/_list/interface/IEditableList';
 import {RecordSet} from 'Types/collection';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {NewSourceController} from 'Controls/dataSource';
@@ -734,6 +735,8 @@ describe('Controls/list_clean/BaseControl', () => {
     });
 
     describe('Edit in place', () => {
+        type TEditingConfig = IEditableListOption['editingConfig'];
+
         const baseControlCfg = {
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
@@ -763,6 +766,59 @@ describe('Controls/list_clean/BaseControl', () => {
             return baseControl.cancelEdit().then(() => {
                 assert.isFalse(isCancelCalled);
             });
+        });
+
+        describe('editing config', () => {
+            it('if autoAddByApplyButton not setted it should be the same as autoAdd', () => {
+                const options = {
+                    editingConfig: {
+                        autoAdd: true
+                    }
+                };
+                let editingConfig: TEditingConfig;
+
+                editingConfig = baseControl._getEditingConfig(options);
+                assert.isTrue(editingConfig.autoAdd);
+                assert.isTrue(editingConfig.autoAddByApplyButton);
+
+                options.editingConfig.autoAdd = false;
+
+                editingConfig = baseControl._getEditingConfig(options);
+                assert.isFalse(editingConfig.autoAdd);
+                assert.isFalse(editingConfig.autoAddByApplyButton);
+            });
+
+            describe('autoAddByApplyButton setted', () => {
+                const options: IEditableListOption = {
+                    editingConfig: {}
+                };
+                let editingConfig: TEditingConfig;
+
+                it('should be true', () => {
+                    options.editingConfig.autoAddByApplyButton = true;
+                    options.editingConfig.autoAdd = true;
+                    editingConfig = baseControl._getEditingConfig(options);
+                    assert.isTrue(editingConfig.autoAdd);
+                    assert.isTrue(editingConfig.autoAddByApplyButton);
+                });
+
+                it('autoAddByApplyButton should be false, autoAdd true', () => {
+                    options.editingConfig.autoAdd = true;
+                    options.editingConfig.autoAddByApplyButton = false;
+                    editingConfig = baseControl._getEditingConfig(options);
+                    assert.isTrue(editingConfig.autoAdd);
+                    assert.isFalse(editingConfig.autoAddByApplyButton);
+                });
+
+                it('autoAddByApplyButton should be true, autoAdd false', () => {
+                    options.editingConfig.autoAdd = false;
+                    options.editingConfig.autoAddByApplyButton = true;
+                    editingConfig = baseControl._getEditingConfig(options);
+                    assert.isFalse(editingConfig.autoAdd);
+                    assert.isTrue(editingConfig.autoAddByApplyButton);
+                });
+            });
+
         });
 
         it('should immediately resolve promise if commit edit called without eipController', () => {
