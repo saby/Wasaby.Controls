@@ -1,3 +1,2 @@
 <Controls.filter:View
-   lazyLoading="{{true}}"
    source="{{_source}}"/>
