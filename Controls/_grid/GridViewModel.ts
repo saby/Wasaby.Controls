@@ -687,6 +687,16 @@ var
 
                 return `${itemData._staticRowClassses} ${classes.trim()}`;
             };
+        },
+        resolveEditArrowVisibility(item, options) {
+            let contents = item.getContents();
+            if (!options.editArrowVisibilityCallback) {
+                return options.showEditArrow;
+            }
+            if (item['[Controls/_display/BreadcrumbsItem]']) {
+                contents = contents[(contents as any).length - 1];
+            }
+            return options.showEditArrow && options.editArrowVisibilityCallback(contents);
         }
     },
 
@@ -1605,9 +1615,7 @@ var
                 columns: this._columns
             });
 
-            current.showEditArrow = this._options.showEditArrow &&
-            (!this._options.editArrowVisibilityCallback ||
-              this._options.editArrowVisibilityCallback(dispItem.getContents()));
+            current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
