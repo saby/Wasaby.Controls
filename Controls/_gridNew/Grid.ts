@@ -1,9 +1,10 @@
 import { ListControl as viewTemplate, View as List } from 'Controls/list';
 import viewName = require('Controls/_gridNew/GridView');
+import { TemplateFunction } from 'UI/Base';
 
 export default class Grid extends List {
-    _viewName = viewName;
-    _viewTemplate = viewTemplate;
+    protected _viewName: TemplateFunction = viewName;
+    protected _viewTemplate: TemplateFunction = viewTemplate;
     protected _supportNewModel: boolean = true;
 
     _getModelConstructor() {

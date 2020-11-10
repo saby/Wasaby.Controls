@@ -1,0 +1,53 @@
+<div attr:class="controls-Grid__row controls-ListView__itemV controls-ListView__itemV_cursor-pointer controls-Grid__row_highlightOnHover_default_theme-default controls-Grid__row_default_theme-default">
+   <ws:for data="column in item.getColumns()">
+      <div attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style) }}">
+         <div if="{{ column.shouldDisplayMarker(marker, markerPosition) }}" attr:class="{{ column.getMarkerClasses(theme, style, markerPosition) }}"></div>
+         <ws:if data="{{ column.isMultiSelectColumn() }}">
+            <ws:partial template="{{ multiSelectTpl }}"
+                        attr:class="{{ column.getContentClassesMultiSelectCell(theme) }}">
+               <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
+                                   key="{{ (item || itemData).getContents().getKey() }}"
+                                   checkboxReadOnly="{{ checkboxReadOnly }}"/>
+            </ws:partial>
+         </ws:if>
+
+         <ws:if data="{{!withoutLevelPadding && (item || itemData).level > 1}}">
+            <ws:for data="i in (item || itemData).level - 1">
+               <div class="controls-TreeGrid__row-levelPadding {{(item || itemData).getLevelIndentClasses((item || itemData), expanderSize, levelIndentSize)}}"></div>
+            </ws:for>
+         </ws:if>
+         <ws:if data="{{(item || itemData).isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
+            <ws:partial template="{{(item || itemData).getExpanderTemplate(expanderTemplate)}}"
+                        itemData="{{(item || itemData)}}"
+                        expanderIcon="{{(item || itemData).getExpanderIcon(expanderIcon)}}"
+                        expanderSize="{{(item || itemData).getExpanderSize(expanderSize)}}"/>
+         </ws:if>
+         <ws:else data="{{(item || itemData).shouldDrawExpanderPadding((item || itemData), expanderIcon, expanderSize)}}">
+            <div class="{{(item || itemData).getExpanderPaddingClasses((item || itemData), expanderSize)}} js-controls-ListView__notEditable"></div>
+         </ws:else>
+
+         <ws:else>
+            <div attr:class="{{ column.getContentClasses(theme, cursor, highlightOnHover) }}"
+                 attr:style="{{ column.getCellStyles() }}">
+               <ws:partial template="{{ column.getTemplate() }}"
+                           attr:key="{{ column.getInstanceId() }}"
+                           column="{{ column.getOriginalColumn() }}"
+                           item="{{ (item || itemData) }}"
+                           itemData="{{ (item || itemData) }}"/>
+            </div>
+         </ws:else>
+         <ws:if data="{{ column.shouldDisplayItemActions() }}">
+            <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
+               <ws:partial template="{{ swipeTemplate }}"
+                           highlightOnHover="{{ highlightOnHover }}" />
+            </ws:if>
+            <ws:else data="{{ itemActionsPosition !== 'custom' }}">
+               <ws:partial template="{{ itemActionsTemplate }}"
+                           itemData="{{ item || itemData }}"
+                           itemActionsClass="{{ itemActionsClass }}"
+                           highlightOnHover="{{ highlightOnHover }}"/>
+            </ws:else>
+         </ws:if>
+      </div>
+   </ws:for>
+</div>

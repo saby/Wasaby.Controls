@@ -7,6 +7,7 @@ import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
+import { TemplateFunction } from 'wasaby-cli/store/_repos/saby-ui/UI/Base';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -57,6 +58,21 @@ export default class TreeItem<T> extends mixin<
      * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
      */
     protected _$childrenProperty: string;
+
+    /**
+     * Шаблон экспандера
+     */
+    protected _$expanderTemplate: TemplateFunction;
+
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -179,6 +195,28 @@ export default class TreeItem<T> extends mixin<
         return this.getOwner().getChildren(this, withFilter);
     }
 
+    // TODO удалить
+    isDrawExpander() {
+        return true;
+    }
+
+    // TODO удалить
+    shouldDrawExpanderPadding() {
+        return false;
+    }
+
+    getExpanderTemplate(expanderTemplate: TemplateFunction): TemplateFunction {
+        return expanderTemplate || this._$expanderTemplate;
+    }
+
+    getExpanderIcon(expanderIcon: string): string {
+        return expanderIcon || this._$expanderIcon;
+    }
+
+    getExpanderSize(expanderSize: string): string {
+        return expanderSize || this._$expanderSize;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: ICollectionItemSerializableState<T>): ISerializableState<T> {
@@ -230,5 +268,8 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
+    _$expanderTemplate: null,
+    _$expanderIcon: '',
+    _$expanderSize: 's',
     _instancePrefix: 'tree-item-'
 });

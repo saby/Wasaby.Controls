@@ -340,7 +340,8 @@ const _private = {
                 loadedList.each((item) => {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
-                        if (!self._nodesSourceControllers[itemKey] && viewModel.getChildren(itemKey, loadedList).length) {
+                        const dispItem = viewModel.getItemBySourceKey(itemKey);
+                        if (!self._nodesSourceControllers[itemKey] && viewModel.getChildren(dispItem, loadedList).length) {
                             _private.createSourceControllerForNode(self, itemKey, options.source, options.navigation);
                         }
                     }

@@ -18,6 +18,7 @@ import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
+import { TemplateFunction } from 'UI/Base';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -35,6 +36,7 @@ interface IItemsFactoryOptions<S> {
     contents?: S;
     hasChildren?: boolean;
     node?: boolean;
+    expanderTemplate?: TemplateFunction;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -156,6 +158,21 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      * @name Controls/_display/Tree#root
      */
     protected _$root: T | S;
+
+    /**
+     * Шаблон экспандера
+     */
+    protected _$expanderTemplate: TemplateFunction;
+
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
 
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов
@@ -433,6 +450,21 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return true;
     }
 
+    // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
+    getExpandedItems(): string[] {
+        return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+    }
+
+    resetExpandedItems(): void {
+        this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
+    }
+
+    // TODO от этого наверное нужно избавляться вообще и использовать SourceController или просто перенести в item
+    //  как я понял хранит hasMore для каждого узла
+    setHasMoreStorage(): void {
+
+    }
+
     // endregion
 
     // region Protected methods
@@ -444,6 +476,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
+            options.expanderTemplate = this._$expanderTemplate;
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -675,6 +708,9 @@ Object.assign(Tree.prototype, {
     _$nodeProperty: '',
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
+    _$expanderTemplate: null,
+    _$expanderIcon: '',
+    _$expanderSize: 's',
     _$root: undefined,
     _$rootEnumerable: false,
     _root: null
