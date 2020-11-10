@@ -4,26 +4,6 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import {Base as dateUtils} from 'Controls/dateUtils';
 
 
-   /**
-    * Модель для контрола 'Controls/input:Date'.
-    *
-    * @class Controls/_input/DateTime/Model
-    *
-    * @author Красильников А.С.
-    * @public
-    * @noShow
-    */
-
-   /*
-    * Model for 'Controls/input:Date' control.
-    *
-    * @class Controls/_input/DateTime/Model
-    *
-    * @author Красильников А.С.
-    * @public
-    * @noShow
-    */
-
    var _private = {
       updateLastValue: function(self) {
          if (dateUtils.isValidDate(self._value)) {
@@ -44,7 +24,23 @@ import {Base as dateUtils} from 'Controls/dateUtils';
          }
       }
    };
+   /**
+    * Модель для контрола {@link Controls/input:Date}.
+    *
+    * @class Controls/_input/DateTime/Model
+    *
+    * @author Красильников А.С.
+    * @public
+    */
 
+   /*
+    * Model for 'Controls/input:Date' control.
+    *
+    * @class Controls/_input/DateTime/Model
+    *
+    * @author Красильников А.С.
+    * @public
+    */
    var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
