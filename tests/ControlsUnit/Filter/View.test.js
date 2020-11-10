@@ -273,9 +273,7 @@ define(
          it('openDetailPanel', function() {
             let view = getView(defaultConfig),
                popupOptions;
-            view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} }
-            };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} };
             view._container = {};
             view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
             view._source = defaultConfig.source;
@@ -302,8 +300,8 @@ define(
                   getElementsByClassName: () => [filterClassName]
                }
             };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} };
             view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} },
                state: 'div_state_filter'
             };
             view._container = {
@@ -390,9 +388,7 @@ define(
             let view = getView(defaultConfig),
                popupOptions,
                isOpened = true;
-            view._children = {
-               StickyOpener: { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} }
-            };
+            view._stickyOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return isOpened;} };
             view._container = {};
 
             view._open();
@@ -423,9 +419,7 @@ define(
             let view = getView(defaultConfig),
                isOpened = true, closed,
                filterChanged, itemsChanged;
-            view._children = {
-               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
-            };
+            view._stickyOpener = { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
             view._notify = (event, data) => {
               if (event === 'filterChanged') {
                  filterChanged = data[0];
@@ -469,9 +463,7 @@ define(
             let view = getView(defaultConfig),
                isOpened = true, closed,
                filterChanged, itemsChanged;
-            view._children = {
-               StickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} }
-            };
+            view._stickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
                   filterChanged = data[0];
@@ -907,9 +899,7 @@ define(
                      sourceController: {hasMoreData: () => {return true;}}
                   }
                };
-               view._children = {
-                  StickyOpener: { close: () => {} }
-               };
+               view._stickyOpener = { close: () => {} };
             });
 
             it('_resultHandler itemClick', function() {
@@ -924,13 +914,13 @@ define(
                   id: 'state',
                   selectedKeys: [2]
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[1].value, [2]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In progress', title: 'In progress', hasMoreText: ''}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [2]});
 
                eventResult.selectedKeys = [null];
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[1].value, defaultSource[1].resetValue);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
@@ -947,7 +937,7 @@ define(
                   action: 'applyClick',
                   selectedKeys: { state: [1, 2] }
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[1].value, [1, 2]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'In any state', title: 'In any state, In progress', hasMoreText: ', еще 1'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [1, 2]});
@@ -973,7 +963,7 @@ define(
                   id: 'state',
                   data: newItems
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});
@@ -984,7 +974,7 @@ define(
                   rawData: [{id: 15, title: 'Completed'}] // without id field
                });
                eventResult.data = newItems;
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.strictEqual(view._configs.state.items.getCount(), 10);
             });
 
@@ -1034,7 +1024,7 @@ define(
                      { id: 'document', value: '11111', resetValue: '', textValue: 'new document', visibility: false }],
                   history: [{ test: 'test' }]
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[1].value, 'Sander123');
                assert.deepStrictEqual(view._source[1].viewMode, 'extended');
                assert.deepStrictEqual(view._source[3].textValue, 'new document');
@@ -1116,9 +1106,7 @@ define(
                      sourceController: {hasMoreData: () => {return true;}}
                   }
                };
-               view._children = {
-                  StickyOpener: { close: () => {} }
-               };
+            view._sStickyOpener = { close: () => {} };
             });
 
             it ('updateText', function () {
@@ -1139,7 +1127,7 @@ define(
                   selectedKeys: { '-1': [1], '-2': [-2, 4] }
                };
                view._configs.document.multiSelect = false;
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1], '-2': [-2]});
                assert.deepStrictEqual(filterChanged, {document: {'-1': [1], '-2': [-2]}});
             });
@@ -1155,7 +1143,7 @@ define(
                   action: 'applyClick',
                   selectedKeys: { document: {'-1': [1, 2], '-2': [-2, 4]} }
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [1, 2], '-2': [-2]});
                assert.deepStrictEqual(view._displayText.document, {text: 'In any state', title: 'In any state, In progress, Folder 2', hasMoreText: ', еще 2' });
                assert.deepStrictEqual(filterChanged, {document: {'-1': [1, 2], '-2': [-2]}});
@@ -1164,7 +1152,7 @@ define(
                   action: 'applyClick',
                   selectedKeys: { document: {'-1': [], '-2': []} }
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[0].value, []);
                assert.deepStrictEqual(view._displayText.document, {});
 
@@ -1172,7 +1160,7 @@ define(
                   action: 'applyClick',
                   selectedKeys: { document: {'-2': [4]} }
                };
-               view._resultHandler('resultEvent', eventResult);
+               view._resultHandler(eventResult);
                assert.deepStrictEqual(view._source[0].value, {'-1': [], '-2': [4]});
                assert.deepStrictEqual(view._displayText.document, {text: 'Deleted', title: 'Deleted', hasMoreText: '' });
             });
@@ -1188,10 +1176,8 @@ define(
                   action: 'moreButtonClick',
                   id: 'document'
                };
-               view._children = {
-                  StickyOpener: { close: () => {isClosed = true;} }
-               };
-               view._resultHandler('resultEvent', eventResult);
+               view._stickyOpener = { close: () => {isClosed = true;} };
+               view._resultHandler(eventResult);
                assert.strictEqual(view._idOpenSelector, 'document');
                assert.isTrue(isClosed);
             });
@@ -1261,9 +1247,7 @@ define(
                   },
                   state: {}
                };
-               view._children = {
-                  StickyOpener: { close: () => {} }
-               };
+               view._stickyOpener = { close: () => {} };
                hSource = new history.Source({
                   originSource: new sourceLib.Memory({
                      keyProperty: 'key',
@@ -1346,11 +1330,9 @@ define(
                   let openFired = false;
                   const view2 = getView(defaultConfig);
                   view2._source = defaultConfig.source;
-                  view2._children = {
-                     selectorOpener: {
-                        open: () => {
-                           openFired = true;
-                        }
+                  view2._stackOpener = {
+                     open: () => {
+                        openFired = true;
                      }
                   };
                   view2._loadDeferred = {
@@ -1391,12 +1373,10 @@ define(
                   view2._loadDeferred = {
                      isReady: () => true
                   };
-                  view2._children = {
-                     selectorOpener: {
-                        open: () => {
-                           openFired = true;
-                           return Promise.resolve();
-                        }
+                  view2._stackOpener = {
+                     open: () => {
+                        openFired = true;
+                        return Promise.resolve();
                      }
                   };
                   view2._showSelector('document').then(() => {
@@ -1436,12 +1416,10 @@ define(
                   view2._loadDeferred = {
                      isReady: () => true
                   };
-                  view2._children = {
-                     selectorOpener: {
-                        open: () => {
-                           openFired = true;
-                           return Promise.resolve();
-                        }
+                  view2._stackOpener = {
+                     open: () => {
+                        openFired = true;
+                        return Promise.resolve();
                      }
                   };
                   view2._showSelector().then(() => {
