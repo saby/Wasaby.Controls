@@ -40,6 +40,10 @@ const DEFAULT_ACTION_SIZE = 'm';
 
 const DEFAULT_ACTION_MODE = 'strict';
 
+interface IItemActionsMenuPopupOptions extends IMenuPopupOptions {
+    item: IItemActionsItem
+}
+
 /**
  * @interface Controls/_itemActions/IControllerOptions
  * @public
@@ -263,9 +267,9 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const target = isContextMenu ? null : this._cloneMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
-        const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+        const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
         const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item,
             clickEvent,
             opener,
@@ -368,16 +372,18 @@ export class Controller {
 
     /**
      * Возвращает конфиг для шаблона меню опций
+     * @param item элемент коллекции, для которого выполняется действие
      * @param isActionMenu
      * @param parentAction
      * @param menuActions
      * @private
      */
     private _getActionsMenuTemplateConfig(
+        item: IItemActionsItem,
         isActionMenu: boolean,
         parentAction: IItemAction,
         menuActions: IItemAction[]
-    ): IMenuPopupOptions {
+    ): IItemActionsMenuPopupOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -390,6 +396,7 @@ export class Controller {
         } : null;
         const root = parentAction && parentAction.id;
         return {
+            item,
             source,
             keyProperty: 'id',
             parentProperty: 'parent',
@@ -518,16 +525,14 @@ export class Controller {
     }
 
     /**
-     * Запоминает измерения для HTML элемента, к которому привязано выпадающее меню
+     * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+     * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
      * @param realTarget
      */
-    private _getFakeMenuTarget(realTarget: HTMLElement): {
-        getBoundingClientRect(): ClientRect;
-        children: any;
-    } {
+    private _cloneMenuTarget(realTarget: HTMLElement): HTMLElement {
         const rect = realTarget.getBoundingClientRect();
         return {
-            children: [],
+            ...clone(realTarget),
             getBoundingClientRect(): ClientRect {
                 return rect;
             }
