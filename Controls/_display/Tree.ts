@@ -175,6 +175,11 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _$expanderSize: string;
 
     /**
+     * Позиция экспандера
+     */
+    protected _$expanderPosition: string;
+
+    /**
      * @cfg {Boolean} Включать корневой узел в список элементов
      * @name Controls/_display/Tree#rootEnumerable
      * @example
@@ -465,6 +470,10 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
     }
 
+    getItemsFactory(): ItemsFactory<T> {
+        return this._getItemsFactory();
+    }
+
     // endregion
 
     // region Protected methods
@@ -474,7 +483,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _getItemsFactory(): ItemsFactory<T> {
         const parent = super._getItemsFactory();
 
-        return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
+        return (options: IItemsFactoryOptions<S>) => {
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             options.expanderTemplate = this._$expanderTemplate;
             if (!('node' in options)) {
@@ -711,6 +720,7 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderIcon: '',
     _$expanderSize: 's',
+    _$expanderPosition: 'default',
     _$root: undefined,
     _$rootEnumerable: false,
     _root: null

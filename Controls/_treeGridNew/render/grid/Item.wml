@@ -11,20 +11,20 @@
             </ws:partial>
          </ws:if>
 
-         <ws:if data="{{!withoutLevelPadding && (item || itemData).level > 1}}">
+<!--         <ws:if data="{{!withoutLevelPadding && (item || itemData).level > 1}}">
             <ws:for data="i in (item || itemData).level - 1">
                <div class="controls-TreeGrid__row-levelPadding {{(item || itemData).getLevelIndentClasses((item || itemData), expanderSize, levelIndentSize)}}"></div>
             </ws:for>
-         </ws:if>
+         </ws:if>-->
          <ws:if data="{{(item || itemData).isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
             <ws:partial template="{{(item || itemData).getExpanderTemplate(expanderTemplate)}}"
                         itemData="{{(item || itemData)}}"
                         expanderIcon="{{(item || itemData).getExpanderIcon(expanderIcon)}}"
                         expanderSize="{{(item || itemData).getExpanderSize(expanderSize)}}"/>
          </ws:if>
-         <ws:else data="{{(item || itemData).shouldDrawExpanderPadding((item || itemData), expanderIcon, expanderSize)}}">
+<!--         <ws:else data="{{(item || itemData).shouldDrawExpanderPadding((item || itemData), expanderIcon, expanderSize)}}">
             <div class="{{(item || itemData).getExpanderPaddingClasses((item || itemData), expanderSize)}} js-controls-ListView__notEditable"></div>
-         </ws:else>
+         </ws:else>-->
 
          <ws:else>
             <div attr:class="{{ column.getContentClasses(theme, cursor, highlightOnHover) }}"

@@ -2,6 +2,7 @@ import TreeGridCollectionItem from 'Controls/_display/TreeGridCollectionItem';
 import GridCollection from './GridCollection';
 import Tree from './Tree';
 import { ItemsFactory } from 'Controls/_display/Collection';
+import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 
 export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> = TreeGridCollectionItem<S>>
     extends GridCollection<S, T> {
@@ -11,6 +12,8 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
     constructor(options: any) {
         super(options);
         this._tree = new Tree(options);
+        // TODO в super уже был такой вызов, нужно сделать один, иначе 2 раза все элементы пересоздаются
+        this._reBuild(true);
     }
 
     getExpandedItems(): string[] {
@@ -31,6 +34,17 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
 
     getChildren(): [] {
         return [];
+    }
+
+    protected _getItemsFactory(): ItemsFactory<T> {
+        const gridFactory = super._getItemsFactory();
+        // TODO указать тип опций
+        return (options: any) => {
+            if (this._tree) {
+                this._tree.getItemsFactory().call(this, options);
+            }
+            return gridFactory.call(this, options);
+        };
     }
 }
 
