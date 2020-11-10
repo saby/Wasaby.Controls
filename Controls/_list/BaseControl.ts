@@ -3899,7 +3899,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
-           isItemsResetFromSourceController ||
+            isItemsResetFromSourceController ||
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
