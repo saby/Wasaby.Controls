@@ -125,7 +125,7 @@ export default class FlatController {
    calculateDragPosition(targetItem: CollectionItem<Model>, position?: TPosition): IDragPosition<CollectionItem<Model>> {
       let prevIndex = -1;
 
-      if (targetItem === null || targetItem instanceof GroupItem) {
+      if (targetItem === null) {
          return {
             index: this._startIndex,
             position: 'before',
@@ -134,7 +134,7 @@ export default class FlatController {
       }
 
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+      if (!(targetItem instanceof GroupItem) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
          return this._dragPosition;
       }
 
