@@ -1695,7 +1695,12 @@ const _private = {
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
-                        newSelection = selectionController.onCollectionRemove(removedItems);
+                        /* Когда в цикле удаляют записи из рекордсета по одному и eventRaising=false, то
+                        * после eventRaising=true нам последовательно прилетают события удаления с отдельными записями.
+                        * Т.к. селекшин меняется в _beforeUpdate, то учитывается только последнее событие.
+                        * Чтобы учитывались все события, обрабатываем удаление всех записей на afterCollectionChanged
+                        */
+                        self._removedItems.push(...removedItems);
                         break;
                     case IObservable.ACTION_REPLACE:
                         selectionController.onCollectionReplace(newItems);
@@ -1763,6 +1768,15 @@ const _private = {
         }
     },
 
+    onAfterCollectionChanged(self: typeof BaseControl): void {
+        if (_private.hasSelectionController(self) && self._removedItems.length) {
+            const newSelection = _private.getSelectionController(self).onCollectionRemove(self._removedItems);
+            _private.changeSelection(self, newSelection);
+        }
+
+        self._removedItems = [];
+    },
+
     /**
      * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
      * Возвращается true, если newItems или newItems.properties не заданы
@@ -1788,8 +1802,20 @@ const _private = {
                     ]
                 );
             });
+            model.subscribe('onAfterCollectionChange', (...args: any[]) => {
+                _private.onAfterCollectionChanged.apply(
+                    null,
+                    [
+                        self,
+                        args[0], // event
+                        null, // changes type
+                        ...args.slice(1) // the rest of the arguments
+                    ]
+                );
+            });
         } else {
             model.subscribe('onListChange', _private.onCollectionChanged.bind(null, self));
+            model.subscribe('onAfterCollectionChange', _private.onAfterCollectionChanged.bind(null, self));
         }
 
         model.subscribe('onGroupsExpandChange', function(event, changes) {
@@ -3094,6 +3120,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // Контроллер для удаления элементов из источника
     _removeController: null,
+    _removedItems: [],
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3575,6 +3603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        let isItemsResetFromSourceController = false;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -3681,7 +3710,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
+                const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
@@ -3689,6 +3720,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const controller = _private.createSelectionController(this, newOptions);
                     controller.setSelection({ selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys });
                 }
+
+                // TODO удалить когда полностью откажемся от старой модели
+                //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
+                this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
         }
 
@@ -3838,7 +3873,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 if (this._sourceController) {
                     const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
-                    if (this._listViewModel.getHasMoreData() !== hasMore) {
+                    if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
                 }
@@ -3858,17 +3893,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
          * Переинициализация ранее проинициализированных опций записи нужна при:
          * 1. Изменились опции записи
          * 3. Изменился коллбек видимости опции
-         * 4. Модель была пересоздана
+         * 4. Записи в модели были пересозданы из sourceController
          * 5. обновилась опция readOnly (относится к TreeControl)
          * 6. обновилась опция itemActionsPosition
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            isItemsResetFromSourceController ||
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
+            _private.updateInitializedItemActions(this, newOptions);
         }
 
         if (
@@ -4102,7 +4138,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (!this._modelRecreated) {
+            if (!this._modelRecreated && !this.__error) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
