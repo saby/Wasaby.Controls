@@ -2,7 +2,7 @@ import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
 import { TColumns, THeader } from 'Controls/grid';
-import { GridLadderUtil } from 'Controls/gridNew';
+import * as GridLadderUtil from './utils/GridLadderUtil';
 import GridColgroup from './GridColgroup';
 import GridHeader from './GridHeader';
 import GridResults, { TResultsPosition } from './GridResults';

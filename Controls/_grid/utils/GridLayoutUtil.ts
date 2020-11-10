@@ -1,7 +1,6 @@
 import {detection} from 'Env/Env';
+import {isFullGridSupport} from 'Controls/display';
 
-const FULL_GRID_IOS_VERSION = 12;
-const FULL_GRID_MAC_SAFARI_VERSION = 13;
 const OLD_IE_LAST_VERSION = 11;
 const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
 const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
@@ -27,20 +26,6 @@ interface IRowOptions {
     rowStart: number;
     rowSpan?: number;
     rowEnd?: number;
-}
-
-function _isFullGridSafari(): boolean {
-    return (
-        detection.safari &&
-        (
-            detection.IOSVersion >= FULL_GRID_IOS_VERSION ||
-            (detection.isMacOSDesktop && (detection.safariVersion >= FULL_GRID_MAC_SAFARI_VERSION))
-        )
-    );
-}
-
-function isFullGridSupport(): boolean {
-    return (!detection.isWinXP || detection.yandex) && (!detection.isNotFullGridSupport || _isFullGridSafari());
 }
 
 function isOldIE(): boolean {
