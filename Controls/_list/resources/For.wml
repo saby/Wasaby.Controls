@@ -82,7 +82,8 @@
                 template="{{ listModel.getCurrent().beforeItemTemplate }}"
                 scope="{{ listModel.getCurrent().beforeItemTemplateOptions }}"
                 itemTemplate="{{ itemTemplate }}"
-                listModel="{{ listModel }}"/>
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
 
 
     <!-- Группа -->
@@ -92,7 +93,8 @@
                     itemData="{{listModel.getCurrent()}}"
                     attr:key="{{listModel.getCurrent().key}}"
                     backgroundStyle="{{backgroundStyle}}"
-                    on:click="_onGroupClick(listModel.getCurrent().dispItem)"/>
+                    on:click="_onGroupClick(listModel.getCurrent().dispItem)"
+                    __notExcessiveRender="{{ true }}" />
     </ws:if>
     <ws:else> <!-- Запись -->
         <ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
@@ -125,5 +127,6 @@
                 template="{{ listModel.getCurrent().afterItemTemplate }}"
                 scope="{{ listModel.getCurrent().afterItemTemplateOptions }}"
                 itemTemplate="{{ itemTemplate }}"
-                listModel="{{ listModel }}"/>
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
 </ws:for>
