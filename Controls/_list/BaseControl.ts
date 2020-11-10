@@ -3602,8 +3602,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
-        const self = this;
         let isItemsResetFromSourceController = false;
+        const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
@@ -3899,8 +3899,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+           isItemsResetFromSourceController ||
             newOptions.readOnly !== this._options.readOnly ||
-            isItemsResetFromSourceController ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
             _private.updateInitializedItemActions(this, newOptions);

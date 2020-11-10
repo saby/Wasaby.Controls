@@ -456,7 +456,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _prepareItem(item, keyProperty, source): Model {
-      if (isHistorySource(source)) {
+      if (this._isHistoryMenu(source)) {
          // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
          // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
          if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty())) {

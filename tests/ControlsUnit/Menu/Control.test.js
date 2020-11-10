@@ -152,7 +152,7 @@ define(
                assert.isNotNull(menuControl._markerController);
             });
          });
-         
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({

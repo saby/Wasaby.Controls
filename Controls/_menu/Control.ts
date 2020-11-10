@@ -793,9 +793,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
                 return items;
             },
-           (error: Error): Promise<void | dataSourceError.ViewConfig> => {
-               return Promise.reject(this._processError(error));
-           }
+            (error: Error): Promise<void | dataSourceError.ViewConfig> => {
+                return Promise.reject(this._processError(error));
+            }
         );
     }
 
