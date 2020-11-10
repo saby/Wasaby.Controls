@@ -38,9 +38,12 @@ define(
                }
             };
             let prepareConfig = popupTemplate.InfoBoxController._prepareConfig;
-            popupTemplate.InfoBoxController._prepareConfig = () => true;
+            popupTemplate.InfoBoxController.prepareConfig = (i, cont) => {
+               assert.equal(i, item);
+               assert.equal(cont, container);
+               return true;
+            };
             let prepareConfigPublic = popupTemplate.InfoBoxController.prepareConfig;
-            popupTemplate.InfoBoxController.prepareConfig = () => true;
             popupTemplate.InfoBoxController.elementCreated(item, container);
             popupTemplate.InfoBoxController._prepareConfig = prepareConfig;
             popupTemplate.InfoBoxController.prepareConfig = prepareConfigPublic;
