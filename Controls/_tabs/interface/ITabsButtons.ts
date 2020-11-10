@@ -15,8 +15,23 @@ export interface ITabsButtons {
 export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableOptions, IItemsOptions<object> {
     source?: SbisService;
     style?: string;
+    separatorVisible?: boolean;
+    borderThickness?: string;
     displayProperty?: string;
 }
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#borderThickness
+ * @cfg {String} Определяет толщину подчеркивания вкладок
+ * @default s
+ * @demo Controls-demo/Tabs/Buttons/BorderThickness/Index
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#separatorVisible
+ * @cfg {Boolean} Определяет наличие разделителя между вкладками
+ * @default true
+ * @demo Controls-demo/Tabs/Buttons/SeparatorVisible/Index
+ */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#tabSpaceTemplate
@@ -72,12 +87,14 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
  * @typedef {String} Style
  * @variant primary
  * @variant secondary
+ * @variant unaccented
  */
 
 /**
  * @name Controls/_tabs/interface/ITabsButtons#style
  * @cfg {Style} Стиль отображения вкладок.
  * @default primary
+ * @demo Controls-demo/Tabs/Buttons/Style/Index
  * @remark
  * Если стандартная тема вам не подходит, вы можете переопределить переменные:
  *

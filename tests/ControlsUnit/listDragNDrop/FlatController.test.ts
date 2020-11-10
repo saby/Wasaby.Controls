@@ -56,7 +56,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
 
          let modelSetDraggedItemsCalled = false;
          model.setDraggedItems = (draggedItemKey, e) => {
-            assert.equal(draggedItemKey, 1);
+            assert.equal(draggedItemKey, draggedItem);
             assert.deepEqual(e, [1]);
             modelSetDraggedItemsCalled = true;
          };
@@ -78,7 +78,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
 
          let modelSetDraggedItemsCalled = false;
          model.setDraggedItems = (draggedItemKey, draggedItemsKeys) => {
-            assert.equal(draggedItemKey, 1);
+            assert.equal(draggedItemKey, draggedItem);
             assert.deepEqual(draggedItemsKeys, [1]);
             modelSetDraggedItemsCalled = true;
          };

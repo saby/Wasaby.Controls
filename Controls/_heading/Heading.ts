@@ -82,4 +82,36 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
  * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
  */
 
+/**
+ * @name Controls/_heading/Heading#fontSize
+ * @cfg
+ * @default l
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#fontColorStyle
+ * @cfg
+ * @default secondary
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#caption
+ * @cfg
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
 export default Header;

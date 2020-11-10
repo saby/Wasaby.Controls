@@ -25,7 +25,7 @@
  * @includes InputCallback Controls/input/InputCallback
  * @includes IFieldData Controls/_input/interface/IFieldData
  * @includes ICallbackData Controls/_input/interface/ICallbackData
- * @includes isMaskFormatValid Controls/_input/Mask/isFormatValid#isFormatValid
+ * @includes isMaskFormatValid Controls/_input/Mask/isFormatValid
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
  * @includes IPadding Controls/_input/interface/IPadding
  * @includes ISelection Controls/_input/resources/Types:ISelection

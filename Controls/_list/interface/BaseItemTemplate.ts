@@ -39,7 +39,7 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/list:BaseItemTemplate#itemActionsClass
-    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/item-actions/ опциями записи} внутри элемента.
+    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
     * @default controls-itemActionsV_position_bottomRight
     */
    itemActionsClass?: string;

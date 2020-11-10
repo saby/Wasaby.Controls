@@ -1,11 +1,12 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
+import { TColumns, THeader } from 'Controls/grid';
+import { GridLadderUtil } from 'Controls/gridNew';
+import GridColgroup from './GridColgroup';
 import GridHeader from './GridHeader';
 import GridResults, { TResultsPosition } from './GridResults';
 import GridFooter from './GridFooter';
-import { TColumns, THeader } from 'Controls/grid';
-import { GridLadderUtil } from 'Controls/gridNew';
 
 export interface IOptions<
     S,
@@ -26,6 +27,7 @@ export default class GridCollection<
     T extends GridCollectionItem<S> = GridCollectionItem<S>
 > extends Collection<S, T> {
     protected _$columns: TColumns;
+    protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
     protected _$footer: GridFooter<S>;
     protected _$results: GridResults<S>;
@@ -34,6 +36,8 @@ export default class GridCollection<
     protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
     protected _$headerInEmptyListVisible: boolean;
+
+    protected _$isFullGridSupport: boolean;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -52,10 +56,17 @@ export default class GridCollection<
         if (this._resultsIsVisible()) {
             this._$results = this._initializeResults(options);
         }
+        if (!this._$isFullGridSupport) {
+            this._$colgroup = this._initializeColgroup(options);
+        }
     }
 
     getColumns(): TColumns {
         return this._$columns;
+    }
+
+    getColgroup(): GridColgroup<S> {
+        return this._$colgroup;
     }
 
     getHeader(): GridHeader<S> {
@@ -150,6 +161,12 @@ export default class GridCollection<
         });
     }
 
+    protected _initializeColgroup(options: IOptions<S>): GridColgroup<S> {
+        return new GridColgroup({
+            owner: this
+        });
+    }
+
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
@@ -167,5 +184,6 @@ Object.assign(GridCollection.prototype, {
     _$headerInEmptyListVisible: false,
     _$resultsPosition: null,
     _$ladderProperties: null,
-    _$stickyColumn: null
+    _$stickyColumn: null,
+    _$isFullGridSupport: true
 });

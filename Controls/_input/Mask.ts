@@ -23,7 +23,6 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        *
        * @class Controls/_input/Mask
        * @extends Controls/_input/Base
-       * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
        * @ignoreOptions Controls/_input/Base#value
        * @ignoreEvents Controls/_input/Base#valueChanged Controls/_input/Base#inputCompleted
        *
@@ -49,6 +48,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
        * @author Красильников А.С.
        * @demo Controls-demo/Input/Masks/Index
        */
+        // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
       var
          _private = {

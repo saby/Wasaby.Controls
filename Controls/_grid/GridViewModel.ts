@@ -368,7 +368,7 @@ var
             if (checkBoxCell) {
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
-                classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+                classLists.padding.top = `controls-OldGrid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
                 classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
@@ -754,12 +754,16 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            this._onAfterCollectionChangeFn = function() {
+                this._notify('onAfterCollectionChange');
+            }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
             this._options.rowSeparatorSize = separatorSizes.row;
             this._options.columnSeparatorSize = separatorSizes.column;
@@ -1713,8 +1717,8 @@ var
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const hasMainCell = !! self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength;
-                    const hasHeader = !!self.getHeader();
-                    const hasTopResults = self.getResultsPosition() === 'top';
+                    const hasHeader = !!self.getHeaderModel();
+                    const hasTopResults = self.isDrawResults() && self.getResultsPosition() === 'top';
                     if (!hasMainCell) {
                         result += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}_theme-${current.theme}`;
                     }
@@ -2247,8 +2251,8 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-            this._model.setDraggedItems(avatarItemKey, draggedItemsKeys);
+        setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
+            this._model.setDraggedItems(draggableItem, draggedItemsKeys);
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
@@ -2369,6 +2373,7 @@ var
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         },

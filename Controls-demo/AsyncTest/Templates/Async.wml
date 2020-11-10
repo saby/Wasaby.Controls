@@ -4,7 +4,7 @@
     </Controls.Container.Async>
     <div class="asyncDemo__column">
         <ws:for data="i in 3">
-            <Controls.Container.Async templateName="Controls/input:Number">
+            <Controls.Container.Async templateName="Controls/input:Number" attr:class="demo-Async__input_{{i}}">
                 <ws:partial template="{{ content.resolvedTemplate }}" value="{{i}}" />
             </Controls.Container.Async>
         </ws:for>

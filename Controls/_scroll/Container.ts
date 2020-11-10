@@ -14,11 +14,18 @@ import {
     IScrollbarsOptions,
     getDefaultOptions as getScrollbarsDefaultOptions
 } from './Container/Interface/IScrollbars';
-import {IShadows, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Container/Interface/IShadows';
+import {
+    IShadows,
+    IShadowsVisibilityByInnerComponents,
+    SHADOW_MODE,
+    getDefaultOptions as getShadowsDefaultOptions
+} from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
 import {POSITION} from './Container/Type';
+import {SCROLL_DIRECTION} from './Utils/Scroll';
+import {IScrollState} from './Utils/ScrollState';
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
     backgroundStyle: string;
@@ -82,7 +89,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._shadows = new ShadowsModel(options);
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController();
-        this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
+        // При инициализации оптимизированные тени не включаем только если явно включены тени на js.
+        // В режиме mixed используем тени на css что бы не вызывать лишние синхронизации. Когда пользователь наведет
+        // мышкой на скролл контейнер или по другим обнавлениям тени начнут работать через js.
+        this._isOptimizeShadowEnabled = options.shadowMode !== SHADOW_MODE.JS && !detection.isMobileIOS;
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
         super._beforeMount(...arguments);
@@ -109,6 +119,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         if (context.ScrollData?.pagingVisible) {
             this._paging.isVisible = this._state.canVerticalScroll;
         }
+        this._updateShadows(this._state, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
@@ -133,6 +144,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._intersectionObserverController = null;
         }
         this._stickyHeaderController.destroy();
+    }
+
+    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+        const isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options || this._options);
+        if (this._isOptimizeShadowEnabled !== isOptimizeShadowEnabled) {
+            this._isOptimizeShadowEnabled = isOptimizeShadowEnabled;
+            this._optimizeShadowClass = this._getOptimizeShadowClass();
+            this._shadows.updateScrollState(sate || this._state);
+        }
     }
 
     _controlResizeHandler(): void {
@@ -199,8 +219,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // }
     }
 
-    protected _positionChangedHandler(event, direction, position): void {
-        this.scrollTo(position, direction);
+    protected _positionChangedHandler(event, direction, scrollPosition): void {
+        // В вертикальном направлении скролим с учетом виртуального скрола.
+        if (direction === SCROLL_DIRECTION.VERTICAL) {
+            this._setScrollTop(scrollPosition);
+        } else {
+            this.scrollTo(scrollPosition, direction);
+        }
     }
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
@@ -284,6 +309,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (this._isStateInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
+            this._updateShadows();
         }
 
         if (this._scrollbars.take()) {
@@ -345,14 +371,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const opts:IContainerOptions = options || this._options;
         let style: string = '';
         if (this._isOptimizeShadowEnabled) {
-            style += `controls-Scroll__background-Shadow_style-${opts.backgroundStyle}_theme-${opts.theme} ` +
+            style += `controls-Scroll__backgroundShadow ` +
+                `controls-Scroll__background-Shadow_style-${opts.backgroundStyle}_theme-${opts.theme} ` +
                 `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${opts.shadowStyle}_theme-${opts.theme}`;
         }
         return style;
     }
 
     protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
-        return options.optimizeShadow && !detection.isMobileIOS;
+        return options.shadowMode === SHADOW_MODE.CSS && !detection.isMobileIOS;
     }
 
     // StickyHeaderController
@@ -361,7 +388,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.fixedHandler(event, fixedHeaderData);
         const top = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const bottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: top, bottom: bottom });
+        this._scrollbars.setOffsets({ top: top, bottom: bottom }, this._isScrollbarsInitialized);
+        // Если включены оптимизированные тени, то мы не обновляем состояние теней при изменении состояния скрола
+        // если нет зафиксированных заголовков. Что бы тени на заголовках отображались правильно, рассчитаем состояние
+        // теней в скролл контейнере.
+        if (this._isOptimizeShadowEnabled) {
+            this._shadows.updateScrollState(this._state);
+        }
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
             this._shadows.bottom.isStickyHeadersShadowsEnabled());
@@ -390,12 +423,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     static getDefaultOptions() {
         return {
             ...getScrollbarsDefaultOptions(),
-            topShadowVisibility: SHADOW_VISIBILITY.AUTO,
-            bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
+            ...getShadowsDefaultOptions(),
             shadowStyle: 'default',
             backgroundStyle: DEFAULT_BACKGROUND_STYLE,
-            scrollMode: 'vertical',
-            optimizeShadow: false
+            scrollMode: 'vertical'
         };
     }
 }

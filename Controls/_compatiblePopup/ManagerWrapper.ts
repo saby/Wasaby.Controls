@@ -24,12 +24,12 @@ var ManagerWrapper = Control.extend({
       Controller.registerManager(this);
 
       // Add handlers to events when children are created
-      this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
-      this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
       this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
       this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
       this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
       this._mousedownPage = this._mouseDownHandler.bind(this);
+      this._scrollPage = this._scrollPage.bind(this);
+      this._resizePage = this._resizePage.bind(this);
       this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
 
       this._toggleWindowHandlers(true);
@@ -111,6 +111,16 @@ var ManagerWrapper = Control.extend({
             }
          }
       }
+   },
+
+   _resizePage: function(event) {
+      this._children.resizeDetect.start(new SyntheticEvent(event));
+      this._popupManager.eventHandler('popupResizeOuter', []);
+   },
+
+   _scrollPage: function(event) {
+      this._children.scrollDetect.start(new SyntheticEvent(event));
+      this._popupManager.eventHandler('pageScrolled', []);
    },
 
    _eventRegistratorHandler: function(registratorName, event) {

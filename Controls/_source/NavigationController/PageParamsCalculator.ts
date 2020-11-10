@@ -10,7 +10,8 @@ class PageParamsCalculator implements IParamsCalculator {
     getQueryParams(
         store: PageNavigationStore,
         config: INavigationPageSourceConfig,
-        direction?: TNavigationDirection
+        direction?: TNavigationDirection,
+        paramsCallback?: Function
     ): IQueryParams {
         const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Page};
@@ -32,7 +33,12 @@ class PageParamsCalculator implements IParamsCalculator {
             addParams.meta.hasMore = false;
         }
 
-        // TODO callback
+        if (paramsCallback) {
+            paramsCallback({
+                page,
+                pageSize
+            });
+        }
 
         return addParams;
     }

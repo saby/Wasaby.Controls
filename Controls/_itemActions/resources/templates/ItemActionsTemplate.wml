@@ -19,7 +19,7 @@
                     actionMode="{{actionMode}}"
                     iconStyle="{{iconStyle}}"
                     size="{{size}}"
-                    showedActions="{{itemData.getActions().showed}}"/>
+                    showedActions="{{showedActions || itemData.getActions().showed}}"/>
             <ws:if data="{{itemData.isEditing() && toolbarVisibility}}">
                 <Controls.Container.Async templateName="Controls/editableArea:Buttons">
                     <ws:partial template="{{content.resolvedTemplate}}"

@@ -57,6 +57,36 @@ describe('Controls/browser:Browser', () => {
 
     describe('_beforeMount', () => {
 
+        describe('init states on beforeMount', () => {
+
+            it('root', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._root === null);
+
+                options = {...options};
+                options.root = 'testRoot';
+                await browser._beforeMount(options);
+                ok(browser._root === 'testRoot');
+            });
+
+            it('viewMode', async() => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._viewMode === undefined);
+
+                options = {...options};
+                options.viewMode = 'table';
+                await browser._beforeMount(options);
+                ok(browser._viewMode === 'table');
+            });
+
+        });
+
         describe('searchController', () => {
 
             describe('searchValue on _beforeMount', () => {
@@ -203,6 +233,7 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
 
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
@@ -215,6 +246,7 @@ describe('Controls/browser:Browser', () => {
                 options.filter = filter;
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
 
                 browser._filter = {
                     testField: 'oldFilterValue'

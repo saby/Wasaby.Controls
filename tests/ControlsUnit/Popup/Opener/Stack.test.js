@@ -791,14 +791,21 @@ define(
                position: { stackWidth: 720 },
                popupOptions: { className: '' }
             };
+            let updateItemPosition = popupTemplate.StackController._updateItemPosition(item);
+            popupTemplate.StackController._updateItemPosition = () => false;
             popupTemplate.StackController._stack.clear();
             popupTemplate.StackController._stack.add(item);
             let result = popupTemplate.StackController.elementCreated(item);
             assert.equal(result, false);
 
+            popupTemplate.StackController._updateItemPosition = () => true;
+            result = popupTemplate.StackController.elementCreated(item);
+            assert.equal(result, true);
+
             popupTemplate.StackController._stack.add(item);
             result = popupTemplate.StackController.elementCreated(item);
             assert.equal(result, true);
-         })
+            popupTemplate.StackController._updateItemPosition = updateItemPosition;
+         });
       });
    });

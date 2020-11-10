@@ -1,6 +1,13 @@
 import {compare} from 'Types/entity';
 import {isValidDateRange} from 'Controls/validate';
 
+/**
+ * Утилиты для работы с периодами дат.
+ * @class Controls/_utils/dateUtils/DateRangeUtil
+ * @public
+ * @author Миронов А.Ю.
+ */
+
 export enum SHIFT_DIRECTION {
     BACK = -1,
     FORWARD = 1

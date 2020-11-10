@@ -28,8 +28,11 @@ import {SbisService} from 'Types/source';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
+import {IFilterItem} from 'Controls/filter';
 
-type HistoryItems = object[];
+interface IHistoryItems {
+   items: IFilterItem[];
+}
 type SortingObject = object[];
 type FilterObject = Record<string, unknown>;
 
@@ -38,13 +41,13 @@ interface ISorting {
 }
 interface IFilter {
    filter: FilterObject;
-   historyItems: HistoryItems;
+   historyItems: IHistoryItems;
 }
 export interface IRequestDataResult {
    data: RecordSet;
    filter?: FilterObject;
    sorting?: SortingObject;
-   historyItems?: HistoryItems;
+   historyItems?: IHistoryItems;
    collapsedGroups?: string[];
 }
 
@@ -57,7 +60,7 @@ export interface ISourceConfig {
    groupHistoryId?: string;
    filter?: FilterObject;
    sorting?: SortingObject;
-   historyItems?: HistoryItems;
+   historyItems?: IHistoryItems;
    propStorageId?: string;
 }
 

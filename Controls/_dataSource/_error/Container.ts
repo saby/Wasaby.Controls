@@ -52,6 +52,7 @@ const getTemplate = (template: string | Control): Promise<Control> => {
  *
  */
 export default class Container extends Control<IContainerConfig> implements IContainer {
+    private _isUnmounted: boolean = false;
     private __viewConfig: Config; // tslint:disable-line:variable-name
     private _popupHelper: Popup = new Popup();
     protected _template: TemplateFunction = _template;
@@ -67,6 +68,10 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @public
      */
     hide(): void {
+        if (this._isUnmounted) {
+            return;
+        }
+
         const mode = this.__viewConfig.mode;
         this.__setConfig(null);
         if (mode === Mode.dialog) {
@@ -82,6 +87,10 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * @public
      */
     show(viewConfig: ViewConfig): void {
+        if (this._isUnmounted) {
+            return;
+        }
+
         if (viewConfig && viewConfig.mode === Mode.dialog) {
             return this.__showDialog(viewConfig);
         }
@@ -124,6 +133,7 @@ export default class Container extends Control<IContainerConfig> implements ICon
 
     protected _beforeUnmount(): void {
         this._closeDialog();
+        this._isUnmounted = true;
     }
 
     /**
@@ -138,6 +148,10 @@ export default class Container extends Control<IContainerConfig> implements ICon
      * Обработчик закрытия диалога.
      */
     private _onDialogClosed(): void {
+        if (this._isUnmounted) {
+            return;
+        }
+
         this._notify('dialogClosed', []);
         this._popupId = null;
     }
@@ -162,6 +176,10 @@ export default class Container extends Control<IContainerConfig> implements ICon
     }
 
     private _notifyServiceError(template: Control, options: object): Promise<IDialogData> | IDialogData | void {
+        if (this._isUnmounted) {
+            return;
+        }
+
         return this._notify(
             'serviceError',
             [template, options, this],
@@ -185,6 +203,10 @@ export default class Container extends Control<IContainerConfig> implements ICon
         getTemplate(config.template)
             .then((dialogTemplate) => this._notifyServiceError(dialogTemplate, config.options))
             .then((dialogData) => {
+                if (this._isUnmounted) {
+                    return;
+                }
+
                 /**
                  * Controls/popup:Global ловит событие 'serviceError'.
                  * В Wasaby окружении Controls/popup:Global есть на каждой странице в виде глобальной обертки.

@@ -7,7 +7,7 @@ import { ISelectionObject } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
 export interface IModel {
-   setDraggedItems(draggedItem: TKey, draggedItems: Array<string | number>): void;
+   setDraggedItems(draggedItem: CollectionItem<Model>, draggedItems: Array<string | number>): void;
    setDragPosition(position: IDragPosition<CollectionItem<Model>>): void;
    resetDraggedItems(): void;
 
@@ -58,16 +58,15 @@ export default class FlatController {
     * Отображает перетаскивание в списке.
     * Позволяет отобразить перетаскиеваемые элементы особым образом, отличным от остальных элементов.
     * @param entity - сущность перемещения, содержит весь список перемещаемых записей
-    * @param draggedItem - запись, за которую осуществляется перетаскивание
+    * @param draggableItem - запись, за которую осуществляется перетаскивание
     */
-   setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
+   setDraggedItems(entity: ItemsEntity, draggableItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      this._draggableItem = draggedItem;
-      this._startIndex = this._getIndex(draggedItem);
+      this._draggableItem = draggableItem;
+      this._startIndex = this._getIndex(draggableItem);
 
-      const draggableItemKey = !draggedItem ? null : draggedItem.getContents().getKey();
-      this._model.setDraggedItems(draggableItemKey, entity.getItems());
+      this._model.setDraggedItems(draggableItem, entity.getItems());
    }
 
    /**

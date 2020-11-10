@@ -1,5 +1,6 @@
 import { ListControl as viewTemplate, View as List } from 'Controls/list';
 import viewName = require('Controls/_gridNew/GridView');
+import { GridLayoutUtil } from 'Controls/grid';
 
 export default class Grid extends List {
     _viewName = viewName;
@@ -16,6 +17,7 @@ Grid.getDefaultOptions = function() {
        stickyHeader: true,
        stickyColumnsCount: 1,
        rowSeparatorSize: null,
-       columnSeparatorSize: null
+       columnSeparatorSize: null,
+       isFullGridSupport: GridLayoutUtil.isFullGridSupport()
    };
 };

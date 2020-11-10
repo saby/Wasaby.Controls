@@ -79,15 +79,30 @@
 }
 
 .ws-is-hover {
-   .controls-BaseControl_showActions_visible .controls-TileView__previewTemplate.controls-ListView__item_showActions .controls-itemActionsV,
-   .controls-BaseControl_showActions_delayed .controls-TileView__previewTemplate.controls-ListView__item_showActions:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate.controls-ListView__item_showActions:hover .controls-itemActionsV {
+   .controls-BaseControl_showActions_visible .controls-TileView__previewTemplate .controls-ListView__item_showActions .controls-itemActionsV,
+   .controls-BaseControl_showActions_delayed .controls-TileView__previewTemplate .controls-ListView__item_showActions:hover .controls-itemActionsV,
+   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate .controls-ListView__item_showActions:hover .controls-itemActionsV,
+   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate:hover .controls-TileView__item_unscaleable .controls-itemActionsV {
       opacity: 1;
       visibility: visible;
    }
+   //TODO каскады до выполнения https://online.sbis.ru/opendoc.html?guid=5c209e19-b6b2-47d0-9b8b-c8ab32e133b0 сейчас нельзя обновлять модель, иначе будут жуткие тормоза
+
+   .controls-TileView__previewTemplate:hover.controls-TileView__previewTemplate_actions_showed {
+      &:not(.controls-TileView__previewTemplate_node) .controls-TileView__previewTemplate_title_text,
+      .controls-TileView__previewTemplate_bottomRightTemplate {
+         display: none;
+      }
+      .controls-TileView__previewTemplate_gradient {
+         display: block;
+      }
+   }
 }
 
-.controls-TileView__previewTemplate_footer {
-   position: absolute;
-   bottom: 0;
+.controls-TileView__previewTemplate.controls-TileView__previewTemplate_withoutTitle {
+   .controls-TileView__previewTemplate_title_text,
+   .controls-TileView__previewTemplate_gradient {
+      display: none;
+   }
 }
+// end TODO

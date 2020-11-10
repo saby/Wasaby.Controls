@@ -31,6 +31,8 @@ interface IDataChildContext {
 export default class Browser extends Control {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
+
+    private _isMounted: boolean;
     private _selectedKeysCount: number|null;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
@@ -40,7 +42,7 @@ export default class Browser extends Control {
     private _listMarkedKey: Key = null;
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
-    private _viewMode: string = null;
+    private _viewMode: string = undefined;
     private _searchValue: string = null;
     private _misspellValue: string = null;
     private _root: Key = null;
@@ -72,21 +74,26 @@ export default class Browser extends Control {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
+        this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+
         this._initShadowVisibility(options);
-        this._operationsController = this._createOperationsController(options);
         this._filterController = new FilterController(options);
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
-        this._errorRegister = new RegisterClass({register: 'dataError'});
+        this._viewMode = options.viewMode;
+
+        if (options.root !== undefined) {
+            this._root = options.root;
+        }
 
         if (receivedState && options.source instanceof PrefetchProxy) {
             this._source = options.source.getOriginal();
         } else {
             this._source = options.source;
         }
-        this._sourceController = new SourceController(options);
+        this._sourceController = new SourceController(this._getSourceControllerOptions(options));
         const controllerState = this._sourceController.getState();
         this._dataOptionsContext = this._createContext(controllerState);
 
@@ -122,6 +129,7 @@ export default class Browser extends Control {
     }
 
     protected _afterMount(options): void {
+        this._isMounted = true;
         if (options.useStore) {
             const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
                 this._filterItemsChanged(null, filterSource);
@@ -137,7 +145,7 @@ export default class Browser extends Control {
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         let methodResult;
 
-        this._operationsController.update(newOptions);
+        this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
@@ -187,8 +195,8 @@ export default class Browser extends Control {
             this._groupHistoryId = newOptions.groupHistoryId;
         }
 
-        if (this._searchController) {
-            this._searchController.update(
+        if (this._searchController || newOptions.searchValue) {
+            this._getSearchController().update(
                 this._getSearchControllerOptions(newOptions),
                 {dataOptions: this._dataOptionsContext}
             );
@@ -225,6 +233,13 @@ export default class Browser extends Control {
         this._filterController = null;
     }
 
+    private _getErrorRegister(): RegisterClass {
+        if (!this._errorRegister) {
+            this._errorRegister = new RegisterClass({register: 'dataError'});
+        }
+        return this._errorRegister;
+    }
+
     private _setFilterItems(filterItems): void {
         this._filterController.setFilterItems(filterItems);
         this._updateFilterAndFilterItems();
@@ -255,7 +270,10 @@ export default class Browser extends Control {
         this._items = this._sourceController.setItems(items);
         const controllerState = this._sourceController.getState();
         this._updateContext(controllerState);
-        this._createSearchControllerWithContext(options, this._dataOptionsContext);
+
+        if (options.searchValue) {
+            this._createSearchControllerWithContext(options, this._dataOptionsContext);
+        }
     }
 
     private _createSearchControllerWithContext(options, context): void {
@@ -342,16 +360,16 @@ export default class Browser extends Control {
     }
 
     protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
-        this._errorRegister.start(errbackConfig);
+        this._getErrorRegister().start(errbackConfig);
     }
 
     protected _registerHandler(event, registerType, component, callback, config): void {
-        this._errorRegister.register(event, registerType, component, callback, config);
+        this._getErrorRegister().register(event, registerType, component, callback, config);
         this._getOperationsController().registerHandler(event, registerType, component, callback, config);
     }
 
     protected _unregisterHandler(event, registerType, component, config): void {
-        this._errorRegister.unregister(event, registerType, component, config);
+        this._getErrorRegister().unregister(event, registerType, component, config);
         this._getOperationsController().unregisterHandler(event, registerType, component, config);
     }
 
@@ -458,8 +476,19 @@ export default class Browser extends Control {
         return {...options, ...optionsChangedCallbacks};
     }
 
-    _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
-        return {...options, filter: this._filter, source: this._source};
+    private _getSourceControllerOptions(options: ISourceControllerOptions): ISourceControllerOptions {
+        return {
+            ...options,
+            filter: this._filter,
+            source: this._source,
+            navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+        };
+    }
+
+    private _notifyNavigationParamsChanged(params): void {
+        if (this._isMounted) {
+            this._notify('navigationParamsChanged', [params]);
+        }
     }
 
     _getSearchController(): SearchController {
@@ -472,7 +501,7 @@ export default class Browser extends Control {
     }
 
     _search(event: SyntheticEvent, value: string, force: boolean): void {
-        this._searchController.search(value, force);
+        this._getSearchController().search(value, force);
     }
 
     _dataLoadCallback(data: RecordSet, direction: Direction): void {

@@ -415,7 +415,7 @@ export default class CollectionItem<T> extends mixin<
         }
         this._$animatedForSelection = animated;
         this._nextVersion();
-        this._notifyItemChangeToOwner('animatedForSelection');
+        this._notifyItemChangeToOwner('animated');
     }
 
     /**
@@ -567,9 +567,11 @@ export default class CollectionItem<T> extends mixin<
      * Метод должен уйти в render-модель при её разработке.
      */
     getContentClasses(theme: string, style: string = 'default'): string {
+        const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
         ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
+        ${isAnimatedForSelection ? ' controls-ListView__item_rightSwipeAnimation' : ''}
         controls-ListView__itemContent_${style}_theme-${theme}`;
     }
 
