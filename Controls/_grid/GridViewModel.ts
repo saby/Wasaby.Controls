@@ -1615,7 +1615,7 @@ var
                 columns: this._columns
             });
 
-            current.showEditArrow = _private.resolveEditArrowVisibility, this._options);
+            current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
