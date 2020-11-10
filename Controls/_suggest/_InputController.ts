@@ -263,6 +263,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                   if (this._options.dataLoadCallback) {
                      this._options.dataLoadCallback(recordSet);
                   }
+                  this._loadEnd(recordSet);
                   this._updateSuggestState();
                }
             });
