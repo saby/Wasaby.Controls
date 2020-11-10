@@ -255,11 +255,13 @@ var _private = {
         let selectedKeys = value instanceof Object ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
-        factory(flattenKeys).each((key) => {
-            if (key !== undefined && !config.items.getRecordById(key) && !(key === config.emptyKey && config.emptyText)) {
-                newKeys.push(key);
-            }
-        });
+        if (config.items) {
+            factory(flattenKeys).each((key) => {
+                if (key !== undefined && !config.items.getRecordById(key) && !(key === config.emptyKey && config.emptyText)) {
+                    newKeys.push(key);
+                }
+            });
+        }
         return newKeys;
     },
 
