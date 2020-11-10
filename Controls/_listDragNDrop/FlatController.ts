@@ -1,7 +1,7 @@
 import { TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem, IDragPosition } from 'Controls/display';
+import { CollectionItem, GroupItem, IDragPosition } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
@@ -125,7 +125,7 @@ export default class FlatController {
    calculateDragPosition(targetItem: CollectionItem<Model>, position?: TPosition): IDragPosition<CollectionItem<Model>> {
       let prevIndex = -1;
 
-      if (targetItem === null) {
+      if (targetItem === null || targetItem instanceof GroupItem) {
          return {
             index: this._startIndex,
             position: 'before',
