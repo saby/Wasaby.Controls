@@ -181,8 +181,6 @@ define([
             });
          });
 
-
-
          [{
             position: 'top',
             result: true,
@@ -756,6 +754,64 @@ define([
                   sinon.assert.calledWith(component._headers['header' + i].inst.updateShadowVisibility, test.resp[i]);
                }
             });
+         });
+      });
+
+      describe('_updateTopBottomDelayed', () => {
+         it('should update height cache', () => {
+            const parent =
+            component._headers = {
+               header0: {
+                  mode: 'stackable',
+                  container: {
+                     id: 0,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 20,
+                     resetSticky: () => undefined
+                  }
+               },
+               header1: {
+                  mode: 'stackable',
+                  container: {
+                     id: 1,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 30,
+                     resetSticky: () => undefined
+                  }
+               },
+               header2: {
+                  mode: 'stackable',
+                  container: {
+                     id: 2,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 40,
+                     resetSticky: () => undefined
+                  }
+               }
+            };
+            component._headersStack.top = ['header0', 'header1', 'header2'];
+            component._fixedHeadersStack.top = ['header0', 'header1', 'header2'];
+            return component._updateTopBottomDelayed().then(() => {
+               for (let headerId of ['header0', 'header1']) {
+                  const heightItem = component._elementsHeight.find((item) => {
+                     return item.key === component._headers[headerId].container;
+                  });
+                  assert.strictEqual(heightItem.value, component._headers[headerId].inst.height);
+               }
+            });
+
+            // heightItem = component._elementsHeight.find((item) => {
+            //    return item.key === component._headers.header0.element;
+            // });
+            // assert.isEqual(component)
+            // sinon.assert.calledWith(component._headers['header' + i].inst.updateShadowVisibility, test.resp[i]);
+
          });
       });
    });

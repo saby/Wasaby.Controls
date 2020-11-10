@@ -53,7 +53,7 @@ var _private = {
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/input:IValue
  * @mixes Controls/_interface/ISelectorDialog
- * 
+ *
  * @public
  * @author Герасимов А.М.
  *
@@ -83,7 +83,7 @@ var _private = {
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/input:IValue
- * 
+ *
  * @public
  * @author Kapustin I.A.
  */
@@ -95,6 +95,7 @@ var Lookup = Control.extend({
 
    _beforeMount: function(options) {
       this._caption = _private.getCaption(this, options);
+      this._passed = !!options.selectedKeys?.length;
    },
 
    _beforeUpdate: function(newOptions) {

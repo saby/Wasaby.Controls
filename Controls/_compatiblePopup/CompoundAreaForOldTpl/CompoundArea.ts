@@ -401,6 +401,9 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _beforeUnmount: function() {
+      if(this.__parentFromCfg && this.__parentFromCfg.unregisterChildControl){
+         this.__parentFromCfg.unregisterChildControl(this);
+      }
       this.__parentFromCfg = null;
       this.__openerFromCfg = null;
       this._logicParent = null;
