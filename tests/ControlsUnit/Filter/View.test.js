@@ -398,7 +398,6 @@ define(
             view._open([1, 2, 4], {template: 'templateName'});
 
             assert.strictEqual(popupOptions.template, 'templateName');
-            assert.strictEqual(popupOptions.actionOnScroll, 'close');
             assert.deepStrictEqual(popupOptions.templateOptions.items, [1, 2, 4]);
          });
 
@@ -463,7 +462,7 @@ define(
             let view = getView(defaultConfig),
                isOpened = true, closed,
                filterChanged, itemsChanged;
-            view._stickyOpener: { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
+            view._stickyOpener = { isOpened: () => {return isOpened;}, close: () => {closed = true;} };
             view._notify = (event, data) => {
                if (event === 'filterChanged') {
                   filterChanged = data[0];
@@ -820,7 +819,8 @@ define(
 
             let self = {
                _children: {},
-               _onSelectorTemplateResult: () => {}
+               _onSelectorTemplateResult: () => {},
+               _getStackOpener: () => {}
             };
 
             let resultItems = filter.View._private.getPopupConfig(self, configs, source);
@@ -994,7 +994,7 @@ define(
                   keyProperty: 'id',
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
-               view._onSelectorTemplateResult('event', newItems);
+               view._onSelectorTemplateResult(newItems);
                assert.deepStrictEqual(view._source[1].value, [11, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'item 11', title: 'item 11, new item, new item 2', hasMoreText: ', еще 2'}});
             });
@@ -1049,7 +1049,7 @@ define(
                   rawData: [{id: 3, title: 'Completed'}, {id: 20, title: 'new item'}, {id: 28, title: 'new item 2'}]
                });
                view._idOpenSelector = 'state';
-               view._onSelectorTemplateResult('resultEvent', newItems);
+               view._onSelectorTemplateResult(newItems);
                assert.deepStrictEqual(view._source[1].value, [3, 20, 28]);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {text: 'Completed', title: 'Completed, new item, new item 2', hasMoreText: ', еще 2'}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.', state: [3, 20, 28]});

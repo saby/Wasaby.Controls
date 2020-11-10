@@ -117,8 +117,8 @@ var List = Control.extend({
             selectedItems: new collection.List({items: selectedItems}),
             multiSelect: this._options.multiSelect,
             handlers: {
-                onSelectComplete: function(event, result) {
-                    selectorDialogResult(event, result);
+                onSelectComplete: (event, result) => {
+                    selectorDialogResult(result);
                     selectorOpener.close();
                 }
             }
