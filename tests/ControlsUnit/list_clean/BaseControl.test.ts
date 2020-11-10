@@ -716,6 +716,46 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(baseControlOptions);
             assert.isTrue(loadStarted, 'searchValue is not changed');
         });
+
+        it('portioned search is started after sourceController load without searchValue', async () => {
+            let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            let loadStarted = false;
+            const navigation = {
+                view: 'infinity',
+                source: 'page',
+                sourceConfig: {
+                    pageSize: 10,
+                    page: 0,
+                    hasMore: false
+                }
+            };
+
+            baseControlOptions.navigation = navigation;
+            baseControlOptions.sourceController = new NewSourceController({
+                source: new Memory(),
+                navigation,
+                keyProperty: 'key'
+            });
+            baseControlOptions.sourceController.hasMoreData = () => true;
+            baseControlOptions.sourceController.load = () => {
+                loadStarted = true;
+                return Promise.reject();
+            };
+            baseControlOptions.sourceController.getItems = () => {
+                const rs = new RecordSet();
+                rs.setMetaData({iterative: true});
+                return rs;
+            };
+
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            baseControl.saveOptions(baseControlOptions);
+
+            baseControlOptions = {...baseControlOptions};
+            baseControlOptions.source = new Memory();
+            baseControl._beforeUpdate(baseControlOptions);
+            assert.isTrue(loadStarted);
+        });
     });
 
     describe('_beforeMount', () => {
