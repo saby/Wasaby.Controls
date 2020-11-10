@@ -996,15 +996,17 @@ describe('Controls/suggest', () => {
          suggestComponent._options.suggestState = false;
          suggestComponent._searchValue = 'testValue';
          suggestComponent._searchResult = undefined;
-         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad');
-         suggestComponent._beforeUpdate({
+
+         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad').callsFake(() => Promise.resolve());
+         const newOptions = {
             suggestState: true,
             searchParam: 'testSearchParam',
             minSearchLength: 3,
             source: getMemorySource()
-         });
+         };
+         suggestComponent._beforeUpdate(newOptions);
 
-         assert.isTrue(resolveLoadStub.withArgs('testValue').calledOnce);
+         assert.isTrue(resolveLoadStub.withArgs('testValue', newOptions).calledOnce);
 
          suggestComponent._options.suggestState = true;
          suggestComponent._searchValue = '';
