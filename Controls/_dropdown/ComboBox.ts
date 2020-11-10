@@ -97,6 +97,7 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
    protected _borderStyle: string = '';
+   protected _countItems: number;
    protected _readOnly: boolean;
 
    _beforeMount(options: IComboboxOptions,
@@ -117,6 +118,9 @@ class ComboBox extends BaseDropdown {
    }
 
    protected _beforeUpdate(newOptions: IComboboxOptions): void {
+      if (newOptions.readOnly !== this._options.readOnly) {
+         this._readOnly = this._getReadOnly(newOptions.readOnly);
+      }
       this._controller.update(this._getControllerOptions(newOptions));
       this._borderStyle = this._getBorderStyle(newOptions.borderStyle, newOptions.validationStatus);
    }
@@ -160,11 +164,11 @@ class ComboBox extends BaseDropdown {
    }
 
    _dataLoadCallback(items: RecordSet<Model>): void {
-      let countItems = items.getCount();
+      this._countItems = items.getCount();
       if (this._options.emptyText) {
-         countItems += 1;
+         this._countItems += 1;
       }
-      const readOnly = countItems < 2 || this._options.readOnly;
+      const readOnly = this._getReadOnly(this._options.readOnly);
       if (readOnly !== this._readOnly) {
          this._readOnly = readOnly;
          this._controller.update(this._getControllerOptions(this._options));
@@ -173,6 +177,10 @@ class ComboBox extends BaseDropdown {
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
       }
+   }
+
+   _getReadOnly(readOnly: boolean): boolean {
+      return this._countItems < 2 || readOnly;
    }
 
    _selectedItemsChangedHandler(selectedItems): void {
