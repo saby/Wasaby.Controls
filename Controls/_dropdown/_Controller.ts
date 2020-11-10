@@ -24,7 +24,7 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
 
@@ -35,7 +35,7 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
 
@@ -456,7 +456,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _prepareItem(item, keyProperty, source): Model {
-      if (this._isHistoryMenu()) {
+      if (isHistorySource(source)) {
          // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
          // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
          if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty())) {

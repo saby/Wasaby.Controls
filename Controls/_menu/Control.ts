@@ -180,8 +180,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._selectionController = this._createSelectionController(options);
                     this._selectionController.setSelection(this._selectionController.getSelection());
                 }
-            }, (error) => {
-                return error;
             });
         }
     }
@@ -793,9 +791,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
                 return items;
             },
-            (error: Error): Promise<void | dataSourceError.ViewConfig> => {
-                return Promise.reject(this._processError(error));
-            }
+            (error: Error): Promise<void | dataSourceError.ViewConfig> => this._processError(error)
         );
     }
 

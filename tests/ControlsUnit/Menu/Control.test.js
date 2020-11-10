@@ -91,16 +91,20 @@ define(
                });
             });
 
-            it('query returns error', async() => {
+            it('query returns error', () => {
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
                options.source.query = () => Promise.reject(new Error());
 
-               await menuControl._loadItems(options).catch(() => {
-                  assert.isNotNull(menuControl._errorConfig);
+               return new Promise((resolve) => {
+                  menuControl._loadItems(options).then(() => {
+                     assert.isNotNull(menuControl._errorConfig);
+                     resolve();
+                  });
                });
             });
+
          });
 
          describe('_beforeUpdate', () => {
@@ -114,39 +118,6 @@ define(
                await menuControl._beforeUpdate(newMenuOptions);
                assert.isTrue(menuControl._notifyResizeAfterRender);
                assert.isTrue(isClosed);
-            });
-         });
-
-         describe('_beforeMount', () => {
-            const menuControl = getMenu();
-            const menuOptions = { ...defaultOptions };
-            menuControl._markerController = null;
-
-            it('_loadItems return error', async() => {
-               menuControl._loadItems = () => {
-                  return Promise.reject(new Error());
-               };
-               await menuControl._beforeMount(menuOptions);
-
-               assert.isNull(menuControl._markerController);
-            });
-
-            it('_loadItems return items', async() => {
-               menuControl._listModel = {
-                  setMarkedKey: () => {}
-               };
-               menuControl._loadItems = () => {
-                  return new Promise((resolve) => {
-                     resolve(new collection.RecordSet({
-                        rawData: [
-                           { key: 1, title: 'Test' },
-                        ],
-                        keyProperty: 'key'
-                     }));
-                  });
-               };
-               await menuControl._beforeMount(menuOptions);
-               assert.isNotNull(menuControl._markerController);
             });
          });
 
