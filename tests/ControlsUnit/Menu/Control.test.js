@@ -91,16 +91,15 @@ define(
                });
             });
 
-            it('query returns error', () => {
+            it('query returns error', async() => {
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
                options.source.query = () => Promise.reject(new Error());
 
                return new Promise((resolve) => {
-                  menuControl._loadItems(options).then(() => {
+                  await menuControl._loadItems(options).catch(() => {
                      assert.isNotNull(menuControl._errorConfig);
-                     resolve();
                   });
                });
             });
@@ -121,6 +120,39 @@ define(
             });
          });
 
+         describe('_beforeMount', () => {
+            const menuControl = getMenu();
+            const menuOptions = { ...defaultOptions };
+            menuControl._markerController = null;
+
+            it('_loadItems return error', async() => {
+               menuControl._loadItems = () => {
+                  return Promise.reject(new Error());
+               };
+               await menuControl._beforeMount(menuOptions);
+
+               assert.isNull(menuControl._markerController);
+            });
+
+            it('_loadItems return items', async() => {
+               menuControl._listModel = {
+                  setMarkedKey: () => {}
+               };
+               menuControl._loadItems = () => {
+                  return new Promise((resolve) => {
+                     resolve(new collection.RecordSet({
+                        rawData: [
+                           { key: 1, title: 'Test' },
+                        ],
+                        keyProperty: 'key'
+                     }));
+                  });
+               };
+               await menuControl._beforeMount(menuOptions);
+               assert.isNotNull(menuControl._markerController);
+            });
+         });
+         
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
