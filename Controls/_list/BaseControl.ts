@@ -3460,6 +3460,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
              */
             if (this._pagingVisible) {
+                this._cachedPagingState = false;
                 _private.initPaging(this);
             }
             this._viewRect = container.getBoundingClientRect();
