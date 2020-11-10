@@ -783,7 +783,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         const container: HTMLElement = this._getNormalizedContainer();
         if (this._cssClassName !== container.className) {
             this._cssClassName = container.className;
-            const styles = getComputedStyle(container);
+            const styles = getComputedStyle(container) as CSSStyleDeclaration;
             // Сразу запрашиваем и сохраняем нужные стили. Recalculate Style происходит не в момент вызова
             // getComputedStyle, а при обращении к стилям в из полученного объекта.
             this._cachedStyles = {
@@ -797,8 +797,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    private _getComputedStyle(): CSSStyleDeclaration {
-        return this._cachedStyles;
+    private _getComputedStyle(): CSSStyleDeclaration | object {
+        // В ядре проблема, что до маунта вызывают апдейт контрола. Пока они разбираются, ставлю защиту
+        return this._cachedStyles || {};
     }
 
     private _getNormalizedContainer(): HTMLElement {
