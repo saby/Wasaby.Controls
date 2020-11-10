@@ -1499,12 +1499,10 @@ const _private = {
     },
 
     resetPortionedSearchAndCheckLoadToDirection(self, options): void {
-        if (options.searchValue) {
-            _private.getPortionedSearch(self).reset();
+        _private.getPortionedSearch(self).reset();
 
-            if (options.searchValue && options.sourceController) {
-                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
-            }
+        if (options.sourceController) {
+            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
         }
     },
 
@@ -3836,7 +3834,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged) {
+        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
