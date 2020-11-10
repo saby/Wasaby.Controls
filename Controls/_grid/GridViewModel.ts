@@ -688,7 +688,7 @@ var
                 return `${itemData._staticRowClassses} ${classes.trim()}`;
             };
         },
-        showEditArrow(item, options) {
+        resolveEditArrowVisibility(item, options) {
             let contents = item.getContents();
             if (!options.editArrowVisibilityCallback) {
                 return options.showEditArrow;
@@ -1615,7 +1615,7 @@ var
                 columns: this._columns
             });
 
-            current.showEditArrow = _private.showEditArrow(dispItem, this._options);
+            current.showEditArrow = _private.resolveEditArrowVisibility, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
