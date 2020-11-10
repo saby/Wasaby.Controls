@@ -3,6 +3,7 @@ import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
 import { GridLayoutUtil } from 'Controls/grid';
+import { GridLadderUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as TableTemplate from 'wml!Controls/_gridNew/Render/table/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
@@ -18,6 +19,15 @@ const _private = {
         const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
         let columnsWidths: string[] = [];
         columnsWidths = initialWidths;
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns
+        });
+        if (ladderStickyColumn) {
+            if (ladderStickyColumn.property.length === 2) {
+                columnsWidths.splice(1, 0, '0px');
+            }
+            columnsWidths = ['0px'].concat(columnsWidths);
+        }
         if (hasMultiSelect) {
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
@@ -50,8 +60,10 @@ const GridView = ListView.extend({
     },
 
     _getGridViewClasses(options): string {
-        let classes = `controls-Grid controls-Grid_${options.isFullGridSupport}_theme-${options.theme}`;
-
+        let classes = `controls-Grid controls-Grid_${options.style}_theme-${options.theme}`;
+        if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
+            classes += ' controls-Grid_support-ladder';
+        }
         if (!options.isFullGridSupport) {
             classes += ' controls-Grid_table-layout controls-Grid_table-layout_fixed';
         }
