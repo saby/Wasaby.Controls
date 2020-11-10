@@ -2166,7 +2166,7 @@ const _private = {
             self._options.navigation.viewConfig.totalInfo === 'extended') {
             return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
         }
-        return hasMoreData === true;
+        return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
