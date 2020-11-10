@@ -7408,7 +7408,7 @@ define([
                      getKey: () => 1
                   })
                }),
-               endDrag: () => undefined
+               endDrag: () => undefined,
                isDragging: () => true
             };
 
