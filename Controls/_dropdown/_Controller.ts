@@ -73,7 +73,7 @@ export default class _Controller implements IDropdownController {
                resolve(beforeMountResult);
             })
             .addErrback((error) => {
-               reject(error);
+                reject(error);
             });
       });
    }
@@ -113,8 +113,8 @@ export default class _Controller implements IDropdownController {
          }
       }
       if ((newOptions.source && (newOptions.source !== oldOptions.source || !this._sourceController)) ||
-         !isEqual(newOptions.navigation, oldOptions.navigation) ||
-         !isEqual(newOptions.filter, oldOptions.filter)) {
+          !isEqual(newOptions.navigation, oldOptions.navigation) ||
+          !isEqual(newOptions.filter, oldOptions.filter)) {
          if (this._sourceController && !this._sourceController.isLoading()) {
             this._source = null;
             this._sourceController = null;
@@ -131,7 +131,7 @@ export default class _Controller implements IDropdownController {
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
          this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
-            newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
+             newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
       }
    }
 
@@ -227,24 +227,24 @@ export default class _Controller implements IDropdownController {
       };
 
       return this.loadDependencies().then(
-         () => {
-            const count = this._items.getCount();
-            if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerContentTemplate)) {
-               this._createMenuSource(this._items);
-               this._isOpened = true;
-               return openPopup();
-            } else if (count === 1) {
-               return Promise.resolve([this._items.at(0)]);
-            }
-         },
-         (error) => {
-            // Если не загрузился модуль меню, то просто выводим сообщение о ошибке загрузки
-            if (!requirejs.defined('Controls/menu')) {
-               dataSourceError.process({error});
-            } else if (this._menuSource) {
-               return openPopup();
-            }
-         }
+          () => {
+             const count = this._items.getCount();
+             if (count > 1 || count === 1 && (this._options.emptyText || this._options.footerContentTemplate)) {
+                this._createMenuSource(this._items);
+                this._isOpened = true;
+                return openPopup();
+             } else if (count === 1) {
+                return Promise.resolve([this._items.at(0)]);
+             }
+          },
+          (error) => {
+             // Если не загрузился модуль меню, то просто выводим сообщение о ошибке загрузки
+             if (!requirejs.defined('Controls/menu')) {
+                dataSourceError.process({error});
+             } else if (this._menuSource) {
+                return openPopup();
+             }
+          }
       );
    }
 
@@ -341,21 +341,21 @@ export default class _Controller implements IDropdownController {
 
    private _loadItems(options) {
       return this._getSourceController(options).then(
-         (sourceController) => {
-            this._filter = this._prepareFilterForQuery(options);
+          (sourceController) => {
+             this._filter = this._prepareFilterForQuery(options);
 
-            return sourceController.load(this._filter).addCallback((items) => {
-               const unloadedKeys = this._getUnloadedSelectedKeys(options.selectedKeys, items);
-               if (options.needLoadSelectedItems && unloadedKeys) {
-                  return this._loadSelectedKeys(options, unloadedKeys, items);
-               } else {
+             return sourceController.load(this._filter).addCallback((items) => {
+                const unloadedKeys = this._getUnloadedSelectedKeys(options.selectedKeys, items);
+                if (options.needLoadSelectedItems && unloadedKeys) {
+                   return this._loadSelectedKeys(options, unloadedKeys, items);
+                } else {
                   return this._resolveLoadedItems(options, items);
-               }
-            }).addErrback((error) => {
-               this._loadError(error);
-               return error;
-            });
-         });
+                }
+             }).addErrback((error) => {
+                this._loadError(error);
+                return error;
+             });
+          });
    }
 
    private _resolveLoadedItems(options: IDropdownControllerOptions, items: RecordSet<Model>): RecordSet<Model> {
@@ -364,10 +364,10 @@ export default class _Controller implements IDropdownController {
       }
       this._setItems(items);
       this._updateSelectedItems(
-         options.emptyText,
-         options.selectedKeys,
-         options.keyProperty,
-         options.selectedItemsChangedCallback);
+          options.emptyText,
+          options.selectedKeys,
+          options.keyProperty,
+          options.selectedItemsChangedCallback);
       return items;
    }
 
@@ -489,8 +489,8 @@ export default class _Controller implements IDropdownController {
       };
 
       if (isTemplateChanged('headTemplate') ||
-         isTemplateChanged('itemTemplate') ||
-         isTemplateChanged('footerContentTemplate')) {
+          isTemplateChanged('itemTemplate') ||
+          isTemplateChanged('footerContentTemplate')) {
          return true;
       }
    }
@@ -521,8 +521,8 @@ export default class _Controller implements IDropdownController {
 
    private _getItemsTemplates(options) {
       let
-         templates = {},
-         itemTemplateProperty = options.itemTemplateProperty;
+          templates = {},
+          itemTemplateProperty = options.itemTemplateProperty;
 
       if (itemTemplateProperty) {
          this._items.each(function(item) {
@@ -572,8 +572,8 @@ export default class _Controller implements IDropdownController {
          // FIXME this._container[0] delete after
          // https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
          width: this._options.width !== undefined ?
-            (this.target[0] || this.target).offsetWidth :
-            undefined,
+             (this.target[0] || this.target).offsetWidth :
+             undefined,
          hasMoreButton: this._sourceController.hasMoreData('down')
       };
       const config = {
