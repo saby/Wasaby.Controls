@@ -98,40 +98,6 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
 }
 
 /**
- * Clean unused instances up from time to time
- * @param items
- * @param treeItemToDecorator
- * @param treeItemToBreadcrumbs
- */
-function cleanUnusedInstances<S, T extends TreeItem<S>>(
-    items: T[],
-    treeItemToDecorator: Map<T, TreeItemDecorator<S>>,
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>
-): void {
-    if (Date.now() - lastTimeForget > FORGET_TIMEOUT) {
-        lastTimeForget = Date.now();
-
-        // Forget unused leaf decorators
-        const decoratorsToDelete = [];
-        treeItemToDecorator.forEach((value, key) => {
-            if (items.indexOf(key) === -1) {
-                decoratorsToDelete.push(key);
-            }
-        });
-        decoratorsToDelete.forEach((key) => treeItemToDecorator.delete(key));
-
-        // Forget unused breadcrumbs
-        const breadcrumbsToDelete = [];
-        treeItemToBreadcrumbs.forEach((value, key) => {
-            if (items.indexOf(key) === -1) {
-                breadcrumbsToDelete.push(key);
-            }
-        });
-        breadcrumbsToDelete.forEach((key) => treeItemToBreadcrumbs.delete(key));
-    }
-}
-
-/**
  * Strategy-decorator which supposed to join expanded nodes into one element.
  * @class Controls/_display/ItemsStrategy/Search
  * @mixes Types/_entity/DestroyableMixin
@@ -400,7 +366,27 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         });
 
         // Clean unused instances up from time to time
-        cleanUnusedInstances(items, treeItemToDecorator, treeItemToBreadcrumbs);
+        if (Date.now() - lastTimeForget > FORGET_TIMEOUT) {
+            lastTimeForget = Date.now();
+
+            // Forget unused leaf decorators
+            const decoratorsToDelete = [];
+            treeItemToDecorator.forEach((value, key) => {
+                if (items.indexOf(key) === -1) {
+                    decoratorsToDelete.push(key);
+                }
+            });
+            decoratorsToDelete.forEach((key) => treeItemToDecorator.delete(key));
+
+            // Forget unused breadcrumbs
+            const breadcrumbsToDelete = [];
+            treeItemToBreadcrumbs.forEach((value, key) => {
+                if (items.indexOf(key) === -1) {
+                    breadcrumbsToDelete.push(key);
+                }
+            });
+            breadcrumbsToDelete.forEach((key) => treeItemToBreadcrumbs.delete(key));
+        }
 
         // Expand breadcrumbs into flat array
         const resultItems: Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> = [];
