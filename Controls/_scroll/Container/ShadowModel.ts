@@ -106,10 +106,11 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     updateVisibilityByInnerComponents(visibility: SHADOW_VISIBILITY): boolean {
-        const isChanged: boolean = this._visibilityByInnerComponents !== visibility;
-        this._visibilityByInnerComponents = visibility;
-        if (isChanged) {
-            this.updateScrollState(this._scrollState);
+        let isChanged: boolean = false;
+
+        if (this._visibilityByInnerComponents !== visibility) {
+            this._visibilityByInnerComponents = visibility;
+            isChanged = this.updateScrollState(this._scrollState);
         }
         return isChanged;
     }
@@ -165,6 +166,9 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     private _getShadowEnable(): boolean {
+        if (this._visibilityByInnerComponents !== SHADOW_VISIBILITY.AUTO) {
+            return SHADOW_ENABLE_MAP[this._visibilityByInnerComponents];
+        }
         return (this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
             (this._isShadowEnable() && this._canScrollByScrollState())) && !this._isStickyFixed;
     }
