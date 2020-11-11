@@ -58,9 +58,9 @@ var _private = {
             return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          },
 
-         getRightPadding: function(rightPadding, itemData, hasHierarchy, hasApplyButton) {
+         getRightPadding: function(options, rightPadding, itemData, hasHierarchy, hasApplyButton) {
             let result = rightPadding || 'default';
-            if (hasApplyButton && itemData.emptyText) {
+            if (hasApplyButton && (itemData.emptyText || !options.emptyText && !itemData.index)) {
                result = 'multiSelect';
             } else if (itemData.hasPinned) {
                result = 'history';
@@ -88,7 +88,8 @@ var _private = {
             } else if (!options.multiSelect) {
                classes += ' controls-DropdownList__hierarchyItem-leftPadding_' + (paddings.left || 'default') + '_theme-' + options.theme;
             }
-            classes += ' controls-DropdownList__item-rightPadding_' + _private.getRightPadding(paddings.right, itemData, hasHierarchy, options.hasApplyButton);
+            classes += ' controls-DropdownList__item-rightPadding_' +
+                _private.getRightPadding(options, paddings.right, itemData, hasHierarchy, options.hasApplyButton);
             return classes;
          },
 

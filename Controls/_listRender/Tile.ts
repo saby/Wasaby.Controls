@@ -187,7 +187,8 @@ export default class TileRender extends BaseRender {
         if (
             !this._destroyed &&
             this._options.listModel && !this._options.listModel.destroyed &&
-            this._options.listModel.getHoveredItem() !== item
+            this._options.listModel.getHoveredItem() !== item &&
+            !this._options.listModel.getActiveItem()
         ) {
             this._options.listModel.setHoveredItem(item);
         }

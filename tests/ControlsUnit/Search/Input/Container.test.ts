@@ -77,4 +77,27 @@ describe('Controls/_search/Input/Container', () => {
          assert.isFalse(called);
       });
    });
+
+   describe('_beforeUnmount', () => {
+      let cont;
+      beforeEach(() => {
+         cont = new InputContainer({});
+      });
+
+      it('should clear the timer on searchResolverController', () => {
+         cont._searchResolverController = {
+            clearTimer: sandbox.stub()
+         };
+
+         cont._beforeUnmount();
+
+         sinon.assert.calledOnce(cont._searchResolverController.clearTimer);
+      });
+
+      it('should not throw when the _searchResolverController doesn\'t exist', () => {
+         assert.doesNotThrow(() => {
+            cont._beforeUnmount();
+         });
+      });
+   });
 });

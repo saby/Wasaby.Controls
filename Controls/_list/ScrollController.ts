@@ -421,14 +421,7 @@ export default class ScrollController {
             }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
-                if (collection.getViewIterator) {
-                    collection.getViewIterator().setIndices(start, stop);
-                } else {
-                    // после удаления старой модели
-                    // tslint:disable-next-line:ban-ts-ignore
-                    // @ts-ignore
-                    collection.setIndexes(start, stop);
-                }
+                collection.setIndexes(start, stop);
             }
         }
     }

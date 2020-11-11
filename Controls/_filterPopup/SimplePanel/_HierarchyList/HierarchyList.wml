@@ -8,6 +8,8 @@
    <ws:for data="index, item in _folders">
       <Controls._filterPopup.SimplePanel._List
               keyProperty="{{_options.keyProperty}}"
+              opener="{{_options.opener}}"
+              selectorDialogResult="{{_options.selectorDialogResult}}"
               displayProperty="{{_options.displayProperty}}"
               nodeProperty="{{_options.nodeProperty}}"
               itemTemplate="{{_options.itemTemplate}}"

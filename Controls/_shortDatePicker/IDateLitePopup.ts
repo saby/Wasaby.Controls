@@ -35,17 +35,27 @@ export interface IDateLitePopupOptions extends IControlOptions {
  * @author Красильников А.С.
  * @public
  */
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#year
+ * @cfg {Date} Отображаемый год.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
+ * @cfg {String} Текст, который отображается, если период не выбран.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#popupClassName
+ * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @default undefined
+ */
    export default {
       getDefaultOptions: function() {
          return {
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#year
-             * @cfg {Date} Отображаемый год.
-             * @default undefined
-             */
-
-            year: undefined,
 
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#chooseMonths
@@ -76,21 +86,6 @@ export interface IDateLitePopupOptions extends IControlOptions {
              * @default true
              */
             chooseYears: true,
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
-             * @cfg {String} Текст, который отображается, если период не выбран.
-             * @default undefined
-             */
-
-            emptyCaption: undefined,
-
-             /**
-              * @name Controls/shortDatePicker/IDateLitePopup#popupClassName
-              * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
-              * @default undefined
-              */
-            popupClassName: undefined,
 
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#monthTemplate
