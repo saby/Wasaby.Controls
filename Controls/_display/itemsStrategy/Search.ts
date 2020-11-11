@@ -81,7 +81,7 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
             });
             treeItemToBreadcrumbs.set(last, breadCrumbs);
         }
-    } else if (last === root && treeItemToBreadcrumbs.size > 0) {
+    } else if (last === root && breadcrumbsToData.size > 0) {
         breadCrumbs = treeItemToBreadcrumbs.get(last);
         if (!breadCrumbs) {
             breadCrumbs = new SearchSeparator({
