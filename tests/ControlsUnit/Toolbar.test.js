@@ -172,7 +172,6 @@ define(
                   _container: 'target'
                };
                toolbar._options = config;
-               toolbar._openMenu = () => {};
                toolbar._showMenu({
                   stopPropagation: () => {
                   }
