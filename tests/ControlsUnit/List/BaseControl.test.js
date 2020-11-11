@@ -6004,6 +6004,29 @@ define([
             });
             assert.isTrue(updateItemActionsCalled);
          });
+
+         // при смене набора items из sourceController необходимо вызывать updateItemActions
+         it('should call updateItemActions when items wee updated from sourceController', () => {
+            const sourceCfg = {
+               ...cfg,
+               source: instance._options.source,
+            };
+            const sourceController = new dataSource.NewSourceController(sourceCfg);
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               adapter: 'adapter.sbis'
+            });
+            sourceController.setItems(items);
+            instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+
+            const newCfg = { ...sourceCfg, sourceController };
+            instance._beforeUpdate(newCfg);
+
+            assert.isTrue(updateItemActionsCalled);
+         });
       });
 
       it('_beforeMount create controllers when passed receivedState', async function() {
@@ -8125,6 +8148,7 @@ define([
                const item = viewModel.getItemBySourceKey(1);
                viewModel.getCollection().remove(item.getContents());
                lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rm', [], undefined, [item], 0);
+               lists.BaseControl._private.onAfterCollectionChanged(baseControl);
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [1]]).called);
             });
          });

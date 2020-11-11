@@ -54,6 +54,11 @@ export default class GroupItem<T> extends mixin<
     ): TemplateFunction|string {
         return userGroupTemplate || 'Controls/listRender:groupTemplate';
     }
+
+    setExpanded(expanded: boolean, silent?: boolean): void {
+        super.setExpanded(expanded, silent);
+        this._nextVersion();
+    }
 }
 
 Object.assign(GroupItem.prototype, {

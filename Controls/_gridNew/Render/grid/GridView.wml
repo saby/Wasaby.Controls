@@ -1,4 +1,4 @@
-<div class="{{ _getGridViewClasses() }}" style="{{ _getGridViewStyles() }}">
+<div class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
     <!-- Header -->
     <ws:if data="{{ _listModel.getHeader() }}">
         <ws:partial template="wml!Controls/_gridNew/Render/grid/Header"

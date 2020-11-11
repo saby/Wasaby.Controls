@@ -260,6 +260,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                   if (this._options.dataLoadCallback) {
                      this._options.dataLoadCallback(recordSet);
                   }
+                  this._loadEnd(recordSet);
                   this._updateSuggestState();
                }
             });
@@ -627,8 +628,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }
       }
 
-      if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
+      if (needSearchOnValueChanged || valueCleared || filterChanged) {
          this._setFilter(newOptions.filter, newOptions);
+      }
+      if (filterChanged && this._showContent) {
+         this._resolveLoad();
       }
 
       if (emptyTemplateChanged) {

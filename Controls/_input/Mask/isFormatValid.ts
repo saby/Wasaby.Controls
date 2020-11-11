@@ -3,16 +3,18 @@ import {IFormatMaskChars, getDefaultMaskOptions, FormatBuilder, Formatter} from 
 const DEFAULT_OPTIONS = getDefaultMaskOptions();
 
 /**
- * Проверяет соответствие значения формату маски.
- * @function
- * @name Controls/_input/Mask/isFormatValid#isFormatValid
- * @returns {Boolean} соответствует ли значение формату маски.
- *
+ * Модуль возвращает функцию isFormatValid, которая проверяет соответствие значения формату маски.
+ * 
+ * @class Controls/_input/Mask/isFormatValid
+ * @author Красильников А.С.
+ * @remark
  * @example
+ * <pre class="brush: html">
  * isFormatValid('1234', 'dd.dd');  // true
  * isFormatValid('12.34', 'dd.dd'); // true
  * isFormatValid('1aa4', 'dd.dd');  // false
  * isFormatValid('1a.a4', 'dd.dd'); // false
+ * </pre>
  */
 function isFormatValid(
     value: string, mask: string,

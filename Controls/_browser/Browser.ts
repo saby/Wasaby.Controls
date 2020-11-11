@@ -42,7 +42,7 @@ export default class Browser extends Control {
     private _listMarkedKey: Key = null;
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
-    private _viewMode: string = null;
+    private _viewMode: string = undefined;
     private _searchValue: string = null;
     private _misspellValue: string = null;
     private _root: Key = null;
@@ -82,6 +82,11 @@ export default class Browser extends Control {
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+        this._viewMode = options.viewMode;
+
+        if (options.root !== undefined) {
+            this._root = options.root;
+        }
 
         if (receivedState && options.source instanceof PrefetchProxy) {
             this._source = options.source.getOriginal();

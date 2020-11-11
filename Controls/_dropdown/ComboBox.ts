@@ -14,6 +14,8 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/fastOpenUtils';
 import {generateStates} from 'Controls/input';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions, IBorderStyleOptions,
     IValidationStatusOptions {
@@ -95,12 +97,15 @@ class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
    protected _borderStyle: string = '';
+   protected _countItems: number;
+   protected _readOnly: boolean;
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
+      this._readOnly = options.readOnly;
       this._setText = this._setText.bind(this);
       this._targetPoint = {
          vertical: 'bottom'
@@ -113,6 +118,9 @@ class ComboBox extends BaseDropdown {
    }
 
    protected _beforeUpdate(newOptions: IComboboxOptions): void {
+      if (newOptions.readOnly !== this._options.readOnly) {
+         this._readOnly = this._getReadOnly(newOptions.readOnly);
+      }
       this._controller.update(this._getControllerOptions(newOptions));
       this._borderStyle = this._getBorderStyle(newOptions.borderStyle, newOptions.validationStatus);
    }
@@ -122,7 +130,7 @@ class ComboBox extends BaseDropdown {
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
             markerVisibility: 'hidden',
-            dataLoadCallback: options.dataLoadCallback,
+            dataLoadCallback: this._dataLoadCallback.bind(this),
             popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
                            + ' controls-ComboBox-popup_theme-' + options.theme,
             typeShadow: 'suggestionsContainer',
@@ -136,7 +144,8 @@ class ComboBox extends BaseDropdown {
                left: 'menu-xs'
             },
             targetPoint: this._targetPoint,
-            openerControl: this
+            openerControl: this,
+            readOnly: this._readOnly
          }
       };
    }
@@ -152,6 +161,26 @@ class ComboBox extends BaseDropdown {
             onResult: this._onResult.bind(this)
          }
       };
+   }
+
+   _dataLoadCallback(items: RecordSet<Model>): void {
+      this._countItems = items.getCount();
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
+      const readOnly = this._getReadOnly(this._options.readOnly);
+      if (readOnly !== this._readOnly) {
+         this._readOnly = readOnly;
+         this._controller.update(this._getControllerOptions(this._options));
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
+   }
+
+   _getReadOnly(readOnly: boolean): boolean {
+      return this._countItems < 2 || readOnly;
    }
 
    _selectedItemsChangedHandler(selectedItems): void {

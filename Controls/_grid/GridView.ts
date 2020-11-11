@@ -30,7 +30,7 @@ import * as ColumnTpl from 'wml!Controls/_grid/layout/common/ColumnContent';
 import * as GroupTemplate from 'wml!Controls/_grid/GroupTemplate';
 
 import {Logger} from 'UI/Utils';
-import { stickyLadderCellsCount } from 'Controls/_grid/utils/GridLadderUtil';
+import { GridLadderUtil } from 'Controls/display';
 import {SyntheticEvent} from "Vdom/Vdom";
 
 var
@@ -53,13 +53,13 @@ var
         },
 
         getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-            if (!columns) {
-                Logger.warn('You must set "columns" option to make grid work correctly!', self);
+            if (!columns || columns.length === 0) {
+                Logger.warn('You must set "columns" option as not empty array to make grid work correctly!', self);
                 return '';
             }
             let initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
             let columnsWidths: string[] = [];
-            const stickyCellsCount = stickyLadderCellsCount(columns, self._options.stickyColumn, self._options.listModel.getDragItemData());
+            const stickyCellsCount = GridLadderUtil.stickyLadderCellsCount(columns, self._options.stickyColumn, self._options.listModel.getDragItemData());
             if (stickyCellsCount === 1) {
                 columnsWidths = ['0px'].concat(initialWidths);
             } else if (stickyCellsCount === 2) {

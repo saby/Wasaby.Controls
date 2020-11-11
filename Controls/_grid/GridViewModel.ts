@@ -31,9 +31,8 @@ import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from './resources/DragScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { IDragPosition } from 'Controls/display';
+import { IDragPosition, GridLadderUtil } from 'Controls/display';
 import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
@@ -368,7 +367,7 @@ var
             if (checkBoxCell) {
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
-                classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+                classLists.padding.top = `controls-OldGrid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
                 classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
@@ -540,7 +539,7 @@ var
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
             const startIndex = self.getStartIndex();
             const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
-            const newLadder: any = prepareLadder({
+            const newLadder: any = GridLadderUtil.prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex,
                 stopIndex,
@@ -585,7 +584,7 @@ var
          * @param self
          */
         hasStickyColumn(self): boolean {
-            return !!getStickyColumn({
+            return !!GridLadderUtil.getStickyColumn({
                 stickyColumn: self._options.stickyColumn,
                 columns: self._columns
             });
@@ -754,12 +753,16 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            this._onAfterCollectionChangeFn = function() {
+                this._notify('onAfterCollectionChange');
+            }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
             this._options.rowSeparatorSize = separatorSizes.row;
             this._options.columnSeparatorSize = separatorSizes.column;
@@ -771,7 +774,7 @@ var
             this._setHeader(this._options.header);
         },
         isSupportLadder(ladderProperties: []): boolean {
-            return isSupportLadder(ladderProperties);
+            return GridLadderUtil.isSupportLadder(ladderProperties);
         },
 
         setTheme(theme: string): void {
@@ -956,7 +959,7 @@ var
          * Проверка необходимости добавлять ячейку для лесенки
          */
         stickyLadderCellsCount(): number {
-            return stickyLadderCellsCount(
+            return GridLadderUtil.stickyLadderCellsCount(
                 this._columns,
                 this._options.stickyColumn,
                 this.getDragItemData());
@@ -1257,7 +1260,7 @@ var
             return this.getColspanStylesFor(
                 'customResults',
                 {
-                    columnIndex: 0,
+                    columnIndex: +this._hasMultiSelectColumn(),
                     columnsLength: this._columns.length
                 });
         },
@@ -1596,7 +1599,7 @@ var
                 current._gridViewModelCached = true;
             }
 
-            stickyColumn = getStickyColumn({
+            stickyColumn = GridLadderUtil.getStickyColumn({
                 stickyColumn: this._options.stickyColumn,
                 columns: this._columns
             });
@@ -2369,6 +2372,7 @@ var
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         },

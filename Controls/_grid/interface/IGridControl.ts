@@ -593,20 +593,6 @@
  */
 
 /**
- * @event Происходит при изменении набора развернутых узлов.
- * @name Controls/_grid/interface/IGridControl#expandedItemsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
- */
-
-/**
- * @event Происходит при изменении набора свернутых узлов.
- * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
- */
-
-/**
  * @event Происходит при клике на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagClick
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.

@@ -725,6 +725,11 @@ define(
                dropdownController._popupOptions = { };
                dropdownController._options.keyProperty = 'key';
                dropdownController._source = new history.Source({});
+               dropdownController._items =  new collection.RecordSet({
+                  rawData: [{
+                     id: '1', HistoryId: 'test'
+                  }]
+               });
                let resultPopupConfig = dropdownController._getPopupOptions();
 
                assert.equal(resultPopupConfig.templateOptions.keyProperty, 'copyOriginalId');
@@ -928,6 +933,21 @@ define(
                   dropdownController._onResult('applyClick', items);
                   assert.deepEqual(selectedItems, items);
                });
+            });
+
+            it('isHistoryMenu', () => {
+               dropdownController._source = historySource;
+               dropdownController._items = new collection.RecordSet({
+                  rawData: [{
+                     id: '1', title: 'title'
+                  }]
+               });
+               let result = dropdownController._isHistoryMenu();
+               assert.isFalse(result);
+
+               dropdownController._items.at(0).set('HistoryId', 'test');
+               result = dropdownController._isHistoryMenu();
+               assert.isTrue(result);
             });
          });
 
