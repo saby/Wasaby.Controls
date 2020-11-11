@@ -9,7 +9,7 @@ import * as template from 'wml!Controls-demo/list_new/ItemActions/ContextMenuCon
 interface ISrcData {
    id: number;
    title: string;
-   menuFooterText;
+   menuFooterText: string;
 }
 
 const itemActions: IItemAction[] = [
