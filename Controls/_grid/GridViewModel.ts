@@ -1270,7 +1270,7 @@ var
             return this.getColspanStylesFor(
                 'customResults',
                 {
-                    columnIndex: 0,
+                    columnIndex: +this._hasMultiSelectColumn(),
                     columnsLength: this._columns.length
                 });
         },
