@@ -274,6 +274,7 @@ describe('Controls/_listRender/Tile', () => {
             const cfg = {
                 ...defaultCfg,
                 listModel: {
+                    getActiveItem: () => false,
                     hoveredItem: null,
                     getHoveredItem() { return this.hoveredItem; },
                     setHoveredItem(item) { this.hoveredItem = item; }
@@ -291,6 +292,7 @@ describe('Controls/_listRender/Tile', () => {
             const cfg = {
                 ...defaultCfg,
                 listModel: {
+                    getActiveItem: () => false,
                     hoveredItem: null,
                     getHoveredItem() { return this.hoveredItem; },
                     setHoveredItem(item) { this.hoveredItem = item; }
@@ -310,6 +312,30 @@ describe('Controls/_listRender/Tile', () => {
 
             assert.isFalse(calledModelSetHoveredItem, 'should not call setHoveredItem for the same item again');
         });
+    });
+
+    it('does not set hovered item if has active item', () => {
+        const cfg = {
+            ...defaultCfg,
+            listModel: {
+                getActiveItem: () => true,
+                hoveredItem: null,
+                getHoveredItem() { return this.hoveredItem; },
+                setHoveredItem(item) { this.hoveredItem = item; }
+            }
+        };
+        const tile = new Tile(cfg);
+        tile.saveOptions(cfg);
+
+        const item = {};
+
+        let calledModelSetHoveredItem = false;
+        cfg.listModel.setHoveredItem = () => {
+            calledModelSetHoveredItem = true;
+        };
+        tile._setHoveredItem(item);
+
+        assert.isFalse(calledModelSetHoveredItem, 'should not call setHoveredItem for the same item again');
     });
 
     describe('_setHoveredItemPosition()', () => {
