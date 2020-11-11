@@ -998,6 +998,22 @@ describe('Controls/suggest', () => {
 
          assert.isTrue(resolveLoadStub.withArgs('testValue').calledOnce);
 
+         suggestComponent._options.suggestState = true;
+         suggestComponent._searchValue = '';
+         suggestComponent._searchResult = undefined;
+         suggestComponent._options.filter = {param: 'old_test'};
+         suggestComponent._showContent = true;
+         resolveLoadStub.reset();
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            source: getMemorySource(),
+            filter: {param: 'new_test'}
+         });
+
+         assert.isTrue(resolveLoadStub.calledOnce);
+
          sandbox.restore();
       });
 
