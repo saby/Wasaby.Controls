@@ -785,33 +785,26 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _loadItems(options: IMenuControlOptions): Deferred<RecordSet> {
         const filter: QueryWhere = Clone(options.filter) || {};
-        let result;
         filter[options.parentProperty] = options.root;
 
-        if (options.sourceController) {
-            result = Promise.resolve(options.sourceController.getItems());
-        } else {
-            result = this._getSourceController(options).load(filter).then(
-                (items: RecordSet): RecordSet => {
-                    if (options.dataLoadCallback) {
-                        options.dataLoadCallback(items);
-                    }
-                    this._moreButtonVisible = options.selectorTemplate &&
-                        this._getSourceController(options).hasMoreData('down');
-                    this._expandButtonVisible = this._isExpandButtonVisible(
-                        items,
-                        options);
-                    this._createViewModel(items, options);
-
-                    return items;
-                },
-                (error: Error): Promise<void | dataSourceError.ViewConfig> => {
-                    return Promise.reject(this._processError(error));
+        return this._getSourceController(options).load(filter).then(
+            (items: RecordSet): RecordSet => {
+                if (options.dataLoadCallback) {
+                    options.dataLoadCallback(items);
                 }
-            );
-    }
+                this._moreButtonVisible = options.selectorTemplate &&
+                    this._getSourceController(options).hasMoreData('down');
+                this._expandButtonVisible = this._isExpandButtonVisible(
+                    items,
+                    options);
+                this._createViewModel(items, options);
 
-        return result;
+                return items;
+            },
+            (error: Error): Promise<void | dataSourceError.ViewConfig> => {
+                return Promise.reject(this._processError(error));
+            }
+        );
     }
 
     private _isExpandButtonVisible(items: RecordSet,
