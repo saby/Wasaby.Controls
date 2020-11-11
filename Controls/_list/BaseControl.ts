@@ -4575,7 +4575,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-            if (this._listViewModel.getCount() > 1) {
+            if (this._listViewModel.getCount() > 1 && !isAdd) {
                 this.setMarkedKey(item.contents.getKey());
             }
         }
@@ -4624,8 +4624,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
+
+        if (this._listViewModel.getCount() > 1) {
+            if (this._markedKeyAfterEditing) {
+                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
+                this.setMarkedKey(this._markedKeyAfterEditing);
+                this._markedKeyAfterEditing = null;
+            } else if (isAdd && willSave) {
+                this.setMarkedKey(item.contents.getKey());
+            } else if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        }
+
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
@@ -5005,7 +5019,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
 
         if (canBeMarked && !this._onLastMouseUpWasDrag) {
-            this.setMarkedKey(key);
+            // маркер устанавливается после завершения редактирования
+            if (this._editInPlaceController?.isEditing()) {
+                // TODO нужно перенести установку маркера на клик, т.к. там выполняется проверка для редактирования
+                this._markedKeyAfterEditing = key;
+            } else {
+                this.setMarkedKey(key);
+            }
         }
     },
 
