@@ -49,6 +49,22 @@ export default class ListCut extends Control {
             maxCountValue: 6
          }
       };
+
+      this._source2 = new InitialMemory({
+         keyProperty: 'id',
+         data: getSourceData()
+      });
+      this._expandedNavigation = {
+         source: 'page',
+         view: 'maxCount',
+         sourceConfig: {
+            pageSize: 2,
+            page: 0
+         },
+         viewConfig: {
+            maxCountValue: 2
+         }
+      };
    }
 
    static _styles: string[] = ['Controls-demo/Spoiler/ListCut/ListCut'];
