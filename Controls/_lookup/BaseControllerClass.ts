@@ -35,8 +35,9 @@ export default class LookupBaseControllerClass {
     }
 
     update(newOptions: ILookupBaseControllerOptions): Promise<RecordSet>|boolean {
-        const keysChanged = newOptions.selectedKeys !== this._options.selectedKeys &&
+        const keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) ||
                             !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+
         const sourceIsChanged = newOptions.source !== this._options.source;
         const isKeyPropertyChanged = newOptions.keyProperty !== this._options.keyProperty;
         let updateResult;
@@ -63,7 +64,9 @@ export default class LookupBaseControllerClass {
             updateResult = true;
         } else if (sourceIsChanged || keysChanged) {
             if (this._selectedKeys.length) {
-                updateResult = this.loadItems();
+                if (this._needLoadItems()) {
+                    updateResult = this.loadItems();
+                }
             } else if (keysChanged) {
                 this._clearItems();
                 updateResult = true;
@@ -226,6 +229,13 @@ export default class LookupBaseControllerClass {
             });
         }
         return this._historyServiceLoad;
+    }
+
+    private _needLoadItems(): boolean {
+        const items = this._getItems();
+        return this.getSelectedKeys().some((key) => {
+            return items.getIndexByValue(this._options.keyProperty, key) === -1;
+        });
     }
 
     private static checkLoadedItems(
