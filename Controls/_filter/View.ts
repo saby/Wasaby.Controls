@@ -847,7 +847,7 @@ var Filter = Control.extend({
                 onResult: this._resultHandler.bind(this)
             }
         };
-        this._getStickyOpener().open(Merge(popupOptions, panelPopupOptions), this);
+        this._getStickyOpener().open(Merge(popupOptions, panelPopupOptions));
     },
 
     _handleScroll(): void {
