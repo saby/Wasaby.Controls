@@ -6,8 +6,8 @@
 .ws-is-mobile-chrome-ios,
 .ws-is-mobile-safari {
   .controls-Scroll-ContainerBase {
-    // Нативный скроллбар на айпаде перекрывается элементами с position: sticky. perspective создаст новый контекст
-    // наложения, что пофиксит ошибку.
+    // Наивный скроллбар находится ниже чем элементы с position: sticky и из-за этого перекрывается.
+    // Свойство perspective создаст новый контекст наложения, что позволить скроллабру быть выше sticky элементов
     perspective: 1000;
   }
 }
