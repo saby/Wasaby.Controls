@@ -615,7 +615,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
-            if (!this._searchResult) {
+            if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
                   this._resolveLoad(this._searchValue, newOptions).then(() => {
                      this._suggestOpened = newOptions.suggestState;
