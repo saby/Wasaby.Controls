@@ -464,7 +464,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _prepareItem(item, keyProperty, source): Model {
-      if (isHistorySource(source)) {
+      if (this._isHistoryMenu()) {
          // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
          // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
          if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty())) {
@@ -545,6 +545,10 @@ export default class _Controller implements IDropdownController {
       return Object.keys(templates);
    }
 
+   private _isHistoryMenu(): boolean {
+      return isHistorySource(this._source) && this._items && this._items.at(0).has('HistoryId');
+   }
+
    private _getPopupOptions(popupOptions?): object {
       let baseConfig = {...this._options};
       const ignoreOptions = [
@@ -567,7 +571,7 @@ export default class _Controller implements IDropdownController {
          closeButtonVisibility: false,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),
-         keyProperty: isHistorySource(this._source) ? 'copyOriginalId' : baseConfig.keyProperty,
+         keyProperty: this._isHistoryMenu() ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
          footerContentTemplate: this._options.footerContentTemplate,
          items: this._items,

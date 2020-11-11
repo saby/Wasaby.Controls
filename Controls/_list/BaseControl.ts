@@ -1515,12 +1515,10 @@ const _private = {
     },
 
     resetPortionedSearchAndCheckLoadToDirection(self, options): void {
-        if (options.searchValue) {
-            _private.getPortionedSearch(self).reset();
+        _private.getPortionedSearch(self).reset();
 
-            if (options.searchValue && options.sourceController) {
-                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
-            }
+        if (options.sourceController) {
+            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
         }
     },
 
@@ -3481,6 +3479,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
              */
             if (this._pagingVisible) {
+                this._cachedPagingState = false;
                 _private.initPaging(this);
             }
             this._viewRect = container.getBoundingClientRect();
@@ -3621,6 +3620,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        let isItemsResetFromSourceController = false;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -3723,7 +3723,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
+                const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
@@ -3731,6 +3733,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const controller = _private.createSelectionController(this, newOptions);
                     controller.setSelection({ selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys });
                 }
+
+                // TODO удалить когда полностью откажемся от старой модели
+                //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
+                this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
         }
 
@@ -3844,7 +3850,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged) {
+        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -3900,17 +3906,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
          * Переинициализация ранее проинициализированных опций записи нужна при:
          * 1. Изменились опции записи
          * 3. Изменился коллбек видимости опции
-         * 4. Модель была пересоздана
+         * 4. Записи в модели были пересозданы из sourceController
          * 5. обновилась опция readOnly (относится к TreeControl)
          * 6. обновилась опция itemActionsPosition
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            isItemsResetFromSourceController ||
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
+            _private.updateInitializedItemActions(this, newOptions);
         }
 
         if (
@@ -4853,7 +4860,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
-            autoAddByApplyButton: !!editingConfig.autoAddByApplyButton,
+            autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };
     },

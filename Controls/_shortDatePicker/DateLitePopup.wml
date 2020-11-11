@@ -54,7 +54,7 @@
                  stubTemplate="{{_options.stubTemplate}}"
                  _displayedRanges="{{_displayedRanges}}"
                  _position="{{_position}}"
-                 monthTemplate="{{monthTemplate}}"
+                 monthTemplate="{{_options.monthTemplate}}"
                  _yearHovered="{{_yearHovered}}"
                  formatDate="{{_formatDate}}"
                  _isFullPicker="{{_isFullPicker}}"

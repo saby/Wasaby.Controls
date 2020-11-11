@@ -38,7 +38,10 @@
                         on:mousedown="_openPanel('all_frequent')"/>
          </ws:if>
          <ws:for data="index, item in _source">
-            <ws:if data="{{_configs[item.name].items && _configs[item.name].items.getCount() && _displayText[item.name].text !== undefined}}">
+            <ws:if data="{{_configs[item.name].items &&
+                           _configs[item.name].items.getCount() &&
+                           _displayText[item.name].text !== undefined ||
+                           _displayText[item.name].text}}">
                <ws:partial template="itemTemplate"
                            text="{{_displayText[item.name].text}}"
                            title="{{_displayText[item.name].title}}"
@@ -82,14 +85,5 @@
                      title="{{_options.emptyText}}"
                      on:mousedown="openDetailPanel()"/>
       </ws:else>
-   </ws:if>
-   <Controls.popup:Sticky
-           name="StickyOpener"
-           className="controls-FilterView-popup"
-           closeOnOutsideClick="{{true}}"
-           on:result="_resultHandler()">
-   </Controls.popup:Sticky>
-   <ws:if data="{{_hasSelectorTemplate}}">
-      <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
    </ws:if>
 </div>

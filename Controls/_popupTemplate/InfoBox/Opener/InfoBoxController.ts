@@ -99,7 +99,7 @@ class InfoBoxController extends StickyController.constructor {
         const maxWidth = container.style.maxWidth;
         container.style.maxWidth = '';
         container.style.maxHeight = '';
-        this.prepareConfig(item);
+        this.prepareConfig(item, container);
         container.style.maxWidth = maxWidth;
 
         return super.elementCreated.apply(this, arguments);
@@ -157,7 +157,7 @@ class InfoBoxController extends StickyController.constructor {
         return baseConfig;
     }
 
-    prepareConfig(item: IPopupItem, sizes?: IPopupSizes = null): IPopupItem {
+    prepareConfig(item: IPopupItem, container?: HTMLElement): IPopupItem {
         cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
         return super.prepareConfig.apply(this, arguments);
     }

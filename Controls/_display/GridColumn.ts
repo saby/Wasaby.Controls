@@ -9,7 +9,7 @@ import {
 } from 'Types/entity';
 import GridCollectionItem from './GridCollectionItem';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn } from '../_grid/interface/IColumn';
+import { IColumn } from 'Controls/grid';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 
@@ -18,6 +18,7 @@ const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 export interface IOptions<T> {
     owner: GridCollectionItem<T>;
     column: IColumn;
+    hiddenForLadder?: boolean;
 }
 
 export default class GridColumn<T> extends mixin<
@@ -32,57 +33,31 @@ export default class GridColumn<T> extends mixin<
     VersionableMixin
 ) implements IInstantiable, IVersionable {
     readonly '[Types/_entity/IInstantiable]': boolean;
-    getInstanceId: () => string;
-
     protected _$owner: GridCollectionItem<T>;
     protected _$column: IColumn;
+    protected _$hiddenForLadder: boolean;
+
+    getInstanceId: () => string;
 
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
     }
 
+    setHiddenForLadder(value: boolean) {
+        this._$hiddenForLadder = value;
+    }
+
     getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
         let wrapperClasses = '';
-        const isEditing = this._$owner.isEditing();
-        const isDragged = this._$owner.isDragged();
-        const preparedStyle = style === 'masterClassic' ? 'default' : style;
-        const topPadding = this._$owner.getTopPadding();
-        const bottomPadding = this._$owner.getBottomPadding();
-        const isMultiSelectColumn = this.isMultiSelectColumn();
-        const eipBackgroundStyle = this._$owner.getEipBackgroundStyle();
         const hasColumnScroll = false;
 
-        if (topPadding === 'null' && bottomPadding === 'null') {
-            wrapperClasses += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
-        } else if (!isMultiSelectColumn) {
-            wrapperClasses += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
-        }
-
-        wrapperClasses += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle} controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
-
-        if (hasColumnScroll) {
-        } else if (!isMultiSelectColumn) {
-            wrapperClasses += ' controls-Grid__cell_fit';
-        }
-
+        wrapperClasses += this._getWrapperBaseClasses(theme, style);
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
 
-        if (isMultiSelectColumn) {
-            wrapperClasses += ' js-controls-ListView__notEditable' +
-                    ' js-controls-ColumnScroll__notDraggable' +
-                    ' controls-GridView__checkbox_theme-default' +
-                    ' controls-GridView__checkbox_position-default_theme-default' +
-                    ` controls-Grid__row-cell-background-hover-default_theme-${theme}` +
-                    ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}_theme-${theme}`;
-        }
-
-        if (isEditing) {
-            wrapperClasses += ` controls-ListView__item_editing_${eipBackgroundStyle}_theme-${theme}`;
-        }
-
-        if (isDragged) {
-            wrapperClasses += ` controls-ListView__item_dragging_theme-${theme}`;
+        if (hasColumnScroll) {
+        } else {
+            wrapperClasses += ' controls-Grid__cell_fit';
         }
 
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
@@ -161,17 +136,21 @@ export default class GridColumn<T> extends mixin<
         return wrapperClasses;
     }
 
-    getContentClassesMultiSelectCell(theme: string): string {
-        let contentClasses = '';
-        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
-            contentClasses += ' controls-ListView__checkbox-onhover';
-        }
-        if (this._$owner.isEditing()) {
-            const eipBackgroundStyle = this._$owner.getEipBacgroundStyle();
-            contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}
-             controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
-        }
-        return contentClasses;
+    // Only for partial grid support
+    getRelativeCellWrapperClasses(theme: string): string {
+        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
+
+        // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
+        // Подробнее искать по #grid_relativeCell_td.
+        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.getMultiSelectVisibility() !== 'hidden' ? 2 : 1);
+
+        return 'controls-Grid__table__relative-cell-wrapper ' +
+               `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
+               (shouldFixAlignment ? 'controls-Grid__table__relative-cell-wrapper_singleCell' : '');
+    }
+
+    getWrapperStyles(): string {
+        return '';
     }
 
     getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
@@ -194,11 +173,16 @@ export default class GridColumn<T> extends mixin<
 
         // todo {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
 
+        if (this._$hiddenForLadder) {
+            contentClasses += ' controls-Grid__row-cell__content_hiddenForLadder';
+            contentClasses += ` controls-Grid__row-cell__content_hiddenForLadder_theme-${theme}`;
+        }
+
         if (this._$owner.isEditing()) {
             const eipBackgroundStyle = this._$owner.getEipBacgroundStyle();
             contentClasses += ` controls-Grid__row-cell-background-editing_theme-${theme}
              controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
-        } else {
+        } else if (templateHighlightOnHover !== false) {
             contentClasses += ` controls-Grid__row-cell-background-hover-default_theme-${theme}`;
         }
         if (this._$owner.isActive() && templateHighlightOnHover !== false) {
@@ -207,20 +191,16 @@ export default class GridColumn<T> extends mixin<
         return contentClasses;
     }
 
-    // region compatibility
 
-    getOriginalColumn(): IColumn {
+    getContentStyles(): string {
+        return '';
+    }
+
+    getColumnConfig(): IColumn {
         return this._$column;
     }
 
-    // end region compatibility
-
-    getCellStyles(): string {
-        // There's a lot
-        return undefined;
-    }
-
-    getTemplate(): TemplateFunction|string {
+    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
         return this._$column.template || DEFAULT_CELL_TEMPLATE;
     }
 
@@ -237,7 +217,7 @@ export default class GridColumn<T> extends mixin<
     }
 
     getColumnIndex(): number {
-        return this._$owner.getColumnIndex(this);
+        return this._$owner.getColumnIndex(this._$column);
     }
 
     isFirstColumn(): boolean {
@@ -248,15 +228,12 @@ export default class GridColumn<T> extends mixin<
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
     }
 
-    isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
-    }
-
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
             return marker !== false && this._$owner.isMarked() && this.isLastColumn();
         } else {
-            return marker !== false && this._$owner.isMarked() && this.isFirstColumn();
+            return marker !== false && this._$owner.isMarked() &&
+                   this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
         }
     }
 
@@ -283,6 +260,34 @@ export default class GridColumn<T> extends mixin<
 
     nextVersion(): void {
         this._nextVersion();
+    }
+
+    protected _getWrapperBaseClasses(theme: string, style: string): string {
+        let classes = '';
+
+        const topPadding = this._$owner.getTopPadding();
+        const bottomPadding = this._$owner.getBottomPadding();
+        const isEditing = this._$owner.isEditing();
+        const isDragged = this._$owner.isDragged();
+        const preparedStyle = style === 'masterClassic' ? 'default' : style;
+
+        classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
+        classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
+
+        if (isEditing) {
+            classes += ` controls-ListView__item_editing_theme-${theme}`;
+        }
+
+        if (isDragged) {
+            classes += ` controls-ListView__item_dragging_theme-${theme}`;
+        }
+
+        if (topPadding === 'null' && bottomPadding === 'null') {
+            classes += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
+        } else {
+            classes += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
+        }
+        return classes;
     }
 
     protected _getWrapperSeparatorClasses(theme: string): string {
@@ -327,16 +332,15 @@ export default class GridColumn<T> extends mixin<
 
         // left <-> right
         const cellPadding = this._$column.cellPadding;
-        if (!this.isFirstColumn()) {
-            if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getColumnIndex() > 1) {
-                classes += ' controls-Grid__cell_spacingLeft';
-                if (cellPadding?.left) {
-                    classes += `_${cellPadding.left}`;
-                }
-                classes += `_theme-${theme}`;
-            }
-        } else {
+
+        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
+        } else if (!this.isFirstColumn()) {
+            classes += ' controls-Grid__cell_spacingLeft';
+            if (cellPadding?.left) {
+                classes += `_${cellPadding.left}`;
+            }
+            classes += `_theme-${theme}`;
         }
 
         if (!this.isLastColumn()) {
@@ -362,5 +366,6 @@ Object.assign(GridColumn.prototype, {
     _moduleName: 'Controls/display:GridColumn',
     _instancePrefix: 'grid-column-',
     _$owner: null,
-    _$column: null
+    _$column: null,
+    _$hiddenForLadder: null
 });

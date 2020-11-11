@@ -3,7 +3,7 @@ define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
-    * Интерфейс для списков с возможностью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования по месту}.
+    * Интерфейс для списков с возможностью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
     *
     * @interface Controls/interface/IEditableList
     * @public
@@ -169,11 +169,11 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед началом {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} по месту.
+    * @event Происходит перед началом {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
     * @name Controls/interface/IEditableList#beforeBeginEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {ItemEditOptions} options Параметры редактирования.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -309,11 +309,11 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит после начала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} по месту.
+    * @event Происходит после начала {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
     * @name Controls/interface/IEditableList#afterBeginEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -372,7 +372,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед завершением {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления} элемента.
+    * @event Происходит перед завершением {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} элемента.
     * @name Controls/interface/IEditableList#beforeEndEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
@@ -382,7 +382,7 @@ define('Controls/interface/IEditableList', [
     * 2. пользователь выполнил действие, которое приводит к сохранению:
     *     * закрыл диалог, на котором находится список с редактируемым элементом;
     *     * начал редактирование другого элемента по клику.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -449,11 +449,11 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит после завершения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования} иди {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавления}.
+    * @event Происходит после завершения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} иди {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления}.
     * @name Controls/interface/IEditableList#afterEndEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -513,7 +513,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @cfg {EditingConfig} Конфигурация {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования по месту}.
+    * @cfg {EditingConfig} Конфигурация {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
     * @demo Controls-demo/list_new/EditInPlace/AutoAdd/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
@@ -539,7 +539,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирование по месту}.
+    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
     * @function Controls/interface/IEditableList#beginEdit
     * @param {ItemEditOptions} options Параметры редактирования.
     * @returns {Core/Deferred}
@@ -595,7 +595,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/add/ добавление по месту}.
+    * Начинает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавление по месту}.
     * @function Controls/interface/IEditableList#beginAdd
     * @param {ItemEditOptions} options Параметры добавления.
     * @returns {Core/Deferred}
@@ -654,7 +654,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Завершает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирование по месту} и сохраняет изменения.
+    * Завершает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту} и сохраняет изменения.
     * @function Controls/interface/IEditableList#commitEdit
     * @returns {Core/Deferred}
     * @remark
@@ -700,7 +700,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Завершает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирование} и отменяет изменения.
+    * Завершает {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование} и отменяет изменения.
     * @function Controls/interface/IEditableList#cancelEdit
     * @returns {Core/Deferred}
     * @remark

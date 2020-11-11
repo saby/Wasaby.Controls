@@ -3,9 +3,12 @@ import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
 import { GridLayoutUtil } from 'Controls/grid';
-import * as Template from 'wml!Controls/_gridNew/Render/grid/GridView';
-import * as Item from 'wml!Controls/_gridNew/Render/grid/Item';
-import { prepareEmptyEditingColumns } from "../_grid/utils/GridEmptyTemplateUtil";
+import { GridLadderUtil } from 'Controls/display';
+import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
+import * as TableTemplate from 'wml!Controls/_gridNew/Render/table/GridView';
+import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
+import * as TableItem from 'wml!Controls/_gridNew/Render/table/Item';
+import { prepareEmptyEditingColumns } from '../_grid/utils/GridEmptyTemplateUtil';
 
 const _private = {
     getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
@@ -16,6 +19,15 @@ const _private = {
         const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
         let columnsWidths: string[] = [];
         columnsWidths = initialWidths;
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns
+        });
+        if (ladderStickyColumn) {
+            if (ladderStickyColumn.property.length === 2) {
+                columnsWidths.splice(1, 0, '0px');
+            }
+            columnsWidths = ['0px'].concat(columnsWidths);
+        }
         if (hasMultiSelect) {
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
@@ -24,9 +36,14 @@ const _private = {
 };
 
 const GridView = ListView.extend({
-    _template: Template,
+    _template: null,
     _hoveredCellIndex: null,
     _hoveredCellItem: null,
+
+    constructor(cfg) {
+        this._template = cfg.isFullGridSupport ? GridTemplate : TableTemplate;
+        GridView.superclass.constructor.apply(this, arguments);
+    },
 
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
@@ -35,16 +52,31 @@ const GridView = ListView.extend({
     },
 
     _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate();
+        return options.itemTemplate || this._resolveBaseItemTemplate(options);
     },
 
-    _resolveBaseItemTemplate(): TemplateFunction {
-        return Item;
+    _resolveBaseItemTemplate(options): TemplateFunction {
+        return options.isFullGridSupport ? GridItem : TableItem;
     },
 
-    _getGridViewClasses(): string {
-        const classes = `controls-Grid controls-Grid_${this._options.style}_theme-${this._options.theme}`;
+    _getGridViewClasses(options): string {
+        let classes = `controls-Grid controls-Grid_${options.style}_theme-${options.theme}`;
+        if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
+            classes += ' controls-Grid_support-ladder';
+        }
+        if (!options.isFullGridSupport) {
+            classes += ' controls-Grid_table-layout controls-Grid_table-layout_fixed';
+        }
         return classes;
+    },
+
+    _getGridViewStyles(options): string {
+        let styles = '';
+        if (options.isFullGridSupport) {
+            const hasMultiSelect = options.multiSelectVisibility !== 'hidden';
+            styles += _private.getGridTemplateColumns(this, options.columns, hasMultiSelect);
+        }
+        return styles;
     },
 
     _onItemMouseMove(event, collectionItem) {
@@ -100,15 +132,6 @@ const GridView = ListView.extend({
         }
     },
 
-    _getGridViewStyles(): string {
-        let styles = '';
-        if (GridLayoutUtil.isFullGridSupport()) {
-            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
-            styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
-        }
-        return styles;
-    },
-
     // todo Переписать, сделать аналогично Footer/Header/Results
     _prepareColumnsForEmptyEditingTemplate(columns, topSpacing, bottomSpacing) {
         return prepareEmptyEditingColumns({
@@ -117,7 +140,7 @@ const GridView = ListView.extend({
                 top: topSpacing,
                 bottom: bottomSpacing
             },
-            isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
+            isFullGridSupport: this._options.isFullGridSupport,
             hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
             emptyTemplateColumns: columns,
             itemPadding: this._options.itemPadding || {},
