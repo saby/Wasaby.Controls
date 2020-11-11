@@ -17,7 +17,7 @@ interface IPrepareEmptyEditingColumnsParams extends IPrepareColumnsParams<IPrepa
         left: string;
         right: string
     };
-    eipBackgroundStyle?: string;
+    editingBackgroundStyle?: string;
 }
 
 export function prepareEmptyEditingColumns(params: IPrepareEmptyEditingColumnsParams): IPreparedEmptyTemplateColumn[] {
@@ -43,7 +43,7 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
     const isLast = params.emptyColumnIndex === params.emptyColumnsLength - 1;
     const cellPadding = params.gridColumns[params.emptyColumn.startColumn].cellPadding;
     const getCellPadding = (side) => cellPadding && cellPadding[side] ? `_${cellPadding[side].toLowerCase()}` : '';
-    const eipBackgroundStyle = params.eipBackgroundStyle || 'default';
+    const editingBackgroundStyle = params.editingBackgroundStyle || 'default';
     const itemPadding = {
         top: (params.itemPadding.top || 'default').toLowerCase(),
         bottom: (params.itemPadding.bottom || 'default').toLowerCase(),
@@ -53,13 +53,13 @@ function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
     const theme = params.theme;
 
     if (params.emptyColumnIndex === 0 && params.hasMultiSelect) {
-        return `controls-GridView__emptyTemplate__checkBoxCell controls-Grid__row-cell-background-editing_theme-${theme}
-        controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme}`;
+        return `controls-GridView__emptyTemplate__checkBoxCell controls-Grid__row-cell-editing_theme-${theme}
+        controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
     }
 
     let classes = 'controls-GridView__emptyTemplate__cell ';
-    classes += `controls-Grid__row-cell-background-editing_theme-${theme}
-    controls-Grid__row-cell-background-editing_${eipBackgroundStyle}_theme-${theme} `;
+    classes += `controls-Grid__row-cell-background-editing_theme-${theme} `;
+    classes += `controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
 
     if (params.isFullGridSupport) {
         classes += `controls-Grid__row-cell__content_baseline_default_theme-${theme} `;

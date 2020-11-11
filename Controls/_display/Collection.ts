@@ -157,7 +157,7 @@ export interface ISwipeConfig {
  * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
  * @property {AddPosition} [addPosition] Позиция редактирования по месту.
  * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
- * @property {String} [backgroundStyle=default] Префикс стиля для настройки фона при редактировании по месту.
+ * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемой записи.
  */
 /*
  * @typedef {Object} IEditingConfig
@@ -2313,10 +2313,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$hoverBackgroundStyle;
     }
 
-    getEipBackgroundStyle(): string {
+    getEditingBackgroundStyle(): string {
         const editingConfig = this.getEditingConfig();
         if (editingConfig) {
-            return editingConfig.backgroundStyle || 'default'
+            return editingConfig.backgroundStyle || 'default';
         }
         return 'default';
     }

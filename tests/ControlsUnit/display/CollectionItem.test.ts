@@ -464,7 +464,7 @@ describe('Controls/_display/CollectionItem', () => {
         const owner = {
             notifyItemChange(): void {},
             getHoverBackgroundStyle: function() {},
-            getEipBackgroundStyle: () => 'default'
+            getEditingBackgroundStyle: () => 'default'
         };
 
         const defaultClasses = [
@@ -474,7 +474,7 @@ describe('Controls/_display/CollectionItem', () => {
             'js-controls-ItemActions__swipeMeasurementContainer'
         ];
         const editingClasses = [
-            'controls-ListView__item_editing'
+            'controls-ListView__item_background-editing'
         ];
 
         const item = new CollectionItem({ owner });

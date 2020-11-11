@@ -533,7 +533,7 @@ export default class CollectionItem<T> extends mixin<
                       backgroundColorStyle?: string,
                       style: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
-        const eipBackgroundStyle = this.getOwner().getEipBackgroundStyle();
+        const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
         return `controls-ListView__itemV ${this._getCursorClasses(cursor)}
             controls-ListView__item_${style}
             controls-ListView__item_${style}_theme-${theme}
@@ -541,7 +541,7 @@ export default class CollectionItem<T> extends mixin<
             js-controls-ItemActions__swipeMeasurementContainer
             controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
             ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
-            ${this.isEditing() ? ` controls-ListView__item_editing_${eipBackgroundStyle}_theme-${theme}` : ''}
+            ${this.isEditing() ? (` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`) : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
             ${backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : ''}
             ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;

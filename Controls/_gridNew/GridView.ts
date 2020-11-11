@@ -145,7 +145,7 @@ const GridView = ListView.extend({
             emptyTemplateColumns: columns,
             itemPadding: this._options.itemPadding || {},
             theme: this._options.theme,
-            eipBackgroundStyle: (this._options.editingConfig ? this._options.editingConfig.backgroundStyle : 'default')
+            editingBackgroundStyle: (this._options.editingConfig ? this._options.editingConfig.backgroundStyle : 'default')
         });
     }
 });
