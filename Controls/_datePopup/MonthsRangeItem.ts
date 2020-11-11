@@ -9,6 +9,13 @@ import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Contr
 import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 
+var _private = {},
+    SELECTION_VEIW_TYPES = {
+        days: 'days',
+        months: 'months'
+    };
+
+const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
 /**
  * Item for the period selection component of multiple months.
  *
@@ -18,15 +25,6 @@ import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
  * @author Красильников А.С.
  * @private
  */
-
-var _private = {},
-    SELECTION_VEIW_TYPES = {
-        days: 'days',
-        months: 'months'
-    };
-
-const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
-
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
     _monthViewModel: modelViewModel,
