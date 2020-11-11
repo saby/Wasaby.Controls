@@ -62,8 +62,8 @@ export default class Browser extends Control {
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
 
-    private _topShadowVisibility: SHADOW_VISIBILITY;
-    private _bottomShadowVisibility: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY  = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options,
                            context,
