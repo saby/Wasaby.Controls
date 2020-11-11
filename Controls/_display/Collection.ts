@@ -2450,6 +2450,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._viewIterator = viewIterator;
     }
 
+    setIndexes(start: number, stop: number): void {
+        this.getViewIterator().setIndices(start, stop);
+    }
+
     getViewIterator(): IViewIterator {
         return this._viewIterator;
     }
