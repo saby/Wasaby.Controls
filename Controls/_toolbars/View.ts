@@ -363,6 +363,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._sticky = new StickyOpener();
         }
         this._sticky.open(config);
+        this._notifyMenuOpened();
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
@@ -466,7 +467,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._openMenu(menuConfig);
         }
 
-        this._notifyMenuOpened();
         this._notify('itemClick', [item, event.nativeEvent]);
         event.stopPropagation();
     }
@@ -504,7 +504,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 this._setMenuItems();
                 this._isLoadMenuItems = true;
             }
-            this._notifyMenuOpened();
             this._openMenu(this._getMenuConfig());
         }
     }

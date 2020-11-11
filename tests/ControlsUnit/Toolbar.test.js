@@ -319,8 +319,6 @@ define(
                            icon: 'icon icon-size',
                            iconStyle: 'iconStyle'
                         },
-                        source: 'items',
-                        root: 'itemKeyProperty',
                         showHeader: true,
                         closeButtonVisibility: false
                      }
@@ -328,7 +326,6 @@ define(
                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
 
                testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
-               expectedConfig.templateOptions.source = '_options.source';
                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
 
                testItem.set('showHeader', false);
