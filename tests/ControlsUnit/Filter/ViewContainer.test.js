@@ -24,14 +24,26 @@ define(
 
          describe('_beforeMount', () => {
             it('_beforeMount with preloadedSources', () => {
+               const filterSource = [{
+                  name: 'testName',
+                  value: 'testValue'
+               }];
                const preloadedSources = [{
                   historyItems: {},
-                  filterButtonSource: [{
-                     name: 'testName'
-                  }]
+                  filterButtonSource: filterSource
                }];
                const filterViewContainer = new filter.ViewContainer();
 
+               filterViewContainer._beforeMount({
+                  useStore: true,
+                  preloadedSources
+               });
+               assert.ok(filterViewContainer._source);
+
+               preloadedSources.historyItems = {
+                  items: filterSource
+               };
+               filterViewContainer._source = null;
                filterViewContainer._beforeMount({
                   useStore: true,
                   preloadedSources
