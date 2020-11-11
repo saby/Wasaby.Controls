@@ -21,6 +21,24 @@ define(
             filterLayout._filterChanged({stopPropagation: () => {propagationStopped = true}}, {...resultFilter});
             assert.isTrue(propagationStopped);
          });
+
+         describe('_beforeMount', () => {
+            it('_beforeMount with preloadedSources', () => {
+               const preloadedSources = [{
+                  historyItems: {},
+                  filterButtonSource: [{
+                     name: 'testName'
+                  }]
+               }];
+               const filterViewContainer = new filter.ViewContainer();
+
+               filterViewContainer._beforeMount({
+                  useStore: true,
+                  preloadedSources
+               });
+               assert.ok(filterViewContainer._source);
+            });
+         });
       });
    }
 );

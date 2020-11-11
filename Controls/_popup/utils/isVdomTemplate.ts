@@ -1,6 +1,6 @@
 import {Control} from 'UI/Base';
 /**
- * Модуль возвращает функцию, которая проверяет, является ли класс наследником 'UI/Base:Control'.
+ * Модуль возвращает функцию, которая проверяет, является ли класс наследником {@link UI/Base:Control}.
  * @remark
  * Аргументы функции:
  *
@@ -8,15 +8,15 @@ import {Control} from 'UI/Base';
  *
  * Критерий проверки:
  *
- * Класс унаследован от Core/Control.
+ * Класс унаследован от UI/Base:Control.
  *
  * Возвращает:
  *
- * * true - класс унаследован от Core/Control.
- * * false - класс не унаследован от Core/Control.
+ * * true - класс унаследован от UI/Base:Control.
+ * * false - класс не унаследован от UI/Base:Control.
  *
  * @example
- * <pre>
+ * <pre class="brush: js">
  * require(['Controls/buttons:Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'], function(VDOMButton, WS3Button, isVDOMTemplate) {
  *   // true
  *   isVDOMTemplate(VDOMButton);

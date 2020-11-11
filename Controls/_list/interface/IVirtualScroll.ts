@@ -1,21 +1,4 @@
 export type IDirection = 'up' | 'down';
-export interface IVirtualScrollConfig {
-    pageSize: number;
-    segmentSize: number;
-    itemHeightProperty: string;
-    viewportHeight: number;
-    mode: 'hide'|'remove';
-}
-
-/**
- * @typedef {object} IVirtualScrollConfig
- * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
- * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
- * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
- * @property {number} [segmentSize] Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
- * @property {string} [itemHeightProperty=undefined] Поле в элементе, которое содержит его высоту для оптимистичного рендеринга.
- */
-
 /**
  * Интерфейс для поддержки виртуального скроллирования в списках.
  *
@@ -31,6 +14,13 @@ export interface IVirtualScrollConfig {
  * @public
  * @author Авраменко А.С.
  */
+export interface IVirtualScrollConfig {
+    pageSize: number;
+    segmentSize: number;
+    itemHeightProperty: string;
+    viewportHeight: number;
+    mode: 'hide'|'remove';
+}
 
 /**
  * @typedef {String} IVirtualScrollMode
@@ -38,6 +28,15 @@ export interface IVirtualScrollConfig {
  * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
  */
 export type IVirtualScrollMode = 'remove' | 'hide';
+
+/**
+ * @typedef {object} IVirtualScrollConfig
+ * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
+ * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
+ * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
+ * @property {number} [segmentSize] Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
+ * @property {string} [itemHeightProperty=undefined] Поле в элементе, которое содержит его высоту для оптимистичного рендеринга.
+ */
 
 /**
  * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig

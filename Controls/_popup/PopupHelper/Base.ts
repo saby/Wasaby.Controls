@@ -4,13 +4,13 @@ import * as randomId from 'Core/helpers/Number/randomId';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 
 interface IOpenerStaticMethods {
-    openPopup: (popupOptions: IBasePopupOptions) => Promise<string>;
+    openPopup: (popupOptions: IBasePopupOptions, popupController?: string) => Promise<string>;
     closePopup: (popupId: string) => void;
 }
 /**
  * Базовый хелпер для открытия всплывающих окон
  * @class Controls/_popup/PopupHelper/Base
- * 
+ *
  * @author Красильников А.С.
  * @private
  */
@@ -19,7 +19,7 @@ export default class Base {
     _popupId: string;
     _opener: IOpenerStaticMethods;
 
-    open(popupOptions: IBasePopupOptions): void {
+    open(popupOptions: IBasePopupOptions, popupController?: string): void {
         const config: IBasePopupOptions = {...popupOptions};
         config.isHelper = true;
 
@@ -42,7 +42,7 @@ export default class Base {
             config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
         }
 
-        this._opener.openPopup(config);
+        this._opener.openPopup(config, popupController);
     }
 
     close(): void {

@@ -57,6 +57,36 @@ describe('Controls/browser:Browser', () => {
 
     describe('_beforeMount', () => {
 
+        describe('init states on beforeMount', () => {
+
+            it('root', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                assert.ok(browser._root === null);
+
+                options = {...options};
+                options.root = 'testRoot';
+                await browser._beforeMount(options);
+                assert.ok(browser._root === 'testRoot');
+            });
+
+            it('viewMode', async() => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                assert.ok(browser._viewMode === undefined);
+
+                options = {...options};
+                options.viewMode = 'table';
+                await browser._beforeMount(options);
+                assert.ok(browser._viewMode === 'table');
+            });
+
+        });
+
         describe('searchController', () => {
 
             describe('searchValue on _beforeMount', () => {
