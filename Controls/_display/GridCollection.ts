@@ -116,6 +116,11 @@ export default class GridCollection<
         return result;
     }
 
+    setIndexes(start: number, stop: number): void {
+        super.setIndexes(start, stop);
+        this._initializeLadder(this._$ladderProperties, this._$columns);
+    }
+
     protected _initializeLadder(ladderProperties: string[], columns: TColumns): void {
         if (GridLadderUtil.isSupportLadder(ladderProperties)) {
             this._$ladder = GridLadderUtil.prepareLadder({
