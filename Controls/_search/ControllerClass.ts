@@ -249,7 +249,7 @@ export default class SearchControllerClass {
 
     private _observeStore(): void {
         this._storeCallbackId = Store.onPropertyChanged('searchValue', (searchValue) => {
-            this.search(searchValue, true);
+            this.search(searchValue);
         });
     }
 
