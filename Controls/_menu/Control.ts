@@ -169,7 +169,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         this._stack = new StackOpener();
 
-        if (options.source) {
+        if (options.sourceController) {
+            return this._createViewModel(options.sourceController.getItems(), options);
+        } else if (options.source) {
             return this._loadItems(options).then(() => {
                 if (options.markerVisibility !== MarkerVisibility.Hidden) {
                     this._markerController = this._getMarkerController(options);
@@ -190,19 +192,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        const searchValueChanged = newOptions.searchValue !== this._options.searchValue;
         let result;
 
-        if (sourceChanged) {
-            this._sourceController = null;
-        }
-
-        if (rootChanged || sourceChanged || filterChanged) {
+        if (newOptions.sourceController && newOptions.searchParam &&
+            newOptions.searchValue && searchValueChanged) {
+            this._closeSubMenu();
+            this._createViewModel(newOptions.sourceController.getItems(), newOptions);
+        } else if (rootChanged || sourceChanged || filterChanged) {
+            if (sourceChanged) {
+                this._sourceController = null;
+            }
             this._closeSubMenu();
             result = this._loadItems(newOptions).then((res) => {
                 this._notifyResizeAfterRender = true;
                 return res;
             });
         }
+
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this._updateSelectionController(newOptions);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
@@ -778,33 +785,26 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _loadItems(options: IMenuControlOptions): Deferred<RecordSet> {
         const filter: QueryWhere = Clone(options.filter) || {};
-        let result;
         filter[options.parentProperty] = options.root;
 
-        if (options.sourceController) {
-            result = Promise.resolve(options.sourceController.getItems());
-        } else {
-            result = this._getSourceController(options).load(filter).then(
-                (items: RecordSet): RecordSet => {
-                    if (options.dataLoadCallback) {
-                        options.dataLoadCallback(items);
-                    }
-                    this._moreButtonVisible = options.selectorTemplate &&
-                        this._getSourceController(options).hasMoreData('down');
-                    this._expandButtonVisible = this._isExpandButtonVisible(
-                        items,
-                        options);
-                    this._createViewModel(items, options);
-
-                    return items;
-                },
-                (error: Error): Promise<void | dataSourceError.ViewConfig> => {
-                    return Promise.reject(this._processError(error));
+        return this._getSourceController(options).load(filter).then(
+            (items: RecordSet): RecordSet => {
+                if (options.dataLoadCallback) {
+                    options.dataLoadCallback(items);
                 }
-            );
-    }
+                this._moreButtonVisible = options.selectorTemplate &&
+                    this._getSourceController(options).hasMoreData('down');
+                this._expandButtonVisible = this._isExpandButtonVisible(
+                    items,
+                    options);
+                this._createViewModel(items, options);
 
-        return result;
+                return items;
+            },
+            (error: Error): Promise<void | dataSourceError.ViewConfig> => {
+                return Promise.reject(this._processError(error));
+            }
+        );
     }
 
     private _isExpandButtonVisible(items: RecordSet,
@@ -859,9 +859,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): object {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const isLoadedChildItems = this._isLoadedChildItems(root);
         const subMenuOptions: object = {
             root,
             bodyContentTemplate: 'Controls/_menu/Control',
+            dataLoadCallback: !isLoadedChildItems ? this._subMenuDataLoadCallback.bind(this) : null,
             footerContentTemplate: this._options.nodeFooterTemplate,
             footerItemData: {
                 key: root,
@@ -876,26 +878,39 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             additionalProperty: null,
             searchParam: null,
             itemPadding: null,
-            source: this._getSourceSubMenu(root),
+            source: this._getSourceSubMenu(isLoadedChildItems),
             iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
         };
 
         return {...this._options, ...subMenuOptions};
     }
 
-    private _getSourceSubMenu(root: TKey): ICrudPlus {
+    private _getSourceSubMenu(isLoadedChildItems: boolean): ICrudPlus {
         let source: ICrudPlus = this._options.source;
-        const collection =  this._listModel.getCollection() as unknown as RecordSet<Model>;
 
-        if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
+        if (isLoadedChildItems) {
             source = new PrefetchProxy({
                 target: this._options.source,
                 data: {
-                    query: collection
+                    query: this._listModel.getCollection()
                 }
             });
         }
         return source;
+    }
+
+    private _isLoadedChildItems(root: TKey): boolean {
+        let isLoaded = false;
+        const collection =  this._listModel.getCollection() as unknown as RecordSet<Model>;
+
+        if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
+            isLoaded = true;
+        }
+        return isLoaded;
+    }
+
+    private _subMenuDataLoadCallback(items: RecordSet): void {
+        this._listModel.getCollection().append(items);
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {
