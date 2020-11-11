@@ -53,7 +53,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
             // эта часть аналогична тому что делает _filter/Controller
             let historyItems = mainSource.historyItems;
             if (historyItems) {
-                historyItems = historyItems.items || Array.isArray(historyItems) ? historyItems : [];
+                historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
             }
             this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
         }
