@@ -47,7 +47,7 @@ export default class ResizeObserverUtil {
 
     terminate(): void {
         if (this._resizeObserverSupported) {
-            this._resizeObserver.disconnect();
+            this._resizeObserver?.disconnect();
             this._resizeObserver = null;
         } else {
             if (this._control) {
