@@ -103,7 +103,8 @@ var _private = {
 
     calculateStateSourceControllers: function(configs, source) {
         factory(source).each(function(item) {
-            if (_private.isFrequentItem(item) && configs[item.name]) {
+            const config = configs[item.name];
+            if (_private.isFrequentItem(item) && config?.items) {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
                 sourceController.calculateState(configs[item.name].items);
