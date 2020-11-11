@@ -4576,7 +4576,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-            if (this._listViewModel.getCount() > 1 && !isAdd) {
+            if (this._listViewModel.getCount() > 1) {
                 this.setMarkedKey(item.contents.getKey());
             }
         }
@@ -4629,9 +4629,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('afterEndEdit', [item.contents, isAdd]);
 
         if (this._listViewModel.getCount() > 1 && isAdd) {
-            if (willSave) {
-                this.setMarkedKey(item.contents.getKey());
-            } else if (_private.hasMarkerController(this)) {
+            if (_private.hasMarkerController(this)) {
                 const controller = _private.getMarkerController(this);
                 controller.setMarkedKey(controller.getMarkedKey());
             }
