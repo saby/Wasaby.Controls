@@ -22,7 +22,6 @@ import {
 import {IFilterOptions, IHierarchyOptions, ISearchOptions, ISourceOptions, TSelectionType, Direction} from 'Controls/interface';
 import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
-import {detection} from 'Env/Env';
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import {ISearchControllerOptions} from 'Controls/_search/interface';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
