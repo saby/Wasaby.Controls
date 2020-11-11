@@ -51,7 +51,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
 /**
  * Контейнер управляющий операциями скролла в списке.
  * @class Controls/_list/ScrollController/ScrollController
- * 
+ *
  * @private
  * @author Авраменко А.С.
  */
@@ -411,12 +411,7 @@ export default class ScrollController {
             }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
-                if (collection.getViewIterator) {
-                    collection.getViewIterator().setIndices(start, stop);
-                } else {
-                    // @ts-ignore
-                    collection.setIndexes(start, stop);
-                }
+                collection.setIndexes(start, stop);
             }
         }
     }
