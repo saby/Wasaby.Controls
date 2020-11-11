@@ -98,8 +98,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
-    private _topShadowVisibility: SHADOW_VISIBILITY;
-    private _bottomShadowVisibility: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY  = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options: IBrowserOptions,
                            context?: typeof ContextOptions,
