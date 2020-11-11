@@ -18,6 +18,12 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       }
    }
 
+   protected _beforeUnmount(): void {
+      if (this._searchResolverController) {
+         this._searchResolverController.clearTimer();
+      }
+   }
+
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._value = newOptions.inputSearchValue;
