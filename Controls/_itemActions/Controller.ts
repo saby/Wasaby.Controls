@@ -40,10 +40,6 @@ const DEFAULT_ACTION_SIZE = 'm';
 
 const DEFAULT_ACTION_MODE = 'strict';
 
-interface IItemActionsMenuPopupOptions extends IMenuPopupOptions {
-    item: IItemActionsItem
-}
-
 /**
  * @interface Controls/_itemActions/IControllerOptions
  * @public
@@ -383,7 +379,7 @@ export class Controller {
         isActionMenu: boolean,
         parentAction: IItemAction,
         menuActions: IItemAction[]
-    ): IItemActionsMenuPopupOptions {
+    ): IMenuPopupOptions {
         const source = new Memory({
             data: menuActions,
             keyProperty: 'id'
@@ -396,8 +392,11 @@ export class Controller {
         } : null;
         const root = parentAction && parentAction.id;
         return {
-            item,
             source,
+            footerItemData: {
+                item,
+                key: Controller._getItemContents(item).getKey()
+            },
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
