@@ -3,6 +3,15 @@
    flex-direction: column;
 }
 
+.ws-is-mobile-chrome-ios,
+.ws-is-mobile-safari {
+  .controls-Scroll-ContainerBase {
+    // Нативный скроллбар на айпаде перекрывается элементами с position: sticky. perspective создаст новый контекст
+    // наложения, что пофиксит ошибку.
+    perspective: 1000;
+  }
+}
+
 .controls-Scroll-containerBase_userContent {
    flex-shrink: 0;
 }
