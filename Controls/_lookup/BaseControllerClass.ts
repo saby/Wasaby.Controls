@@ -35,8 +35,16 @@ export default class LookupBaseControllerClass {
     }
 
     update(newOptions: ILookupBaseControllerOptions): Promise<RecordSet>|boolean {
-        const keysChanged = newOptions.selectedKeys !== this._options.selectedKeys ||
-                            !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+        let keysChanged;
+
+        if (newOptions.selectedKeys.length || this._options.selectedKeys.length) {
+            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys);
+        }
+
+        if (!keysChanged && newOptions.hasOwnProperty('selectedKeys')) {
+            keysChanged = !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+        }
+
         const sourceIsChanged = newOptions.source !== this._options.source;
         const isKeyPropertyChanged = newOptions.keyProperty !== this._options.keyProperty;
         let updateResult;
