@@ -26,7 +26,7 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/LiteSelector/Index
@@ -40,7 +40,7 @@ import dateControlsUtils from "./Utils";
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLinkLite
@@ -80,6 +80,8 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
 
         return {
             opener: this,
+            template: 'Controls/shortDatePicker:View',
+            closeOnOutsideClick: true,
             target: container,
             className,
             fittingMode: {
