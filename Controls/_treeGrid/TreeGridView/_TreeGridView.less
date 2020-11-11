@@ -117,10 +117,14 @@
 }
 
 .controls-TreeGrid__row-expander_node_default_theme-@{themeName}:before,
-.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_emptyNode_default_theme-@{themeName}:before {
    position: relative;
    bottom: -@expander_padding_icon-treeGrid;
+}
+
+.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before {
+   position: relative;
+   bottom: -@expander_padding_icon-hidden-node-treeGrid;
 }
 
 .controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
