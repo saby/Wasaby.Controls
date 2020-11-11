@@ -152,17 +152,29 @@ describe('Controls/_multiselection/Controller', () => {
       assert.isTrue(model.getItemBySourceKey(2).isSelected());
    });
 
-   it('onCollectionRemove', () => {
-      controller.toggleItem(1);
+   describe('onCollectionRemove', () => {
+      it('remove item', () => {
+         controller.toggleItem(1);
 
-      const expectedResult = {
-         selected: [], excluded: []
-      };
-      const removedItem = {
-         getKey: () => 1
-      };
-      const result = controller.onCollectionRemove([removedItem]);
-      assert.deepEqual(result, expectedResult);
+         const expectedResult = {
+            selected: [], excluded: []
+         };
+         const removedItem = {
+            getKey: () => 1
+         };
+         const result = controller.onCollectionRemove([removedItem]);
+         assert.deepEqual(result, expectedResult);
+      });
+
+      it('remove all', () => {
+         model.setItems(new RecordSet({
+            rawData: [],
+            keyProperty: 'id'
+         }), {});
+
+         const result = controller.onCollectionRemove([]);
+         assert.deepEqual(result, {selected: [], excluded: []});
+      });
    });
 
    it('onCollectionReset', () => {

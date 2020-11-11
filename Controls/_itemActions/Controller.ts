@@ -258,7 +258,12 @@ export class Controller {
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
-        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item, clickEvent, opener, templateOptions);
+        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item,
+            clickEvent,
+            opener,
+            templateOptions,
+            isActionMenu
+        );
         if (actionMenuConfig) {
             return actionMenuConfig;
         }

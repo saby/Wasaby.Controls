@@ -117,14 +117,18 @@ var List = Control.extend({
             selectedItems: new collection.List({items: selectedItems}),
             multiSelect: this._options.multiSelect,
             handlers: {
-                onSelectComplete: function(event, result) {
-                    selectorDialogResult(event, result);
+                onSelectComplete: (event, result) => {
+                    selectorDialogResult(result);
                     selectorOpener.close();
                 }
             }
         };
         Merge(templateConfig, selectorTemplate.templateOptions);
         selectorOpener.open(Merge({
+            opener: this._options.opener,
+            eventHandlers: {
+                onResult: selectorDialogResult
+            },
             templateOptions: templateConfig,
             template: selectorTemplate.templateName,
             isCompoundTemplate: this._options.isCompoundTemplate
