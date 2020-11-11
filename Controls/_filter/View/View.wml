@@ -17,7 +17,7 @@
 </ws:template>
 
 <div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}
-            {{_options.readOnly && _options.alignment === 'left' ? 'controls-FilterView_readOnly_theme-' + _options.theme}}"
+            {{_options.readOnly ? 'controls-FilterView_readOnly_theme-' + _options.theme}}"
    on:mouseenter="_mouseEnterHandler()">
    <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
