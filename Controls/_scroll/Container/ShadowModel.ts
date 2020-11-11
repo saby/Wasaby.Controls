@@ -106,10 +106,11 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     updateVisibilityByInnerComponents(visibility: SHADOW_VISIBILITY): boolean {
-        const isChanged: boolean = this._visibilityByInnerComponents !== visibility;
-        this._visibilityByInnerComponents = visibility;
-        if (isChanged) {
-            this.updateScrollState(this._scrollState);
+        let isChanged: boolean = false;
+
+        if (this._visibilityByInnerComponents !== visibility) {
+            this._visibilityByInnerComponents = visibility;
+            isChanged = this.updateScrollState(this._scrollState);
         }
         return isChanged;
     }
