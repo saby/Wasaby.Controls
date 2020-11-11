@@ -523,6 +523,10 @@ describe('Controls/list_clean/BaseControl', () => {
             cfgClone.navigation.viewConfig.pagingMode = 'base';
             await baseControl._beforeUpdate(cfgClone);
             assert.isTrue(baseControl._isPagingPadding());
+
+            cfgClone.navigation.viewConfig.pagingPadding = 'null';
+            await baseControl._beforeUpdate(cfgClone);
+            assert.isFalse(baseControl._isPagingPadding());
         });
 
         it('paging mode is edge + eip', async () => {
