@@ -7739,6 +7739,27 @@ define([
                lists.BaseControl._private.changeMarkedKey(baseControl, 1);
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
             });
+
+            it('pass undefined', () => {
+               let notifyCalled = false;
+               baseControl._notify = () => {
+                  notifyCalled = true;
+               };
+               lists.BaseControl._private.changeMarkedKey(baseControl, undefined);
+               assert.isFalse(notifyCalled);
+            });
+
+            it('pass current markedKey', () => {
+               baseControl.setMarkedKey(1);
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+
+               let notifyCalled = false;
+               baseControl._notify = () => {
+                  notifyCalled = true;
+               };
+               lists.BaseControl._private.changeMarkedKey(baseControl, 1);
+               assert.isFalse(notifyCalled);
+            });
          });
 
          describe('move marker', () => {
