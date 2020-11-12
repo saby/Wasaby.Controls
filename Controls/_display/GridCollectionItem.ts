@@ -18,6 +18,8 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$columnItems: GridColumn<T>[];
     protected _$ladder: {};
 
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
+
     constructor(options?: IOptions<T>) {
         super(options);
     }
@@ -239,16 +241,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     protected _redrawColumns(target: 'first'|'last'|'all'): void {
-        switch (target) {
-            case 'first':
-                this._$columnItems[0].nextVersion();
-                break;
-            case 'last':
-                this._$columnItems[this.getColumnsCount() - 1].nextVersion();
-                break;
-            case 'all':
-                this._$columnItems.forEach((column) => column.nextVersion());
-                break;
+        if (this._$columnItems) {
+            switch (target) {
+                case 'first':
+                    this._$columnItems[0].nextVersion();
+                    break;
+                case 'last':
+                    this._$columnItems[this.getColumnsCount() - 1].nextVersion();
+                    break;
+                case 'all':
+                    this._$columnItems.forEach((column) => column.nextVersion());
+                    break;
+            }
         }
     }
 

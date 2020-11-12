@@ -1,4 +1,4 @@
-<div attr:class="controls-itemActionsV__action controls-itemActionsV__action_padding_theme-{{theme}}
+<div attr:class="controls-itemActionsV__action {{!action.isMenu ? 'controls-itemActionsV__action_padding_theme-' + theme : 'controls-itemActionsV__action_menu_padding_theme-' + theme}}
             controls-itemActionsV__action_style_{{actionStyle || action.style || 'secondary'}}
             {{((iconStyle || action.iconStyle || 'secondary') !== 'secondary') ?
             ('controls-icon_style-' + (iconStyle || action.iconStyle)) : ('controls-action_iconStyle_secondary')}}_theme-{{theme}}

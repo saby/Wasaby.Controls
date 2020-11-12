@@ -649,7 +649,7 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
-        if (self._options.navigation.viewConfig.showEndButton) {
+        if (self._options.navigation?.viewConfig?.showEndButton) {
             _private.scrollToEdge(self, 'down');
         }
     },
@@ -2155,17 +2155,21 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    isPagingNavigationVisible(hasMoreData) {
+    isPagingNavigationVisible(self, hasMoreData) {
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
-        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        if (self._options.navigation && self._options.navigation.viewConfig &&
+            self._options.navigation.viewConfig.totalInfo === 'extended') {
+            return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        }
+        return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -3879,6 +3883,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
+
+                    if (this._pagingNavigation &&
+                        !this._pagingNavigationVisible && this._items && sourceChanged) {
+                        _private.updatePagingData(this,
+                            this._items.getMetaData().more);
+                    }
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -5576,7 +5586,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
                 (this._options.navigation.viewConfig.pagingMode === 'end' ||
-                    this._options.navigation.viewConfig.pagingPadding === 'null')
+                    this._options.navigation.viewConfig.pagingPadding === 'null' ||
+                    this._options.navigation.viewConfig.pagingPadding === null
+                )
             )
         );
     },

@@ -75,6 +75,13 @@ function getLookupControllerWithSelectedKeys(additionalConfig?: object): BaseCon
     return new BaseControllerClass(options as ILookupBaseControllerOptions);
 }
 
+function getLookupControllerWithoutSelectedKeys(additionalConfig?: object): BaseControllerClass {
+    let options = getControllerOptions();
+    delete options.selectedKeys;
+    options = {...options, ...additionalConfig};
+    return new BaseControllerClass(options as ILookupBaseControllerOptions);
+}
+
 class CustomModel extends Model {
     protected _moduleName: string = 'customModel';
     protected _$properties = {
@@ -147,7 +154,19 @@ describe('Controls/_lookup/BaseControllerClass', () => {
             ok(controller.update(options));
             const items = await controller.loadItems();
             ok(items.getCount() === 3);
-        })
+        });
+
+        it('update without keys in options', async () => {
+            const controller = getLookupControllerWithoutSelectedKeys();
+
+            controller.setItems(getRecordSet());
+            deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
+
+            const options = getControllerOptions();
+            delete options.selectedKeys;
+            controller.update(options as ILookupBaseControllerOptions);
+            deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
+        });
     });
 
     it('setItems', () => {
