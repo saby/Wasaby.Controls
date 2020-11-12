@@ -198,7 +198,7 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      if (this._model.getCount()) {
+      if (this._model.getCollection().getCount()) {
          let keys = this._getItemsKeys(removedItems);
          // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
          keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));

@@ -1,4 +1,4 @@
-import { IDragPosition } from 'Controls/display';
+import { GroupItem, IDragPosition } from 'Controls/display';
 import {
     BaseDragStrategy,
     IDraggableCollection,
@@ -46,7 +46,7 @@ export default class Flat<
         }
 
         // If you hover on a record that is being dragged, then the position should not change.
-        if (this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+        if (!(targetItem instanceof GroupItem) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
             return currentPosition;
         }
 

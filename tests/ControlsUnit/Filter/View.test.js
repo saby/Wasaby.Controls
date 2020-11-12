@@ -414,6 +414,40 @@ define(
             assert.isTrue(isFastReseted);
          });
 
+         describe('calculateStateSourceControllers', () => {
+            it('not calculate state for unloaded filter', () => {
+               const originalMethod =  filter.View._private.getSourceController;
+               let methodCalled = false;
+               const getSourceController = () => {
+                  methodCalled = true;
+                  return {
+                     calculateState: () => true
+                  };
+               };
+               filter.View._private.getSourceController = getSourceController;
+               const items = [{
+                  name: 'document',
+                  viewMode: 'frequent',
+                  value: ['1'],
+                  resetValue: [],
+                  editorOptions: {
+                     source: new sourceLib.Memory({
+                        keyProperty: 'id',
+                        data: []
+                     })
+                  }
+               }];
+               const configs = {
+                  document: {
+                     name: 'document',
+                  }
+               };
+               filter.View._private.calculateStateSourceControllers(items, configs);
+               assert.isFalse(methodCalled);
+               filter.View._private.getSourceController = originalMethod;
+            });
+         });
+
          it('_reset', function() {
             let view = getView(defaultConfig),
                isOpened = true, closed,

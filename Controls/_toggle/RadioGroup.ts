@@ -18,9 +18,7 @@ export interface IRadioGroupOptions extends IControlOptions,
     * 
     * @remark
     * Полезные ссылки:
-    * * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2fRadioGroup%2fIndex">демо-пример</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
-    *
     *
     * @class Controls/_toggle/RadioGroup
     * @extends Core/Control

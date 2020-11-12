@@ -99,7 +99,7 @@ import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 import {RemoveController} from './Controllers/RemoveController';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 
 // TODO: getDefaultOptions зовётся при каждой перерисовке,
 //  соответственно если в опции передаётся не примитив, то они каждый раз новые.
@@ -668,7 +668,7 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
-        if (self._options.navigation.viewConfig.showEndButton) {
+        if (self._options.navigation?.viewConfig?.showEndButton) {
             _private.scrollToEdge(self, 'down');
         }
     },
@@ -2174,17 +2174,21 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    isPagingNavigationVisible(hasMoreData) {
+    isPagingNavigationVisible(self, hasMoreData) {
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
-        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        if (self._options.navigation && self._options.navigation.viewConfig &&
+            self._options.navigation.viewConfig.totalInfo === 'extended') {
+            return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        }
+        return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -3892,6 +3896,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
                     }
+
+                    if (this._pagingNavigation &&
+                        !this._pagingNavigationVisible && this._items && sourceChanged) {
+                        _private.updatePagingData(this,
+                            this._items.getMetaData().more);
+                    }
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
@@ -4154,7 +4164,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (!this._modelRecreated && !this.__error) {
+            if (this._listViewModel && !this._modelRecreated && !this.__error) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
@@ -4593,7 +4603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-            if (this._listViewModel.getCount() > 1) {
+            if (this._listViewModel.getCount() > 1 && !isAdd) {
                 this.setMarkedKey(item.contents.getKey());
             }
         }
@@ -4642,8 +4652,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
+
+        if (this._listViewModel.getCount() > 1) {
+            if (this._markedKeyAfterEditing) {
+                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
+                this.setMarkedKey(this._markedKeyAfterEditing);
+                this._markedKeyAfterEditing = null;
+            } else if (isAdd && willSave) {
+                this.setMarkedKey(item.contents.getKey());
+            } else if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        }
+
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
@@ -5034,7 +5058,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
 
         if (canBeMarked && !this._onLastMouseUpWasDrag) {
-            this.setMarkedKey(key);
+            // маркер устанавливается после завершения редактирования
+            if (this._editInPlaceController?.isEditing()) {
+                // TODO нужно перенести установку маркера на клик, т.к. там выполняется проверка для редактирования
+                this._markedKeyAfterEditing = key;
+            } else {
+                this.setMarkedKey(key);
+            }
         }
     },
 
@@ -5581,7 +5611,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return !(detection.isMobileIOS ||
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
-                this._options.navigation.viewConfig.pagingMode === 'end')
+                (this._options.navigation.viewConfig.pagingMode === 'end' ||
+                    this._options.navigation.viewConfig.pagingPadding === 'null' ||
+                    this._options.navigation.viewConfig.pagingPadding === null
+                )
+            )
         );
     },
 
@@ -5661,8 +5695,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController && this._dndListController.isDragging()) {
-            const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
-            this._dndListController.setDragPosition(newPosition);
+            const draggableItem = this._dndListController.getDraggableItem();
+            if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+                const newPosition = this._dndListController.calculateDragPosition({targetItem: null});
+                this._dndListController.setDragPosition(newPosition);
+            } else {
+                // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
+                this._dndListController.endDrag();
+            }
         }
     },
 

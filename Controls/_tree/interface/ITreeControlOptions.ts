@@ -60,7 +60,9 @@ import { RecordSet } from 'Types/collection';
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FBasePG">демо-пример</a>
  * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент — "null". В этом случае предполагается, что все данные будут загружены сразу.
- * @see collapsedItems
+ * Настройка не работает, если источник данных задан через {@link Types/source:Memory}.
+ * @see expandByItemClick
+ * @see expanderVisibility
  */
 
 /*
@@ -424,14 +426,14 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @event Происходит при изменении набора развернутых узлов.
- * @name Controls/_grid/interface/IGridControl#expandedItemsChanged
+ * @name Controls/_tree/interface/ITreeControlOptions#expandedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
  */
 
 /**
  * @event Происходит при изменении набора свернутых узлов.
- * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
+ * @name Controls/_tree/interface/ITreeControlOptions#collapsedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
  */

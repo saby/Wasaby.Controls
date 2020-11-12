@@ -16,6 +16,9 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$owner: GridCollection<T>;
     protected _$columns: TColumns;
     protected _$columnItems: GridColumn<T>[];
+    protected _$ladder: {};
+
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -84,10 +87,6 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         };
     }
 
-    getStickyLadder(): {} {
-        return this._$owner.getStickyLadder(this);
-    }
-
     getHeader(): GridHeader<T> {
         return this._$owner.getHeader();
     }
@@ -106,7 +105,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
     getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
         let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
-        const ladder = this._$owner.getLadder(this);
+        const ladder = this.getLadder();
         const stickyLadder = this.getStickyLadder();
         const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
         const index = stickyProperties.indexOf(stickyProperty);
@@ -127,6 +126,17 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
         }
         return ladderWrapperClasses;
+    }
+
+    setLadder(ladder: {}) {
+        this._$ladder = ladder;
+        if (this._$columnItems) {
+            this._$columnItems.forEach((columnItem) => {
+                columnItem.destroy();
+            });
+            this._initializeColumns();
+            this._nextVersion();
+        }
     }
 
     // region overrides
@@ -156,6 +166,22 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     // endregion
+
+    getLadder(): {} {
+        let result;
+        if (this._$ladder && this._$ladder.ladder) {
+            result = this._$ladder.ladder[this._$owner.getIndex(this)];
+        }
+        return result;
+    }
+
+    getStickyLadder(): {} {
+        let result;
+        if (this._$ladder && this._$ladder.stickyLadder) {
+            result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
+        }
+        return result;
+    }
 
     protected _initializeColumns(): void {
         if (this._$columns) {
@@ -210,21 +236,23 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     protected _getStickyLadderStyle(column: IColumn, stickyProperty: string): string {
-        const stickyLadder = this._$owner.getStickyLadder(this);
+        const stickyLadder = this.getStickyLadder();
         return stickyLadder && stickyLadder[stickyProperty].headingStyle;
     }
 
     protected _redrawColumns(target: 'first'|'last'|'all'): void {
-        switch (target) {
-            case 'first':
-                this._$columnItems[0].nextVersion();
-                break;
-            case 'last':
-                this._$columnItems[this.getColumnsCount() - 1].nextVersion();
-                break;
-            case 'all':
-                this._$columnItems.forEach((column) => column.nextVersion());
-                break;
+        if (this._$columnItems) {
+            switch (target) {
+                case 'first':
+                    this._$columnItems[0].nextVersion();
+                    break;
+                case 'last':
+                    this._$columnItems[this.getColumnsCount() - 1].nextVersion();
+                    break;
+                case 'all':
+                    this._$columnItems.forEach((column) => column.nextVersion());
+                    break;
+            }
         }
     }
 

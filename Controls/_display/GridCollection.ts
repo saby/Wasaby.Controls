@@ -42,7 +42,9 @@ export default class GridCollection<
     constructor(options: IOptions<S, T>) {
         super(options);
 
-        this._initializeLadder(this._$ladderProperties, this._$columns);
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._initializeLadder(this._$ladderProperties, this._$columns);
+        }
 
         this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
         this._$resultsPosition = options.resultsPosition;
@@ -93,14 +95,6 @@ export default class GridCollection<
         return emptyTemplateClasses;
     }
 
-    getLadder(item: T): {} {
-        let result;
-        if (this._$ladder && this._$ladder.ladder) {
-            result = this._$ladder.ladder[this.getIndex(item)];
-        }
-        return result;
-    }
-
     getStickyColumn(): GridLadderUtil.IStickyColumn {
         return GridLadderUtil.getStickyColumn({
             stickyColumn: this._$stickyColumn,
@@ -108,29 +102,26 @@ export default class GridCollection<
         });
     }
 
-    getStickyLadder(item: T): {} {
-        let result;
-        if (this._$ladder && this._$ladder.stickyLadder) {
-            result = this._$ladder.stickyLadder[this.getIndex(item)];
-        }
-        return result;
-    }
-
     setIndexes(start: number, stop: number): void {
         super.setIndexes(start, stop);
-        this._initializeLadder(this._$ladderProperties, this._$columns);
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._initializeLadder(this._$ladderProperties, this._$columns);
+        }
     }
 
     protected _initializeLadder(ladderProperties: string[], columns: TColumns): void {
-        if (GridLadderUtil.isSupportLadder(ladderProperties)) {
-            this._$ladder = GridLadderUtil.prepareLadder({
-                columns: columns,
-                ladderProperties: ladderProperties,
-                startIndex: this.getStartIndex(),
-                stopIndex: this.getStopIndex() || this.getCollectionCount(),
-                display: this
-            });
-        }
+        this._$ladder = GridLadderUtil.prepareLadder({
+            columns: columns,
+            ladderProperties: ladderProperties,
+            startIndex: this.getStartIndex(),
+            stopIndex: this.getStopIndex() || this.getCollectionCount(),
+            display: this
+        });
+        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+                item.setLadder(this._$ladder);
+            }
+        });
     }
 
     protected _headerIsVisible(options: IOptions<S>): boolean {
