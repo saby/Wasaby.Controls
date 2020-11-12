@@ -4725,6 +4725,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!this._isMounted) {
                 return addResult;
             }
+
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
+
             // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
             const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
             const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
@@ -4747,6 +4753,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
             this.hideIndicator();
         });
     },
