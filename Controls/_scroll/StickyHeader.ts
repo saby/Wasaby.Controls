@@ -632,7 +632,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + opts.fixedZIndex + ';';
-        } else {
+        } else if (opts.zIndex ) {
             style += 'z-index: ' + opts.zIndex + ';';
         }
 
