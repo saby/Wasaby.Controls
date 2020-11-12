@@ -27,6 +27,15 @@ import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
 
+interface IMenuPosition {
+    left: number;
+    top: number;
+    height: number;
+}
+
+const SUB_DROPDOWN_DELAY = 400;
+
+const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
 /**
  * Контрол меню.
  * @class Controls/menu:Control
@@ -41,86 +50,6 @@ import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOption
  *
  * @author Герасимов А.М.
  */
-
-/**
- * @name Controls/_menu/Control#multiSelect
- * @cfg {Boolean} Определяет, установлен ли множественный выбор.
- * @default false
- * @demo Controls-demo/Menu/Control/MultiSelect/Index
- * @example
- * Множественный выбор установлен.
- * WML:
- * <pre>
- * <Controls.menu:Control
- *       selectedKeys="{{_selectedKeys}}"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       multiSelect="{{true}}">
- * </Controls.menu:Control>
- * </pre>
- * JS:
- * <pre>
- * this._source = new Memory({
- *    keyProperty: 'id',
- *    data: [
- *       {id: 1, title: 'Yaroslavl'},
- *       {id: 2, title: 'Moscow'},
- *       {id: 3, title: 'St-Petersburg'}
- *    ]
- * });
- * this._selectedKeys = [1, 3];
- * </pre>
- */
-
-/**
- * @name Controls/_menu/Control#selectedKeys
- * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
- * @demo Controls-demo/Menu/Control/SelectedKeys/Index
- */
-
-/**
- * @name Controls/_menu/Control#root
- * @cfg {Number|String|null} Идентификатор корневого узла.
- * @demo Controls-demo/Menu/Control/Root/Index
- */
-
-/**
- * @event Происходит при выборе элемента.
- * @name Controls/_menu/Control#itemClick
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Выбранный элемент.
- * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.
- * По умолчанию, когда выбран пункт с иерархией, подменю закрывается.
- * @example
- * В следующем примере показано, как незакрывать подменю, если кликнули на пункт с иерархией.
- * <pre>
- *    <Controls.menu:Control
- *          displayProperty="title"
- *          keyProperty="key"
- *          source="{{_source}}"
- *          on:itemClick="_itemClickHandler()" />
- * </pre>
- * TS:
- * <pre>
- *    protected _itemClickHandler(e, item): boolean {
- *       if (item.get(nodeProperty)) {
- *          return false;
- *       }
- *    }
- * </pre>
- */
-
-interface IMenuPosition {
-    left: number;
-    top: number;
-    height: number;
-}
-
-const SUB_DROPDOWN_DELAY = 400;
-
-const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
-
 export default class MenuControl extends Control<IMenuControlOptions> implements IMenuControl {
     readonly '[Controls/_menu/interface/IMenuControl]': boolean = true;
     protected _template: TemplateFunction = ViewTemplate;
@@ -169,7 +98,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         this._stack = new StackOpener();
 
-        if (options.source) {
+        if (options.sourceController) {
+            return this._createViewModel(options.sourceController.getItems(), options);
+        } else if (options.source) {
             return this._loadItems(options).then(() => {
                 if (options.markerVisibility !== MarkerVisibility.Hidden) {
                     this._markerController = this._getMarkerController(options);
@@ -190,18 +121,24 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const rootChanged = newOptions.root !== this._options.root;
         const sourceChanged = newOptions.source !== this._options.source;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
+        const searchValueChanged = newOptions.searchValue !== this._options.searchValue;
         let result;
 
-        if (sourceChanged) {
-            this._sourceController = null;
-        }
-
-        if (rootChanged || sourceChanged || filterChanged) {
+        if (newOptions.sourceController && newOptions.searchParam &&
+            newOptions.searchValue && searchValueChanged) {
             this._closeSubMenu();
-            result = this._loadItems(newOptions).then(() => {
+            this._createViewModel(newOptions.sourceController.getItems(), newOptions);
+        } else if (rootChanged || sourceChanged || filterChanged) {
+            if (sourceChanged) {
+                this._sourceController = null;
+            }
+            this._closeSubMenu();
+            result = this._loadItems(newOptions).then((res) => {
                 this._notifyResizeAfterRender = true;
+                return res;
             });
         }
+
         if (this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys)) {
             this._updateSelectionController(newOptions);
             this._notify('selectedItemsChanged', [this._getSelectedItems()]);
@@ -851,9 +788,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _getTemplateOptions(item: CollectionItem<Model>): object {
         const root: TKey = item.getContents().get(this._options.keyProperty);
+        const isLoadedChildItems = this._isLoadedChildItems(root);
         const subMenuOptions: object = {
             root,
             bodyContentTemplate: 'Controls/_menu/Control',
+            dataLoadCallback: !isLoadedChildItems ? this._subMenuDataLoadCallback.bind(this) : null,
             footerContentTemplate: this._options.nodeFooterTemplate,
             footerItemData: {
                 key: root,
@@ -868,26 +807,45 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             additionalProperty: null,
             searchParam: null,
             itemPadding: null,
-            source: this._getSourceSubMenu(root),
+            source: this._getSourceSubMenu(isLoadedChildItems),
             iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
         };
 
         return {...this._options, ...subMenuOptions};
     }
 
-    private _getSourceSubMenu(root: TKey): ICrudPlus {
+    private _getSourceSubMenu(isLoadedChildItems: boolean): ICrudPlus {
         let source: ICrudPlus = this._options.source;
-        const collection =  this._listModel.getCollection() as unknown as RecordSet<Model>;
 
-        if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
+        if (isLoadedChildItems) {
             source = new PrefetchProxy({
                 target: this._options.source,
                 data: {
-                    query: collection
+                    query: this._listModel.getCollection()
                 }
             });
         }
         return source;
+    }
+
+    private _isLoadedChildItems(root: TKey): boolean {
+        let isLoaded = false;
+        const collection =  this._listModel.getCollection() as unknown as RecordSet<Model>;
+
+        if (collection.getIndexByValue(this._options.parentProperty, root) !== -1) {
+            isLoaded = true;
+        }
+        return isLoaded;
+    }
+
+    private _subMenuDataLoadCallback(items: RecordSet): void {
+        if (this._listModel.getCollection().getFormat().getIndexByValue('name', this._options.parentProperty) === -1) {
+            this._listModel.getCollection().addField({
+                name: this._options.parentProperty,
+                type: 'string'
+            });
+        }
+        this._listModel.getCollection().append(items);
     }
 
     private _updateItemActions(listModel: Collection<Model>, options: IMenuControlOptions): void {
@@ -1011,3 +969,71 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         };
     }
 }
+/**
+ * @name Controls/_menu/Control#multiSelect
+ * @cfg {Boolean} Определяет, установлен ли множественный выбор.
+ * @default false
+ * @demo Controls-demo/Menu/Control/MultiSelect/Index
+ * @example
+ * Множественный выбор установлен.
+ * WML:
+ * <pre>
+ * <Controls.menu:Control
+ *       selectedKeys="{{_selectedKeys}}"
+ *       keyProperty="id"
+ *       displayProperty="title"
+ *       source="{{_source}}"
+ *       multiSelect="{{true}}">
+ * </Controls.menu:Control>
+ * </pre>
+ * JS:
+ * <pre>
+ * this._source = new Memory({
+ *    keyProperty: 'id',
+ *    data: [
+ *       {id: 1, title: 'Yaroslavl'},
+ *       {id: 2, title: 'Moscow'},
+ *       {id: 3, title: 'St-Petersburg'}
+ *    ]
+ * });
+ * this._selectedKeys = [1, 3];
+ * </pre>
+ */
+
+/**
+ * @name Controls/_menu/Control#selectedKeys
+ * @cfg {Array.<Number|String>} Массив ключей выбранных элементов.
+ * @demo Controls-demo/Menu/Control/SelectedKeys/Index
+ */
+
+/**
+ * @name Controls/_menu/Control#root
+ * @cfg {Number|String|null} Идентификатор корневого узла.
+ * @demo Controls-demo/Menu/Control/Root/Index
+ */
+
+/**
+ * @event Происходит при выборе элемента.
+ * @name Controls/_menu/Control#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Выбранный элемент.
+ * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, подменю не закроется.
+ * По умолчанию, когда выбран пункт с иерархией, подменю закрывается.
+ * @example
+ * В следующем примере показано, как незакрывать подменю, если кликнули на пункт с иерархией.
+ * <pre>
+ *    <Controls.menu:Control
+ *          displayProperty="title"
+ *          keyProperty="key"
+ *          source="{{_source}}"
+ *          on:itemClick="_itemClickHandler()" />
+ * </pre>
+ * TS:
+ * <pre>
+ *    protected _itemClickHandler(e, item): boolean {
+ *       if (item.get(nodeProperty)) {
+ *          return false;
+ *       }
+ *    }
+ * </pre>
+ */

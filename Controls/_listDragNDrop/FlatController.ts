@@ -1,7 +1,7 @@
 import { TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem, IDragPosition } from 'Controls/display';
+import { CollectionItem, GroupItem, IDragPosition } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
@@ -134,7 +134,7 @@ export default class FlatController {
       }
 
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+      if (!(targetItem instanceof GroupItem) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
          return this._dragPosition;
       }
 

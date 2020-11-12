@@ -3,6 +3,8 @@ import * as template from 'wml!Controls/_filter/View/Container';
 import {default as Store} from 'Controls/Store';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import clone = require('Core/core-clone');
+import {RecordSet} from "Types/collection";
+import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark
@@ -12,7 +14,6 @@ import clone = require('Core/core-clone');
  * @class Controls/_filter/View/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * 
  * @public
  */
 
@@ -51,7 +52,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
             // эта часть аналогична тому что делает _filter/Controller
             let historyItems = mainSource.historyItems;
             if (historyItems) {
-                historyItems = historyItems.items || historyItems;
+                historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
             }
             this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
         }
@@ -71,11 +72,18 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
         return result;
     },
 
-    _cloneItems(items) {
+    _cloneItems(items: IFilterItem[]|RecordSet<IFilterItem>): IFilterItem[] {
+        let resultItems;
+
         if (items['[Types/_entity/CloneableMixin]']) {
-            return items.clone();
+            resultItems = (items as RecordSet<IFilterItem>).clone();
+        } else {
+            resultItems = [];
+            items.forEach((item) => {
+                resultItems.push({...item});
+            });
         }
-        return clone(items);
+        return resultItems;
     },
 
     _itemsChanged(event: Event, items): void {

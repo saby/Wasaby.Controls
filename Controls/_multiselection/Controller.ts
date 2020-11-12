@@ -199,14 +199,19 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      let keys = this._getItemsKeys(removedItems);
-      // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
-      keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
+      if (this._model.getCollection().getCount()) {
+         let keys = this._getItemsKeys(removedItems);
+         // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
+         keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
 
-      const selected = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
-      const excluded = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+         const selected = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
+         const excluded = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
 
-      return {selected, excluded};
+         return { selected, excluded };
+      } else {
+         // Если удалили все записи, то и выбирать нечего
+         return { selected: [], excluded: [] };
+      }
    }
 
    /**

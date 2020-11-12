@@ -1,15 +1,13 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
+import GridGroupItem from './GridGroupItem';
 import { TemplateFunction } from 'UI/Base';
-import { TColumns } from '../_grid/interface/IColumn';
-import { THeader } from '../_grid/interface/IHeaderCell';
+import { TColumns, THeader } from 'Controls/grid';
+import * as GridLadderUtil from './utils/GridLadderUtil';
+import GridColgroup from './GridColgroup';
 import GridHeader from './GridHeader';
-import GridResults from './GridResults';
+import GridResults, { TResultsPosition } from './GridResults';
 import GridFooter from './GridFooter';
-/* todo заготовка для ladder
-import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn } from '../_grid/utils/GridLadderUtil';*/
-
-type TResultsPosition = 'top' | 'bottom';
 
 export interface IOptions<
     S,
@@ -21,8 +19,8 @@ export interface IOptions<
     resultsTemplate: TemplateFunction;
     resultsPosition: TResultsPosition;
     headerInEmptyListVisible: boolean;
-    /* todo заготовка для ladder
-    ladderProperties: string[];*/
+    ladderProperties: string[];
+    stickyColumn: {};
 }
 
 export default class GridCollection<
@@ -30,16 +28,25 @@ export default class GridCollection<
     T extends GridCollectionItem<S> = GridCollectionItem<S>
 > extends Collection<S, T> {
     protected _$columns: TColumns;
+    protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
     protected _$footer: GridFooter<S>;
     protected _$results: GridResults<S>;
-    /* todo заготовка для ladder
-    protected _$ladder: {}; */
+    protected _$ladder: {};
+    protected _$ladderProperties: string[];
+    protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
     protected _$headerInEmptyListVisible: boolean;
 
+    protected _$isFullGridSupport: boolean;
+
     constructor(options: IOptions<S, T>) {
         super(options);
+
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._initializeLadder(this._$ladderProperties, this._$columns);
+        }
+
         this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
         this._$resultsPosition = options.resultsPosition;
 
@@ -52,14 +59,17 @@ export default class GridCollection<
         if (this._resultsIsVisible()) {
             this._$results = this._initializeResults(options);
         }
-        /* todo заготовка для ladder
-        if (isSupportLadder(options.ladderProperties)) {
-            this._$ladder = this._initializeLadder(options);
-        }*/
+        if (!this._$isFullGridSupport) {
+            this._$colgroup = this._initializeColgroup(options);
+        }
     }
 
     getColumns(): TColumns {
         return this._$columns;
+    }
+
+    getColgroup(): GridColgroup<S> {
+        return this._$colgroup;
     }
 
     getHeader(): GridHeader<S> {
@@ -78,23 +88,41 @@ export default class GridCollection<
         return this._$resultsPosition;
     }
 
-    /*  todo заготовка для ladder
-    protected _initializeLadder(options: IOptions<S>): {} {
-        return prepareLadder({
-            columns: options.columns,
-            ladderProperties: options.ladderProperties,
-            startIndex: this.getStartIndex(),
-            stopIndex: this.getStopIndex(),
-            display: this
-        });
-    }*/
-
     getEmptyTemplateClasses(theme?: string): string {
         const rowSeparatorSize = this.getRowSeparatorSize();
         let emptyTemplateClasses = `controls-GridView__emptyTemplate js-controls-GridView__emptyTemplate`;
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}`;
         emptyTemplateClasses += ` controls-Grid__row-cell_withRowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
         return emptyTemplateClasses;
+    }
+
+    getStickyColumn(): GridLadderUtil.IStickyColumn {
+        return GridLadderUtil.getStickyColumn({
+            stickyColumn: this._$stickyColumn,
+            columns: this._$columns
+        });
+    }
+
+    setIndexes(start: number, stop: number): void {
+        super.setIndexes(start, stop);
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._initializeLadder(this._$ladderProperties, this._$columns);
+        }
+    }
+
+    protected _initializeLadder(ladderProperties: string[], columns: TColumns): void {
+        this._$ladder = GridLadderUtil.prepareLadder({
+            columns: columns,
+            ladderProperties: ladderProperties,
+            startIndex: this.getStartIndex(),
+            stopIndex: this.getStopIndex() || this.getCollectionCount(),
+            display: this
+        });
+        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+                item.setLadder(this._$ladder);
+            }
+        });
     }
 
     protected _headerIsVisible(options: IOptions<S>): boolean {
@@ -130,15 +158,22 @@ export default class GridCollection<
         });
     }
 
+    protected _initializeColgroup(options: IOptions<S>): GridColgroup<S> {
+        return new GridColgroup({
+            owner: this
+        });
+    }
+
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
-            /* todo заготовка для ladder
-            options.ladder = this._$ladder;
-             */
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
+    }
+
+    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
+        return GridGroupItem;
     }
 }
 
@@ -148,5 +183,8 @@ Object.assign(GridCollection.prototype, {
     _itemModule: 'Controls/display:GridCollectionItem',
     _$columns: null,
     _$headerInEmptyListVisible: false,
-    _$resultsPosition: null
+    _$resultsPosition: null,
+    _$ladderProperties: null,
+    _$stickyColumn: null,
+    _$isFullGridSupport: true
 });

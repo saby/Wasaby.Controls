@@ -111,6 +111,18 @@ define(
             assert.isTrue(isUpdated);
          });
 
+         it('_beforeUpdate readOnly changes', function() {
+            let combobox = getCombobox(config);
+            let isUpdated = false;
+            combobox._controller = {
+               update: () => {isUpdated = true}
+            };
+            combobox._beforeUpdate({
+               readOnly: true
+            });
+            assert.isTrue(combobox._readOnly);
+         });
+
 
          it('dataLoadCallback option', function() {
             let isCalled = false;

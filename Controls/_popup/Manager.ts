@@ -105,8 +105,8 @@ class Manager {
         }
         if (!this._dataLoaderModule) {
             const message = 'На приложении не задан загрузчик данных. Опция окна dataLoaders будет проигнорирована';
-            Logger.error(message, this);
-            return Promise.resolve();
+            Logger.warn(message, this);
+            return undefined;
         }
 
         return new Promise((resolve) => {
@@ -768,7 +768,8 @@ class Manager {
                 focusedContainer.classList.contains('ws-wait-indicator')) {
                 return true;
             }
-            focusedContainer = focusedContainer.parentElement;
+            // У SVG в IE11 нет parentElement
+            focusedContainer = focusedContainer.parentElement || focusedContainer.parentNode;
         }
         return false;
     }

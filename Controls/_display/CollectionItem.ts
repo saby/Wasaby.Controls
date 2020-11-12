@@ -29,6 +29,7 @@ export interface IOptions<T> {
     owner?: ICollection<T, CollectionItem<T>>;
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
+    multiSelectVisibility: string;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -115,6 +116,8 @@ export default class CollectionItem<T> extends mixin<
     protected _$hovered: boolean;
 
     protected _$rendered: boolean;
+
+    protected _$multiSelectVisibility: string;
 
     protected _$dragged: boolean;
 
@@ -524,12 +527,11 @@ export default class CollectionItem<T> extends mixin<
                       backgroundColorStyle?: string,
                       style: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
-        return `controls-ListView__itemV
+        return `controls-ListView__itemV ${this._getCursorClasses(cursor)}
             controls-ListView__item_${style}
             controls-ListView__item_${style}_theme-${theme}
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
-            controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
             ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
             ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
@@ -622,7 +624,17 @@ export default class CollectionItem<T> extends mixin<
     }
 
     getMultiSelectVisibility(): string {
-        return this.getOwner().getMultiSelectVisibility();
+        return this._$multiSelectVisibility;
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const multiSelectVisibilityUpdated = this._$multiSelectVisibility !== multiSelectVisibility;
+        if (multiSelectVisibilityUpdated) {
+            this._$multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            return true;
+        }
+        return false;
     }
 
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
@@ -645,6 +657,11 @@ export default class CollectionItem<T> extends mixin<
         }
 
         return classes;
+    }
+
+    protected _getCursorClasses(cursor: string = 'pointer', clickable: boolean = true): string {
+        const cursorStyle = clickable === false ? 'default' : cursor;
+        return `controls-ListView__itemV_cursor-${cursorStyle}`;
     }
 
     protected _setEditingContents(editingContents: T): void {
@@ -750,5 +767,6 @@ Object.assign(CollectionItem.prototype, {
     _instancePrefix: 'collection-item-',
     _contentsIndex: undefined,
     _version: 0,
-    _counters: null
+    _counters: null,
+    _$multiSelectVisibility: null
 });

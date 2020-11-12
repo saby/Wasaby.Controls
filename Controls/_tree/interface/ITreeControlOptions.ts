@@ -424,14 +424,14 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @event Происходит при изменении набора развернутых узлов.
- * @name Controls/_grid/interface/IGridControl#expandedItemsChanged
+ * @name Controls/_tree/interface/ITreeControlOptions#expandedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
  */
 
 /**
  * @event Происходит при изменении набора свернутых узлов.
- * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
+ * @name Controls/_tree/interface/ITreeControlOptions#collapsedItemsChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
  */

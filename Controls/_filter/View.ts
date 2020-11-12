@@ -20,54 +20,11 @@ import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import * as defaultItemTemplate from 'wml!Controls/_filter/View/ItemTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {DependencyTimer} from 'Controls/fastOpenUtils';
+import {DependencyTimer} from 'Controls/popup';
 import {load} from 'Core/library';
 import {IFilterItem} from './View/interface/IFilterView';
-
-/**
- * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
- * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
- * @remark
- * При клике на кнопку-иконку или строковое представления открывается панель фильтров, созданная на основе {@link Controls/filterPopup:DetailPanel}.
- * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
- *
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/">руководство разработчика по работе с контролом</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
- *
- * @class Controls/_filter/View
- * @extends Core/Control
- * @mixes Controls/_filter/View/interface/IFilterView
- *
- * @public
- * @author Золотова Э.Е.
- * @demo Controls-demo/FilterView/ItemTemplates/Index
- *
- * @see Controls/filterPopup:SimplePanel
- * @see Controls/filterPopup:DetailPanel
- * @see Controls/filter:ViewContainer
- */
-
-/*
- * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
- * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
- * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
- * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">demo-example</a>.
- *
- * @class Controls/_filter/View
- * @extends Core/Control
- * @mixes Controls/_filter/interface/IFilterView
- *
- * @public
- * @author Золотова Э.Е.
- * @see Controls/filterPopup:SimplePanel
- * @see Controls/filterPopup:DetailPanel
- * @see Controls/filter:FastContainer
- */
+import {StickyOpener, StackOpener} from 'Controls/popup';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 
 const DEFAULT_FILTER_NAME = 'all_frequent';
 var _private = {
@@ -103,7 +60,8 @@ var _private = {
 
     calculateStateSourceControllers: function(configs, source) {
         factory(source).each(function(item) {
-            if (_private.isFrequentItem(item) && configs[item.name]) {
+            const config = configs[item.name];
+            if (_private.isFrequentItem(item) && config?.items) {
                 var sourceController = _private.getSourceController(configs[item.name], item.editorOptions.source,
                      item.editorOptions.navigation);
                 sourceController.calculateState(configs[item.name].items);
@@ -134,7 +92,7 @@ var _private = {
     loadUnloadedFrequentItems(self, configs, items): Promise<RecordSet[]> {
         const loadPromises = [];
         factory(items).each((item): void => {
-            if (_private.isFrequentItem(item) && !configs[item.name]) {
+            if (_private.isFrequentItem(item) && (!configs[item.name] || !configs[item.name].items)) {
                 loadPromises.push(_private.loadItems(self, item));
             }
         });
@@ -163,8 +121,9 @@ var _private = {
                     }
                     popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
                     popupItem.sourceController = configs[item.name].sourceController;
-                    popupItem.selectorOpener = self._children.selectorOpener;
+                    popupItem.selectorOpener = self._getStackOpener();
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
+                    popupItem.opener = self;
                 }
                 popupItems.push(popupItem);
             }
@@ -186,7 +145,7 @@ var _private = {
         return selection.length > 1 ? ', ' + rk('еще') + ' ' + (selection.length - 1) : '';
     },
 
-    getFastText: function(config, selectedKeys) {
+    getFastText: function(config, selectedKeys, item?: IFilterItem) {
         var textArr = [];
         if (selectedKeys[0] === config.emptyKey && config.emptyText) {
             textArr.push(config.emptyText);
@@ -197,6 +156,8 @@ var _private = {
                     textArr.push(object.getPropertyValue(selectedItem, config.displayProperty));
                 }
             });
+        } else if (item?.textValue) {
+            textArr.push(item.textValue);
         }
         return {
             text: textArr[0] || '',
@@ -219,7 +180,7 @@ var _private = {
     },
 
     updateText: function(self, items, configs, detailPanelHandler = false) {
-        factory(items).each(function(item) {
+        factory(items).each(function(item: IFilterItem) {
             if (configs[item.name]) {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
@@ -228,7 +189,7 @@ var _private = {
 
                     // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
                     const flatSelectedKeys = nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
-                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys);
+                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys, item);
                     if (!self._displayText[item.name].text && detailPanelHandler) {
                         // If method is called after selecting from detailPanel, then textValue will contains actual display value
                         self._displayText[item.name].text = item.textValue && item.textValue.split(', ')[0];
@@ -253,11 +214,13 @@ var _private = {
         let selectedKeys = value instanceof Object ? value : [value];
         let flattenKeys = factory(selectedKeys).flatten().value();
         let newKeys = [];
-        factory(flattenKeys).each((key) => {
-            if (key !== undefined && !config.items.getRecordById(key) && !(key === config.emptyKey && config.emptyText)) {
-                newKeys.push(key);
-            }
-        });
+        if (config.items) {
+            factory(flattenKeys).each((key) => {
+                if (key !== undefined && !config.items.getRecordById(key) && !(key === config.emptyKey && config.emptyText)) {
+                    newKeys.push(key);
+                }
+            });
+        }
         return newKeys;
     },
 
@@ -346,7 +309,7 @@ var _private = {
         });
     },
 
-    getConfigByItem(self, item: IFilterItem): Record<string, any> {
+    getConfigByItem(self, item: IFilterItem): void {
         const options = item.editorOptions;
         self._configs[item.name] = Merge(self._configs[item.name] || {}, CoreClone(options), {ignoreRegExp: /dataLoadCallback/});
         self._configs[item.name].emptyText = item.emptyText;
@@ -394,10 +357,14 @@ var _private = {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
-                if ((!onlyChangedItems || _private.isItemChanged(item))) {
+                if (!onlyChangedItems || _private.isItemChanged(item)) {
                     if (hasSimplePanel) {
-                        var result = _private.loadItems(self, item);
-                        pDef.push(result);
+                        if (!item.textValue) {
+                            const result = _private.loadItems(self, item);
+                            pDef.push(result);
+                        } else {
+                            _private.getConfigByItem(self, item);
+                        }
                     } else {
                         if (!self._configs?.[item.name]) {
                             self._configs[item.name] = {};
@@ -666,7 +633,50 @@ var _private = {
         }
     }
 };
+/**
+ * Контрол "Объединенный фильтр". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде.
+ * Состоит из кнопки-иконки, строкового представления выбранного фильтра и параметров быстрого фильтра.
+ * @remark
+ * При клике на кнопку-иконку или строковое представления открывается панель фильтров, созданная на основе {@link Controls/filterPopup:DetailPanel}.
+ * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
+ *
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/">руководство разработчика по работе с контролом</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
+ *
+ * @class Controls/_filter/View
+ * @extends Core/Control
+ * @mixes Controls/_filter/View/interface/IFilterView
+ * @public
+ * @author Золотова Э.Е.
+ * 
+ * @demo Controls-demo/FilterView/ItemTemplates/Index
+ * @demo Controls-demo/FilterView/FilterView
+ * 
+ * @see Controls/filterPopup:SimplePanel
+ * @see Controls/filterPopup:DetailPanel
+ * @see Controls/filter:ViewContainer
+ */
 
+/*
+ * Control for data filtering. Consists of an icon-button, a string representation of the selected filter and fast filter parameters.
+ * Clicking on a icon-button or a string opens the detail panel. {@link Controls/filterPopup:DetailPanel}
+ * Clicking on fast filter parameters opens the simple panel. {@link Controls/filterPopup:SimplePanel}
+ * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">demo-example</a>.
+ *
+ * @class Controls/_filter/View
+ * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterView
+ *
+ * @public
+ * @author Золотова Э.Е.
+ * @see Controls/filterPopup:SimplePanel
+ * @see Controls/filterPopup:DetailPanel
+ * @see Controls/filter:FastContainer
+ */
 var Filter = Control.extend({
     _template: template,
     _displayText: null,
@@ -676,6 +686,8 @@ var Filter = Control.extend({
     _dateRangeItem: null,
     _hasResetValues: true,
     _dependenciesTimer: null,
+    _stickyOpener: null,
+    _stackOpener: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -738,6 +750,13 @@ var Filter = Control.extend({
         }
         this._configs = null;
         this._displayText = null;
+        UnregisterUtil(this, 'scroll');
+        if (this._stickyOpener) {
+            this._stickyOpener.destroy();
+        }
+        if (this._stackOpener) {
+            this._stackOpener.destroy();
+        }
     },
 
     openDetailPanel: function() {
@@ -811,15 +830,44 @@ var Filter = Control.extend({
         if (this._options.readOnly) {
             return;
         }
-        var popupOptions = {
+        if (!detection.isMobileIOS) {
+            RegisterUtil(this, 'scroll', this._handleScroll.bind(this));
+        }
+        const popupOptions = {
+            opener: this,
             templateOptions: {
                 items: items,
                 historyId: this._options.historyId
             },
             target: this._container[0] || this._container,
-            actionOnScroll: detection.isMobileIOS ? 'none' : 'close'
+            className: 'controls-FilterView-popup',
+            closeOnOutsideClick: true,
+            eventHandlers: {
+                onResult: this._resultHandler.bind(this)
+            }
         };
-        this._children.StickyOpener.open(Merge(popupOptions, panelPopupOptions), this);
+        this._getStickyOpener().open(Merge(popupOptions, panelPopupOptions));
+    },
+
+    _handleScroll(): void {
+        const stickyOpener = this._getStickyOpener();
+        if (stickyOpener.isOpened()) {
+            stickyOpener.close();
+        }
+    },
+
+    _getStickyOpener(): StickyOpener {
+        if (!this._stickyOpener) {
+            this._stickyOpener = new StickyOpener();
+        }
+        return this._stickyOpener;
+    },
+
+    _getStackOpener(): StackOpener {
+        if (!this._stackOpener) {
+            this._stackOpener = new StackOpener();
+        }
+        return this._stackOpener;
     },
 
     _rangeTextChangedHandler: function(event, textValue) {
@@ -834,7 +882,7 @@ var Filter = Control.extend({
         _private.notifyChanges(this, this._source);
     },
 
-    _resultHandler: function(event, result) {
+    _resultHandler: function(result) {
         if (!result.action) {
             const filterSource = converterFilterItems.convertToFilterSource(result.items);
             _private.resolveItems(this, mergeSource(this._source, filterSource));
@@ -848,20 +896,20 @@ var Filter = Control.extend({
             }
             _private.notifyChanges(this, this._source);
         }
-        this._children.StickyOpener.close();
+        this._getStickyOpener().close();
     },
 
-    _onSelectorTemplateResult: function(event, items) {
+    _onSelectorTemplateResult: function(items) {
         const config = this._configs[this._idOpenSelector];
         if (!config.items && items.getCount()) {
             config.items = new RecordSet({
                 keyProperty: items.at(0).getKeyProperty(),
                 rawData: [],
                 format: items.at(0).getFormat()
-            })
+            });
         }
         let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._idOpenSelector].initSelectorItems, items, this._idOpenSelector]) || items;
-        this._resultHandler(event, {action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
+        this._resultHandler({action: 'selectorResult', id: this._idOpenSelector, data: resultSelectedItems});
     },
 
     _isFastReseted: function() {
@@ -893,8 +941,9 @@ var Filter = Control.extend({
     },
 
     _reset: function(event, item) {
-        if (this._children.StickyOpener.isOpened()) {
-            this._children.StickyOpener.close();
+        const stickyOpener = this._getStickyOpener();
+        if (stickyOpener.isOpened()) {
+            stickyOpener.close();
         }
         var newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
@@ -934,14 +983,16 @@ var Filter = Control.extend({
                 });
                 this._idOpenSelector = name;
                 this._configs[name].initSelectorItems = templateOptions.selectedItems;
-                return this._children.selectorOpener.open({
+                return this._getStackOpener().open({
+                    opener: this,
                     template: item.editorOptions.selectorTemplate.templateName,
                     templateOptions,
                     eventHandlers: {
                         onSelectComplete: (event, result): void => {
-                            this._onSelectorTemplateResult(event, result);
-                            this._children.selectorOpener.close();
-                        }
+                            this._onSelectorTemplateResul(result);
+                            this._getStackOpener().close();
+                        },
+                        onResult: this._onSelectorTemplateResult.bind(this)
                     }
                 });
             }
@@ -949,8 +1000,9 @@ var Filter = Control.extend({
     },
 
     _resetFilterText: function() {
-        if (this._children.StickyOpener.isOpened()) {
-            this._children.StickyOpener.close();
+        const stickyOpener = this._getStickyOpener();
+        if (stickyOpener.isOpened()) {
+            stickyOpener.close();
         }
         factory(this._source).each(function(item) {
             // Быстрые фильтры и фильтр выбора периода

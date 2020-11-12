@@ -82,6 +82,11 @@ export default class Browser extends Control {
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
+        this._viewMode = options.viewMode;
+
+        if (options.root !== undefined) {
+            this._root = options.root;
+        }
 
         if (receivedState && options.source instanceof PrefetchProxy) {
             this._source = options.source.getOriginal();
@@ -310,6 +315,7 @@ export default class Browser extends Control {
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
+        this._sourceController.cancelLoading();
         this._items = this._sourceController.setItems(items);
         this._updateContext(this._sourceController.getState());
     }

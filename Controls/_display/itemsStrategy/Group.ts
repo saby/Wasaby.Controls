@@ -19,6 +19,7 @@ interface IOptions<S, T extends CollectionItem<S>> {
     display?: Collection<S, T>;
     handler?: GroupHandler<S, T>;
     collapsedGroups?: IGroups;
+    groupConstructor: new(options: unknown) => GroupItem<T>;
 }
 
 interface ISortOptions<S, T extends CollectionItem<S>> {
@@ -26,6 +27,7 @@ interface ISortOptions<S, T extends CollectionItem<S>> {
     handler: GroupHandler<S, T>;
     groups: Array<GroupItem<IGroup>>;
     collapsedGroups?: IGroups;
+    groupConstructor: new(options: unknown) => GroupItem<T>;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
@@ -227,7 +229,8 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
             display: this.options.display as Collection<S, T>,
             handler: this._options.handler,
             collapsedGroups: this._options.collapsedGroups,
-            groups: this._groups
+            groups: this._groups,
+            groupConstructor: this._options.groupConstructor
         });
     }
 
@@ -279,11 +282,11 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
             // Create group with this groupId if necessary
             if (groupsId.indexOf(groupId) === -1) {
                 const isCollapsed = options.collapsedGroups && options.collapsedGroups.indexOf(groupId) !== -1;
-                const group = new GroupItem<IGroup>({
+                const group = new options.groupConstructor({
                     owner: display as any,
                     contents: groupId,
                     expanded: !isCollapsed
-                });
+                }) as GroupItem<IGroup>;
 
                 groupIndex = groups.length;
 

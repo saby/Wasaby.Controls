@@ -515,6 +515,9 @@ const _private = {
                 listModel.setCompatibleReset(false);
             } else {
                 listModel.setCollection(items);
+                if (self._options.itemsReadyCallback) {
+                    self._options.itemsReadyCallback(listModel.getCollection());
+                }
             }
             self._items = listModel.getCollection();
         } else {
@@ -649,7 +652,7 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
-        if (self._options.navigation.viewConfig.showEndButton) {
+        if (self._options.navigation?.viewConfig?.showEndButton) {
             _private.scrollToEdge(self, 'down');
         }
     },
@@ -722,7 +725,9 @@ const _private = {
         }
 
         if (itemActions) {
-            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === 'delete');
+            // TODO Опция выпилена в 21.1000
+            const deleteActionKey = self._options.task1180208637 ? self._options.task1180208637 : 'delete'
+            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === deleteActionKey);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
             }
@@ -1499,12 +1504,10 @@ const _private = {
     },
 
     resetPortionedSearchAndCheckLoadToDirection(self, options): void {
-        if (options.searchValue) {
-            _private.getPortionedSearch(self).reset();
+        _private.getPortionedSearch(self).reset();
 
-            if (options.searchValue && options.sourceController) {
-                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
-            }
+        if (options.sourceController) {
+            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
         }
     },
 
@@ -2084,6 +2087,7 @@ const _private = {
         self.__error = errorConfig;
         if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
             self._scrollController = null;
+            self._observerRegistered = false;
         }
     },
 
@@ -2157,17 +2161,21 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    isPagingNavigationVisible(hasMoreData) {
+    isPagingNavigationVisible(self, hasMoreData) {
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
-        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        if (self._options.navigation && self._options.navigation.viewConfig &&
+            self._options.navigation.viewConfig.totalInfo === 'extended') {
+            return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        }
+        return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -3038,6 +3046,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
     _recalcPagingVisible: false,
+    _isPagingArrowClick: false,
 
     _itemTemplate: null,
 
@@ -3462,6 +3471,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
              */
             if (this._pagingVisible) {
+                this._cachedPagingState = false;
                 _private.initPaging(this);
             }
             this._viewRect = container.getBoundingClientRect();
@@ -3470,7 +3480,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                    _private.doAfterUpdate(this, () => {if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                    _private.doAfterUpdate(this, () => {if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3490,14 +3500,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
-         * Это нужно чтобы правильно посчитать номер страницы
+         * Это нужно чтобы правильно посчитать номер страницы.
+         * Также, это нужно для других пэджингов, но только в том случае, если мы скроллим не через нажатие кнопок.
+         * Иначе пэджинг может исчезать и сразу появляться.
+         * https://online.sbis.ru/opendoc.html?guid=8d830d87-be3f-4522-b453-0df337147d42
          */
         if (_private.needScrollPaging(this._options.navigation) &&
-            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
             scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
                 this._scrollController?.getPlaceholders().top || 0);
         }
+        this._isPagingArrowClick = false;
         return scrollParams;
     },
 
@@ -3836,7 +3850,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged) {
+        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -3855,6 +3869,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                         _private.updateInitializedItemActions(this, newOptions);
                         this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._scrollController) {
+                            _private.createScrollController(this, newOptions);
+                        }
                     });
                 });
             } else {
@@ -3863,6 +3880,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
                     _private.updateInitializedItemActions(this, newOptions);
                     this._listViewModel.setSearchValue(newOptions.searchValue);
+                    if (!this._scrollController) {
+                        _private.createScrollController(this, newOptions);
+                    }
                 });
             }
         } else {
@@ -3874,6 +3894,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
                     if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
+                    }
+
+                    if (this._pagingNavigation &&
+                        !this._pagingNavigationVisible && this._items && sourceChanged) {
+                        _private.updatePagingData(this,
+                            this._items.getMetaData().more);
                     }
                 }
             });
@@ -4137,7 +4163,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (!this._modelRecreated && !this.__error) {
+            if (this._listViewModel && !this._modelRecreated && !this.__error) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
@@ -4267,7 +4293,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
         this._notifyOnDrawItems();
-
+        if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
+            this._registerObserver();
+            this._registerIntersectionObserver();
+        }
         // FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading && this._loadingState === null) {
@@ -4308,6 +4337,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     __onPagingArrowClick(e, arrow) {
+        this._isPagingArrowClick = true;
         switch (arrow) {
             case 'Next':
                 _private.scrollPage(this, 'Down');
@@ -4576,7 +4606,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-            if (this._listViewModel.getCount() > 1) {
+            if (this._listViewModel.getCount() > 1 && !isAdd) {
                 this.setMarkedKey(item.contents.getKey());
             }
         }
@@ -4625,8 +4655,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
+
+        if (this._listViewModel.getCount() > 1) {
+            if (this._markedKeyAfterEditing) {
+                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
+                this.setMarkedKey(this._markedKeyAfterEditing);
+                this._markedKeyAfterEditing = null;
+            } else if (isAdd && willSave) {
+                this.setMarkedKey(item.contents.getKey());
+            } else if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        }
+
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
@@ -4702,6 +4746,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!this._isMounted) {
                 return addResult;
             }
+
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
+
             // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
             const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
             const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
@@ -4724,6 +4774,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
             this.hideIndicator();
         });
     },
@@ -4846,7 +4900,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
-            autoAddByApplyButton: !!editingConfig.autoAddByApplyButton,
+            autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };
     },
@@ -5006,7 +5060,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
 
         if (canBeMarked && !this._onLastMouseUpWasDrag) {
-            this.setMarkedKey(key);
+            // маркер устанавливается после завершения редактирования
+            if (this._editInPlaceController?.isEditing()) {
+                // TODO нужно перенести установку маркера на клик, т.к. там выполняется проверка для редактирования
+                this._markedKeyAfterEditing = key;
+            } else {
+                this.setMarkedKey(key);
+            }
         }
     },
 
@@ -5550,7 +5610,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return !(detection.isMobileIOS ||
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
-                this._options.navigation.viewConfig.pagingMode === 'end')
+                (this._options.navigation.viewConfig.pagingMode === 'end' ||
+                    this._options.navigation.viewConfig.pagingPadding === 'null' ||
+                    this._options.navigation.viewConfig.pagingPadding === null
+                )
+            )
         );
     },
 
@@ -5629,8 +5693,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            const newPosition = this._dndListController.calculateDragPosition(null);
-            this._dndListController.setDragPosition(newPosition);
+            const draggableItem = this._dndListController.getDraggableItem();
+            if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+                const newPosition = this._dndListController.calculateDragPosition(null);
+                this._dndListController.setDragPosition(newPosition);
+            } else {
+                // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
+                this._dndListController.endDrag();
+            }
         }
     },
 

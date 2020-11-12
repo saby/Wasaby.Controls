@@ -5,6 +5,7 @@
    box-sizing: border-box;
    display: flex;
    align-items: center;
+   left: 0;
 }
 
 .controls-TileView__previewTemplate_title_singleLine_theme-@{themeName} {
@@ -85,6 +86,9 @@
    .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate:hover .controls-TileView__item_unscaleable .controls-itemActionsV {
       opacity: 1;
       visibility: visible;
+   }
+   .controls-TileView__previewTemplate:hover.controls-TileView__previewTemplate_actions_showed.controls-TileView__previewTemplate_node .controls-TileView__previewTemplate_title_text {
+      padding-right: @item_padding_itemActions + @icon-size_m;
    }
    //TODO каскады до выполнения https://online.sbis.ru/opendoc.html?guid=5c209e19-b6b2-47d0-9b8b-c8ab32e133b0 сейчас нельзя обновлять модель, иначе будут жуткие тормоза
 

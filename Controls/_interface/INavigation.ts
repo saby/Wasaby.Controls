@@ -154,6 +154,13 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
 export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbers' | 'direct';
 
 /**
+ * @typeof {String} TNavigationPagingPadding
+ * @variant default Предназначен для отображения отступа под пэйджинг.
+ * @variant null Предназначен для отключения отображения отступа под пэйджинг.
+ */
+type TNavigationPagingPadding = 'default' | 'null';
+
+/**
  * @typedef {Object} INavigationViewConfig
  * @property {TNavigationPagingMode} [pagingMode=hidden] Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
  * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
@@ -161,12 +168,14 @@ export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbe
  * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/INavigationOptionValue.typedef здесь}.
  * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.
  * Когда параметр принимает значение true, кнопка отображается.
+ * @property {TNavigationPagingPadding} [pagingPadding=default] Опция управляет отображением отступа под пэйджинг.
  */
 export interface INavigationViewConfig {
     pagingMode?: TNavigationPagingMode;
     totalInfo?: TNavigationTotalInfo;
     maxCountValue?: number;
     showEndButton?: boolean;
+    pagingPadding?: TNavigationPagingPadding;
 }
 
 /**

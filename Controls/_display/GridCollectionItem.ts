@@ -1,45 +1,66 @@
 import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
 import GridCollection from './GridCollection';
 import GridColumn, { IOptions as IGridColumnOptions } from './GridColumn';
-import { IColumn, TColumns } from '../_grid/interface/IColumn';
+import { IColumn, TColumns } from 'Controls/grid';
+import GridCheckboxColumn from './GridCheckboxColumn';
+import GridHeader from './GridHeader';
+import { TResultsPosition } from './GridResults';
+import GridStickyLadderColumn from './GridStickyLadderColumn';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
     columns: TColumns;
-    /* todo заготовка для ladder
-    ladder: {};
-     */
 }
 
 export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$owner: GridCollection<T>;
     protected _$columns: TColumns;
-    protected _$columnItems: Array<GridColumn<T>>;
+    protected _$columnItems: GridColumn<T>[];
+    protected _$ladder: {};
+
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
 
     constructor(options?: IOptions<T>) {
         super(options);
-        const addMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
-        if (this._$columns) {
-            const factory = this._getColumnsFactory();
-            this._$columnItems = this._$columns.map((column) => factory({ column }));
-            if (addMultiSelectColumn) {
-                this._$columnItems = [
-                    factory({ column: {} as IColumn })
-                ].concat(this._$columnItems);
-            }
+    }
+
+    getItemClasses(templateHighlightOnHover: boolean = true,
+                   theme: string = 'default',
+                   style: string = 'default',
+                   cursor: string = 'pointer',
+                   clickable: boolean = true): string {
+        /* todo (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
+                (this.getCount() - 1 === current.index)*/
+        const isLastItem = false;
+
+        let itemClasses = `controls-ListView__itemV ${this._getCursorClasses(cursor, clickable)}`;
+
+        itemClasses += ` controls-Grid__row controls-Grid__row_${style}_theme-${theme}`;
+
+        if (templateHighlightOnHover !== false && !this.isEditing()) {
+            itemClasses += ` controls-Grid__row_highlightOnHover_${style}_theme-${theme}`;
         }
+
+        if (isLastItem) {
+            itemClasses += ' controls-Grid__row_last';
+        }
+
+        return itemClasses;
     }
 
     getColumns(): Array<GridColumn<T>> {
+        if (!this._$columnItems) {
+            this._initializeColumns();
+        }
         return this._$columnItems;
     }
 
     getColumnsCount(): number {
-        return this._$columnItems.length;
+        return this._$columns.length;
     }
 
-    getColumnIndex(column: GridColumn<T>): number {
-        return this._$columnItems.indexOf(column);
+    getColumnIndex(column: IColumn): number {
+        return this._$columns.indexOf(column);
     }
 
     getTopPadding(): string {
@@ -66,28 +87,75 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         };
     }
 
-    /* todo заготовка для ladder
-     в шаблоне добавить:
-                       <ws:ladderWrapper>
-                          <ws:partial template="{{ladderWrapper.content}}"
-                                      attr:class="{{ (item || itemData ).getLadderWrapperClasses(ladderWrapper.ladderProperty) }}"/>
-                       </ws:ladderWrapper>
+    getHeader(): GridHeader<T> {
+        return this._$owner.getHeader();
+    }
 
-    ts-код:
-    getLadderWrapperClasses(ladderProperty: string): string {
+    getResultsPosition(): TResultsPosition {
+        return this._$owner.getResultsPosition();
+    }
+
+    getStickyLadderProperties(column: IColumn): string[] {
+        let stickyProperties = column && column.stickyProperty;
+        if (stickyProperties && !(stickyProperties instanceof Array)) {
+            stickyProperties = [stickyProperties];
+        }
+        return stickyProperties as string[];
+    }
+
+    getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
         let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
-        const ladder = null; // this._$owner.getIndex(this);
-        if (ladder && ladder[ladderProperty].ladderLength < 1) {
+        const ladder = this.getLadder();
+        const stickyLadder = this.getStickyLadder();
+        const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const index = stickyProperties.indexOf(stickyProperty);
+        const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
+
+        if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+            index === 1 && !hasMainCell || index === 0 && hasMainCell)) {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
+        }
+
+        if (stickyProperty === ladderProperty && index === 1 && hasMainCell) {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_additional-with-main';
+        }
+
+        if ((stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1 || !ladder) {
+
+        } else {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
         }
         return ladderWrapperClasses;
-    }*/
+    }
+
+    setLadder(ladder: {}) {
+        if (this._$ladder !== ladder) {
+            this._$ladder = ladder;
+            this._reinitializeColumns();
+        }
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility)
+        if (isChangedMultiSelectVisibility) {
+            this._reinitializeColumns();
+        }
+        return isChangedMultiSelectVisibility;
+    }
 
     // region overrides
 
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);
+        if (changed) {
+            this._redrawColumns('first');
+        }
+    }
+
+    setSelected(selected: boolean|null, silent?: boolean): void {
+        const changed = this._$selected !== selected;
+        super.setSelected(selected, silent);
         if (changed) {
             this._redrawColumns('first');
         }
@@ -103,17 +171,102 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
     // endregion
 
+    getLadder(): {} {
+        let result;
+        if (this._$ladder && this._$ladder.ladder) {
+            result = this._$ladder.ladder[this._$owner.getIndex(this)];
+        }
+        return result;
+    }
+
+    getStickyLadder(): {} {
+        let result;
+        if (this._$ladder && this._$ladder.stickyLadder) {
+            result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
+        }
+        return result;
+    }
+
+    protected _reinitializeColumns(): void {
+        if (this._$columnItems) {
+            this._$columnItems.forEach((columnItem) => {
+                columnItem.destroy();
+            });
+            this._initializeColumns();
+            this._nextVersion();
+        }
+    }
+
+    protected _initializeColumns(): void {
+        if (this._$columns) {
+            const createMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
+            // todo Множественный stickyProperties можно поддержать здесь:
+            const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+            const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
+                                                      this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
+            const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
+                                                       this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
+            const factory = this._getColumnsFactory();
+
+            this._$columnItems = this._$columns.map((column) => factory({ column }));
+
+            if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
+                this._$columnItems[0].setHiddenForLadder(true);
+            }
+
+            if (stickyLadderStyleForSecondProperty) {
+                this._$columnItems.splice(1,0,new GridStickyLadderColumn({
+                    column: this._$columns[0],
+                    owner: this,
+                    wrapperStyle: stickyLadderStyleForSecondProperty,
+                    contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
+                    stickyProperty: stickyLadderProperties[1],
+                    stickyHeaderZIndex: 1
+                }));
+            }
+
+            if (stickyLadderStyleForFirstProperty) {
+                this._$columnItems = ([
+                    new GridStickyLadderColumn({
+                        column: this._$columns[0],
+                        owner: this,
+                        wrapperStyle: stickyLadderStyleForFirstProperty,
+                        contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
+                        stickyProperty: stickyLadderProperties[0],
+                        stickyHeaderZIndex: 2
+                    })
+                ] as GridColumn<T>[]).concat(this._$columnItems);
+            }
+
+            if (createMultiSelectColumn) {
+                this._$columnItems = ([
+                    new GridCheckboxColumn({
+                        column: {} as IColumn,
+                        owner: this
+                    })
+                ] as GridColumn<T>[]).concat(this._$columnItems);
+            }
+        }
+    }
+
+    protected _getStickyLadderStyle(column: IColumn, stickyProperty: string): string {
+        const stickyLadder = this.getStickyLadder();
+        return stickyLadder && stickyLadder[stickyProperty].headingStyle;
+    }
+
     protected _redrawColumns(target: 'first'|'last'|'all'): void {
-        switch (target) {
-            case 'first':
-                this._$columnItems[0].nextVersion();
-                break;
-            case 'last':
-                this._$columnItems[this.getColumnsCount() - 1].nextVersion();
-                break;
-            case 'all':
-                this._$columnItems.forEach((column) => column.nextVersion());
-                break;
+        if (this._$columnItems) {
+            switch (target) {
+                case 'first':
+                    this._$columnItems[0].nextVersion();
+                    break;
+                case 'last':
+                    this._$columnItems[this.getColumnsCount() - 1].nextVersion();
+                    break;
+                case 'all':
+                    this._$columnItems.forEach((column) => column.nextVersion());
+                    break;
+            }
         }
     }
 
