@@ -3062,6 +3062,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
     _recalcPagingVisible: false,
+    _isPagingArrowClick: false,
 
     _itemTemplate: null,
 
@@ -3515,14 +3516,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
-         * Это нужно чтобы правильно посчитать номер страницы
+         * Это нужно чтобы правильно посчитать номер страницы.
+         * Также, это нужно для других пэджингов, но только в том случае, если мы скроллим не через нажатие кнопок.
+         * Иначе пэджинг может исчезать и сразу появляться.
+         * https://online.sbis.ru/opendoc.html?guid=8d830d87-be3f-4522-b453-0df337147d42
          */
         if (_private.needScrollPaging(this._options.navigation) &&
-            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
             scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
                 this._scrollController?.getPlaceholders().top || 0);
         }
+        this._isPagingArrowClick = false;
         return scrollParams;
     },
 
@@ -4335,6 +4340,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     __onPagingArrowClick(e, arrow) {
+        this._isPagingArrowClick = true;
         switch (arrow) {
             case 'Next':
                 _private.scrollPage(this, 'Down');
