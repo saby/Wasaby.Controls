@@ -19,9 +19,9 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
     protected _$source: TreeItem<T>;
 
     constructor(options?: IOptions<T>) {
-        super();
-        this._$source = options && options.source;
-        this._$parent = options && options.parent;
+        super({ contents: options?.source?.contents });
+        this._$source = options?.source;
+        this._$parent = options?.parent;
     }
 
     getSource(): TreeItem<T> {
