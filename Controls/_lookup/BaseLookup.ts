@@ -4,6 +4,7 @@ import {default as LookupController, ILookupBaseControllerOptions, SelectedItems
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor, Model} from 'Types/entity';
 import {IStackPopupOptions} from 'Controls/_popup/interface/IStack';
+import {TKey} from 'Controls/interface';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
@@ -33,7 +34,7 @@ export default abstract class
         } else if (options.items) {
             this._setItems(options.items);
             this._inheritorBeforeMount(options);
-        } else if (options.selectedKeys.length && options.source) {
+        } else if (options.selectedKeys && options.selectedKeys.length && options.source) {
             return this._lookupController.loadItems().then((items) => {
                 this._setItems(items);
                 this._inheritorBeforeMount(options);
@@ -103,6 +104,18 @@ export default abstract class
         this._afterItemsChanged();
     }
 
+    protected _getSelectedKeys(options: ILookupOptions): TKey[] {
+        let selectedKeys;
+
+        if (options.hasOwnProperty('selectedKeys')) {
+            selectedKeys = options.selectedKeys;
+        } else {
+            selectedKeys = this._lookupController.getSelectedKeys();
+        }
+
+        return selectedKeys;
+    }
+
     private _afterItemsChanged(): void {
         this._itemsChanged(this._items = this._lookupController.getItems());
         this._notifyChanges();
@@ -116,7 +129,7 @@ export default abstract class
     private _notifyChanges(): void {
         const controller = this._lookupController;
         const newSelectedkeys = controller.getSelectedKeys();
-        const selectedKeysDiff = ArrayUtil.getArrayDifference(this._options.selectedKeys, newSelectedkeys);
+        const selectedKeysDiff = ArrayUtil.getArrayDifference(this._getSelectedKeys(this._options), newSelectedkeys);
         this._notify('selectedKeysChanged', [newSelectedkeys, selectedKeysDiff.added, selectedKeysDiff.removed]);
         this._notify('itemsChanged', [controller.getItems()]);
         this._notify('textValueChanged', [controller.getTextValue()]);
@@ -134,7 +147,6 @@ export default abstract class
 
     static getDefaultOptions(): object {
         return {
-            selectedKeys: [],
             multiSelect: false,
             horizontalPadding: 'xs'
         };

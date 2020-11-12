@@ -31,12 +31,17 @@ export default class LookupBaseControllerClass {
 
     constructor(options: ILookupBaseControllerOptions) {
         this._options = options;
-        this._selectedKeys = options.selectedKeys.slice();
+        this._selectedKeys = options.selectedKeys ? options.selectedKeys.slice() : [];
     }
 
     update(newOptions: ILookupBaseControllerOptions): Promise<RecordSet>|boolean {
-        const keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) ||
-                            !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+        const hasSelectedKeysInOptions = newOptions.hasOwnProperty('selectedKeys');
+        let keysChanged;
+
+        if (hasSelectedKeysInOptions) {
+            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) ||
+                          !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+        }
 
         const sourceIsChanged = newOptions.source !== this._options.source;
         const isKeyPropertyChanged = newOptions.keyProperty !== this._options.keyProperty;
@@ -49,7 +54,7 @@ export default class LookupBaseControllerClass {
             this._sourceController = null;
         }
 
-        if (keysChanged || sourceIsChanged) {
+        if (keysChanged || sourceIsChanged && hasSelectedKeysInOptions) {
             this._setSelectedKeys(newOptions.selectedKeys.slice());
         } else if (isKeyPropertyChanged) {
             const selectedKeys = [];
