@@ -110,6 +110,9 @@ var TileView = ListView.extend({
         if (this._options.tileMode !== newOptions.tileMode) {
             this._listModel.setTileMode(newOptions.tileMode);
         }
+        if (this._options.itemsContainerPadding !== newOptions.itemsContainerPadding) {
+            this._listModel.setItemsContainerPadding(newOptions.itemsContainerPadding);
+        }
         if (this._options.tileHeight !== newOptions.tileHeight) {
             this._listModel.setItemsHeight(newOptions.tileHeight);
         }
