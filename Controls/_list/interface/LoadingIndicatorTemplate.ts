@@ -10,18 +10,17 @@ import {TemplateFunction} from 'UI/Base';
  *
  *
  * @example
- * WML:
  * <pre class="brush: html">
- *   <Controls.list:View
- *      <ws:loadingIndicatorTemplate>
- *           <ws:partial template="Controls/list:LoadingIndicatorTemplate"
+ * <Controls.list:View>
+ *     <ws:loadingIndicatorTemplate>
+ *         <ws:partial template="Controls/list:LoadingIndicatorTemplate"
  *                      scope="{{loadingIndicatorTemplate}}">
- *               <ws:footerTemplate>
- *                  <div>Дополнительная информация</div>
- *               </ws:footerTemplate>
- *          </ws:partial>
- *      </ws:loadingIndicatorTemplate>
- *  </Controls.list:View>
+ *             <ws:footerTemplate>
+ *                 <div>Дополнительная информация</div>
+ *             </ws:footerTemplate>
+ *         </ws:partial>
+ *     </ws:loadingIndicatorTemplate>
+ * </Controls.list:View>
  * </pre>
  */
 

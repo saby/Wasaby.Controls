@@ -20,7 +20,7 @@ export default class ScrollToEnd extends Control {
             hasMore: false
         },
         viewConfig: {
-            pagingMode: 'direct',
+            pagingMode: 'basic',
             showEndButton: true
         }
     };
@@ -36,7 +36,7 @@ export default class ScrollToEnd extends Control {
             direction: CursorDirection.bothways
         },
         viewConfig: {
-            pagingMode: 'direct',
+            pagingMode: 'basic',
             showEndButton: true
         }
     };

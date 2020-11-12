@@ -150,6 +150,7 @@ export type TNavigationTotalInfo = 'basic' | 'extended';
  * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
  * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
  * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц.
+ * @variant direct Значение устарело и будет удалено. Используйте значение basic.
  */
 export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbers' | 'direct';
 

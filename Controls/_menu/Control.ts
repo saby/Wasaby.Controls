@@ -235,7 +235,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
      * @param clickEvent
      * @private
      */
-    protected _itemActionClick(event: SyntheticEvent<MouseEvent>,
+    protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
                                item: CollectionItem<Model>,
                                action: IItemAction,
                                clickEvent: SyntheticEvent<MouseEvent>): void {

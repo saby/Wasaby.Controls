@@ -199,7 +199,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             !newOptions.record && this._createMetaDataOnUpdate !== createMetaData;
 
         if (newOptions.record && this._record !== newOptions.record) {
-            if (!needCreate && !needRead) {
+            const isEqualId = this._isEqualId(this._record, newOptions.record);
+            if (!needCreate && !needRead && !isEqualId) {
                 this._confirmRecordChangeHandler(() => {
                     this._setRecord(newOptions.record);
                 });
@@ -237,6 +238,17 @@ class FormController extends Control<IFormController, IReceivedState> {
                 this._isNewRecord = newOptions.isNewRecord;
             }
         }
+    }
+
+    private _isEqualId(oldRecord: Model, newRecord: Model): boolean {
+        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
+        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
+        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
+            return false;
+        }
+        const oldId: string = this._getRecordId(oldRecord) as string;
+        const newId: string = this._getRecordId(newRecord) as string;
+        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
     }
 
     private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
@@ -424,12 +436,15 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    private _getRecordId(): number | string {
-        if (!this._record.getId && !this._options.keyProperty) {
+    private _getRecordId(record?: Model): number | string {
+        if (!record) {
+            record = this._record;
+        }
+        if (!record.getId && !this._options.keyProperty) {
             Logger.error('FormController: Рекорд не является моделью и не задана опция keyProperty, указывающая на ключевое поле рекорда', this);
             return null;
         }
-        return this._options.keyProperty ? this._record.get(this._options.keyProperty) : this._record.getId();
+        return this._options.keyProperty ? record.get(this._options.keyProperty) : record.getId();
     }
 
     private _tryDeleteNewRecord(): Promise<undefined> {

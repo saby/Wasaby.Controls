@@ -11,7 +11,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IStickyPopupOptions} from 'Controls/popup';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
@@ -41,7 +41,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_dropdown/interface/IBaseDropdown
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IIcon
@@ -55,7 +55,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ISearch
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -76,7 +76,6 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IDropdown
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IIconSize
@@ -274,11 +273,4 @@ export default class Button extends BaseDropdown {
  *    });
  * }
  * </pre>
- */
-
-/**
- * @name Controls/_dropdown/Button#additionalProperty
- * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
- * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
- * @demo Controls-demo/dropdown_new/Button/AdditionalProperty/Index
  */

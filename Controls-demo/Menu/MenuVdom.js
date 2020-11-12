@@ -226,7 +226,7 @@ define('Controls-demo/Menu/MenuVdom', [
          },
       }
    );
-   ModuleClass._styles = ['Controls-demo/Dropdown/MenuVdom', 'Controls-demo/Menu/MenuVdom'];
+   ModuleClass._styles = ['Controls-demo/Menu/MenuVdom'];
 
    return ModuleClass;
 });

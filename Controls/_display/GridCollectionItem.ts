@@ -18,6 +18,8 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$columnItems: GridColumn<T>[];
     protected _$ladder: {};
 
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
+
     constructor(options?: IOptions<T>) {
         super(options);
     }

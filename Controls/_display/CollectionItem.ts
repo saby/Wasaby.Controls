@@ -17,6 +17,8 @@ import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/IColl
 import {ICollectionItem} from './interface/ICollectionItem';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
+import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
+import {IItemPadding} from '../_list/interface/IList';
 
 export interface IOptions<T> {
     contents?: T;
@@ -299,12 +301,19 @@ export default class CollectionItem<T> extends mixin<
         );
     }
 
-    getMarkerClasses(theme: string, style: string = 'default', markerPosition: 'left' | 'right' = 'left'): string {
-        let markerClasses = 'controls-ListView__itemV_marker';
-        markerClasses += ` controls-ListView__itemV_marker_${style}_theme-${theme}`;
-        markerClasses += ` controls-ListView__itemV_marker_theme-${theme}`;
-        markerClasses += ` controls-ListView__itemV_marker-${markerPosition}`;
-        return markerClasses;
+    getMarkerClasses(theme: string, style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
+                     markerPosition: 'left' | 'right' = 'left'): string {
+        let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
+        if (markerClassName === 'default') {
+            markerClass += 'default';
+        } else {
+            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
+        }
+        markerClass += ` controls-ListView__itemV_marker_${style}_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker-${markerPosition}`;
+        return markerClass;
     }
 
     increaseCounter(name: string): number {
@@ -624,6 +633,10 @@ export default class CollectionItem<T> extends mixin<
         return this.getOwner().getMultiSelectVisibility();
     }
 
+    getMultiSelectPosition(): string {
+        return this.getOwner().getMultiSelectPosition();
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -637,7 +650,7 @@ export default class CollectionItem<T> extends mixin<
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getMultiSelectVisibility() !== 'hidden') {
+        if (this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;

@@ -26,7 +26,7 @@
    </ws:if>
 
    <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked()}}">
-      <div class="{{itemData.getMarkerClasses()}}"></div>
+      <div class="{{itemData.getMarkerClasses(markerClassName)}}"></div>
    </ws:if>
 
    <ws:if data="{{contentTemplate}}">

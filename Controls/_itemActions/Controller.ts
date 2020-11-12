@@ -25,7 +25,10 @@ import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
+import {DependencyTimer} from 'Controls/popup';
+import * as mStubs from 'Core/moduleStubs';
 import {getActions} from './measurers/ItemActionMeasurer';
+
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -147,6 +150,11 @@ export class Controller {
     private _itemActionsPosition: TItemActionsPosition;
 
     private _activeItemKey: any;
+
+    // Таймер для погрузки зависимостей
+    private _dependenciesTimer: DependencyTimer = null;
+
+    private _loadMenuTempPromise: Promise<>;
 
     /**
      * Метод инициализации и обновления параметров.
@@ -304,6 +312,61 @@ export class Controller {
     }
 
     /**
+     * Устанавливает активный Item в коллекции
+     * @param item Текущий элемент коллекции
+     */
+    setActiveItem(item: IItemActionsItem): void {
+        this._collection.setActiveItem(item);
+        if (item && typeof item.getContents !== 'undefined' && typeof item.getContents().getKey !== 'undefined') {
+            this._activeItemKey = item.getContents().getKey();
+        }
+    }
+
+        /**
+     * Возвращает текущий активный Item
+     */
+    getActiveItem(): IItemActionsItem {
+        let activeItem = this._collection.getActiveItem();
+
+        /**
+         * Проверяем что элемент существует, в противном случае пытаемся его найти.
+         */
+        if (activeItem === undefined &&
+           (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)
+        ) {
+            activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
+        }
+        return activeItem;
+    }
+
+    /**
+     * Устанавливает текущее состояние анимации в модель
+     */
+    startSwipeCloseAnimation(): void {
+        const swipeItem = this.getSwipeItem();
+        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+    }
+
+    /**
+     * Стартует таймер загрузки зависимостей меню
+     * @remark
+     * Рендер контрола Controls/dropdown:Button намного дороже, поэтому вместо menuButton используем текущую вёрстку и таймеры
+     */
+    startMenuDependenciesTimer(): void {
+        if (!this._dependenciesTimer) {
+            this._dependenciesTimer = new DependencyTimer();
+        }
+        this._dependenciesTimer.start(this._loadDependencies.bind(this));
+    }
+
+    /**
+     * Останавливает таймер и фактически загружает все зависимости
+     */
+    stopMenuDependenciesTimer(): void {
+        this._dependenciesTimer?.stop();
+    }
+
+    /**
      * Возвращает конфиг для шаблона меню опций
      * @param isActionMenu
      * @param parentAction
@@ -342,40 +405,22 @@ export class Controller {
         };
     }
 
-    /**
-     * Устанавливает активный Item в коллекции
-     * @param item Текущий элемент коллекции
-     */
-    setActiveItem(item: IItemActionsItem): void {
-        this._collection.setActiveItem(item);
-        if (item && typeof item.getContents !== 'undefined' && typeof item.getContents().getKey !== 'undefined') {
-            this._activeItemKey = item.getContents().getKey();
+    private _loadDependencies(): Promise<unknown[]> {
+        if (!this._loadMenuTempPromise) {
+            const templatesToLoad = ['Controls/menu'];
+            if (this._contextMenuConfig) {
+                const templates = ['headerTemplate', 'footerTemplate', 'itemTemplate', 'groupTemplate'];
+                templates.forEach((template) => {
+                    if (typeof this._contextMenuConfig[template] === 'string') {
+                        templatesToLoad.push(this._contextMenuConfig[template]);
+                    }
+                });
+            }
+            this._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
+                return loadedDeps[0].Control.loadCSS(this._theme);
+            });
         }
-    }
-
-    /**
-     * Возвращает текущий активный Item
-     */
-    getActiveItem(): IItemActionsItem {
-        let activeItem = this._collection.getActiveItem();
-
-        /**
-         * Проверяем что элемент существует, в противном случае пытаемся его найти.
-         */
-        if (activeItem === undefined &&
-           (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)
-        ) {
-            activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
-        }
-        return activeItem;
-    }
-
-    /**
-     * Устанавливает текущее состояние анимации в модель
-     */
-    startSwipeCloseAnimation(): void {
-        const swipeItem = this.getSwipeItem();
-        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+        return this._loadMenuTempPromise;
     }
 
     /**

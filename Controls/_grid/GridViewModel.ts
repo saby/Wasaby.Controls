@@ -686,6 +686,16 @@ var
 
                 return `${itemData._staticRowClassses} ${classes.trim()}`;
             };
+        },
+        resolveEditArrowVisibility(item, options) {
+            let contents = item.getContents();
+            if (!options.editArrowVisibilityCallback) {
+                return options.showEditArrow;
+            }
+            if (item['[Controls/_display/BreadcrumbsItem]']) {
+                contents = contents[(contents as any).length - 1];
+            }
+            return options.showEditArrow && options.editArrowVisibilityCallback(contents);
         }
     },
 
@@ -1604,7 +1614,7 @@ var
                 columns: this._columns
             });
 
-            current.showEditArrow = this._options.showEditArrow;
+            current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
@@ -1644,10 +1654,11 @@ var
                 }
             };
 
-            current.getMarkerClasses = () => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
+            current.getMarkerClasses = (markerClassName = 'default') => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}
+            controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (current.itemPadding.top || 'l') + '_' + markerClassName)}
             controls-ListView__itemV_marker-${current.markerPosition}`;
 
             if (current.hasMultiSelectColumn) {

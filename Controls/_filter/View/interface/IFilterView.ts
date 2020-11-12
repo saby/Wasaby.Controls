@@ -44,8 +44,8 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @property {Types/source:Base} source Object that implements ICrud interface for data access. If 'items' is specified, 'source' will be ignored.
  * @property {Boolean} multiSelect Determines whether multiple selection is set.
  * @property {Controls/interface/ISelectorDialog} selectorTemplate Items selection panel template.
- * @property {Function} itemTemplate Template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplate}
- * @property {String} itemTemplateProperty Name of the item property that contains template for item render. For more information, see {@link Controls/interface/IDropdown#itemTemplateProperty}
+ * @property {Function} itemTemplate Template for item render. For more information, see {@link Controls/_menu/interface/IMenuBase#itemTemplate}
+ * @property {String} itemTemplateProperty Name of the item property that contains template for item render. For more information, see {@link Controls/_menu/interface/IMenuBase#itemTemplateProperty}
  * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/_interface/IFilter}
  * @property {Object} navigation List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.) {@link Controls/_interface/INavigation}
  * @property {Types/collection:IList} items Special structure for the visual representation of the filter. {@link Types/collection:IList}.
