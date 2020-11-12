@@ -2577,15 +2577,10 @@ const _private = {
         if (self._options.markerVisibility !== 'hidden' && self._children.listView) {
             const controller = _private.getMarkerController(self);
             const itemsContainer = self._children.listView.getItemsContainer();
-            const collection = self._listViewModel.getDisplay ? self._listViewModel.getDisplay() : self._listViewModel;
-            let item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            // Тут может оказаться, к примеру Group, который не является MarkableItem
-            while (!item.MarkableItem) {
-                item = collection.getNext(item);
-            }
-            const contents = _private.getPlainItemContents(item);
-            if (contents.getKey() !== controller.getMarkedKey()) {
-                _private.changeMarkedKey(self, contents.getKey());
+            const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
+            const markedKey = controller.getSuitableMarkedKey(item);
+            if (markedKey !== controller.getMarkedKey()) {
+                _private.changeMarkedKey(self, markedKey);
             }
         }
     },
