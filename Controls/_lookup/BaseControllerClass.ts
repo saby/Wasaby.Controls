@@ -35,7 +35,7 @@ export default class LookupBaseControllerClass {
     }
 
     update(newOptions: ILookupBaseControllerOptions): Promise<RecordSet>|boolean {
-        const hasSelectedKeysInOptions = newOptions.hasOwnProperty('selectedKeys');
+        const hasSelectedKeysInOptions = newOptions.selectedKeys !== undefined;
         let keysChanged;
 
         if (hasSelectedKeysInOptions) {
