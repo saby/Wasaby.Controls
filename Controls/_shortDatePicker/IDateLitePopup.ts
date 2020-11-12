@@ -16,6 +16,7 @@ export interface IDateLitePopupOptions extends IControlOptions {
    displayedRanges?: Date[];
    dateConstructor?: Function;
    monthTemplate?: TemplateFunction;
+   itemTemplate?: TemplateFunction;
    stickyPosition?: object;
 
    //TODO: устаревшая опция
