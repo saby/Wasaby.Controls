@@ -222,6 +222,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             imageProperty: 'image',
             itemCompressionCoefficient: 0.7,
             itemClasses: 'controls-TileView__item_spacingLeft_default_theme-default controls-TileView__item_spacingRight_default_theme-default controls-TileView__item_spacingTop_default_theme-default controls-TileView__item_spacingBottom_default_theme-default',
+            imageAlign: 'center',
             itemsHeight: 200,
             itemWidth: 250,
             defaultShadowVisibility: 'visible',

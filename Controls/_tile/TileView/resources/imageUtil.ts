@@ -61,10 +61,10 @@ export function getImageSize(
     };
 }
 
-export function getImageClasses(imageFit: 'contain' | 'cover'): string {
-    let result = '';
+export function getImageClasses(imageFit: 'contain' | 'cover', imageAlign: 'center' | 'top' = 'center'): string {
+    let result = `controls-TileView__image_align_${imageAlign}`;
     if (imageFit === IMAGE_FIT.CONTAIN) {
-        result = 'controls-TileView__image-contain';
+        result = ' controls-TileView__image-contain';
     }
     return result;
 }

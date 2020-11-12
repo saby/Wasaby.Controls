@@ -79,6 +79,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
             defaultShadowVisibility: 'visible',
             itemClasses: 'controls-TileView__item_spacingLeft_default_theme-default controls-TileView__item_spacingRight_default_theme-default controls-TileView__item_spacingTop_default_theme-default controls-TileView__item_spacingBottom_default_theme-default',
             itemCompressionCoefficient: 0.7,
+            imageAlign: 'center',
             displayProperty: 'title',
             imageWidthProperty: 'imageWidth',
             imageHeightProperty: 'imageHeight',

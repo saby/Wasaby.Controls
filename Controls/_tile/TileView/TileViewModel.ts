@@ -118,7 +118,9 @@ var TileViewModel = ListViewModel.extend({
             imageWidthProperty,
             imageUrlResolver,
             imageProperty,
-            imageFit} = itemData;
+            imageFit,
+            imageAlign
+        } = itemData;
         const imageHeight = item.get(imageHeightProperty) && Number(item.get(imageHeightProperty));
         const imageWidth = item.get(imageWidthProperty) && Number(item.get(imageWidthProperty));
         let baseUrl = item.get(imageProperty);
@@ -134,7 +136,7 @@ var TileViewModel = ListViewModel.extend({
         }
         return {
             url: baseUrl,
-            class: getImageClasses(imageFit)
+            class: getImageClasses(imageFit, imageAlign)
         };
     },
 
@@ -151,6 +153,7 @@ var TileViewModel = ListViewModel.extend({
             imageWidthProperty: this._options.imageWidthProperty,
             imageFit: this._options.imageFit,
             imageUrlResolver: this._options.imageUrlResolver,
+            imageAlign: this._options.imageAlign || 'center',
             itemClasses: this.getItemPaddingClasses()
         };
         if (this._options.tileSize) {

@@ -3,8 +3,10 @@ import {getImageClasses, getImageUrl, getImageSize, IMAGE_FIT} from 'Controls/_t
 
 describe('tileImageUtil', () => {
     describe('getImageClasses', () => {
-        assert.strictEqual(getImageClasses(IMAGE_FIT.CONTAIN), 'controls-TileView__image-contain');
-        assert.strictEqual(getImageClasses(IMAGE_FIT.COVER), '');
+        assert.isTrue(getImageClasses(IMAGE_FIT.CONTAIN).includes('controls-TileView__image-contain'));
+        assert.isTrue(!getImageClasses(IMAGE_FIT.COVER).includes('controls-TileView__image-contain'));
+        assert.isTrue(getImageClasses(IMAGE_FIT.COVER).includes('controls-TileView__image_align_center'));
+        assert.isTrue(getImageClasses(IMAGE_FIT.COVER, 'top').includes('controls-TileView__image_align_top'));
     });
     describe('getImageUrl', () => {
         const imageUrlResolver = () => 'resolvedUrl';
