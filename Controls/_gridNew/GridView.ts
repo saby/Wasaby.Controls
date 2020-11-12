@@ -5,15 +5,31 @@ import { Logger} from 'UI/Utils';
 import { GridLayoutUtil } from 'Controls/grid';
 import { GridLadderUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
-import * as TableTemplate from 'wml!Controls/_gridNew/Render/table/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
-import * as TableItem from 'wml!Controls/_gridNew/Render/table/Item';
 import { prepareEmptyEditingColumns } from '../_grid/utils/GridEmptyTemplateUtil';
 
-const _private = {
-    getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
+const GridView = ListView.extend({
+    _template: GridTemplate,
+    _hoveredCellIndex: null,
+    _hoveredCellItem: null,
+
+    _beforeMount(options): void {
+        let result = GridView.superclass._beforeMount.apply(this, arguments);
+        this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
+        return result;
+    },
+
+    _resolveItemTemplate(options): TemplateFunction {
+        return options.itemTemplate || this._resolveBaseItemTemplate(options);
+    },
+
+    _resolveBaseItemTemplate(options): TemplateFunction {
+        return GridItem;
+    },
+
+    _getGridTemplateColumns(columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
         if (!columns) {
-            Logger.warn('You must set "columns" option to make grid work correctly!', self);
+            Logger.warn('You must set "columns" option to make grid work correctly!', this);
             return '';
         }
         const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
@@ -32,31 +48,6 @@ const _private = {
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
         return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
-    }
-};
-
-const GridView = ListView.extend({
-    _template: null,
-    _hoveredCellIndex: null,
-    _hoveredCellItem: null,
-
-    constructor(cfg) {
-        this._template = cfg.isFullGridSupport ? GridTemplate : TableTemplate;
-        GridView.superclass.constructor.apply(this, arguments);
-    },
-
-    _beforeMount(options): void {
-        let result = GridView.superclass._beforeMount.apply(this, arguments);
-        this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
-        return result;
-    },
-
-    _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate(options);
-    },
-
-    _resolveBaseItemTemplate(options): TemplateFunction {
-        return options.isFullGridSupport ? GridItem : TableItem;
     },
 
     _getGridViewClasses(options): string {
@@ -64,25 +55,19 @@ const GridView = ListView.extend({
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ' controls-Grid_support-ladder';
         }
-        if (!options.isFullGridSupport) {
-            classes += ' controls-Grid_table-layout controls-Grid_table-layout_fixed';
-        }
         return classes;
     },
 
     _getGridViewStyles(options): string {
-        let styles = '';
-        if (options.isFullGridSupport) {
-            const hasMultiSelect = options.multiSelectVisibility !== 'hidden';
-            styles += _private.getGridTemplateColumns(this, options.columns, hasMultiSelect);
-        }
-        return styles;
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden';
+        return this._getGridTemplateColumns(options.columns, hasMultiSelect);
     },
 
     _onItemMouseMove(event, collectionItem) {
         GridView.superclass._onItemMouseMove.apply(this, arguments);
         this._setHoveredCell(collectionItem.item, event.nativeEvent);
     },
+
     _onItemMouseLeave() {
         GridView.superclass._onItemMouseLeave.apply(this, arguments);
         this._setHoveredCell(null, null);
@@ -148,8 +133,6 @@ const GridView = ListView.extend({
         });
     }
 });
-
-GridView._private = _private;
 
 GridView._theme = ['Controls/grid', 'Controls/Classes'];
 
