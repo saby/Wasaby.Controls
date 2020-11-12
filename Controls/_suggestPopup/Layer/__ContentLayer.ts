@@ -6,7 +6,7 @@ import BaseLayer from './__BaseLayer';
 import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 
 var _private = {
-   getSizes(self, dropDownContainer): object {
+   getSizes(self, dropDownContainer?: HTMLElement): object {
       var boundingClientToJSON = function(bc) {
          var resultObj = {};
 
@@ -64,7 +64,7 @@ var _private = {
       return result;
    },
 
-   getDropDownContainerSize(container): object {
+   getDropDownContainerSize(container?: HTMLElement): object {
       container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
       return container.getBoundingClientRect();
    },
@@ -76,6 +76,17 @@ var _private = {
       if (heightChanged) {
          self._height = height;
          self._controlResized = true;
+      }
+   },
+
+   checkRightBorder(self): void {
+      const sizes = _private.getSizes(self);
+      const dropDownContainerSize = _private.getDropDownContainerSize();
+      const suggestSize = sizes.suggest;
+
+      if (suggestSize.right > dropDownContainerSize.right) {
+         self._right = self._left;
+         self._left = 'auto';
       }
    },
 
@@ -118,6 +129,8 @@ var __ContentLayer = BaseLayer.extend({
 
    _template: template,
    _height: '0px',
+   _right: 'auto',
+   _left: '-12px',
    _maxHeight: 'none',
    _showContent: false,
 
@@ -131,7 +144,10 @@ var __ContentLayer = BaseLayer.extend({
       _private.updateMaxHeight(this);
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
+
          _private.updateHeight(this);
+         _private.checkRightBorder(this);
+
          this._showContent = this._options.showContent;
          if (needNotifyControlResizeEvent) {
             this._children.resize.start();
@@ -142,6 +158,7 @@ var __ContentLayer = BaseLayer.extend({
 
    _resize(): void {
       _private.updateHeight(this);
+      _private.checkRightBorder(this);
    },
 
    close(): void {
