@@ -4974,7 +4974,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
-            if (action && !action['parent@']) {
+            if (action) {
                 const item = _private.getItemActionsController(this, this._options).getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
