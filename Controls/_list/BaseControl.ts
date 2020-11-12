@@ -833,6 +833,11 @@ const _private = {
             }
 
             _private.prepareFooter(self, self._options, self._sourceController);
+
+            if (_private.hasMarkerController(self)) {
+                const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
+                _private.changeMarkedKey(self, newMarkedKey);
+            }
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
