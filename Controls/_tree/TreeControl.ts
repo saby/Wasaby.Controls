@@ -292,8 +292,7 @@ const _private = {
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
             if (!isDeepReload || self._needResetExpandedItems) {
-                viewModel.resetExpandedItems();
-                viewModel.setHasMoreStorage({});
+                _private.resetExpandedItems(self);
                 self._needResetExpandedItems = false;
             }
 
@@ -349,6 +348,13 @@ const _private = {
         }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
+    },
+
+    resetExpandedItems(self): void {
+        const viewModel = self._children.baseControl.getViewModel();
+
+        viewModel.resetExpandedItems();
+        viewModel.setHasMoreStorage({});
     },
 
     getHasMoreData(self, sourceController, direction, key) {
@@ -561,6 +567,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         if (this._options.deepReload !== newOptions.deepReload) {
             updateSourceController = true;
+        }
+
+        if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
+            _private.resetExpandedItems(this);
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
