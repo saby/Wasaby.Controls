@@ -315,7 +315,7 @@ const _private = {
         const needAttachLoadTopTriggerToNull = _private.needAttachLoadTopTriggerToNull(self);
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
-            self._needScrollToFirstItem = true;
+            self._needScrollToFirstItem = false;
             self._scrollTop = 1;
         } else {
             self._attachLoadTopTriggerToNull = false;
@@ -814,10 +814,6 @@ const _private = {
             }
 
             _private.prepareFooter(self, self._options, self._sourceController);
-
-            if (detection.isMobilePlatform && direction === 'up') {
-                 self._notify('_afterLoadItemsToUp', [], {bubbling: true});
-            }
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -4255,7 +4251,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (firstItem && firstItem.key !== null) {
                 _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
-            this._notify('_scrollToFirstItemForTopPadding', [], {bubbling: true});
         }
     },
 
@@ -5197,11 +5192,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (!this._pagingVisible) {
             _private.initPaging(this);
-        }
-
-        // Если не нужно делать отступ, значит нужно сразу сбросить shadowVisibility опции в auto
-        if (!this._needScrollToFirstItem) {
-            this._notify('_mouseEnterToBaseControl', [], { bubbling: true });
         }
     },
 

@@ -407,14 +407,6 @@ export default class Browser extends Control {
         this._getOperationsController(this._options).setOperationsPanelVisible(false);
     }
 
-    protected _resetShadowVisibility(event?: SyntheticEvent<null>): void {
-        if (event) {
-            event.stopPropagation();
-        }
-        this._topShadowVisibility = SHADOW_VISIBILITY.AUTO;
-        this._bottomShadowVisibility = SHADOW_VISIBILITY.AUTO;
-    }
-
     private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
@@ -439,10 +431,9 @@ export default class Browser extends Control {
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
-                this._topShadowVisibility = more.before ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
-                this._bottomShadowVisibility = more.after ? SHADOW_VISIBILITY.VISIBLE : SHADOW_VISIBILITY.AUTO;
+                this._topShadowVisibility = more.before ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
+                this._bottomShadowVisibility = more.after ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
             }
-
         }
     }
 
