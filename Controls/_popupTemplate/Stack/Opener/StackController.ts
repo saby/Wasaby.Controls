@@ -279,7 +279,6 @@ class StackController extends BaseController {
             }
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
-                this._showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
                 }
