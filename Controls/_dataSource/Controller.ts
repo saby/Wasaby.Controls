@@ -31,6 +31,8 @@ export interface IControllerState {
     sorting: QueryOrderSelector;
     filter: QueryWhereExpression<unknown>;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
+
+    parentProperty?: string;
     root?: TKey;
 
     items: RecordSet;
@@ -77,7 +79,7 @@ export default class Controller {
     private _loadPromise: CancelablePromise<LoadResult>;
 
     private _parentProperty: string;
-    private _root: TKey;
+    private _root: TKey = null;
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
@@ -86,7 +88,9 @@ export default class Controller {
         this._options = cfg;
         this._filter = cfg.filter;
 
-        this.setRoot(cfg.root);
+        if (cfg.root !== undefined) {
+            this.setRoot(cfg.root);
+        }
         this.setParentProperty(cfg.parentProperty);
 
         this._collectionChange = this._collectionChange.bind(this);
@@ -225,7 +229,9 @@ export default class Controller {
             filter: this._filter,
             sorting: this._options.sorting,
             navigation: this._options.navigation,
-            root: this._options.root,
+
+            parentProperty: this._parentProperty,
+            root: this._root,
 
             items: this._items,
             // FIXME sourceController не должен создаваться, если нет source
