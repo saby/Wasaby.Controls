@@ -19,7 +19,6 @@ export interface ICheckboxGroupOptions extends IControlOptions,
             IToggleGroupOptions {
     direction?: string;
 }
-
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
  * 

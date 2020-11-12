@@ -9,11 +9,13 @@ import {
    IFontColorStyle,
    IFontColorStyleOptions
 } from 'Controls/interface';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from "Types/entity";
 import dateControlsUtils from "./Utils";
 
+export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyleOptions {
+}
 /**
  * A link button that displays the period. Supports the change of periods to adjacent.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FLinkView">Demo examples.</a>.
@@ -28,10 +30,6 @@ import dateControlsUtils from "./Utils";
  * @demo Controls-demo/Input/Date/LinkView
  *
  */
-
-export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyleOptions {
-}
-
 class LinkView extends Control<ILinkViewControlOptions> implements IFontColorStyle {
    _template: TemplateFunction = componentTmpl;
 

@@ -310,6 +310,16 @@ describe('Controls/marker/Controller', () => {
       });
    });
 
+   it('destroy', () => {
+      controller.setMarkedKey(1);
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+      controller.destroy();
+      assert.isFalse(model.getItemBySourceKey(1).isMarked());
+      assert.isFalse(model.getItemBySourceKey(2).isMarked());
+      assert.isFalse(model.getItemBySourceKey(3).isMarked());
+   });
+
    it('should work with breadcrumbs', () => {
       const items = new RecordSet({
          rawData: [{
