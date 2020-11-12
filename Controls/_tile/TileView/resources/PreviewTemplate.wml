@@ -61,6 +61,7 @@
 
 
 <ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl"
+            titleStyle="none"
             attr:class="controls-TileView__previewTemplate
                         {{itemData.dispItem && itemData.dispItem.isNode() ? 'js-controls-TileView__withoutZoom controls-TileView__previewTemplate_node' : ''}}
                         {{itemData.isUnscaleable && itemData.hasVisibleActions() ? 'controls-TileView__previewTemplate_actions_showed' : ''}}

@@ -26,7 +26,7 @@
                {{itemData.isFixed ? ' controls-TileView__item_fixed controls-TileView__item_fixed_theme-' + theme}}
                {{itemData.isAnimated ? ' controls-TileView__item_animated'}}
                {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + theme}}
-               {{!!hasTitle ? 'controls-TileView__item_withTitle'}}
+               {{titleStyle === 'none' ? 'controls-TileView__item_withoutTitle'}}
                {{' controls-ListView__item_shadow_' + (shadowVisibility || itemData.defaultShadowVisibility) + '_theme-' + theme}}
                {{marker !== false && itemData.markerVisibility !== 'hidden' && itemData._isSelected ?
                   ' controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-' + theme :
