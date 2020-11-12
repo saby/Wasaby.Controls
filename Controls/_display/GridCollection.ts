@@ -1,5 +1,6 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
+import GridGroupItem from './GridGroupItem';
 import { TemplateFunction } from 'UI/Base';
 import { TColumns, THeader } from 'Controls/grid';
 import * as GridLadderUtil from './utils/GridLadderUtil';
@@ -169,6 +170,10 @@ export default class GridCollection<
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
+    }
+
+    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
+        return GridGroupItem;
     }
 }
 
