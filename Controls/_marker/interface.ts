@@ -69,8 +69,8 @@ export interface IMarkerListOptions {
 
    /**
     * @typedef {String} MarkerPosition
-    * @variation left Расположение маркера слева
-    * @variation right Расположение маркера справа
+    * @variat left Расположение маркера слева
+    * @variat right Расположение маркера справа
     */
    /**
     * Опция сделана для master. Опция непубличная, т.к. в стандарт её вносить пока не будут

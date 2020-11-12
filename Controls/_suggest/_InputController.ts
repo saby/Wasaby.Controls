@@ -124,6 +124,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _misspellingCaption: string = null;
    private _suggestDirection: TSuggestDirection = null;
    private _markerVisibility: TVisibility = 'onactivated';
+   private _suggestOpened: boolean = null;
 
    private _errorController: dataSourceError.Controller = null;
    private _errorConfig: dataSourceError.ViewConfig | void = null;
@@ -165,6 +166,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._loading = null;
       this._errorConfig = null;
       this._pendingErrorConfig = null;
+
+      if (this._sourceController) {
+         this._sourceController.destroy();
+         this._sourceController = null;
+      }
+      this._searchResult = null;
 
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
@@ -260,6 +267,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                   if (this._options.dataLoadCallback) {
                      this._options.dataLoadCallback(recordSet);
                   }
+                  this._loadEnd(recordSet);
                   this._updateSuggestState();
                }
             });
@@ -285,13 +293,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._children.indicator.hide();
       }
    }
-   private _searchErrback(error: CancelableError): void {
+   private _searchErrback(error: CancelableError & {
+      isCancelled?: boolean;
+   }): void {
       // aborting of the search may be caused before the search start, because of the delay before searching
       if (this._loading !== null) {
          this._loading = false;
          this._forceUpdate();
       }
-      if (!error?.canceled) {
+      if (!error?.canceled && !error?.isCancelled ) {
          this._hideIndicator();
 
          this.getErrorController().process({
@@ -555,6 +565,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._suggestDirectionChangedCallback = this._suggestDirectionChangedCallback.bind(this);
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
       this._searchValue = options.value || '';
+      this._suggestOpened = options.suggestState;
       this._setFilter(options.filter, options);
 
       if (this._searchValue && options.suggestState) {
@@ -604,12 +615,19 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
-            if (!this._searchResult) {
+            if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
-                  this._resolveLoad(this._searchValue);
+                  this._resolveLoad(this._searchValue, newOptions).then(() => {
+                     this._suggestOpened = newOptions.suggestState;
+                  }).catch((error) => {
+                     this._searchErrback(error);
+                  });
                });
+            } else {
+               this._suggestOpened = newOptions.suggestState;
             }
          } else {
+            this._suggestOpened = newOptions.suggestState;
             this._setCloseState();
             this._setSuggestMarkedKey(null);
          }
@@ -627,8 +645,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }
       }
 
-      if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
+      if (needSearchOnValueChanged || valueCleared || filterChanged) {
          this._setFilter(newOptions.filter, newOptions);
+      }
+      if (filterChanged && this._showContent) {
+         this._resolveLoad();
       }
 
       if (emptyTemplateChanged) {
@@ -718,7 +739,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._resolveLoad();
    }
 
-   private async _resolveLoad(value?: string): Promise<RecordSet> {
+   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
@@ -738,7 +759,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             return recordSet;
          });
       } else {
-         return this._getSourceController().load().then((recordSet) => {
+         return this._getSourceController(options).load().then((recordSet) => {
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
                if (this._options.dataLoadCallback) {

@@ -245,7 +245,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     }
 
     query(): Deferred<DataSet> {
-        const historyId = this._$historyId;
+        const historyId = this.getHistoryIdForStorage();
         const storageDef = LoadPromisesStorage.read(historyId);
         const storageData = DataStorage.read(historyId);
         let resultDef;
@@ -314,6 +314,12 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
      */
     getHistoryId(): string {
         return this._$historyId;
+    }
+
+    getHistoryIdForStorage(): string {
+        // Если задают historyIds в параметрах источника, то кэш сохраняем по строке,
+        // склееной из всех идентификаторов, заданных в опции historyIds
+        return this._$historyId || this._$historyIds?.slice().sort().join();
     }
 
     /**

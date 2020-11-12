@@ -1499,12 +1499,10 @@ const _private = {
     },
 
     resetPortionedSearchAndCheckLoadToDirection(self, options): void {
-        if (options.searchValue) {
-            _private.getPortionedSearch(self).reset();
+        _private.getPortionedSearch(self).reset();
 
-            if (options.searchValue && options.sourceController) {
-                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
-            }
+        if (options.sourceController) {
+            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
         }
     },
 
@@ -3466,6 +3464,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
              * Скрывать нельзя, так как при подгрузке данных пэйджинг будет моргать.
              */
             if (this._pagingVisible) {
+                this._cachedPagingState = false;
                 _private.initPaging(this);
             }
             this._viewRect = container.getBoundingClientRect();
@@ -3606,6 +3605,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        let isItemsResetFromSourceController = false;
         const self = this;
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
@@ -3712,7 +3712,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
+                const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
@@ -3720,6 +3722,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const controller = _private.createSelectionController(this, newOptions);
                     controller.setSelection({ selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys });
                 }
+
+                // TODO удалить когда полностью откажемся от старой модели
+                //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
+                this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
         }
 
@@ -3833,7 +3839,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged) {
+        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -3895,17 +3901,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
          * Переинициализация ранее проинициализированных опций записи нужна при:
          * 1. Изменились опции записи
          * 3. Изменился коллбек видимости опции
-         * 4. Модель была пересоздана
+         * 4. Записи в модели были пересозданы из sourceController
          * 5. обновилась опция readOnly (относится к TreeControl)
          * 6. обновилась опция itemActionsPosition
          */
         if (
             newOptions.itemActions !== this._options.itemActions ||
             newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback ||
+            isItemsResetFromSourceController ||
             newOptions.readOnly !== this._options.readOnly ||
             newOptions.itemActionsPosition !== this._options.itemActionsPosition
         ) {
-            _private.updateInitializedItemActions(this, newOptions, newOptions.itemActions !== this._options.itemActions);
+            _private.updateInitializedItemActions(this, newOptions);
         }
 
         if (
@@ -4578,7 +4585,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._isMounted) {
             this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-            if (this._listViewModel.getCount() > 1) {
+            if (this._listViewModel.getCount() > 1 && !isAdd) {
                 this.setMarkedKey(item.contents.getKey());
             }
         }
@@ -4627,8 +4634,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
+    _afterEndEditCallback(item: IEditableCollectionItem, isAdd: boolean, willSave: boolean): void {
         this._notify('afterEndEdit', [item.contents, isAdd]);
+
+        if (this._listViewModel.getCount() > 1) {
+            if (this._markedKeyAfterEditing) {
+                // если закрыли добавление записи кликом по другой записи, то маркер должен встать на 'другую' запись
+                this.setMarkedKey(this._markedKeyAfterEditing);
+                this._markedKeyAfterEditing = null;
+            } else if (isAdd && willSave) {
+                this.setMarkedKey(item.contents.getKey());
+            } else if (_private.hasMarkerController(this)) {
+                const controller = _private.getMarkerController(this);
+                controller.setMarkedKey(controller.getMarkedKey());
+            }
+        }
+
         item.contents.unsubscribe('onPropertyChange', this._resetValidation);
         _private.updateItemActions(this, this._options);
     },
@@ -4848,7 +4869,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
-            autoAddByApplyButton: !!editingConfig.autoAddByApplyButton,
+            autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };
     },
@@ -5008,7 +5029,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
 
         if (canBeMarked && !this._onLastMouseUpWasDrag) {
-            this.setMarkedKey(key);
+            // маркер устанавливается после завершения редактирования
+            if (this._editInPlaceController?.isEditing()) {
+                // TODO нужно перенести установку маркера на клик, т.к. там выполняется проверка для редактирования
+                this._markedKeyAfterEditing = key;
+            } else {
+                this.setMarkedKey(key);
+            }
         }
     },
 
@@ -5552,7 +5579,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return !(detection.isMobileIOS ||
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
-                this._options.navigation.viewConfig.pagingMode === 'end')
+                (this._options.navigation.viewConfig.pagingMode === 'end' ||
+                    this._options.navigation.viewConfig.pagingPadding === 'null')
+            )
         );
     },
 
@@ -5631,8 +5660,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _dragLeave(): void {
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController) {
-            const newPosition = this._dndListController.calculateDragPosition(null);
-            this._dndListController.setDragPosition(newPosition);
+            const draggableItem = this._dndListController.getDraggableItem();
+            if (draggableItem && this._listViewModel.getItemBySourceKey(draggableItem.getContents().getKey())) {
+                const newPosition = this._dndListController.calculateDragPosition(null);
+                this._dndListController.setDragPosition(newPosition);
+            } else {
+                // если перетаскиваемого элемента нет в модели, значит мы перетащили элемент в другой список
+                this._dndListController.endDrag();
+            }
         }
     },
 

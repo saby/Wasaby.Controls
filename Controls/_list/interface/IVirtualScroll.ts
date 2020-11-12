@@ -1,4 +1,19 @@
 export type IDirection = 'up' | 'down';
+/**
+ * Интерфейс для поддержки виртуального скроллирования в списках.
+ *
+ * @interface Controls/_list/interface/IVirtualScrollConfig
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*
+ * Interface for lists that can use virtual scroll.
+ *
+ * @interface Controls/_list/interface/IVirtualScrollConfig
+ * @public
+ * @author Авраменко А.С.
+ */
 export interface IVirtualScrollConfig {
     pageSize: number;
     segmentSize: number;
@@ -6,6 +21,13 @@ export interface IVirtualScrollConfig {
     viewportHeight: number;
     mode: 'hide'|'remove';
 }
+
+/**
+ * @typedef {String} IVirtualScrollMode
+ * @variant remove Скрытые элементы удаляются из DOM.
+ * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
+ */
+export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
  * @typedef {object} IVirtualScrollConfig
@@ -17,30 +39,7 @@ export interface IVirtualScrollConfig {
  */
 
 /**
- * Интерфейс для поддержки виртуального скроллирования в списках.
- *
- * @interface Controls/_list/interface/IVirtualScroll
- * @public
- * @author Авраменко А.С.
- */
-
-/*
- * Interface for lists that can use virtual scroll.
- *
- * @interface Controls/_list/interface/IVirtualScroll
- * @public
- * @author Авраменко А.С.
- */
-
-/**
- * @typedef {String} IVirtualScrollMode
- * @variant remove Скрытые элементы удаляются из DOM.
- * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
- */
-export type IVirtualScrollMode = 'remove' | 'hide';
-
-/**
- * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
+ * @name Controls/_list/interface/IVirtualScrollConfig#virtualScrollConfig
  * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга.
  * Виртуальный скроллинг работает только при включенной <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/">навигации</a>.
  * @remark Подробнее о конфигурации виртуального скролла читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/virtual-scroll/">здесь</a>.

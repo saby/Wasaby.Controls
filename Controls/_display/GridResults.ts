@@ -2,11 +2,13 @@ import { TemplateFunction } from 'UI/Base';
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
 import GridCollection from './GridCollection';
-import { TColumns } from '../_grid/interface/IColumn';
+import { TColumns } from 'Controls/grid';
 import GridResultsCell from './GridResultsCell';
 import { Model as EntityModel } from 'Types/entity';
 
 type TResultsCells<T> = Array<GridResultsCell<T>>;
+
+export type TResultsPosition = 'top' | 'bottom';
 
 export interface IOptions<T> {
     owner: GridCollection<T>;

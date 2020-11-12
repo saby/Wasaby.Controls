@@ -5,7 +5,7 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 /**
  * Хелпер для открытия прилипающих окон
  * @class Controls/_popup/PopupHelper/Sticky
- * 
+ *
  * @author Красильников А.С.
  * @public
  */
@@ -32,8 +32,9 @@ export default class Sticky extends Base {
      * @see close
      * @see destroy
      */
-    open(popupOptions: IStickyPopupOptions): void {
-        return super.open(popupOptions);
+    open(popupOptions: IStickyPopupOptions, popupController?: string): void {
+        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=50d7c8f9-7f88-401c-a511-79f774c43c4a
+        return super.open(popupOptions, popupController);
     }
 }
 /**

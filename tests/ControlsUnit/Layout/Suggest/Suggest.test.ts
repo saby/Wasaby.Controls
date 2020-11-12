@@ -110,10 +110,14 @@ describe('Controls/suggest', () => {
          let state;
          let isReady = true;
          let isCallCancel = false;
+         let isSourceControllerNulled = false;
 
          const inputContainer = getComponentObject({
             suggestState: true
          });
+         inputContainer._sourceController = {
+            destroy: () => isSourceControllerNulled = true
+         };
 
          inputContainer._notify = (eventName, args) => {
             state = args[0];
@@ -125,6 +129,10 @@ describe('Controls/suggest', () => {
          inputContainer._close();
          assert.isFalse(state);
          assert.isFalse(isCallCancel);
+
+         assert.isTrue(isSourceControllerNulled);
+         assert.isNull(inputContainer._sourceController);
+         assert.isNull(inputContainer._searchResult);
 
          isReady = false;
          inputContainer._close();
@@ -806,7 +814,7 @@ describe('Controls/suggest', () => {
 
          assert.equal(inputContainer._suggestMarkedKey, null);
          assert.notEqual(inputContainer._searchResult, queryRecordSet);
-         assert.equal(inputContainer._searchResult, queryRecordSetEmpty);
+         assert.isNull(inputContainer._searchResult);
          assert.equal(inputContainer._tabsSelectedKey, 'testId2');
          assert.equal(inputContainer._misspellingCaption, null);
       });
@@ -988,15 +996,33 @@ describe('Controls/suggest', () => {
          suggestComponent._options.suggestState = false;
          suggestComponent._searchValue = 'testValue';
          suggestComponent._searchResult = undefined;
-         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad');
-         suggestComponent._beforeUpdate({
+
+         const resolveLoadStub = sandbox.stub(suggestComponent, '_resolveLoad').callsFake(() => Promise.resolve());
+         const newOptions = {
             suggestState: true,
             searchParam: 'testSearchParam',
             minSearchLength: 3,
             source: getMemorySource()
+         };
+         suggestComponent._beforeUpdate(newOptions);
+
+         assert.isTrue(resolveLoadStub.withArgs('testValue', newOptions).calledOnce);
+
+         suggestComponent._options.suggestState = true;
+         suggestComponent._searchValue = '';
+         suggestComponent._searchResult = undefined;
+         suggestComponent._options.filter = {param: 'old_test'};
+         suggestComponent._showContent = true;
+         resolveLoadStub.reset();
+         suggestComponent._beforeUpdate({
+            suggestState: true,
+            searchParam: 'testSearchParam',
+            minSearchLength: 3,
+            source: getMemorySource(),
+            filter: {param: 'new_test'}
          });
 
-         assert.isTrue(resolveLoadStub.withArgs('testValue').calledOnce);
+         assert.isTrue(resolveLoadStub.calledOnce);
 
          sandbox.restore();
       });

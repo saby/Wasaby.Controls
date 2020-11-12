@@ -6004,6 +6004,29 @@ define([
             });
             assert.isTrue(updateItemActionsCalled);
          });
+
+         // при смене набора items из sourceController необходимо вызывать updateItemActions
+         it('should call updateItemActions when items wee updated from sourceController', () => {
+            const sourceCfg = {
+               ...cfg,
+               source: instance._options.source,
+            };
+            const sourceController = new dataSource.NewSourceController(sourceCfg);
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               adapter: 'adapter.sbis'
+            });
+            sourceController.setItems(items);
+            instance._listViewModel.setActionsAssigned(true);
+            sandbox.replace(lists.BaseControl._private, 'updateItemActions', (self, options) => {
+               updateItemActionsCalled = true;
+            });
+
+            const newCfg = { ...sourceCfg, sourceController };
+            instance._beforeUpdate(newCfg);
+
+            assert.isTrue(updateItemActionsCalled);
+         });
       });
 
       it('_beforeMount create controllers when passed receivedState', async function() {
@@ -7390,12 +7413,27 @@ define([
             const newPos = {};
             baseControl._dndListController = {
                setDragPosition: () => undefined,
-               calculateDragPosition: () => newPos
+               calculateDragPosition: () => newPos,
+               getDraggableItem: () => ({
+                  getContents: () => ({
+                     getKey: () => 1
+                  })
+               }),
+               endDrag: () => undefined
             };
 
             const setDragPositionSpy = sinon.spy(baseControl._dndListController, 'setDragPosition');
             baseControl._dragLeave();
             assert.isTrue(setDragPositionSpy.withArgs(newPos).called);
+
+            baseControl._dndListController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 5
+               })
+            });
+            const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
+            baseControl._dragLeave();
+            assert.isTrue(endDragSpy.called);
          });
 
          it('drag enter', async () => {
