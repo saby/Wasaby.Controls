@@ -522,7 +522,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         if (options.sourceController) {
             // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
             //  и на списке и на Browser'e
-            if (options.parentProperty || options.root !== undefined) {
+            const sourceControllerState = options.sourceController.getState();
+
+            if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
+                options.root !== undefined && options.root !== sourceControllerState.root) {
                 options.sourceController.updateOptions(options);
             }
         }
