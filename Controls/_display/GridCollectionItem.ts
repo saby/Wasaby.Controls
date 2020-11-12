@@ -18,6 +18,8 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$columnItems: GridColumn<T>[];
     protected _$ladder: {};
 
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
+
     constructor(options?: IOptions<T>) {
         super(options);
     }
@@ -127,14 +129,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     setLadder(ladder: {}) {
-        this._$ladder = ladder;
-        if (this._$columnItems) {
-            this._$columnItems.forEach((columnItem) => {
-                columnItem.destroy();
-            });
-            this._initializeColumns();
-            this._nextVersion();
+        if (this._$ladder !== ladder) {
+            this._$ladder = ladder;
+            this._reinitializeColumns();
         }
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility)
+        if (isChangedMultiSelectVisibility) {
+            this._reinitializeColumns();
+        }
+        return isChangedMultiSelectVisibility;
     }
 
     // region overrides
@@ -179,6 +185,16 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
         }
         return result;
+    }
+
+    protected _reinitializeColumns(): void {
+        if (this._$columnItems) {
+            this._$columnItems.forEach((columnItem) => {
+                columnItem.destroy();
+            });
+            this._initializeColumns();
+            this._nextVersion();
+        }
     }
 
     protected _initializeColumns(): void {
