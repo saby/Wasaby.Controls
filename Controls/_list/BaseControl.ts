@@ -534,6 +534,9 @@ const _private = {
                 listModel.setCompatibleReset(false);
             } else {
                 listModel.setCollection(items);
+                if (self._options.itemsReadyCallback) {
+                    self._options.itemsReadyCallback(listModel.getCollection());
+                }
             }
             self._items = listModel.getCollection();
         } else {
