@@ -4708,6 +4708,24 @@ define([
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
+         // Клик по itemAction с подменю ('parent@': true) должен бросать событие actionClick
+         it('should emit actionClick event on submenu (\'parent@\': true) action click', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const stubHandleItemActionClick = sinon.stub(lists.BaseControl._private, 'handleItemActionClick');
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.called(stubHandleItemActionClick);
+            stubHandleItemActionClick.restore();
+         });
+
          // должен открывать меню, соответствующее новому id Popup
          it('should open itemActionsMenu according to its id', () => {
             const fakeEvent = initFakeEvent();
