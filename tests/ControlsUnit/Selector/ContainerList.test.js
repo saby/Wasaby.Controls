@@ -64,17 +64,17 @@ define(['Controls/lookupPopup', 'Types/entity'], function(lookupPopup, entity) {
          var itemActions = [{id: 'test'}];
 
          options.itemActions = itemActionsEmpty;
-         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[0].id, 'selector.action');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions({}, options)[0].id, 'selector.action');
 
          options.itemActions = itemActions;
-         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[0].id, 'test');
-         assert.equal(lookupPopup.ListContainer._private.getItemActions(options)[1].id, 'selector.action');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions({}, options)[0].id, 'test');
+         assert.equal(lookupPopup.ListContainer._private.getItemActions({}, options)[1].id, 'selector.action');
 
          options.selectionType = 'leaf';
          options.itemActions = itemActionsEmpty;
-         assert.isFalse(!!lookupPopup.ListContainer._private.getItemActions(options)[0]);
+         assert.isFalse(!!lookupPopup.ListContainer._private.getItemActions({}, options)[0]);
          options.itemActions = itemActions;
-         assert.equal(lookupPopup.ListContainer._private.getItemActions(options).length, 1);
+         assert.equal(lookupPopup.ListContainer._private.getItemActions({}, options).length, 1);
       });
 
       it('getItemActionVisibilityCallback', function() {
