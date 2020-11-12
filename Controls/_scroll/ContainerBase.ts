@@ -146,7 +146,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._onResizeContainer(this._getFullStateFromDOM());
     }
 
-    _scrollHandler(e: SyntheticEvent): void {
+    protected _scrollHandler(e: SyntheticEvent): void {
         if (this._scrollLockedPosition !== null) {
             this._children.content.scrollTop = this._scrollLockedPosition;
             return;
