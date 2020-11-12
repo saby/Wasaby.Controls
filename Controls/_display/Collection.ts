@@ -2355,6 +2355,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setSearchValue(searchValue: string): void {
         this._$searchValue = searchValue;
+        this._nextVersion();
     }
 
     getSearchValue(): string {
