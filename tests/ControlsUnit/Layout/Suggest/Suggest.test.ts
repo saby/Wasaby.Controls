@@ -111,12 +111,16 @@ describe('Controls/suggest', () => {
          let isReady = true;
          let isCallCancel = false;
          let isSourceControllerNulled = false;
+         let isTimerCleared = false;
 
          const inputContainer = getComponentObject({
             suggestState: true
          });
          inputContainer._sourceController = {
             destroy: () => isSourceControllerNulled = true
+         };
+         inputContainer._searchResolverController = {
+            clearTimer: () => isTimerCleared = true
          };
 
          inputContainer._notify = (eventName, args) => {
@@ -131,6 +135,7 @@ describe('Controls/suggest', () => {
          assert.isFalse(isCallCancel);
 
          assert.isTrue(isSourceControllerNulled);
+         assert.isTrue(isTimerCleared);
          assert.isNull(inputContainer._sourceController);
          assert.isNull(inputContainer._searchResult);
 
