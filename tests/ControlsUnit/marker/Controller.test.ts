@@ -308,6 +308,25 @@ describe('Controls/marker/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(3).isMarked());
          assert.equal(model.getVersion(), 3);
       });
+
+      it('not exists marked item', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: undefined });
+         ctrl.setMarkedKey(1);
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.equal(newMarkedKey, 2);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
    });
 
    it('destroy', () => {
