@@ -270,6 +270,7 @@ define(
             assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.width, 800);
             assert.equal(itemConfig.popupOptions.content, popupTemplate.StackContent);
+            assert.equal(itemConfig.position.hidden, undefined);
 
             let itemCount = 0;
             let items = popupTemplate.StackController._stack;
