@@ -113,7 +113,8 @@ var
           let result;
 
           // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-          if (!!item.forEach) {
+          // For "search separator" item is null and we can't prevent _isGroup() call for it
+          if (!item || !!item.forEach) {
               result = false;
           } else {
               result = SearchViewModel.superclass._isGroup.call(this, item);
