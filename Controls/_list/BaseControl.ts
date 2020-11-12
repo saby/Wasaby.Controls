@@ -3882,7 +3882,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     if (this._pagingNavigation &&
                         !this._pagingNavigationVisible && this._items && sourceChanged) {
                         _private.updatePagingData(this,
-                            this._listViewModel.getHasMoreData() || this._items.getMetaData().more);
+                            this._items.getMetaData().more);
                     }
                 }
             });
