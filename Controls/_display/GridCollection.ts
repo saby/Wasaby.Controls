@@ -118,7 +118,9 @@ export default class GridCollection<
             display: this
         });
         this.getViewIterator().each((item: GridCollectionItem<T>) => {
-            item.setLadder(this._$ladder);
+            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+                item.setLadder(this._$ladder);
+            }
         });
     }
 
