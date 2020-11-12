@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, которые служат для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ организации фильтрации в списках}.
+ * Библиотека контролов, которые служат для <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">организации фильтрации в списках</a>.
  * @library Controls/filter
  * @includes Selector Controls/_filter/Button
  * @includes Fast Controls/_filter/Fast

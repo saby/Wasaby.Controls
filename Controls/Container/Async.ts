@@ -30,7 +30,7 @@ interface IOptions extends IControlOptions {
 const SUCCESS_BUILDED = 's';
 /**
  * Контейнер для асинхронной загрузки контролов.
- * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+ * Подробное описание и примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
  *
  * @class Controls/Container/Async
  * @extends Core/Control
@@ -41,7 +41,7 @@ const SUCCESS_BUILDED = 's';
 
 /**
  * Container for asynchronously loading components.
- * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+ * Подробное описание и примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
  *
  * @class Controls/Container/Async
  * @extends Core/Control
