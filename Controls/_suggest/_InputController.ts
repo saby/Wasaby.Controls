@@ -171,6 +171,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._sourceController.destroy();
          this._sourceController = null;
       }
+      if (this._searchResolverController) {
+         this._searchResolverController.clearTimer();
+      }
       this._searchResult = null;
 
       // when closing popup we reset the cache with recent keys
