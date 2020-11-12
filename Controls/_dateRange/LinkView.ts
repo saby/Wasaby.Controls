@@ -9,7 +9,7 @@ import {
    IFontColorStyle,
    IFontColorStyleOptions
 } from 'Controls/interface';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from "Types/entity";
 import dateControlsUtils from "./Utils";
