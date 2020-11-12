@@ -84,6 +84,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _optimizeShadowClass: string;
     protected _needUpdateContentSize: boolean = false;
     protected _isScrollbarsInitialized: boolean = false;
+    private _isControllerInitialized: boolean;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(options);
@@ -111,8 +112,20 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         super._afterMount();
 
-        if (compatibility.touch) {
-            this._stickyHeaderController.init(this._container);
+        const hasBottomHeaders = (): boolean => {
+            const headers = Object.values(this._stickyHeaderController._headers);
+            for (let i = 0; i < headers.length; i++) {
+                if (headers[i].position === POSITION.BOTTOM) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        // Если есть заголовки, фиксирующиеся снизу, то при построении нужно обновить им позицию,
+        // т.к. они будут зафиксированы.
+        if (compatibility.touch || hasBottomHeaders()) {
+            this._initHeaderController();
         }
     }
 
@@ -140,12 +153,19 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _beforeUnmount(): void {
+    protected _beforeUnmount(): void {
         if (this._intersectionObserverController) {
             this._intersectionObserverController.destroy();
             this._intersectionObserverController = null;
         }
         this._stickyHeaderController.destroy();
+    }
+
+    private _initHeaderController(): void {
+        if (!this._isControllerInitialized) {
+            this._stickyHeaderController.init(this._container);
+            this._isControllerInitialized = true;
+        }
     }
 
     _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
@@ -313,7 +333,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             }
             this._updateShadows();
             if (!compatibility.touch) {
-                this._stickyHeaderController.init(this._container);
+                this._initHeaderController();
             }
         }
 

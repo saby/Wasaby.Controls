@@ -4,7 +4,7 @@
         <ws:for data="i in 2">
             <div class="asyncDemo__row demo-row__{{i+1}}">
                 <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Async" attr:class="demo-Async__column{{i+1}}"/>
-                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync"attr:class="demo-NotAsync__column{{i+1}}"/>
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync" attr:class="demo-NotAsync__column{{i+1}}"/>
             </div>
         </ws:for>
         <div class="asyncDemo__row demo-row__3">
