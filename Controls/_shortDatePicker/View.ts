@@ -426,21 +426,19 @@ class View extends Control<IDateLitePopupOptions> {
 
     static _theme: string[] = ['Controls/shortDatePicker'];
 
-    static getDefaultOptions(): object {
-        return {
-            ...IPeriodSimpleDialog.getDefaultOptions(),
-            captionFormatter: dateControlsUtils.formatDateRangeCaption,
-            itemTemplate: ItemWrapper,
-            monthTemplate: monthTmpl,
-            dateConstructor: WSDate
-        };
+    static getDefaultOptions(): IDateLitePopupOptions {
+        const PeriodDialogOptions: IDateLitePopupOptions = IPeriodSimpleDialog.getDefaultOptions();
+        PeriodDialogOptions.captionFormatter = dateControlsUtils.formatDateRangeCaption;
+        PeriodDialogOptions.itemTemplate = ItemWrapper;
+        PeriodDialogOptions.monthTemplate = monthTmpl;
+        PeriodDialogOptions.dateConstructor = WSDate;
+        return PeriodDialogOptions;
     }
 
-    static getOptionTypes(): object {
-        return {
-            ...IPeriodSimpleDialog.getOptionTypes(),
-            captionFormatter: descriptor(Function)
-        };
+    static getOptionTypes(): IDateLitePopupOptions {
+        const PeriodDialogTypes: IDateLitePopupOptions = IPeriodSimpleDialog.getOptionTypes();
+        PeriodDialogTypes.captionFormatter = descriptor(Function);
+        return PeriodDialogTypes;
     }
 }
 
