@@ -160,6 +160,7 @@ export class Controller {
     * @void
     */
    destroy(): void {
+      this._model.each((it) => it.setMarked(false, true));
       this._markedKey = null;
       this._markerVisibility = null;
       this._model = null;
