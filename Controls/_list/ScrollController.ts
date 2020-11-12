@@ -205,7 +205,7 @@ export default class ScrollController {
      * @param listViewContainer
      * @param baseContainer
      * @param scrollTop
-     * @return {Collection<Model>}
+     * @return {CollectionItem<Model>}
      */
     getFirstVisibleRecord(listViewContainer: any, baseContainer: any, scrollTop: number): Model {
         const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
