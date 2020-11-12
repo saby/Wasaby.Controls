@@ -33,20 +33,6 @@ import dateControlsUtils from "./Utils";
  *
  */
 
-/*
- * A link button that displays the period. Supports the change of periods to adjacent.
- *
- * @class Controls/_dateRange/RangeShortSelector
- * @extends Core/Control
- * @mixes Controls/_dateRange/interfaces/ILinkView
- * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
- *
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/Input/Date/RangeLinkLite
- *
- */
-
 interface IRangeShortSelectorOptions extends IControlOptions {
     chooseMonths: boolean;
     chooseQuarters: boolean;
@@ -122,8 +108,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     }
 
     _mouseEnterHandler(): void {
-        const loadCss = ({View}) => View.loadCSS();
-        this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        if (!this._loadCalendarPopupPromise) {
+            const loadCss = ({View}) => View.loadCSS();
+            this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        }
     }
 
     _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {
