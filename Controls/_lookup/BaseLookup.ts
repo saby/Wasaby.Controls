@@ -107,7 +107,7 @@ export default abstract class
     protected _getSelectedKeys(options: ILookupOptions): TKey[] {
         let selectedKeys;
 
-        if (options.hasOwnProperty('selectedKeys')) {
+        if (options.selectedKeys !== undefined) {
             selectedKeys = options.selectedKeys;
         } else {
             selectedKeys = this._lookupController.getSelectedKeys();
