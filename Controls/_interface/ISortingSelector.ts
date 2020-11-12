@@ -1,15 +1,4 @@
 
-/**
- * Контрол в виде кнопки с выпадающим меню, используемый для изменения сортировки. Рекомендуется, если в реестре нет заголовков.
- *
- * @class Controls/grid:SortingSelector
- * @extends Core/Control
- * @public
- * @implements Controls/_interface/IFontColorStyle
- * @demo Controls-demo/grid/Sorting/SortingSelector/Default/Index
- * @author Авраменко А.С.
- */
-
 import {IControlOptions} from 'UI/Base';
 
 /**
@@ -25,6 +14,16 @@ export interface ISortingParam {
    icon: string;
    iconSize: 's' | 'm' | 'l';
 }
+/**
+ * Контрол в виде кнопки с выпадающим меню, используемый для изменения сортировки. Рекомендуется, если в реестре нет заголовков.
+ *
+ * @class Controls/grid:SortingSelector
+ * @extends Core/Control
+ * @public
+ * @implements Controls/_interface/IFontColorStyle
+ * @demo Controls-demo/grid/Sorting/SortingSelector/Default/Index
+ * @author Авраменко А.С.
+ */
 export interface ISortingSelectorOptions extends IControlOptions {
 
    /**

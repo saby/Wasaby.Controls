@@ -6,5 +6,5 @@
  * @author Красильников А.С.
  */
 
-export {isMouseEvent, MouseUp, MouseButtons} from './_utils/fastOpenUtils/MouseEventHelper';
-export {isLeftMouseButton, DependencyTimer} from './_utils/fastOpenUtils/FastOpen';
+export {isMouseEvent, MouseUp, MouseButtons} from 'Controls/popup';
+export {isLeftMouseButton, DependencyTimer} from 'Controls/popup';

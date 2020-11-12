@@ -129,14 +129,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     setLadder(ladder: {}) {
-        this._$ladder = ladder;
-        if (this._$columnItems) {
-            this._$columnItems.forEach((columnItem) => {
-                columnItem.destroy();
-            });
-            this._initializeColumns();
-            this._nextVersion();
+        if (this._$ladder !== ladder) {
+            this._$ladder = ladder;
+            this._reinitializeColumns();
         }
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility)
+        if (isChangedMultiSelectVisibility) {
+            this._reinitializeColumns();
+        }
+        return isChangedMultiSelectVisibility;
     }
 
     // region overrides
@@ -181,6 +185,16 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
         }
         return result;
+    }
+
+    protected _reinitializeColumns(): void {
+        if (this._$columnItems) {
+            this._$columnItems.forEach((columnItem) => {
+                columnItem.destroy();
+            });
+            this._initializeColumns();
+            this._nextVersion();
+        }
     }
 
     protected _initializeColumns(): void {
@@ -241,16 +255,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     }
 
     protected _redrawColumns(target: 'first'|'last'|'all'): void {
-        switch (target) {
-            case 'first':
-                this._$columnItems[0].nextVersion();
-                break;
-            case 'last':
-                this._$columnItems[this.getColumnsCount() - 1].nextVersion();
-                break;
-            case 'all':
-                this._$columnItems.forEach((column) => column.nextVersion());
-                break;
+        if (this._$columnItems) {
+            switch (target) {
+                case 'first':
+                    this._$columnItems[0].nextVersion();
+                    break;
+                case 'last':
+                    this._$columnItems[this.getColumnsCount() - 1].nextVersion();
+                    break;
+                case 'all':
+                    this._$columnItems.forEach((column) => column.nextVersion());
+                    break;
+            }
         }
     }
 
