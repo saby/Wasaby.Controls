@@ -295,7 +295,8 @@ export default class Area extends Text<IAreaOptions> {
 
         defaultOptions.minLines = 1;
         defaultOptions.newLineKey = 'enter';
-        defaultOptions.optimizeShadow = false;
+        // В темной теме розницы у полей ввода нестандартный фон
+        defaultOptions.shadowMode = 'js';
 
         return defaultOptions;
     }
