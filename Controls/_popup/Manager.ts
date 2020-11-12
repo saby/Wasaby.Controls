@@ -768,7 +768,8 @@ class Manager {
                 focusedContainer.classList.contains('ws-wait-indicator')) {
                 return true;
             }
-            focusedContainer = focusedContainer.parentElement;
+            // У SVG в IE11 нет parentElement
+            focusedContainer = focusedContainer.parentElement || focusedContainer.parentNode;
         }
         return false;
     }
