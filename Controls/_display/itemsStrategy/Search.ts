@@ -77,7 +77,8 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
             breadCrumbs = new BreadcrumbsItem<S>({
                 contents: null,
                 last,
-                owner: display
+                owner: display,
+                multiSelectVisibility: display?.getMultiSelectVisibility()
             });
             treeItemToBreadcrumbs.set(last, breadCrumbs);
         }
@@ -86,7 +87,8 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
         if (!breadCrumbs) {
             breadCrumbs = new SearchSeparator({
                 contents: null,
-                source: item
+                source: item,
+                multiSelectVisibility: display?.getMultiSelectVisibility()
             });
             treeItemToBreadcrumbs.set(item, breadCrumbs);
         }
@@ -345,7 +347,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         const itsDescendant = item.getParent() !== breadcrumbsReference.last;
                         decoratedItem = new TreeItemDecorator({
                             source: item,
-                            parent: itsDescendant ? item.getParent() : (currentBreadcrumbs instanceof SearchSeparator ? undefined : currentBreadcrumbs)
+                            parent: itsDescendant ? item.getParent() :
+                                (currentBreadcrumbs instanceof SearchSeparator ? undefined : currentBreadcrumbs),
+                            multiSelectVisibility: display?.getMultiSelectVisibility()
                         });
                         treeItemToDecorator.set(item, decoratedItem);
                     }

@@ -505,17 +505,16 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__item-rightPadding_#rightspacing#'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'visible' });
 
         // multiselect visible
-        multiSelectVisibility = 'visible';
         const visibleContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__itemContent_withCheckboxes'
         ]).forEach((className) => assert.include(visibleContentClasses, className));
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
+        item.setMultiSelectVisibility('hidden');
         const hiddenContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__item-leftPadding_#leftspacing#'
@@ -533,15 +532,14 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__notEditable'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'hidden' });
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
         const hiddenMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.forEach((className) => assert.include(hiddenMultiSelectClasses, className));
 
         // multiselect onhover + not selected
-        multiSelectVisibility = 'onhover';
+        item.setMultiSelectVisibility('onhover');
         const onhoverMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.concat([
             'controls-ListView__checkbox-onhover'
