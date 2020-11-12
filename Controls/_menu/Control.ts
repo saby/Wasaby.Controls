@@ -839,6 +839,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _subMenuDataLoadCallback(items: RecordSet): void {
+        if (this._listModel.getCollection().getFormat().getIndexByValue('name', this._options.parentProperty) === -1) {
+            this._listModel.getCollection().addField({
+                name: this._options.parentProperty,
+                type: 'string'
+            });
+        }
         this._listModel.getCollection().append(items);
     }
 
