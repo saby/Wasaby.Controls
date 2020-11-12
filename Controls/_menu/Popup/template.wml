@@ -71,7 +71,7 @@
                        emptyTemplate="{{_options.emptyTemplate}}"
                        source="{{_options.source}}"
                        navigation="{{_options.navigation}}"
-                       filter="{{_options.filter}}"
+                       filter="{{filter || _options.filter}}"
                        parentProperty="{{_options.parentProperty}}"
                        nodeProperty="{{_options.nodeProperty}}"
                        selectedKeys="{{_options.selectedKeys}}"
@@ -106,7 +106,9 @@
    <ws:partial template="{{'Controls/list:DataContainer'}}"
                scope="{{_options}}">
       <ws:partial template="{{'Controls/search:Controller'}}">
-         <ws:partial template="menuPopup" />
+         <ws:partial template="{{'Controls/list:Container'}}">
+            <ws:partial template="menuPopup" filter="{{content.filter}}"/>
+         </ws:partial>
       </ws:partial>
    </ws:partial>
 </ws:if>

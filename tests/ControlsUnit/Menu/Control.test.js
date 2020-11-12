@@ -440,19 +440,21 @@ define(
 
          it('getTemplateOptions', function() {
             let menuControl = getMenu();
+            menuControl._isLoadedChildItems = () => true;
             menuControl._listModel = getListModel();
 
-            let item = new display.TreeItem({
-               contents: new entity.Model({
-                  rawData: { key: 1, title: '111' },
-                  keyProperty: 'key'
-               }),
-               hasChildren: false
-            });
+            let item = menuControl._listModel.at(1);
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
+            expectedOptions.dataLoadCallback = null;
+            expectedOptions.source = new source.PrefetchProxy({
+               target: menuControl._options.source,
+               data: {
+                  query: menuControl._listModel.getCollection()
+               }
+            });
             expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.footerItemData = {
                item,

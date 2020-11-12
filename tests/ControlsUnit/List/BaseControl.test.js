@@ -7384,12 +7384,27 @@ define([
             const newPos = {};
             baseControl._dndListController = {
                setDragPosition: () => undefined,
-               calculateDragPosition: () => newPos
+               calculateDragPosition: () => newPos,
+               getDraggableItem: () => ({
+                  getContents: () => ({
+                     getKey: () => 1
+                  })
+               }),
+               endDrag: () => undefined
             };
 
             const setDragPositionSpy = sinon.spy(baseControl._dndListController, 'setDragPosition');
             baseControl._dragLeave();
             assert.isTrue(setDragPositionSpy.withArgs(newPos).called);
+
+            baseControl._dndListController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 5
+               })
+            });
+            const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
+            baseControl._dragLeave();
+            assert.isTrue(endDragSpy.called);
          });
 
          it('drag enter', async () => {
