@@ -1,10 +1,17 @@
 .controls-Suggest__suggestionsContainer-inInput {
 	top: -@padding-top_suggestSearch;
-	left: -@padding-left_suggestSearch;
 	padding-top: @inline_height_m + @padding-top_suggestSearch + @padding-top_suggestSearch;
 	border: @popup_border-thickness_suggest solid @popup_border-color_suggest;
 	.box-shadow(@box-shadow-size_suggestSearch @box-shadow-color_suggest);
 	position: absolute;
+}
+
+.controls-Suggest__suggestionsContainer_direction-right_theme-@{themeName} {
+	left: -@padding-side_suggestSearch;
+}
+
+.controls-Suggest__suggestionsContainer_direction-left_theme-@{themeName} {
+	right: -@padding-side_suggestSearch - @width_closeButton_toolButton;
 }
 
 .controls-Suggest__close {
