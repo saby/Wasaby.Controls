@@ -112,6 +112,33 @@ function getController(additionalOptions: object = {}): NewSourceController {
 
 describe('Controls/dataSource:SourceController', () => {
 
+    describe('getState', () => {
+        it('getState after create controller', () => {
+            const root = 'testRoot';
+            const parentProperty = 'testParentProperty';
+            let hierarchyOptions;
+            let controller;
+            let controllerState;
+
+            hierarchyOptions = {
+                root,
+                parentProperty
+            };
+            controller = new NewSourceController(hierarchyOptions);
+            controllerState = controller.getState();
+            ok(controllerState.parentProperty === parentProperty);
+            ok(controllerState.root === root);
+
+            hierarchyOptions = {
+                parentProperty
+            };
+            controller = new NewSourceController(hierarchyOptions);
+            controllerState = controller.getState();
+            ok(controllerState.parentProperty === parentProperty);
+            ok(controllerState.root === null);
+        });
+    });
+
     describe('load', () => {
 
         it('load with parentProperty',  async () => {

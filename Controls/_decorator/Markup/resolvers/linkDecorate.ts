@@ -5,7 +5,7 @@ import { clearNeedDecorateGlobals, needDecorate, getDecoratedLink } from '../res
  * @remark
  * Распознаватель тегов для {@link Controls/decorator:Markup}.
  * Модуль содержит функцию, которая позволяет преобразовать обычную ссылку в декорированную.
- * Декорация ссылки выполняется через {@link https://wi.sbis.ru/doc/platform/developmentapl/middleware/link-decorator/ Сервис декорирования ссылок}.
+ * Декорация ссылки выполняется через <a href="/doc/platform/developmentapl/middleware/link-decorator/">Сервис декорирования ссылок</a>.
  * Функция предназначена для использования в контроле {@link Controls/decorator:Markup} в опции {@link https://wi.sbis.ru/docs/js/Controls/decorator/Markup/options/tagResolver/ tagResolver}.
  * @example
  * <pre class="brush: xml">

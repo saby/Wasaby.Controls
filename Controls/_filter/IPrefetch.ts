@@ -40,5 +40,5 @@ export default interface IPrefetch {
  * @cfg {PrefetchParams} Устанавливает конфигурацию для кэширования данных.
  * @remark
  * Подробнее о механизме кэширования отчетов вы можете прочитать в разделе
- * <a href='https://wi.sbis.ru/doc/platform/application-optimization/reports-caching/'>Платформенный механизм кэширования</a>.
+ * <a href='/doc/platform/application-optimization/reports-caching/'>Платформенный механизм кэширования</a>.
  */

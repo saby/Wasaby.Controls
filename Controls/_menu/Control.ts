@@ -2,7 +2,6 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
-import {Sticky as StickyOpener} from 'Controls/popup';
 import {Controller as SourceController} from 'Controls/source';
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
@@ -22,7 +21,7 @@ import {TouchContextField} from 'Controls/context';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {error as dataSourceError} from 'Controls/dataSource';
 import {ISelectorTemplate} from 'Controls/_interface/ISelectorDialog';
-import {StackOpener} from 'Controls/popup';
+import {StickyOpener, StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
@@ -242,6 +241,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const contents: Model = item.getContents();
         if (action && !action['parent@'] && action.handler) {
             action.handler(contents);
+        } else {
+            this._openItemActionMenu(item, action, clickEvent);
         }
     }
 
@@ -314,6 +315,35 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 return MenuControl._isHistoryItem(item) ? String(key) : key;
             }
         });
+    }
+
+    private _openItemActionMenu(item: CollectionItem<Model>,
+                                action: IItemAction,
+                                clickEvent: SyntheticEvent<MouseEvent>): void {
+        const menuConfig = this._itemActionsController.prepareActionsMenuConfig(item, clickEvent,
+            action, this, false);
+        if (menuConfig) {
+            if (!this._itemActionSticky) {
+                this._itemActionSticky = new StickyOpener();
+            }
+            menuConfig.eventHandlers = {
+                onResult: this._onItemActionsMenuResult.bind(this)
+            };
+            this._itemActionSticky.open(menuConfig);
+            this._itemActionsController.setActiveItem(item);
+        }
+    }
+
+    private _onItemActionsMenuResult(eventName: string, actionModel: Model,
+                                     clickEvent: SyntheticEvent<MouseEvent>): void {
+        if (eventName === 'itemClick') {
+            const action = actionModel && actionModel.getRawData();
+            if (action && !action['parent@']) {
+                const item = this._itemActionsController.getActiveItem();
+                this._itemActionClick(null, item, action, clickEvent);
+                this._itemActionSticky.close();
+            }
+        }
     }
 
     private _pinClick(event: SyntheticEvent<MouseEvent>, item: Model): void {
@@ -663,17 +693,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             listModel = new Collection({...collectionConfig,
                 filter: MenuControl._displayFilter.bind(this, options)
             });
+
+            if (options.groupProperty) {
+                listModel.setGroup(this._groupMethod.bind(this, options));
+            } else if (options.groupingKeyCallback) {
+                listModel.setGroup(options.groupingKeyCallback);
+            }
         }
 
         if (options.itemActions) {
             this._updateItemActions(listModel, options);
         }
 
-        if (options.groupProperty) {
-            listModel.setGroup(this._groupMethod.bind(this, options));
-        } else if (options.groupingKeyCallback) {
-            listModel.setGroup(options.groupingKeyCallback);
-        }
         if (options.additionalProperty) {
             listModel.addFilter(this._additionalFilter);
         } else if (options.allowPin && options.root === null && !this._expander) {

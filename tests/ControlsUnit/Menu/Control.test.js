@@ -764,6 +764,27 @@ define(
             });
          });
 
+         describe('itemActions', function() {
+            it('_openItemActionMenu', () => {
+               let isOpened = false;
+               let actualConfig;
+               let menuControl = getMenu();
+               menuControl._itemActionsController = {
+                  prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
+                  setActiveItem: () => {}
+               };
+               menuControl._itemActionSticky = {
+                  open: (menuConfig) => {
+                     actualConfig = menuConfig;
+                     isOpened = true;
+                  }
+               };
+               menuControl._openItemActionMenu('item', {}, null);
+               assert.isTrue(isOpened);
+               assert.isOk(actualConfig.eventHandlers);
+            });
+         });
+
          it('_changeIndicatorOverlay', function() {
             let menuControl = getMenu();
             let indicatorConfig = {
