@@ -62,6 +62,15 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    .controls-BaseControl-hide-paging {
       display: none;
    }
+
+   // При отключении отступа под пэйджинг, отсуп все равно остается для ios из-за position: sticky.
+   .controls-BaseControl-hide-paging-padding {
+      padding: 0;
+      > .controls-PagingV {
+         position: absolute;
+         bottom: @scrollpaging_offset-vertical_list;
+      }
+   }
 }
 
 .controls-BaseControl_paging-Padding_theme-@{themeName} {
