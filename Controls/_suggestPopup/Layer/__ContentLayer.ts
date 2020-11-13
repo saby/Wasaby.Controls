@@ -6,15 +6,15 @@ import BaseLayer from './__BaseLayer';
 import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 
 var _private = {
-   getSizes(self, dropDownContainer): object {
-      var boundingClientToJSON = function(bc) {
-         var resultObj = {};
+   getSizes(self, dropDownContainer?: HTMLElement): object {
+      const boundingClientToJSON = (bc) => {
+         let resultObj = {};
 
          // firefox bug, clientRect object haven't method toJSON
          if (bc.toJSON) {
             resultObj = bc.toJSON();
          } else {
-            for (var i in bc) {
+            for (const i in bc) {
                // hasOwnProperty does not work correctly on clientRect object in FireFox and IE (not all versions)
                if (Object.getPrototypeOf(bc).hasOwnProperty(i)) {
                   resultObj[i] = bc[i];
@@ -24,10 +24,10 @@ var _private = {
 
          return resultObj;
       };
-      var result;
+      let result;
 
-      var container = self._container;
-      var targetContainer = self._options.target;
+      let container = self._container;
+      let targetContainer = self._options.target;
 
       //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
       if (container.get) {
@@ -37,22 +37,22 @@ var _private = {
          targetContainer = targetContainer.get(0);
       }
 
-      var oldHeight = container.style.height;
+      const oldHeight = container.style.height;
 
       //reset height to get real height of content
       //the only solution is to get height avoiding synchronization
       container.style.height = '';
 
-      var suggestBCR = boundingClientToJSON(container.getBoundingClientRect());
-      var containerBCR =  boundingClientToJSON(targetContainer.getBoundingClientRect());
-      var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
+      const suggestBCR = boundingClientToJSON(container.getBoundingClientRect());
+      const containerBCR =  boundingClientToJSON(targetContainer.getBoundingClientRect());
+      const dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
 
       /* because dropDownContainer can have height smaller, than window height */
-      function fixSizesByDDContainer(size) {
+      const fixSizesByDDContainer = (size) => {
          size.top -= dropDownContainerBCR.top;
          size.bottom -= dropDownContainerBCR.top;
          return size;
-      }
+      };
 
       result = {
          suggest: fixSizesByDDContainer(suggestBCR),
@@ -64,8 +64,9 @@ var _private = {
       return result;
    },
 
-   getDropDownContainerSize(container): object {
-      container = container || document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
+   getDropDownContainerSize(container?: HTMLElement): object {
+      container = container ||
+         document.getElementsByClassName('controls-Popup__stack-target-container')[0] || document.body;
       return container.getBoundingClientRect();
    },
 
@@ -77,6 +78,16 @@ var _private = {
          self._height = height;
          self._controlResized = true;
       }
+   },
+
+   determineOpenDirection(self): void {
+      const sizes = _private.getSizes(self);
+      const dropDownContainerSize = _private.getDropDownContainerSize();
+      const suggestSize = sizes.suggest;
+
+      const targetSizes = self._options.target.getBoundingClientRect();
+
+      self._openDirection = (targetSizes.left + suggestSize.width > dropDownContainerSize.width) ? 'left' : 'right';
    },
 
    /**
@@ -118,6 +129,7 @@ var __ContentLayer = BaseLayer.extend({
 
    _template: template,
    _height: '0px',
+   _openDirection: 'right',
    _maxHeight: 'none',
    _showContent: false,
 
@@ -131,7 +143,10 @@ var __ContentLayer = BaseLayer.extend({
       _private.updateMaxHeight(this);
       if (this._options.showContent) {
          const needNotifyControlResizeEvent = this._controlResized;
+
          _private.updateHeight(this);
+         _private.determineOpenDirection(this);
+
          this._showContent = this._options.showContent;
          if (needNotifyControlResizeEvent) {
             this._children.resize.start();
@@ -142,6 +157,7 @@ var __ContentLayer = BaseLayer.extend({
 
    _resize(): void {
       _private.updateHeight(this);
+      _private.determineOpenDirection(this);
    },
 
    close(): void {
