@@ -66,13 +66,13 @@ export default class GridGroupItem<T> extends mixin<
     }
 
     _initializeColumns(): void {
-        if (this._$owner.getColumns()) {
+        if (this._$columns) {
             const columns = [];
             const factory = this._getColumnsFactory();
 
             columns.push(new GridGroupCell({
                 owner: this,
-                columns: this._$owner.getColumns(),
+                columns: this._$columns,
                 column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE }
             }));
 
