@@ -20,6 +20,12 @@ export interface IHistoryServiceOptions {
     favorite?: HistoryListParam;
     dataLoaded?: boolean;
 }
+
+interface IHistory {
+    recent: RecordSet;
+    frequent: RecordSet;
+    pinned: RecordSet;
+}
 const STORAGES_USAGE = {};
 
 /**
@@ -325,8 +331,16 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     /**
      * Save new history
      */
-    saveHistory(historyId: string, newHistory: RecordSet): void {
-        DataStorage.write(historyId, newHistory);
+    saveHistory(historyId: string, history: IHistory): void {
+        Object.entries(history).forEach(([key, value]) => {
+            if (value && value['[Types/_entity/ICloneable]']) {
+                // Необходимо склонировать историю, т.к. история хранится глобально на приложение,
+                // И кто-то её легко может испортить
+                // Но клонируем максимально дешёвым способом, без клона вложенных объектов
+                history[key] = value.clone(true);
+            }
+        });
+        DataStorage.write(historyId, {...history});
     }
 
     /**
