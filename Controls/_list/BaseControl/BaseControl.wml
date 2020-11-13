@@ -216,7 +216,7 @@
             <div if="{{ _isPagingPadding() }}" name="pagingPaddingContainer"
                  class="controls-BaseControl_paging-Padding_theme-{{_options.theme}}">
             </div>
-            <div class="controls-BaseControl__pagingContainer{{_isHidePagingPadding() ? ' controls-BaseControl-hide-paging-padding': ''}}">
+            <div class="controls-BaseControl__pagingContainer{{_isPagingPaddingOption() ? ' controls-BaseControl-hide-paging-padding': ''}}">
                 <ws:if data="{{_options.pagingLeftTemplate}}">
                     <ws:partial template="{{_options.pagingLeftTemplate}}"/>
                 </ws:if>
