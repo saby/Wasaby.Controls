@@ -2276,11 +2276,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
-        this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.setMultiSelectVisibility) {
-                item.setMultiSelectVisibility(visibility);
-            }
-        });
+        this._updateItemsMultiSelectVisibility(visibility);
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
@@ -2293,6 +2289,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMultiSelectPosition(): 'default' | 'custom' {
         return this._$multiSelectPosition;
+    }
+
+    protected _updateItemsMultiSelectVisibility(visibility: string): void {
+        this.getViewIterator().each((item: CollectionItem<T>) => {
+            if (item.setMultiSelectVisibility) {
+                item.setMultiSelectVisibility(visibility);
+            }
+        });
     }
 
     protected _setItemPadding(itemPadding: IItemPadding): void {
@@ -2466,6 +2470,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     getViewIterator(): IViewIterator {

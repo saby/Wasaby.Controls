@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import {tmplNotify} from 'Controls/eventUtils';
 import template = require('wml!Controls/_explorer/PathController/PathWrapper');
-import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 
 var _private = {
    needCrumbs: function(header, items, rootVisible) {
