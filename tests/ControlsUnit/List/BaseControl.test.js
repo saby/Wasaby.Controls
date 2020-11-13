@@ -4930,6 +4930,15 @@ define([
             assert.equal(instance._itemActionsMenuId, null);
          });
 
+         // Необходимо игнорировать заурытие меню, если инстанс был разрушен
+         it('should not call closeActionsMenu when control is destroyed', () => {
+            const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
+            instance.destroy();
+            instance._onItemActionsMenuClose({id: 'ekaf'});
+            sinon.assert.notCalled(spyCloseActionsMenu);
+            spyCloseActionsMenu.restore();
+         });
+
          // Необходимо показать контекстное меню по longTap, если не был инициализирован itemActionsController
          it('should display context menu on longTap', () => {
             const spyOpenContextMenu = sinon.spy(lists.BaseControl._private, 'openContextMenu');
