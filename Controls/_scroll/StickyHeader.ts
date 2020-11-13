@@ -225,7 +225,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         UnregisterUtil(this, 'scrollStateChanged');
         if (this._model) {
             //Let the listeners know that the element is no longer fixed before the unmount.
-            this._fixationStateChangeHandler('', this._model.fixedPosition);
+            this._fixationStateChangeHandler('', this._model.fixedPosition, true);
             this._model.destroy();
         }
         this._stickyDestroy = true;
@@ -429,10 +429,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      * To inform descendants about the fixing status. To update the state of the instance.
      * @private
      */
-    protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
+    protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION, isBeforeUnmount?: boolean): void {
         // If the header is hidden we cannot calculate its current height.
         // Use the height that it had before it was hidden.
-        if (!isHidden(this._container)) {
+        // Поле _height во время вызова _beforeUnmount уже не нужно, а вычисление offsetHeight оттуда вызывает force reflow
+        if (!isBeforeUnmount && !isHidden(this._container)) {
             this._height = this._container.offsetHeight;
         }
         this._isFixed = !!newPosition;
