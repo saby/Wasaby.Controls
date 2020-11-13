@@ -250,7 +250,7 @@ describe('Controls/browser:Browser', () => {
                 options.filter = {};
                 options.searchValue = 'test';
                 browser._beforeUpdate(options);
-                deepStrictEqual(browser._filter.name, 'test');
+                assert.deepStrictEqual(browser._filter.name, 'test');
             });
 
         });
