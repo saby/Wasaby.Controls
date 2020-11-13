@@ -168,7 +168,10 @@ export class Controller {
     * @return {CrudEntityKey} Новый ключ маркера
     */
    onCollectionReset(): CrudEntityKey {
-      const newMarkedKey = this.calculateMarkedKeyForVisible();
+      let newMarkedKey = this._markedKey;
+      if (this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+         newMarkedKey = this._getFirstItemKey();
+      }
       if (newMarkedKey === this._markedKey) {
          this.setMarkedKey(newMarkedKey);
       }

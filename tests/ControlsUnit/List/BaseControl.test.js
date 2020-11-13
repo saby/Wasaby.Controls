@@ -6349,7 +6349,8 @@ define([
                      page: 0,
                      hasMore: false
                   }
-               }
+               },
+               markerVisibility: 'visible'
             };
             let dataLoadFired = false;
 
@@ -6369,6 +6370,7 @@ define([
 
             const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
             assert.equal(ctrl._loadingState, 'down');
+            assert.equal(ctrl._markerController.getMarkedKey(), 1);
 
             await loadPromise;
             assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
