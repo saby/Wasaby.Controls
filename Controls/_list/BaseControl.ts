@@ -2601,8 +2601,9 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const itemsContainer = self._children.listView.getItemsContainer();
             const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            if (item.getKey() !== controller.getMarkedKey()) {
-                _private.changeMarkedKey(self, item.getKey());
+            const markedKey = controller.getSuitableMarkedKey(item);
+            if (markedKey !== controller.getMarkedKey()) {
+                _private.changeMarkedKey(self, markedKey);
             }
         }
     },
