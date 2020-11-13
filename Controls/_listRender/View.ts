@@ -219,7 +219,7 @@ export default class View extends Control<IViewOptions> {
             this._changeMarkedKey(item.getContents().getKey());
         }
 
-        if (action && !action.isMenu && !action['parent@']) {
+        if (action && !action.isMenu) {
             this._handleItemActionClick(action, clickEvent, item, false);
         } else {
             this._openItemActionsMenu(action, clickEvent, item, false);
