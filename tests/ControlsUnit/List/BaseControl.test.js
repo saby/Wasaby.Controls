@@ -3312,7 +3312,7 @@ define([
             let ctrl;
             let sandbox;
             let isCloseSwipeCalled;
-            beforeEach(() => {
+            beforeEach(async () => {
                isCloseSwipeCalled = false;
                opt = {
                   test: 'test'
@@ -3325,9 +3325,8 @@ define([
                   },
                   viewModelConfig: {
                      items: rs,
-                     keyProperty: 'id',
-                     selectedKeys: [1, 3]
                   },
+                  keyProperty: 'id',
                   viewModelConstructor: lists.ListViewModel,
                   navigation: {
                      source: 'page',
@@ -3340,13 +3339,16 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                sandbox = sinon.createSandbox();
                sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
                   isCloseSwipeCalled = true;
                });
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   edit: () => Promise.resolve(),
                   add: () => Promise.resolve(),
@@ -3373,6 +3375,7 @@ define([
             it('beginAdd', async() => {
                await ctrl.beginAdd(opt).then((beginRes) => {
                   assert.isUndefined(beginRes);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                });
             });
 
@@ -3491,7 +3494,7 @@ define([
          describe('api', () => {
             let cfg, ctrl, sandbox;
 
-            beforeEach(() => {
+            beforeEach(async () => {
                cfg = {
                   viewName: 'Controls/List/ListView',
                   source: source,
@@ -3515,9 +3518,13 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  keyProperty: 'id',
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   cancel: () => Promise.resolve(),
                   commit: () => Promise.resolve(),
@@ -3544,6 +3551,7 @@ define([
                   isRejected = true;
                }).finally(() => {
                   assert.isFalse(isRejected);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                   done();
                });
                assert.isTrue(result instanceof Promise);
