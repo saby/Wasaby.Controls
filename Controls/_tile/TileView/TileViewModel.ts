@@ -327,14 +327,20 @@ var TileViewModel = ListViewModel.extend({
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
+    shouldOpenExtendedMenu(isActionMenu: boolean, isContextMenu: boolean, itemData: Record<string, any>): boolean {
+        const isScalingTile = this._options.tileScalingMode !== 'none' && !itemData.dispItem.isNode();
+        return this._options.actionMenuViewMode === 'preview' && !isActionMenu && !(isScalingTile && isContextMenu);
+    },
+
     getActionsMenuConfig(
         itemData,
         clickEvent: SyntheticEvent,
         opener,
         templateOptions,
-        isActionMenu
+        isActionMenu,
+        isContextMenu
     ): Record<string, any> {
-        if (this._options.actionMenuViewMode === 'preview' && !isActionMenu) {
+        if (this.shouldOpenExtendedMenu(isActionMenu, isContextMenu, itemData)) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = templateOptions;
             /* TODO Вынести этот код из модели в контрол плитки
