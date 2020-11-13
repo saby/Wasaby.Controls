@@ -796,12 +796,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
 /**
  * @name Controls/_scroll/StickyHeader#fixedZIndex
- * @cfg {Number} Устанавливает z-index у прилипающего заголовка после того, как он зафиксировался
+ * @cfg {Number} Устанавливает z-index у зафиксированного прилипающего заголовка
  */
 
 /**
  * @name Controls/_scroll/StickyHeader#zIndex
- * @cfg {Number} Устанавливает z-index у прилипающего заголовка до того, как он зафиксировался
+ * @cfg {Number} Устанавливает z-index у незафиксированного прилипающего заголовка
  */
 
 /**
