@@ -62,10 +62,8 @@ export default class Browser extends Control {
     private _errorRegister: RegisterClass;
     private _storeCallbacks: string[];
 
-    private _topShadowVisibilityFromOptions: SHADOW_VISIBILITY;
-    private _bottomShadowVisibilityFromOptions: SHADOW_VISIBILITY;
-    private _topShadowVisibility: SHADOW_VISIBILITY;
-    private _bottomShadowVisibility: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options,
                            context,
@@ -76,7 +74,6 @@ export default class Browser extends Control {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._initShadowVisibility(options);
         this._filterController = new FilterController(options);
 
         this._filter = options.filter;
@@ -450,21 +447,10 @@ export default class Browser extends Control {
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
-                if (more.before) {
-                    this._topShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
-                }
-
-                if (more.after) {
-                    this._bottomShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
-                }
+                this._topShadowVisibility = more.before ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
+                this._bottomShadowVisibility = more.after ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
             }
-
         }
-    }
-
-    private _initShadowVisibility(options): void {
-        this._topShadowVisibility = this._topShadowVisibilityFromOptions = options.topShadowVisibility;
-        this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
     }
 
     _createSearchController(options, context): SearchController {
