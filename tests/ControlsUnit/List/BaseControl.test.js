@@ -6737,18 +6737,33 @@ define([
                };
                let baseControl = new lists.BaseControl(cfg);
                let expectedSourceConfig = {};
+               let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
+               baseControl._cancelEdit = () => {
+                  isEditingCanceled = true;
+                  return {
+                     then: (cb) => {
+                        return cb()
+                     }
+                  }
+               };
+               baseControl._editInPlaceController = {
+                  isEditing: () => true
+               };
                expectedSourceConfig.page = 0;
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, 5);
+               assert.isTrue(isEditingCanceled);
+               isEditingCanceled = false;
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
             });
          });
          describe('navigation switch', function() {
