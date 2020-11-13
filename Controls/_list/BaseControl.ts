@@ -3850,18 +3850,22 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
-                        this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                        _private.updateInitializedItemActions(this, newOptions);
-                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._destroyed) {
+                            this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                            this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                            _private.updateInitializedItemActions(this, newOptions);
+                            this._listViewModel.setSearchValue(newOptions.searchValue);
+                        }
                     });
                 });
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                    _private.updateInitializedItemActions(this, newOptions);
-                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                    if (!this._destroyed) {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                    }
                 });
             }
         } else {
