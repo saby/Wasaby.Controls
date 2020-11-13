@@ -180,15 +180,15 @@ describe('Controls/browser:Browser', () => {
 
                 browser = new Browser(newOptions)
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
-                equal(browser._topShadowVisibility, 'visible');
-                equal(browser._bottomShadowVisibility, 'visible');
+                equal(browser._topShadowVisibility, 'gridauto');
+                equal(browser._bottomShadowVisibility, 'gridauto');
 
                 detection.isMobilePlatform = true;
 
                 browser = new Browser(newOptions)
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
-                equal(browser._topShadowVisibility, 'visible');
-                equal(browser._bottomShadowVisibility, 'visible');
+                equal(browser._topShadowVisibility, 'auto');
+                equal(browser._bottomShadowVisibility, 'auto');
             });
         });
 
