@@ -3,12 +3,20 @@
   display: inline-block;
 }
 
-.controls-Slider_big_withoutBorder_theme-@{themeName} {
+.controls-Slider_m_withoutBorder-horizontal_theme-@{themeName} {
   padding: 0 @marker_l_size_slider / 2;
 }
-.controls-Slider_small_withoutBorder_theme-@{themeName} {
+.controls-Slider_s_withoutBorder-horizontal_theme-@{themeName} {
   padding: 0 @marker_s_size_slider / 2;
 }
+
+.controls-Slider_m_withoutBorder-vertical_theme-@{themeName} {
+  padding: @marker_l_size_slider/2 0;
+}
+.controls-Slider_s_withoutBorder-vertical_theme-@{themeName} {
+  padding: @marker_s_size_slider/2 0;
+}
+
 .controls-Slider__withBorder_horizontal_theme-@{themeName} {
   border: @border-thickness_slider solid @border-color_slider;
   border-radius: @border-radius_slider;
