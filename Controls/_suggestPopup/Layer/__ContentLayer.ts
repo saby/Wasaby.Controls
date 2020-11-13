@@ -80,15 +80,14 @@ var _private = {
       }
    },
 
-   checkRightBorder(self): void {
+   determineOpenDirection(self): void {
       const sizes = _private.getSizes(self);
       const dropDownContainerSize = _private.getDropDownContainerSize();
       const suggestSize = sizes.suggest;
 
-      if (suggestSize.right > dropDownContainerSize.right) {
-         self._right = self._left;
-         self._left = 'auto';
-      }
+      const targetSizes = self._options.target.getBoundingClientRect();
+
+      self._openDirection = (targetSizes.left + suggestSize.width > dropDownContainerSize.width) ? 'left' : 'right';
    },
 
    /**
@@ -130,8 +129,7 @@ var __ContentLayer = BaseLayer.extend({
 
    _template: template,
    _height: '0px',
-   _right: 'auto',
-   _left: '-12px',
+   _openDirection: 'right',
    _maxHeight: 'none',
    _showContent: false,
 
@@ -147,7 +145,7 @@ var __ContentLayer = BaseLayer.extend({
          const needNotifyControlResizeEvent = this._controlResized;
 
          _private.updateHeight(this);
-         _private.checkRightBorder(this);
+         _private.determineOpenDirection(this);
 
          this._showContent = this._options.showContent;
          if (needNotifyControlResizeEvent) {
@@ -159,7 +157,7 @@ var __ContentLayer = BaseLayer.extend({
 
    _resize(): void {
       _private.updateHeight(this);
-      _private.checkRightBorder(this);
+      _private.determineOpenDirection(this);
    },
 
    close(): void {

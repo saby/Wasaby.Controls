@@ -169,7 +169,7 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
             }
          });
          sandbox.replace(__ContentLayer.default._private, 'updateHeight', () => {});
-         sandbox.replace(__ContentLayer.default._private, 'checkRightBorder', () => {});
+         sandbox.replace(__ContentLayer.default._private, 'determineOpenDirection', () => {});
          __ContentLayer.default._private.getScrollContainerSize = function() {return {top: 0}};
          layer._container = getContainer({top: 0});
          layer._showContent = false;
