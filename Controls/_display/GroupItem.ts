@@ -25,6 +25,8 @@ export default class GroupItem<T> extends mixin<CollectionItem<any>,
     readonly MarkableItem: boolean = false;
     readonly SelectableItem: boolean = false;
 
+    protected _$multiSelectVisibility: string;
+
     constructor(options?: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);
@@ -36,6 +38,16 @@ export default class GroupItem<T> extends mixin<CollectionItem<any>,
 
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const multiSelectVisibilityUpdated = this._$multiSelectVisibility !== multiSelectVisibility;
+        if (multiSelectVisibilityUpdated) {
+            this._$multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            return true;
+        }
+        return false;
     }
 
     getGroupPaddingClasses(theme: string, side: 'left' | 'right'): string {
@@ -64,5 +76,6 @@ export default class GroupItem<T> extends mixin<CollectionItem<any>,
 Object.assign(GroupItem.prototype, {
     '[Controls/_display/GroupItem]': true,
     _moduleName: 'Controls/display:GroupItem',
-    _instancePrefix: 'group-item-'
+    _instancePrefix: 'group-item-',
+    _$multiSelectVisibility: null
 });

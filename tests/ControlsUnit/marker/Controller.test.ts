@@ -167,6 +167,13 @@ describe('Controls/marker/Controller', () => {
       assert.equal(result, 1);
    });
 
+   it('getSuitableMarkedKey', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
+      const item = model.at(0);
+      const result = controller.getSuitableMarkedKey(item);
+      assert.equal(result, 1);
+   });
+
    describe('onCollectionRemove', () => {
       it('exists current marked item', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});

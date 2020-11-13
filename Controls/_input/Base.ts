@@ -459,6 +459,7 @@ var Base = Control.extend({
         const newViewModelOptions = this._getViewModelOptions(newOptions);
         this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
+        _private.updateSelectionByOptions(this, newOptions);
     },
 
     /**

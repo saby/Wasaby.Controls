@@ -13,7 +13,7 @@
             emptyTemplate="{{_options.emptyTemplate}}"
             minSearchLength="{{_options.minSearchLength}}"
             source="{{_options.suggestSource || _options.source}}"
-            keyProperty="{{_options.keyProperty}}"
+            keyProperty="{{_options.suggestKeyProperty || _options.keyProperty}}"
             historyId="{{_options.historyId}}"
             searchParam="{{_options.searchParam}}"
             searchDelay="{{_options.searchDelay}}"
