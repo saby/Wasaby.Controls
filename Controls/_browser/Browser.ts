@@ -312,6 +312,7 @@ export default class Browser extends Control {
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
+        this._sourceController.cancelLoading();
         this._items = this._sourceController.setItems(items);
         this._updateContext(this._sourceController.getState());
     }

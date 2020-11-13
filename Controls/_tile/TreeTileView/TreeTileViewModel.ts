@@ -147,6 +147,14 @@ var TreeTileViewModel = TreeViewModel.extend({
         this._tileModel.setItemsHeight(itemsHeight);
     },
 
+    setItemsContainerPadding(padding) {
+        this._tileModel.setItemsContainerPadding(padding);
+    },
+
+    getItemsContainerPadding() {
+        return this._tileModel.getItemsContainerPadding();
+    },
+
     getItemsHeight: function () {
         return this._tileModel.getItemsHeight();
     },

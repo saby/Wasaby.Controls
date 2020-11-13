@@ -178,6 +178,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    protected _scrollHandler(e: SyntheticEvent): void {
+        super._scrollHandler(e);
+        this._initHeaderController();
+    }
+
     _controlResizeHandler(): void {
         super._controlResizeHandler();
         this._stickyHeaderController.controlResizeHandler();

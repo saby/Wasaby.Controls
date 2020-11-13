@@ -30,7 +30,7 @@ import 'Controls/search';
 
 /*
  * Search input that suggests options as you are typing.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text

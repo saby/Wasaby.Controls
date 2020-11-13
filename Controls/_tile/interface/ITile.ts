@@ -32,6 +32,12 @@
  */
 
 /**
+ * @cfg {Controls/_list/interface/IList/itemPadding.typedef} Конфигурация внешних отступов плитки.
+ * @name Controls/_tile/interface/ITile#itemsContainerPadding
+ * @demo Controls-demo/Tile/ItemsContainerPadding/Index
+ */
+
+/**
  * @name Controls/_tile/interface/ITile#tileWidth
  * @cfg {Number} Минимальная ширина элементов, отображаемых в виде плитки.
  * @default 250

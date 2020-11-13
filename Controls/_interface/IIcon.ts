@@ -39,7 +39,7 @@ export default interface IIcon {
  * @cfg {String} Button icon.
  * @default Undefined
  * @remark Icon is given by icon classes.
- * All icons are symbols of special icon font. You can see all icons at <a href="https://wi.sbis.ru/docs/js/icons/">this page</a>.
+ * All icons are symbols of special icon font. You can see all icons at <a href="/docs/js/icons/">this page</a>.
  * @example
  * Button with style buttonPrimary and icon Add.
  * <pre>

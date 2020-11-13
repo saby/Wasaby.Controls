@@ -10,7 +10,7 @@ interface IConfirmationTemplate extends IControlOptions {
    style: TStyle;
 }
 /**
- * Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/'>диалога подтверждения</a>.
+ * Базовый шаблон <a href='/doc/platform/developmentapl/interface-development/controls/openers/confirmation/'>диалога подтверждения</a>.
  * 
  * @remark
  * Полезные ссылки:

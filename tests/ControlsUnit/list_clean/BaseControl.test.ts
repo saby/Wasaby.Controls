@@ -588,18 +588,24 @@ describe('Controls/list_clean/BaseControl', () => {
                 return {top: 100, bottom: 100};
             };
             const scrollParams = {
-                scrollTop: 0,
-                scrollHeight: 1000,
+                scrollTop: 100,
+                scrollHeight: 1200,
                 clientHeight: 400
             };
             assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
-            scrollParams.scrollTop = 400;
+            scrollParams.scrollTop = 500;
+            baseControl.scrollMoveSyncHandler({scrollTop: 400});
+            assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
+            scrollParams.scrollTop = 0;
+            scrollParams.scrollHeight = 1000;
+
             baseControl.scrollMoveSyncHandler({scrollTop: scrollParams.scrollTop});
+            baseControl.__onPagingArrowClick(null, '');
             assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 0});
             scrollParams.scrollTop = 100;
             scrollParams.scrollHeight = 1200;
+            baseControl.scrollMoveSyncHandler({scrollTop: 0});
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
             assert.deepEqual(baseControl._getScrollParams(baseControl), scrollParams);
             baseControl.scrollMoveSyncHandler({scrollTop: 400});
@@ -764,18 +770,18 @@ describe('Controls/list_clean/BaseControl', () => {
     });
 
     describe('_beforeMount', () => {
-       it('_beforeMount with prefetchProxy', async () => {
-           const baseControlOptions = getBaseControlOptionsWithEmptyItems();
-           baseControlOptions.source = new PrefetchProxy({
-               target: new Memory(),
-               data: {
-                   query: new DataSet()
-               }
-           });
-           const baseControl = new BaseControl(baseControlOptions);
-           const mountResult = await baseControl._beforeMount(baseControlOptions);
-           assert.isTrue(!mountResult);
-       })
+        it('_beforeMount with prefetchProxy', async () => {
+            const baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            baseControlOptions.source = new PrefetchProxy({
+                target: new Memory(),
+                data: {
+                    query: new DataSet()
+                }
+            });
+            const baseControl = new BaseControl(baseControlOptions);
+            const mountResult = await baseControl._beforeMount(baseControlOptions);
+            assert.isTrue(!mountResult);
+        })
     });
 
     describe('Edit in place', () => {
