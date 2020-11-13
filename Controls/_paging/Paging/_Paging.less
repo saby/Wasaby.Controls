@@ -99,6 +99,8 @@
    font-family: @arrow_icon_font-family_paging;
    font-size: @arrow_icon-size_paging;
    font-style: normal;
+   width: @arrow_icon-size_paging;
+   height: @arrow_icon-size_paging;
 }
 
 .controls-Paging__contrast_theme-@{themeName} {
@@ -107,8 +109,11 @@
    box-shadow: @box-shadow_ToolbarBox;
 }
 
-.controls-Paging_icon-Begin_digits_theme-@{themeName}::before {
-   content: @digits_arrow_begin_icon_content_paging;
+.controls-Paging_icon-Begin_digits_theme-@{themeName} {
+   background-image: @icon_background-image_arrow_begin;
+}
+.controls-Paging__arrow__state-disabled_theme-@{themeName} .controls-Paging_icon-Begin_digits_theme-@{themeName} {
+   background-image: @icon_background-image_arrow_begin_disabled;
 }
 
 .controls-Paging_icon-Prev_digits_theme-@{themeName}::before {
@@ -119,10 +124,12 @@
    content: @digits_arrow_next_icon_content_paging;
 }
 
-.controls-Paging_icon-End_digits_theme-@{themeName}::before {
-   content: @digits_arrow_end_icon_content_paging;
+.controls-Paging_icon-End_digits_theme-@{themeName} {
+   background-image: @icon_background-image_arrow_end;
 }
-
+.controls-Paging__arrow__state-disabled_theme-@{themeName} .controls-Paging_icon-End_digits_theme-@{themeName} {
+   background-image: @icon_background-image_arrow_end_disabled;
+}
 .controls-Paging_icon-Begin_theme-@{themeName}::before {
    content: @arrow_begin_icon_content_paging;
 }
