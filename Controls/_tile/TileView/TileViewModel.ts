@@ -224,10 +224,6 @@ var TileViewModel = ListViewModel.extend({
         return this._options.itemsContainerPadding;
     },
 
-    getItemsContainerPadding() {
-        return this._tileModel.getItemsContainerPadding();
-    },
-
     _onCollectionChange(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
         //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
