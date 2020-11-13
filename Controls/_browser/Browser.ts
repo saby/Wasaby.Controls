@@ -428,7 +428,7 @@ export default class Browser extends Control {
     }
 
     private _defineShadowVisibility(items: RecordSet|Error|void): void {
-        if (items instanceof RecordSet) {
+        if (!detection.isMobilePlatform && items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
                 this._topShadowVisibility = more.before ? 'gridauto' : SHADOW_VISIBILITY.AUTO;

@@ -222,6 +222,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _getShadowsModelOptions(options: IContainerBaseOptions): any {
         const shadowsModel = {...options};
+        // gridauto нужно для таблицы
         if (options.topShadowVisibility === 'gridauto') {
             shadowsModel.topShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
         }
