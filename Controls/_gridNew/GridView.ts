@@ -5,7 +5,7 @@ import { Logger} from 'UI/Utils';
 import { GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
-import { prepareEmptyEditingColumns } from '../_grid/utils/GridEmptyTemplateUtil';
+import { prepareEmptyEditingColumns, prepareEmptyColumns } from '../_grid/utils/GridEmptyTemplateUtil';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -15,6 +15,7 @@ const GridView = ListView.extend({
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
+        this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
         return result;
     },
 
@@ -126,9 +127,40 @@ const GridView = ListView.extend({
             },
             isFullGridSupport: this._options.isFullGridSupport,
             hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-            emptyTemplateColumns: columns,
+            colspanColumns: columns,
             itemPadding: this._options.itemPadding || {},
             theme: this._options.theme
+        });
+    },
+
+    _prepareColumnsForEmptyTemplate(columns, content, topSpacing, bottomSpacing, theme) {
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns: this._options.columns
+        });
+        let gridColumns;
+        if (ladderStickyColumn) {
+            gridColumns = (ladderStickyColumn.property.length === 2 ? [{}, {}] : [{}]).concat(this._options.columns);
+        } else {
+            gridColumns = this._options.columns;
+        }
+
+        return prepareEmptyColumns({
+            gridColumns,
+            emptyTemplateSpacing: {
+                top: topSpacing,
+                bottom: bottomSpacing
+            },
+            isFullGridSupport: this._options.isFullGridSupport,
+            hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
+            colspanColumns: content ? [{template: content}] : columns,
+            itemPadding: this._options.itemPadding || {},
+            theme: this._options.theme,
+            afterPrepareCallback(column, index, columns): void {
+                column.classes = 'controls-ListView__empty ' +
+                    'controls-ListView__empty_theme-default ' +
+                    `controls-ListView__empty_topSpacing_${topSpacing}_theme-${theme} ` +
+                    `controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
+            }
         });
     }
 });
