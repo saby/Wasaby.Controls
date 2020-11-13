@@ -34,6 +34,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     position: POSITION;
     mode: MODE;
     fixedZIndex: number;
+    zIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundStyle: string;
 }
@@ -546,6 +547,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + fixedZIndex + ';';
+        } else if (opts.zIndex) {
+            style += 'z-index: ' + opts.zIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
@@ -791,7 +794,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
 /**
  * @name Controls/_scroll/StickyHeader#fixedZIndex
- * @cfg {Number} Устанавливает z-index у прилипающего заголовка
+ * @cfg {Number} Определяет значение z-index на заголовке, когда он зафиксирован
+ * @default 2
+ */
+
+/**
+ * @name Controls/_scroll/StickyHeader#zIndex
+ * @cfg {Number} Определяет значение z-index на заголовке, когда он не зафиксирован
+ * @default undefined
  */
 
 /**
