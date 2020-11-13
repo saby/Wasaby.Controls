@@ -668,11 +668,17 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
  * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
- * @remark
- * Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
  * @default default
  * @remark
- * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
+ * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
+ * Подробнее в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#hover">статье</a>.
+ * @example
+ * <pre>
+ * <Controls.list:View
+ *    keyProperty="id"
+ *    source="{{_viewSource}}"
+ *    hoverBackgroundStyle="primary" />
+ * </pre
  */
 
 /**

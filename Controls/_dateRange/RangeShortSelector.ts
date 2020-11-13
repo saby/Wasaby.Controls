@@ -120,8 +120,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     }
 
     _mouseEnterHandler(): void {
-        const loadCss = ({View}) => View.loadCSS();
-        this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        if (!this._loadCalendarPopupPromise) {
+            const loadCss = ({View}) => View.loadCSS();
+            this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        }
     }
 
     _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {

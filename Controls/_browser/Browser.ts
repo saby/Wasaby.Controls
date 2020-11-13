@@ -440,18 +440,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
         const sourceController = this._getSourceController(this._options);
 
-        // для того чтобы мог посчитаться новый prefetch Source внутри
-        const newItems = sourceController.setItems(items);
-        const controllerState = sourceController.getState();
-
-        if (!this._items) {
-            this._items = newItems;
-        } else {
-            controllerState.items = this._items;
-            sourceController.setItems(this._items);
-        }
-
-        this._updateContext(controllerState);
+        sourceController.cancelLoading();
+        this._items = sourceController.setItems(items);
+        this._updateContext(sourceController.getState());
     }
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {

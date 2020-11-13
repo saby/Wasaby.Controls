@@ -208,7 +208,7 @@ export default class ScrollController {
      * @param listViewContainer
      * @param baseContainer
      * @param scrollTop
-     * @return {Model}
+     * @return {CollectionItem<Model>}
      */
     getFirstVisibleRecord(listViewContainer: HTMLElement, baseContainer: HTMLElement, scrollTop: number): Model {
         const topOffset = this._getTopOffsetForItemsContainer(listViewContainer, baseContainer);
@@ -217,8 +217,7 @@ export default class ScrollController {
         let firstItemIndex = this._options.collection.getStartIndex();
         firstItemIndex += this._getFirstVisibleItemIndex(listViewContainer.children, verticalOffset);
         firstItemIndex = Math.min(firstItemIndex, this._options.collection.getStopIndex());
-        const item = this._options.collection.at(firstItemIndex);
-        return item.getContents();
+        return this._options.collection.at(firstItemIndex);
     }
 
     /**

@@ -47,7 +47,7 @@ export default interface IBaseItemTemplateOptions {
    cursor?: TCursor;
    /**
     * @name Controls/list:BaseItemTemplate#marker
-    * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/select/marker/ маркером}.
+    * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
     * @default true
     */
    marker?: boolean;

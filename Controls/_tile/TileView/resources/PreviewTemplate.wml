@@ -2,6 +2,7 @@
    <div
       class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
       <ws:partial template="wml!Controls/_tile/TileView/TileImageTemplate"
+                  imageAlign="{{imageAlign}}"
                   attr:class="controls-TileView__previewTemplate_image controls-TileView__previewTemplate_image_theme-{{_options.theme}}">
          <ws:imageWrapperTemplate>
             <ws:if data="{{topTemplate}}">
@@ -61,6 +62,7 @@
 
 
 <ws:partial template="wml!Controls/_tile/TreeTileView/DefaultItemTpl"
+            titleStyle="none"
             attr:class="controls-TileView__previewTemplate
                         {{itemData.dispItem && itemData.dispItem.isNode() ? 'js-controls-TileView__withoutZoom controls-TileView__previewTemplate_node' : ''}}
                         {{itemData.isUnscaleable && itemData.hasVisibleActions() ? 'controls-TileView__previewTemplate_actions_showed' : ''}}

@@ -110,6 +110,9 @@ const defaultExcludedKeys = [];
 // = 28 + 6 + 6 см controls-BaseControl_paging-Padding_theme TODO не должно такого быть, он в разных темах разный
 const PAGING_PADDING = 40;
 
+// ключ операции удаления записи
+const DELETE_ACTION_KEY = 'delete';
+
 const PAGE_SIZE_ARRAY = [{id: 1, title: '5', pageSize: 5},
     {id: 2, title: '10', pageSize: 10},
     {id: 3, title: '25', pageSize: 25},
@@ -531,6 +534,9 @@ const _private = {
                 listModel.setCompatibleReset(false);
             } else {
                 listModel.setCollection(items);
+                if (self._options.itemsReadyCallback) {
+                    self._options.itemsReadyCallback(listModel.getCollection());
+                }
             }
             self._items = listModel.getCollection();
         } else {
@@ -738,7 +744,7 @@ const _private = {
         }
 
         if (itemActions) {
-            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === 'delete');
+            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === DELETE_ACTION_KEY);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
             }
@@ -830,6 +836,14 @@ const _private = {
             }
 
             _private.prepareFooter(self, self._options, self._sourceController);
+
+            // После выполнения поиска мы должны поставить маркер.
+            // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
+            // то на событие reset список будет пустой и нам некуда будет ставить маркер.
+            if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
+                const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
+                _private.changeMarkedKey(self, newMarkedKey);
+            }
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -2098,6 +2112,7 @@ const _private = {
         self.__error = errorConfig;
         if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
             self._scrollController = null;
+            self._observerRegistered = false;
         }
     },
 
@@ -2594,8 +2609,9 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const itemsContainer = self._children.listView.getItemsContainer();
             const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            if (item.getKey() !== controller.getMarkedKey()) {
-                _private.changeMarkedKey(self, item.getKey());
+            const markedKey = controller.getSuitableMarkedKey(item);
+            if (markedKey !== controller.getMarkedKey()) {
+                _private.changeMarkedKey(self, markedKey);
             }
         }
     },
@@ -3059,6 +3075,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
     _recalcPagingVisible: false,
+    _isPagingArrowClick: false,
 
     _itemTemplate: null,
 
@@ -3492,7 +3509,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                    _private.doAfterUpdate(this, () => {if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                    _private.doAfterUpdate(this, () => {if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3512,14 +3529,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
-         * Это нужно чтобы правильно посчитать номер страницы
+         * Это нужно чтобы правильно посчитать номер страницы.
+         * Также, это нужно для других пэджингов, но только в том случае, если мы скроллим не через нажатие кнопок.
+         * Иначе пэджинг может исчезать и сразу появляться.
+         * https://online.sbis.ru/opendoc.html?guid=8d830d87-be3f-4522-b453-0df337147d42
          */
         if (_private.needScrollPaging(this._options.navigation) &&
-            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
             scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
                 this._scrollController?.getPlaceholders().top || 0);
         }
+        this._isPagingArrowClick = false;
         return scrollParams;
     },
 
@@ -3869,18 +3890,28 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
-                        this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                        _private.updateInitializedItemActions(this, newOptions);
-                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._destroyed) {
+                            this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                            this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                            _private.updateInitializedItemActions(this, newOptions);
+                            this._listViewModel.setSearchValue(newOptions.searchValue);
+                            if (!this._scrollController) {
+                                _private.createScrollController(this, newOptions);
+                            }
+                        }
                     });
                 });
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                    _private.updateInitializedItemActions(this, newOptions);
-                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                    if (!this._destroyed) {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._scrollController) {
+                            _private.createScrollController(this, newOptions);
+                        }
+                    }
                 });
             }
         } else {
@@ -4291,7 +4322,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
         this._notifyOnDrawItems();
-
+        if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
+            this._registerObserver();
+            this._registerIntersectionObserver();
+        }
         // FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading && this._loadingState === null) {
@@ -4332,6 +4366,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     __onPagingArrowClick(e, arrow) {
+        this._isPagingArrowClick = true;
         switch (arrow) {
             case 'Next':
                 _private.scrollPage(this, 'Down');
@@ -4740,6 +4775,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!this._isMounted) {
                 return addResult;
             }
+
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
+
             // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
             const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
             const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
@@ -4762,6 +4803,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
             this.hideIndicator();
         });
     },
@@ -4984,7 +5029,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
-            if (action && !action['parent@']) {
+            if (action) {
                 const item = _private.getItemActionsController(this, this._options).getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
@@ -5609,7 +5654,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             (this._options.navigation &&
                 this._options.navigation.viewConfig &&
                 (this._options.navigation.viewConfig.pagingMode === 'end' ||
-                    this._options.navigation.viewConfig.pagingPadding === 'null')
+                    this._options.navigation.viewConfig.pagingPadding === 'null' ||
+                    this._options.navigation.viewConfig.pagingPadding === null
+                )
             )
         );
     },
