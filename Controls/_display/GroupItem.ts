@@ -1,7 +1,7 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import {mixin} from 'Types/util';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
 }
@@ -14,10 +14,8 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
  * @public
  * @author Мальцев А.А.
  */
-export default class GroupItem<T> extends mixin<
-    CollectionItem<any>,
-    ExpandableMixin
-    >(
+export default class GroupItem<T> extends mixin<CollectionItem<any>,
+    ExpandableMixin>(
     CollectionItem,
     ExpandableMixin
 ) {
@@ -32,11 +30,15 @@ export default class GroupItem<T> extends mixin<
         ExpandableMixin.call(this);
     }
 
+    isStickyHeader(): boolean {
+        return this.getOwner().isStickyHeader();
+    }
+
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
 
-    getGroupPaddingClasses(theme: string, side: 'left'|'right'): string {
+    getGroupPaddingClasses(theme: string, side: 'left' | 'right'): string {
         if (side === 'left') {
             const spacing = this.getOwner().getLeftPadding().toLowerCase();
             const hasMultiSelect = this.getOwner().getMultiSelectVisibility() !== 'hidden';
@@ -47,11 +49,9 @@ export default class GroupItem<T> extends mixin<
         }
     }
 
-    getItemTemplate(
-        itemTemplateProperty: string,
-        userItemTemplate: TemplateFunction|string,
-        userGroupTemplate?: TemplateFunction|string
-    ): TemplateFunction|string {
+    getItemTemplate(itemTemplateProperty: string,
+                    userItemTemplate: TemplateFunction | string,
+                    userGroupTemplate?: TemplateFunction | string): TemplateFunction | string {
         return userGroupTemplate || 'Controls/listRender:groupTemplate';
     }
 
