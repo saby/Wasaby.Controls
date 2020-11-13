@@ -5,7 +5,7 @@ import { Logger} from 'UI/Utils';
 import { GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
-import { prepareEmptyEditingColumns, prepareEmptyColumns } from '../_grid/utils/GridEmptyTemplateUtil';
+import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/GridEmptyTemplateUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 
 const GridView = ListView.extend({
