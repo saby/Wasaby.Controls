@@ -57,7 +57,10 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
-      const right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      let right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      if (this._options.direction === 'vertical') {
+         right = maxPercentValue - right;
+      }
       this._pointData[0].position = right;
       this._lineData.width = right;
    }
