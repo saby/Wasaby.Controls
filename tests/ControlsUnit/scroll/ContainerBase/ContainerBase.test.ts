@@ -8,6 +8,8 @@ describe('Controls/scroll:ContainerBase', () => {
       scrollMode: SCROLL_MODE.VERTICAL
    };
 
+   const contains: Function = () => false;
+
    describe('_beforeMount', () => {
       it('should create models', () => {
          const control: ContainerBase = new ContainerBase(options);
@@ -20,7 +22,7 @@ describe('Controls/scroll:ContainerBase', () => {
    describe('_afterMount', () => {
       it('should initialize models', () => {
          const control: ContainerBase = new ContainerBase(options);
-         const children: string[] = [ 'children1', 'children2' ];
+         const children = [ { classList: {contains} }, { classList: {contains} } ];
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
@@ -108,13 +110,14 @@ describe('Controls/scroll:ContainerBase', () => {
       });
 
       it('should update observed containers', () => {
-         const children: string[] = ['children1', 'children2'];
+         const children = [ { classList: {contains} }, { classList: {contains} } ];
          control._beforeMount(options);
          control._resizeObserverSupported = true;
 
          sinon.stub(control._resizeObserver, 'observe');
+         sinon.stub(control._resizeObserver, 'unobserve');
          control._children.content.children = children;
-         control._observedElements = ['children1', 'children3'];
+         control._observedElements = [children[0], 'children3'];
 
          control._afterUpdate();
 
