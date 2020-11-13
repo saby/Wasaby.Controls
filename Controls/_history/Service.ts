@@ -20,6 +20,12 @@ export interface IHistoryServiceOptions {
     favorite?: HistoryListParam;
     dataLoaded?: boolean;
 }
+
+interface IHistory {
+    recent: RecordSet;
+    frequent: RecordSet;
+    pinned: RecordSet;
+}
 const STORAGES_USAGE = {};
 
 /**
@@ -325,8 +331,8 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     /**
      * Save new history
      */
-    saveHistory(historyId: string, newHistory: RecordSet): void {
-        DataStorage.write(historyId, newHistory);
+    saveHistory(historyId: string, history: IHistory): void {
+        DataStorage.write(historyId, {...history});
     }
 
     /**
