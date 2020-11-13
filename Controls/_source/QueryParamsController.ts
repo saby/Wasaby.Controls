@@ -106,10 +106,12 @@ export default class QueryParamsController implements IQueryParamsController {
     }
 
     destroy(): void {
-        this._controllers.each((item: IControllerItem) => {
-            item.queryParamsController.destroy();
-        });
-        this._controllers = null;
+        if (this._controllers) {
+            this._controllers.each((item: IControllerItem) => {
+                item.queryParamsController.destroy();
+            });
+            this._controllers = null;
+        }
     }
 
     getController(root?: Key): IQueryParamsController {

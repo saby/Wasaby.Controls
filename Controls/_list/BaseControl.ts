@@ -819,6 +819,14 @@ const _private = {
             }
 
             _private.prepareFooter(self, self._options, self._sourceController);
+
+            // После выполнения поиска мы должны поставить маркер.
+            // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
+            // то на событие reset список будет пустой и нам некуда будет ставить маркер.
+            if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
+                const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
+                _private.changeMarkedKey(self, newMarkedKey);
+            }
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -2584,8 +2592,9 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const itemsContainer = self._children.listView.getItemsContainer();
             const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            if (item.getKey() !== controller.getMarkedKey()) {
-                _private.changeMarkedKey(self, item.getKey());
+            const markedKey = controller.getSuitableMarkedKey(item);
+            if (markedKey !== controller.getMarkedKey()) {
+                _private.changeMarkedKey(self, markedKey);
             }
         }
     },
@@ -3865,23 +3874,27 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
-                        this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                        _private.updateInitializedItemActions(this, newOptions);
-                        this._listViewModel.setSearchValue(newOptions.searchValue);
-                        if (!this._scrollController) {
-                            _private.createScrollController(this, newOptions);
+                        if (!this._destroyed) {
+                            this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                            this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                            _private.updateInitializedItemActions(this, newOptions);
+                            this._listViewModel.setSearchValue(newOptions.searchValue);
+                            if (!this._scrollController) {
+                                _private.createScrollController(this, newOptions);
+                            }
                         }
                     });
                 });
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                    _private.updateInitializedItemActions(this, newOptions);
-                    this._listViewModel.setSearchValue(newOptions.searchValue);
-                    if (!this._scrollController) {
-                        _private.createScrollController(this, newOptions);
+                    if (!this._destroyed) {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._scrollController) {
+                            _private.createScrollController(this, newOptions);
+                        }
                     }
                 });
             }
@@ -4188,6 +4201,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._actualPagingVisible = this._pagingVisible;
 
+        if (this._hideTopTrigger && this._needScrollToFirstItem) {
+            this._hideTopTrigger = false;
+        }
         this._scrollToFirstItemIfNeed();
 
         if (this._updateShadowModeBeforePaint) {
@@ -4278,7 +4294,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (firstItem && firstItem.key !== null) {
                 _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
-            this._notify('_scrollToFirstItemForTopPadding', [], {bubbling: true});
         }
     },
 
@@ -5225,11 +5240,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (this._hideTopTrigger) {
-            this._hideTopTrigger = false;
-        }
         if (!this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
+        if (this._hideTopTrigger && !this._needScrollToFirstItem) {
+            this._hideTopTrigger = false;
         }
 
         if (!this._pagingVisible) {
@@ -5282,10 +5297,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
+
         options.navigation = newNavigation;
-        this._sourceController.updateOptions(options);
-        _private.reload(this, this._options);
-        this._shouldRestoreScrollPosition = true;
+
+        const updateData = () => {
+            this._sourceController.updateOptions(options);
+            const result = _private.reload(this, this._options);
+            this._shouldRestoreScrollPosition = true;
+            return result;
+        };
+
+        if (_private.isEditing(this)) {
+            this._cancelEdit().then((result) => {
+                return !(result && result.canceled) ? updateData() : result;
+            });
+        } else {
+            return updateData();
+        }
     },
 
     recreateSourceController(options): void {
