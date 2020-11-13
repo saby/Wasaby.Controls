@@ -819,6 +819,14 @@ const _private = {
             }
 
             _private.prepareFooter(self, self._options, self._sourceController);
+
+            // После выполнения поиска мы должны поставить маркер.
+            // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
+            // то на событие reset список будет пустой и нам некуда будет ставить маркер.
+            if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
+                const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
+                _private.changeMarkedKey(self, newMarkedKey);
+            }
         };
 
         const drawItemsUp = (countCurrentItems, addedItems) => {
@@ -4193,6 +4201,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._actualPagingVisible = this._pagingVisible;
 
+        if (this._hideTopTrigger && this._needScrollToFirstItem) {
+            this._hideTopTrigger = false;
+        }
         this._scrollToFirstItemIfNeed();
 
         if (this._updateShadowModeBeforePaint) {
@@ -4283,7 +4294,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (firstItem && firstItem.key !== null) {
                 _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
             }
-            this._notify('_scrollToFirstItemForTopPadding', [], {bubbling: true});
         }
     },
 
@@ -5230,11 +5240,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (this._hideTopTrigger) {
-            this._hideTopTrigger = false;
-        }
         if (!this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
+        }
+        if (this._hideTopTrigger && !this._needScrollToFirstItem) {
+            this._hideTopTrigger = false;
         }
 
         if (!this._pagingVisible) {
@@ -5287,10 +5297,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
+
         options.navigation = newNavigation;
-        this._sourceController.updateOptions(options);
-        _private.reload(this, this._options);
-        this._shouldRestoreScrollPosition = true;
+
+        const updateData = () => {
+            this._sourceController.updateOptions(options);
+            const result = _private.reload(this, this._options);
+            this._shouldRestoreScrollPosition = true;
+            return result;
+        };
+
+        if (_private.isEditing(this)) {
+            this._cancelEdit().then((result) => {
+                return !(result && result.canceled) ? updateData() : result;
+            });
+        } else {
+            return updateData();
+        }
     },
 
     recreateSourceController(options): void {

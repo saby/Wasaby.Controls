@@ -235,7 +235,9 @@ export default class LookupBaseControllerClass {
 
     private _needLoadItems(): boolean {
         const items = this._getItems();
-        return this.getSelectedKeys().some((key) => {
+        const selectedKeys = this.getSelectedKeys();
+
+        return (items.getCount() !== selectedKeys.length) || this.getSelectedKeys().some((key) => {
             return items.getIndexByValue(this._options.keyProperty, key) === -1;
         });
     }

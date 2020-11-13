@@ -120,7 +120,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _observeContentSize(): void {
-        for (const element of this._children.content.children) {
+        for (const element of this._getElementsForHeightCalculation()) {
             if (!this._observedElements.includes(element)) {
                 this._resizeObserver.observe(element);
                 this._observedElements.push(element);
@@ -128,7 +128,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
     _unobserveDeleted(): void {
-        const contentElements: HTMLElement[] = [...this._children.content.children];
+        const contentElements: HTMLElement[] = this._getElementsForHeightCalculation();
         this._observedElements = this._observedElements.filter((element: HTMLElement) => {
             if (!contentElements.includes(element)) {
                 this._resizeObserver.unobserve(element);
@@ -410,15 +410,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         let heigthValue = 0;
         let widthValue = 0;
 
-        for (const child of children) {
-            const ignoredChild = this._getIgnoredChild(child);
-            if (ignoredChild) {
-                for (const child of ignoredChild) {
-                    heigthValue += this._calculateScrollHeight(child);
-                }
-            } else {
-                heigthValue += this._calculateScrollHeight(child);
-            }
+        for (const child of this._getElementsForHeightCalculation()) {
+            heigthValue += this._calculateScrollHeight(child);
         }
 
         newState.scrollHeight = heigthValue;
@@ -434,6 +427,24 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             newState.scrollWidth = newState.clientWidth;
         }
         this._updateStateAndGenerateEvents(newState);
+    }
+
+    _getElementsForHeightCalculation(container?: HTMLElement): HTMLElement[] {
+        const elements: HTMLElement[] = [];
+        const _container: HTMLElement = container || this._children.content;
+
+        for (const child of _container.children) {
+            const ignoredChild = this._getIgnoredChild(child);
+            if (ignoredChild) {
+                for (const child of ignoredChild) {
+                    elements.push(child);
+                }
+            } else {
+                elements.push(child);
+            }
+        }
+
+        return elements;
     }
 
     _getIgnoredChild(container: HTMLElement): HTMLCollection {
