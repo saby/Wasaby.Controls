@@ -315,7 +315,7 @@ const _private = {
         const needAttachLoadTopTriggerToNull = _private.needAttachLoadTopTriggerToNull(self);
         if (needAttachLoadTopTriggerToNull && self._isMounted) {
             self._attachLoadTopTriggerToNull = true;
-            self._needScrollToFirstItem = false;
+            self._needScrollToFirstItem = true;
             self._scrollTop = 1;
         } else {
             self._attachLoadTopTriggerToNull = false;
