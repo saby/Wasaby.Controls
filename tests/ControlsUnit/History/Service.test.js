@@ -33,10 +33,10 @@ define(['Controls/history', 'Core/Deferred', 'Env/Env', 'Application/Env', 'UI/U
          assert.isTrue(queryDef === loadDeferred);
 
          let nextQuery = service.query();
-         const expectedData = 'test';
+         const expectedData = {history: 'test'};
          service.saveHistory('testId', expectedData);
          nextQuery.addCallback((data) => {
-            assert.equal(data.getRawData(), expectedData);
+            assert.deepStrictEqual(data.getRawData(), expectedData);
             done();
          });
          loadDeferred.callback();
