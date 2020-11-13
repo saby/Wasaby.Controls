@@ -15,6 +15,11 @@ interface IReceivedState {
     items: Record[];
 }
 
+const SIZES = {
+    ARROW_WIDTH: 12,
+    HOME_BUTTON_WIDTH: 24
+};
+
 /**
  * Хлебные крошки с кнопкой "Назад".
  *
@@ -59,7 +64,6 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected _notifyHandler: Function = tmplNotify;
     protected _applyHighlighter: Function = applyHighlighter;
     protected _getRootModel: Function = Common.getRootModel;
-    protected _width: number = 0;
     protected _dotsWidth: number = 0;
     protected _indexEdge: number = 0;
     protected _items: Record[] = [];
@@ -87,11 +91,11 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
                 this._paddingRight = res[0].PADDING_RIGHT;
                 if (receivedState) {
                     this._dotsWidth = this._getDotsWidth(options.fontSize);
-                    this._prepareData(options, options.containerWidth);
+                    this._prepareData(options);
                 } else if (this._breadCrumbsItems) {
                     const getTextWidth = res[1];
                     this._dotsWidth = this._getDotsWidth(options.fontSize, getTextWidth);
-                    this._prepareData(options, options.containerWidth, getTextWidth);
+                    this._prepareData(options, getTextWidth);
                     return {
                         items: options.items
                     };
@@ -107,7 +111,6 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         if (isItemsChanged) {
             this._items = newOptions.items;
         }
-        this._width = newOptions.containerWidth;
         if (isFontSizeChanged) {
             this._dotsWidth = this._getDotsWidth(newOptions.fontSize);
         }
@@ -116,7 +119,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         if (isDataChange) {
             this._prepareItems(newOptions);
             if (this._breadCrumbsItems) {
-                if (this._width) {
+                if (newOptions.containerWidth) {
                     this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
                 } else {
                     this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
@@ -128,9 +131,8 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         const dotsWidth = getTextWidth('...', fontSize) + this._paddingRight;
         return this._arrowWidth + dotsWidth;
     }
-    private _prepareData(options: IBreadCrumbsOptions, width: number, getTextWidth: Function = this._getTextWidth): void {
+    private _prepareData(options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         if (options.items && options.items.length > 1) {
-            this._width = width;
             this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, options, getTextWidth);
         }
     }
@@ -139,7 +141,8 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         if (items && items.length > 0) {
-            this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, this._width, this._dotsWidth, getTextWidth);
+            const width = options.containerWidth - this._getTextWidth(this._backButtonCaption, '3xl') - SIZES.ARROW_WIDTH - SIZES.HOME_BUTTON_WIDTH;
+            this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, width, this._dotsWidth, getTextWidth);
             this._visibleItems[0].hasArrow = false;
             this._indexEdge = 0;
         }
