@@ -673,12 +673,13 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
  * Подробнее в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#hover">статье</a>.
  * @example
- * <pre>
+ * <pre class="brush: html; highlight: [5]">
+ * <!-- WML -->
  * <Controls.list:View
  *    keyProperty="id"
  *    source="{{_viewSource}}"
  *    hoverBackgroundStyle="primary" />
- * </pre
+ * </pre>
  */
 
 /**
