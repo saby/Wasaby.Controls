@@ -5634,7 +5634,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
-    _isPagingPaddingOption(): boolean {
+    _isPagingPaddingFromOptions(): boolean {
         return !(this._options.navigation &&
             this._options.navigation.viewConfig &&
             (this._options.navigation.viewConfig.pagingMode === 'end' ||
@@ -5645,7 +5645,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _isPagingPadding(): boolean {
-        return !(detection.isMobileIOS || !this._isPagingPaddingOption());
+        return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
     },
 
     _onMouseMove(event): void {
