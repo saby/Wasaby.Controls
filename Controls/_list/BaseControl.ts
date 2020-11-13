@@ -5295,10 +5295,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.page = params.page - 1;
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
+
         options.navigation = newNavigation;
-        this._sourceController.updateOptions(options);
-        _private.reload(this, this._options);
-        this._shouldRestoreScrollPosition = true;
+
+        const updateData = () => {
+            this._sourceController.updateOptions(options);
+            const result = _private.reload(this, this._options);
+            this._shouldRestoreScrollPosition = true;
+            return result;
+        };
+
+        if (_private.isEditing(this)) {
+            this._cancelEdit().then((result) => {
+                return !(result && result.canceled) ? updateData() : result;
+            });
+        } else {
+            return updateData();
+        }
     },
 
     recreateSourceController(options): void {
