@@ -190,6 +190,17 @@ describe('Controls/_lookup/BaseControllerClass', () => {
             items = await controller.update(newOptions as ILookupBaseControllerOptions);
             deepStrictEqual(controller.getSelectedKeys(), []);
         });
+
+        it('update source', async () => {
+            const controller = getLookupControllerWithSelectedKeys();
+            controller.setItems(await controller.loadItems());
+
+            const newOptions = getControllerOptions();
+            // same keys
+            newOptions.selectedKeys = [0, 1, 2];
+            newOptions.source = getSource();
+            ok(controller.update(newOptions as ILookupBaseControllerOptions) instanceof Promise);
+        });
     });
 
     it('setItems', () => {
