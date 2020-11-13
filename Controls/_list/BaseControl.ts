@@ -5240,7 +5240,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        if (!this._scrollController?.getScrollTop()) {
+        // нельзя делать это в процессе обновления
+        if (!this._updateInProgress && !this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
         }
         if (this._hideTopTrigger && !this._needScrollToFirstItem) {
