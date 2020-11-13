@@ -4931,7 +4931,7 @@ define([
          });
 
          // Необходимо игнорировать заурытие меню, если инстанс был разрушен
-         it('should close popup with specified id', () => {
+         it('should not call closeActionsMenu when control is destroyed', () => {
             const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
             instance.destroy();
             instance._onItemActionsMenuClose({id: 'ekaf'});
