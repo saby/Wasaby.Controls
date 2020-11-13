@@ -5565,14 +5565,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._dndListController;
     },
 
-    _isPagingPadding(): boolean {
-        return !(detection.isMobileIOS ||
-            (this._options.navigation &&
-                this._options.navigation.viewConfig &&
-                (this._options.navigation.viewConfig.pagingMode === 'end' ||
-                    this._options.navigation.viewConfig.pagingPadding === 'null')
-            )
+    _isHidePagingPadding(): boolean {
+        return (this._options.navigation &&
+            this._options.navigation.viewConfig &&
+            (this._options.navigation.viewConfig.pagingMode === 'end' ||
+                this._options.navigation.viewConfig.pagingPadding === 'null')
         );
+    },
+
+    _isPagingPadding(): boolean {
+        return !(detection.isMobileIOS || this._isHidePagingPadding());
     },
 
     _onMouseMove(event): void {
