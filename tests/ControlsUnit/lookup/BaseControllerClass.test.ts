@@ -56,6 +56,7 @@ function getRecordSet(): RecordSet {
 function getControllerOptions(): Partial<ILookupBaseControllerOptions> {
     return {
         selectedKeys: [],
+        multiSelect: true,
         source,
         keyProperty: 'id',
         displayProperty: 'title'
@@ -166,6 +167,39 @@ describe('Controls/_lookup/BaseControllerClass', () => {
             delete options.selectedKeys;
             controller.update(options as ILookupBaseControllerOptions);
             deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
+        });
+
+        it('update selectedKeys', async () => {
+            const controller = getLookupControllerWithSelectedKeys();
+            let items;
+
+            let newOptions = getControllerOptions();
+            newOptions.selectedKeys = [0, 1];
+            items = await controller.update(newOptions as ILookupBaseControllerOptions);
+            ok(items.getCount() === 2);
+            deepStrictEqual(controller.getSelectedKeys(), [0, 1]);
+
+            newOptions = getControllerOptions();
+            newOptions.selectedKeys = [0, 1, 2];
+            items = await controller.update(newOptions as ILookupBaseControllerOptions);
+            ok(items.getCount() === 3);
+            deepStrictEqual(controller.getSelectedKeys(), [0, 1, 2]);
+
+            newOptions = getControllerOptions();
+            newOptions.selectedKeys = [];
+            items = await controller.update(newOptions as ILookupBaseControllerOptions);
+            deepStrictEqual(controller.getSelectedKeys(), []);
+        });
+
+        it('update source', async () => {
+            const controller = getLookupControllerWithSelectedKeys();
+            controller.setItems(await controller.loadItems());
+
+            const newOptions = getControllerOptions();
+            // same keys
+            newOptions.selectedKeys = [0, 1, 2];
+            newOptions.source = getSource();
+            ok(controller.update(newOptions as ILookupBaseControllerOptions) instanceof Promise);
         });
     });
 

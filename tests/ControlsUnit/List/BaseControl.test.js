@@ -4930,6 +4930,15 @@ define([
             assert.equal(instance._itemActionsMenuId, null);
          });
 
+         // Необходимо игнорировать заурытие меню, если инстанс был разрушен
+         it('should not call closeActionsMenu when control is destroyed', () => {
+            const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
+            instance.destroy();
+            instance._onItemActionsMenuClose({id: 'ekaf'});
+            sinon.assert.notCalled(spyCloseActionsMenu);
+            spyCloseActionsMenu.restore();
+         });
+
          // Необходимо показать контекстное меню по longTap, если не был инициализирован itemActionsController
          it('should display context menu on longTap', () => {
             const spyOpenContextMenu = sinon.spy(lists.BaseControl._private, 'openContextMenu');
@@ -6701,18 +6710,33 @@ define([
                };
                let baseControl = new lists.BaseControl(cfg);
                let expectedSourceConfig = {};
+               let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
+               baseControl._cancelEdit = () => {
+                  isEditingCanceled = true;
+                  return {
+                     then: (cb) => {
+                        return cb()
+                     }
+                  }
+               };
+               baseControl._editInPlaceController = {
+                  isEditing: () => true
+               };
                expectedSourceConfig.page = 0;
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, 5);
+               assert.isTrue(isEditingCanceled);
+               isEditingCanceled = false;
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
             });
          });
          describe('navigation switch', function() {

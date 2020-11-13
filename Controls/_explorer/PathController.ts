@@ -1,8 +1,7 @@
 import Control = require('Core/Control');
 import {tmplNotify} from 'Controls/eventUtils';
 import template = require('wml!Controls/_explorer/PathController/PathController');
-import {ItemsUtil} from 'Controls/list';
-import GridIsEqualUtil = require('Controls/_grid/utils/GridIsEqualUtil');
+import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import HeadingPathBack = require('Controls/_explorer/HeadingPathBack');
 
    var _private = {
