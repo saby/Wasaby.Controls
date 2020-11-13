@@ -143,6 +143,14 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return isChangedMultiSelectVisibility;
     }
 
+    setColumns(newColumns: TColumns): void {
+        if (this._$columns !== newColumns) {
+            this._$columns = newColumns;
+            this._nextVersion();
+            this._reinitializeColumns();
+        }
+    }
+
     // region overrides
 
     setMarked(marked: boolean, silent?: boolean): void {

@@ -6,6 +6,7 @@ import { GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import { prepareEmptyEditingColumns } from '../_grid/utils/GridEmptyTemplateUtil';
+import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -16,6 +17,15 @@ const GridView = ListView.extend({
         let result = GridView.superclass._beforeMount.apply(this, arguments);
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
         return result;
+    },
+
+    _beforeUpdate(newOptions): void {
+        GridView.superclass._beforeUpdate.apply(this, arguments);
+        const columnsChanged = !GridIsEqualUtil.isEqualWithSkip(this._options.columns, newOptions.columns,
+            { template: true, resultTemplate: true });
+        if (columnsChanged) {
+            this._listModel.setColumns(newOptions.columns, false);
+        }
     },
 
     _resolveItemTemplate(options): TemplateFunction {

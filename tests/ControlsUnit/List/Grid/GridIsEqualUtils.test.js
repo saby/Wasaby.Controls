@@ -1,5 +1,5 @@
 
-define(['Controls/_grid/utils/GridIsEqualUtil'], function(GridIsEqualUtil) {
+define(['Controls/Utils/GridIsEqualUtil'], function(GridIsEqualUtil) {
    var header = [
       {
          width: '1fr',
