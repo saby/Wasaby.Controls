@@ -132,12 +132,10 @@ export default class Controller {
     }
 
     setItems(items: RecordSet): RecordSet {
-        this._setItems(items);
-
         if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
-
+        this._setItems(items);
         return this._items;
     }
 

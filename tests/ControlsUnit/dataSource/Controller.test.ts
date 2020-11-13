@@ -2,6 +2,7 @@ import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
+import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
 
 const filterByEntries = (item, filter): boolean => {
     return filter.entries ? filter.entries.get('marked').includes(String(item.get('key'))) : true;
@@ -100,6 +101,17 @@ function getMemoryWithHierarchyItems(): Memory {
         keyProperty: 'key',
         filter: filterByEntries
     });
+}
+
+function getPagingNavigation(hasMore: boolean = false): INavigationOptionValue<INavigationPageSourceConfig> {
+    return {
+        source: 'page',
+        sourceConfig: {
+            pageSize: 1,
+            page: 0,
+            hasMore
+        }
+    };
 }
 
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
@@ -232,5 +244,39 @@ describe('Controls/dataSource:SourceController', () => {
             controller.updateOptions(options);
             deepStrictEqual(controller._expandedItems, ['testRoot']);
         });
+    });
+
+    describe('setItems', () => {
+
+        it('navigation is updated before assign items', () => {
+            const controller = getController({
+                navigation: getPagingNavigation(true)
+            });
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            const controllerItems = controller.getItems();
+
+            let hasMoreResult;
+            controllerItems.subscribe('onCollectionChange', () => {
+                hasMoreResult = controller.hasMoreData('down');
+            });
+
+            let newControllerItems = controllerItems.clone();
+            newControllerItems.setMetaData({
+                more: false
+            });
+            controller.setItems(newControllerItems);
+            ok(!hasMoreResult);
+
+            newControllerItems = controllerItems.clone();
+            newControllerItems.setMetaData({
+                more: true
+            });
+            controller.setItems(newControllerItems);
+            ok(hasMoreResult);
+        });
+
     });
 });
