@@ -2307,6 +2307,15 @@ const _private = {
         const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
 
         self._wasScrollToEnd = true;
+        
+        const hasMoreData = {
+            up: _private.hasMoreData(this, this._sourceController, 'up'),
+            down: _private.hasMoreData(this, this._sourceController, 'down')
+        };
+        if (this._scrollPagingCtr) {
+            this._currentPage = this._pagingCfg.pagesCount;
+            this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
+        }
 
         // Последняя страница уже загружена но конец списка не обязательно отображается,
         // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
@@ -4335,16 +4344,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._itemReloaded) {
             this._listViewModel.clearReloadedMarks();
             this._itemReloaded = false;
-        }
-        if (this._wasScrollToEnd) {
-            const hasMoreData = {
-                up: _private.hasMoreData(this, this._sourceController, 'up'),
-                down: _private.hasMoreData(this, this._sourceController, 'down')
-            };
-            if (this._scrollPagingCtr) {
-                this._currentPage = this._pagingCfg.pagesCount;
-                this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
-            }
         }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
