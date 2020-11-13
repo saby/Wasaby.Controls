@@ -91,7 +91,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
 
 /**
  * @name Controls/_popupTemplate/Dialog#draggable
- * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
+ * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
  * @default false
  */
 

@@ -1,3 +1,4 @@
+import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -98,6 +99,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
+    groupTemplate?: TemplateFunction;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
@@ -1654,6 +1656,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$groupProperty;
     }
 
+    protected _getGroupItemConstructor(): new() => GroupItem<T> {
+        return GroupItem;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
      * @see group
@@ -2354,8 +2360,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setSearchValue(searchValue: string): void {
-        this._$searchValue = searchValue;
-        this._nextVersion();
+        if (this._$searchValue !== searchValue) {
+            this._$searchValue = searchValue;
+            this._nextVersion();
+        }
     }
 
     getSearchValue(): string {
@@ -3022,7 +3030,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
             handler: this._$group,
-            collapsedGroups: this._$collapsedGroups
+            collapsedGroups: this._$collapsedGroups,
+            groupConstructor: this._getGroupItemConstructor()
         });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
