@@ -408,16 +408,6 @@ export default class Browser extends Control {
         this._getOperationsController(this._options).setOperationsPanelVisible(false);
     }
 
-    protected _onScrollToFirstItemForTopPadding(): void {
-        // Возвращаем в опции значение видимости теней, которое передали прикладники
-        if (this._topShadowVisibility !== this._topShadowVisibilityFromOptions) {
-            this._topShadowVisibility = this._topShadowVisibilityFromOptions;
-        }
-        if (this._bottomShadowVisibility !== this._bottomShadowVisibilityFromOptions) {
-            this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions;
-        }
-    }
-
     private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
