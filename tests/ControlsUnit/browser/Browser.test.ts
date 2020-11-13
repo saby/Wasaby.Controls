@@ -237,6 +237,22 @@ describe('Controls/browser:Browser', () => {
                 assert.deepStrictEqual(browser._searchController._options.filter, filter);
             });
 
+            it('update with searchValue', async () => {
+                let options = getBrowserOptions();
+                const filter = {
+                    testField: 'newFilterValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+
+                options = {...options};
+                options.filter = {};
+                options.searchValue = 'test';
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._filter.name, 'test');
+            });
+
         });
 
         describe('operationsController', () => {
