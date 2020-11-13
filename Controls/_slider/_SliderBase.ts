@@ -9,6 +9,7 @@ export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
 }
 
 const MOBILE_TOOLTIP_HIDE_DELAY: number = 3000;
+const maxPercentValue = 100;
 
 class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
@@ -44,6 +45,9 @@ class SliderBase extends Control<ISliderBaseOptions> {
         if (!this._options.readOnly) {
             //На мобильных устройствах положение подсказки и ползунка всегда совпадает
             this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
+            if ( this._options.direction === 'vertical') {
+                this._tooltipPosition = maxPercentValue - this._tooltipPosition;
+            }
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
 
