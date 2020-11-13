@@ -226,6 +226,10 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    isStickyHeader(): boolean {
+        return this.getOwner().isStickyHeader();
+    }
+
     /**
      * Устанавливает содержимое элемента коллекции
      * @param contents Новое содержимое
