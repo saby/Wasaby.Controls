@@ -253,10 +253,12 @@ var TreeTileViewModel = TreeViewModel.extend({
         clickEvent: SyntheticEvent,
         opener,
         templateOptions,
-        isActionMenu: boolean
+        isActionMenu: boolean,
+        isContextMenu: boolean
     ): Record<string, any> {
         const itemData = this.getItemDataByItem(item);
-        return this._tileModel.getActionsMenuConfig(itemData, clickEvent, opener, templateOptions, isActionMenu);
+        return this._tileModel.getActionsMenuConfig(itemData,
+            clickEvent, opener, templateOptions, isActionMenu, isContextMenu);
     }
 });
 

@@ -262,7 +262,8 @@ export class Controller {
             clickEvent,
             opener,
             templateOptions,
-            isActionMenu
+            isActionMenu,
+            isContextMenu
         );
         if (actionMenuConfig) {
             return actionMenuConfig;
