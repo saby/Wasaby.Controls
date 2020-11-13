@@ -159,9 +159,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _firstItem: TItem = null;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
     protected _actualItems: TItems = null;
-    private _itemsSources: {
-        [key: number]: ICrudPlus
-    } = {};
 
     protected _template: TemplateFunction = template;
 
@@ -231,6 +228,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _getMenuConfigByItem(item: TItem): IStickyPopupOptions {
         const options = this._options;
+        let source = this._getSourceForMenu();
+        const root = item.get(options.keyProperty);
+
+        /**
+         * Если запись для выпадающего списка еще не были загружены,
+         * то отдаем оригинальный источник вместо prefetchProxy
+         */
+        if (this._items.getIndexByValue(options.parentProperty, root) === -1) {
+            source = options.source;
+        }
         return {
             ...this._getMenuOptions(),
             opener: this,
@@ -243,6 +250,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 horizontal: 'right'
             },
             templateOptions: {
+                source,
+                root,
                 groupTemplate: options.groupTemplate,
                 groupProperty: options.groupProperty,
                 groupingKeyCallback: options.groupingKeyCallback,
@@ -261,21 +270,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 }
             }
         };
-    }
-
-    private _getItemSource(item: TItem): Promise<void> {
-        const itemSource = item.get('source');
-        const itemKey = item.get(this._options.keyProperty);
-        if (!this._itemsSources[itemKey]) {
-            return itemSource.query().then((items) => {
-                const menuSource = this._createPrefetchProxy(itemSource, items);
-                this._itemsSources[itemKey] = menuSource;
-                return menuSource;
-            });
-        } else {
-            const source = this._itemsSources[itemKey];
-            return Promise.resolve(source);
-        }
     }
 
     private _getMenuOptions(): IMenuOptions {
@@ -363,7 +357,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._sticky = new StickyOpener();
         }
         this._sticky.open(config);
-        this._notifyMenuOpened();
     }
 
     protected _beforeMount(options: IToolbarOptions, context: {}, receivedItems?: TItems): Promise<TItems> {
@@ -389,14 +382,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._isLoadMenuItems = false;
-            this._itemsSources = {};
             this._sticky?.close();
             this.setStateBySource(newOptions.source);
         }
         if (this._options.items !== newOptions.items) {
             this._isLoadMenuItems = false;
             this._sourceByItems = null;
-            this._itemsSources = {};
             this._setStateByItems(newOptions.items);
         }
     }
@@ -440,44 +431,21 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             event.stopPropagation();
             return;
         }
-        const menuConfig = {
-            ...this._getMenuConfigByItem(item),
-            target: event.currentTarget
-        };
 
-        const root = item.get(this._options.keyProperty);
+        if (item.get(this._nodeProperty)) {
+            this._openMenu(Object.assign(this._getMenuConfigByItem(item), {
+                target: event.currentTarget
+            }));
 
-        if (item.get('source')) {
-            this._getItemSource(item).then((source) => {
-                menuConfig.templateOptions.source = source;
-                menuConfig.templateOptions.root = root;
-                this._openMenu(menuConfig);
-            });
-        } else if (item.get(this._nodeProperty)) {
-            let source = this._getSourceForMenu();
             /**
-             * Если запись для выпадающего списка еще не были загружены,
-             * то отдаем оригинальный источник вместо prefetchProxy
+             * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+             * по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
              */
-            if (this._items.getIndexByValue(this._options.parentProperty, root) === -1) {
-                source = this._options.source;
-            }
-            menuConfig.templateOptions.source = source;
-            menuConfig.templateOptions.root = root;
-
-            this._openMenu(menuConfig);
+            this._notify('menuOpened', [], {bubbling: true});
         }
 
         this._notify('itemClick', [item, event.nativeEvent]);
         event.stopPropagation();
-    }
-
-    private _notifyMenuOpened(): void {
-        /**
-         * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-         * по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
-         */
-        this._notify('menuOpened', [], {bubbling: true});
     }
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
@@ -505,6 +473,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 this._setMenuItems();
                 this._isLoadMenuItems = true;
             }
+            this._notify('menuOpened', [], {bubbling: true});
             this._openMenu(this._getMenuConfig());
         }
     }
