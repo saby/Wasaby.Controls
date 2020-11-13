@@ -337,7 +337,7 @@ export default class View extends Control<IViewOptions> {
         clickEvent: SyntheticEvent<MouseEvent>): void {
         if (eventName === 'itemClick') {
             const action = actionModel && actionModel.getRawData();
-            if (action) {
+            if (action && !action['parent@']) {
                 const item = this._itemActionsController.getActiveItem();
                 this._handleItemActionClick(action, clickEvent, item, true);
             }
