@@ -32,10 +32,6 @@ export default class GroupItem<T> extends mixin<CollectionItem<any>,
         ExpandableMixin.call(this);
     }
 
-    isStickyHeader(): boolean {
-        return this.getOwner().isStickyHeader();
-    }
-
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
