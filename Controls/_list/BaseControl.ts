@@ -515,6 +515,9 @@ const _private = {
                 listModel.setCompatibleReset(false);
             } else {
                 listModel.setCollection(items);
+                if (self._options.itemsReadyCallback) {
+                    self._options.itemsReadyCallback(listModel.getCollection());
+                }
             }
             self._items = listModel.getCollection();
         } else {
@@ -649,7 +652,7 @@ const _private = {
     },
     keyDownEnd(self, event) {
         _private.setMarkerAfterScroll(self, event);
-        if (self._options.navigation.viewConfig.showEndButton) {
+        if (self._options.navigation?.viewConfig?.showEndButton) {
             _private.scrollToEdge(self, 'down');
         }
     },
@@ -722,7 +725,9 @@ const _private = {
         }
 
         if (itemActions) {
-            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === 'delete');
+            // TODO Опция выпилена в 21.1000
+            const deleteActionKey = self._options.task1180208637 ? self._options.task1180208637 : 'delete'
+            const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === deleteActionKey);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
             }
@@ -2082,6 +2087,7 @@ const _private = {
         self.__error = errorConfig;
         if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
             self._scrollController = null;
+            self._observerRegistered = false;
         }
     },
 
@@ -2155,17 +2161,21 @@ const _private = {
         return navigation && navigation.view === 'pages';
     },
 
-    isPagingNavigationVisible(hasMoreData) {
+    isPagingNavigationVisible(self, hasMoreData) {
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
-        return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        if (self._options.navigation && self._options.navigation.viewConfig &&
+            self._options.navigation.viewConfig.totalInfo === 'extended') {
+            return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
+        }
+        return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
-        self._pagingNavigationVisible = _private.isPagingNavigationVisible(hasMoreData);
+        self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
         self._selectedPageSizeKey = PAGE_SIZE_ARRAY.find((item) => item.pageSize === self._currentPageSize);
         self._selectedPageSizeKey = self._selectedPageSizeKey ? [self._selectedPageSizeKey.id] : [1];
@@ -2574,8 +2584,9 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const itemsContainer = self._children.listView.getItemsContainer();
             const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
-            if (item.getKey() !== controller.getMarkedKey()) {
-                _private.changeMarkedKey(self, item.getKey());
+            const markedKey = controller.getSuitableMarkedKey(item);
+            if (markedKey !== controller.getMarkedKey()) {
+                _private.changeMarkedKey(self, markedKey);
             }
         }
     },
@@ -3036,6 +3047,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _cachedPagingState: false,
     _shouldNotResetPagingCache: false,
     _recalcPagingVisible: false,
+    _isPagingArrowClick: false,
 
     _itemTemplate: null,
 
@@ -3469,7 +3481,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
-                    _private.doAfterUpdate(this, () => {if (this._scrollController.getParamsToRestoreScrollPosition()) {
+                    _private.doAfterUpdate(this, () => {if (this._scrollController?.getParamsToRestoreScrollPosition()) {
                         return;
                     }
                     _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3489,14 +3501,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
-         * Это нужно чтобы правильно посчитать номер страницы
+         * Это нужно чтобы правильно посчитать номер страницы.
+         * Также, это нужно для других пэджингов, но только в том случае, если мы скроллим не через нажатие кнопок.
+         * Иначе пэджинг может исчезать и сразу появляться.
+         * https://online.sbis.ru/opendoc.html?guid=8d830d87-be3f-4522-b453-0df337147d42
          */
         if (_private.needScrollPaging(this._options.navigation) &&
-            this._options.navigation.viewConfig.pagingMode === 'numbers') {
+            (this._options.navigation.viewConfig.pagingMode === 'numbers' || !this._isPagingArrowClick)) {
             scrollParams.scrollTop += (this._scrollController?.getPlaceholders().top || 0);
             scrollParams.scrollHeight += (this._scrollController?.getPlaceholders().bottom +
                 this._scrollController?.getPlaceholders().top || 0);
         }
+        this._isPagingArrowClick = false;
         return scrollParams;
     },
 
@@ -3850,18 +3866,28 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 return this._prepareGroups(newOptions, (collapsedGroups) => {
                     return _private.reload(self, newOptions).addCallback(() => {
-                        this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                        _private.updateInitializedItemActions(this, newOptions);
-                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._destroyed) {
+                            this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                            this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                            _private.updateInitializedItemActions(this, newOptions);
+                            this._listViewModel.setSearchValue(newOptions.searchValue);
+                            if (!this._scrollController) {
+                                _private.createScrollController(this, newOptions);
+                            }
+                        }
                     });
                 });
             } else {
                 // return result here is for unit tests
                 return _private.reload(self, newOptions).addCallback(() => {
-                    this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                    _private.updateInitializedItemActions(this, newOptions);
-                    this._listViewModel.setSearchValue(newOptions.searchValue);
+                    if (!this._destroyed) {
+                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
+                        _private.updateInitializedItemActions(this, newOptions);
+                        this._listViewModel.setSearchValue(newOptions.searchValue);
+                        if (!this._scrollController) {
+                            _private.createScrollController(this, newOptions);
+                        }
+                    }
                 });
             }
         } else {
@@ -3873,6 +3899,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const hasMore = _private.hasMoreDataInAnyDirection(this, this._sourceController);
                     if (this._listViewModel && this._listViewModel.getHasMoreData() !== hasMore) {
                         _private.setHasMoreData(this._listViewModel, hasMore);
+                    }
+
+                    if (this._pagingNavigation &&
+                        !this._pagingNavigationVisible && this._items && sourceChanged) {
+                        _private.updatePagingData(this,
+                            this._items.getMetaData().more);
                     }
                 }
             });
@@ -4266,7 +4298,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
         this._notifyOnDrawItems();
-
+        if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
+            this._registerObserver();
+            this._registerIntersectionObserver();
+        }
         // FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
             if (this._options.loading && this._loadingState === null) {
@@ -4307,6 +4342,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     __onPagingArrowClick(e, arrow) {
+        this._isPagingArrowClick = true;
         switch (arrow) {
             case 'Next':
                 _private.scrollPage(this, 'Down');
@@ -4715,6 +4751,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!this._isMounted) {
                 return addResult;
             }
+
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
+
             // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
             const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
             const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
@@ -4737,6 +4779,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this.showIndicator();
         return this._getEditInPlaceController().cancel().finally(() => {
+            if (_private.hasSelectionController(this)) {
+                const controller = _private.getSelectionController(this);
+                controller.setSelection(controller.getSelection());
+            }
             this.hideIndicator();
         });
     },
@@ -5569,7 +5615,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return (this._options.navigation &&
             this._options.navigation.viewConfig &&
             (this._options.navigation.viewConfig.pagingMode === 'end' ||
-                this._options.navigation.viewConfig.pagingPadding === 'null')
+                this._options.navigation.viewConfig.pagingPadding === 'null' ||
+                this._options.navigation.viewConfig.pagingPadding === null
+            )
         );
     },
 

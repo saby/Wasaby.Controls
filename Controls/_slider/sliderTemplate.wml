@@ -1,6 +1,6 @@
 <div class="controls-Slider_theme-{{_options.theme}}
             controls-Slider{{_options.readOnly ? '_disabled' : '_enabled'}}_theme-{{_options.theme}}
-            {{!_options.borderVisible ? (' controls-Slider' + (_options.size=='m'  ? '_big' : '_small') + '_withoutBorder_theme-'+_options.theme)}}">
+            {{!_options.borderVisible ? (' controls-Slider_' + _options.size + '_withoutBorder-' + _options.direction + '_theme-'+_options.theme)}}">
    <div class="controls-Slider__wrapper controls-Slider__wrapper_{{_options.direction}}
                {{_options.borderVisible ? ' controls-Slider__withBorder_' + _options.direction + '_theme-'+_options.theme}}"
         on:mousedown="_mouseDownAndTouchStartHandler()"
@@ -22,7 +22,7 @@
                           {{point.name=='tooltip' ? (_isDrag ? 'controls-Slider__point_hidden controls-Slider__point_hidden_theme-' + _options.theme : 'controls-Slider__point_tooltip controls-Slider__point_tooltip_theme-' + _options.theme)}}"
                     name="{{point.name}}"
                     style="left: {{_options.direction === 'horizontal' ? point.position + '%'}};
-                           top: {{_options.direction === 'vertical' ? point.position + '%'}};">
+                           bottom: {{_options.direction === 'vertical' ? point.position + '%'}};">
                   <ws:if data="{{point.name=='tooltip' && _options.tooltipVisible && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
                      <div class="controls-Slider__tooltipValue controls-Slider__tooltipValue_theme-{{_options.theme}} controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}} controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue_theme-{{_options.theme}}">
                         {{_tooltipValue}}
@@ -52,7 +52,7 @@
                            controls-Slider__line__full_{{_options.readOnly ? 'disabled' : 'enabled'}}{{_viewMode}}_theme-{{_options.theme}}"
                     style="left: {{_options.direction === 'horizontal' ? _lineData.position + '%'}};
                         width: {{_options.direction === 'horizontal' ? _lineData.width + '%'}};
-                        top: {{_options.direction === 'vertical' ? _lineData.position + '%'}};
+                        bottom: {{_options.direction === 'vertical' ? _lineData.position + '%'}};
                         height: {{_options.direction === 'vertical' ? _lineData.width + '%'}};">
                </div>
                <ws:if data="{{_options.intervals}}">
@@ -63,7 +63,7 @@
                                     controls-Slider__interval_{{_options.size=='m' ? 'big' : 'small'}}_theme-{{_options.theme}}"
                              style="left: {{_options.direction === 'horizontal' ? interval.start + '%' : 'auto' }};
                                     width: {{_options.direction === 'horizontal' ? interval.width + '%' : 'auto' }};
-                                    top: {{_options.direction === 'vertical' ? interval.start + '%' : 'auto' }};
+                                    bottom: {{_options.direction === 'vertical' ? interval.start + '%' : 'auto' }};
                                     height: {{_options.direction === 'vertical' ? interval.width + '%'}};">
                      </div>
                   </ws:for>

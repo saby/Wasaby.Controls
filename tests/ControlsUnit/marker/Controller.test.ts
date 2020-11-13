@@ -167,6 +167,13 @@ describe('Controls/marker/Controller', () => {
       assert.equal(result, 1);
    });
 
+   it('getSuitableMarkedKey', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
+      const item = model.at(0);
+      const result = controller.getSuitableMarkedKey(item);
+      assert.equal(result, 1);
+   });
+
    describe('onCollectionRemove', () => {
       it('exists current marked item', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
@@ -308,6 +315,16 @@ describe('Controls/marker/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(3).isMarked());
          assert.equal(model.getVersion(), 3);
       });
+   });
+
+   it('destroy', () => {
+      controller.setMarkedKey(1);
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+      controller.destroy();
+      assert.isFalse(model.getItemBySourceKey(1).isMarked());
+      assert.isFalse(model.getItemBySourceKey(2).isMarked());
+      assert.isFalse(model.getItemBySourceKey(3).isMarked());
    });
 
    it('should work with breadcrumbs', () => {

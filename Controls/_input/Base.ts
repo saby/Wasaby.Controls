@@ -214,7 +214,6 @@ var _private = {
  *
  * @class Controls/_input/Base
  * @extends UI/Base:Control
- *
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IBorderStyle
@@ -226,9 +225,7 @@ var _private = {
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection
- *
  * @public
- *
  * @author Красильников А.С.
  */
 
@@ -462,6 +459,7 @@ var Base = Control.extend({
         const newViewModelOptions = this._getViewModelOptions(newOptions);
         this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
+        _private.updateSelectionByOptions(this, newOptions);
     },
 
     /**

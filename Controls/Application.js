@@ -24,7 +24,7 @@ define('Controls/Application',
 
    /**
     * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
-    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+    * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
     *
     * @class Controls/Application
     * @extends Core/Control
