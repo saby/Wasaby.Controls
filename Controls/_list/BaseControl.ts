@@ -5024,7 +5024,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemActionsMenuClose(currentPopup): void {
-        if (!this._listViewModel.isDestroyed()) {
+        if (!this._destroyed) {
             _private.closeActionsMenu(this, currentPopup);
         }
     },
