@@ -3312,7 +3312,7 @@ define([
             let ctrl;
             let sandbox;
             let isCloseSwipeCalled;
-            beforeEach(() => {
+            beforeEach(async () => {
                isCloseSwipeCalled = false;
                opt = {
                   test: 'test'
@@ -3325,9 +3325,8 @@ define([
                   },
                   viewModelConfig: {
                      items: rs,
-                     keyProperty: 'id',
-                     selectedKeys: [1, 3]
                   },
+                  keyProperty: 'id',
                   viewModelConstructor: lists.ListViewModel,
                   navigation: {
                      source: 'page',
@@ -3340,13 +3339,16 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                sandbox = sinon.createSandbox();
                sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
                   isCloseSwipeCalled = true;
                });
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   edit: () => Promise.resolve(),
                   add: () => Promise.resolve(),
@@ -3373,6 +3375,7 @@ define([
             it('beginAdd', async() => {
                await ctrl.beginAdd(opt).then((beginRes) => {
                   assert.isUndefined(beginRes);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                });
             });
 
@@ -3491,7 +3494,7 @@ define([
          describe('api', () => {
             let cfg, ctrl, sandbox;
 
-            beforeEach(() => {
+            beforeEach(async () => {
                cfg = {
                   viewName: 'Controls/List/ListView',
                   source: source,
@@ -3515,9 +3518,13 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  keyProperty: 'id',
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   cancel: () => Promise.resolve(),
                   commit: () => Promise.resolve(),
@@ -3544,6 +3551,7 @@ define([
                   isRejected = true;
                }).finally(() => {
                   assert.isFalse(isRejected);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                   done();
                });
                assert.isTrue(result instanceof Promise);
@@ -4706,6 +4714,24 @@ define([
             assert.exists(outgoingEventsMap.actionClick, 'actionClick event has not been fired');
             assert.exists(outgoingEventsMap.actionClick[2], 'Third argument has not been set');
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
+         });
+
+         // Клик по itemAction с подменю ('parent@': true) должен бросать событие actionClick
+         it('should emit actionClick event on submenu (\'parent@\': true) action click', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const stubHandleItemActionClick = sinon.stub(lists.BaseControl._private, 'handleItemActionClick');
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.called(stubHandleItemActionClick);
+            stubHandleItemActionClick.restore();
          });
 
          // должен открывать меню, соответствующее новому id Popup
@@ -6609,26 +6635,55 @@ define([
             it('isPagingNavigationVisible', () => {
                let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
 
+               const baseControlOptions = {
+                   _options: {
+                       navigation: {
+                           viewConfig: {
+                               totalInfo: 'extended'
+                           }
+                       }
+                   }
+               };
+
                // Известно общее количество  записей, записей 0
-               let result = isPagingNavigationVisible(0);
+               let result = isPagingNavigationVisible(baseControlOptions, 0);
                assert.isFalse(result, 'paging should not be visible');
 
                // Известно общее количество записей, записей 6
-               result = isPagingNavigationVisible(6);
+               result = isPagingNavigationVisible(baseControlOptions, 6);
                assert.isTrue(result, 'paging should be visible');
 
                // Неизвестно общее количество записей, записей 5
-               result = isPagingNavigationVisible(5);
+               result = isPagingNavigationVisible(baseControlOptions, 5);
                assert.isFalse(result, 'paging should not be visible');
 
 
                // Неизвестно общее количество записей, hasMore = false
-               result = isPagingNavigationVisible(false);
+               result = isPagingNavigationVisible(baseControlOptions, false);
                assert.isFalse(result, 'paging should not be visible');
 
                // Неизвестно общее количество записей, hasMore = true
-               result = isPagingNavigationVisible(true);
-               assert.isTrue(result, 'paging should not be visible');
+               result = isPagingNavigationVisible(baseControlOptions, true);
+               assert.isTrue(result, 'paging should be visible');
+
+
+
+             baseControlOptions._options.navigation = {};
+             // Известно общее количество  записей, записей 0
+             result = isPagingNavigationVisible(baseControlOptions, 0);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Известно общее количество записей, записей 6
+             result = isPagingNavigationVisible(baseControlOptions, 6);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Неизвестно общее количество записей, hasMore = false
+             result = isPagingNavigationVisible(baseControlOptions, false);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Неизвестно общее количество записей, hasMore = true
+             result = isPagingNavigationVisible(baseControlOptions, true);
+             assert.isTrue(result, 'paging should not be visible');
             });
 
             describe('getPagingLabelData', function() {

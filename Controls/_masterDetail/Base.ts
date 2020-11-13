@@ -5,28 +5,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
-/**
- * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
- * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
- * @class Controls/_masterDetail/Base
- * @extends Core/Control
- * @mixes Controls/_interface/IPropStorage
- *
- * @author Авраменко А.С.
- * @public
- * @demo Controls-demo/MasterDetail/Demo
- */
-
-/*
- * Control that allows to implement the Master-Detail interface
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
- * @class Controls/_masterDetail/Base
- * @extends Core/Control
- *
- * @author Авраменко А.С.
- * @public
- * @demo Controls-demo/MasterDetail/Demo
- */
 const RESIZE_DELAY = 50;
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
@@ -38,7 +16,28 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     contrastBackground: boolean;
     masterVisibility: string;
 }
+/**
+ * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
+ * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
+ * @class Controls/_masterDetail/Base
+ * @extends Core/Control
+ * @mixes Controls/_interface/IPropStorage
+ *
+ * @author Авраменко А.С.
+ * @public
+ * @demo Controls-demo/MasterDetail/Demo
+ */
 
+/*
+ * Control that allows to implement the Master-Detail interface
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
+ * @class Controls/_masterDetail/Base
+ * @extends Core/Control
+ *
+ * @author Авраменко А.С.
+ * @public
+ * @demo Controls-demo/MasterDetail/Demo
+ */
 class Base extends Control<IMasterDetail> {
     /**
      * @typedef {String} MasterVisibility

@@ -17,10 +17,8 @@
                      <Controls.grid:View
                              source="{{_masterSource}}"
                              keyProperty="id"
-                             parentProperty="Раздел"
                              style="master"
                              backgroundStyle="master"
-                             nodeProperty="Раздел@"
                              markerVisibility="visible"
                              itemActions="{{_itemActions}}"
                              columns="{{gridColumns}}"

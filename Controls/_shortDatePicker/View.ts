@@ -12,6 +12,14 @@ import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
+const enum POSITION {
+    RIGHT = 'right',
+    LEFT = 'left'
+}
+
+// В режиме 'Только года' одновременно отобржается 15 элементов.
+// Таким образом последний отображаемый элемент имеет индекс 14.
+const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
 /**
  * Контрол выбора даты или периода.
  *
@@ -33,16 +41,6 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
-
-const enum POSITION {
-    RIGHT = 'right',
-    LEFT = 'left'
-}
-
-// В режиме 'Только года' одновременно отобржается 15 элементов.
-// Таким образом последний отображаемый элемент имеет индекс 14.
-const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
-
 class View extends Control<IDateLitePopupOptions> {
     protected _template: TemplateFunction = componentTmpl;
     protected _defaultListTemplate: TemplateFunction = listTmpl;
@@ -428,21 +426,19 @@ class View extends Control<IDateLitePopupOptions> {
 
     static _theme: string[] = ['Controls/shortDatePicker'];
 
-    static getDefaultOptions(): object {
-        return {
-            ...IPeriodSimpleDialog.getDefaultOptions(),
-            captionFormatter: dateControlsUtils.formatDateRangeCaption,
-            itemTemplate: ItemWrapper,
-            monthTemplate: monthTmpl,
-            dateConstructor: WSDate
-        };
+    static getDefaultOptions(): IDateLitePopupOptions {
+        const PeriodDialogOptions: IDateLitePopupOptions = IPeriodSimpleDialog.getDefaultOptions();
+        PeriodDialogOptions.captionFormatter = dateControlsUtils.formatDateRangeCaption;
+        PeriodDialogOptions.itemTemplate = ItemWrapper;
+        PeriodDialogOptions.monthTemplate = monthTmpl;
+        PeriodDialogOptions.dateConstructor = WSDate;
+        return PeriodDialogOptions;
     }
 
-    static getOptionTypes(): object {
-        return {
-            ...IPeriodSimpleDialog.getOptionTypes(),
-            captionFormatter: descriptor(Function)
-        };
+    static getOptionTypes(): IDateLitePopupOptions {
+        const PeriodDialogTypes: IDateLitePopupOptions = IPeriodSimpleDialog.getOptionTypes();
+        PeriodDialogTypes.captionFormatter = descriptor(Function);
+        return PeriodDialogTypes;
     }
 }
 

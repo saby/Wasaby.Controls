@@ -1,20 +1,12 @@
 import {detection} from 'Env/Env';
-import {isFullGridSupport} from 'Controls/display';
+import {isFullGridSupport, GridLayoutUtil} from 'Controls/display';
 
 const OLD_IE_LAST_VERSION = 11;
-const DEFAULT_GRID_COLUMN_WIDTH = '1fr';
-const DEFAULT_TABLE_COLUMN_WIDTH = 'auto';
 
 const RegExps = {
     pxValue: new RegExp('^[0-9]+px$'),
     percentValue: new RegExp('^[0-9]+%$')
 };
-
-interface ICssRule {
-    name: string;
-    value: string | number;
-    applyIf?: boolean;
-}
 
 interface IColumnOptions {
     columnStart: number;
@@ -34,10 +26,6 @@ function isOldIE(): boolean {
 
 function isCompatibleWidth(width: string | number): boolean {
     return !!width && !!(`${width}`.match(RegExps.percentValue) || `${width}`.match(RegExps.pxValue));
-}
-
-function getDefaultColumnWidth(): string {
-    return isFullGridSupport() ? DEFAULT_GRID_COLUMN_WIDTH : DEFAULT_TABLE_COLUMN_WIDTH;
 }
 
 function getColumnStyles(cfg: IColumnOptions): string {
@@ -79,14 +67,6 @@ function getMultiHeaderStyles(columnStart: number, columnEnd: number, rowStart: 
     });
 }
 
-function getTemplateColumnsStyle(columnsWidth: Array<string | number>): string {
-    const widths = columnsWidth.join(' ');
-    return toCssString([
-        {name: 'grid-template-columns', value: widths},
-        {name: '-ms-grid-columns', value: widths, applyIf: detection.isIE}
-    ]);
-}
-
 function getGridLayoutStyles(): string {
     return toCssString([
         {name: 'display', value: 'grid'},
@@ -94,20 +74,12 @@ function getGridLayoutStyles(): string {
     ]);
 }
 
-function toCssString(cssRules: ICssRule[]): string {
-    let cssString = '';
-
-    cssRules.forEach((rule) => {
-        // Применяем правило если нет условия или оно задано и выполняется
-        cssString += (!rule.hasOwnProperty('applyIf') || !!rule.applyIf) ? `${rule.name}: ${rule.value}; ` : '';
-    });
-
-    return cssString.trim();
-}
+export const getDefaultColumnWidth = GridLayoutUtil.getDefaultColumnWidth;
+export const toCssString = GridLayoutUtil.toCssString;
+export const getTemplateColumnsStyle = GridLayoutUtil.getTemplateColumnsStyle;
 
 export {
     isCompatibleWidth,
-    getDefaultColumnWidth,
     RegExps,
 
     isFullGridSupport,
@@ -116,8 +88,6 @@ export {
     getColumnStyles,
     getRowStyles,
     getCellStyles,
-    getTemplateColumnsStyle,
     getGridLayoutStyles,
-    toCssString,
     getMultiHeaderStyles
 };
