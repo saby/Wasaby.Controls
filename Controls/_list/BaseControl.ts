@@ -5051,7 +5051,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemActionsMenuClose(currentPopup): void {
-        _private.closeActionsMenu(this, currentPopup);
+        if (!this._destroyed) {
+            _private.closeActionsMenu(this, currentPopup);
+        }
     },
 
     _handleMenuActionMouseEnter(event: SyntheticEvent): void {
