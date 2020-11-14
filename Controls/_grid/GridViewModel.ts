@@ -33,7 +33,7 @@ import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from './resources/DragScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { IDragPosition, GridLadderUtil } from 'Controls/display';
-import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
+import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspanUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
