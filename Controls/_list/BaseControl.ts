@@ -3247,7 +3247,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
-            newOptions.dataLoadCallback(self._items);
+            newOptions.dataLoadCallback(receivedData);
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
