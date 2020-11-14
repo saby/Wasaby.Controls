@@ -209,10 +209,6 @@ export {
  * @public
  */
 
-const groupConstants = {
-    hiddenGroup: 'CONTROLS_HIDDEN_GROUP'
-};
-
 const editing = {
     CANCEL: 'Cancel'
 };
@@ -236,5 +232,7 @@ export enum CursorDirection {
     forward = 'forward',
     bothways = 'bothways'
 }
+
+import {groupConstants} from './_list/Controllers/Grouping';
 
 export {groupConstants, editing};
