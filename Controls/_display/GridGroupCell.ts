@@ -35,8 +35,10 @@ export default class GridGroupCell<T> extends GridColumn<T> {
 
     getGroupWrapperStyles() {
         const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const ladderStickyColumn = this._$owner.getStickyColumn();
+        const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const columnStart = hasMultiselect ? 1 : 0;
-        const columnEnd = columnStart + this._$columns.length;
+        const columnEnd = columnStart + this._$columns.length + ladderColumnLength;
         return `grid-column: ${columnStart + 1} / ${columnEnd + 1};`;
     }
 
