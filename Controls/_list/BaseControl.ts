@@ -3764,13 +3764,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
+                _private.assignItemsToModel(this, items, newOptions);
+                isItemsResetFromSourceController = true;
 
                 if (loadedBySourceController) {
                     _private.executeAfterReloadCallbacks(self, items, newOptions);
                 }
-
-                _private.assignItemsToModel(this, items, newOptions);
-                isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
