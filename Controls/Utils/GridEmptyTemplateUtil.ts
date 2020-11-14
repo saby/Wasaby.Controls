@@ -34,6 +34,10 @@ export function prepareEmptyEditingColumns(params: IPrepareEmptyEditingColumnsPa
     });
 }
 
+export function prepareEmptyColumns(params: IPrepareEmptyEditingColumnsParams): IPreparedEmptyTemplateColumn[] {
+    return prepareColumns<IPreparedEmptyTemplateColumn>({...params});
+}
+
 function getEmptyColumnClasses(params: IPrepareEmptyEditingColumnsParams & {
     emptyColumn: IPreparedEmptyTemplateColumn;
     emptyColumnIndex: number;
