@@ -266,7 +266,7 @@ describe('Controls/browser:Browser', () => {
                 options = {...options};
                 options.filter = {};
                 options.searchValue = 'test';
-                browser._beforeUpdate(options);
+                await browser._beforeUpdate(options);
                 deepStrictEqual(browser._filter.name, 'test');
             });
 
