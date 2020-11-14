@@ -1,7 +1,7 @@
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import {mixin} from 'Types/util';
-import { TemplateFunction } from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
 
 interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
 }
@@ -14,10 +14,8 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
  * @public
  * @author Мальцев А.А.
  */
-export default class GroupItem<T> extends mixin<
-    CollectionItem<any>,
-    ExpandableMixin
-    >(
+export default class GroupItem<T> extends mixin<CollectionItem<any>,
+    ExpandableMixin>(
     CollectionItem,
     ExpandableMixin
 ) {
@@ -26,6 +24,8 @@ export default class GroupItem<T> extends mixin<
 
     readonly MarkableItem: boolean = false;
     readonly SelectableItem: boolean = false;
+
+    protected _$multiSelectVisibility: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -36,7 +36,17 @@ export default class GroupItem<T> extends mixin<
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
 
-    getGroupPaddingClasses(theme: string, side: 'left'|'right'): string {
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const multiSelectVisibilityUpdated = this._$multiSelectVisibility !== multiSelectVisibility;
+        if (multiSelectVisibilityUpdated) {
+            this._$multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
+    getGroupPaddingClasses(theme: string, side: 'left' | 'right'): string {
         if (side === 'left') {
             const spacing = this.getOwner().getLeftPadding().toLowerCase();
             const hasMultiSelect = this.getOwner().getMultiSelectVisibility() !== 'hidden';
@@ -47,11 +57,9 @@ export default class GroupItem<T> extends mixin<
         }
     }
 
-    getItemTemplate(
-        itemTemplateProperty: string,
-        userItemTemplate: TemplateFunction|string,
-        userGroupTemplate?: TemplateFunction|string
-    ): TemplateFunction|string {
+    getItemTemplate(itemTemplateProperty: string,
+                    userItemTemplate: TemplateFunction | string,
+                    userGroupTemplate?: TemplateFunction | string): TemplateFunction | string {
         return userGroupTemplate || 'Controls/listRender:groupTemplate';
     }
 
@@ -64,5 +72,6 @@ export default class GroupItem<T> extends mixin<
 Object.assign(GroupItem.prototype, {
     '[Controls/_display/GroupItem]': true,
     _moduleName: 'Controls/display:GroupItem',
-    _instancePrefix: 'group-item-'
+    _instancePrefix: 'group-item-',
+    _$multiSelectVisibility: null
 });

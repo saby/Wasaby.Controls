@@ -1,13 +1,13 @@
 import {TemplateFunction} from 'UI/Base';
 import {ListView, CssClassList} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
-import * as GridIsEqualUtil from 'Controls/_grid/utils/GridIsEqualUtil';
+import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import {tmplNotify} from 'Controls/eventUtils';
 import {prepareEmptyEditingColumns} from './utils/GridEmptyTemplateUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
-import {shouldAddActionsCell, shouldDrawColumnScroll, getAllowedSwipeType, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
+import {shouldAddActionsCell, shouldDrawColumnScroll, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
 
@@ -933,7 +933,8 @@ var
                 hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
                 colspanColumns: columns.map((c) => ({...c, startColumn: c.startIndex, endColumn: c.endIndex})),
                 itemPadding: this._options.itemPadding || {},
-                theme: this._options.theme
+                theme: this._options.theme,
+                editingBackgroundStyle: (this._options.editingConfig ? this._options.editingConfig.backgroundStyle : 'default')
             });
         }
     });

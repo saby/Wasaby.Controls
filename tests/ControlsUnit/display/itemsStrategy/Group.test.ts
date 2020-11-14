@@ -85,6 +85,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return group before item', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: () => {
                     return 'foo';
                 }
@@ -121,6 +122,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return items count with groups', () => {
             const strategy = new Group<string>({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => item
             });
             assert.strictEqual(strategy.count, 2 * source.items.length);
@@ -135,6 +137,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return items with groups', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const expected = [];
@@ -160,6 +163,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => item.group
             });
             const expected = [
@@ -182,6 +186,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
 
@@ -209,6 +214,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should add items before first group', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const newItems = ['four', 'five'];
@@ -224,6 +230,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should add items after first group', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const newItems = ['four', 'five'];
@@ -239,6 +246,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should add items after last group', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const newItems = ['four', 'five'];
@@ -254,6 +262,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should remove item and group', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const expected = ['#two', 'two', '#three', 'three'];
@@ -268,6 +277,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should remove item and keep group', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: () => '#foo'
             });
             const expected = ['#foo', 'two', 'three'];
@@ -284,6 +294,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should reset group items', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
             const oldItems = strategy.items;
@@ -306,6 +317,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return valid index', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
 
@@ -320,6 +332,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return last index', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: () => 'foo'
             });
 
@@ -334,6 +347,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
 
@@ -354,6 +368,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return valid index', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
 
@@ -368,6 +383,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should return -1 if index out of bounds', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: () => 'foo'
             });
 
@@ -382,6 +398,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const source = getSource(items);
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             });
 
@@ -405,6 +422,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const options: any = {
                 display: {},
                 groups,
+                groupConstructor: GroupItem,
                 handler: null
             };
             const expected = [0, 1, 2];
@@ -423,6 +441,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const options: any = {
                 display: {},
                 groups,
+                groupConstructor: GroupItem,
                 handler: () => 'foo'
             };
             const expected = [0, 1, 2, 3];
@@ -444,6 +463,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const options: any = {
                 display: {},
                 groups,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             };
             const expected = [0, 3, 1, 4, 2, 5];
@@ -471,6 +491,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const options: any = {
                 display: {},
                 groups,
+                groupConstructor: GroupItem,
                 handler: (item) => '#' + item
             };
             const expected = [0, 3, 2, 4, 1, 5];
@@ -500,6 +521,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
         it('should serialize itemsOrder if handler is defined', () => {
             const strategy = new Group({
                 source,
+                groupConstructor: GroupItem,
                 handler: () => '#foo'
             });
             const json = strategy.toJSON() as any;

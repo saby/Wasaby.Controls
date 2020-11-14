@@ -11,14 +11,14 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
    captions?: string[];
    orientation?: string;
 }
+
+const CAPTIONS_LENGTH = 2;
 /**
  * Двойной переключатель, который позволяет выбрать один из двух взаимоисключающих вариантов.
  * 
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fDoubleSwitch%2fIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
- *
  *
  * @class Controls/_toggle/DoubleSwitch
  * @extends Core/Control
@@ -34,8 +34,6 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
 /*
  * Switch with two captions and with support two orientation.
  *
- * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fDoubleSwitch%2fIndex">Demo-example</a>.
- *
  * @class Controls/_toggle/DoubleSwitch
  * @extends Core/Control
  * @implements Controls/_toggle/interface/ICheckable
@@ -47,7 +45,6 @@ export interface IDoubleSwitchOptions extends IControlOptions, ICheckableOptions
  * @demo Controls-demo/toggle/DoubleSwitch/Base/Index
  *
  */
-const CAPTIONS_LENGTH = 2;
 class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, ITooltip {
    '[Controls/_interface/ITooltip]': true;
    '[Controls/_toggle/interface/ICheckable]': true;

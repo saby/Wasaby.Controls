@@ -29,7 +29,7 @@ import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
-import {DependencyTimer} from 'Controls/fastOpenUtils';
+import {DependencyTimer} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -173,6 +173,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._sourceController) {
          this._sourceController.destroy();
          this._sourceController = null;
+      }
+      if (this._searchResolverController) {
+         this._searchResolverController.clearTimer();
       }
       this._searchResult = null;
 

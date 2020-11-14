@@ -5,9 +5,21 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
+const RESIZE_DELAY = 50;
+const TOUCH_RESIZE_MASTER_OFFSET = 100;
+
+interface IMasterDetail extends IControlOptions, IPropStorageOptions {
+    master: TemplateFunction;
+    detail: TemplateFunction;
+    masterWidth: number | string;
+    masterMinWidth: number | string;
+    masterMaxWidth: number | string;
+    contrastBackground: boolean;
+    masterVisibility: string;
+}
 /**
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
- * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
+ * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
  * @mixes Controls/_interface/IPropStorage
@@ -19,7 +31,7 @@ import {IPropStorageOptions} from 'Controls/interface';
 
 /*
  * Control that allows to implement the Master-Detail interface
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
  *
@@ -27,18 +39,6 @@ import {IPropStorageOptions} from 'Controls/interface';
  * @public
  * @demo Controls-demo/MasterDetail/Demo
  */
-const RESIZE_DELAY = 50;
-
-interface IMasterDetail extends IControlOptions, IPropStorageOptions {
-    master: TemplateFunction;
-    detail: TemplateFunction;
-    masterWidth: number | string;
-    masterMinWidth: number | string;
-    masterMaxWidth: number | string;
-    contrastBackground: boolean;
-    masterVisibility: string;
-}
-
 class Base extends Control<IMasterDetail> {
     /**
      * @typedef {String} MasterVisibility
@@ -127,6 +127,7 @@ class Base extends Control<IMasterDetail> {
     protected _currentMinWidth: string;
     protected _containerWidth: number;
     protected _updateOffsetDebounced: Function;
+    private _touchstartPosition: number;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
         this._updateOffsetDebounced = debounce(this._updateOffsetDebounced.bind(this), RESIZE_DELAY);
@@ -157,6 +158,10 @@ class Base extends Control<IMasterDetail> {
         return getSettings([options.propStorageId]);
     }
     private _dragStartHandler(): void {
+        this._beginResize();
+    }
+
+    private _beginResize(): void {
         if (!this._minOffset && !this._maxOffset && this._canResizing) {
             this._updateOffset(this._options);
         }
@@ -224,6 +229,30 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
+    protected _touchstartHandler(e: SyntheticEvent<TouchEvent>): void {
+        if (e.target === e.currentTarget) {
+            this._touchstartPosition = this._getTouchPageXCoord(e);
+            this._beginResize();
+        }
+    }
+
+    protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
+        if (this._touchstartPosition) {
+            const touchendPosition: number = this._getTouchPageXCoord(e);
+            const hasTouchOffset: boolean = this._touchstartPosition - touchendPosition !== 0;
+            if (hasTouchOffset) {
+                const direction: string = (this._touchstartPosition - touchendPosition > 0) ? 'left' : 'right';
+                const offset: number = direction === 'left' ? -TOUCH_RESIZE_MASTER_OFFSET : TOUCH_RESIZE_MASTER_OFFSET;
+                this._changeOffset(offset);
+            }
+            this._touchstartPosition = null;
+        }
+    }
+
+    private _getTouchPageXCoord(e: SyntheticEvent<TouchEvent>): number {
+        return e.nativeEvent.changedTouches[0].pageX;
+    }
+
     private _startResizeRegister(): void {
         const eventCfg = {
             type: 'controlResize',
@@ -286,11 +315,15 @@ class Base extends Control<IMasterDetail> {
 
     protected _offsetHandler(event: Event, offset: number): void {
         if (offset !== 0) {
-            const width = parseInt(this._currentWidth, 10) + offset;
-            this._currentWidth = width + 'px';
-            this._updateOffset(this._options);
-            this._notify('masterWidthChanged', [this._currentWidth]);
+            this._changeOffset(offset);
         }
+    }
+
+    private _changeOffset(offset: number): void {
+        const width = parseInt(this._currentWidth, 10) + offset;
+        this._currentWidth = width + 'px';
+        this._updateOffset(this._options);
+        this._notify('masterWidthChanged', [this._currentWidth]);
     }
 
     private _isPercentValue(value: string | number): boolean {

@@ -120,7 +120,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _observeContentSize(): void {
-        for (const element of this._children.content.children) {
+        for (const element of this._getElementsForHeightCalculation()) {
             if (!this._observedElements.includes(element)) {
                 this._resizeObserver.observe(element);
                 this._observedElements.push(element);
@@ -128,7 +128,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
     _unobserveDeleted(): void {
-        const contentElements: HTMLElement[] = [...this._children.content.children];
+        const contentElements: HTMLElement[] = this._getElementsForHeightCalculation();
         this._observedElements = this._observedElements.filter((element: HTMLElement) => {
             if (!contentElements.includes(element)) {
                 this._resizeObserver.unobserve(element);
@@ -146,7 +146,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._onResizeContainer(this._getFullStateFromDOM());
     }
 
-    _scrollHandler(e: SyntheticEvent): void {
+    protected _scrollHandler(e: SyntheticEvent): void {
         if (this._scrollLockedPosition !== null) {
             this._children.content.scrollTop = this._scrollLockedPosition;
             return;
@@ -410,17 +410,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         let heigthValue = 0;
         let widthValue = 0;
 
-        for (const child of children) {
-            // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
-            // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
-            if (child.className.includes('Hint-ListWrapper')) {
-                const hintListWrapperChildren = child.children;
-                for (const child of hintListWrapperChildren) {
-                    heigthValue+= this._calculateScrollHeight(child);
-                }
-            } else {
-                heigthValue+= this._calculateScrollHeight(child);
-            }
+        for (const child of this._getElementsForHeightCalculation()) {
+            heigthValue += this._calculateScrollHeight(child);
         }
 
         newState.scrollHeight = heigthValue;
@@ -428,7 +419,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         if (newState.scrollHeight < newState.clientHeight) {
             newState.scrollHeight = newState.clientHeight;
         }
-        for (child of children) {
+        for (let child of children) {
             widthValue += child.offsetWidth;
         }
         newState.scrollWidth = widthValue;
@@ -436,6 +427,37 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             newState.scrollWidth = newState.clientWidth;
         }
         this._updateStateAndGenerateEvents(newState);
+    }
+
+    _getElementsForHeightCalculation(container?: HTMLElement): HTMLElement[] {
+        const elements: HTMLElement[] = [];
+        const _container: HTMLElement = container || this._children.content;
+
+        for (const child of _container.children) {
+            const ignoredChild = this._getIgnoredChild(child);
+            if (ignoredChild) {
+                for (const child of ignoredChild) {
+                    elements.push(child);
+                }
+            } else {
+                elements.push(child);
+            }
+        }
+
+        return elements;
+    }
+
+    _getIgnoredChild(container: HTMLElement): HTMLCollection {
+        // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
+        // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
+        // Должно удалиться, когда перейдем на замеры по div скроллконтейнера
+        if (container.classList.contains('Hint-ListWrapper')) {
+            return container.children;
+        } else if (container.classList.contains('Wizard-Vertical-Container__content')) {
+            const wizardContainer = container.querySelector('.Wizard-Vertical-View');
+            return wizardContainer?.children;
+        }
+        return null;
     }
 
     _calculateScrollHeight(element: HTMLElement): number {

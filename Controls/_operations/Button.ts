@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IExpandableOptions, IExpandable} from 'Controls/interface';
 import ButtonTemplate = require('wml!Controls/_operations/Button/Button');
 import {default as Store} from 'Controls/Store';
-import {DependencyTimer, isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from 'Env/Env';
 import {SyntheticEvent} from "Vdom/Vdom";
 
@@ -28,7 +28,7 @@ export interface IOperationsButtonOptions extends IControlOptions, IExpandableOp
 
 /*
  * Control for changing the extensibility of the "Controls/_operations/Panel".
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
  *
  * @class Controls/_operations/Button
  * @extends Core/Control

@@ -353,7 +353,9 @@ var
             }
 
             if (current.isEditing()) {
-                classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
+                const editingBackgroundStyle = current.editingBackgroundStyle || 'default';
+                classLists.base += ` controls-Grid__row-cell-editing_theme-${theme}`;
+                classLists.base += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
             } else {
                 let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
                 classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
@@ -1771,6 +1773,12 @@ var
 
             _private.setRowClassesGettersOnItemData(this, current);
 
+            if (self._options.editingConfig) {
+                current.editingBackgroundStyle = self._options.editingConfig.backgroundStyle || 'default';
+            } else {
+                current.editingBackgroundStyle = 'default';
+            }
+
             current.getCurrentColumn = function(backgroundColorStyle) {
                 const currentColumn: any = {
                         item: current.item,
@@ -1972,22 +1980,26 @@ var
                     }
                 }
 
-                // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
-                //  под плашку операций над записью вне строки обеспечивался не только блоком
-                //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
-                //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
-                //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
-                //  Данный код должен быть неактуальным. Если его удаление н вызывает проблем, можно удалить
-                //  в 21.1000
-
                 if (isFullGridSupport) {
                     styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
                 } else {
                     column.colspan = column.endColumn - column.startColumn;
                 }
 
-                column.getWrapperClasses = (backgroundStyle: string = 'default') => {
-                    return `${classes} controls-background-${backgroundStyle}_theme-${theme}`;
+                column.getWrapperClasses = (needBottomPadding: boolean, backgroundStyle: string = 'default') => {
+                    // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
+                    //  под плашку операций над записью вне строки обеспечивался не только блоком
+                    //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
+                    //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
+                    //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
+                    const shouldDrawBottomPadding =
+                        (this.getCount() || this.isEditing()) &&
+                        this._options.itemActionsPosition === 'outside' &&
+                        !needBottomPadding &&
+                        this._options.resultsPosition !== 'bottom';
+
+                    return `${classes} controls-background-${backgroundStyle}_theme-${theme} ` +
+                           (shouldDrawBottomPadding ? `controls-GridView__footer__itemActionsV_outside_theme-${theme} ` : '');
                 };
 
                 column.getWrapperStyles = (containerSize: number) => {

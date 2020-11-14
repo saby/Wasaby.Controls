@@ -3312,7 +3312,7 @@ define([
             let ctrl;
             let sandbox;
             let isCloseSwipeCalled;
-            beforeEach(() => {
+            beforeEach(async () => {
                isCloseSwipeCalled = false;
                opt = {
                   test: 'test'
@@ -3325,9 +3325,8 @@ define([
                   },
                   viewModelConfig: {
                      items: rs,
-                     keyProperty: 'id',
-                     selectedKeys: [1, 3]
                   },
+                  keyProperty: 'id',
                   viewModelConstructor: lists.ListViewModel,
                   navigation: {
                      source: 'page',
@@ -3340,13 +3339,16 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                sandbox = sinon.createSandbox();
                sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
                   isCloseSwipeCalled = true;
                });
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   edit: () => Promise.resolve(),
                   add: () => Promise.resolve(),
@@ -3373,6 +3375,7 @@ define([
             it('beginAdd', async() => {
                await ctrl.beginAdd(opt).then((beginRes) => {
                   assert.isUndefined(beginRes);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                });
             });
 
@@ -3491,7 +3494,7 @@ define([
          describe('api', () => {
             let cfg, ctrl, sandbox;
 
-            beforeEach(() => {
+            beforeEach(async () => {
                cfg = {
                   viewName: 'Controls/List/ListView',
                   source: source,
@@ -3515,9 +3518,13 @@ define([
                      viewConfig: {
                         pagingMode: 'direct'
                      }
-                  }
+                  },
+                  keyProperty: 'id',
+                  selectedKeys: [1],
+                  excludedKeys: []
                };
                ctrl = new lists.BaseControl(cfg);
+               await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   cancel: () => Promise.resolve(),
                   commit: () => Promise.resolve(),
@@ -3544,6 +3551,7 @@ define([
                   isRejected = true;
                }).finally(() => {
                   assert.isFalse(isRejected);
+                  assert.isTrue(ctrl._listViewModel.getItemBySourceKey(1).isSelected());
                   done();
                });
                assert.isTrue(result instanceof Promise);
@@ -4708,6 +4716,24 @@ define([
             assert.equal(outgoingEventsMap.actionClick[2].className, 'controls-ListView__itemV');
          });
 
+         // Клик по itemAction с подменю ('parent@': true) должен бросать событие actionClick
+         it('should emit actionClick event on submenu (\'parent@\': true) action click', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const stubHandleItemActionClick = sinon.stub(lists.BaseControl._private, 'handleItemActionClick');
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.called(stubHandleItemActionClick);
+            stubHandleItemActionClick.restore();
+         });
+
          // должен открывать меню, соответствующее новому id Popup
          it('should open itemActionsMenu according to its id', () => {
             const fakeEvent = initFakeEvent();
@@ -4938,6 +4964,15 @@ define([
             assert.equal(instance._itemActionsMenuId, 'fake');
             instance._onItemActionsMenuClose(null);
             assert.equal(instance._itemActionsMenuId, null);
+         });
+
+         // Необходимо игнорировать заурытие меню, если инстанс был разрушен
+         it('should not call closeActionsMenu when control is destroyed', () => {
+            const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
+            instance.destroy();
+            instance._onItemActionsMenuClose({id: 'ekaf'});
+            sinon.assert.notCalled(spyCloseActionsMenu);
+            spyCloseActionsMenu.restore();
          });
 
          // Необходимо показать контекстное меню по longTap, если не был инициализирован itemActionsController
@@ -6359,7 +6394,8 @@ define([
                      page: 0,
                      hasMore: false
                   }
-               }
+               },
+               markerVisibility: 'visible'
             };
             let dataLoadFired = false;
 
@@ -6379,6 +6415,7 @@ define([
 
             const loadPromise = lists.BaseControl._private.loadToDirection(ctrl, 'down');
             assert.equal(ctrl._loadingState, 'down');
+            assert.equal(ctrl._markerController.getMarkedKey(), 1);
 
             await loadPromise;
             assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
@@ -6609,26 +6646,55 @@ define([
             it('isPagingNavigationVisible', () => {
                let isPagingNavigationVisible = lists.BaseControl._private.isPagingNavigationVisible;
 
+               const baseControlOptions = {
+                   _options: {
+                       navigation: {
+                           viewConfig: {
+                               totalInfo: 'extended'
+                           }
+                       }
+                   }
+               };
+
                // Известно общее количество  записей, записей 0
-               let result = isPagingNavigationVisible(0);
+               let result = isPagingNavigationVisible(baseControlOptions, 0);
                assert.isFalse(result, 'paging should not be visible');
 
                // Известно общее количество записей, записей 6
-               result = isPagingNavigationVisible(6);
+               result = isPagingNavigationVisible(baseControlOptions, 6);
                assert.isTrue(result, 'paging should be visible');
 
                // Неизвестно общее количество записей, записей 5
-               result = isPagingNavigationVisible(5);
+               result = isPagingNavigationVisible(baseControlOptions, 5);
                assert.isFalse(result, 'paging should not be visible');
 
 
                // Неизвестно общее количество записей, hasMore = false
-               result = isPagingNavigationVisible(false);
+               result = isPagingNavigationVisible(baseControlOptions, false);
                assert.isFalse(result, 'paging should not be visible');
 
                // Неизвестно общее количество записей, hasMore = true
-               result = isPagingNavigationVisible(true);
-               assert.isTrue(result, 'paging should not be visible');
+               result = isPagingNavigationVisible(baseControlOptions, true);
+               assert.isTrue(result, 'paging should be visible');
+
+
+
+             baseControlOptions._options.navigation = {};
+             // Известно общее количество  записей, записей 0
+             result = isPagingNavigationVisible(baseControlOptions, 0);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Известно общее количество записей, записей 6
+             result = isPagingNavigationVisible(baseControlOptions, 6);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Неизвестно общее количество записей, hasMore = false
+             result = isPagingNavigationVisible(baseControlOptions, false);
+             assert.isFalse(result, 'paging should not be visible');
+
+             // Неизвестно общее количество записей, hasMore = true
+             result = isPagingNavigationVisible(baseControlOptions, true);
+             assert.isTrue(result, 'paging should not be visible');
             });
 
             describe('getPagingLabelData', function() {
@@ -6680,18 +6746,33 @@ define([
                };
                let baseControl = new lists.BaseControl(cfg);
                let expectedSourceConfig = {};
+               let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
                baseControl.recreateSourceController = function(newSource, newNavigation) {
                   assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
                };
+               baseControl._cancelEdit = () => {
+                  isEditingCanceled = true;
+                  return {
+                     then: (cb) => {
+                        return cb()
+                     }
+                  }
+               };
+               baseControl._editInPlaceController = {
+                  isEditing: () => true
+               };
                expectedSourceConfig.page = 0;
                expectedSourceConfig.pageSize = 100;
                expectedSourceConfig.hasMore = false;
                baseControl._changePageSize({}, 5);
+               assert.isTrue(isEditingCanceled);
+               isEditingCanceled = false;
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
             });
          });
          describe('navigation switch', function() {
@@ -7475,80 +7556,6 @@ define([
          });
       });
 
-      describe('changeMarkedKey', () => {
-         const data = [
-            {
-               id: 1,
-               title: 'Первый',
-               type: 1
-            },
-            {
-               id: 2,
-               title: 'Второй',
-               type: 2
-            }
-         ];
-         const source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
-         const cfg = {
-            viewName: 'Controls/List/ListView',
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id',
-            markerVisibility: 'visible',
-            source: source
-         };
-         let baseControl;
-
-         beforeEach(() => {
-            baseControl = new lists.BaseControl()
-            baseControl.saveOptions(cfg);
-            baseControl._environment = {};
-            return baseControl._beforeMount(cfg);
-         });
-
-         it('notify return promise', () => {
-            baseControl._notify = (eventName, params) => {
-               assert.deepEqual(params, [1]);
-               return Promise.resolve(1);
-            };
-
-            return lists.BaseControl._private.changeMarkedKey(baseControl, 1).then((newMarkedKey) => {
-               assert.equal(newMarkedKey, 1);
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-            });
-         });
-
-         it('notify return new key', () => {
-            baseControl._notify = (eventName, params) => {
-               if (eventName === 'beforeMarkedKeyChanged') {
-                  assert.deepEqual(params, [1]);
-               } else {
-                  assert.deepEqual(params, [2]);
-               }
-               return 2;
-            };
-
-            lists.BaseControl._private.changeMarkedKey(baseControl, 1);
-            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-         });
-
-         it('notify nothing return', () => {
-            baseControl._notify = (eventName, params) => {
-               assert.deepEqual(params, [1]);
-            };
-
-            lists.BaseControl._private.changeMarkedKey(baseControl, 1);
-            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-         });
-      });
-
       // region Move
 
       describe('MoveController', () => {
@@ -7696,38 +7703,59 @@ define([
          describe('_private.changeMarkedKey', () => {
             it('notify return promise', () => {
                baseControl._notify = (eventName, params) => {
-                  assert.deepEqual(params, [1]);
-                  return Promise.resolve(1);
+                  assert.deepEqual(params, [3]);
+                  return Promise.resolve(3);
                };
 
-               return lists.BaseControl._private.changeMarkedKey(baseControl, 1).then((newMarkedKey) => {
-                  assert.equal(newMarkedKey, 1);
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               return lists.BaseControl._private.changeMarkedKey(baseControl, 3).then((newMarkedKey) => {
+                  assert.equal(newMarkedKey, 3);
+                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
                });
             });
 
             it('notify return new key', () => {
                baseControl._notify = (eventName, params) => {
                   if (eventName === 'beforeMarkedKeyChanged') {
-                     assert.deepEqual(params, [1]);
+                     assert.deepEqual(params, [3]);
                   } else {
                      assert.deepEqual(params, [2]);
                   }
                   return 2;
                };
 
-               lists.BaseControl._private.changeMarkedKey(baseControl, 1);
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               lists.BaseControl._private.changeMarkedKey(baseControl, 3);
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
             it('notify nothing return', () => {
                baseControl._notify = (eventName, params) => {
-                  assert.deepEqual(params, [1]);
+                  assert.deepEqual(params, [3]);
                };
 
-               lists.BaseControl._private.changeMarkedKey(baseControl, 1);
+               lists.BaseControl._private.changeMarkedKey(baseControl, 3);
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
+            });
+
+            it('pass undefined', () => {
+               let notifyCalled = false;
+               baseControl._notify = () => {
+                  notifyCalled = true;
+               };
+               lists.BaseControl._private.changeMarkedKey(baseControl, undefined);
+               assert.isFalse(notifyCalled);
+            });
+
+            it('pass current markedKey', () => {
+               baseControl.setMarkedKey(1);
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+
+               let notifyCalled = false;
+               baseControl._notify = () => {
+                  notifyCalled = true;
+               };
+               lists.BaseControl._private.changeMarkedKey(baseControl, 1);
+               assert.isFalse(notifyCalled);
             });
          });
 

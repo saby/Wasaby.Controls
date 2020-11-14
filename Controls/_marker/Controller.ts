@@ -100,6 +100,26 @@ export class Controller {
    }
 
    /**
+    * Возвращает ключ следующего подходящего для установки маркера элемента
+    * по текущему элементу.
+    * Если текущий элемент подходит, для установки маркера то возвращает его ключ.
+    * @remark
+    * Метод необходим для случаев, когда мы пытаемся установить маркер на новый элемент,
+    * но мы не знаем, является ли этот элемент MarkableItem
+    * @param item
+    * @return {CrudEntityKey} Ключ следующего подходящего для установки маркера элемента
+    */
+   getSuitableMarkedKey(item: CollectionItem<Model>) {
+      const contents = item.getContents();
+      if (item.MarkableItem) {
+         return contents.getKey();
+      }
+      const index = this._model.getIndex(item);
+      const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index + 1, true);
+      return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
+   }
+
+   /**
     * Обрабатывает удаления элементов из коллекции
     * @remark Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
     * @param {number} removedItemsIndex Индекс удаленной записи в коллекции
@@ -149,7 +169,10 @@ export class Controller {
     * @return {CrudEntityKey} Новый ключ маркера
     */
    onCollectionReset(): CrudEntityKey {
-      const newMarkedKey = this.calculateMarkedKeyForVisible();
+      let newMarkedKey = this._markedKey;
+      if (this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+         newMarkedKey = this._getFirstItemKey();
+      }
       if (newMarkedKey === this._markedKey) {
          this.setMarkedKey(newMarkedKey);
       }
@@ -161,6 +184,7 @@ export class Controller {
     * @void
     */
    destroy(): void {
+      this._model.each((it) => it.setMarked(false, true));
       this._markedKey = null;
       this._markerVisibility = null;
       this._model = null;
@@ -180,7 +204,7 @@ export class Controller {
 
       // Для GroupItem нет ключа, в contents хранится не Model
       if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
-         return undefined;
+         return null;
       }
 
       return contents.getKey();

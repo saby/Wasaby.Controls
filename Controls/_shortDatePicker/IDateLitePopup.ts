@@ -16,13 +16,14 @@ export interface IDateLitePopupOptions extends IControlOptions {
    displayedRanges?: Date[];
    dateConstructor?: Function;
    monthTemplate?: TemplateFunction;
+   itemTemplate?: TemplateFunction;
    stickyPosition?: object;
 
    //TODO: устаревшая опция
    range?: Date[];
 }
 
-   var EMPTY_CAPTIONS = {
+const EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
       NOT_SELECTED: rk('Не выбран'),
       WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
@@ -53,8 +54,8 @@ export interface IDateLitePopupOptions extends IControlOptions {
  * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @default undefined
  */
-   export default {
-      getDefaultOptions: function() {
+export default {
+      getDefaultOptions(): object {
          return {
 
             /**
@@ -214,9 +215,9 @@ export interface IDateLitePopupOptions extends IControlOptions {
          };
       },
 
-      EMPTY_CAPTIONS: EMPTY_CAPTIONS,
+      EMPTY_CAPTIONS,
 
-      getOptionTypes: function() {
+      getOptionTypes(): object  {
          return {
             chooseMonths: descriptor(Boolean),
             chooseQuarters: descriptor(Boolean),

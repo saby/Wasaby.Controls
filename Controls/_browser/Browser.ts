@@ -99,10 +99,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
-    private _topShadowVisibilityFromOptions: SHADOW_VISIBILITY;
-    private _bottomShadowVisibilityFromOptions: SHADOW_VISIBILITY;
-    private _topShadowVisibility: SHADOW_VISIBILITY;
-    private _bottomShadowVisibility: SHADOW_VISIBILITY;
+    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options: IBrowserOptions,
                            context?: typeof ContextOptions,
@@ -113,8 +111,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._initShadowVisibility(options);
-        this._filterController = new FilterController(options  as IFilterControllerOptions);
+        this._filterController = new FilterController(options as IFilterControllerOptions);
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
@@ -440,18 +437,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
         const sourceController = this._getSourceController(this._options);
 
-        // для того чтобы мог посчитаться новый prefetch Source внутри
-        const newItems = sourceController.setItems(items);
-        const controllerState = sourceController.getState();
-
-        if (!this._items) {
-            this._items = newItems;
-        } else {
-            controllerState.items = this._items;
-            sourceController.setItems(this._items);
-        }
-
-        this._updateContext(controllerState);
+        sourceController.cancelLoading();
+        this._items = sourceController.setItems(items);
+        this._updateContext(sourceController.getState());
     }
 
     protected _filterItemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
@@ -546,17 +534,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._getOperationsController().setOperationsPanelVisible(false);
     }
 
-    protected _onScrollToFirstItemForTopPadding(): void {
-        // Возвращаем в опции значение видимости теней, которое передали прикладники
-        if (this._topShadowVisibility !== this._topShadowVisibilityFromOptions) {
-            this._topShadowVisibility = this._topShadowVisibilityFromOptions;
-        }
-        if (this._bottomShadowVisibility !== this._bottomShadowVisibilityFromOptions) {
-            this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions;
-        }
-    }
-
-    private _createOperationsController(options: IBrowserOptions): OperationsController {
+    private _createOperationsController(options) {
         const controllerOptions = {
             ...options,
             ...{
@@ -585,21 +563,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (items instanceof RecordSet) {
             const more = items.getMetaData().more;
             if (more) {
-                if (more.before) {
-                    this._topShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
-                }
-
-                if (more.after) {
-                    this._bottomShadowVisibility = SHADOW_VISIBILITY.VISIBLE;
-                }
+                this._topShadowVisibility = more.before ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
+                this._bottomShadowVisibility = more.after ? 'gridauto' : SHADOW_VISIBILITY.AUTO;
             }
-
         }
-    }
-
-    private _initShadowVisibility(options: IBrowserOptions): void {
-        this._topShadowVisibility = this._topShadowVisibilityFromOptions = options.topShadowVisibility;
-        this._bottomShadowVisibility = this._bottomShadowVisibilityFromOptions = options.bottomShadowVisibility;
     }
 
     private _getSearchControllerOptions(options: IBrowserOptions): ISearchControllerOptions {

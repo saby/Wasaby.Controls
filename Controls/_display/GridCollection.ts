@@ -1,5 +1,6 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
 import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
+import GridGroupItem from './GridGroupItem';
 import { TemplateFunction } from 'UI/Base';
 import { TColumns, THeader } from 'Controls/grid';
 import * as GridLadderUtil from './utils/GridLadderUtil';
@@ -43,7 +44,7 @@ export default class GridCollection<
         super(options);
 
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
-            this._initializeLadder(this._$ladderProperties, this._$columns);
+            this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
         this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
@@ -102,14 +103,29 @@ export default class GridCollection<
         });
     }
 
+    setColumns(newColumns: TColumns): void {
+        this._$columns = newColumns;
+        this._nextVersion();
+        this._updateItemsColumns();
+    }
+
+    protected _reBuild(reset?: boolean): void {
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties) && !!this._$ladder) {
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+        }
+        super._reBuild(reset);
+    }
+
     setIndexes(start: number, stop: number): void {
         super.setIndexes(start, stop);
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
-            this._initializeLadder(this._$ladderProperties, this._$columns);
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+            this._updateItemsLadder();
         }
+        this._updateItemsColumns();
     }
 
-    protected _initializeLadder(ladderProperties: string[], columns: TColumns): void {
+    protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
         this._$ladder = GridLadderUtil.prepareLadder({
             columns: columns,
             ladderProperties: ladderProperties,
@@ -117,8 +133,21 @@ export default class GridCollection<
             stopIndex: this.getStopIndex() || this.getCollectionCount(),
             display: this
         });
+    }
+
+    protected _updateItemsLadder(): void {
         this.getViewIterator().each((item: GridCollectionItem<T>) => {
-            item.setLadder(this._$ladder);
+            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+                item.setLadder(this._$ladder);
+            }
+        });
+    }
+
+    protected _updateItemsColumns(): void {
+        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+                item.setColumns(this._$columns);
+            }
         });
     }
 
@@ -167,6 +196,10 @@ export default class GridCollection<
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
+    }
+
+    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
+        return GridGroupItem;
     }
 }
 

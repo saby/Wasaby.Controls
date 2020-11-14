@@ -1,3 +1,4 @@
+import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -98,6 +99,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
+    groupTemplate?: TemplateFunction;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
@@ -157,6 +159,7 @@ export interface ISwipeConfig {
  * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
  * @property {AddPosition} [addPosition] Позиция редактирования по месту.
  * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
+ * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемой записи.
  */
 /*
  * @typedef {Object} IEditingConfig
@@ -174,6 +177,7 @@ export interface IEditingConfig {
     autoAdd?: boolean;
     sequentialEditing?: boolean;
     item?: CollectionItem<any>;
+    backgroundStyle?: string;
 }
 
 interface IUserStrategy<S, T> {
@@ -1654,6 +1658,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$groupProperty;
     }
 
+    protected _getGroupItemConstructor(): new() => GroupItem<T> {
+        return GroupItem;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
      * @see group
@@ -2270,6 +2278,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
+        this._updateItemsMultiSelectVisibility(visibility);
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
@@ -2282,6 +2291,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMultiSelectPosition(): 'default' | 'custom' {
         return this._$multiSelectPosition;
+    }
+
+    protected _updateItemsMultiSelectVisibility(visibility: string): void {
+        this.getViewIterator().each((item: CollectionItem<T>) => {
+            if (item.setMultiSelectVisibility) {
+                item.setMultiSelectVisibility(visibility);
+            }
+        });
     }
 
     protected _setItemPadding(itemPadding: IItemPadding): void {
@@ -2309,6 +2326,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getHoverBackgroundStyle(): string {
         return this._$hoverBackgroundStyle;
+    }
+
+    getEditingBackgroundStyle(): string {
+        const editingConfig = this.getEditingConfig();
+        if (editingConfig) {
+            return editingConfig.backgroundStyle || 'default';
+        }
+        return 'default';
     }
 
     setTheme(theme: string): boolean {
@@ -2349,7 +2374,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setSearchValue(searchValue: string): void {
-        this._$searchValue = searchValue;
+        if (this._$searchValue !== searchValue) {
+            this._$searchValue = searchValue;
+            this._nextVersion();
+        }
     }
 
     getSearchValue(): string {
@@ -2452,6 +2480,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     getViewIterator(): IViewIterator {
@@ -3005,6 +3034,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemsFactory(): ItemsFactory<T> {
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
+            options.multiSelectVisibility = this._$multiSelectVisibility;
             return create(this._itemModule, options);
         };
     }
@@ -3045,7 +3075,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
             handler: this._$group,
-            collapsedGroups: this._$collapsedGroups
+            collapsedGroups: this._$collapsedGroups,
+            groupConstructor: this._getGroupItemConstructor()
         });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));

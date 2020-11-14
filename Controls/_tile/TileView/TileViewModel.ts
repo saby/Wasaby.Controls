@@ -12,6 +12,16 @@ const DEFAULT_ITEM_HEIGHT = 200;
 const ITEM_COMPRESSION_COEFFICIENT = 0.7;
 const DEFAULT_SCALE_COEFFICIENT = 1.5;
 const DEFAULT_WIDTH_PROPORTION = 1;
+const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
+const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
+const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
+
+interface IItemPadding {
+    left: string;
+    right: string;
+    bottom: string;
+    top: string;
+}
 
 const TILE_SIZES = {
     s: {
@@ -205,6 +215,15 @@ var TileViewModel = ListViewModel.extend({
         TileViewModel.superclass.setActiveItem.apply(this, arguments);
     },
 
+    setItemsContainerPadding(padding) {
+        this._options.itemsContainerPadding = padding;
+        this._nextModelVersion();
+    },
+
+    getItemsContainerPadding() {
+        return this._options.itemsContainerPadding;
+    },
+
     _onCollectionChange(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
         //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
@@ -221,25 +240,65 @@ var TileViewModel = ListViewModel.extend({
     },
 
     getItemPaddingClasses(): string {
-        return this.getPaddingClasses('item');
+        const padding = this.getPadding('itemPadding');
+        const theme = `_theme-${this._options.theme}`;
+        const leftSpacingClass = `controls-TileView__item_spacingLeft_${padding.left}${theme}`;
+        const rightSpacingClass = `controls-TileView__item_spacingRight_${padding.right}${theme}`;
+        const topSpacingClass = `controls-TileView__item_spacingTop_${padding.top}${theme}`;
+        const bottomSpacingClass = `controls-TileView__item_spacingBottom_${padding.bottom}${theme}`;
+
+        return `${leftSpacingClass} ${rightSpacingClass} ${topSpacingClass} ${bottomSpacingClass}`;
+    },
+
+    getPadding(paddingOption: string): IItemPadding {
+        return {
+            left: this._options[paddingOption]?.left || 'default',
+            right: this._options[paddingOption]?.right || 'default',
+            top: this._options[paddingOption]?.top || 'default',
+            bottom: this._options[paddingOption]?.bottom || 'default'
+        };
+    },
+
+    preparePadding(availablePadding: string[], padding: IItemPadding): void {
+        Object.keys(padding).forEach((key) => {
+            if (!availablePadding.includes(padding[key])) {
+                padding[key] = 'default';
+            }
+        });
     },
 
     getItemsPaddingContainerClasses(): string {
-        return this.getPaddingClasses('itemPaddingContainer');
-    },
-
-    getPaddingClasses(classPrefix: string = 'item'): string {
-        const leftSpacing = this._options.itemPadding?.left || 'default';
-        const rightSpacing = this._options.itemPadding?.right || 'default';
-        const bottomSpacing = this._options.itemPadding?.bottom || 'default';
-        const topSpacing = this._options.itemPadding?.top || 'default';
         const theme = `_theme-${this._options.theme}`;
-
-        const leftSpacingClass = `controls-TileView__${classPrefix}_spacingLeft_${leftSpacing}${theme}`;
-        const rightSpacingClass = `controls-TileView__${classPrefix}_spacingRight_${rightSpacing}${theme}`;
-        const topSpacingClass = `controls-TileView__${classPrefix}_spacingTop_${topSpacing}${theme}`;
-        const bottomSpacingClass = `controls-TileView__${classPrefix}_spacingBottom_${bottomSpacing}${theme}`;
-
+        const itemPadding = this.getPadding('itemPadding');
+        let leftSpacingClass = '';
+        let rightSpacingClass = '';
+        let bottomSpacingClass = '';
+        let topSpacingClass = '';
+        if (this._options.itemsContainerPadding) {
+            const itemsContainerPadding = this.getPadding('itemsContainerPadding');
+            this.preparePadding(AVAILABLE_ITEM_PADDINGS, itemPadding);
+            if (!AVAILABLE_CONTAINER_VERTICAL_PADDINGS.includes(itemsContainerPadding.top)) {
+                itemsContainerPadding.top = 'default';
+            }
+            if (!AVAILABLE_CONTAINER_VERTICAL_PADDINGS.includes(itemsContainerPadding.bottom)) {
+                itemsContainerPadding.bottom = 'default';
+            }
+            if (!AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS.includes(itemsContainerPadding.left)) {
+                itemsContainerPadding.left = 'default';
+            }
+            if (!AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS.includes(itemsContainerPadding.right)) {
+                itemsContainerPadding.right = 'default';
+            }
+            leftSpacingClass = `controls-TileView__itemsPaddingContainer_spacingLeft_${itemsContainerPadding.left}_itemPadding_${itemPadding.left}${theme}`;
+            rightSpacingClass = `controls-TileView__itemsPaddingContainer_spacingRight_${itemsContainerPadding.right}_itemPadding_${itemPadding.right}${theme}`;
+            topSpacingClass = `controls-TileView__itemsPaddingContainer_spacingTop_${itemsContainerPadding.top}_itemPadding_${itemPadding.top}${theme}`;
+            bottomSpacingClass = `controls-TileView__itemsPaddingContainer_spacingBottom_${itemsContainerPadding.bottom}_itemPadding_${itemPadding.bottom}${theme}`;
+        } else {
+            leftSpacingClass = `controls-TileView__itemsPaddingContainer_spacingLeft_${itemPadding.left}${theme}`;
+            rightSpacingClass = `controls-TileView__itemsPaddingContainer_spacingRight_${itemPadding.right}${theme}`;
+            topSpacingClass = `controls-TileView__itemsPaddingContainer_spacingTop_${itemPadding.top}${theme}`;
+            bottomSpacingClass = `controls-TileView__itemsPaddingContainer_spacingBottom_${itemPadding.bottom}${theme}`;
+        }
         return `${leftSpacingClass} ${rightSpacingClass} ${topSpacingClass} ${bottomSpacingClass}`;
     },
 
@@ -268,14 +327,20 @@ var TileViewModel = ListViewModel.extend({
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
+    shouldOpenExtendedMenu(isActionMenu: boolean, isContextMenu: boolean, itemData: Record<string, any>): boolean {
+        const isScalingTile = this._options.tileScalingMode !== 'none' && !itemData.dispItem.isNode();
+        return this._options.actionMenuViewMode === 'preview' && !isActionMenu && !(isScalingTile && isContextMenu);
+    },
+
     getActionsMenuConfig(
         itemData,
         clickEvent: SyntheticEvent,
         opener,
         templateOptions,
-        isActionMenu
+        isActionMenu,
+        isContextMenu
     ): Record<string, any> {
-        if (this._options.actionMenuViewMode === 'preview' && !isActionMenu) {
+        if (this.shouldOpenExtendedMenu(isActionMenu, isContextMenu, itemData)) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = templateOptions;
             /* TODO Вынести этот код из модели в контрол плитки

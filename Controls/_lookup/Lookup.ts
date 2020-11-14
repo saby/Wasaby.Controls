@@ -511,6 +511,26 @@ export default class Lookup extends BaseLookupInput {
  *       multiSelect="{{true}}">
  *    </Controls.lookup:Input>
  * </pre>
+ * @see suggestKeyProperty
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#suggestKeyProperty
+ * @cfg {String} Устанавливает поле с первичным ключем для автодополнения.
+ * @remark
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#keyProperty}.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       suggestSource="{{_source}}"
+ *       suggestKeyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ * @link suggestSource
  */
 
 /**
