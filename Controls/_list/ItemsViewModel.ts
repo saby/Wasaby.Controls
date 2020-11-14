@@ -4,7 +4,7 @@
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
-import {view as constView} from 'Controls/Constants';
+import {groupConstants as constView} from 'Controls/list';
 import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';

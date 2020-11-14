@@ -2,7 +2,7 @@ define(
    [
       'Controls/_dropdownPopup/DropdownViewModel',
       'Types/collection',
-      'Controls/Constants',
+      'Controls/list',
       'Types/entity',
       'Controls/list',
       'Core/core-clone'
@@ -218,7 +218,7 @@ define(
             };
             newConfig.groupingKeyCallback = function (item) {
                if (item.get('group') === 'hidden' || !item.get('group')) {
-                  return ControlsConstants.view.hiddenGroup;
+                  return ControlsConstants.groupConstants.hiddenGroup;
                }
                return item.get('group');
             };

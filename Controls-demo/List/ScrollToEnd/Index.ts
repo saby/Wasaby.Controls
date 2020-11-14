@@ -1,7 +1,7 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/List/ScrollToEnd/ScrollToEnd');
 import { Memory } from 'Types/source';
-import {CursorDirection} from 'Controls/Constants';
+import {CursorDirection} from 'Controls/list';
 
 const ITEMS_COUNT = 1000;
 const PAGE_SIZE = 40;
