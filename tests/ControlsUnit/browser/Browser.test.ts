@@ -245,6 +245,7 @@ describe('Controls/browser:Browser', () => {
                 options.filter = filter;
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
+                browser.saveOptions(options);
 
                 options = {...options};
                 options.filter = {};
