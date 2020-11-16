@@ -150,7 +150,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
 
     protected _createItems(): T[] {
         const filteredItems = this.source.items.filter((item) => {
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 return true;
             }
             const key = item.getContents().getKey();

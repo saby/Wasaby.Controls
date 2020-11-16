@@ -637,7 +637,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
             hasItem = enumerator[method]();
             nearbyItem = enumerator.getCurrent();
 
-            if (skipGroups && nearbyItem instanceof GroupItem) {
+            if (skipGroups && nearbyItem['[Controls/_display/GroupItem]']) {
                 nearbyItem = undefined;
                 continue;
             }
