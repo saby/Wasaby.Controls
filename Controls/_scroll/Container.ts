@@ -94,7 +94,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // При инициализации оптимизированные тени не включаем только если явно включены тени на js.
         // В режиме mixed используем тени на css что бы не вызывать лишние синхронизации. Когда пользователь наведет
         // мышкой на скролл контейнер или по другим обнавлениям тени начнут работать через js.
-        this._isOptimizeShadowEnabled = options.shadowMode !== SHADOW_MODE.JS && !detection.isMobileIOS;
+        this._isOptimizeShadowEnabled = options.shadowMode !== SHADOW_MODE.JS && Container._isCssShadowsSupported();
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
         super._beforeMount(...arguments);
@@ -424,7 +424,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
-        return options.shadowMode === SHADOW_MODE.CSS && !detection.isMobileIOS;
+        return options.shadowMode === SHADOW_MODE.CSS && Container._isCssShadowsSupported();
     }
 
     // StickyHeaderController
@@ -455,6 +455,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
         return this._stickyHeaderController.getHeadersHeight(position, type);
+    }
+
+    static _isCssShadowsSupported(): boolean {
+        // Ie и Edge неправильно позиционируют фон со стилями
+        // background-position: bottom и background-attachment: local
+        return !detection.isMobileIOS && !detection.isIE;
     }
 
     static contextTypes() {
