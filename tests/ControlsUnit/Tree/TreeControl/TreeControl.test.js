@@ -1045,6 +1045,41 @@ define([
          });
       });
 
+      describe('_beforeUpdate', () => {
+
+         it('_afterReloadCallback called after data loaded by sourceController', async () => {
+            const source = new sourceLib.Memory();
+            const items = new collection.RecordSet({
+               rawData: [],
+               idProperty: 'id'
+            });
+            const sourceController = new dataSource.NewSourceController({
+               source: 'id'
+            });
+            sourceController.setItems(items);
+            let cfg = {
+               columns: [],
+               source,
+               sourceController,
+               root: 'test'
+            };
+            let afterReloadCallbackCalled = false;
+            const treeCreateObject = correctCreateTreeControl(cfg, true);
+            const treeControl = treeCreateObject.treeControl;
+            await treeControl.createPromise;
+
+            cfg = {...cfg};
+            cfg.source = new sourceLib.Memory();
+            cfg.afterReloadCallback = () => {
+               afterReloadCallbackCalled = true;
+            };
+            treeControl.saveOptions(cfg);
+            treeControl._beforeUpdate(cfg);
+            assert.isTrue(afterReloadCallbackCalled);
+         });
+
+      });
+
       it('TreeControl._private.prepareHasMoreStorage', function() {
          const sourceController = new dataSource.NewSourceController({
             source: new sourceLib.Memory(),

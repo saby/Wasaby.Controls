@@ -3768,10 +3768,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
-                if (loadedBySourceController) {
-                    _private.executeAfterReloadCallbacks(self, items, newOptions);
-                }
-
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
                     && newOptions.selectedKeys && newOptions.selectedKeys.length) {
@@ -3782,6 +3778,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
+            }
+
+            if (loadedBySourceController) {
+                _private.executeAfterReloadCallbacks(self, items, newOptions);
             }
         }
 
