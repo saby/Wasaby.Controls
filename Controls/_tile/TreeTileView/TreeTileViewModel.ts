@@ -41,6 +41,7 @@ var TreeTileViewModel = TreeViewModel.extend({
             const collapsedGroups = this.getCollapsedGroups() || [];
             current.isExpanded = () => !collapsedGroups.includes(dispItem.getContents());
         }
+        current.isStickyHeader = () => this._options.stickyHeader;
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ' controls-TileView__checkbox js-controls-TileView__withoutZoom';
             current.multiSelectClassList += !current.isGroup && dispItem.isNode() ? ' controls-TreeTileView__checkbox' : '';
