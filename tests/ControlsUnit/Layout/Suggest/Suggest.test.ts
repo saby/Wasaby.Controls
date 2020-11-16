@@ -1356,6 +1356,22 @@ describe('Controls/suggest', () => {
          assert.isFalse(isOpenPopup);
       });
 
+      it('changeValueHandler', async () => {
+         const suggestComponent = getComponentObject({
+            suggestTemplate: {},
+            value: 'testValue',
+            searchParam: 'testSearchParam',
+            filter: '',
+            minSearchLength: 3
+         });
+
+         await suggestComponent._beforeMount(suggestComponent._options);
+         assert.strictEqual(suggestComponent._filter.testSearchParam, 'testValue');
+
+         suggestComponent._changeValueHandler({}, '');
+         assert.strictEqual(suggestComponent._filter.testSearchParam, '');
+      });
+
       describe('_beforeUnmount', () => {
 
          it('_beforeUnmount while load dependencies', () => {

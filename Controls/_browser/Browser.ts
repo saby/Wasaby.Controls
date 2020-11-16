@@ -8,6 +8,7 @@ import {
     SearchResolver as SearchResolverController
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
+import { IFilterControllerOptions } from 'Controls/_filter/ControllerClass';
 import {tmplNotify} from 'Controls/eventUtils';
 import {RecordSet} from 'Types/collection';
 import {ContextOptions} from 'Controls/context';
@@ -111,7 +112,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController(options as IFilterControllerOptions);
+        this._filterController = new FilterController({
+            ...options,
+            historySaveCallback: this._historySaveCallback.bind(this)
+        } as IFilterControllerOptions);
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
@@ -211,11 +215,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        // @ts-ignore
-        const isFilterOptionsChanged = this._filterController.update({
-            ...newOptions,
-            searchValue: this._searchValue
-        });
+        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
 
         if (isFilterOptionsChanged) {
             this._updateFilterAndFilterItems();
@@ -434,6 +434,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._notify('rootChanged', [root]);
     }
 
+    protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+        this?._notify('historySave', [historyData, items]);
+    }
+
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
         const sourceController = this._getSourceController(this._options);
 
@@ -581,6 +585,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             filter: this._filter,
             source: this._source,
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+        };
+    }
+
+    private _getFilterControllerOptions(options): IFilterControllerOptions {
+       return {
+           ...options,
+           searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue,
+           historySaveCallback: this._historySaveCallback.bind(this)
         };
     }
 

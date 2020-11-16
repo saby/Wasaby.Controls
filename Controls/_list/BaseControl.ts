@@ -3278,6 +3278,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             self._groupingLoader = new GroupingLoader({});
         }
 
+        if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
+            newOptions.dataLoadCallback(receivedData);
+        }
+
         if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
             if (receivedData) {
@@ -3324,9 +3328,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (newOptions.serviceDataLoadCallback instanceof Function) {
                     newOptions.serviceDataLoadCallback(null, self._items);
-                }
-                if (newOptions.dataLoadCallback instanceof Function) {
-                    newOptions.dataLoadCallback(self._items);
                 }
 
                     _private.createScrollController(self, newOptions);
@@ -3764,13 +3765,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
+                _private.assignItemsToModel(this, items, newOptions);
+                isItemsResetFromSourceController = true;
 
                 if (loadedBySourceController) {
                     _private.executeAfterReloadCallbacks(self, items, newOptions);
                 }
-
-                _private.assignItemsToModel(this, items, newOptions);
-                isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
