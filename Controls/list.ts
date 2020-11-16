@@ -22,7 +22,7 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
- * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
+ * @includes BaseEditingTemplateControls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
@@ -61,7 +61,7 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
- * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
+ * @includes BaseEditingTemplateControls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
