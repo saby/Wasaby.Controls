@@ -4,8 +4,8 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/list:IContentTemplate
- * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes IContentTemplate Controls/_list/interface/IContentTemplate
+ * @includes ItemTemplate Controls/_list/interface/ItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
@@ -22,9 +22,9 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
- * @includes BaseEditingTemplateControls/_list/interface/BaseEditingTemplate
- * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
- * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
+ * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
+ * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes IRemoveControllerOptions Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
@@ -44,8 +44,8 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/list:IContentTemplate
- * @includes ItemTemplate Controls/list:ItemTemplate
+ * @includes IContentTemplate Controls/_list/interface/IContentTemplate
+ * @includes ItemTemplate Controls/_list/interface/ItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
@@ -61,9 +61,9 @@
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
- * @includes BaseEditingTemplateControls/_list/interface/BaseEditingTemplate
- * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
- * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
+ * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
+ * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes MoveController Controls/_list/Controllers/MoveController
  * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
  * @includes RemoveController Controls/_list/Controllers/RemoveController

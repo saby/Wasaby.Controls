@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * Шаблон, который по умолчанию используется для отображения индикатора загрузки в списочных контролах.
  *
- * @class Controls/list:LoadingIndicatorTemplate
+ * @class Controls/_list/interface/LoadingIndicatorTemplate
  * @author Михайлов С.Е.
  * @public
  * @see Controls/list
@@ -26,7 +26,7 @@ import {TemplateFunction} from 'UI/Base';
 
 export default interface ILoadingIndicatorTemplateOptions {
     /**
-     * @name Controls/list:LoadingIndicatorTemplate#contentTemplate
+     * @name Controls/_list/interface/LoadingIndicatorTemplate#contentTemplate
      * @cfg {String|Function|undefined} Пользовательский шаблон, описывающий контент индикатора
      * @example
      * WML:
@@ -45,7 +45,7 @@ export default interface ILoadingIndicatorTemplateOptions {
      */
     contentTemplate: TemplateFunction | string;
     /**
-     * @name Controls/list:LoadingIndicatorTemplate#footerTemplate
+     * @name Controls/_list/interface/LoadingIndicatorTemplate#footerTemplate
      * @cfg {String|Function|undefined} Пользовательский шаблон, описывающий подвал индикатора.
      * @example
      * WML:
