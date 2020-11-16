@@ -303,7 +303,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const newItems = strategy.items;
 
             oldItems.forEach((item, index) => {
-                if (item instanceof GroupItem) {
+                if (item['[Controls/_display/GroupItem]']) {
                     assert.notEqual(newItems[index], oldItems[index]);
                     assert.equal(newItems[index].getContents(), oldItems[index].getContents());
                 } else {

@@ -5444,7 +5444,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         swipeEvent.stopPropagation();

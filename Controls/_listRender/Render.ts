@@ -75,7 +75,7 @@ export default class Render extends Control<IRenderOptions> {
         e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
         item: CollectionItem<unknown>
     ): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             if (e.target?.closest('.controls-ListView__groupExpander')) {
                 item.toggleExpanded();
             }
@@ -87,7 +87,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         if (
@@ -105,7 +105,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemSwipe(e: SyntheticEvent<ISwipeEvent>, item: CollectionItem<unknown>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
 
@@ -140,7 +140,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         this._notify('itemMouseMove', [item, e]);
@@ -159,7 +159,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         if (item.isEditing()) {
