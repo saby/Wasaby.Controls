@@ -164,22 +164,29 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         return lastItem?.get('counterCaption');
     }
 
-    private _prepareItems(options): void {
+    private _prepareItems(options: IBreadCrumbsOptions): void {
+        const clearCrumbsView = () => {
+            this._visibleItems = null;
+            this._breadCrumbsItems = null;
+            this._backButtonClass = '';
+            this._breadCrumbsClass = '';
+            this._isHomeVisible = false;
+        };
+
         if (options.items && options.items.length > 0) {
-            this._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
-            //containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
+            const lastItem = options.items[options.items.length - 1];
+            this._backButtonCaption = ItemsUtil.getPropertyValue(lastItem, options.displayProperty);
+            // containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
             if (options.items.length > 1) {
                 this._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
                 this._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
                 this._isHomeVisible = true;
-
             } else {
-                this._visibleItems = null;
-                this._breadCrumbsItems = null;
-                this._backButtonClass = '';
-                this._breadCrumbsClass = '';
-                this._isHomeVisible = false;
+                clearCrumbsView();
             }
+        } else {
+            this._backButtonCaption = '';
+            clearCrumbsView();
         }
     }
 
