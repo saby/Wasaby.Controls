@@ -243,17 +243,38 @@ describe('Controls/_lookup/BaseControllerClass', () => {
         ok(controller.getItems().at(0) instanceof CustomModel);
     });
 
-    it('removeItem', () => {
-        const controller = getLookupControllerWithSelectedKeys();
-        const item = new Model({
-            rawData: getData()[0],
-            keyProperty: 'id'
+    describe('removeItem', () => {
+        it('simple removeItem', () => {
+            const controller = getLookupControllerWithSelectedKeys();
+            const item = new Model({
+                rawData: getData()[0],
+                keyProperty: 'id'
+            });
+
+            controller.setItems(getRecordSet());
+            controller.removeItem(item);
+            deepStrictEqual(controller.getSelectedKeys(), [1, 2]);
+            deepStrictEqual(controller.getItems().getCount(), 2);
         });
 
-        controller.setItems(getRecordSet());
-        controller.removeItem(item);
-        deepStrictEqual(controller.getSelectedKeys(), [1, 2]);
-        deepStrictEqual(controller.getItems().getCount(), 2);
+        it('update after removeItem', async () => {
+            let options = getControllerOptions();
+            options.selectedKeys = [1];
+            const controller = new BaseControllerClass(options as ILookupBaseControllerOptions);
+            controller.setItems(await controller.loadItems());
+
+            deepStrictEqual(controller.getSelectedKeys(), [1]);
+            deepStrictEqual(controller.getItems().getCount(), 1);
+
+            options = {...options};
+            options.selectedKeys = [];
+            controller.removeItem(new Model({
+                rawData: getData()[1],
+                keyProperty: 'id'
+            }));
+
+            ok(!controller.update(options as ILookupBaseControllerOptions));
+        });
     });
 
     it('getSelectedKeys', () => {
