@@ -21,13 +21,20 @@ import {Base as DateUtil} from 'Controls/dateUtils';
  */
 var Component = RangeSelectionController.extend({
    _beforeMount: function(options) {
-      var quantum = options.quantum || [];
+      const quantum = options.quantum || [];
       this._quantum = quantum;
-      this._isSingleQuant = options.selectionType === Component.SELECTION_TYPES.quantum &&
-         Object.keys(quantum).length === 1 &&
-         Object.keys([Object.keys(quantum)[0]]).length === 1;
+      this._isSingleQuant = this._getIsSingleQuant(quantum, options.selectionType);
 
       Component.superclass._beforeMount.apply(this, arguments);
+   },
+
+   _getIsSingleQuant(quantum: {}, selectionType: string): boolean {
+      for (const i in quantum) {
+         if (quantum[i].length > 1) {
+            return false;
+         }
+      }
+      return selectionType === Component.SELECTION_TYPES.quantum && Object.keys(quantum).length === 1;
    },
 
    // _beforeUpdate: function(options) {
