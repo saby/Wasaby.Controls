@@ -15,7 +15,7 @@ export {default as dateRangeQuantum} from './_dateRange/Utils/DateRangeQuantum';
 export {default as IRangeSelectable} from './_dateRange/interfaces/IRangeSelectable';
 export {default as IDatePickerSelectors} from './_dateRange/interfaces/IDatePickerSelectors';
 export {default as IDateRange} from './_dateRange/interfaces/IDateRange';
-export {default as IDayTemplate} from './_interfaces/IDayTemplate';
+export {default as IDayTemplate} from './_interface/IDayTemplate';
 export {default as IRangeInputTag} from './_dateRange/interfaces/IRangeInputTag';
 export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteDialog';
 export {default as ILinkView} from './_dateRange/interfaces/ILinkView';
