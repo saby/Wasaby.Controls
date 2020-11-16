@@ -286,7 +286,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
                     owner: display as any,
                     contents: groupId,
                     expanded: !isCollapsed,
-                    multiSelectVisibility: display.getMultiSelectVisibility()
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
                 }) as GroupItem<IGroup>;
 
                 groupIndex = groups.length;
