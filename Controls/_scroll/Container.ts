@@ -142,7 +142,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
         this._updateScrollContainerPaigingSccClass(options);
         this._scrollbars.updateOptions(options);
-        this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+        this._shadows.updateOptions(this._getShadowsModelOptions(options));
     }
 
     protected _afterUpdate() {

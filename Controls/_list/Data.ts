@@ -3,13 +3,13 @@ import template = require('wml!Controls/_list/Data');
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {RegisterClass} from 'Controls/event';
 import {RecordSet} from 'Types/collection';
-import {QueryWhereExpression, PrefetchProxy, ICrud, ICrudPlus, IData} from 'Types/source';
+import {QueryWhereExpression, PrefetchProxy, ICrud, ICrudPlus, IData, Memory} from 'Types/source';
 import {
    error as dataSourceError,
    ISourceControllerOptions,
    NewSourceController as SourceController
 } from 'Controls/dataSource';
-import {IControllerOptions, IControllerState} from 'Controls/_dataSource/Controller';
+import {IControllerState} from 'Controls/_dataSource/Controller';
 import {ContextOptions} from 'Controls/context';
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -107,8 +107,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._sourceController =
           options.sourceController ||
           new SourceController(this._getSourceControllerOptions(options));
-      let controllerState = this._sourceController.getState();
+      this._fixRootForMemorySource(options);
 
+      let controllerState = this._sourceController.getState();
       // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       this._filter = controllerState.filter;
       this._dataOptionsContext = this._createContext(controllerState);
@@ -153,11 +154,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (sourceChanged) {
          const currentRoot = this._sourceController.getRoot();
-
-         // https://online.sbis.ru/opendoc.html?guid=e5351550-2075-4550-b3e7-be0b83b59cb9
-         if (!newOptions.hasOwnProperty('root')) {
-            this._sourceController.setRoot(undefined);
-         }
+         this._fixRootForMemorySource(newOptions);
 
          this._loading = true;
          return this._sourceController.reload()
@@ -273,6 +270,14 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          }
       }
       curContext.updateConsumers();
+   }
+
+   // https://online.sbis.ru/opendoc.html?guid=e5351550-2075-4550-b3e7-be0b83b59cb9
+   // https://online.sbis.ru/opendoc.html?guid=c1dc4b23-57cb-42c8-934f-634262ec3957
+   private _fixRootForMemorySource(options: IDataOptions): void {
+      if (!options.hasOwnProperty('root') && options.source instanceof Memory) {
+         this._sourceController.setRoot(undefined);
+      }
    }
 
    _getChildContext(): object {

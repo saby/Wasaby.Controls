@@ -132,12 +132,10 @@ export default class Controller {
     }
 
     setItems(items: RecordSet): RecordSet {
-        this._setItems(items);
-
         if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
-
+        this._setItems(items);
         return this._items;
     }
 
@@ -516,11 +514,15 @@ export default class Controller {
         const historyId = hasGrouping ? (options.groupHistoryId || options.historyIdCollapsedGroups) : undefined;
         const collapsedGroups = options.collapsedGroups;
         const getFilterWithCollapsedGroups = (collapsedGroupsIds: TArrayGroupId) => {
-            let modifiedFilter: Record<string, unknown> = {};
+            let modifiedFilter;
+
             if (collapsedGroupsIds && collapsedGroupsIds.length) {
                 modifiedFilter = { ...initialFilter };
                 modifiedFilter.collapsedGroups = collapsedGroupsIds;
+            } else {
+                modifiedFilter = initialFilter;
             }
+
             return modifiedFilter;
         };
         let resultFilterPromise;

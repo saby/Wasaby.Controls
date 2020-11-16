@@ -827,7 +827,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             // TODO What's a better way of doing this?
             this.addFilter(
                 (item, index, collectionItem, collectionIndex, hasMembers, groupItem) =>
-                    collectionItem instanceof GroupItem || !groupItem || groupItem.isExpanded()
+                    collectionItem['[Controls/_display/GroupItem]'] || !groupItem || groupItem.isExpanded()
             );
         }
     }
@@ -953,7 +953,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *         });
      *
      *         display.each(function(item, index) {
-     *             if (item instanceof GroupItem) {
+     *             if (item['[Controls/_display/GroupItem]']) {
      *                 console.log('[' + item.getContents() + ']');
      *             } else {
      *                 console.log(item.getContents().name);
@@ -1054,7 +1054,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let count = 0;
         if (skipGroups && this._isGrouped()) {
             this.each((item) => {
-                if (!(item instanceof GroupItem)) {
+                if (!(item['[Controls/_display/GroupItem]'])) {
                     count++;
                 }
             });
@@ -1214,7 +1214,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 item,
@@ -1237,7 +1237,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setPosition(lastIndex);
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 undefined,
@@ -1747,7 +1747,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const items = [];
         let currentGroupId;
         this.each((item) => {
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
                 return;
             }
@@ -1814,7 +1814,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let itemIndex = 0;
         while (enumerator.moveNext()) {
             item = enumerator.getCurrent();
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
             }
             if (itemIndex === index) {
@@ -2278,11 +2278,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
-        this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.setMultiSelectVisibility) {
-                item.setMultiSelectVisibility(visibility);
-            }
-        });
+        this._updateItemsMultiSelectVisibility(visibility);
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
@@ -2295,6 +2291,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMultiSelectPosition(): 'default' | 'custom' {
         return this._$multiSelectPosition;
+    }
+
+    protected _updateItemsMultiSelectVisibility(visibility: string): void {
+        this.getViewIterator().each((item: CollectionItem<T>) => {
+            if (item.setMultiSelectVisibility) {
+                item.setMultiSelectVisibility(visibility);
+            }
+        });
     }
 
     protected _setItemPadding(itemPadding: IItemPadding): void {
@@ -2370,7 +2374,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setSearchValue(searchValue: string): void {
-        this._$searchValue = searchValue;
+        if (this._$searchValue !== searchValue) {
+            this._$searchValue = searchValue;
+            this._nextVersion();
+        }
     }
 
     getSearchValue(): string {
@@ -2456,7 +2463,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         for (let idx = 0; idx < itemsCount; idx++) {
             const item = this.at(idx);
-            if (!(item instanceof GroupItem) || item.isExpanded()) {
+            if (!(item['[Controls/_display/GroupItem]']) || item.isExpanded()) {
                 return false;
             }
         }
@@ -2473,6 +2480,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setIndexes(start: number, stop: number): void {
         this.getViewIterator().setIndices(start, stop);
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     getViewIterator(): IViewIterator {
@@ -2871,7 +2879,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         for (let i = 0; i < max; i++) {
             item = isRemove ? oldItems[i] : newItems[i];
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 notify(notifyIndex, i);
                 notifyIndex = i;
             }
@@ -3145,7 +3153,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setCurrent(item);
         while (enumerator[method]()) {
             nearbyItem = enumerator.getCurrent();
-            if (skipGroups && nearbyItem instanceof GroupItem) {
+            if (skipGroups && nearbyItem['[Controls/_display/GroupItem]']) {
                 nearbyItem = undefined;
                 continue;
             }
@@ -3332,7 +3340,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             processedIndices.add(index);
             item = items[index];
             match = true;
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 // A new group begin, check match for previous
                 if (prevGroup) {
                     match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);

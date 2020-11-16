@@ -303,7 +303,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             const newItems = strategy.items;
 
             oldItems.forEach((item, index) => {
-                if (item instanceof GroupItem) {
+                if (item['[Controls/_display/GroupItem]']) {
                     assert.notEqual(newItems[index], oldItems[index]);
                     assert.equal(newItems[index].getContents(), oldItems[index].getContents());
                 } else {
@@ -439,7 +439,11 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             ];
             const groups = [];
             const options: any = {
-                display: {},
+                display: {
+                    getMultiSelectVisibility() {
+                        return 'hidden';
+                    }
+                },
                 groups,
                 groupConstructor: GroupItem,
                 handler: () => 'foo'
@@ -461,7 +465,11 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             ];
             const groups = [];
             const options: any = {
-                display: {},
+                display: {
+                    getMultiSelectVisibility() {
+                        return 'hidden';
+                    }
+                },
                 groups,
                 groupConstructor: GroupItem,
                 handler: (item) => '#' + item
@@ -489,7 +497,11 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 new GroupItem({contents: '#three'})
             ];
             const options: any = {
-                display: {},
+                display: {
+                    getMultiSelectVisibility() {
+                        return 'hidden';
+                    }
+                },
                 groups,
                 groupConstructor: GroupItem,
                 handler: (item) => '#' + item

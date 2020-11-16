@@ -285,7 +285,8 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
                 const group = new options.groupConstructor({
                     owner: display as any,
                     contents: groupId,
-                    expanded: !isCollapsed
+                    expanded: !isCollapsed,
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
                 }) as GroupItem<IGroup>;
 
                 groupIndex = groups.length;

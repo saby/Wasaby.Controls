@@ -34,6 +34,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     position: POSITION;
     mode: MODE;
     fixedZIndex: number;
+    zIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundStyle: string;
 }
@@ -162,11 +163,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
-            container: this._container,
             position: this._options.position,
             mode: this._options.mode,
             shadowVisibility: this._options.shadowVisibility
         }, true], {bubbling: true});
+    }
+
+    getContainer(): HTMLElement {
+        return this._container;
     }
 
     protected _beforeUpdate(options: IStickyHeaderOptions, context): void {
@@ -174,7 +178,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
-            this._updateStyle(options.position, options.fixedZIndex, options.task1177692247);
+            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
         }
         if (context?.stickyHeader?.shadowPosition !== this._scrollShadowPosition) {
             this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
@@ -453,19 +457,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyles(options: IStickyHeaderOptions): void {
-        this._updateStyle(options.position, options.fixedZIndex, options.task1177692247);
+        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
         this._updateShadowStyles(options.mode, options.shadowVisibility);
         this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(position: POSITION, fixedZIndex: number, task1177692247): void {
-        const style = this._getStyle(position, fixedZIndex, task1177692247);
+    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247): void {
+        const style = this._getStyle(position, fixedZIndex, zIndex, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, task1177692247?): string {
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -546,6 +550,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             }
 
             style += 'z-index: ' + fixedZIndex + ';';
+        } else if (zIndex) {
+            style += 'z-index: ' + zIndex + ';';
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
@@ -791,7 +797,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
 /**
  * @name Controls/_scroll/StickyHeader#fixedZIndex
- * @cfg {Number} Устанавливает z-index у прилипающего заголовка
+ * @cfg {Number} Определяет значение z-index на заголовке, когда он зафиксирован
+ * @default 2
+ */
+
+/**
+ * @name Controls/_scroll/StickyHeader#zIndex
+ * @cfg {Number} Определяет значение z-index на заголовке, когда он не зафиксирован
+ * @default undefined
  */
 
 /**

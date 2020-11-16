@@ -33,7 +33,7 @@ import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from './resources/DragScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
 import { IDragPosition, GridLadderUtil } from 'Controls/display';
-import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
+import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspanUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -581,15 +581,19 @@ var
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
+        getStickyColumn(self): GridLadderUtil.IStickyColumn {
+            return GridLadderUtil.getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._columns
+            });
+        },
+
         /**
          * Проверяет, присутствует ли "прилипающая" колонка
          * @param self
          */
         hasStickyColumn(self): boolean {
-            return !!GridLadderUtil.getStickyColumn({
-                stickyColumn: self._options.stickyColumn,
-                columns: self._columns
-            });
+            return !!_private.getStickyColumn(self);
         },
 
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
@@ -1980,22 +1984,26 @@ var
                     }
                 }
 
-                // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
-                //  под плашку операций над записью вне строки обеспечивался не только блоком
-                //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
-                //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
-                //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
-                //  Данный код должен быть неактуальным. Если его удаление н вызывает проблем, можно удалить
-                //  в 21.1000
-
                 if (isFullGridSupport) {
                     styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
                 } else {
                     column.colspan = column.endColumn - column.startColumn;
                 }
 
-                column.getWrapperClasses = (backgroundStyle: string = 'default') => {
-                    return `${classes} controls-background-${backgroundStyle}_theme-${theme}`;
+                column.getWrapperClasses = (needBottomPadding: boolean, backgroundStyle: string = 'default') => {
+                    // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
+                    //  под плашку операций над записью вне строки обеспечивался не только блоком
+                    //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
+                    //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
+                    //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
+                    const shouldDrawBottomPadding =
+                        (this.getCount() || this.isEditing()) &&
+                        this._options.itemActionsPosition === 'outside' &&
+                        !needBottomPadding &&
+                        this._options.resultsPosition !== 'bottom';
+
+                    return `${classes} controls-background-${backgroundStyle}_theme-${theme} ` +
+                           (shouldDrawBottomPadding ? `controls-GridView__footer__itemActionsV_outside_theme-${theme} ` : '');
                 };
 
                 column.getWrapperStyles = (containerSize: number) => {
@@ -2345,7 +2353,8 @@ var
                 // активирована колонка для множественного выбора?
                 const offsetForMultiSelect: number = +(this._hasMultiSelectColumn());
                 // к колонкам была добавлена "прилипающая" колонка?
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const ladderStickyColumn = _private.getStickyColumn(this);
+                const offsetForStickyColumn: number = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
                 // к колонкам была добавлена колонка "Действий"?
                 const offsetForActionCell: number = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,
