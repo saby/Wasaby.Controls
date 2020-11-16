@@ -37,9 +37,13 @@ describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
             result: false
         }].forEach((test) => {
             it('should calculate _isSingleQuant correctly', () => {
-                const
-                    component =
-                        calendarTestUtils.createComponent(DateRangeSelectionController);
+                const component = calendarTestUtils.createComponent(
+                    DateRangeSelectionController,
+                    {
+                        quantum: test.quantum,
+                        selectionType: 'quantum'
+                    }
+                );
                 assert.equal(test.result, component._isSingleQuant);
             });
         });
