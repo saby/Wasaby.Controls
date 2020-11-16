@@ -221,6 +221,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._errorRegister.destroy();
          this._errorRegister = null;
       }
+      if (this._sourceController) {
+         this._sourceController.destroy();
+     }
    }
 
    _registerHandler(event, registerType, component, callback, config): void {
