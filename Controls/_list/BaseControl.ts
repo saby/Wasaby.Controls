@@ -2117,6 +2117,7 @@ const _private = {
             self._scrollController = null;
             self._observerRegistered = false;
         }
+        self._viewReady = false;
     },
 
     hideError(self: BaseControl): void {
@@ -3122,6 +3123,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemReloaded: false,
     _modelRecreated: false,
+    _viewReady: false,
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
@@ -4211,7 +4213,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (this._listViewModel && !this._modelRecreated && !this.__error) {
+            if (this._listViewModel && !this._modelRecreated && this._viewReady) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
@@ -5529,6 +5531,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
+        this._viewReady = true;
         if (this._isScrollShown) {
             this._viewSize = _private.getViewSize(this, true);
             this._updateItemsHeights();
