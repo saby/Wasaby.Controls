@@ -121,7 +121,7 @@ export default class ScrollPagingController {
         }
     }
     getItemsCountOnPage() {
-        if (this._options.pagingMode === 'numbers') {
+        if (this._pagingData.averageElementHeight) {
             return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
         }
     }
