@@ -1117,7 +1117,7 @@ const _private = {
             
             // Не совсем понятно, где должен быть этот код. SourceController не должен знать про 
             // размеры окна, записей, и т.д. Но и список не должен сам вычислять параметры для загрузки.
-            const itemsOnPage = self._scrollPagingCtr.getItemsCountOnPage();
+            const itemsOnPage = self._scrollPagingCtr?.getItemsCountOnPage();
             const metaMore = self._items.getMetaData().more;
             if (typeof metaMore === 'number' && itemsOnPage && self._options.navigation.source === 'page') {
                 const pageSize = self._options.navigation.sourceConfig.pageSize;
