@@ -46,7 +46,7 @@ export default class Flat<
         }
 
         // If you hover on a record that is being dragged, then the position should not change.
-        if (!(targetItem instanceof GroupItem) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+        if (!(targetItem['[Controls/_display/GroupItem]']) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
             return currentPosition;
         }
 
