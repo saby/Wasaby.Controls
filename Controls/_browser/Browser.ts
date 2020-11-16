@@ -80,7 +80,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _path: RecordSet;
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
-    private _searchValue: string = null;
+    private _searchValue: string = '';
     private _dataOptionsContext: typeof ContextOptions;
 
     private _itemsReadyCallback: Function;
