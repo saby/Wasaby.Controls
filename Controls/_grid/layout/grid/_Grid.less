@@ -382,12 +382,6 @@
 
 }
 
-
-.controls-Grid__row-cell-background-editing_theme-@{themeName} .controls-Grid__row-cell__content_colspaned {
-   z-index: 1;
-   background-color: @item_editing_background-color_list;
-}
-
 .controls-Grid__row-cell-editing_theme-@{themeName} {
    > .controls-itemActionsV,
    +.controls-itemActionsV__container > .controls-itemActionsV
@@ -399,8 +393,10 @@
 .controls-Grid__row-cell-background-editing_default_theme-@{themeName} {
    background-color: @item_editing_background-color_list;
    /** При редактировании по месту, переопределяем фон содержимого ячейки */
+   .controls-Grid__row-cell__content_colspaned,
    .controls-Grid__row-cell__content {
       background-color: @item_editing_background-color_list;
+      z-index: 1;
    }
 }
 
