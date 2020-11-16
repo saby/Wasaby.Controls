@@ -475,10 +475,12 @@ var
          }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
-         [root]: {
+            [root]: {
                markedKey: null
             }
          };
+
+         this._headerVisibility = root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
 
          // TODO: для 20.5100. в 20.6000 можно удалить
          if (cfg.displayMode) {
@@ -495,6 +497,8 @@ var
          const isRootChanged = cfg.root !== this._options.root;
          const loadedBySourceController = isSearchViewMode && cfg.sourceController;
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
+         this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
+
          if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
             this._newItemPadding = cfg.itemPadding;
          }
