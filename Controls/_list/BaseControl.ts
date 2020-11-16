@@ -4087,10 +4087,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
-
-        // Если sourceController есть в опциях, значит его создали наверху
-        // например list:DataContainer, и разрушать его тоже должен создатель.
-        if (this._sourceController && !this._options.sourceController) {
+        if (this._sourceController) {
             this._sourceController.destroy();
         }
 
@@ -5508,7 +5505,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
-        return diCreate(modelName, {...modelConfig, collection: items, unique: true});
+        return diCreate(modelName, {...modelConfig, collection: items});
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {
@@ -5776,8 +5773,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                const lastItem = this._listViewModel.getLast();
+                const startPosition = {
+                    index: this._listViewModel.getIndex(lastItem),
+                    dispItem: lastItem,
+                    position: 'after'
+                };
+
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+
+                // задаем изначальную позицию в другом списке
+                this._dndListController.setDragPosition(startPosition);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }

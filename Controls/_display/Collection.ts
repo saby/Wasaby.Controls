@@ -2205,13 +2205,26 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     // region Drag-N-Drop
 
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndex(draggableItem);
+        const draggableItemIndex = this.getIndex(draggableItem);
+        // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
+        const avatarStartIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
 
         this.appendStrategy(this._dragStrategy, {
             draggedItemsKeys,
             draggableItem,
             avatarIndex: avatarStartIndex
         });
+
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        this._notifyBeforeCollectionChange();
+        this._notifyCollectionChange(
+            IObservable.ACTION_ADD,
+            [strategy.avatarItem],
+            avatarStartIndex,
+            [],
+            0
+        );
+        this._notifyAfterCollectionChange();
     }
 
     setDragPosition(position: IDragPosition<T>): void {
@@ -2223,7 +2236,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     resetDraggedItems(): void {
-        // TODO нужно у стратегии вызвать метод reset, чтобы задестроить avatarItem и обнулить все ссылки
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        strategy.reset();
         this.removeStrategy(this._dragStrategy);
     }
 
