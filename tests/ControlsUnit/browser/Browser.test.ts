@@ -90,12 +90,12 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
 
                 await browser._beforeMount(options);
-                ok(browser._searchValue === '');
+                assert.ok(browser._searchValue === '');
 
                 options = {...options};
                 options.searchValue = 'test';
                 await browser._beforeMount(options);
-                ok(browser._searchValue === 'test');
+                assert.ok(browser._searchValue === 'test');
             });
 
         });
