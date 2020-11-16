@@ -1,7 +1,7 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/tile:ItemTemplate
- * @mixes Controls/list:BaseItemTemplate
+ * @mixes Controls/_list/interface/BaseItemTemplate
  * @mixes Controls/list:IContentTemplate
  * @author Авраменко А.С.
  * @see Controls/tile:View
