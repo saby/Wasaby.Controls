@@ -8036,7 +8036,7 @@ define([
                return baseControl._beforeMount(newCfg).then(() => {
                   assert.isNotOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
-                  assert.isNotOk(baseControl._selectionController);
+                  assert.isOk(baseControl._selectionController);
                });
             });
          });
