@@ -1113,7 +1113,25 @@ const _private = {
                 pagingMode = self._options.navigation.viewConfig.pagingMode;
             }
 
-            const navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+            let navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+            
+            // Решение проблемы загрузки достаточного количества данных для перехода в конец/начало списка
+            // в зависимости от размеров экрана. 
+            // Из размера вьюпорта и записи мы знаем, сколько данных нам хватит.
+            // Не совсем понятно, где должен быть этот код. SourceController не должен знать про 
+            // размеры окна, записей, и т.д. Но и список не должен сам вычислять параметры для загрузки.
+            // https://online.sbis.ru/opendoc.html?guid=608aa44e-8aa5-4b79-ac90-d06ed77183a3
+            const itemsOnPage = self._scrollPagingCtr?.getItemsCountOnPage();
+            const metaMore = self._items.getMetaData().more;
+            if (typeof metaMore === 'number' && itemsOnPage && self._options.navigation.source === 'page') {
+                const pageSize = self._options.navigation.sourceConfig.pageSize;
+                const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
+                const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                navigationQueryConfig = {
+                    page: direction === 'up' ? 0 : 1,
+                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                };
+            }
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
