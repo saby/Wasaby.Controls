@@ -57,7 +57,7 @@ export default class ColumnsInnerView extends Control {
         }
 
         if (options.columnsMode === 'auto' && options.initialWidth) {
-            this._recalculateColumnsCountByWidth(options.initialWidth);
+            this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
         } else {
             if (options.columnsCount) {
                 this._columnsCount = options.columnsCount;
@@ -96,8 +96,8 @@ export default class ColumnsInnerView extends Control {
     private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._itemsContainerGetter = itemsContainerGetter;
     }
-    private _recalculateColumnsCountByWidth(width: number): void {
-        const newColumnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
+    private _recalculateColumnsCountByWidth(width: number, columnMinWidth: number): void {
+        const newColumnsCount = Math.floor(width / ((columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
         if (newColumnsCount !== this._columnsCount) {
             this._columnsCount = newColumnsCount;
             this.updateColumns();
@@ -109,7 +109,7 @@ export default class ColumnsInnerView extends Control {
 
         // если currentWidth === 0, значит контрол скрыт (на вкладке switchbleArea), и не нужно пересчитывать
         if (this._options.columnsMode === 'auto' && currentWidth > 0) {
-            this._recalculateColumnsCountByWidth(currentWidth);
+            this._recalculateColumnsCountByWidth(currentWidth, this._options.columnMinWidth);
         }
     }
 
