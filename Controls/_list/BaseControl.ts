@@ -2305,7 +2305,7 @@ const _private = {
         const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
 
         self._wasScrollToEnd = true;
-        
+
         const hasMoreData = {
             up: _private.hasMoreData(this, this._sourceController, 'up'),
             down: _private.hasMoreData(this, this._sourceController, 'down')
@@ -3838,7 +3838,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        if (this._items && this._items.getCount()) {
+        // Когда удаляют все записи, мы сбрасываем selection, поэтому мы его должны применить даже когда список пуст
+        if (this._items) {
             const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
