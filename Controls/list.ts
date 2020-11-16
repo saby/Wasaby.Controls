@@ -6,7 +6,7 @@
  * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
  * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
- * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
@@ -46,7 +46,7 @@
  * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
  * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
- * @includes EmptyTemplate Controls/list:EmptyTemplate
+ * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
