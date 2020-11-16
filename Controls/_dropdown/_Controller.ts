@@ -560,6 +560,7 @@ export default class _Controller implements IDropdownController {
          }
       }
       let templateOptions = {
+         dataLoadCallback: null,
          closeButtonVisibility: false,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),

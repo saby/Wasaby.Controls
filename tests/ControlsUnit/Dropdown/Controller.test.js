@@ -711,6 +711,7 @@ define(
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+               assert.isNull(resultPopupConfig.templateOptions.dataLoadCallback);
                assert.equal(resultPopupConfig.opener, 'test');
             });
 
