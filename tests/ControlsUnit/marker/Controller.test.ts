@@ -336,7 +336,7 @@ describe('Controls/marker/Controller', () => {
       });
 
       it('not exists marked item, onactivated and was not set marker before reset', () => {
-         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: undefined });
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: null });
          model.setItems(new RecordSet({
             rawData: [
                {id: 2},
