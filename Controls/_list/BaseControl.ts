@@ -3135,6 +3135,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsController: null,
     _sourceController: null,
     _prevRootId: null,
+    _loadedBySourceController: false,
 
     _notifyHandler: tmplNotify,
 
@@ -3658,7 +3659,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
-        const loadedBySourceController = newOptions.sourceController &&
+        this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
@@ -3782,7 +3783,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
-            if (loadedBySourceController) {
+            if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
             }
         }
@@ -3835,7 +3836,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         const needReload =
-            !loadedBySourceController &&
+            !this._loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
@@ -3893,7 +3894,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
+        if (searchValueChanged || this._loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -4228,7 +4229,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated || positionRestored) {
+            if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
 
@@ -4341,6 +4342,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
+        this._loadedBySourceController = false;
         this._notifyOnDrawItems();
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
