@@ -31,7 +31,7 @@ export function getActions(
     containerSize: number
 ): IItemActionsContainer {
     let showedActions = [];
-    const allActions = MeasurerUtils.getActualActions(actions.all);
+    const allActions = MeasurerUtils.getActualActions(actions.all).filter((action) => !action['parent@']);
     const availableActionsCount = getAvailableActionsCount(iconSize, containerSize);
     if (allActions.length > availableActionsCount) {
         showedActions = allActions.slice(0, availableActionsCount - 1);
