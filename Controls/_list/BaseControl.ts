@@ -660,12 +660,15 @@ const _private = {
                 }], {bubbling: true});
             }
         };
-        return self._scrollController ?
-            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                if (result) {
-                    _private.handleScrollControllerResult(self, result);
-                }
-            }) : Promise.resolve();
+        return new Promise((resolve) => {
+            self._scrollController ?
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+                    resolve();
+                }) : resolve();
+        });
     },
 
     // region key handlers
