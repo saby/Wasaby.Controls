@@ -108,4 +108,19 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             });
         })
     });
+
+    describe('updateVisibilityByInnerComponents', () => {
+        it('should change version if shadow visibility is changed.', () => {
+            const shadows = new ShadowsModel({
+                ...getShadowsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            });
+            const version = shadows.getVersion();
+            shadows.updateVisibilityByInnerComponents({
+                top: SHADOW_VISIBILITY.VISIBLE,
+                bottom: SHADOW_VISIBILITY.VISIBLE
+            });
+            assert.notStrictEqual(shadows.getVersion(), version);
+        });
+    });
 });
