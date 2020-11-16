@@ -36,3 +36,4 @@ export {
     TreeGridView,
     RowEditor
 };
+export {IReloadableTreeGrid} from 'Controls/_treeGrid/interface/IReloadableTreeGrid';
