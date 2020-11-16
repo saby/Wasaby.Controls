@@ -4,7 +4,7 @@
  * @includes View Controls/_grid/Grid
  * @includes ItemTemplate Controls/grid:ItemTemplate
  * @includes ResultsTemplate Controls/grid:ResultsTemplate
- * @includes GroupTemplate Controls/grid:GroupTemplate
+ * @includes GroupTemplate Controls/_grid/interface/GroupTemplate
  * @includes HeaderContent Controls/grid:HeaderContent
  * @includes LadderWrapper Controls/grid:LadderWrapper
  * @includes ColumnTemplate Controls/grid:ColumnTemplate
