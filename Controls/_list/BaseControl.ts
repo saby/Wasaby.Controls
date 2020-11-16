@@ -4087,7 +4087,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
-        if (this._sourceController) {
+
+        // Если sourceController есть в опциях, значит его создали наверху
+        // например list:DataContainer, и разрушать его тоже должен создатель.
+        if (this._sourceController && !this._options.sourceController) {
             this._sourceController.destroy();
         }
 
@@ -5505,7 +5508,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
-        return diCreate(modelName, {...modelConfig, collection: items});
+        return diCreate(modelName, {...modelConfig, collection: items, unique: true});
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {
