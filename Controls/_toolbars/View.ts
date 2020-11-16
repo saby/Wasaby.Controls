@@ -484,11 +484,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                     ...config,
                     target: event.currentTarget
                 });
-
-                this._notify('itemClick', [item, event.nativeEvent]);
-                event.stopPropagation();
             });
         }
+
+        this._notify('itemClick', [item, event.nativeEvent]);
+        event.stopPropagation();
     }
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
@@ -516,6 +516,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             if (!this._isLoadMenuItems) {
                 this._setMenuItems().then(() => {
                     this._isLoadMenuItems = true;
+                    menuConfig.templateOptions.source = this._menuSource;
                     this._openMenu(menuConfig);
                 });
             } else {
