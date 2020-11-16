@@ -41,7 +41,7 @@ export default interface IBaseItemTemplateOptions {
    highlightOnHover?: boolean;
    /**
     * @name Controls/_list/interface/BaseItemTemplate#cursor
-    * @cfg {TCursor} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
+    * @cfg {Controls/_list/interface/BaseItemTemplate/TCursor.typedef} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
     * @default pointer
     */
    cursor?: TCursor;
@@ -58,7 +58,7 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/_list/interface/BaseItemTemplate#itemActionsClass
-    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
+    * @cfg {Controls/_list/interface/BaseItemTemplate/ItemActionsClass.typedef} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
     * @default controls-itemActionsV_position_bottomRight
     */
    itemActionsClass?: string;
@@ -76,7 +76,7 @@ export default interface IBaseItemTemplateOptions {
     */
    checkboxReadOnly?: boolean;
    /**
-    * @typedef {String} backgroundColorStyle
+    * @typedef {String} BackgroundColorStyle
     * @variant danger
     * @variant success
     * @variant warning
@@ -87,7 +87,7 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/interface/IItemTemplate#backgroundColorStyle
-    * @cfg {backgroundColorStyle} Настройка фона строки.
+    * @cfg {Controls/_list/interface/BaseItemTemplate/BackgroundColorStyle.typedef} Настройка фона строки.
     * @remark 
     * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight">руководство разработчика</a>.
     * @demo Controls-demo/list_new/ItemTemplate/BackgroundColorStyle/Index
@@ -96,7 +96,7 @@ export default interface IBaseItemTemplateOptions {
 
    /**
     * @name Controls/interface/IItemTemplate#markerClassName
-    * @cfg {TMarkerClassName} Размер маркера.
+    * @cfg {Controls/_list/interface/BaseItemTemplate/TMarkerClassName.typedef} Размер маркера.
     * @default default
     */
    markerClassName?: TMarkerClassName;
