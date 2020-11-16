@@ -188,7 +188,8 @@ export default class FilterControllerClass {
 
     handleDataLoad(items: RecordSet): void {
         if (this._options.historyId && this._isFilterChanged) {
-            if (getHistorySource({ historyId: this._options.historyId }).historyReady()) {
+            if (getHistorySource({ historyId: this._options.historyId,
+                                        favorite: !!this._options.prefetchParams }).historyReady()) {
                 this._deleteCurrentFilterFromHistory();
             }
             this._addToHistory(
@@ -289,7 +290,7 @@ export default class FilterControllerClass {
         historyItems: IFilterItem[],
         prefetchParams: IPrefetchHistoryParams
     ): Promise<THistoryData> {
-        if (historyItems && prefetchParams) {
+        if (historyItems && prefetchParams && historyItems?.length) {
             return this._loadHistoryItems(historyId).then((result) => {
                 return historyItems ? historyItems : result;
             });
