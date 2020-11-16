@@ -41,7 +41,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
             if (!this._dependenciesTimer) {
                 this._dependenciesTimer = new DependencyTimer();
             }
-            this._dependenciesTimer.start(this._loadDependencies);
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
         }
     }
 
@@ -84,8 +84,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     }
 
     private _loadDependencies(): void {
-        const loadDependencies = this._controller.loadDependencies.bind(this._controller);
-        loadDependencies().catch((error) => {
+        this._controller.loadDependencies().catch((error) => {
             return error;
         });
     }
