@@ -23,7 +23,21 @@ var Component = RangeSelectionController.extend({
    _beforeMount: function(options) {
       const quantum = options.quantum || [];
       this._quantum = quantum;
-      this._isSingleQuant = this._getIsSingleQuant(quantum, options.selectionType);
+      const isSingleQuant = () => {
+         // Проверяем, есть ли в каком-нибудь из видов кванта больше чем одно значение (например days: [1, 3]). В таком
+         // случае квант не единственный.
+         for (const i in quantum) {
+            if (quantum[i].length > 1) {
+               return false;
+            }
+         }
+         // Проверяем, передали ли в quantum два или больше типа квантов
+         // (days, weeks, months, quarters, halfyears и years). Например {days: [3], weeks: [5]}, В таком случае квант
+         // не единственный.
+         return options.selectionType === Component.SELECTION_TYPES.quantum && Object.keys(quantum).length === 1;
+      };
+
+      this._isSingleQuant = isSingleQuant();
 
       Component.superclass._beforeMount.apply(this, arguments);
    },

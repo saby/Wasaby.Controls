@@ -40,8 +40,7 @@ describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
                 const
                     component =
                         calendarTestUtils.createComponent(DateRangeSelectionController);
-                const result = component._getIsSingleQuant(test.quantum, 'quantum');
-                assert.equal(test.result, result);
+                assert.equal(test.result, component._isSingleQuant);
             });
         });
     });
