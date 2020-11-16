@@ -98,6 +98,11 @@ var TreeTileViewModel = TreeViewModel.extend({
             return version;
         };
 
+        // Совместимость с newModel, https://online.sbis.ru/opendoc.html?guid=0bca7ba3-f49f-46da-986a-a1692deb9c47
+        current.isStickyHeader = () => {
+            return this._options.stickyHeader;
+        }
+
         return current;
     },
     isScaled: function(itemData) {
