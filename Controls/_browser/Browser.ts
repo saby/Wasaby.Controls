@@ -112,7 +112,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController(options as IFilterControllerOptions);
+        this._filterController = new FilterController({
+            ...options,
+            historySaveCallback: this._historySaveCallback.bind(this)
+        } as IFilterControllerOptions);
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
@@ -431,6 +434,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._notify('rootChanged', [root]);
     }
 
+    protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+        this?._notify('historySave', [historyData, items]);
+    }
+
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
         const sourceController = this._getSourceController(this._options);
 
@@ -583,8 +590,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _getFilterControllerOptions(options): IFilterControllerOptions {
        return {
-            ...options,
-            searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue
+           ...options,
+           searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue,
+           historySaveCallback: this._historySaveCallback.bind(this)
         };
     }
 
