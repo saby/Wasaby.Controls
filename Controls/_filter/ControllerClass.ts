@@ -288,7 +288,7 @@ export default class FilterControllerClass {
         historyItems: IFilterItem[],
         prefetchParams: IPrefetchHistoryParams
     ): Promise<THistoryData> {
-        if (historyItems && prefetchParams) {
+        if (historyItems && prefetchParams && historyItems?.length) {
             return this._loadHistoryItems(historyId).then((result) => {
                 return historyItems ? historyItems : result;
             });
