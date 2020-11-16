@@ -39,7 +39,7 @@ export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
 /**
  * Интерфейс управления значением поля ввода.
  *
- * @interface Controls/_input/interface/IValue
+ * @interface Controls/_input/interface/IValueOptions
  * @author Красильников А.С.
  * @public
  */

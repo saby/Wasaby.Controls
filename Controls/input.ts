@@ -20,7 +20,7 @@
  * @includes INumberLength Controls/_input/interface/INumberLength
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
- * @includes IValue Controls/_input/interface/IValue
+ * @includes IValueOptions Controls/_input/interface/IValueOptions
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
  * @includes InputCallback Controls/input/InputCallback
  * @includes IFieldData Controls/_input/interface/IFieldData
@@ -54,7 +54,7 @@
  * @includes IText Controls/_input/interface/IText
  * @includes IBase Controls/_input/interface/IBase
  * @includes ITag Controls/_input/interface/ITag
- * @includes IValue Controls/_input/interface/IValue
+ * @includes IValueOptions Controls/_input/interface/IValueOptions
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
  * @includes IFieldData Controls/_input/interface/IFieldData
  * @includes ICallbackData Controls/_input/interface/ICallbackData
