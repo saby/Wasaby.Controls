@@ -75,7 +75,8 @@ export default class FilterControllerClass {
     }
 
     setFilterItems(historyItems: THistoryData): void {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             this._setFilterItems(state.filterSource, [], historyItems);
         } else {
@@ -90,7 +91,8 @@ export default class FilterControllerClass {
     }
 
     loadFilterItemsFromHistory(): Promise<THistoryData> {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             const loadedSources = state && state.loadedSources && state.loadedSources[0];
             if (loadedSources) {
