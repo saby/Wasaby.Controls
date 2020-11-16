@@ -130,8 +130,8 @@ var TreeTileViewModel = TreeViewModel.extend({
                 itemContents
             );
         } else {
-            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.tileWidth :
-            this._options.folderWidth;
+            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.folderWidth :
+            this._options.tileWidth;
         }
         return opts;
     },
