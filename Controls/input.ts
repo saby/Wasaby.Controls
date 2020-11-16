@@ -29,6 +29,7 @@
  * @includes IBorderVisibility Controls/_input/interface/IBorderVisibility
  * @includes IPadding Controls/_input/interface/IPadding
  * @includes ISelection Controls/_input/resources/Types:ISelection
+ * @includes IAreaOptions Controls/_input/interface/IAreaOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -57,7 +58,7 @@
  * @includes IDateTimeMask Controls/_input/interface/IDateTimeMask
  * @includes IFieldData Controls/_input/interface/IFieldData
  * @includes ICallbackData Controls/_input/interface/ICallbackData
- *
+ * @includes IAreaOptions Controls/_input/interface/IAreaOptions
  * @public
  * @author Крайнов Д.О.
  */
