@@ -408,6 +408,7 @@ define(
             let actualTarget;
             menu._controller = {
                openMenu: () => Promise.resolve(),
+               loadDependencies: () => Promise.resolve(),
                setMenuPopupTarget: (target) => {actualTarget = target;}
             };
             menu._children = {
