@@ -43,6 +43,7 @@ export interface IFilterControllerOptions {
     excludedKeys?: TKeysSelection;
     source?: ICrud;
     selectionViewMode?: string;
+    historySaveCallback?: (historyData: Record<string, any>, filterButtonItems: IFilterItem[]) => void;
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -428,8 +429,9 @@ export default class FilterControllerClass {
                 historyData = this._updateMeta.item;
             } else {
                 historyData = this._getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
-                // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                this._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
+                if (this._options.historySaveCallback instanceof Function) {
+                    this._options.historySaveCallback(historyData, filterButtonItems);
+                }
             }
 
             return getHistorySource({historyId}).update(historyData, meta);

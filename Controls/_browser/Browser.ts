@@ -75,7 +75,10 @@ export default class Browser extends Control {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController(options);
+        this._filterController = new FilterController({
+            ...options,
+            historySaveCallback: this._historySaveCallback.bind(this)
+        });
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
@@ -138,6 +141,10 @@ export default class Browser extends Control {
 
             this._storeCallbacks = [sourceCallbackId, filterSourceCallbackId];
         }
+    }
+
+    protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+        this?._notify('historySave', [historyData, items]);
     }
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
@@ -465,8 +472,9 @@ export default class Browser extends Control {
 
     private _getFilterControllerOptions(options): IFilterControllerOptions {
        return {
-            ...options,
-            searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue
+           ...options,
+           searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue,
+           historySaveCallback: this._historySaveCallback.bind(this)
         };
     }
 
