@@ -98,7 +98,7 @@ export default interface IEditingEmptyTemplateOptions {
      */
     bottomSpacing?: string;
     /**
-     * @nameControls/_grid/interface/EditingEmptyTemplate#columns
+     * @name Controls/_grid/interface/EditingEmptyTemplate#columns
      * @cfg {Array.<Controls/_grid/interface/EditingEmptyTemplate/IEmptyColumnColumns.typedef>} Набор конфигураций колонок пустого списка.
      */
     columns?: IEmptyColumnColumns[];

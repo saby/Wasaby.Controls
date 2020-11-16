@@ -25,7 +25,7 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
 /**
  * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
  *
- * @class Controls/grid:ColumnTemplate
+ * @class Controls/_grid/interface/ColumnTemplate
  * @author Авраменко А.С.
  * 
  * @see Controls/_grid/interface/IGridControl/Column.typedef
@@ -60,7 +60,7 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
 
  export default interface IColumnTemplateOptions {
    /**
-    * @name Controls/grid:ColumnTemplate#contentTemplate
+    * @name Controls/_grid/interface/ColumnTemplate#contentTemplate
     * @cfg {String|Function} Пользовательский шаблон для отображения содержимого ячейки.
     * @see Controls/grid:IGridControl#showEditArrow
     * @remark
@@ -200,7 +200,7 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
    contentTemplate?: string;
 
     /**
-     * @name Controls/grid:ColumnTemplate#cursor
+     * @name Controls/_grid/interface/ColumnTemplate#cursor
      * @cfg {TCursor} Тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}, когда он находится в пределах ячейки.
      * @default pointer
      */
@@ -217,13 +217,13 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
      * @variant readonly
      */
     /**
-     * @name Controls/grid:ColumnTemplate#backgroundColorStyle
+     * @name Controls/_grid/interface/ColumnTemplate#backgroundColorStyle
      * @cfg {backgroundColorStyle} Стиль фона ячейки.
      */
     backgroundColorStyle?: string;
 
     /**
-     * @name Controls/grid:ColumnTemplate#tagStyle
+     * @name Controls/_grid/interface/ColumnTemplate#tagStyle
      * @cfg {String} Позволяет задать стиль для цветных индикаторов в ячейке.
      * @variant info
      * @variant danger
@@ -235,13 +235,13 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
 
     /**
-     * @name Controls/grid:ColumnTemplate#expanderTemplate
+     * @name Controls/_grid/interface/ColumnTemplate#expanderTemplate
      * @cfg {Function} Шаблон позволяет отобразить иконку для узла. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
      */
     expanderTemplate?: Function;
 
     /**
-     * @name Controls/grid:ColumnTemplate#markerClassName
+     * @name Controls/_grid/interface/ColumnTemplate#markerClassName
      * @cfg {TMarkerClassName} Размер маркера.
      * @default default
      */
