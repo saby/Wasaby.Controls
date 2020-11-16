@@ -9,7 +9,7 @@
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
- * @includes EditingTemplate Controls/list:EditingTemplate
+ * @includes EditingTemplate Controls/_list/interface/EditingTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
@@ -49,7 +49,7 @@
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
- * @includes EditingTemplate Controls/list:EditingTemplate
+ * @includes EditingTemplate Controls/_list/interface/EditingTemplate
  * @includes View Controls/_list/List
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover

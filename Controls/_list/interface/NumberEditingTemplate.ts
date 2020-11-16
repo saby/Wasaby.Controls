@@ -3,7 +3,7 @@
  * В режиме чтения выводит значение с помощью {@link Controls/decorator:Number}.
  * 
  * @class Controls/list:NumberEditingTemplate
- * @mixes Controls/list:EditingTemplate
+ * @mixes Controls/_list/interface/EditingTemplate
  * @author Авраменко А.С.
  * @see Controls/list:View
  * @example
