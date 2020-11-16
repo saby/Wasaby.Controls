@@ -543,8 +543,8 @@ class StickyHeaderController {
                             nextHeader = this._headers[nextHeaderId];
                             for (let j = 0; j <= i; j++) {
                                 prevHeader = this._headers[this._headersStack[position][j]];
-                                parentElementOfPrevHeader = prevHeader.inst._container;
-                                parentElementOfNextHeader = nextHeader.inst._container;
+                                parentElementOfPrevHeader = prevHeader.inst.getContainer().parentElement;
+                                parentElementOfNextHeader = nextHeader.inst.getContainer().parentElement;
                                 while (parentElementOfNextHeader !== parentElementOfPrevHeader && parentElementOfNextHeader !== document.body) {
                                     parentElementOfNextHeader = parentElementOfNextHeader.parentElement;
                                 }
