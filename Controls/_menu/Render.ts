@@ -154,7 +154,8 @@ class MenuRender extends Control<IMenuRenderOptions> {
     }
 
     private _isGroupNext(treeItem: TreeItem<Model>): boolean {
-        return this._getNextItem(treeItem)['[Controls/_display/GroupItem]'];
+        const nextItem = this._getNextItem(treeItem);
+        return nextItem && nextItem['[Controls/_display/GroupItem]'];
     }
 
     private _getNextItem(treeItem: TreeItem<Model>): TreeItem<Model> {
