@@ -697,6 +697,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       this._searchValue = value;
+      this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
@@ -704,9 +705,14 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
-      return this._getSearchResolver(options)
-          .then((searchResolver) => searchResolver.resolve(value))
-          .catch((error) => error);
+      if (this._searchResolverController) {
+         this._searchResolverController.resolve(value);
+         return Promise.resolve();
+      } else {
+         return this._getSearchResolver(options)
+             .then((searchResolver) => searchResolver.resolve(value))
+             .catch((error) => error);
+      }
    }
 
    private _getSearchLibrary(): Promise<typeof import('Controls/searchNew')> {

@@ -1,7 +1,7 @@
 <ws:if data="{{ isFullGridSupport }}">
     <div class="controls-GridView__footer">
         <ws:for data="column in columns">
-            <div class="{{ column.getWrapperClasses(backgroundStyle) }}"
+            <div class="{{ column.getWrapperClasses(_needBottomPadding, backgroundStyle) }}"
                  style="{{ column.getWrapperStyles(containerSize) }}">
                 <ws:partial if="{{ column.template }}"
                             template="{{ column.template }}"
@@ -14,7 +14,7 @@
 <ws:else>
     <tr class="controls-GridView__footer">
         <ws:for data="column in columns">
-            <td class="{{ column.getWrapperClasses(backgroundStyle) }}"
+            <td class="{{ column.getWrapperClasses(_needBottomPadding, backgroundStyle) }}"
                 style="{{ column.getWrapperStyles(containerSize) }}"
                 colspan="{{ column.colspan }}">
                 <ws:if data="{{ column.template }}">

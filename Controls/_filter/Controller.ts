@@ -3,6 +3,7 @@ import template = require('wml!Controls/_filter/Controller');
 import {RecordSet} from 'Types/Collection';
 import FilterController from 'Controls/_filter/ControllerClass';
 import {IPrefetchHistoryParams} from './IPrefetch';
+import {IFilterItem} from './View/interface/IFilterView';
 
 export interface IFilterHistoryData {
    items: object[];
@@ -37,7 +38,10 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
     },
 
     _beforeMount(options, context, receivedState): Promise<IFilterHistoryData|{}> {
-        this._filterController = new FilterController(options);
+        this._filterController = new FilterController({
+            ...options,
+            historySaveCallback: this._historySaveCallback.bind(this)
+        });
 
         if (receivedState) {
            this._filterController.setFilterItems(receivedState);
@@ -49,8 +53,12 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
         }
     },
 
+    _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+        this?._notify('historySave', [historyData, items]);
+    },
      _beforeUpdate(newOptions): void {
-        this._filterController.update(newOptions);
+        this._filterController.update({...newOptions,
+            historySaveCallback: this._historySaveCallback.bind(this)});
         this._updateFilterAndFilterItems();
      },
 
@@ -123,7 +131,7 @@ export = Container;
  * @extends Core/Control
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_filter/IPrefetch
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -137,7 +145,7 @@ export = Container;
 * @class Controls/_filter/Controller
 * @extends Core/Control
 * @mixes Controls/_interface/IFilterChanged
-* 
+*
 * @public
 * @author Герасимов А.М.
 */

@@ -9,10 +9,8 @@
                      <Controls.grid:View
                              source="{{_masterSource}}"
                              keyProperty="id"
-                             parentProperty="Раздел"
                              style="masterClassic"
                              backgroundStyle="master"
-                             nodeProperty="Раздел@"
                              markerVisibility="visible"
                              columns="{{_gridColumns}}"
                      >
