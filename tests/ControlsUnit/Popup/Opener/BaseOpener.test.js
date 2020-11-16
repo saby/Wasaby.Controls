@@ -129,7 +129,7 @@ define(
          assert.deepEqual(newConfig, popup.BaseOpener.util.getIndicatorConfig(indicatorId, cfg));
       });
 
-      /*it('showDialog remove old id', (done) => {
+      it('showDialog remove old id', (done) => {
          const baseOpenPopup = popup.BaseOpener._openPopup;
          popup.BaseOpener._openPopup = (cfg) => {
             popup.BaseOpener._openPopup = baseOpenPopup;
@@ -140,6 +140,6 @@ define(
             id: 'badId'
          };
          popup.BaseOpener.showDialog({}, config);
-      });*/
+      });
    }
 );
