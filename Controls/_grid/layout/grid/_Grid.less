@@ -381,10 +381,7 @@
    }
 
 }
-.controls-Grid__row-cell-background-editing_theme-@{themeName} .controls-Grid__row-cell__content_colspaned {
-   z-index: 1;
-   background-color: @item_editing_background-color_list;
-}
+
 .controls-Grid__row-cell-background-editing_theme-@{themeName} {
    background-color: @item_editing_background-color_list;
    > .controls-itemActionsV,
@@ -395,8 +392,10 @@
    }
 
    /** При редактировании по месту, переопределяем фон содержимого ячейки */
+   .controls-Grid__row-cell__content_colspaned,
    .controls-Grid__row-cell__content {
       background-color: @item_editing_background-color_list;
+      z-index: 1;
    }
 }
 .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {
