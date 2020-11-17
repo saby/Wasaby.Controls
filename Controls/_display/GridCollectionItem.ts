@@ -120,7 +120,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_additional-with-main';
         }
 
-        if ((stickyProperty === ladderProperty || !stickyProperty) && !ladder || !ladder[ladderProperty] || ladder[ladderProperty].ladderLength >= 1) {
+        if ((stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1 || !ladder[ladderProperty] || !ladder) {
 
         } else {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
