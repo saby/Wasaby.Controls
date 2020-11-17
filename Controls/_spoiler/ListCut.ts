@@ -55,10 +55,6 @@ export default class ListCut extends Control<IListCutOptions> implements IExpand
       }
    }
 
-   protected _beforeMount(options?: IListCutOptions): void {
-      this._iconSize = { iconSize: options.iconSize === 'default' ? 'm' : options.iconSize };
-   }
-
    protected _clickHandler(): void {
       const expanded = !this._expanded;
       if (this._options.readOnly) {
@@ -68,5 +64,11 @@ export default class ListCut extends Control<IListCutOptions> implements IExpand
       }
 
       this._notify('expandedChanged', [expanded]);
-  }
+   }
+
+   static getDefaultOptions(): object {
+      return {
+         iconSize: 'm'
+      };
+   }
 }
