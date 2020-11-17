@@ -333,17 +333,28 @@ export default class Lookup extends BaseLookupInput {
       // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
       const fieldWrapperMinHeight = this._getFieldWrapperMinHeight();
       const fieldWrapperWidth = this._getFieldWrapperWidth();
+      const fieldWrapperStyles = this._getFieldWrapperComputedStyle();
+      const fieldWrapperWidthWithPaddings =
+          fieldWrapperWidth +
+          parseInt(fieldWrapperStyles.paddingLeft, 10) +
+          parseInt(fieldWrapperStyles.paddingRight, 10) +
+          parseInt(fieldWrapperStyles.borderLeftWidth, 10) +
+          parseInt(fieldWrapperStyles.borderRightWidth, 10);
       let additionalWidth = rightFieldWrapperWidth;
 
       if (!readOnly && (multiSelect || comment)) {
          additionalWidth += this._getInputMinWidth(
-             this._getFieldWrapper().offsetWidth,
+             fieldWrapperWidthWithPaddings,
              rightFieldWrapperWidth,
              fieldWrapperMinHeight
          );
       }
 
       return fieldWrapperWidth - additionalWidth;
+   }
+
+   private _getFieldWrapperComputedStyle(): CSSStyleDeclaration {
+      return getComputedStyle(this._getFieldWrapper());
    }
 
    private _getInputMinWidth(
