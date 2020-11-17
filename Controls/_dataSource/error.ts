@@ -10,8 +10,8 @@
  * @includes Handler Controls/_dataSource/_error/Handler
  * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
  * @includes IContainer Controls/_dataSource/_error/IContainer
- * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
- * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
+ * @includes IContainerConfig Controls/_dataSource/_error/IContainerConfig
+ * @includes IContainerConstructor Controls/_dataSource/_error/IContainerConstructor
  * @includes process Controls/_dataSource/_error/process
  * @public
  * @author Северьянов А.А.

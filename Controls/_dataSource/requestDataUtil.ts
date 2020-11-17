@@ -1,8 +1,10 @@
 /**
  * Модуль возвращает метод, с помощью которого можно запросить данные с учетом фильтрации и сортировки.
+ * @remark
  * <h2>Аргументы функции</h2>
  *
  * Функция на вход приниает объект с полями:
+ * 
  * * source: SbisService - источник данных;
  * * filterButtonSource: Array - элементы {@link Controls/filter:Controller#filterButtonSource FilterButton};
  * * fastFilterSource: Array - элементы {@link Controls/filter:Controller#fastFilterSource FastFilter};
@@ -26,8 +28,11 @@ import {SbisService} from 'Types/source';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
+import {IFilterItem} from 'Controls/filter';
 
-type HistoryItems = object[];
+interface IHistoryItems {
+   items: IFilterItem[];
+}
 type SortingObject = object[];
 type FilterObject = Record<string, unknown>;
 
@@ -36,13 +41,13 @@ interface ISorting {
 }
 interface IFilter {
    filter: FilterObject;
-   historyItems: HistoryItems;
+   historyItems: IHistoryItems;
 }
 export interface IRequestDataResult {
    data: RecordSet;
    filter?: FilterObject;
    sorting?: SortingObject;
-   historyItems?: HistoryItems;
+   historyItems?: IHistoryItems;
    collapsedGroups?: string[];
 }
 
@@ -55,7 +60,7 @@ export interface ISourceConfig {
    groupHistoryId?: string;
    filter?: FilterObject;
    sorting?: SortingObject;
-   historyItems?: HistoryItems;
+   historyItems?: IHistoryItems;
    propStorageId?: string;
 }
 

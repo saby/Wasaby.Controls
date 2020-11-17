@@ -4,6 +4,8 @@ import {tmplNotify} from 'Controls/eventUtils';
 import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/popupConfirmation';
 import rk = require('i18n!Controls');
 
+
+export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {}
 /**
  * Базовый шаблон футера окна диалога.
  *
@@ -14,13 +16,11 @@ import rk = require('i18n!Controls');
  * @class Controls/_popupConfirmation/Footer
  * @implements Controls/_popup/interface/IConfirmationFooter
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
-
-export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {}
 class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;

@@ -16,7 +16,7 @@ import {object} from 'Types/util';
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable
     * @mixes Controls/_interface/IItemTemplate
-    * @control
+    * 
     * @public
     * @author Герасимов А.М.
     */
@@ -27,13 +27,31 @@ import {object} from 'Types/util';
     * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
     * @extends Core/Control
-    * @control
+    * 
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable
     * @public
     * @author Герасимов А.М.
     */
 
+   var FilterSelect = Control.extend({
+      _template: template,
+      _itemTemplate: itemTemplate,
+
+      _clickHandler: function(event, item) {
+         const textValue = object.getPropertyValue(item, this._options.textValueProperty) || object.getPropertyValue(item, this._options.displayProperty);
+         this._notify('textValueChanged', [textValue]);
+         this._notify('selectedKeysChanged', [[object.getPropertyValue(item, this._options.keyProperty)]]);
+      }
+
+   });
+
+   FilterSelect.getDefaultOptions = function() {
+      return {
+         displayProperty: 'title',
+         textValueProperty: 'textValue'
+      };
+   };
    /**
     * @name Controls/_filterPopup/Panel/Select#items
     * @cfg {Array} Набор данных для отображения.
@@ -73,40 +91,19 @@ import {object} from 'Types/util';
     * Используется, если фильтр имеет разное текстовое представление для блоков "Отбираются" и "Еще можно отобрать"
     * @default textValue
     * @example
-    * WML:
-    * <pre>
-    *    <Controls.filterPopup:Select items="{{_items}}" textValueProperty="text" keyProperty="id"/>
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.filterPopup:Select items="{{_items}}" textValueProperty="text" keyProperty="id"/>
     * </pre>
-    *
-    * JS:
-    * <pre>
-    *     _beforeMount() {
-    *         this._items = [
-    *             {id: 1, title: 'For sale', text: 'For sale'},
-    *             {id: 2, title: 'No', text: 'Not for sale'}
-    *         ];
-    *     }
+    * <pre class="brush: js">
+    * // JavaScript
+    * _beforeMount() {
+    *    this._items = [
+    *       {id: 1, title: 'For sale', text: 'For sale'},
+    *       {id: 2, title: 'No', text: 'Not for sale'}
+    *    ];
+    * }
     * </pre>
     */
-
-   var FilterSelect = Control.extend({
-      _template: template,
-      _itemTemplate: itemTemplate,
-
-      _clickHandler: function(event, item) {
-         const textValue = object.getPropertyValue(item, this._options.textValueProperty) || object.getPropertyValue(item, this._options.displayProperty);
-         this._notify('textValueChanged', [textValue]);
-         this._notify('selectedKeysChanged', [[object.getPropertyValue(item, this._options.keyProperty)]]);
-      }
-
-   });
-
-   FilterSelect.getDefaultOptions = function() {
-      return {
-         displayProperty: 'title',
-         textValueProperty: 'textValue'
-      };
-   };
-
    export = FilterSelect;
 

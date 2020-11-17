@@ -2,7 +2,7 @@
     <ws:partial template="{{content.resolvedTemplate}}"
                 attr:class="js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
                            js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
-                           js-controls-ListView__checkbox controls-Checkbox__iconWrapper_inList_theme-{{_options.theme}}"
+                           controls-Checkbox__iconWrapper_inList_theme-{{_options.theme}}"
                 triState="{{triState}}"
                 readOnly="{{checkboxReadOnly || false}}"
                 value="{{multiSelectStatus}}"

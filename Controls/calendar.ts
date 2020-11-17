@@ -5,15 +5,15 @@
  * @includes MonthList Controls/_calendar/MonthList
  * @includes MonthSlider Controls/_calendar/MonthSlider
  * @includes MonthModel Controls/_calendar/Month/Model
- * @includes MonthViewDayTemplate Controls/_calendar/interfaces/MonthViewDayTemplate
+ * @includes MonthViewDayTemplate Controls/calendar:MonthViewDayTemplate
  * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
  * @includes MonthView Controls/_calendar/MonthView
  * @includes IMonth Controls/_calendar/interfaces/IMonth
  * @includes IMonthList Controls/_calendar/interfaces/IMonthList
  * @includes IMonthListSource Controls/_calendar/interfaces/IMonthListSource
  * @includes IMonthListVirtualPageSize Controls/_calendar/interfaces/IMonthListVirtualPageSize
- * @includes MonthListMonthTemplate Controls/_calendar/interfaces/MonthListMonthTemplate
- * @includes MonthListYearTemplate Controls/_calendar/interfaces/MonthListYearTemplate
+ * @includes MonthListMonthTemplate Controls/calendar:MonthListMonthTemplate
+ * @includes MonthListYearTemplate Controls/calendar:MonthListYearTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -25,15 +25,15 @@
  * @includes MonthList Controls/_calendar/MonthList
  * @includes MonthSlider Controls/_calendar/MonthSlider
  * @includes MonthModel Controls/_calendar/Month/Model
- * @includes MonthViewDayTemplate Controls/_calendar/interfaces/MonthViewDayTemplate
+ * @includes MonthViewDayTemplate Controls/calendar:MonthViewDayTemplate
  * @includes MonthViewModel Controls/_calendar/MonthView/MonthViewModel
  * @includes MonthView Controls/_calendar/MonthView
  * @includes IMonth Controls/_calendar/interfaces/IMonth
  * @includes IMonthList Controls/_calendar/interfaces/IMonthList
  * @includes IMonthListSource Controls/_calendar/interfaces/IMonthListSource
  * @includes IMonthListVirtualPageSize Controls/_calendar/interfaces/IMonthListVirtualPageSize
- * @includes MonthListMonthTemplate Controls/_calendar/interfaces/MonthListMonthTemplate
- * @includes MonthListYearTemplate Controls/_calendar/interfaces/MonthListYearTemplate
+ * @includes MonthListMonthTemplate Controls/calendar:MonthListMonthTemplate
+ * @includes MonthListYearTemplate Controls/calendar:MonthListYearTemplate
  * @public
  * @author Крайнов Д.О.
  */

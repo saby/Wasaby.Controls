@@ -72,10 +72,9 @@ var _private = {
  * @class Controls/_list/Remover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IRemovable
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /*
@@ -85,10 +84,9 @@ var _private = {
  * @class Controls/_list/Remover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IRemovable
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 var Remover = BaseAction.extend({

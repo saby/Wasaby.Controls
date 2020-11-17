@@ -13,6 +13,14 @@ import * as CounterTemplate from 'wml!Controls/_lookup/SelectedCollection/Counte
 import {default as BaseLookup} from './BaseLookup';
 import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTemplate';
 
+const MAX_VISIBLE_ITEMS = 20;
+let SHOW_SELECTOR_WIDTH = 0;
+let CLEAR_RECORDS_WIDTH = 0;
+let LEFT_OFFSET_COUNTER = 0;
+
+export interface ILookupOptions extends ILookupInputOptions {
+   multiLine?: boolean;
+}
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
  * Выбранные значения отображаются в виде текста с кнопкой удаления внутри поля ввода.
@@ -44,11 +52,11 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
@@ -81,153 +89,12 @@ import * as itemTemplate from 'wml!Controls/_lookup/SelectedCollection/ItemTempl
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
- * @control
+ * @mixes Controls/_input/interface/IValueOptions
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
-
-/**
- * @name Controls/_lookup/Lookup#multiLine
- * @cfg {Boolean} Определяет, включать ли режим автовысоты при выборе записей,
- * когда включён этот режим, поле связи может отображаться в несколько строк.
- * @default false
- * @remark
- * Когда поле связи находится в многострочном режиме, то высота определяется автоматически по выбранным записям. Количество отображаемых записей устанавливается опцией {@link Controls/interface/ISelectedCollection#maxVisibleItems}.
- * Актуально только при multiSelect: true.
- *
- * @example
- * WML:
- * <pre>
- *    <Controls.lookup:Input
- *       source="{{_source}}"
- *       keyProperty="id"
- *       searchParam="title"
- *       multiSelect="{{true}}"
- *       multiLine="{{true}}">
- *    </Controls.lookup:Input>
- * </pre>
- *
- * @see Controls/interface/ISelectedCollection#maxVisibleItems
- * @see Controls/interface/ISelectedCollection#multiSelect
- */
-/*
- * @name Controls/_lookup/Lookup#multiLine
- * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
- * @default false
- * @remark
- *
- When the communication field is in multi-line mode, the height is automatically determined by the selected records. The number of records displayed is set by the {@link Controls/interface/ISelectedCollection#maxVisibleItems} option.
- * Only relevant with multiSelect: true.
- *
- * @example
- * WML:
- * <pre>
- *    <Controls.lookup:Input
- *       source="{{_source}}"
- *       keyProperty="id"
- *       searchParam="title"
- *       multiSelect="{{true}}"
- *       multiLine="{{true}}">
- *    </Controls.lookup:Input>
- * </pre>
- *
- * @see Controls/interface/ISelectedCollection#maxVisibleItems
- * @see Controls/interface/ISelectedCollection#multiSelect
- */
-
-/**
- * @name Controls/_lookup/Lookup#comment
- * @cfg {String} Текст, который отображается в {@link placeholder подсказке} поля ввода, если в поле связи выбрано значение.
- * @remark
- * Если указана опция comment, то для поля связи будет включён режим,
- * в котором после выбора записи, поле ввода будет продолжать отображаться.
- * Актуально только в режиме единичного выбора.
- * Введённый комментарий можно получить из опции value поля связи.
- * @example
- * WML:
- * <pre>
- *     <Controls.lookup:Input
- *             comment='Введите комментарий'
- *             displayProperty='name'
- *             keyProperty='id'
- *             multiSelect='{{false}}'
- *             source='{{_source}}'
- *             bind:value='_value'
- *             bind:selectedKeys='_selectedKeys'/>
- * </pre>
- *
- * JS:
- * <pre>
- *     import {Memory} from 'Types/source';
- *
- *     protected _beforeMount() {
- *        this._source = new Memory({
- *            keyProperty: 'id'
- *            data: [
- *               { id: 1, name: 'Sasha' },
- *               { id: 2, name: 'Mark' },
- *               { id: 3, name: 'Jasmin' },
- *               { id: 4, name: 'Doggy' }
- *            ]
- *        });
- *        this._selectedKeys = [];
- *     }
- * </pre>
- * @link placeholder
- */
-/*
- * @name Controls/_lookup/Lookup#comment
- * @cfg {String} The text that is displayed in the empty comment box.
- * @remark
- * Actual only in the mode of single choice.
- * If the value is not specified, the comment field will not be displayed.
- */
-
-/**
- * @name Controls/_lookup/Lookup#suggestSource
- * @cfg {Types/source:ICrudPlus} Устанавливает источник для автодополнения.
- * @remark
- * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#source}.
- *
- * @example
- * WML:
- * <pre>
- *    <Controls.lookup:Input
- *       suggestSource="{{_source}}"
- *       keyProperty="id"
- *       searchParam="title"
- *       multiSelect="{{true}}">
- *    </Controls.lookup:Input>
- * </pre>
- */
-
-/**
- * @name Controls/_lookup/Lookup#items
- * @cfg {Types/collection:RecordSet} Устанавливает значения без использования источника.
- *
- * @example
- * WML:
- * <pre>
- *    <Controls.lookup:Input
- *       items="{{_items}}"
- *       keyProperty="id"
- *       searchParam="title"
- *       multiSelect="{{true}}">
- *    </Controls.lookup:Input>
- * </pre>
- */
-
-const MAX_VISIBLE_ITEMS = 20;
-let SHOW_SELECTOR_WIDTH = 0;
-let CLEAR_RECORDS_WIDTH = 0;
-let LEFT_OFFSET_COUNTER = 0;
-
-export interface ILookupOptions extends ILookupInputOptions {
-   multiLine?: boolean;
-}
-
 export default class Lookup extends BaseLookupInput {
    protected _listOfDependentOptions: string[] = ['multiSelect', 'multiLine', 'displayProperty', 'maxVisibleItems', 'readOnly', 'comment'];
    protected _rootContainerClasses: string = 'controls-Lookup';
@@ -466,17 +333,28 @@ export default class Lookup extends BaseLookupInput {
       // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
       const fieldWrapperMinHeight = this._getFieldWrapperMinHeight();
       const fieldWrapperWidth = this._getFieldWrapperWidth();
+      const fieldWrapperStyles = this._getFieldWrapperComputedStyle();
+      const fieldWrapperWidthWithPaddings =
+          fieldWrapperWidth +
+          parseInt(fieldWrapperStyles.paddingLeft, 10) +
+          parseInt(fieldWrapperStyles.paddingRight, 10) +
+          parseInt(fieldWrapperStyles.borderLeftWidth, 10) +
+          parseInt(fieldWrapperStyles.borderRightWidth, 10);
       let additionalWidth = rightFieldWrapperWidth;
 
       if (!readOnly && (multiSelect || comment)) {
          additionalWidth += this._getInputMinWidth(
-             this._getFieldWrapper().offsetWidth,
+             fieldWrapperWidthWithPaddings,
              rightFieldWrapperWidth,
              fieldWrapperMinHeight
          );
       }
 
       return fieldWrapperWidth - additionalWidth;
+   }
+
+   private _getFieldWrapperComputedStyle(): CSSStyleDeclaration {
+      return getComputedStyle(this._getFieldWrapper());
    }
 
    private _getInputMinWidth(
@@ -532,3 +410,152 @@ export default class Lookup extends BaseLookupInput {
       };
    }
 }
+/**
+ * @name Controls/_lookup/Lookup#multiLine
+ * @cfg {Boolean} Определяет, включать ли режим автовысоты при выборе записей,
+ * когда включён этот режим, поле связи может отображаться в несколько строк.
+ * @default false
+ * @remark
+ * Когда поле связи находится в многострочном режиме, то высота определяется автоматически по выбранным записям. Количество отображаемых записей устанавливается опцией {@link Controls/interface/ISelectedCollection#maxVisibleItems}.
+ * Актуально только при multiSelect: true.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}"
+ *       multiLine="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ *
+ * @see Controls/interface/ISelectedCollection#maxVisibleItems
+ * @see Controls/interface/ISelectedCollection#multiSelect
+ */
+/*
+ * @name Controls/_lookup/Lookup#multiLine
+ * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
+ * @default false
+ * @remark
+ * When the communication field is in multi-line mode, the height is automatically determined by the selected records. The number of records displayed is set by the {@link Controls/interface/ISelectedCollection#maxVisibleItems} option.
+ * Only relevant with multiSelect: true.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       source="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}"
+ *       multiLine="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ *
+ * @see Controls/interface/ISelectedCollection#maxVisibleItems
+ * @see Controls/interface/ISelectedCollection#multiSelect
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#comment
+ * @cfg {String} Текст, который отображается в {@link placeholder подсказке} поля ввода, если в поле связи выбрано значение.
+ * @remark
+ * Если указана опция comment, то для поля связи будет включён режим,
+ * в котором после выбора записи, поле ввода будет продолжать отображаться.
+ * Актуально только в режиме единичного выбора.
+ * Введённый комментарий можно получить из опции value поля связи.
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.lookup:Input
+ *             comment='Введите комментарий'
+ *             displayProperty='name'
+ *             keyProperty='id'
+ *             multiSelect='{{false}}'
+ *             source='{{_source}}'
+ *             bind:value='_value'
+ *             bind:selectedKeys='_selectedKeys'/>
+ * </pre>
+ *
+ * JS:
+ * <pre>
+ *     import {Memory} from 'Types/source';
+ *
+ *     protected _beforeMount() {
+ *        this._source = new Memory({
+ *            keyProperty: 'id'
+ *            data: [
+ *               { id: 1, name: 'Sasha' },
+ *               { id: 2, name: 'Mark' },
+ *               { id: 3, name: 'Jasmin' },
+ *               { id: 4, name: 'Doggy' }
+ *            ]
+ *        });
+ *        this._selectedKeys = [];
+ *     }
+ * </pre>
+ * @link placeholder
+ */
+/*
+ * @name Controls/_lookup/Lookup#comment
+ * @cfg {String} The text that is displayed in the empty comment box.
+ * @remark
+ * Actual only in the mode of single choice.
+ * If the value is not specified, the comment field will not be displayed.
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#suggestSource
+ * @cfg {Types/source:ICrudPlus} Устанавливает источник для автодополнения.
+ * @remark
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#source}.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       suggestSource="{{_source}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ * @see suggestKeyProperty
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#suggestKeyProperty
+ * @cfg {String} Устанавливает поле с первичным ключем для автодополнения.
+ * @remark
+ * Если опция не указана, то вместо нее автоматически передается значение опции {@link Controls/_lookup/Lookup#keyProperty}.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       suggestSource="{{_source}}"
+ *       suggestKeyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ * @link suggestSource
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#items
+ * @cfg {Types/collection:RecordSet} Устанавливает значения без использования источника.
+ *
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.lookup:Input
+ *       items="{{_items}}"
+ *       keyProperty="id"
+ *       searchParam="title"
+ *       multiSelect="{{true}}">
+ *    </Controls.lookup:Input>
+ * </pre>
+ */

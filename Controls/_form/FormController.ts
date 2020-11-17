@@ -78,86 +78,39 @@ export const enum INITIALIZING_WAY {
 
 /**
  * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
- * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
+ * В частном случае контрол применяется для создания <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
  * @remark
  * Для того, чтобы дочерние контролы могли отреагировать на начало сохранения, либо уничтожения контрола, им необходимо зарегистрировать соответствующие обработчики.
  * Обработчики регистрируются через событие registerFormOperation, в аргументах которого ожидается объект с полями
- * <ol>
- *     <li>save:Function - вызов происходит перед началом сохранения</li>
- *     <li>cancel:Function - вызов происходит перед показом вопроса о сохранении</li>
- *     <li>isDestroyed:Function - функция, которая сообщает о том, не разрушился ли контрол, зарегистрировавший операцию.
- *     В случае, если он будет разрушен - операция автоматически удалится из списка зарегистрированных</li>
- * </ol>
- * @category FormController
+ *
+ * * save:Function - вызов происходит перед началом сохранения
+ * * cancel:Function - вызов происходит перед показом вопроса о сохранении
+ * * isDestroyed:Function - функция, которая сообщает о том, не разрушился ли контрол, зарегистрировавший операцию.
+ * В случае, если он будет разрушен - операция автоматически удалится из списка зарегистрированных
+ *
  * @class Controls/_form/FormController
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFormController
+ * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
- * @demo Controls-demo/Popup/Edit/Opener
- * @control
  * @public
  * @author Красильников А.С.
+ * 
+ * @demo Controls-demo/Popup/Edit/Opener
  */
 
 /*
  * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
- * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
- * @category FormController
+ * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
  * @class Controls/_form/FormController
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/IFormController
+ * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
  * @demo Controls-demo/Popup/Edit/Opener
- * @control
+ *
  * @public
  * @author Красильников А.С.
- */
-
-/**
- * Объект с состоянием, полученным при серверном рендеринге.
- * @typedef {Object}
- * @name ReceivedState
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- */
-
-/*
- * Object with state from server side rendering
- * @typedef {Object}
- * @name ReceivedState
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- */
-
-/**
- * @typedef {Object}
- * @name CrudResult
- * @property {*} [data]
- * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
- * @property {Controls/dataSource:error.ViewConfig} [error]
- */
-
-/**
- * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
- * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
- * @param {CrudResult} crudResult
- * @return {ReceivedState}
- */
-
-
-
-/**
- * Получение результата из обертки <CrudResult>
- * @param {CrudResult} [crudResult]
- * @return {Promise}
- */
-
-/*
- * getting result from <CrudResult> wrapper
- * @param {CrudResult} [crudResult]
- * @return {Promise}
  */
 
 class FormController extends Control<IFormController, IReceivedState> {
@@ -246,7 +199,8 @@ class FormController extends Control<IFormController, IReceivedState> {
             !newOptions.record && this._createMetaDataOnUpdate !== createMetaData;
 
         if (newOptions.record && this._record !== newOptions.record) {
-            if (!needCreate && !needRead) {
+            const isEqualId = this._isEqualId(this._record, newOptions.record);
+            if (!needCreate && !needRead && !isEqualId) {
                 this._confirmRecordChangeHandler(() => {
                     this._setRecord(newOptions.record);
                 });
@@ -279,11 +233,22 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this._createMetaDataOnUpdate = null;
                 });
             });
-        } else {
+        } else if (!this._isConfirmShowed) {
             if (newOptions.hasOwnProperty('isNewRecord')) {
                 this._isNewRecord = newOptions.isNewRecord;
             }
         }
+    }
+
+    private _isEqualId(oldRecord: Model, newRecord: Model): boolean {
+        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
+        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
+        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
+            return false;
+        }
+        const oldId: string = this._getRecordId(oldRecord) as string;
+        const newId: string = this._getRecordId(newRecord) as string;
+        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
     }
 
     private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
@@ -319,6 +284,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this.update().then(() => {
                         this._isConfirmShowed = false;
                         defaultAnswerCallback();
+                    }, () => {
+                        // Промис с необработанным исключением кидает ошибку в консоль. Ставлю заглушку
                     });
                 } else {
                     this._isConfirmShowed = false;
@@ -471,12 +438,15 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    private _getRecordId(): number | string {
-        if (!this._record.getId && !this._options.keyProperty) {
+    private _getRecordId(record?: Model): number | string {
+        if (!record) {
+            record = this._record;
+        }
+        if (!record.getId && !this._options.keyProperty) {
             Logger.error('FormController: Рекорд не является моделью и не задана опция keyProperty, указывающая на ключевое поле рекорда', this);
             return null;
         }
-        return this._options.keyProperty ? this._record.get(this._options.keyProperty) : this._record.getId();
+        return this._options.keyProperty ? record.get(this._options.keyProperty) : record.getId();
     }
 
     private _tryDeleteNewRecord(): Promise<undefined> {
@@ -757,7 +727,10 @@ class FormController extends Control<IFormController, IReceivedState> {
             theme: this._options.theme,
             mode: mode || dataSourceError.Mode.include
         }).then((errorConfig: dataSourceError.ViewConfig) => {
-            this._showError(errorConfig);
+            if (errorConfig) {
+                this._showError(errorConfig);
+            }
+
             return {
                 error,
                 errorConfig
@@ -872,4 +845,49 @@ class FormController extends Control<IFormController, IReceivedState> {
         };
     }
 }
+
+/**
+ * Объект с состоянием, полученным при серверном рендеринге.
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
+
+/*
+ * Object with state from server side rendering
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
+
+/**
+ * @typedef {Object}
+ * @name CrudResult
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ * @property {Controls/dataSource:error.ViewConfig} [error]
+ */
+
+/**
+ * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
+ * @param {CrudResult} crudResult
+ * @return {ReceivedState}
+ */
+
+
+
+/**
+ * Получение результата из обертки <CrudResult>
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+
+/*
+ * getting result from <CrudResult> wrapper
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
 export default FormController;

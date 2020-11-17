@@ -382,6 +382,20 @@ define(
             classList = DropdownViewModel._private.getClassList(options, itemData, hasHierarchy);
             assert.equal(classList, expectedClassList);
 
+            options.hasApplyButton = true;
+            itemData = { item: { get: () => false } };
+            expectedClassList = 'controls-DropdownList__row_state_default ' +
+               'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_multiSelect';
+            classList = DropdownViewModel._private.getClassList(options, itemData, false);
+            assert.equal(classList, expectedClassList);
+
+            options.hasApplyButton = true;
+            itemData = { item: { get: () => false }, index: 1 };
+            expectedClassList = 'controls-DropdownList__row_state_default ' +
+               'controls-DropdownList__item-leftPadding_s controls-DropdownList__item-rightPadding_default';
+            classList = DropdownViewModel._private.getClassList(options, itemData, false);
+            assert.equal(classList, expectedClassList);
+
             options.hasApplyButton = false;
             itemData = { item: { get: () => false } };
             hasHierarchy = false;

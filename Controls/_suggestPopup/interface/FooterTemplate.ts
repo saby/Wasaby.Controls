@@ -23,38 +23,36 @@
  * @author Герасимов А.М.
  * @public
  */
-
-/**
- * @name Controls/suggestPopup:FooterTemplate#showMoreButtonTemplate
- * @cfg {Function|String} Шаблон кнопки "Ещё".
- * @example 
- * <pre class="brush: html">
- * <ws:partial template="Controls/suggestPopup:FooterTemplate">
- *    <ws:showMoreButtonTemplate>
- *       <span on:click="_showAllClick()">
- *          <span>Моя кнопка</span>
- *       </span>
- *    </ws:showMoreButtonTemplate>
- * </ws:partial>
- * </pre>
- */
-
-/**
- * @name Controls/suggestPopup:FooterTemplate#showSelectorButtonTemplate
- * @cfg {Function|String} Шаблон кнопки "Показать всё".
- * @example 
- * <pre class="brush: html">
- * <ws:partial template="Controls/suggestPopup:FooterTemplate">
- *    <ws:showSelectorButtonTemplate>
- *       <span on:click="_showAllClick()">
- *          <span>Моя кнопка</span>
- *       </span>
- *    </ws:showSelectorButtonTemplate>
- * </ws:partial>
- * </pre>
- */
 export default interface IFooterTemplateOptions {
+    /**
+     * @name Controls/suggestPopup:FooterTemplate#showMoreButtonTemplate
+     * @cfg {Function|String} Шаблон кнопки "Ещё".
+     * @example 
+     * <pre class="brush: html">
+     * <ws:partial template="Controls/suggestPopup:FooterTemplate">
+     *    <ws:showMoreButtonTemplate>
+     *       <span on:click="_showAllClick()">
+     *          <span>Моя кнопка</span>
+     *       </span>
+     *    </ws:showMoreButtonTemplate>
+     * </ws:partial>
+     * </pre>
+     */
     showMoreButtonTemplate?: string;
+    /**
+     * @name Controls/suggestPopup:FooterTemplate#showSelectorButtonTemplate
+     * @cfg {Function|String} Шаблон кнопки "Показать всё".
+     * @example 
+     * <pre class="brush: html">
+     * <ws:partial template="Controls/suggestPopup:FooterTemplate">
+     *    <ws:showSelectorButtonTemplate>
+     *       <span on:click="_showAllClick()">
+     *          <span>Моя кнопка</span>
+     *       </span>
+     *    </ws:showSelectorButtonTemplate>
+     * </ws:partial>
+     * </pre>
+     */
     showSelectorButtonTemplate?: string;
  }
  

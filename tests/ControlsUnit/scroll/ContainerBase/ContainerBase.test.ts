@@ -8,6 +8,8 @@ describe('Controls/scroll:ContainerBase', () => {
       scrollMode: SCROLL_MODE.VERTICAL
    };
 
+   const contains: Function = () => false;
+
    describe('_beforeMount', () => {
       it('should create models', () => {
          const control: ContainerBase = new ContainerBase(options);
@@ -20,14 +22,15 @@ describe('Controls/scroll:ContainerBase', () => {
    describe('_afterMount', () => {
       it('should initialize models', () => {
          const control: ContainerBase = new ContainerBase(options);
-         const children: string[] = [ 'children1', 'children2' ];
+         const children = [ { classList: {contains} }, { classList: {contains} } ];
          control._beforeMount(options);
 
          sinon.stub(control._resizeObserver, 'observe');
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children
+               children: children,
+               getBoundingClientRect: () => {}
             }
          };
          control._afterMount();
@@ -107,13 +110,14 @@ describe('Controls/scroll:ContainerBase', () => {
       });
 
       it('should update observed containers', () => {
-         const children: string[] = ['children1', 'children2'];
+         const children = [ { classList: {contains} }, { classList: {contains} } ];
          control._beforeMount(options);
          control._resizeObserverSupported = true;
 
          sinon.stub(control._resizeObserver, 'observe');
+         sinon.stub(control._resizeObserver, 'unobserve');
          control._children.content.children = children;
-         control._observedElements = ['children1', 'children3'];
+         control._observedElements = [children[0], 'children3'];
 
          control._afterUpdate();
 
@@ -163,6 +167,24 @@ describe('Controls/scroll:ContainerBase', () => {
          assert.strictEqual(control._state.scrollHeight, content.scrollHeight);
          assert.strictEqual(control._state.clientWidth, content.clientWidth);
          assert.strictEqual(control._state.scrollWidth, content.scrollWidth);
+      });
+   });
+
+   describe('_resizeObserverCallback', () => {
+      it('should\'t update state if container is invisible', () => {
+         const control: ContainerBase = new ContainerBase(options);
+         control._beforeMount(options);
+
+         control._container = {
+            closest: sinon.stub().returns(true)
+         }
+
+         sinon.stub(control, '_updateStateAndGenerateEvents');
+
+         control._resizeObserverCallback();
+
+         sinon.assert.notCalled(control._updateStateAndGenerateEvents);
+         sinon.restore();
       });
    });
 
@@ -399,6 +421,32 @@ describe('Controls/scroll:ContainerBase', () => {
          };
          assert.isTrue(inst._updateState({ scrollTop: 1 }));
          sandBox.restore();
+      });
+   });
+
+   describe('_onRegisterNewListScrollComponent', () => {
+      it('should propagate event to registered component', () => {
+         const registeredControl: string = 'registeredControl';
+         const control: ContainerBase = new ContainerBase(options);
+         control._beforeMount(options);
+         control._children = {
+            content: {
+               scrollTop: 0,
+               scrollLeft: 0,
+               clientHeight: 100,
+               scrollHeight: 100,
+               clientWidth: 100,
+               scrollWidth: 100,
+               getBoundingClientRect: sinon.fake()
+            }
+         };
+
+         sinon.stub(control._registrars.listScroll, 'startOnceTarget');
+         assert.isFalse(control._isStateInitialized);
+         control._onRegisterNewListScrollComponent(registeredControl);
+         sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'cantScroll');
+         sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'viewportResize');
+         sinon.restore();
       });
    });
 

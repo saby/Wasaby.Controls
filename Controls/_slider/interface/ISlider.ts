@@ -5,16 +5,18 @@ export interface ISliderOptions {
     precision: number;
     tooltipFormatter?: Function;
     size?: string;
+    direction?: string;
     minValue: number;
     maxValue: number;
     scaleLabelFormatter?: Function;
+    viewMode?: string;
 }
 /**
  * Интерфейс для контрола Слайдер.
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Бондарь А.В.
+ * @author Колесова П.C.
  */
 
 /*
@@ -22,7 +24,7 @@ export interface ISliderOptions {
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Бондарь А.В.
+ * @author Колесова П.C.
  */
 
 export interface ISlider {

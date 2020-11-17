@@ -4,18 +4,16 @@ import {DateRangeModel, rangeSelection as rangeSelectionUtils} from 'Controls/da
 import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/YearsRange');
 
+const BUTTONS_COUNT = 6;
 /**
  * Component that allows you to select periods that are multiples of years.
  *
  * @class Controls/_datePopup/YearsRange
  * @extends Core/Control
- * @control
+ * 
  * @author Красильников А.С.
  * @private
  */
-
-const BUTTONS_COUNT = 6;
-
 var Component = BaseControl.extend({
     _template: componentTmpl,
 

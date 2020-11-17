@@ -80,7 +80,7 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
@@ -97,98 +97,11 @@ var _private = {
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
  *
- */
-
-/**
- * @name Controls/_operationsPanel/OperationsPanel#rightTemplate
- * @cfg {Function} Шаблон, отображаемый в правой части панели массового выбора.
- * @example
- * <pre>
- *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
- * </pre>
- */
-
-/*
- * @name Controls/_operationsPanel/OperationsPanel#rightTemplate
- * @cfg {Function} Template displayed on the right side of the panel.
- * @example
- * <pre>
- *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
- * </pre>
- */
-
-/**
- * @event Controls/_operationsPanel/OperationsPanel#itemClick Происходит при клике на элемент.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Record} item Элемент, по которому произвели клик.
- * @param {Object} originalEvent Дескриптор исходного события.
- * @example
- * TMPL:
- * <pre>
- *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
- * </pre>
- * JS:
- * <pre>
- *    onPanelItemClick: function(e, selection) {
-    *       var itemId = item.get('id');
-    *       switch (itemId) {
-    *          case 'remove':
-    *             this._removeItems();
-    *             break;
-    *          case 'move':
-    *             this._moveItems();
-    *             break;
-    *    }
-    * </pre>
-    */
-
-/*
- * @event Controls/_operationsPanel/OperationsPanel#itemClick Occurs when an item was clicked.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
- * @param {Types/entity:Record} item Clicked item.
- * @param {Event} originalEvent Descriptor of the original event.
- * @example
- * TMPL:
- * <pre>
- *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
- * </pre>
- * JS:
- * <pre>
- *    onPanelItemClick: function(e, selection) {
- *       var itemId = item.get('id');
- *       switch (itemId) {
- *          case 'remove':
- *             this._removeItems();
- *             break;
- *          case 'move':
- *             this._moveItems();
- *             break;
- *    }
- * </pre>
- */
-
-/**
- * @name Controls/_operationsPanel/OperationsPanel#selectionViewMode
- * @cfg {String} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
- * @variant null Кпопка скрыта
- * @variant all Кнопка "Показать отмеченные"
- * @variant selected Кнопка "Показать все"
- * @default null
- * @example
- * <pre>
- *    Control.extend({
- *       _selectionViewMode: 'all'
- *       ...
- *    });
- * </pre>
- * <pre>
- *    <Controls.operations:Panel bind:selectionViewMode="_selectionViewMode"/>
- * </pre>
  */
 
 var OperationsPanel = Control.extend({
@@ -259,5 +172,92 @@ OperationsPanel.getDefaultOptions = function() {
    };
 };
 OperationsPanel._theme = ['Controls/operationsPanel', 'Controls/toolbars'];
+/**
+ * @name Controls/_operationsPanel/OperationsPanel#rightTemplate
+ * @cfg {Function} Шаблон, отображаемый в правой части панели массового выбора.
+ * @example
+ * <pre>
+ *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+ * </pre>
+ */
 
+/*
+ * @name Controls/_operationsPanel/OperationsPanel#rightTemplate
+ * @cfg {Function} Template displayed on the right side of the panel.
+ * @example
+ * <pre>
+ *    <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+ * </pre>
+ */
+
+/**
+ * @event Происходит при клике на элемент.
+ * @name Controls/_operationsPanel/OperationsPanel#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, по которому произвели клик.
+ * @param {Object} originalEvent Дескриптор исходного события.
+ * @example
+ * TMPL:
+ * <pre>
+ *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
+ * </pre>
+ * JS:
+ * <pre>
+ *    onPanelItemClick: function(e, selection) {
+*       var itemId = item.get('id');
+*       switch (itemId) {
+*          case 'remove':
+*             this._removeItems();
+*             break;
+*          case 'move':
+*             this._moveItems();
+*             break;
+*    }
+* </pre>
+*/
+
+/*
+ * @event Occurs when an item was clicked.
+ * @name Controls/_operationsPanel/OperationsPanel#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
+ * @param {Types/entity:Record} item Clicked item.
+ * @param {Event} originalEvent Descriptor of the original event.
+ * @example
+ * TMPL:
+ * <pre>
+ *    <Controls.operations:Panel on:itemClick="onPanelItemClick()" />
+ * </pre>
+ * JS:
+ * <pre>
+ *    onPanelItemClick: function(e, selection) {
+ *       var itemId = item.get('id');
+ *       switch (itemId) {
+ *          case 'remove':
+ *             this._removeItems();
+ *             break;
+ *          case 'move':
+ *             this._moveItems();
+ *             break;
+ *    }
+ * </pre>
+ */
+
+/**
+ * @name Controls/_operationsPanel/OperationsPanel#selectionViewMode
+ * @cfg {String} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
+ * @variant null Кпопка скрыта
+ * @variant all Кнопка "Показать отмеченные"
+ * @variant selected Кнопка "Показать все"
+ * @default null
+ * @example
+ * <pre>
+ *    Control.extend({
+ *       _selectionViewMode: 'all'
+ *       ...
+ *    });
+ * </pre>
+ * <pre>
+ *    <Controls.operations:Panel bind:selectionViewMode="_selectionViewMode"/>
+ * </pre>
+ */
 export = OperationsPanel;

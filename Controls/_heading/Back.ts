@@ -36,7 +36,7 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
  * @implements Controls/_interface/IIconStyle
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
@@ -56,7 +56,7 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
  * @implements Controls/_interface/IIconStyle
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index

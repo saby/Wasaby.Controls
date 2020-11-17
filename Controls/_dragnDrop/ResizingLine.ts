@@ -6,23 +6,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import IResizingLine from 'Controls/_dragnDrop/interface/IResizingLine';
 
 /*TODO Kingo*/
-/**
- * Контрол, позволяющий визуально отображать процесс изменения других контролов при помощи перемещения мышью
- * @remark
- * Родительские DOM элементы не должны иметь overflow: hidden. В противном случае корректная работа не гарантируется.
- *
- * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dragnDrop.less">переменные тем оформления</a>
- *
- * @class Controls/_dragnDrop/ResizingLine
- * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- * @category DragnDrop
- * @demo Controls-demo/ResizingLine/Index
- */
 
 interface IChildren {
     dragNDrop: Container;
@@ -37,7 +20,22 @@ const enum ORIENTATION {
     VERTICAL = 'vertical',
     HORIZONTAL = 'horizontal'
 }
-
+/**
+ * Контрол, позволяющий визуально отображать процесс изменения других контролов при помощи перемещения мышью
+ * @remark
+ * Родительские DOM элементы не должны иметь overflow: hidden. В противном случае корректная работа не гарантируется.
+ *
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dragnDrop.less">переменные тем оформления</a>
+ *
+ * @class Controls/_dragnDrop/ResizingLine
+ * @extends Core/Control
+ * 
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/ResizingLine/Index
+ */
 class ResizingLine extends Control<IControlOptions, IResizingLine> {
     protected _children: IChildren;
     protected _options: IResizingLine;

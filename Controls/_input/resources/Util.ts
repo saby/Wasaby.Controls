@@ -1,6 +1,7 @@
 import {detection} from 'Env/Env';
 import {IText} from 'Controls/decorator';
 import {ISelection, ISplitValue, InputType, NativeInputType} from './Types';
+import {SyntheticEvent} from 'UI/Vdom';
 
 export const MINUS: string = '-';
 export const HYPHEN: string = '–';
@@ -67,4 +68,21 @@ export function getAdaptiveInputType(selection: ISelection, nativeInputType: Nat
     const execType: string[] = /^(insert|delete|).*?(Backward|Forward|)$/.exec(nativeInputType);
 
     return (selectionLength ? execType[1] : execType[1] + execType[2]) as InputType;
+}
+
+export function processKeydownEvent(event: SyntheticEvent<KeyboardEvent>): void {
+    const code: string = event.nativeEvent.key;
+    const processedKeys: string[] = [
+        'End', 'Home', ' ', 'ArrowLeft', 'ArrowRight',
+        // Поддержка значения key в IE
+        'Spacebar', 'Left', 'Right'
+    ];
+
+    /**
+     * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
+     * Для этого останавливаем всплытие события.
+     */
+    if (processedKeys.includes(code)) {
+        event.stopPropagation();
+    }
 }

@@ -3,6 +3,7 @@ import Tree from '../Tree';
 import TreeItem from '../TreeItem';
 import TreeItemDecorator from '../TreeItemDecorator';
 import BreadcrumbsItem from '../BreadcrumbsItem';
+import SearchSeparator from '../SearchSeparator';
 import {DestroyableMixin, SerializableMixin, ISerializableState} from 'Types/entity';
 import {mixin, object} from 'Types/util';
 import {Map} from 'Types/shim';
@@ -22,13 +23,13 @@ interface IOptions<S, T> {
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     treeItemToDecorator: Map<T, TreeItemDecorator<S>>;
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>;
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>;
     dedicatedItemProperty: string;
     display: Tree<S, T>;
 }
 
 interface IBreadCrumbsReference<S, T extends TreeItem<S>> {
-    breadCrumbs: BreadcrumbsItem<S>;
+    breadCrumbs: BreadcrumbsItem<S> | SearchSeparator<S>;
     last: T;
     itsNew: boolean;
 }
@@ -63,8 +64,8 @@ function getNearestNode<S, T extends TreeItem<S>>(item: T): T {
  */
 function getBreadCrumbsReference<S, T extends TreeItem<S>>(
     item: T,
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S>>,
-    breadcrumbsToData: Map<BreadcrumbsItem<S>, T[]>,
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>,
+    breadcrumbsToData: Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>,
     display: Tree<S, T>
 ): IBreadCrumbsReference<S, T> {
     let breadCrumbs;
@@ -76,9 +77,20 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
             breadCrumbs = new BreadcrumbsItem<S>({
                 contents: null,
                 last,
-                owner: display
+                owner: display,
+                multiSelectVisibility: display?.getMultiSelectVisibility()
             });
             treeItemToBreadcrumbs.set(last, breadCrumbs);
+        }
+    } else if (last === root && breadcrumbsToData.size > 0) {
+        breadCrumbs = treeItemToBreadcrumbs.get(last);
+        if (!breadCrumbs) {
+            breadCrumbs = new SearchSeparator({
+                contents: null,
+                source: item,
+                multiSelectVisibility: display?.getMultiSelectVisibility()
+            });
+            treeItemToBreadcrumbs.set(item, breadCrumbs);
         }
     }
 
@@ -99,7 +111,7 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
 export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
->(
+    >(
     DestroyableMixin,
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
@@ -225,14 +237,14 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
     static sortItems<S, T extends TreeItem<S> = TreeItem<S>>(
         items: T[],
         options: ISortOptions<S, T>
-    ): Array<T | BreadcrumbsItem<S>> {
+    ): Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> {
         const {
             dedicatedItemProperty,
             display,
             treeItemToDecorator,
             treeItemToBreadcrumbs
         }: ISortOptions<S, T> = options;
-        const breadcrumbsToData = new Map<BreadcrumbsItem<S>, T[]>();
+        const breadcrumbsToData = new Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>();
         const sortedItems = [];
 
         /**
@@ -310,12 +322,15 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                 }
 
                 // Get breadcrumbs by leaf's parent
-                const breadcrumbsReference = getBreadCrumbsReference(
-                    item.getParent() as T,
+                let breadcrumbsReference: IBreadCrumbsReference<S, T>;
+                const parent = item.getParent() as T;
+                breadcrumbsReference = getBreadCrumbsReference(
+                    parent,
                     treeItemToBreadcrumbs,
                     breadcrumbsToData,
                     display
                 );
+
                 const currentBreadcrumbs = breadcrumbsReference.breadCrumbs;
                 if (currentBreadcrumbs) {
                     // Add actual breadcrumbs if it has been changed and it's not a repeat
@@ -332,7 +347,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         const itsDescendant = item.getParent() !== breadcrumbsReference.last;
                         decoratedItem = new TreeItemDecorator({
                             source: item,
-                            parent: itsDescendant ? item.getParent() : currentBreadcrumbs
+                            parent: itsDescendant ? item.getParent() :
+                                (currentBreadcrumbs instanceof SearchSeparator ? undefined : currentBreadcrumbs),
+                            multiSelectVisibility: display?.getMultiSelectVisibility()
                         });
                         treeItemToDecorator.set(item, decoratedItem);
                     }
@@ -376,9 +393,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
         }
 
         // Expand breadcrumbs into flat array
-        const resultItems: Array<T | BreadcrumbsItem<S>> = [];
+        const resultItems: Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> = [];
         sortedItems.forEach((item) => {
-            if (item instanceof BreadcrumbsItem) {
+            if (item instanceof BreadcrumbsItem || item instanceof SearchSeparator) {
                 resultItems.push(item);
                 const data = breadcrumbsToData.get(item);
                 if (data) {

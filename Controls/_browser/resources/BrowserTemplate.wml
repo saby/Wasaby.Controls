@@ -42,10 +42,10 @@
         on:register="_registerHandler()"
         on:unregister="_unregisterHandler()"
         on:search="_search()"
+        on:searchReset="_searchReset()"
         on:listExpandedItemsChanged="_notifyHandler('expandedItemsChanged')"
         on:misspellCaptionClick="_misspellCaptionClick()"
         on:filterItemsChanged="_filterItemsChanged()"
         on:filterHistoryApply="_filterHistoryApply()"
-        on:_scrollToFirstItemForTopPadding="_onScrollToFirstItemForTopPadding()"
 />
 

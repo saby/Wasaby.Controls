@@ -16,7 +16,8 @@
                attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme-' + _options.theme}}"/>
 </ws:template>
 
-<div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}"
+<div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}
+            {{_options.readOnly ? 'controls-FilterView_readOnly_theme-' + _options.theme}}"
    on:mouseenter="_mouseEnterHandler()">
    <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
       <ws:if data="{{_dateRangeItem}}">
@@ -29,16 +30,19 @@
                      on:rangeChanged="_rangeValueChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_needShowFastFilter(_source)}}">
-         <ws:if data="{{_options.panelTemplateName && _isFastReseted() && _options.detailPanelTemplateName}}">
+         <ws:if data="{{_isFastReseted() && _options.detailPanelTemplateName}}">
             <ws:partial template="itemTemplate"
                         name="all_frequent"
                         itemName="all_frequent"
-                        text="{{_options.emptyText}}"
+                        text="{{_options.emptyText || rk('Все')}}"
                         attr:class="controls-FilterView__frequentFilter"
                         on:mousedown="_openPanel('all_frequent')"/>
          </ws:if>
          <ws:for data="index, item in _source">
-            <ws:if data="{{_configs[item.name].items && _configs[item.name].items.getCount() && _displayText[item.name].text !== undefined}}">
+            <ws:if data="{{_configs[item.name].items &&
+                           _configs[item.name].items.getCount() &&
+                           _displayText[item.name].text !== undefined ||
+                           _displayText[item.name].text}}">
                <ws:partial template="itemTemplate"
                            text="{{_displayText[item.name].text}}"
                            title="{{_displayText[item.name].title}}"
@@ -67,21 +71,20 @@
       </ws:if>
    </div>
    <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
-      <div name="detailPanelTarget" class="controls-FilterView__icon
-                                           controls-FilterView__icon_theme-{{_options.theme}}
-                                           controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
-                                           controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
-                                           icon-FilterBig"
-           on:mousedown="openDetailPanel()">
-      </div>
-   </ws:if>
-   <Controls.popup:Sticky
-           name="StickyOpener"
-           className="controls-FilterView-popup"
-           closeOnOutsideClick="{{true}}"
-           on:result="_resultHandler()">
-   </Controls.popup:Sticky>
-   <ws:if data="{{_hasSelectorTemplate}}">
-      <Controls.popup:Stack name="selectorOpener" on:result="_onSelectorTemplateResult()" />
+      <ws:if data="{{!_options.emptyText || _options.detailPanelTemplateName}}">
+         <div name="detailPanelTarget" class="controls-FilterView__icon
+                                              controls-FilterView__icon_theme-{{_options.theme}}
+                                              controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
+                                              controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
+                                              icon-FilterBig"
+              on:mousedown="openDetailPanel()">
+         </div>
+      </ws:if>
+      <ws:else>
+         <ws:partial template="itemTemplate"
+                     text="{{_options.emptyText}}"
+                     title="{{_options.emptyText}}"
+                     on:mousedown="openDetailPanel()"/>
+      </ws:else>
    </ws:if>
 </div>

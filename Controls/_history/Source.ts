@@ -33,12 +33,11 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
  * @public
  * @author Герасимов А.М.
- * @category Menu
+ * 
  * @example
- * <pre>
+ * <pre class="brush: js">
  *    var source = new history.Source({
  *        originSource: new source.Memory({
  *           keyProperty: 'id',
@@ -58,10 +57,9 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new history.Source({
@@ -75,27 +73,6 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  *        parentProperty: 'parent'
  *    });
  * </pre>
- */
-
-/**
- * @name Controls/_history/Source#originSource
- * @cfg {Source} Источник данных.
- */
-/**
- * @name Controls/_history/Source#historySource
- * @cfg {Source} Источник, который работает с историей.
- * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
- */
-
-/**
- * @name Controls/_history/Source#unpinIfNotExist
- * @default true
- * @cfg {Boolean} Флаг, определяющий будет ли снят пин с записи, которой нет в данных
- */
-/*
- * @name Controls/_history/Source#historySource
- * @cfg {Source} A source which work with history
- * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
 export default class HistorySource extends mixin<SerializableMixin, OptionsToPropertyMixin>(
     SerializableMixin,
@@ -425,7 +402,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 return false;
             }
         }
-        this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
+        this._$historySource.saveHistory(this._$historySource.getHistoryIdForStorage(), this._$history);
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(item, meta);
     }
 
@@ -533,10 +510,10 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 const isPinned = item.get('pinned');
                 const isFrequent = item.get('frequent');
 
-                if (isFrequent || isRecent && !isPinned) {
+                if (isFrequent || isRecent && !isPinned || isPinned) {
                     updateResult = true;
 
-                    if (isRecent) {
+                    if (isRecent && !isPinned) {
                         moveRecentItemToTop(item);
                     }
                 }
@@ -605,17 +582,16 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
         // For Selector/Suggest load data from history, if there is a historyKeys
         if (where && (where.$_history === true || where.historyKeys)) {
-            //@ts-ignore
-            delete query._where.$_history;
+            where = object.clone(where);
+            delete where.$_history;
 
             historySourceQuery = this._$historySource.query();
             pd.push(historySourceQuery);
 
             if (where.historyKeys) {
-                where = object.clone(where);
                 delete where.historyKeys;
-                query.where(where);
             }
+            query.where(where);
 
             originSourceQuery = this._$originSource.query(query);
             pd.push(originSourceQuery);
@@ -632,7 +608,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     if (data[0] && !this._isError(data[0])) {
                         this._initHistory(data[0], this._$oldItems);
                         newItems = this._getItemsWithHistory(this._$history, this._$oldItems);
-                        this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
+                        this._$historySource.saveHistory(this._$historySource.getHistoryIdForStorage(), this._$history);
                     } else {
                         newItems = this._$oldItems;
                     }
@@ -687,6 +663,28 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
         this._$history = history;
     }
 }
+
+
+/**
+ * @name Controls/_history/Source#originSource
+ * @cfg {Source} Источник данных.
+ */
+/**
+ * @name Controls/_history/Source#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник работает с сервисом истории ввода.
+ */
+
+/**
+ * @name Controls/_history/Source#unpinIfNotExist
+ * @default true
+ * @cfg {Boolean} Флаг, определяющий будет ли снят пин с записи, которой нет в данных
+ */
+/*
+ * @name Controls/_history/Source#historySource
+ * @cfg {Source} A source which work with history
+ * @see {Controls/_history/Service} Source working with the service of InputHistory
+ */
 
 Object.assign(HistorySource.prototype, {
     _moduleName: 'Controls/history:Source'

@@ -10,46 +10,12 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     *
     * @class Controls/_popupTemplate/CloseButton
     * @extends Core/Control
-    * @control
+    *
     * @public
     * @author Красильников А.С.
     * @demo Controls-demo/PopupTemplate/CloseButton/ViewModes/Index
     * @mixes Controls/_buttons/interface/IClick
     *
-    */
-
-   /**
-    * @name Controls/_popupTemplate/CloseButton#viewMode
-    * @cfg {String} Устанавливает вид отображения кнопки.
-    * @variant toolButton Отображение как кнопки панели инструментов.
-    * @variant linkButton Отображение кнопки в виде ссылки.
-    * @default toolButton
-    * @example
-    * Отображение в виде ссылки:
-    * <pre>
-    *    <Controls.popupTemplate:CloseButton viewMode="linkButton"/>
-    * </pre>
-    * Отображение как кнопки панели инструментов:
-    * <pre>
-    *    <Controls.popupTemplate:CloseButton viewMode="toolButton"/>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_popupTemplate/CloseButton#transparent
-    * @cfg {String} Определяет фон кнопки.
-    * @variant true Кнопке будет установлен прозрачный фон.
-    * @variant false Кнопка имеет фон по умолчанию для этого режима отображения и стиля.
-    * @default true
-    * @example
-    * Кнопка "Закрыть" с прозрачным фоном:
-    * <pre>
-    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}"/>
-    * </pre>
-    * Кнопка "Закрыть" с непрозрачным фоном.
-    * <pre>
-    *    <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}"/>
-    * </pre>
     */
 
 class CloseButton extends Control<IControlOptions> {
@@ -64,5 +30,43 @@ class CloseButton extends Control<IControlOptions> {
       };
    }
 }
+   /**
+    * @name Controls/_popupTemplate/CloseButton#viewMode
+    * @cfg {String} Устанавливает вид отображения кнопки.
+    * @variant toolButton Отображение как кнопки панели инструментов.
+    * @variant linkButton Отображение кнопки в виде ссылки.
+    * @variant functionalButton Отображение функциональной кнопки закрытия
+    * @default toolButton
+    * @example
+    * Отображение в виде ссылки:
+    * <pre class="brush: html">
+    * <Controls.popupTemplate:CloseButton viewMode="linkButton"/>
+    * </pre>
+    * Отображение как кнопки панели инструментов:
+    * <pre class="brush: html">
+    * <Controls.popupTemplate:CloseButton viewMode="toolButton"/>
+    * </pre>
+    *
+    * Отображение функциональной кнопки закрытия:
+    * <pre>
+    *    <Controls.popupTemplate:CloseButton viewMode="functionalButton"/>
+    * </pre>
+    */
 
+   /**
+    * @name Controls/_popupTemplate/CloseButton#transparent
+    * @cfg {Boolean} Определяет фон кнопки.
+    * @variant true Кнопке будет установлен прозрачный фон.
+    * @variant false Кнопка имеет фон по умолчанию для этого режима отображения и стиля.
+    * @default true
+    * @example
+    * Кнопка "Закрыть" с прозрачным фоном:
+    * <pre class="brush: html">
+    * <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{true}}"/>
+    * </pre>
+    * Кнопка "Закрыть" с непрозрачным фоном.
+    * <pre class="brush: html">
+    * <Controls.popupTemplate:CloseButton viewMode="toolButton" transparent="{{false}}"/>
+    * </pre>
+    */
 export default CloseButton;

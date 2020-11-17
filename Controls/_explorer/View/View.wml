@@ -13,6 +13,7 @@
                                  on:itemClick="_onBreadCrumbsClick()">
          <Controls.tree:TreeControl root="{{_getRoot()}}"
                                     scope="{{_options}}"
+                                    itemPadding="{{_itemPadding}}"
                                     header="{{content.header}}"
                                     name="treeControl"
                                     viewName="{{_viewName}}"
@@ -26,6 +27,8 @@
                                     markerVisibility="{{ _options.markerVisibility }}"
                                     navigation="{{ _navigation }}"
                                     useNewModel="{{_options.viewMode === 'list' ? false : _options.useNewModel}}"
+                                    headerVisibility="{{ _headerVisibility }}"
+                                    headerInEmptyListVisible="{{ _headerVisibility }}"
                                     on:itemClick="_onItemClick()"
                                     on:itemMouseDown="_notifyHandler('itemMouseDown')"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"

@@ -88,7 +88,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="viewTpl">
-    <div class="controls-ScrollController">
+    <div class="controls-ScrollController" name="viewContainer">
         <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? 'display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
@@ -100,7 +100,9 @@
                 _needBottomPadding="{{_needBottomPadding}}"
                 needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel) }}"
                 listModel="{{_listViewModel}}"
+                isEditingRowScrollToElement="{{ _isEditingRowScrollToElement }}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
+                preventServerSideColumnScroll="{{ _isMounted || _options.preventServerSideColumnScroll }}"
                 on:closeSwipe="_onCloseSwipe()"
                 on:validateCreated="_onValidateCreated()"
                 on:validateDestroyed="_onValidateDestroyed()"
@@ -113,6 +115,7 @@
                 on:groupClick="_onGroupClick()"
                 on:editArrowClick="_notifyHandler('editArrowClick')"
                 on:itemContextMenu="_onItemContextMenu()"
+                on:itemLongTap="_onItemLongTap()"
                 on:itemMouseDown="_itemMouseDown()"
                 on:itemMouseUp="_itemMouseUp()"
                 on:itemMouseEnter="_itemMouseEnter()"
@@ -120,6 +123,7 @@
                 on:itemMouseLeave="_itemMouseLeave()"
                 on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                 on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
+                on:updateItemActionsOnItem="_updateItemActionsOnItem()"
                 on:itemSwipe="_onItemSwipe()"
                 on:editingRowKeyDown="_onEditingRowKeyDown()"
                 on:rowDeactivated="_onRowDeactivated()"
@@ -211,9 +215,9 @@
             Вместо этого, задаем пэйджингу высоту как у разделителя.
             https://online.sbis.ru/opendoc.html?guid=aafcd848-43e0-4ac3-a4b8-cffff9f04be0 -->
             <div if="{{ _isPagingPadding() }}" name="pagingPaddingContainer"
-                 class="controls-BaseControl_paging-Padding_theme-{{_options.theme}} {{(_options.task1179362156) ? 'controls-BaseControl-hide-paging'}}">
+                 class="controls-BaseControl_paging-Padding_theme-{{_options.theme}}">
             </div>
-            <div class="controls-BaseControl__pagingContainer {{_options.task1179362156 ? 'controls-BaseControl-hide-paging'}}">
+            <div class="controls-BaseControl__pagingContainer{{!_isPagingPaddingFromOptions() ? ' controls-BaseControl-hide-paging-padding': ''}}">
                 <ws:if data="{{_options.pagingLeftTemplate}}">
                     <ws:partial template="{{_options.pagingLeftTemplate}}"/>
                 </ws:if>
@@ -221,7 +225,7 @@
                         attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                         contrastBackground="{{true}}"
                         pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
-                        showEndButton="{{_pagingCfg.showEndButton}}"
+                        showEndButton="{{_options.navigation.viewConfig.showEndButton || _pagingCfg.showEndButton}}"
                         scope="{{_pagingCfg}}"
                         contentTemplate="{{_options.pagingContentTemplate}}"
                         on:onArrowClick="__onPagingArrowClick()"

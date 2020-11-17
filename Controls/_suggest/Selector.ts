@@ -7,44 +7,6 @@ import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-/**
- * Поле ввода с выпадающим списком с возможностью автодополнения.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">демо-пример</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
- *
- *
- * @class Controls/_suggest/Selector
- * @extends Controls/input:Text
- * @mixes Controls/_interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
- * @author Герасимов А.М.
- * @public
- */
-
-/*
- * Combobox input that suggests options as you are typing.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Demo-example</a>.
- *
- * @class Controls/_suggest/Selector
- * @extends Controls/input:Text
- * @mixes Controls/_interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
- * @public
- */
-
 var _private = {
    loadSelectedItem: function(self, options) {
       var filter = {};
@@ -81,7 +43,43 @@ var _private = {
       });
    }
 };
+/**
+ * Поле ввода с выпадающим списком с возможностью автодополнения.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
+ *
+ *
+ * @class Controls/_suggest/Selector
+ * @extends Controls/input:Text
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_suggest/ISuggest
+ * @mixes Controls/_interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * 
+ * @author Герасимов А.М.
+ * @public
+ */
 
+/*
+ * Combobox input that suggests options as you are typing.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Demo-example</a>.
+ *
+ * @class Controls/_suggest/Selector
+ * @extends Controls/input:Text
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_suggest/ISuggest
+ * @mixes Controls/_interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * 
+ * @public
+ */
 var Suggest = Control.extend({
 
    _template: template,

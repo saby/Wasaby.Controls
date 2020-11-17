@@ -19,12 +19,12 @@ import {RecordSet} from 'Types/collection';
 export interface IContextMenuConfig {
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#items
-     * @cfg {Types/collection:RecordSet} набор элементов для замены в контекстном меню
+     * @cfg {Types/collection:RecordSet} Набор элементов для замены в контекстном меню.
      */
     items?: RecordSet;
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#groupTemplate
-     * @cfg {UI/Base:TemplateFunction|string} шаблон для установки группировки.
+     * @cfg {UI/Base:TemplateFunction|string} Шаблон для установки группировки.
      */
     groupTemplate?: TemplateFunction|string;
     /**
@@ -34,22 +34,22 @@ export interface IContextMenuConfig {
     groupProperty?: string;
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#itemTemplate
-     * @cfg {UI/Base:TemplateFunction|string} шаблон элемента меню
+     * @cfg {UI/Base:TemplateFunction|string} Шаблон элемента меню.
      */
     itemTemplate?: TemplateFunction|string;
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#footerTemplate
-     * @cfg {UI/Base:TemplateFunction|string} шаблон футера.
+     * @cfg {UI/Base:TemplateFunction|string} Шаблон футера.
      */
     footerTemplate?: TemplateFunction|string;
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#headerTemplate
-     * @cfg {UI/Base:TemplateFunction|string} шаблон шапки.
+     * @cfg {UI/Base:TemplateFunction|string} Шаблон шапки.
      */
     headerTemplate?: TemplateFunction|string;
     /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#iconSize
-     * @cfg {string} размер иконок в выпадающем меню.
+     * @cfg {string} Размер иконок в выпадающем меню.
      */
     iconSize?: string;
 }

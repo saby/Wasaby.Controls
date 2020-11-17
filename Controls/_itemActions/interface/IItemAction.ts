@@ -62,7 +62,7 @@ export type TActionCaptionPosition = 'right' | 'bottom' | 'none';
 export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 
 /**
- * @typedef {string} TItemActionsSize
+ * @typedef {String} TItemActionsSize
  * Размер иконок опций записи
  * @variant inside Внутри элемента.
  * @variant outside Под элементом.
@@ -70,7 +70,7 @@ export type TItemActionsPosition = 'inside' | 'outside' | 'custom';
 export type TItemActionsSize = 'm' | 'l';
 
 /**
- * @typedef {string} TItemActionsSize
+ * @typedef {String} TItemActionsSize
  * Видимость кнопки "Ещё" в свайпе
  * @variant visible - кнопка видима в любом случае
  * @variant adaptive - Расчёт происходит от количесива элементов в свайпе
@@ -80,20 +80,21 @@ export type TMenuButtonVisibility = 'visible' | 'adaptive';
 /**
  * @typedef {Function} TItemActionHandler
  * @description
- * Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler/ пример обработчика}.
+ * Обработчик опции записи. См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
  * @param item Corresponding list item.
  */
 export type TItemActionHandler = (item: Model) => void;
 
 /**
- * Интерфейс {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ опции записи}
+ * Интерфейс {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
  * @interface Controls/_itemActions/interface/IItemAction
- * @description
+ * @remark
  * Опции записи могут быть использованы в следующих вариантах:
- * 1.    Панель опций записи, отображаемая в desktop браузерах
- * 2.    Панель опций записи, появляющаяся при свайпе по записи влево.
- * 3.    Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
- * 4.    Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
+ * 
+ * 1. Панель опций записи, отображаемая в desktop браузерах
+ * 2. Панель опций записи, появляющаяся при свайпе по записи влево.
+ * 3. Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
+ * 4. Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
  * @public
  * @author Аверкиев П.А.
  */
@@ -179,7 +180,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#handler
      * @cfg {TItemActionHandler} Обработчик опции записи.
      * @remark
-     * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler/ пример обработчика}.
+     * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#handler
@@ -223,7 +224,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#parent
      * @cfg {String|Number} Идентификатор родительской опции записи.
      * @remark
-     * Используется для создания {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/hierarchy/ многоуровневого контекстного меню}.
+     * Используется для создания {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/hierarchy/ многоуровневого контекстного меню}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#parent

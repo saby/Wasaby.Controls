@@ -88,6 +88,7 @@ export interface INavigationControllerOptions {
      */
     navigationType: TNavigationSource;
     navigationConfig?: INavigationSourceConfig;
+    navigationParamsChangedCallback?: Function;
 }
 
 type TKey = string | number | null; // TODO общий тип
@@ -103,7 +104,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
@@ -114,7 +115,7 @@ type NavigationRecord = Record<{
  *
  * @class Controls/source/NavigationController
  *
- * @control
+ * 
  * @public
  * @author Аверкиев П.А.
  */
@@ -123,12 +124,14 @@ export class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
+    private _navigationParamsChangedCallback: Function;
     private _navigationStores: List<INavigationStoresListItem> = null;
     private _paramsCalculator: IParamsCalculator = null;
 
     constructor(cfg: INavigationControllerOptions) {
         this._navigationType = cfg.navigationType;
         this._navigationConfig = cfg.navigationConfig;
+        this._navigationParamsChangedCallback = cfg.navigationParamsChangedCallback;
 
         if (this._navigationType) {
             this._navigationStores = new List();
@@ -158,7 +161,12 @@ export class NavigationController {
 
         // Если id не передан то берется стор для корневого раздела, для которого жесткий id = null
         const store = this._getStore(id);
-        const addQueryParams = calculator.getQueryParams(store, navigationQueryConfig, direction);
+        const addQueryParams = calculator.getQueryParams(
+            store,
+            navigationQueryConfig,
+            direction,
+            this._navigationParamsChangedCallback
+        );
         return NavigationController._mergeParams(mainQueryParams, addQueryParams);
     }
 
@@ -240,6 +248,10 @@ export class NavigationController {
         return calculator.hasMoreData(store, direction);
     }
 
+    hasLoaded(id: TKey): boolean {
+        return this._navigationStores.getIndexByValue('id', id) !== -1;
+    }
+
     updateOptions(newOptions: INavigationControllerOptions): void {
         if ((newOptions.navigationType !== this._navigationType) ||
             !isEqual(newOptions.navigationConfig, this._navigationConfig)) {
@@ -253,6 +265,8 @@ export class NavigationController {
             this._navigationType = newOptions.navigationType;
             this._navigationConfig = newOptions.navigationConfig;
         }
+
+        this._navigationParamsChangedCallback = newOptions.navigationParamsChangedCallback;
     }
 
     private _getStore(id: TKey): INavigationStore {

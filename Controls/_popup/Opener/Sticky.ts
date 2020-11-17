@@ -15,8 +15,9 @@ const getStickyConfig = (config) => {
 
 const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
 
+interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {}
 /**
- * Контрол, открывающий всплывающее окно, которое позиционнируется относительно вызывающего элемента.
+ * Контрол, открывающий всплывающее окно, которое позиционируется относительно вызывающего элемента.
  * @remark
  * Полезные ссылки:
  * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/sticky/">руководство разработчика</a>
@@ -27,29 +28,11 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StickyController';
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/ISticky
- * @control
+ *
  * @author Красильников А.С.
- * @category Popup
  * @demo Controls-demo/Popup/Opener/StickyPG
  * @public
  */
-
-/*
- * Component that opens a popup that is positioned relative to a specified element.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
- * @class Controls/_popup/Opener/Sticky
- * @extends Controls/_popup/Opener/BaseOpener
- * @mixes Controls/_popup/interface/IBaseOpener
- * @mixes Controls/_popup/interface/ISticky
- * @control
- * @author Красильников А.С.
- * @category Popup
- * @demo Controls-demo/Popup/Opener/StickyPG
- * @public
- */
-
-interface IStickyOpenerOptions extends IStickyPopupOptions, IBaseOpenerOptions {}
-
 class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
     protected _template: TemplateFunction = Template;
     readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
@@ -106,7 +89,7 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
         return baseConfig;
     }
 
-    static openPopup(config: IStickyPopupOptions): Promise<string> {
+    static openPopup(config: IStickyPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
         return new Promise((resolve) => {
             const newCfg = getStickyConfig(config);
             if (!newCfg.hasOwnProperty('isHelper')) {
@@ -115,7 +98,7 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
             if (!newCfg.hasOwnProperty('opener')) {
                 Logger.error('Controls/popup:Sticky: Для открытия окна через статический метод, обязательно нужно указать опцию opener');
             }
-            BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
+            BaseOpener.requireModules(newCfg, popupController).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });

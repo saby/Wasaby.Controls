@@ -65,4 +65,31 @@ describe('ColumnsInnerView', () => {
         assert.isFalse(columnsView._model.getItemBySourceKey(2).isMarked());
         assert.isFalse(columnsView._model.getItemBySourceKey(3).isMarked());
     });
+    
+    it('add items, _addingColumnsCounter', () => {
+        assert.deepEqual(columnsView._addingColumnsCounter, 0, 'wrong _addingColumnsCounter');
+        let newItem = rs.at(0).clone();
+        newItem.set('id', 12);
+        rs.add(newItem, 0);
+        assert.deepEqual(columnsView._addingColumnsCounter, 1, 'wrong _addingColumnsCounter');
+        newItem = rs.at(0).clone();
+        newItem.set('id', 13);
+        rs.add(newItem, 0);
+        assert.deepEqual(columnsView._addingColumnsCounter, 2, 'wrong _addingColumnsCounter');
+        newItem = rs.at(0).clone();
+        newItem.set('id', 14);
+        rs.add(newItem, 0);
+        assert.deepEqual(columnsView._addingColumnsCounter, 3, 'wrong _addingColumnsCounter');
+        const rsForPrepend = new RecordSet({
+            keyProperty: 'id',
+            rawData: [15, 16, 17].map((id)=>{
+                return {
+                    id
+                };
+            })
+        });
+        rs.prepend(rsForPrepend);
+        assert.deepEqual(columnsView._addingColumnsCounter, 0, 'wrong _addingColumnsCounter');
+
+    });
 });

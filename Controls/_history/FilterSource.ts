@@ -6,7 +6,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import entity = require('Types/entity');
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
@@ -344,10 +344,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -368,10 +367,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -385,28 +383,6 @@ var _private = {
  *           })
  *       });
  * </pre>
- */
-
-/**
- * @name Controls/_history/FilterSource#originSource
- * @cfg {Source} Источник данных.
- */
-
-/*
- * @name Controls/_history/FilterSource#originSource
- * @cfg {Source} A data source
- */
-
-/**
- * @name Controls/_history/FilterSource#historySource
- * @cfg {Source} Источник, который работает с историей.
- * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
- */
-
-/*
- * @name Controls/_history/FilterSource#historySource
- * @cfg {Source} A source which work with history
- * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
 
 var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
@@ -561,4 +537,25 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
 Source._private = _private;
 
+/**
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} A data source
+ */
+
+/**
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} A source which work with history
+ * @see {Controls/_history/Service} Source working with the service of InputHistory
+ */
 export = Source;

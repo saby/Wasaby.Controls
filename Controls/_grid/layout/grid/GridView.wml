@@ -36,6 +36,7 @@
                     swipeTemplate="{{_options.swipeTemplate}}"
                     backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                     isColumnScrollVisible="{{ _isColumnScrollVisible }}"
+                    isEditingRowScrollToElement="{{_options.isEditingRowScrollToElement}}"
                     tagTemplate="{{_options.tagTemplate}}">
             <ws:editArrowTemplate>
                 <ws:partial template="wml!Controls/_grid/_editArrowTemplate"></ws:partial>
@@ -81,9 +82,23 @@
     </ws:if>
 
     <!-- Подвал таблицы -->
-    <div class="{{_getFooterClasses()}}" style="{{_getFooterStyles()}} {{_listModel.getFooterStyles()}}">
-        <ws:partial template="{{_options.footerTemplate}}"/>
-    </div>
+    <!-- Шаблон рисуется по нашему состоянию футера(массив колонок), которое не меняется при изменении шаблона отдельной колонки -->
+    <!-- Чтобы затриггерить синхронизацию передаем подвал из опций и ядро само решит нужна ли перерисовка -->
+    <!-- Не смотря на то что наше состояние не меняется, если шаблон действительно изменился он перерисуется. -->
+    <!-- Это обеспечивает конструкция вида <ws:partial template="{{ column.template }}"/> -->
+    <!-- TODO Данное поведение в этой конструкции ядром считается ошибочным и будет исправлено по задаче https://online.sbis.ru/doc/546d1109-14f5-4118-8619-362048862d27 -->
+    <ws:partial template="wml!Controls/_grid/FooterTemplate"
+                columns="{{ _listModel.getFooter() }}"
+                _footer="{{ _options.footer }}"
+                _footerTemplate="{{ _options.footerTemplate }}"
+                _needBottomPadding="{{ _options._needBottomPadding }}"
+                _isEditing="{{ _listModel.isEditing() }}"
+                containerSize="{{ _containerSize }}"
+                hasColumnScroll="{{ _containerSize && _isColumnScrollVisible }}"
+                hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"
+                attr:class="{{ _options.footer ? 'controls-GridView__footer' }}"
+                backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                isFullGridSupport="{{ true }}"/>
 </div>
 
 

@@ -28,131 +28,6 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
    nodeProperty?: string;
    selectionType: TSelectionType;
 }
-/**
- * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
- * Загружает список записей по списку первичных ключей из опции selectedKeys при завершении выбора
- * Должен использоваться внутри Controls/lookupPopup:Controller.
- * В одном Controls/lookupPopup:Controller можно использовать несколько контейнеров.
- *
- * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
- *
- * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
- *
- * @class Controls/_lookupPopup/Container
- * @extends Core/Control
- * @control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/ISelectionType
- * @public
- * @author Герасимов Александр Максимович
- */
-
-/*
- * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
- * Loading data by selectedKeys on selection complete.
- * Must used inside Controls/lookupPopup:Controller.
- * In one Controls/lookupPopup:Controller can be used some Containers.
- *
- * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
- *
- * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
- *
- * @class Controls/_lookupPopup/Container
- * @extends Core/Control
- * @control
- * @mixes Controls/_interface/ISource
- * @public
- * @author Герасимов Александр Максимович
- */
-
-
-/**
- * @name Controls/_lookupPopup/Container#selectionFilter
- * @cfg {Function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка.
- * Функция должна вернуть true если запись относится к данному списку или false, если не относится.
- * @remark По умолчанию опция selectionFilter установлена как функция, которая всегда возвращает true.
- * @example
- *
- * WML:
- * <pre>
- *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
- *        ...
- *    </Controls.lookupPopup:Container>
- * </pre>
- *
- * JS:
- * <pre>
- *     _selectionFilter: function(item, index) {
- *        let filterResult = false;
- *
- *        if (item.get('Компания')) {
- *            filterResult = true;
- *        }
- *
- *        return filterResult;
- *     }
- * </pre>
- */
-
-/*
- * @name Controls/_lookupPopup/Container#selectionFilter
- * @cfg {Function} Function that filters selectedItems from Controls/lookupPopup:Controller for a specific list.
- * @remark By default selectionFilter option is setted as function that always returns true.
- * @example
- *
- * WML:
- * <pre>
- *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
- *        ...
- *    </Controls.lookupPopup:Container>
- * </pre>
- *
- * JS:
- * <pre>
- *     _selectionFilter: function(item, index) {
- *        let filterResult = false;
- *
- *        if (item.get('Компания')) {
- *            filterResult = true;
- *        }
- *
- *        return filterResult;
- *     }
- * </pre>
- */
-
-
-/**
- * @name Controls/_lookupPopup/Container#selectionType
- * @cfg {String} Тип записей, которые можно выбрать.
- * @variant node только узлы доступны для выбора
- * @variant leaf только листья доступны для выбора
- * @variant all все типы записей доступны для выбора
- * @example
- * В данном примере для выбора доступны только листья.
- * <pre>
- *    <Controls.lookupPopup:ListContainer selectionType="leaf">
- *        ...
- *    </Controls.lookupPopup:ListContainer>
- * </pre>
- */
-
-/*
- * @name Controls/_lookupPopup/Container#selectionType
- * @cfg {String} Type of records that can be selected.
- * @variant node only nodes are available for selection
- * @variant leaf only leafs are available for selection
- * @variant all all types of records are available for selection
- * @example
- * In this example only leafs are available for selection.
- * <pre>
- *    <Controls.lookupPopup:ListContainer selectionType="leaf">
- *        ...
- *    </Controls.lookupPopup:ListContainer>
- * </pre>
- */
-
-
 
       var SELECTION_TYPES = ['all', 'leaf', 'node'];
 
@@ -420,7 +295,42 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             }
          }
       };
+      /**
+       * Контейнер принимает опцию selectedItems от {@link Controls/lookupPopup:Controller} и устанавливает опцию selectedKeys для дочернего списка.
+       * Загружает список записей по списку первичных ключей из опции selectedKeys при завершении выбора
+       * Должен использоваться внутри Controls/lookupPopup:Controller.
+       * В одном Controls/lookupPopup:Controller можно использовать несколько контейнеров.
+       *
+       * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
+       *
+       * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
+       *
+       * @class Controls/_lookupPopup/Container
+       * @extends Core/Control
+       * 
+       * @mixes Controls/_interface/ISource
+       * @mixes Controls/_interface/ISelectionType
+       * @public
+       * @author Герасимов Александр Максимович
+       */
 
+      /*
+      * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
+      * Loading data by selectedKeys on selection complete.
+      * Must used inside Controls/lookupPopup:Controller.
+      * In one Controls/lookupPopup:Controller can be used some Containers.
+      *
+      * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
+      *
+      * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
+      *
+      * @class Controls/_lookupPopup/Container
+      * @extends Core/Control
+      * 
+      * @mixes Controls/_interface/ISource
+      * @public
+      * @author Герасимов Александр Максимович
+      */
       var Container = Control.extend({
 
          _template: template,
@@ -542,6 +452,90 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
       };
 
       Container._private = _private;
+      /**
+       * @name Controls/_lookupPopup/Container#selectionFilter
+       * @cfg {Function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка.
+       * Функция должна вернуть true если запись относится к данному списку или false, если не относится.
+       * @remark По умолчанию опция selectionFilter установлена как функция, которая всегда возвращает true.
+       * @example
+       *
+       * WML:
+       * <pre>
+       *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
+       *        ...
+       *    </Controls.lookupPopup:Container>
+       * </pre>
+       *
+       * JS:
+       * <pre>
+       *     _selectionFilter: function(item, index) {
+       *        let filterResult = false;
+       *
+       *        if (item.get('Компания')) {
+       *            filterResult = true;
+       *        }
+       *
+       *        return filterResult;
+       *     }
+       * </pre>
+       */
 
+      /*
+      * @name Controls/_lookupPopup/Container#selectionFilter
+      * @cfg {Function} Function that filters selectedItems from Controls/lookupPopup:Controller for a specific list.
+      * @remark By default selectionFilter option is setted as function that always returns true.
+      * @example
+      *
+      * WML:
+      * <pre>
+      *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
+      *        ...
+      *    </Controls.lookupPopup:Container>
+      * </pre>
+      *
+      * JS:
+      * <pre>
+      *     _selectionFilter: function(item, index) {
+      *        let filterResult = false;
+      *
+      *        if (item.get('Компания')) {
+      *            filterResult = true;
+      *        }
+      *
+      *        return filterResult;
+      *     }
+      * </pre>
+      */
+
+
+      /**
+       * @name Controls/_lookupPopup/Container#selectionType
+       * @cfg {String} Тип записей, которые можно выбрать.
+       * @variant node только узлы доступны для выбора
+       * @variant leaf только листья доступны для выбора
+       * @variant all все типы записей доступны для выбора
+       * @example
+       * В данном примере для выбора доступны только листья.
+       * <pre>
+       *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+       *        ...
+       *    </Controls.lookupPopup:ListContainer>
+       * </pre>
+       */
+
+      /*
+      * @name Controls/_lookupPopup/Container#selectionType
+      * @cfg {String} Type of records that can be selected.
+      * @variant node only nodes are available for selection
+      * @variant leaf only leafs are available for selection
+      * @variant all all types of records are available for selection
+      * @example
+      * In this example only leafs are available for selection.
+      * <pre>
+      *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+      *        ...
+      *    </Controls.lookupPopup:ListContainer>
+      * </pre>
+      */
       export = Container;
 

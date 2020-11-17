@@ -49,5 +49,6 @@ export interface ICollection<S, T> extends IBaseCollection<T> {
     getLeftPadding(): string;
     getItemUid(item: T): string;
     getMarkerVisibility(): string;
+    getRowSeparatorSize(): string;
     notifyItemChange(item: T, properties?: object): void;
 }

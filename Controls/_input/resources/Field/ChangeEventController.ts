@@ -1,9 +1,10 @@
 import {Tag} from '../Types';
 import {SyntheticEvent} from 'UI/Vdom';
+import BaseViewModel from 'Controls/_input/BaseViewModel';
 
-export interface IConfig {
+export interface IConfig<Value, ModelOptions> {
     tag: Tag;
-    displayValue: string;
+    model: BaseViewModel<Value, ModelOptions>;
 }
 
 type Handler<T extends Event> = (event: SyntheticEvent<T>, config: IConfig) => void;
@@ -13,7 +14,7 @@ type Handler<T extends Event> = (event: SyntheticEvent<T>, config: IConfig) => v
  * Используется чтобы поддержать кросбраузернность события, потому что нативное работает не во всех браузерах.
  * Например, если после пользовательского ввода вернуть предыдущее значение программно https://jsfiddle.net/v6g0fz7u/.
  */
-class ChangeEventController {
+class ChangeEventController<Value, ModelOptions> {
     /**
      * Отображаемое значение, которое фиксируется для определения вызова обработчика changeHandler.
      * Одним из условий вызова обработчика является то, что текущее значение отличается от зафиксированного.
@@ -32,10 +33,10 @@ class ChangeEventController {
         this._fixedDisplayValue = fixedDisplayValue;
     }
 
-    private _callChangeHandler(displayValue: string): void {
-        if (this._fixedDisplayValue !== displayValue) {
+    private _callChangeHandler(model: BaseViewModel<Value, ModelOptions>): void {
+        if (this._fixedDisplayValue !== model.displayValue) {
             this._changeHandler();
-            this._fixedDisplayValue = displayValue;
+            this._fixedDisplayValue = model.displayValue;
         }
     }
 
@@ -51,7 +52,7 @@ class ChangeEventController {
      * Обработчик, который нужно вызвать при уходе фокуса(blur) из поля ввода.
      */
     blurHandler: Handler<FocusEvent> = (event, config) => {
-        this._callChangeHandler(config.displayValue);
+        this._callChangeHandler(config.model);
     };
 
     /**
@@ -59,7 +60,7 @@ class ChangeEventController {
      */
     keyDownHandler: Handler<KeyboardEvent> = (event, config) => {
         if (ChangeEventController._isTriggeredOnKeyDown(event.nativeEvent.key, config.tag)) {
-            this._callChangeHandler(config.displayValue);
+            this._callChangeHandler(config.model);
         }
     };
 

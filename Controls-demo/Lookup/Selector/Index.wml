@@ -1,6 +1,6 @@
 <div class="controls-demo-selector-button">
    <div class="controlsDemo__wrapper ControlsDemo-Lookup__container">
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__single1">
          <h4>Single selection from one directory</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -14,7 +14,7 @@
          <div>{{_textSingle1}}</div>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__single2">
          <h4>Require single selection</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -29,7 +29,7 @@
          </Controls.lookup:Selector>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__multiple1">
          <h4>Multiple selection from one directory</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -45,7 +45,7 @@
          <div>{{_textMultiply}}</div>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__multiple2">
          <h4>Multiple selection from one directory</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -61,7 +61,7 @@
          <div>{{_textMultiply2}}</div>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__multiple3">
          <h4>Multiple selection from several directory</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -76,7 +76,7 @@
          <div>{{_textMultiply3}}</div>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__single3">
          <h4>Empty single selection read only</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -88,7 +88,7 @@
          </Controls.lookup:Selector>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__single4">
          <h4>Single selection read only</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"
@@ -100,7 +100,7 @@
          </Controls.lookup:Selector>
       </div>
 
-      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control">
+      <div class="controlsDemo__wrapper ControlsDemo-Lookup-control demo-LookupSelector__multiple4">
          <h4>Multiple selection with read only</h4>
          <Controls.lookup:Selector
                  source="{{_sourceButton}}"

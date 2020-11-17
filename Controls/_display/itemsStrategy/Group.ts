@@ -9,7 +9,8 @@ import {
 } from 'Types/entity';
 import {mixin} from 'Types/util';
 
-type GroupContents = string | number;
+type IGroup = string | number;
+type IGroups = IGroup[];
 
 type GroupHandler<S, T> = (data: S, index: number, item: T) => string | number;
 
@@ -17,16 +18,20 @@ interface IOptions<S, T extends CollectionItem<S>> {
     source: IItemsStrategy<S, T>;
     display?: Collection<S, T>;
     handler?: GroupHandler<S, T>;
+    collapsedGroups?: IGroups;
+    groupConstructor: new(options: unknown) => GroupItem<T>;
 }
 
 interface ISortOptions<S, T extends CollectionItem<S>> {
     display: Collection<S, T>;
     handler: GroupHandler<S, T>;
-    groups: Array<GroupItem<GroupContents>>;
+    groups: Array<GroupItem<IGroup>>;
+    collapsedGroups?: IGroups;
+    groupConstructor: new(options: unknown) => GroupItem<T>;
 }
 
 interface ISerializableState extends IDefaultSerializableState {
-    _groups: Array<GroupItem<GroupContents>>;
+    _groups: Array<GroupItem<IGroup>>;
     _itemsOrder: number[];
 }
 
@@ -60,7 +65,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     /**
      * Группы
      */
-    protected _groups: Array<GroupItem<GroupContents>> = [];
+    protected _groups: Array<GroupItem<IGroup>> = [];
 
     /**
      * Индекс в в стратегии -> оригинальный индекс
@@ -77,6 +82,17 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
      */
     set handler(value: GroupHandler<S, T>) {
         this._options.handler = value;
+    }
+
+    set collapsedGroups(value: IGroups) {
+        this._options.collapsedGroups = value;
+        // reset created groups
+        this._groups = [];
+        this._itemsOrder = null;
+    }
+
+    get groups(): Array<GroupItem<IGroup>> {
+        return this._groups;
     }
 
     // region IItemsStrategy
@@ -212,7 +228,9 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
         return Group.sortItems<S, T>(this.source.items, {
             display: this.options.display as Collection<S, T>,
             handler: this._options.handler,
-            groups: this._groups
+            collapsedGroups: this._options.collapsedGroups,
+            groups: this._groups,
+            groupConstructor: this._options.groupConstructor
         });
     }
 
@@ -263,10 +281,13 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
 
             // Create group with this groupId if necessary
             if (groupsId.indexOf(groupId) === -1) {
-                const group = new GroupItem<GroupContents>({
+                const isCollapsed = options.collapsedGroups && options.collapsedGroups.indexOf(groupId) !== -1;
+                const group = new options.groupConstructor({
                     owner: display as any,
-                    contents: groupId
-                });
+                    contents: groupId,
+                    expanded: !isCollapsed,
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
+                }) as GroupItem<IGroup>;
 
                 groupIndex = groups.length;
 

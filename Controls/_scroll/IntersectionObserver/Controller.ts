@@ -18,36 +18,11 @@ export interface IIntersectionObserverControllerOptions extends IControlOptions,
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
  *
  * @class Controls/_scroll/IntersectionObserver/Controller
- * @control
+ * 
  * @author Красильников А.С.
  * @see Controls/_scroll/IntersectionObserver/Container
  * @demo Controls-demo/Scroll/IntersectionObserverController/Index
  * @public
- */
-
-/**
- * @name Controls/_scroll/IntersectionObserver/Controller#observerName
- * @cfg {String} Контроллер следит только за элементами с таким же именем.
- */
-
-/**
- * @name Controls/_scroll/IntersectionObserver/Controller#threshold
- * @cfg {Array} Число или массив чисел, указывающий, при каком проценте видимости целевого элемента должен
- * сработать callback. Например, в этом случае callback функция будет вызываться при появлении в зоне видимости
- * каждые 25% целевого элемента:  [0, 0.25, 0.5, 0.75, 1]
- */
-
-/**
- * @name Controls/_scroll/IntersectionObserver/Controller#rootMargin
- * @cfg {String} Смещение прямоугольника, применяемое к bounding box корня при расчёте пересечений,
- * эффективно сжимает или увеличивает корень для целей расчёта. Может быть выражено в пикселях (px) или в процентах (%).
- * Например "50% 0px 0px 0px"
- * @default "0px 0px 0px 0px".
- */
-
-/**
- * @event Controls/_scroll/IntersectionObserver/Controller#intersect Происходит когда цель достигает порогового значения,
- * указанного в опции threshold
  */
 
 class IntersectionObserverController extends Control<IIntersectionObserverControllerOptions> {
@@ -97,4 +72,28 @@ class IntersectionObserverController extends Control<IIntersectionObserverContro
     }
 }
 
+/**
+ * @name Controls/_scroll/IntersectionObserver/Controller#observerName
+ * @cfg {String} Контроллер следит только за элементами с таким же именем.
+ */
+
+/**
+ * @name Controls/_scroll/IntersectionObserver/Controller#threshold
+ * @cfg {Array} Число или массив чисел, указывающий, при каком проценте видимости целевого элемента должен
+ * сработать callback. Например, в этом случае callback функция будет вызываться при появлении в зоне видимости
+ * каждые 25% целевого элемента:  [0, 0.25, 0.5, 0.75, 1]
+ */
+
+/**
+ * @name Controls/_scroll/IntersectionObserver/Controller#rootMargin
+ * @cfg {String} Смещение прямоугольника, применяемое к bounding box корня при расчёте пересечений,
+ * эффективно сжимает или увеличивает корень для целей расчёта. Может быть выражено в пикселях (px) или в процентах (%).
+ * Например "50% 0px 0px 0px"
+ * @default "0px 0px 0px 0px".
+ */
+
+/**
+ * @event Происходит когда цель достигает порогового значения, указанного в опции threshold
+ * @name Controls/_scroll/IntersectionObserver/Controller#intersect
+ */
 export default IntersectionObserverController;

@@ -12,28 +12,6 @@ import { Model } from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import { Sticky, IStickyPopupOptions } from 'Controls/popup';
 
-/**
- * Контрол, отображающий коллекцию элементов.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
- *
- * @class Controls/_lookup/SelectedCollection
- * @extends Core/Control
- * @control
- * @public
- * @author Герасимов А.М.
- */
-/*
- * Control, that display collection of items.
- *
- * @class Controls/_lookup/SelectedCollection
- * @extends Core/Control
- * @control
- * @author Герасимов А.М.
- */
-
 const JS_CLASS_CAPTION_ITEM = '.js-controls-SelectedCollection__item__caption';
 const JS_CLASS_CROSS_ITEM = '.js-controls-SelectedCollection__item__cross';
 
@@ -47,7 +25,27 @@ export interface ISelectedCollectionOptions extends IControlOptions{
 interface ISelectedCollectionChildren {
    infoBoxLink: HTMLElement;
 }
-
+/**
+ * Контрол, отображающий коллекцию элементов.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
+ *
+ * @class Controls/_lookup/SelectedCollection
+ * @extends Core/Control
+ * 
+ * @public
+ * @author Герасимов А.М.
+ */
+/*
+ * Control, that display collection of items.
+ *
+ * @class Controls/_lookup/SelectedCollection
+ * @extends Core/Control
+ * 
+ * @author Герасимов А.М.
+ */
 class SelectedCollection extends Control<ISelectedCollectionOptions, number> {
    protected _template: TemplateFunction = template;
    protected _visibleItems: Model[] = null;

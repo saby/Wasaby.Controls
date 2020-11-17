@@ -5,7 +5,6 @@
  * @includes ArrowButton Controls/_buttons/ArrowButton
  * @includes IClick Controls/_buttons/interface/IClick
  * @includes IButton Controls/_buttons/interface/IButton
- * @includes IArrowButton Controls/_buttons/interface/IArrowButton
  * @author Красильников А.С.
  */
 

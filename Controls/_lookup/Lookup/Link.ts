@@ -15,7 +15,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IHeight
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -26,7 +26,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IHeight
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

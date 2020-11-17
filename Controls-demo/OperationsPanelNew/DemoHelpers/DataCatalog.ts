@@ -170,7 +170,7 @@ function getListData(): Array<{
       id: 15,
       Раздел: 2,
       'Раздел@': true,
-      'Раздел$': true,
+      Раздел$: true,
       name: 'Бегунов А.В.',
       photo: null,
       position: null,

@@ -6,9 +6,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // @ts-ignore
 import * as template from 'wml!Controls/_decorator/Phone/Phone';
 
-import {toString} from 'Controls/inputUtils';
+import toString from 'Controls/_decorator/inputUtils/toString';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Phone}.
  * @interface Controls/_decorator/Phone/IPhoneOptions
  * @public
  * @author Красильников А.С.
@@ -23,14 +24,16 @@ export interface IPhoneOptions extends IControlOptions {
 }
 
 /**
- * Графический контрол, декорирующий телефонный номер таким образом, что он приводится к формату:
+ * Графический контрол, декорирующий телефонный номер таким образом, что он приводится к заданному формату.
  *
+ * @remark
+ * Форматы телефонных номеров:
+ * 
  * * Российские мобильные номера, например +7(XXX) XXX-XX-XX[ доб. {остальные цифры}];
  * * Российские мобильные номера в зависимости от кода города, например +7(XXXX) XX-XX-XX[ доб. {остальные цифры}] или +7(XXXXX) X-XX-XX[ доб. {остальные цифры}];
  * * Иностранные номера, например +{иностранный код} {остальные цифры};
  * * Остальные номера отображаются как есть без формата.
  *
- * @remark
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
  *

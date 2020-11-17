@@ -1,6 +1,6 @@
 import {Logger} from 'UI/Utils';
 import {descriptor} from 'Types/entity';
-import {escapeSpecialChars, addWordCheck} from 'Controls/inputUtils';
+import {escapeSpecialChars, addWordCheck} from 'Controls/_decorator/inputUtils/RegExp';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 //@ts-ignore
 import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
@@ -14,6 +14,7 @@ import * as template from 'wml!Controls/_decorator/Highlight/Highlight';
 export type HighlightMode = 'word' | 'substring';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Highlight}.
  * @interface Controls/_decorator/Highlight/IHighlightOptions
  * @public
  * @author Красильников А.С.

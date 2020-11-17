@@ -72,6 +72,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
+    _onAfterCollectionChangeFnc: null,
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
 
@@ -80,6 +81,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._itemDataCache = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+        this._onAfterCollectionChangeFnc = this._onAfterCollectionChange.bind(this);
         this._onMetaDataChanged = this._onMetaDataChanged.bind(this);
         if (cfg.items) {
             if (cfg.itemsReadyCallback) {
@@ -90,6 +92,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display = this._prepareDisplay(cfg.items, this._options);
             this._updateResults(this._items);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            this._display.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
         }
     },
 
@@ -430,6 +433,11 @@ var ItemsViewModel = BaseViewModel.extend({
         this._nextModelVersion(shouldNotUpdatePrefix, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
+
+    _onAfterCollectionChange(): void {
+        this._notify('onAfterCollectionChange');
+    },
+
     _onBeginCollectionChange: function() {
         // method may be implemented
     },
@@ -545,10 +553,12 @@ var ItemsViewModel = BaseViewModel.extend({
 
     // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
     setItems(items, cfg): void {
+        const metaData = items.getMetaData();
         if (_private.isEqualItems(this._items, items)) {
-            this._items.setMetaData(items.getMetaData());
+            this._items.setMetaData(metaData);
             this._items.assign(items);
             this._updateSubscriptionOnMetaChange(this._items, items, true);
+            this._display.setHasMoreData(metaData?.more);
         } else {
             if (this._options.itemsReadyCallback) {
                 this._options.itemsReadyCallback(items);
@@ -558,9 +568,12 @@ var ItemsViewModel = BaseViewModel.extend({
             const oldDisplay = this._display;
             this._display = this._prepareDisplay(this._items, cfg);
             this._updateResults(this._items);
+            this._display.setHasMoreData(metaData?.more);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            this._display.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
             if (oldDisplay) {
                 oldDisplay.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
+                oldDisplay.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
                 oldDisplay.destroy();
             }
             this.setIndexes(0, this.getCount());
@@ -673,6 +686,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
+        this._onAfterCollectionChangeFnc = null;
     },
 
     setHasMoreData(hasMoreData: boolean): boolean {

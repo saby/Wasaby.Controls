@@ -48,7 +48,7 @@ define([
             templateOptions: {}
          };
 
-         var ERROR_TEXT = 'Ошибка загрузки контрола ControlsUnit/Async/Fail/TestControlSync\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
+         var ERROR_TEXT = 'Ошибка загрузки контрола "ControlsUnit/Async/Fail/TestControlSync"\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
 
          var async = new Async(options);
          return async._beforeMount(options).then(function () {
@@ -83,7 +83,7 @@ define([
             templateName: 'ControlsUnit/Async/Fail/TestControlSync',
             templateOptions: {}
          };
-         var ERROR_TEXT = 'Ошибка загрузки контрола ControlsUnit/Async/Fail/TestControlSync\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
+         var ERROR_TEXT = 'Ошибка загрузки контрола "ControlsUnit/Async/Fail/TestControlSync"\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
 
          var async = new Async(options);
          return async._beforeMount(options).then(function() {
@@ -136,7 +136,7 @@ define([
             templateOptions: {}
          };
 
-         var ERROR_TEXT = 'Ошибка загрузки контрола ControlsUnit/Async/Fail/TestControlAsync\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
+         var ERROR_TEXT = 'Ошибка загрузки контрола "ControlsUnit/Async/Fail/TestControlAsync"\nВозможны следующие причины:\n\t                   • Ошибка в самом контроле\n\t                   • Долго отвечал БЛ метод в _beforeUpdate\n\t                   • Контрола не существует';
 
          let async = new Async(options);
          async._beforeMount(options);

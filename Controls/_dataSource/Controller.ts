@@ -31,6 +31,8 @@ export interface IControllerState {
     sorting: QueryOrderSelector;
     filter: QueryWhereExpression<unknown>;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
+
+    parentProperty?: string;
     root?: TKey;
 
     items: RecordSet;
@@ -50,6 +52,15 @@ export interface IControllerOptions extends
     expandedItems?: TKey[];
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
+    navigationParamsChangedCallback?: Function;
+}
+
+interface ILoadConfig {
+    filter?: QueryWhereExpression<unknown>;
+    sorting?: QueryOrderSelector;
+    key?: TKey;
+    navigationSourceConfig?: INavigationSourceConfig;
+    direction?: Direction;
 }
 
 type LoadResult = Promise<RecordSet|Error>;
@@ -68,7 +79,7 @@ export default class Controller {
     private _loadPromise: CancelablePromise<LoadResult>;
 
     private _parentProperty: string;
-    private _root: TKey;
+    private _root: TKey = null;
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
@@ -77,23 +88,32 @@ export default class Controller {
         this._options = cfg;
         this._filter = cfg.filter;
 
-        this.setRoot(cfg.root);
+        if (cfg.root !== undefined) {
+            this.setRoot(cfg.root);
+        }
         this.setParentProperty(cfg.parentProperty);
 
         this._collectionChange = this._collectionChange.bind(this);
     }
     load(direction?: Direction,
          key: TKey = this._root,
-         navigationSourceConfig?: INavigationSourceConfig
+         filter?: QueryWhereExpression<unknown>
     ): Promise<LoadResult> {
-        return this._load(direction, key, navigationSourceConfig);
+        return this._load({
+            direction,
+            key,
+            filter
+        });
     }
 
     reload(sourceConfig?: INavigationSourceConfig): LoadResult {
         this._navigationController = null;
         this._deepReload = true;
 
-        return this._load(undefined, this._root, sourceConfig).then((result) => {
+        return this._load({
+            key: this._root,
+            navigationSourceConfig: sourceConfig
+        }).then((result) => {
             this._deepReload = false;
             return result;
         });
@@ -112,12 +132,10 @@ export default class Controller {
     }
 
     setItems(items: RecordSet): RecordSet {
-        this._setItems(items);
-
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._root);
+            this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
-
+        this._setItems(items);
         return this._items;
     }
 
@@ -138,6 +156,10 @@ export default class Controller {
         this._root = key;
     }
 
+    getRoot(): TKey {
+        return this._root;
+    }
+
     // FIXME, если parentProperty задаётся на списке, а не на data(browser)
     setParentProperty(parentProperty: string): void {
         this._parentProperty = parentProperty;
@@ -147,6 +169,7 @@ export default class Controller {
         const isFilterChanged = !isEqual(newOptions.filter, this._options.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
+        const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
 
         if (isFilterChanged) {
             this._filter = newOptions.filter;
@@ -156,11 +179,11 @@ export default class Controller {
             this.setParentProperty(newOptions.parentProperty);
         }
 
-        if (newOptions.root !== undefined && newOptions.root !== this._options.root) {
+        if (rootChanged) {
             this.setRoot(newOptions.root);
         }
 
-        if (newOptions.expandedItems !== this._options.expandedItems) {
+        if (newOptions.expandedItems !== undefined && newOptions.expandedItems !== this._options.expandedItems) {
             this.setExpandedItems(newOptions.expandedItems);
         }
 
@@ -176,7 +199,7 @@ export default class Controller {
                         navigationConfig: newOptions.navigation.sourceConfig
                     });
                 } else {
-                    this._navigationController = this._getNavigationController(newOptions.navigation);
+                    this._navigationController = this._getNavigationController(newOptions);
                 }
             }
 
@@ -188,7 +211,7 @@ export default class Controller {
             isSourceChanged ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
-            newOptions.root !== this._options.root;
+            rootChanged;
 
         this._options = newOptions;
         return isChanged;
@@ -204,7 +227,9 @@ export default class Controller {
             filter: this._filter,
             sorting: this._options.sorting,
             navigation: this._options.navigation,
-            root: this._options.root,
+
+            parentProperty: this._parentProperty,
+            root: this._root,
 
             items: this._items,
             // FIXME sourceController не должен создаваться, если нет source
@@ -219,19 +244,29 @@ export default class Controller {
     }
 
     // FIXME для поддержки nodeSourceControllers в дереве
-    calculateState(items: RecordSet, direction: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key);
+    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
+        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
         let hasMoreData = false;
 
         if (this._hasNavigationBySource()) {
-            hasMoreData = this._getNavigationController(this._options.navigation)
+            hasMoreData = this._getNavigationController(this._options)
                 .hasMoreData(NAVIGATION_DIRECTION_COMPATIBILITY[direction], key);
         }
 
         return hasMoreData;
+    }
+
+    hasLoaded(key: TKey): boolean {
+        let loadedResult = false;
+
+        if (this._hasNavigationBySource()) {
+            loadedResult = this._getNavigationController(this._options).hasLoaded(key);
+        }
+
+        return loadedResult;
     }
 
     isLoading(): boolean {
@@ -240,7 +275,7 @@ export default class Controller {
 
     shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            return this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -270,12 +305,16 @@ export default class Controller {
     }
 
     private _getNavigationController(
-        navigationOption: INavigationOptionValue<INavigationSourceConfig>
+        {
+            navigation,
+            navigationParamsChangedCallback
+        }: Partial<IControllerOptions>
     ): NavigationController {
         if (!this._navigationController) {
             this._navigationController = new NavigationController({
-                navigationType: navigationOption.source,
-                navigationConfig: navigationOption.sourceConfig
+                navigationType: navigation.source,
+                navigationConfig: navigation.sourceConfig,
+                navigationParamsChangedCallback
             });
         }
 
@@ -289,7 +328,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            this._getNavigationController(this._options)
                 .updateQueryProperties(list, id, navigationConfig, NAVIGATION_DIRECTION_COMPATIBILITY[direction]);
         }
     }
@@ -300,7 +339,7 @@ export default class Controller {
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
         ): IQueryParams {
-        const navigationController = this._getNavigationController(this._options.navigation);
+        const navigationController = this._getNavigationController(this._options);
         return navigationController.getQueryParams(
             {
                 filter: queryParams.filter,
@@ -322,15 +361,12 @@ export default class Controller {
         }
     }
 
-    private _load(
-        direction?: Direction,
-        key?: TKey,
-        navigationSourceConfig?: INavigationSourceConfig
-    ): Promise<LoadResult> {
+    private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): Promise<LoadResult> {
         if (this._options.source) {
+            const filterPromise = filter ? Promise.resolve(filter) : this._prepareFilterForQuery(this._filter, key);
             this.cancelLoading();
             this._loadPromise = new CancelablePromise(
-                this._prepareFilterForQuery(key).then((preparedFilter: QueryWhereExpression<unknown>) => {
+                filterPromise.then((preparedFilter: QueryWhereExpression<unknown>) => {
                     // В source может лежать prefetchProxy
                     // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
                     const source = direction !== undefined ?
@@ -356,7 +392,8 @@ export default class Controller {
                 })
                 .catch((error) => {
                     this._loadPromise = null;
-                    return error;
+                    this._navigationController = null;
+                    return this._processQueryError(error);
                 });
 
             return this._loadPromise.promise;
@@ -369,8 +406,7 @@ export default class Controller {
     private _getFilterHierarchy(
         initialFilter: QueryWhereExpression<unknown>,
         options: IControllerOptions,
-        root?: TKey): Promise<QueryWhereExpression<unknown>> {
-        const rootForFilter = root || this._root;
+        root: TKey = this._root): Promise<QueryWhereExpression<unknown>> {
         const expandedItemsForFilter = this._expandedItems || options.expandedItems;
         const parentProperty = this._parentProperty;
         const deepReload = this._deepReload || options.deepReload;
@@ -384,10 +420,10 @@ export default class Controller {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
-                    resultFilter[parentProperty].push(rootForFilter);
+                    resultFilter[parentProperty].push(root);
                     resultFilter[parentProperty] = resultFilter[parentProperty].concat(expandedItemsForFilter);
-                } else if (rootForFilter !== undefined) {
-                    resultFilter[parentProperty] = rootForFilter;
+                } else if (root !== undefined) {
+                    resultFilter[parentProperty] = root;
                 }
 
                 if (options.selectedKeys && options.selectedKeys.length) {
@@ -407,8 +443,11 @@ export default class Controller {
         });
     }
 
-    private _prepareFilterForQuery(key: TKey): Promise<QueryWhereExpression<unknown>> {
-        return Controller._getFilterForCollapsedGroups(this._filter, this._options)
+    private _prepareFilterForQuery(
+        filter: QueryWhereExpression<unknown>,
+        key: TKey
+    ): Promise<QueryWhereExpression<unknown>> {
+        return Controller._getFilterForCollapsedGroups(filter, this._options)
             .then((preparedFilter: QueryWhereExpression<unknown>) => {
                 return this._getFilterHierarchy(preparedFilter, this._options, key);
             });
@@ -419,13 +458,15 @@ export default class Controller {
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction): LoadResult {
-        if (result instanceof Error) {
-            if (this._options.dataLoadErrback instanceof Function) {
-                this._options.dataLoadErrback(result);
-            }
-        }
-        if (result instanceof RecordSet) {
-            this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        return result;
+    }
+
+    private _processQueryError(
+        result: LoadResult
+    ): LoadResult {
+        if (this._options.dataLoadErrback instanceof Function) {
+            this._options.dataLoadErrback(result);
         }
         return result;
     }
@@ -445,7 +486,7 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._root);
+            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
         }
     }
 
@@ -473,11 +514,15 @@ export default class Controller {
         const historyId = hasGrouping ? (options.groupHistoryId || options.historyIdCollapsedGroups) : undefined;
         const collapsedGroups = options.collapsedGroups;
         const getFilterWithCollapsedGroups = (collapsedGroupsIds: TArrayGroupId) => {
-            let modifiedFilter: Record<string, unknown> = {};
+            let modifiedFilter;
+
             if (collapsedGroupsIds && collapsedGroupsIds.length) {
                 modifiedFilter = { ...initialFilter };
                 modifiedFilter.collapsedGroups = collapsedGroupsIds;
+            } else {
+                modifiedFilter = initialFilter;
             }
+
             return modifiedFilter;
         };
         let resultFilterPromise;

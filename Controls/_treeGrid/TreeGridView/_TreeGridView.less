@@ -8,6 +8,9 @@
 @_hierarchy_offset_l_treeGrid:    @expander_l_padding-left_treeGrid + @expander_l_padding-right_treeGrid + @expander_width_treeGrid;
 @_hierarchy_offset_xl_treeGrid:   @expander_xl_padding-left_treeGrid + @expander_xl_padding-right_treeGrid + @expander_width_treeGrid;
 
+.controls-TreeGrid__row_expander_position_right_theme-@{themeName} {
+   padding-left: @expander_position-right_padding-left_treeGrid;
+}
 .controls-TreeGrid__row_default-expander_size_s_theme-@{themeName}, .controls-TreeGrid__row-expanderPadding_size_s_theme-@{themeName} {
    padding-left: @expander_s_padding-left_treeGrid;
    padding-right: @expander_s_padding-right_treeGrid;
@@ -98,7 +101,8 @@
    visibility: hidden;
 }
 
-.controls-TreeGrid__row-expander_node_default_theme-@{themeName}:before {
+.controls-TreeGrid__row-expander_node_default_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_emptyNode_default_theme-@{themeName}:before {
    color: @node_expander_icon-color_treeGrid;
    font-family: @node_expander_icon_font-family_treeGrid;
    font-size: @node_expander_icon-size_treeGrid;
@@ -113,9 +117,14 @@
 }
 
 .controls-TreeGrid__row-expander_node_default_theme-@{themeName}:before,
-.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before {
+.controls-TreeGrid__row-expander_emptyNode_default_theme-@{themeName}:before {
    position: relative;
    bottom: -@expander_padding_icon-treeGrid;
+}
+
+.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before {
+   position: relative;
+   bottom: -@expander_padding_icon-hidden-node-treeGrid;
 }
 
 .controls-TreeGrid__row-expander_node_master_theme-@{themeName}:before {
@@ -142,19 +151,29 @@
 }
 .controls-TreeGrid__row-expander_node_default_collapsed_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_node_master_collapsed_theme-@{themeName}:before {
-   content: '\e96e';
+   content: @node_expander_collapsed_icon-content_treeGrid;
 }
 .controls-TreeGrid__row-expander_node_default_expanded_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_node_master_expanded_theme-@{themeName}:before {
-   content: '\e96d';
+   content: @node_expander_icon-content_treeGrid;
+}
+
+.controls-TreeGrid__row-expander_emptyNode_default_collapsed_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_emptyNode_master_collapsed_theme-@{themeName}:before {
+   content: @empty-node_expander_collapsed_icon-content_treeGrid;
+}
+
+.controls-TreeGrid__row-expander_emptyNode_default_expanded_theme-@{themeName}:before,
+.controls-TreeGrid__row-expander_emptyNode_master_expanded_theme-@{themeName}:before {
+   content: @empty-node_expander_icon-content_treeGrid;
 }
 .controls-TreeGrid__row-expander_hiddenNode_default_collapsed_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_hiddenNode_master_collapsed_theme-@{themeName}:before {
-   content: '\e9c2';
+   content: @hidden-node_expander_collapsed_icon-content_treeGrid;
 }
 .controls-TreeGrid__row-expander_hiddenNode_default_expanded_theme-@{themeName}:before,
 .controls-TreeGrid__row-expander_hiddenNode_master_expanded_theme-@{themeName}:before {
-   content: '\e9c1';
+   content: @hidden-node_expander_icon-content_treeGrid;
 }
 
 .controls-TreeGrid__row {
@@ -213,6 +232,10 @@
 }
 .controls-TreeGrid__row-levelPadding_size_xl_theme-@{themeName}{
    width: @_hierarchy_offset_xl_treeGrid;
+}
+// при поиске иерархический отступ по стандарту 20px
+.controls-TreeGrid__row-levelPadding_size_search_theme-@{themeName} {
+   width: @search-hierarchy_offset_treeGrid;
 }
 .controls-TreeGridView__footer__expanderPadding-default_theme-@{themeName}{
    margin-left: @_hierarchy_offset_s_treeGrid;
@@ -333,7 +356,7 @@
    z-index: 2;
 }
 
-.controls-Grid__row-cell-background-editing_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
+.controls-Grid__row-cell-editing_theme-@{themeName} > .controls-TreeGridView__row-cell_innerWrapper > .controls-itemActionsV {
    visibility: visible;
    opacity: 1;
 }
@@ -353,9 +376,21 @@
    // https://online.sbis.ru/opendoc.html?guid=7ec6ad1a-6c9d-412d-b477-7935d81c82cc
    z-index: 3;
 }
+.controls-TreeGrid__row__searchSeparator_theme-@{themeName} {
+}
+
+.controls-TreeGrid__row__searchSeparator_line_horizontal_theme-@{themeName} {
+   margin-top: @search-separator_padding-top_treeGrid;
+   margin-bottom: @search-separator_padding-bottom_treeGrid;
+   width: @search-separator_length_treeGrid;
+   height: @search-separator_thickness_treeGrid;
+   background-color: @search-separator_color_treeGrid;
+   display: block;
+}
 
 .ws-is-hover {
-   .controls-TreeGrid__row-expander_node_default_theme-@{themeName}:hover:before {
+   .controls-TreeGrid__row-expander_node_default_theme-@{themeName}:hover:before,
+   .controls-TreeGrid__row-expander_emptyNode_default_theme-@{themeName}:hover:before {
       color: @node_expander_hover_icon-color_treeGrid;
    }
    .controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:hover:before {

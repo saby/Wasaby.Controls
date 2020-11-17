@@ -152,6 +152,7 @@ var
 
         shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
+
             if (expanderIcon === 'none' || itemData.item.get(itemData.nodeProperty) === null) {
                 return false;
             }
@@ -161,12 +162,13 @@ var
         },
         shouldDrawExpanderPadding(itemData, tmplExpanderIcon, tmplExpanderSize): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
+            const expanderPosition = itemData.getExpanderPosition();
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
 
             if (itemData.expanderVisibility === 'hasChildren') {
-                return itemData.thereIsChildItem && expanderIcon !== 'none';
+                return itemData.thereIsChildItem && (expanderIcon !== 'none' && expanderPosition === 'default');
             } else {
-                return !expanderSize && expanderIcon !== 'none';
+                return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
             }
         },
         getExpanderPaddingClasses(itemData, tmplExpanderSize, isNodeFooter): string {
@@ -178,6 +180,7 @@ var
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
+            const expanderPosition = itemData.getExpanderPosition();
             const theme = itemData.theme;
             const style = itemData.style || 'default';
             const itemType = itemData.item.get(itemData.nodeProperty);
@@ -185,7 +188,11 @@ var
             let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
             let expanderIconClass = '';
 
-            expanderClasses += ' controls-TreeGrid__row_' + style + '-expander_size_' + (expanderSize || 'default') + `_theme-${theme} `;
+            if (expanderPosition !== 'right') {
+                expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
+            } else {
+                expanderClasses += ` controls-TreeGrid__row_expander_position_right_theme-${theme} `;
+            }
             expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
             expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
@@ -196,7 +203,7 @@ var
                 expanderClasses += expanderIconClass;
 
                 // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
-                if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode')) {
+                if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode') || (expanderIcon === 'emptyNode')) {
                     expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
                 }
             } else {
@@ -440,6 +447,7 @@ var
             this._options = cfg;
             this._expandedItems = cfg.expandedItems ? cClone(cfg.expandedItems) : [];
             this._collapsedItems = _private.prepareCollapsedItems(this._expandedItems, cfg.collapsedItems);
+            this._hasMoreStorage = {};
             this._hierarchyRelation = new relation.Hierarchy({
                 keyProperty: cfg.keyProperty || 'id',
                 parentProperty: cfg.parentProperty || 'Раздел',
@@ -609,9 +617,16 @@ var
                 current._treeViewModelCached = true;
             }
 
-
             current.getExpanderIcon = (tmplExpanderIcon) => tmplExpanderIcon || this._options.expanderIcon;
+            current.getExpanderPosition = () => this._options.expanderPosition;
             current.getExpanderSize = (tmplExpanderSize) => tmplExpanderSize || this._options.expanderSize;
+
+            current.isDrawExpander = (columnIndex, expanderIcon, expanderPosition: 'default' | 'right') => {
+                return ((current.hasMultiSelectColumn && columnIndex === 1 ||
+                    !current.hasMultiSelectColumn && columnIndex === 0) &&
+                    current.shouldDrawExpander(current, expanderIcon) &&
+                    current.getExpanderPosition() === expanderPosition);
+            };
 
             // 1. Нужен ли экспандер.
             current.shouldDrawExpander = _private.shouldDrawExpander;
@@ -638,7 +653,7 @@ var
                 return `controls-TreeGrid__row-levelPadding_size_${correctLevelIndentSize}_theme-${current.theme}`;
             };
 
-            current.isExpanded = current.item.get && this.isExpanded(dispItem);
+            current.isExpanded = current.item && current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.thereIsChildItem = this._thereIsChildItem;
@@ -648,7 +663,7 @@ var
             current.expanderTemplate = this._options.expanderTemplate;
             current.footerContentTemplate = this._options.footerContentTemplate;
 
-            if (current.item.get) {
+            if (current.item && current.item.get) {
                 current.level = current.dispItem.getLevel();
             }
 
@@ -665,7 +680,7 @@ var
             }
 
             current.useNewNodeFooters = this._options.useNewNodeFooters;
-            if (current.item.get) {
+            if (current.item && current.item.get) {
                 _private.setNodeFooterIfNeed(this, current);
             }
 

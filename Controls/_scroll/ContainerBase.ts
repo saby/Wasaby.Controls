@@ -12,6 +12,7 @@ import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
 import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import {tmplNotify} from 'Controls/eventUtils';
+import {isHidden} from './StickyHeader/Utils';
 
 export interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: SCROLL_MODE;
@@ -51,7 +52,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _savedScrollTop: number = 0;
     private _savedScrollPosition: number = 0;
 
+    private _virtualNavigationRegistrar: RegisterClass;
+
     _beforeMount(options: IContainerBaseOptions): void {
+        this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
         this._registrars.scrollStateChanged = new RegisterClass({register: 'scrollStateChanged'});
@@ -116,7 +120,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _observeContentSize(): void {
-        for (const element of this._children.content.children) {
+        for (const element of this._getElementsForHeightCalculation()) {
             if (!this._observedElements.includes(element)) {
                 this._resizeObserver.observe(element);
                 this._observedElements.push(element);
@@ -124,7 +128,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
     _unobserveDeleted(): void {
-        const contentElements: HTMLElement[] = [...this._children.content.children];
+        const contentElements: HTMLElement[] = this._getElementsForHeightCalculation();
         this._observedElements = this._observedElements.filter((element: HTMLElement) => {
             if (!contentElements.includes(element)) {
                 this._resizeObserver.unobserve(element);
@@ -142,7 +146,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._onResizeContainer(this._getFullStateFromDOM());
     }
 
-    _scrollHandler(e: SyntheticEvent): void {
+    protected _scrollHandler(e: SyntheticEvent): void {
         if (this._scrollLockedPosition !== null) {
             this._children.content.scrollTop = this._scrollLockedPosition;
             return;
@@ -166,12 +170,22 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
 
         this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
+        this._virtualNavigationRegistrar.register(event, registerType, component, callback);
     }
 
-    _unRegisterIt(e: SyntheticEvent, registerType: string, component: any): void {
-        this._registrars.scrollStateChanged.unregister(e, registerType, component);
-        this._registrars.listScroll.unregister(e, registerType, component);
-        this._registrars.scroll.unregister(e, registerType, component);
+    _unRegisterIt(event: SyntheticEvent, registerType: string, component: any): void {
+        this._registrars.scrollStateChanged.unregister(event, registerType, component);
+        this._registrars.scroll.unregister(event, registerType, component);
+        this._registrars.listScroll.unregister(event, registerType, component);
+        this._virtualNavigationRegistrar.unregister(event, registerType, component);
+    }
+
+    protected _enableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(true);
+    }
+
+    protected _disableVirtualNavigationHandler(): void {
+        this._virtualNavigationRegistrar.start(false);
     }
 
     // _createEdgeIntersectionObserver() {
@@ -203,8 +217,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     /**
      * Возвращает true если есть возможность вроскролить к позиции offset.
-     * @function Controls/_scroll/Container#canScrollTo
-     * @param offset Позиция в пикселях
+     * @name Controls/_scroll/Container#canScrollTo
+     * @function
+     * @param {Number} offset Позиция в пикселях
      * @noshow
      */
     canScrollTo(offset: number): boolean {
@@ -213,8 +228,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     /**
      * Скроллит к выбранной позиции по горизонтале. Позиция определяется в пикселях от левого края контейнера.
-     * @function Controls/_scroll/Container#horizontalScrollTo
-     * @param {Number} Позиция в пикселях
+     * @name Controls/_scroll/Container#horizontalScrollTo
+     * @function
+     * @param {Number} offset Позиция в пикселях.
      */
 
     /*
@@ -227,53 +243,73 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к верху контейнера
-     * @function Controls/_scroll/Container#scrollToTop
+     * Скроллит к верху контейнера.
+     * @name Controls/_scroll/Container#scrollToTop
+     * @function 
+     * @see scrollToBottom
+     * @see scrollToLeft
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the top of the container.
-     * @function Controls/_scroll/Container#scrollToTop
+     * @name Controls/_scroll/Container#scrollToTop
+     * @function
      */
     scrollToTop() {
-        this.setScrollTop(0);
+        this._setScrollTop(0);
     }
 
     /**
-     * Скроллит к левому краю контейнера
-     * @function Controls/_scroll/Container#scrollToTop
+     * Скроллит к левому краю контейнера.
+     * @name Controls/_scroll/Container#scrollToLeft
+     * @function
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the lefе of the container.
-     * @function Controls/_scroll/Container#scrollToTop
+     * @name Controls/_scroll/Container#scrollToLeft
+     * @function
      */
     scrollToLeft() {
         this.scrollTo(0, SCROLL_DIRECTION.HORIZONTAL);
     }
 
     /**
-     * Скроллит к низу контейнера
-     * @function Controls/_scroll/Container#scrollToBottom
+     * Скроллит к низу контейнера.
+     * @name Controls/_scroll/Container#scrollToBottom
+     * @function
+     * @see scrollToTop
+     * @see scrollToLeft
+     * @see scrollToRight
      */
 
     /*
      * Scrolls to the bottom of the container.
-     * @function Controls/_scroll/Container#scrollToBottom
+     * @name Controls/_scroll/Container#scrollToBottom
+     * @function
      */
     scrollToBottom() {
-        this.setScrollTop(
+        this._setScrollTop(
             this._children.content.scrollHeight - this._children.content.clientHeight + this._topPlaceholderSize);
     }
 
     /**
-     * Скроллит к правому краю контейнера
-     * @function Controls/_scroll/Container#scrollToBottom
+     * Скроллит к правому краю контейнера.
+     * @name Controls/_scroll/Container#scrollToRight
+     * @function
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToLeft
      */
 
     /*
      * Scrolls to the right of the container.
-     * @function Controls/_scroll/Container#scrollToBottom
+     * @name Controls/_scroll/Container#scrollToRight
+     * @function
      */
     scrollToRight() {
         this.scrollTo(this._state.scrollWidth - this._state.clientWidth, SCROLL_DIRECTION.HORIZONTAL);
@@ -352,6 +388,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _resizeObserverCallback(entries: any): void {
+        if(isHidden(this._container)) {
+            return;
+        }
         const newState: IScrollState = {};
         for (const entry of entries) {
             if (entry.target === this._children.content) {
@@ -367,14 +406,63 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Раньше scrollHeight считался следующим образом.
         // newState.scrollHeight = entry.contentRect.height;
         // newState.scrollWidth = entry.contentRect.width;
-        if (newState.scrollHeight === undefined) {
-            newState.scrollHeight = this._children.content.scrollHeight;
-        }
-        if (newState.scrollWidth === undefined) {
-            newState.scrollWidth = this._children.content.scrollWidth;
+        let children = this._children.content.children;
+        let heigthValue = 0;
+        let widthValue = 0;
+
+        for (const child of this._getElementsForHeightCalculation()) {
+            heigthValue += this._calculateScrollHeight(child);
         }
 
+        newState.scrollHeight = heigthValue;
+
+        if (newState.scrollHeight < newState.clientHeight) {
+            newState.scrollHeight = newState.clientHeight;
+        }
+        for (let child of children) {
+            widthValue += child.offsetWidth;
+        }
+        newState.scrollWidth = widthValue;
+        if (newState.scrollWidth <  newState.clientWidth) {
+            newState.scrollWidth = newState.clientWidth;
+        }
         this._updateStateAndGenerateEvents(newState);
+    }
+
+    _getElementsForHeightCalculation(container?: HTMLElement): HTMLElement[] {
+        const elements: HTMLElement[] = [];
+        const _container: HTMLElement = container || this._children.content;
+
+        for (const child of _container.children) {
+            const ignoredChild = this._getIgnoredChild(child);
+            if (ignoredChild) {
+                for (const child of ignoredChild) {
+                    elements.push(child);
+                }
+            } else {
+                elements.push(child);
+            }
+        }
+
+        return elements;
+    }
+
+    _getIgnoredChild(container: HTMLElement): HTMLCollection {
+        // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
+        // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
+        // Должно удалиться, когда перейдем на замеры по div скроллконтейнера
+        if (container.classList.contains('Hint-ListWrapper')) {
+            return container.children;
+        } else if (container.classList.contains('Wizard-Vertical-Container__content')) {
+            const wizardContainer = container.querySelector('.Wizard-Vertical-View');
+            return wizardContainer?.children;
+        }
+        return null;
+    }
+
+    _calculateScrollHeight(element: HTMLElement): number {
+        return element.offsetHeight + parseFloat(window.getComputedStyle(element).marginTop) +
+            parseFloat(window.getComputedStyle(element).marginBottom);
     }
 
     _getFullStateFromDOM(): IScrollState {
@@ -433,20 +521,20 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     protected _doScroll(scrollParam) {
         if (scrollParam === 'top') {
-            this.setScrollTop(0);
+            this._setScrollTop(0);
         } else {
             const
                 clientHeight = this._state.clientHeight,
                 scrollHeight = this._state.scrollHeight,
                 currentScrollTop = this._state.scrollTop + (this._isVirtualPlaceholderMode() ? this._topPlaceholderSize : 0);
             if (scrollParam === 'bottom') {
-                this.setScrollTop(scrollHeight - clientHeight);
+                this._setScrollTop(scrollHeight - clientHeight);
             } else if (scrollParam === 'pageUp') {
-                this.setScrollTop(currentScrollTop - clientHeight);
+                this._setScrollTop(currentScrollTop - clientHeight);
             } else if (scrollParam === 'pageDown') {
-                this.setScrollTop(currentScrollTop + clientHeight);
+                this._setScrollTop(currentScrollTop + clientHeight);
             } else if (typeof scrollParam === 'number') {
-                this.setScrollTop(scrollParam);
+                this._setScrollTop(scrollParam);
             }
         }
     }
@@ -522,9 +610,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _onRegisterNewListScrollComponent(component: any): void {
-        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
+        // Списку нужны события canScroll и cantScroll в момент инициализации до того,
+        // как у нас отработают обработчики и инициализируются состояние.
         if (!this._isStateInitialized) {
-            return;
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
         }
         this._sendByListScrollRegistrarToComponent(
             component,
@@ -579,7 +668,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         this._bottomPlaceholderSize = placeholdersSizes.bottom;
     }
 
-    setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
+    protected _setScrollTop(scrollTop: number, withoutPlaceholder?: boolean): void {
         const scrollContainer: HTMLElement = this._children.content;
         if (this._isVirtualPlaceholderMode() && !withoutPlaceholder) {
             const scrollState: IScrollState = this._state;
@@ -647,7 +736,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference - correctingHeight :
             this._savedScrollTop - heightDifference + correctingHeight;
 
-        this.setScrollTop(newPosition, true);
+        this._setScrollTop(newPosition, true);
     }
 
     _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {

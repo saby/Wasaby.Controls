@@ -19,7 +19,7 @@ import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
-import {CollectionItem} from "../display";
+import {calculatePath} from 'Controls/dataSource';
 
 var
       HOT_KEYS = {
@@ -109,17 +109,6 @@ var
          getRoot: function(self, newRoot) {
             return typeof newRoot !== 'undefined' ? newRoot : self._root;
          },
-         getPath(data) {
-             const path = data && data.getMetaData().path;
-             let breadCrumbs;
-
-             if (path && path.getCount() > 0) {
-                 breadCrumbs = factory(path).toArray();
-             } else {
-                 breadCrumbs = null;
-             }
-             return breadCrumbs;
-         },
          resolveItemsOnFirstLoad(self, resolver, result) {
             if (self._firstLoad) {
                resolver(result);
@@ -140,7 +129,7 @@ var
             }
          },
          serviceDataLoadCallback: function(self, oldData, newData) {
-            self._breadCrumbsItems = _private.getPath(newData);
+            self._breadCrumbsItems = calculatePath(newData).path;
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
@@ -202,6 +191,7 @@ var
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
             _private.setViewConfig(self, self._viewMode);
+            _private.applyNewVisualOptions(self);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
             var result;
@@ -221,6 +211,12 @@ var
             }
 
             return result;
+         },
+         applyNewVisualOptions(self): void {
+            if (self._newItemPadding) {
+               self._itemPadding = self._newItemPadding;
+               self._newItemPadding = null;
+            }
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -365,18 +361,14 @@ var
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
     *
-    * Демо-примеры:
-    * <ul>
-    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
-    *    <li><a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Иерархический проводник в режиме "список" и строкой поиска</a></li>
-    * </ul>
+    * @demo Controls-demo/Explorer/Explorer
+    * @demo Controls-demo/Explorer/Search
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
@@ -388,18 +380,17 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    *
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
 
@@ -427,74 +418,18 @@ var
     * @mixes Controls/_interface/IHierarchy
     * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
     * @mixes Controls/_marker/interface/IMarkerListOptions
-    * @control
+    *
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
-
-   /**
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
-    * @remark Поле используется для вывода хлебных крошек.
-    * @example
-    * <pre>
-    * <Controls.explorers:View displayProperty="title">
-    *     ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} sets the property to be displayed in search results
-    * @example
-    * <pre class="brush:html">
-    * <Controls.explorers:View
-    *   ...
-    *   displayProperty="title">
-    *       ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   /**
-    * @name Controls/_explorer/View#breadcrumbsDisplayMode
-    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
-    */
-
-   /**
-    * @name Controls/_explorer/View#tileItemTemplate
-    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
-    * @default undefined
-    * @remark
-    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
-    *
-    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
-    *
-    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
-    *
-    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
-    * @example
-    * <pre class="brush: html;">
-    * <Controls.explorer:View>
-    *     <ws:tileItemTemplate>
-    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
-    *     </ws:tileItemTemplate>
-    * </Controls.explorer:View>
-    * </pre>
-    * @see itemTemplate
-    * @see itemTemplateProprty
-    */
-
     var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
@@ -512,12 +447,16 @@ var
       _markerForRestoredScroll: null,
       _navigation: null,
       _resetScrollAfterViewModeChange: false,
+      _itemPadding: {},
 
       _resolveItemsPromise() {
          this._itemsResolver();
       },
 
       _beforeMount: function(cfg) {
+         if (cfg.itemPadding) {
+            this._itemPadding = cfg.itemPadding;
+         }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -536,10 +475,12 @@ var
          }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
-         [root]: {
+            [root]: {
                markedKey: null
             }
          };
+
+         this._headerVisibility = root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
 
          // TODO: для 20.5100. в 20.6000 можно удалить
          if (cfg.displayMode) {
@@ -554,8 +495,13 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+         const loadedBySourceController = isSearchViewMode && cfg.sourceController;
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
+         this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
 
+         if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
+            this._newItemPadding = cfg.itemPadding;
+         }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
          * Чтобы список мог восстановить позицию скрола по отмеченой записи, она должна быть в наборе данных.
@@ -573,7 +519,7 @@ var
             this._navigation = cfg.navigation;
          }
 
-         if ((isViewModeChanged && isRootChanged && !isSearchViewMode) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+         if ((isViewModeChanged && isRootChanged && !loadedBySourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
@@ -587,11 +533,13 @@ var
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
             const recreateSource = cfg.source !== this._options.source;
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
-            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !isSearchViewMode) {
+            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
+         } else {
+            _private.applyNewVisualOptions(this);
          }
       },
       _beforeRender(): void {
@@ -717,7 +665,7 @@ var
          keysHandler(event, HOT_KEYS, _private, this);
       },
       _updateHeadingPath() {
-          this._breadCrumbsItems = _private.getPath(this._items);
+          this._breadCrumbsItems = calculatePath(this._items).path;
       },
       scrollToItem(key: string|number, toBottom: boolean): void {
          this._children.treeControl.scrollToItem(key, toBottom);
@@ -811,10 +759,63 @@ var
       };
    };
 
-   export = Explorer;
+   /**
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @remark Поле используется для вывода хлебных крошек.
+    * @example
+    * <pre>
+    * <Controls.explorers:View displayProperty="title">
+    *     ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} sets the property to be displayed in search results
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
 
    /**
-    * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
+    * @name Controls/_explorer/View#breadcrumbsDisplayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    */
+
+   /**
+    * @name Controls/_explorer/View#tileItemTemplate
+    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
+    * @default undefined
+    * @remark
+    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
+    *
+    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+    *
+    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    *
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
+    * @example
+    * <pre class="brush: html;">
+    * <Controls.explorer:View>
+    *     <ws:tileItemTemplate>
+    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
+    *     </ws:tileItemTemplate>
+    * </Controls.explorer:View>
+    * </pre>
+    * @see itemTemplate
+    * @see itemTemplateProprty
+    */
+   /**
+    * @event Происходит при клике на кнопку "Просмотр записи".
+    * @name Controls/_explorer/View#arrowClick
     * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     */
+   export = Explorer;

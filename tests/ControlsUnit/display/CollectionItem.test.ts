@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-
-import {CollectionItem} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
+import {Collection, CollectionItem} from 'Controls/display';
 import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {
@@ -443,7 +443,8 @@ describe('Controls/_display/CollectionItem', () => {
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;
-            }
+            },
+            getHoverBackgroundStyle: function() {}
         };
 
         const item = new CollectionItem({ owner });
@@ -460,6 +461,12 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getWrapperClasses()', () => {
+        const owner = {
+            notifyItemChange(): void {},
+            getHoverBackgroundStyle: function() {},
+            getEditingBackgroundStyle: () => 'default'
+        };
+
         const defaultClasses = [
             'controls-ListView__itemV',
             'controls-ListView__item_default',
@@ -467,10 +474,10 @@ describe('Controls/_display/CollectionItem', () => {
             'js-controls-ItemActions__swipeMeasurementContainer'
         ];
         const editingClasses = [
-            'controls-ListView__item_editing'
+            'controls-ListView__item_background-editing'
         ];
 
-        const item = new CollectionItem();
+        const item = new CollectionItem({ owner });
         const wrapperClasses = item.getWrapperClasses();
 
         defaultClasses.forEach((className) => assert.include(wrapperClasses, className));
@@ -490,6 +497,7 @@ describe('Controls/_display/CollectionItem', () => {
             getLeftPadding(): string { return '#leftSpacing#'; },
             getRightPadding(): string { return '#rightSpacing#'; },
             getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectPosition(): string { return 'default'; },
             getRowSeparatorSize: function () { return ''; }
         };
         const defaultClasses = [
@@ -499,17 +507,16 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__item-rightPadding_#rightspacing#'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'visible' });
 
         // multiselect visible
-        multiSelectVisibility = 'visible';
         const visibleContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__itemContent_withCheckboxes'
         ]).forEach((className) => assert.include(visibleContentClasses, className));
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
+        item.setMultiSelectVisibility('hidden');
         const hiddenContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__item-leftPadding_#leftspacing#'
@@ -527,15 +534,14 @@ describe('Controls/_display/CollectionItem', () => {
             'controls-ListView__notEditable'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'hidden' });
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
         const hiddenMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.forEach((className) => assert.include(hiddenMultiSelectClasses, className));
 
         // multiselect onhover + not selected
-        multiSelectVisibility = 'onhover';
+        item.setMultiSelectVisibility('onhover');
         const onhoverMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.concat([
             'controls-ListView__checkbox-onhover'
@@ -671,9 +677,29 @@ describe('Controls/_display/CollectionItem', () => {
 
         beforeEach(() => {
             item = new CollectionItem();
+            item.setOwner(new Collection({
+                keyProperty: 'id',
+                collection: new RecordSet({
+                    rawData: [item],
+                    keyProperty: 'id'
+                }) as any
+            }))
         });
 
         // CSS класс для позиционирования опций записи.
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
+            const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
 
         // Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight
         it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is not set', () => {

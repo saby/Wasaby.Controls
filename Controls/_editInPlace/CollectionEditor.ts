@@ -7,13 +7,13 @@ export const ERROR_MSG = {
     ADDING_ITEM_KEY_WAS_NOT_SET: 'Adding item key was not set. Key is required. You can set the key ' +
         'before edit while prepare adding item or in callbacks: beforeBeginEdit and beforeEndEdit.',
     ADD_ITEM_KEY_DUPLICATED: 'Duplicating keys in editable collection. Adding item has the same key as item which is already exists in collection.',
-    ITEM_FOR_EDITING_MISSED_IN_COLLECTION: 'Item passed for editing does not exist in source collection.',
+    ITEM_FOR_EDITING_MISSED_IN_COLLECTION: 'Item passed for editing is missing in collection. You can edit only existing items, to add new use method add(item: Model).',
     COLLECTION_IS_REQUIRED: 'Options ICollectionEditorOptions:collection is required.',
     SOURCE_COLLECTION_MUST_BE_RECORDSET: 'Source collection must be instance of type extended of Types/collection:RecordSet.',
     HAS_NO_EDITING: 'There is no running edit in collection.',
     EDITING_IS_ALREADY_RUNNING: 'Editing is already running. Commit or cancel current before beginning new.',
     NO_FORMAT_FOR_KEY_PROPERTY: 'There is no format for item\'s key property. It is required if trying to add item with empty key. set item\'s key or format of key property.',
-    PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST: 'Parent of adding item doesn\'t exist. Check if the parentProperty field is filled in correctly and parent is displayed.' +
+    PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST: 'Adding in tree error. The parent of adding item doesn\'t exist. Check if the parentProperty field is filled in correctly and parent is displayed.' +
         'If you want to add item to the root, the parentProperty value of the added item must be "null"'
 };
 
@@ -102,7 +102,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
         this._editingItem = this._options.collection.getItemBySourceKey(item.getKey());
         if (!this._editingItem) {
-            throw Error(ERROR_MSG.ITEM_FOR_EDITING_MISSED_IN_COLLECTION);
+            this._throwEditingItemMissingError(item);
         }
 
         this._editingItem.setEditing(true, item);
@@ -136,10 +136,19 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
 
         // У каждого элемента дерева есть родитель. Если его нет, значит конфигурация добавляемого элемента
         // ошибочна. Добавление записи не сможет начаться, если родительская запись отсутствует в дереве.
+        // Родительский элемент может быть корнем, как null, так и реальной записью.
         if (this._editingItem instanceof TreeItem) {
             const parentKey = item.get(this._options.collection.getParentProperty());
-            if (parentKey !== null && !this._options.collection.getItemBySourceKey(parentKey)) {
-                throw Error(ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST);
+            if (
+                parentKey !== null &&
+                (
+                    this._options.collection.getRoot().getContents() !== parentKey &&
+                    !this._options.collection.getItemBySourceKey(parentKey)
+                )
+            ) {
+                throw Error(
+                    `There is no item with key={${parentKey}} in list. ${ERROR_MSG.PARENT_OF_ADDING_ITEM_DOES_NOT_EXIST}`
+                );
             }
         }
 
@@ -224,6 +233,15 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         }
 
         return next;
+    }
+
+    private _throwEditingItemMissingError(item: Model): never {
+        const keys = '[\n\t' + this._options.collection.getItems()
+            .filter((i) => i['[Controls/_display/IEditableCollectionItem]'])
+            .map((i) => i.contents.getKey())
+            .join(',\n\t') + '\n]';
+
+        throw Error(`${ERROR_MSG.ITEM_FOR_EDITING_MISSED_IN_COLLECTION}\nEditingItemKey: {${item.getKey()}},\nCollectionKeys: ${keys}`);
     }
 
     destroy(): void {

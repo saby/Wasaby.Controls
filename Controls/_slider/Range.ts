@@ -42,71 +42,6 @@ const maxPercentValue = 100;
  * @demo Controls-demo/Slider/Range/Base/Index
  */
 
-/**
- * @name Controls/_slider/Range#startValue
- * @cfg {Number} Устанавливает текущее начальное значение слайдера.
- * @remark Должно находиться в диапазоне [minValue..maxValue]
- * @example
- * Слайдер с первым ползунком, установленном в положение 40:
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:startValue="_startValue"/>
- * </pre>
- * ts:
- * <pre>
- *    this._startValue = 40;
- * </pre>
- * @see endValue
- */
-
-/*
- * @name Controls/_slider/Range#startValue
- * @cfg {Number} sets the current start value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the first point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:startValue="_startValue"/>
- * </pre>
- * ts:
- * <pre>
- *    this._startValue = 40;
- * </pre>
- * @see endValue
- */
-
-/**
- * @name Controls/_slider/Range#endValue
- * @cfg {Number} Устанавливает текущее конечное значение слайдера.
- * @remark Должно находится в диапазоне [minValue..maxValue]
- * @example
- * Слайдер со вторым ползунком, установленном в положение 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:endValue="_endValue"/>
- * </pre>
- * ts:
- * <pre>
- *    this._endValue = 40;
- * </pre>
- * @see startValue
- */
-
-/*
- * @name Controls/_slider/Range#endValue
- * @cfg {Number} sets the current end value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the second point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base bind:endValue="_endValue"/>
- * </pre>
- * ts:
- * <pre>
- *    this._endValue = 40;
- * </pre>
- * @see startValue
- */
-
-
 class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
@@ -158,6 +93,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeMount(options: ISliderRangeOptions): void {
+      super._beforeMount(options);
       this._checkOptions(options);
       this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
           options.scaleLabelFormatter);
@@ -171,6 +107,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeUpdate(options: ISliderRangeOptions): void {
+      super._beforeUpdate(options);
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
          this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep,
@@ -249,4 +186,71 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
 
    }
 }
+
+/**
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} Устанавливает текущее начальное значение слайдера.
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер с первым ползунком, установленном в положение 40:
+ * <pre class="brush:html">
+ * <!-- WML -->
+ * <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * <pre class="brush:js">
+ * // TypeScript
+ * this._startValue = 40;
+ * </pre>
+ * @see endValue
+ */
+
+/*
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} sets the current start value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the first point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._startValue = 40;
+ * </pre>
+ * @see endValue
+ */
+
+/**
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} Устанавливает текущее конечное значение слайдера.
+ * @remark Должно находится в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер со вторым ползунком, установленном в положение 40;
+ * <pre class="brush:html">
+ * <!-- WML -->
+ * <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * <pre class="brush:js">
+ * // TypeScript
+ * this._endValue = 40;
+ * </pre>
+ * @see startValue
+ */
+
+/*
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} sets the current end value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the second point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._endValue = 40;
+ * </pre>
+ * @see startValue
+ */
+
 export default Range;

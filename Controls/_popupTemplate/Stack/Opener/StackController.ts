@@ -14,9 +14,8 @@ import {Bus} from 'Env/Event';
 /**
  * Stack Popup Controller
  * @class Controls/_popupTemplate/Stack/Opener/StackController
- * @control
+ *
  * @private
- * @category Popup
  */
 
 const ACCORDEON_MIN_WIDTH = 50;
@@ -29,6 +28,7 @@ class StackController extends BaseController {
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
+        let positionUpdate: boolean = false;
 
         if (isSinglePopup) {
             this._prepareSizeWithoutDOM(item);
@@ -42,7 +42,7 @@ class StackController extends BaseController {
         } else if (!isSinglePopup) {
             this._update();
         } else {
-            this._updateItemPosition(item);
+            positionUpdate = this._updateItemPosition(item);
         }
 
         if (!isNewEnvironment()) {
@@ -55,9 +55,9 @@ class StackController extends BaseController {
             return true;
         }
 
-        // Если стековое окно 1, то перерисовок звать не надо, позиция и размеры проставились до маунта.
+        // Если стековое окно 1, то перерисовок звать не надо, только если после маунта позиция и размеры изменились
         // Если окон больше, то перерисовка должна быть, меняются классы, видимость.
-        return !isSinglePopup;
+        return !isSinglePopup || positionUpdate;
     }
 
     elementUpdateOptions(item: IPopupItem, container: HTMLDivElement): boolean|Promise<boolean> {
@@ -120,14 +120,17 @@ class StackController extends BaseController {
         this._savePopupWidth(item);
     }
 
-    private _updateItemPosition(item: IPopupItem): void {
+    private _updateItemPosition(item: IPopupItem): boolean {
         // Пересчитаем еще раз позицию, на случай, если ресайзили окно браузера
         const position = this._getItemPosition(item);
         // быстрая проверка на равенство простых объектов
         if (JSON.stringify(item.position) !== JSON.stringify(position)) {
             item.position = position;
             this._updatePopupOptions(item);
+            return true;
         }
+
+        return false;
     }
 
     private _update(): void {
@@ -276,7 +279,6 @@ class StackController extends BaseController {
             }
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
-                this._showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
                 }

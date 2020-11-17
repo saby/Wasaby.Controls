@@ -1246,6 +1246,13 @@ describe('Controls/_itemActions/Controller', () => {
                         showType: TItemActionShowType.MENU
                     },
                     {
+                        id: 2,
+                        icon: 'icon-PhoneNull',
+                        title: 'This action should not appear in menu',
+                        showType: TItemActionShowType.TOOLBAR,
+                        parent: null
+                    },
+                    {
                         id: 5,
                         title: 'Documentation',
                         showType: TItemActionShowType.TOOLBAR,
@@ -1657,6 +1664,22 @@ describe('Controls/_itemActions/Controller', () => {
             // @ts-ignore
             assert.notExists(config.nativeEvent);
         });
+
+        // T3.18 нужно пробрасывать footerItemData в конфиг шаблона
+        it('should set config.footerItemData', () => {
+            const item3 = collection.getItemBySourceKey(3);
+            const config = itemActionsController.prepareActionsMenuConfig(
+                item3,
+                clickEvent,
+                itemActions[3],
+                null,
+                false
+            );
+            assert.exists(config.templateOptions, 'Template options were not set');
+            assert.exists(config.templateOptions.footerItemData);
+            assert.equal(config.templateOptions.footerItemData.item, item3);
+        });
+
     });
 
     // см. этот же тест в Collection.test.ts

@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from "UI/Base";
 import {Memory} from 'Types/source';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
-import {_departmentsDataLong} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
+import {_departments} from 'Controls-demo/Lookup/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Lookup/FlatListSelectorWithTabs/resources/DepartmentsTemplate');
 
 export default class extends Control{
@@ -9,10 +9,10 @@ export default class extends Control{
     protected _source: Memory;
     protected _keyProperty: string = 'department';
     protected _beforeMount(options) {
-        var keyProperty = this._keyProperty;
+        const keyProperty = this._keyProperty;
         this._filter = Object.assign({}, options.filter);
         this._source = new Memory({
-            data: _departmentsDataLong,
+            data: _departments,
             filter: function(item, queryFilter) {
                 var selectionFilterFn = function(item, filter) {
                     var isSelected = false;
@@ -30,7 +30,7 @@ export default class extends Control{
 
                 return queryFilter.selection ? selectionFilterFn(item, queryFilter) : normalFilterFn(item, queryFilter);
             },
-            keyProperty: keyProperty
+            keyProperty
         });
     }
     protected _beforeUpdate(options) {

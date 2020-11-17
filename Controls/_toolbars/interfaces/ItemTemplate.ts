@@ -13,36 +13,6 @@ import {TemplateFunction} from 'UI/Base';
  * * <a href="/doc/platform/developmentapl/interface-development/controls/buttons-switches/toolbar/#template-standart">руководство разработчика</a>
  */
 
-/**
- * @name Controls/toolbars:ItemTemplate#itemsSpacing
- * @cfg {String} Размер расстояния между кнопками.
- * @variant medium
- * @variant big
- * @default medium
- * @remark
- * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
- */
-
-/**
- * @name Controls/toolbars:ItemTemplate#theme
- * @cfg {String} theme Название темы оформления. В зависимости от темы загружаются различные таблицы стилей и применяются различные стили к контролу.
- */
-
-/**
- * @name Controls/toolbars:ItemTemplate#item
- * @cfg {Object} item Элемент тулбара.
- */
-
-/**
- * @name Controls/toolbars:ItemTemplate#buttonTemplate
- * @cfg {String|Function} buttonTemplate Шаблон кнопки тулбара.
- */
-
-/**
- * @name Controls/toolbars:ItemTemplate#buttonTemplateOptions
- * @cfg {Object} buttonTemplateOptions Опции шаблона кнопки.
- */
-
 export default interface IItemTemplateOptions {
 
     /**
@@ -84,9 +54,34 @@ export default interface IItemTemplateOptions {
      * @deprecated
      */
     contentTemplate?: string;
+    /**
+     * @name Controls/toolbars:ItemTemplate#itemsSpacing
+     * @cfg {String} Размер расстояния между кнопками.
+     * @variant medium
+     * @variant big
+     * @default medium
+     * @remark
+     * Размер расстояния задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+     */
     itemSpacing?: string;
+    /**
+     * @name Controls/toolbars:ItemTemplate#theme
+     * @cfg {String} theme Название темы оформления. В зависимости от темы загружаются различные таблицы стилей и применяются различные стили к контролу.
+     */
     theme?: string;
+    /**
+     * @name Controls/toolbars:ItemTemplate#item
+     * @cfg {Object} item Элемент тулбара.
+     */
     item?: object;
+    /**
+     * @name Controls/toolbars:ItemTemplate#buttonTemplate
+     * @cfg {String|Function} buttonTemplate Шаблон кнопки тулбара.
+     */
     buttonTemplate?: string | TemplateFunction;
+    /**
+     * @name Controls/toolbars:ItemTemplate#buttonTemplateOptions
+     * @cfg {Object} buttonTemplateOptions Опции шаблона кнопки.
+     */
     buttonTemplateOptions?: object;
  }

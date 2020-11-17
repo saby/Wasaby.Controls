@@ -16,7 +16,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
@@ -32,11 +32,25 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @extends Core/Control
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
  */
+
+var Panel = Control.extend({
+   _template: template,
+   _hidePanel: false,
+
+   _beforeMount(): void {
+      this._errorCallback = this._errorCallback.bind(this);
+   },
+
+   _errorCallback(viewConfig: object, error): void {
+      this._hidePanel = true;
+      loadDataError.process({error});
+   }
+});
 
 /**
  * @name Controls/_operations/Panel#rightTemplate
@@ -46,12 +60,13 @@ import {error as loadDataError} from 'Controls/dataSource';
  * <pre class="brush: html">
  * <Controls.operations:Panel>
  *     <ws:rightTemplate>
- *         <Controls.buttons:Button caption="Доп. операции"
- *                                  on:click="_onClickAddBlock()"
- *                                  iconSize="s"
- *                                  icon="icon-Settings"
- *                                  viewMode="link"
- *                                  fontColorStyle="link"
+ *         <Controls.buttons:Button
+ *             caption="Доп. операции"
+ *             on:click="_onClickAddBlock()"
+ *             iconSize="s"
+ *             icon="icon-Settings"
+ *             viewMode="link"
+ *             fontColorStyle="link"
  *     </ws:rightTemplate>
  * </Controls.operations:Panel>
  * </pre>
@@ -174,49 +189,34 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @demo Controls-demo/operations/SelectedCountConfig/Index
  * @default undefined
  * @example
- * TS:
- * <pre>
- *    import {SbisService} from 'Types/source';
+ * <pre class="brush: html">
+ * // TypeScript
+ * import {SbisService} from 'Types/source';
  *
- *    private _filter: object = null;
- *    private _selectedCountConfig: object = null;
+ * private _filter: object = null;
+ * private _selectedCountConfig: object = null;
  *
- *    _beforeMount():void {
- *        this._filter = {};
- *        this._selectedCountConfig = this._getSelectedCountConfig();
+ * _beforeMount():void {
+ *    this._filter = {};
+ *    this._selectedCountConfig = this._getSelectedCountConfig();
+ * }
+ *
+ * private _getSelectedCountConfig() {
+ *    return {
+ *       rpc: new SbisService({
+ *          endpoint: 'Employee'
+ *       }),
+ *       command: 'employeeCount',
+ *       data: {
+ *          filter: this._filter
+ *       }
  *    }
- *
- *    private _getSelectedCountConfig() {
- *        return {
- *            rpc: new SbisService({
- *                endpoint: 'Employee'
- *            }),
- *            command: 'employeeCount',
- *            data: {
- *                filter: this._filter
- *            }
- *        }
- *    }
+ * }
  * </pre>
- *
- * WML:
- * <pre>
- *    <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}"/>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}"/>
  * </pre>
  */
-
-var Panel = Control.extend({
-   _template: template,
-   _hidePanel: false,
-
-   _beforeMount(): void {
-      this._errorCallback = this._errorCallback.bind(this);
-   },
-
-   _errorCallback(viewConfig: object, error): void {
-      this._hidePanel = true;
-      loadDataError.process({error});
-   }
-});
 
 export = Panel;

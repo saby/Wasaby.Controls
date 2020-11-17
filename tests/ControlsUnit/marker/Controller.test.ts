@@ -167,6 +167,13 @@ describe('Controls/marker/Controller', () => {
       assert.equal(result, 1);
    });
 
+   it('getSuitableMarkedKey', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
+      const item = model.at(0);
+      const result = controller.getSuitableMarkedKey(item);
+      assert.equal(result, 1);
+   });
+
    describe('onCollectionRemove', () => {
       it('exists current marked item', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
@@ -289,7 +296,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getVersion(), 4);
       });
 
-      it('not exists marked item', () => {
+      it('not exists marked item, visible', () => {
          controller.setMarkedKey(1);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
 
@@ -308,6 +315,51 @@ describe('Controls/marker/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(3).isMarked());
          assert.equal(model.getVersion(), 3);
       });
+
+      it('not exists marked item, onactivated and was set marker before reset', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: undefined });
+         ctrl.setMarkedKey(1);
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.equal(newMarkedKey, 2);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
+
+      it('not exists marked item, onactivated and was not set marker before reset', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: null });
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.isNull(newMarkedKey);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
+   });
+
+   it('destroy', () => {
+      controller.setMarkedKey(1);
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+      controller.destroy();
+      assert.isFalse(model.getItemBySourceKey(1).isMarked());
+      assert.isFalse(model.getItemBySourceKey(2).isMarked());
+      assert.isFalse(model.getItemBySourceKey(3).isMarked());
    });
 
    it('should work with breadcrumbs', () => {

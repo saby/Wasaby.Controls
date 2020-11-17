@@ -3,23 +3,6 @@ import template = require('wml!Controls/_popupTemplate/InfoBox/InfoBox');
 import {IStickyPopupPosition, TVertical, THorizontal} from './Sticky/StickyController';
 import {ValidationStatus, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 
-/**
- * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/infobox/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
- *
- * @class Controls/_popupTemplate/InfoBox
- * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- * @mixes Controls/_interface/IValidationStatus
- * @demo Controls-demo/Popup/TestInfoBox
- */
-
 type TArrowPosition = 'start' | 'end' | 'center';
 type TStyle = 'danger' | 'secondary' | 'warning' | 'success' | 'info' | 'primary' | 'unaccented' | ValidationStatus;
 
@@ -31,7 +14,22 @@ export interface IInfoboxTemplateOptions extends IControlOptions, IValidationSta
     floatCloseButton?: boolean;
     closeButtonVisibility: boolean;
 }
-
+/**
+ * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ всплывающей подсказки}.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/infobox/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
+ * @class Controls/_popupTemplate/InfoBox
+ * @extends Core/Control
+ * 
+ * @public
+ * @author Красильников А.С.
+ * @mixes Controls/_interface/IValidationStatus
+ * @demo Controls-demo/Popup/TestInfoBox
+ */
 export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _arrowSide: THorizontal | TVertical;

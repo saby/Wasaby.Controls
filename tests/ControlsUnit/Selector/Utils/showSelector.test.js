@@ -43,6 +43,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
 
       it('showSelector with templateOptions', function() {
          const baseController = getBaseController();
+         baseController._options.selectorTemplate.templateOptions = {};
          isShowSelector = false;
          showSelector.default(baseController, {
             templateOptions: {
@@ -160,10 +161,18 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
       it('showSelector with selectorTemplate', function() {
          const baseController = getBaseController();
          baseController._options.selectorTemplate = {
-            templateName: 'selectorTemplate'
+            templateName: 'selectorTemplate',
+            templateOptions: {
+               searchValue: 'testValue'
+            }
          };
-         showSelector.default(baseController, {});
+         showSelector.default(baseController, {
+            templateOptions: {
+               searchValue: ''
+            }
+         });
          assert.equal(lastPopupOptions.template, 'selectorTemplate');
+         assert.equal(lastPopupOptions.templateOptions.searchValue, 'testValue');
       });
    });
 });

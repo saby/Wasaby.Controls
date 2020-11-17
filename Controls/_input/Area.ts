@@ -7,6 +7,7 @@ import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
 import * as Text from 'Controls/_input/Text';
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
@@ -21,15 +22,15 @@ import 'Controls/decorator';
  * Вы можете переместить текст в следующую строку с помощью {@link newLineKey горячих клавиш}.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/input/text/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Area
  * @extends Controls/input:Text
  * @mixes Controls/input:INewLineKey
- *
+ * @mixes Controls/_input/interface/IAreaOptions
  * @public
+ * 
  * @demo Controls-demo/Input/Area/MinMaxLines/Index
  *
  * @author Красильников А.С.
@@ -85,6 +86,7 @@ export default class Area extends Text<IAreaOptions> {
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        processKeydownEvent(event);
         this._newLineHandler(event, true);
     }
 
@@ -293,7 +295,8 @@ export default class Area extends Text<IAreaOptions> {
 
         defaultOptions.minLines = 1;
         defaultOptions.newLineKey = 'enter';
-        defaultOptions.optimizeShadow = false;
+        // В темной теме розницы у полей ввода нестандартный фон
+        defaultOptions.shadowMode = 'js';
 
         return defaultOptions;
     }

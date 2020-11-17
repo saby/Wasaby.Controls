@@ -30,6 +30,28 @@ define([
 
       describe('Initialisation', function() {
          [{
+            options: {
+               selectionType: 'single',
+               date: start
+            },
+            eq: {
+               months: false,
+               quarters: false,
+               halfYears: false,
+               years: false
+            }
+         }, {
+            options: {
+               selectionType: 'disable',
+               date: start
+            },
+            eq: {
+               months: false,
+               quarters: false,
+               halfYears: false,
+               years: false
+            }
+         }, {
             options: { selectionType: 'range', date: start},
             eq: { months: true, quarters: true, halfYears: true, years: true }
          }, {
@@ -194,7 +216,7 @@ define([
                selectionProcessing: false,
                hoveredSelectionValue: start,
                hoveredStartValue: start,
-               selectionViewType: MonthsRangeItem.SELECTION_VEIW_TYPES.months
+               selectionViewType: MonthsRangeItem.SELECTION_VIEW_TYPES.months
             },
             cssClass: 'controls-RangeSelection__start-end-hovered'
          }].forEach(function(test) {

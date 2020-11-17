@@ -7,48 +7,10 @@ import template = require('wml!Controls/_scroll/IntersectionObserver/EdgeInterse
  * Контейнер, позволяющий отслеживать пересечение своих границ с границами скроллируемой области.
  *
  * @class Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer
- * @control
+ * 
  * @author Миронов А.Ю.
  * @see Controls/_scroll/Container
  * @public
- */
-
-/**
- * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOffset
- * @cfg {number} Смещение относительно верхней границы контенера. Можно отслеживать моменты когда до границы контейнера
- * еще осталось какое то расстояние.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
- */
-
-/**
- * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOffset
- * @cfg {number} Смещение относительно нижней границы контенера. Можно отслеживать моменты когда до границы контейнера
- * еще осталось какое то расстояние.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
- */
-
-/**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topIn Происходит когда верхняя граница контейнера
- * становится видимой.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
- */
-
-/**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOut Происходит когда верхняя граница контейнера
- * становится невидимой.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
- */
-
-/**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomIn Происходит когда нижняя граница контейнера
- * становится видимой.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
- */
-
-/**
- * @event Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOut Происходит когда нижняя граница контейнера
- * становится невидимой.
- * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
  */
 
 class EdgeIntersectionObserverContainer extends Control<IEdgeIntersectionObserverOptions> {
@@ -73,3 +35,40 @@ class EdgeIntersectionObserverContainer extends Control<IEdgeIntersectionObserve
 }
 
 export default EdgeIntersectionObserverContainer;
+/**
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOffset
+ * @cfg {number} Смещение относительно верхней границы контенера. Можно отслеживать моменты когда до границы контейнера
+ * еще осталось какое то расстояние.
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */
+
+/**
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOffset
+ * @cfg {number} Смещение относительно нижней границы контенера. Можно отслеживать моменты когда до границы контейнера
+ * еще осталось какое то расстояние.
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */
+
+/**
+ * @event Происходит, когда верхняя граница контейнера становится видимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topIn
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */
+
+/**
+ * @event Происходит, когда верхняя граница контейнера становится невидимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#topOut
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */
+
+/**
+ * @event Происходит, когда нижняя граница контейнера становится видимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomIn
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */
+
+/**
+ * @event Происходит, когда нижняя граница контейнера становится невидимой.
+ * @name Controls/_scroll/IntersectionObserver/EdgeIntersectionContainer#bottomOut
+ * @demo Controls-demo/Scroll/EdgeIntersectionContainer/Default/Index
+ */

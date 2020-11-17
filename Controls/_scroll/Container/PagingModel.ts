@@ -9,6 +9,7 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
 
     private _stateUp: boolean = false;
     private _stateDown: boolean = true;
+    private _arrowState = {};
     private _isVisible: boolean = false;
     private _position: SCROLL_POSITION;
 
@@ -16,12 +17,27 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
          if (this._position !== scrollState.verticalPosition) {
              this._position = scrollState.verticalPosition;
             if (scrollState.verticalPosition === SCROLL_POSITION.START) {
+               this._arrowState = {
+                    begin: 'readonly',
+                    prev: 'readonly',
+                    next: 'visible'
+               };
                this._stateUp = false;
                this._stateDown = true;
             } else if (scrollState.verticalPosition === SCROLL_POSITION.END) {
+               this._arrowState = {
+                    begin: 'visible',
+                    prev: 'visible',
+                    next: 'readonly'
+               };
                this._stateUp = true;
                this._stateDown = false;
             } else {
+               this._arrowState = {
+                    begin: 'visible',
+                    prev: 'visible',
+                    next: 'visible'
+               };
                this._stateUp = true;
                this._stateDown = true;
             }
@@ -48,5 +64,9 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
 
     get stateDown(): boolean {
         return this._stateDown;
+    }
+
+    get arrowState() {
+        return this._arrowState;
     }
 }

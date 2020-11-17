@@ -3,7 +3,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
 ], function() {
 
    /**
-    * Интерфейс для настройки отображения элементов в {@link Controls/treeGrid:View дереве}.
+    * Интерфейс для настройки отображения элементов в контроле {@link Controls/treeGrid:View Дерево}.
     *
     * @interface Controls/interface/ITreeGridItemTemplate
     * @public
@@ -18,12 +18,10 @@ define('Controls/interface/ITreeGridItemTemplate', [
 
    /**
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplate
-    * @cfg {Function} Шаблон отображения элемента.
+    * @cfg {Function} Пользовательский шаблон отображения элемента.
     * @default undefined
     * @remark
-    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/treeGrid:ItemTemplate}.
-    *
-    * Шаблон Controls/treeGrid:ItemTemplate поддерживает {@link Controls/treeGrid:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/treeGrid:ItemTemplate}. Шаблон Controls/treeGrid:ItemTemplate поддерживает {@link Controls/treeGrid:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *
     * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию itemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/treeGrid:ItemTemplate.
     *
@@ -44,7 +42,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
    /*
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplate
     * @cfg {Function} Template for item render.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FItemTemplatePG">Example</a>.
+    * @demo Controls-demo/treeGrid/ItemTemplate/NoHighlightOnHover/Index
     * @remark
     * Base itemTemplate for Controls.treeGrid:View: "Controls/treeGrid:ItemTemplate".
     * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
@@ -61,7 +59,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
 
    /**
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
-    * @cfg {String} Имя поля элемента, которое содержит имя шаблона отображения элемента. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
+    * @cfg {String} Имя поля элемента, которое содержит имя {@link Controls/interface/ITreeGridItemTemplate#itemTemplate шаблона отображения элемента}. С помощью этой настройки отдельным элементам можно задать собственный шаблон отображения.
     * @default undefined
     * @remark
     * Если не задано значение в опции itemTemplateProperty или в свойстве элемента, то используется шаблон из {@link Controls/interface/ITreeGridItemTemplate#itemTemplate itemTemplate}.

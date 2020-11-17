@@ -103,6 +103,15 @@
    visibility: hidden;
 }
 
+.controls-Menu__row__searchSeparator_line_horizontal_theme-@{themeName} {
+   margin-top: @search-separator_padding-top_menuPopup;
+   margin-bottom: @search-separator_padding-bottom_menuPopup;
+   width: @search-separator_length_menuPopup;
+   height: @search-separator_thickness_menuPopup;
+   background-color: @search-separator_color_menuPopup;
+   display: block;
+}
+
 .controls-Menu__icon {
    .flex-shrink(0);
 }
@@ -165,7 +174,7 @@
 }
 
 .controls-Menu__content_levelPadding_theme-@{themeName} {
-   padding-left: @search_item_padding-left_menu;
+   padding-left: @search-hierarchy_offset_menuPopup;
 }
 
 .controls-Menu__content_baseline {

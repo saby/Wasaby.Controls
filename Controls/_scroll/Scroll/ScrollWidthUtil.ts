@@ -28,7 +28,10 @@ var _private = {
         var style;
 
         if (scrollbarWidth) {
-            style =  `margin: 0 -${scrollbarWidth}px -${scrollMode === 'vertical' ? 0 : scrollbarWidth}px 0;`;
+            style =  `margin-right: -${scrollbarWidth}px;`;
+            if (scrollMode === 'verticalHorizontal') {
+                style += `margin-bottom: -${scrollbarWidth}px;`
+            }
         } else if (scrollbarWidth === 0) {
             style = '';
         }

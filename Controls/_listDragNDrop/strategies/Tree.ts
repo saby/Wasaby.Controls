@@ -19,8 +19,16 @@ interface IDraggableTreeCollection extends IDraggableFlatCollection<IDraggableTr
 
 type ITreeDragStrategyParams = IDragStrategyParams<IDragPosition<IDraggableTreeItem>, IDraggableTreeItem>;
 
-export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection> {
+/**
+ * Стратегия расчета позиции для драг'н'дропа в иерархическом списке
+ * @class Controls/_listDragNDrop/strategies/Flat
+ * @author Панихин К.А.
+ */
 
+export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollection> {
+    /**
+     * Запускает расчет позиции
+     */
     calculatePosition(
         {currentPosition, targetItem, mouseOffsetInTargetItem}: ITreeDragStrategyParams
     ): IDragPosition<IDraggableTreeItem> {

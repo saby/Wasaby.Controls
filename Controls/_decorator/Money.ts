@@ -13,7 +13,8 @@ import {
 } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 import {descriptor, DescriptorValidator} from 'Types/entity';
-import {numberToString, splitIntoTriads} from 'Controls/inputUtils';
+import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
+import numberToString from 'Controls/_decorator/inputUtils/toString';
 
 // tslint:disable-next-line:ban-ts-ignore
 //@ts-ignore
@@ -28,6 +29,7 @@ interface IPaths {
 }
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Money}.
  * @interface Controls/_decorator/Money/IMoneyOptions
  * @public
  * @author Красильников А.С.
@@ -217,3 +219,25 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 }
 
 export default Money;
+/**
+ * @name Controls/_decorator/Money#useGrouping
+ * @cfg
+ * @default true
+ */
+/**
+ * @name Controls/_decorator/Money#fontColorStyle
+ * @cfg
+ * @default default
+ * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
+ */ 
+/**
+ * @name Controls/_decorator/Money#showEmptyDecimals
+ * @cfg
+ * @default true
+ */ 
+/**
+ * @name Controls/_decorator/Money#fontSize
+ * @cfg
+ * @default m
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
+ */

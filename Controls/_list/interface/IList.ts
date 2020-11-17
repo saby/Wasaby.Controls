@@ -3,14 +3,6 @@ import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
 import {IFontColorStyle} from 'Controls/interface';
 
-/**
- * Интерфейс для списков.
- *
- * @interface Controls/_list/interface/IList
- * @public
- * @author Авраменко А.С.
- */
-
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
 type TListStyle = 'master'|'default';
@@ -23,6 +15,22 @@ export interface IItemPadding {
     left?: THorizontalItemPadding;
     right?: THorizontalItemPadding;
 }
+
+/**
+ * Интерфейс для списков.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*ENG
+ * Interface for lists.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
 
 export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
@@ -47,7 +55,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
- * @cfg {IFontColorStyle}[moreFontColorStyle=listMore] Опция управляет стилем цвета текста для кнопки ещё.
+ * @cfg {IFontColorStyle} Опция управляет стилем цвета текста для кнопки ещё.
+ * @default listMore
  * @see IFontColorStyle
  */
 
@@ -55,14 +64,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением счетчика непрочитанных сообщений
  * @see pagingMode
- */
-
-/*ENG
- * Interface for lists.
- *
- * @interface Controls/_list/interface/IList
- * @public
- * @author Авраменко А.С.
  */
 
 /**
@@ -101,9 +102,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#emptyTemplate
- * @cfg {Function} Шаблон отображения контрола без элементов.
+ * @cfg {Function} Пользовательский шаблон отображения пустого списка.
  * @demo Controls-demo/list_new/EmptyList/Default/Index
- * @default Controls/list:EmptyTemplate
+ * @default undefined
  * @example
  * <pre class="brush: html">
  * <Controls.list:View>
@@ -114,12 +115,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  *     </ws:emptyTemplate>
  * </Controls.list:View>
  * </pre>
+ * @remark
+ * Пользовательский шаблон получается путем конфигурации базового шаблона {@link Controls/list:EmptyTemplate}.
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/empty-list/">руководство разработчика</a>.
  */
 
 /*ENG
  * @name Controls/_list/interface/IList#emptyTemplate
  * @cfg {Function} Template for the empty list.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
  * @remark
  * We recommend to use default template for emptyTemplate: Controls/list:EmptyTemplate
  * The template accepts the following options:
@@ -150,7 +153,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /*ENG
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Template that will be rendered below the list.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
 /**
@@ -178,7 +181,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  * @remark
- * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/list/select/#multiple-choice">руководству разработчика</a>.
+ * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/select/#multiple-choice">руководству разработчика</a>.
  */
 
 /*ENG
@@ -230,7 +233,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseEnter Occurs when the cursor is over the list item.
+ * @event Occurs when the cursor is over the list item.
+ * @name Controls/_list/interface/IList#itemMouseEnter
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -245,7 +249,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseLeave Occurs when the cursor leaves the list item.
+ * @event Occurs when the cursor leaves the list item.
+ * @name Controls/_list/interface/IList#itemMouseLeave
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor was over.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -260,7 +265,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemMouseMove Occurs when the cursor moves over list items.
+ * @event Occurs when the cursor moves over list items.
+ * @name Controls/_list/interface/IList#itemMouseMove
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item that the cursor is moving along.
  * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -458,7 +464,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#itemSwipe Occurs when list item is swiped.
+ * @event Occurs when list item is swiped.
+ * @name Controls/_list/interface/IList#itemSwipe
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
@@ -485,9 +492,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
- * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @event The event fires when the user hovers over a list item with a cursor.
+ * @name Controls/_list/interface/IList#hoveredItemChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
@@ -501,9 +507,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#markedKeyChanged Occurs when list item was selected (marked).
- * @remark
- * See also <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @event Occurs when list item was selected (marked).
+ * @name Controls/_list/interface/IList#markedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Number} key Key of the selected item.
  */
@@ -525,9 +530,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  */
 
 /*ENG
- * @event Controls/_list/interface/IList#drawItems Occurs when the next batch of data is drawn.
- * @remark
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+ * @event Occurs when the next batch of data is drawn.
+ * @name Controls/_list/interface/IList#drawItems
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  */
 
@@ -543,23 +547,26 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * Событие не происходит, если:
  *
  * * элемент нельзя отметить маркером.
- * * при клике начинается <a href="/doc/platform/developmentapl/interface-development/controls/list/list/edit/">редактирование по месту</a>.
+ * * при клике начинается <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/edit/">редактирование по месту</a>.
  */
 
 /**
  * @typedef {String} VerticalItemPaddingEnum
+ * @variant null Нулевой отступ. 
  * @variant s Маленький отступ.
  * @variant l Большой отступ.
  */
 
 /*ENG
  * @typedef {String} VerticalItemPaddingEnum
+ * @variant null Without padding.
  * @variant s Small padding.
  * @variant l Large padding.
  */
 
 /**
  * @typedef {String} HorizontalItemPaddingEnum
+ * @variant null Нулевой отступ.
  * @variant xs Минимальный отступ.
  * @variant s Маленький отступ.
  * @variant m Средний отступ.
@@ -570,6 +577,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /*ENG
  * @typedef {Object} HorizontalItemPaddingEnum
+ * @variant null Without padding.
  * @variant xs Extra small padding.
  * @variant s Small padding.
  * @variant m Medium padding.
@@ -597,6 +605,10 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 /**
  * @cfg {ItemPadding} Конфигурация отступов внутри элементов списка.
  * @name Controls/_list/interface/IList#itemPadding
+ * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
+ * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
+ * @remark
+ * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/paddings/">руководство разработчика</a>.
  */
 
 /*ENG
@@ -655,10 +667,19 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
+ * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
  * @default default
  * @remark
- * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
+ * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
+ * Подробнее в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#hover">статье</a>.
+ * @example
+ * <pre class="brush: html; highlight: [5]">
+ * <!-- WML -->
+ * <Controls.list:View
+ *    keyProperty="id"
+ *    source="{{_viewSource}}"
+ *    hoverBackgroundStyle="primary" />
+ * </pre>
  */
 
 /**

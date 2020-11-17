@@ -16,6 +16,7 @@
          model="{{model}}"
          inputCallback="{{inputCallback}}"
          recalculateLocationVisibleArea="{{recalculateLocationVisibleArea}}"
+         on:keydown="_keyDownHandler()"
          attr:wrap="hard"
          attr:spellcheck="{{options.spellCheck}}"
          attr:class="controls-InputBase__nativeField_theme_{{options.theme}} controls-Area__realField

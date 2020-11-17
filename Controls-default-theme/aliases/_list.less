@@ -72,6 +72,27 @@
 @marker_thickness_list:                                             3px;
 @marker_color_list:                                                 @marker_color;
 
+@marker_height_default_list:                                        100%;
+@marker_height_padding-s_image-l_list:                              48px;
+@marker_height_padding-s_image-m_list:                              40px;
+@marker_height_padding-s_image-s_list:                              32px;
+@marker_height_padding-s_image-xs_list:                             24px;
+@marker_height_padding-s_text-2xl_list:                             30px;
+@marker_height_padding-s_text-xl_list:                              31px;
+@marker_height_padding-s_text-l_list:                               31px;
+@marker_height_padding-s_text-m_list:                               32px;
+@marker_height_padding-s_text-xs_list:                              34px;
+
+@marker_height_padding-l_image-l_list:                              54px;
+@marker_height_padding-l_image-m_list:                              46px;
+@marker_height_padding-l_image-s_list:                              38px;
+@marker_height_padding-l_image-xs_list:                             30px;
+@marker_height_padding-l_text-2xl_list:                             36px;
+@marker_height_padding-l_text-xl_list:                              37px;
+@marker_height_padding-l_text-l_list:                               37px;
+@marker_height_padding-l_text-m_list:                               38px;
+@marker_height_padding-l_text-xs_list:                              40px;
+
 // Чебоксы мультивыбора
 
 @checkbox_offset-top_list:                                          4px;
@@ -152,10 +173,8 @@
 @master_separator_color_list:                                       @detail_background-color_masterDetail;
 
 // Маркер
-@master-marker_thickness_list:                                      6px;
-@master-marker_fontSize_list:                                       @item_font-size_2xl_grid;
+@master-marker_thickness_list:                                      3px;
 @masterClassic-marker_thickness_list:                               3px;
-@master-marker_height_list:                                         11px;
 @master-marker_color_list:                                          #349CEE;
 
 // Цвет фона элемента
@@ -172,7 +191,6 @@
 @master_item_selected_text-color_list:                              #D94700;
 @master_item_font-size_list:                                        @font-size_l;
 @master_item_selected_font-size_list:                               @font-size_l;
-@item_max-font-size_list:                                           @font-size_2xl;
 
 // Отступы
 @master_item_padding-top_list:                                      4px;
@@ -182,8 +200,6 @@
 @detail_contrast_background-color_masterDetail:                     transparent;
 @detail_background-color_masterDetail:                              #F8F8F8;
 
-
-@item_min-height_list:                                              25px;
 @editing-toolbar_offset-left_listEditInPlace:                       @offset_xs;
 
 // Разделители между элементами
@@ -194,94 +210,6 @@
 @item_edge_separator_l_color_list:                                  #F3F3F3;
 @item_separator_s_color_list:                                       #F5F5F5;
 @item_separator_l_color_list:                                       #F3F3F3;
-
-
-
-// Переменные для операций над записью
-//
-// Цвет фона
-
-@background-color_itemActions:                                      @item_hover_background-color_list;
-@background-color_outside_itemActions:                              @item_hover_background-color_list;
-@background-color_editing_itemActions:                              @item_editing_background-color_list;
-@master_background-color_itemActions:                               @master_item_hover_background-color_list;
-
-// Размеры и отступы
-
-@offset-right_itemActions:                                          @offset_xs;
-@offset-top_itemActions:                                            3px;
-@offset-bottom_itemActions:                                         3px;
-@height_itemActions:                                                @inline_height_m;
-
-@height_outside_itemActions:                                        31px;
-@offset-right_outside_itemActions:                                  @offset-right_itemActions;
-@offset-bottom_outside_itemActions:                                 @offset-bottom_itemActions;
-@offset-top_outside_itemActions:                                    @offset_2xs;
-@corner_width_outside_itemActions:                                  24px;
-
-@item_padding_itemActions:                                          @offset_xs;
-
-// Иконки
-
-@item_icon-size_itemActions:                                        @icon-size_m;
-@item_icon-offset_itemActions:                                      @offset_xs;
-@item_icon-size_editing_itemActions:                                @icon-size_s;
-@item_icon_font-family_itemsActions:                                @icon_font-family_m;
-@item_icon_font-family_editing_itemsActions:                        @icon_font-family_s;
-@item_area-size_outside_itemActions:                                @item_icon-size_itemActions;
-
-// Текст
-
-@item_caption_min-height_itemActions:                               @inline_height_xs;
-@item_font-size_itemActions:                                        @font-size_default;
-@item_text-color_itemActions:                                       @link_text-color;
-@item_hover_text-color_itemActions:                                 @link_hover_text-color;
-@item_active_text-color_itemActions:                                @item_hover_text-color_itemActions;
-
-
-
-// Переменные для свайпа
-//
-// Цвет фона и тень
-
-@background-color_swipe:                                            #F4F9FD;
-@shadow-color_swipe:                                                rgba(0, 0, 0, 0.12);
-@shadow-blur_swipe:                                                 6px;
-@animation_offset_swipe:                                            16px;
-
-// Иконки
-
-@item_icon_offset-horizontal_swipe:                                 @offset_xs;
-@item_s_icon-size_swipe:                                            @icon-size_m;
-@item_l_icon-size_swipe:                                            @icon-size_l;
-@item_s_icon_font-family_swipe:                                     @icon_font-family_m;
-@item_l_icon_font-family_swipe:                                     @icon_font-family_m;
-@secondary_icon-color_swipe:                                        @secondary_hover_icon-color;
-
-// Текст
-
-@item_text-color_swipe:                                             @link_hover_text-color;
-@item_horizontal_text_max-width_swipe:                              220px;
-@item_vertical_text_max-width_swipe:                                160px;
-@item_s_font-size_swipe:                                            @font-size_m;
-@item_l_font-size_swipe:                                            @font-size_xl;
-
-// Разделитель
-
-@separator_color_swipe:                                             #EBF1F6;
-@separator_thickness_swipe:                                         1px;
-@separator_padding-horizontal_swipe:                                3px;
-@separator_edge_padding-horizontal_swipe:                           @offset_xs;
-@separator_edge_padding-vertical_swipe:                             3px;
-
-// Отступы в элементах
-
-@item_horizontal_padding-horizontal_swipe:                          @offset_xs;
-@item_horizontal_padding-vertical_swipe:                            3px;
-@item_vertical_padding-horizontal_swipe:                            @offset_xs;
-@item_s_vertical_padding-vertical_swipe:                            @offset_3xs;
-@item_l_vertical_padding-vertical_swipe:                            @offset_xs;
-@item_edge_padding-horizontal_swipe:                                @offset_m;
 
 // Переменные для декоратора денег
 

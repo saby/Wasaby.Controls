@@ -3,6 +3,7 @@ import {IMenuBaseOptions} from './IMenuBase';
 import {ISourceOptions, INavigationOptions, IFilterOptions, ISelectorDialogOptions} from 'Controls/interface';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {Stack} from 'Controls/popup';
+import {NewSourceController} from 'Controls/dataSource';
 
 export type TKey = string|number|null;
 
@@ -15,6 +16,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, I
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     dataLoadCallback: Function;
     selectorDialogResult: Function;
+    sourceController?: NewSourceController;
 }
 
 /**
@@ -94,7 +96,7 @@ export default interface IMenuControl {
  * @property {String} iconStyle Стиль иконки {@link Controls/_interface/IIconStyle}.
  * Каждому значению свойства соответствует стиль, который определяется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
  * @property {Function} handler Обработчик опции записи.
- * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-actions/handler/ пример обработчика}.
+ * См. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
  */
 
 /**
@@ -113,4 +115,11 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#nodeProperty
  * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
  * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#additionalProperty
+ * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
+ * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @demo Controls-demo/dropdown_new/Button/AdditionalProperty/Index
  */

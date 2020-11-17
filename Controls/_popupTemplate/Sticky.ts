@@ -18,20 +18,13 @@ interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOpti
  *
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
- * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @implements Controls/_popupTemplate/interface/IPopupTemplateBaseOptions
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
  * @demo Controls-demo/PopupTemplate/Sticky/CloseButtonVisibility/Index
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
- */
-
-/**
- * @name Controls/_popupTemplate/Sticky#shadowVisible
- * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
- * @default false
  */
 
 class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTemplateBase {
@@ -70,5 +63,9 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         };
     }
 }
-
+/**
+ * @name Controls/_popupTemplate/Sticky#shadowVisible
+ * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
+ * @default false
+ */
 export default StickyTemplate;

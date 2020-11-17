@@ -91,20 +91,16 @@ define(
                });
             });
 
-            it('query returns error', () => {
+            it('query returns error', async() => {
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
                options.source.query = () => Promise.reject(new Error());
 
-               return new Promise((resolve) => {
-                  menuControl._loadItems(options).then(() => {
-                     assert.isNotNull(menuControl._errorConfig);
-                     resolve();
-                  });
+               await menuControl._loadItems(options).catch(() => {
+                  assert.isNotNull(menuControl._errorConfig);
                });
             });
-
          });
 
          describe('_beforeUpdate', () => {
@@ -118,6 +114,39 @@ define(
                await menuControl._beforeUpdate(newMenuOptions);
                assert.isTrue(menuControl._notifyResizeAfterRender);
                assert.isTrue(isClosed);
+            });
+         });
+
+         describe('_beforeMount', () => {
+            const menuControl = getMenu();
+            const menuOptions = { ...defaultOptions };
+            menuControl._markerController = null;
+
+            it('_loadItems return error', async() => {
+               menuControl._loadItems = () => {
+                  return Promise.reject(new Error());
+               };
+               await menuControl._beforeMount(menuOptions);
+
+               assert.isNull(menuControl._markerController);
+            });
+
+            it('_loadItems return items', async() => {
+               menuControl._listModel = {
+                  setMarkedKey: () => {}
+               };
+               menuControl._loadItems = () => {
+                  return new Promise((resolve) => {
+                     resolve(new collection.RecordSet({
+                        rawData: [
+                           { key: 1, title: 'Test' },
+                        ],
+                        keyProperty: 'key'
+                     }));
+                  });
+               };
+               await menuControl._beforeMount(menuOptions);
+               assert.isNotNull(menuControl._markerController);
             });
          });
 
@@ -411,19 +440,21 @@ define(
 
          it('getTemplateOptions', function() {
             let menuControl = getMenu();
+            menuControl._isLoadedChildItems = () => true;
             menuControl._listModel = getListModel();
 
-            let item = new display.TreeItem({
-               contents: new entity.Model({
-                  rawData: { key: 1, title: '111' },
-                  keyProperty: 'key'
-               }),
-               hasChildren: false
-            });
+            let item = menuControl._listModel.at(1);
 
             const expectedOptions = Clone(defaultOptions);
             expectedOptions.root = 1;
             expectedOptions.bodyContentTemplate = 'Controls/_menu/Control';
+            expectedOptions.dataLoadCallback = null;
+            expectedOptions.source = new source.PrefetchProxy({
+               target: menuControl._options.source,
+               data: {
+                  query: menuControl._listModel.getCollection()
+               }
+            });
             expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
             expectedOptions.footerItemData = {
                item,
@@ -730,6 +761,27 @@ define(
                menuOptions.root = 2;
                groupId = menuControl._groupMethod(menuOptions, item);
                assert.equal(groupId, ControlsConstants.view.hiddenGroup);
+            });
+         });
+
+         describe('itemActions', function() {
+            it('_openItemActionMenu', () => {
+               let isOpened = false;
+               let actualConfig;
+               let menuControl = getMenu();
+               menuControl._itemActionsController = {
+                  prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
+                  setActiveItem: () => {}
+               };
+               menuControl._itemActionSticky = {
+                  open: (menuConfig) => {
+                     actualConfig = menuConfig;
+                     isOpened = true;
+                  }
+               };
+               menuControl._openItemActionMenu('item', {}, null);
+               assert.isTrue(isOpened);
+               assert.isOk(actualConfig.eventHandlers);
             });
          });
 

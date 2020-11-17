@@ -9,7 +9,7 @@ import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
  * @class Controls/_lookupPopup/SelectedCollection/Popup
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */
@@ -22,7 +22,7 @@ import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
  * @class Controls/_lookupPopup/SelectedCollection/Popup
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */

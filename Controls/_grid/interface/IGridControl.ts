@@ -1,3 +1,5 @@
+import { TColumns } from './IColumn';
+import { IList } from 'Controls/list';
 /**
  * Интерфейс для контрола {@link Controls/grid:View Таблица}.
  *
@@ -5,6 +7,10 @@
  * @public
  * @author Авраменко А.С.
  */
+
+export interface IGridControl extends IList {
+    columns: TColumns;
+}
 
 /*
  * Interface for Grid (table view).
@@ -38,7 +44,8 @@
 /*
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Array of fields that should be sticky.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
+ * @demo Controls-demo/grid/Ladder/Sticky/Index
+ * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultiline/Index
  * @example
  * Set ladderProperties and render item template through the ladderWrapper:
  * <pre>
@@ -133,7 +140,7 @@
 /*
  * @name Controls/_grid/interface/IGridControl#header
  * @cfg {Array.<HeaderCell>} Describes grid's header.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
+ * @demo Controls-demo/grid/Header/Default/Index
  * @remark
  * Base header content template for Controls/grid:View: "Controls/grid:HeaderContent".
  * @example
@@ -179,7 +186,6 @@
 /*
  * @name Controls/_grid/interface/IGridControl#columns
  * @cfg {TColumns} Describes grid's columns.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @remark Before rendering, make sure that {@link Controls/display:Collection Collection} contains required data, when the {@link Controls/_grid/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/_grid/interface/IGridControl#columns columns} option, if necessary.
  * @example
  * <pre>
@@ -208,6 +214,107 @@
  */
 
 /**
+ * @typedef {IFooterColumn}
+ * @description Тип колонки подваалов таблицы
+ * @property {Number} [startColumn] Индекс колонки таблицы, с которой начинается ячейка подвала. Необязательное поле, если неопределено, берется endColumn предыдущей ячейки или 1(если это первая колонка).
+ * @property {Number} [endColumn] Индекс колонки таблицы, на которой заканчивается ячейка подвала. Необязательное поле, если неопределено, берется startColumn текущей ячейки увеличенный на один.
+ * @property {Number} [template] Шаблон содержимого ячейки подвала. Необязательное поле, если неопределено, содержимое ячейки будет пустым.
+ * @remark
+ * Значения опций startColumn и endColumn задаются в соответствии с GridLayout CSS, т.е. с единицы. Индексы считаются по границам колонок.
+ * Например, чтобы отобразить объединенную ячейку подвала под второй и третей колонкой таблицы, нужно задать startColumn и endColumn в значения
+ * 2 и 4 соответственно.
+ * @public
+ */
+
+/*
+ * @typedef {IFooterColumn}
+ * @description Table footer column type.
+ * @property {Number} [startColumn] The index of the table column that the footer cell starts with. An optional field, if undefined, is taken from the endColumn of the previous cell or 1 (if this is the first column).
+ * @property {Number} [endColumn] The index of the table column that the footer cell ends with. An optional field, if undefined, the startColumn of the current cell is taken, incremented by one.
+ * @property {Number} [template] Footer cell content template. Optional field, if undefined, cell content will be empty.
+ * @remark
+ * The startColumn and endColumn options are set according to the GridLayout CSS, i.e. from one. Indexes are calculated along the column boundaries.
+ * For example, to display the merged footer cell under the second and third columns of the table, you need to set startColumn and endColumn to values
+ * 2 and 4 respectively.
+ * @public
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#footer
+ * @cfg {Array.<IFooterColumn>} Описывает колонки подвала таблицы.
+ * @example
+ * В примере показана настройка колонок подвала для таблицы с десятью колонками.
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = getGridColumns();
+ *    // this._columns.length === 10
+ * }
+ * </pre>
+ *
+ * <pre class="brush: html">
+ *  <Controls.grid:View ...>
+ *      <ws:footer>
+ *          <ws:Array>
+ *              <ws:Object startColumn="{{ 2 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 2 - 4</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 4 - 6</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object endColumn="{{ 8 }}" >
+ *                  <ws:template>
+ *                      <div>Footer column 6 - 8</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              </ws:Array>
+ *          </ws:footer>
+ *      </Controls.grid:View>
+ * </pre>
+ */
+
+/*
+ * @name Controls/_grid/interface/IGridControl#footer
+ * @cfg {TColumns} Describes the columns in the footer of the table.
+ * @example
+ * <pre class="brush: js">
+ * _columns: null,
+ * _beforeMount: function() {
+ *    this._columns = getGridColumns();
+ *    // this._columns.length === 10
+ * }
+ * </pre>
+ *
+ * <pre class="brush: html">
+ *  <Controls.grid:View ...>
+ *      <ws:footer>
+ *          <ws:Array>
+ *              <ws:Object startColumn="{{ 2 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 2 - 4</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
+ *                  <ws:template>
+ *                      <div>Footer column 4 - 6</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              <ws:Object endColumn="{{ 8 }}" >
+ *                  <ws:template>
+ *                      <div>Footer column 6 - 8</div>
+ *                  </ws:template>
+ *              </ws:Object>
+ *              </ws:Array>
+ *          </ws:footer>
+ *      </Controls.grid:View>
+ * </pre>
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Закрепляет заголовок таблицы.
  * @demo Controls-demo/grid/Header/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
@@ -218,7 +325,8 @@
 /*
  * @name Controls/_grid/interface/IGridControl#stickyHeader
  * @cfg {Boolean} Fix the table header.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FStickyPG">Example</a>
+ * @demo Controls-demo/grid/Header/Sticky/Index
+ * @demo Controls-demo/grid/Header/NoSticky/Index
  * @default true
  */
 
@@ -303,15 +411,12 @@
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @deprecated Опция устарела и в ближайшее время её поддержка будет прекращена. Используйте опцию {@link Controls/grid:IGridControl#rowSeparatorSize rowSeparatorSize}.
  * @cfg {Boolean} Позволяет отображать/скрывать разделитель строк.
- * @remark
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">демо-пример</a>
  * @default false
  */
 
 /*
  * @name Controls/_grid/interface/IGridControl#rowSeparatorVisibility
  * @cfg {Boolean} Allows to visible or hide row separator.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FBasePG">Example</a>
  * @deprecated
  * @default false
  */
@@ -455,10 +560,9 @@
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * @remark
- * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне колонки, необходимо в опции contentTemplate явно указать позицию стрелки-шеврона.
- * Для этого используется переменная {@link Controls/grid:ColumnTemplate#editArrowTemplate} из области видимости самого шаблона.
- * Пример использования смотреть {@link Controls/grid:ColumnTemplate#contentTemplate тут}.
- * Обратите внимание! Для отображения стрелки-шеврона по свайпу необходимо всегда указывать опцию showEditArrow=true, вне зависимости от того,
+ * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне ячейки, необходимо в опции {@link Controls/grid:ColumnTemplate#contentTemplate} явно указать позицию стрелки-шеврона. Для этого используется переменная editArrowTemplate из области видимости самого шаблона. Пример использования посмотрите {@link Controls/grid:ColumnTemplate#contentTemplate тут}.
+ * 
+ * **Обратите внимание!** Для отображения стрелки-шеврона по свайпу необходимо всегда указывать опцию showEditArrow=true, вне зависимости от того,
  * используется прикладной шаблон или нет.
  * @demo Controls-demo/grid/ShowEditArrow/Index
  * @example
@@ -495,21 +599,7 @@
  */
 
 /**
- * @event Происходит при изменении набора развернутых узлов.
- * @name Controls/_grid/interface/IGridControl#expandedItemsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
- */
-
-/**
- * @event Происходит при изменении набора свернутых узлов.
- * @name Controls/_grid/interface/IGridControl#collapsedItemsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
- */
-
-/**
- * @event Происходит при клике на тег внутри ячейки грида.
+ * @event Происходит при клике на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagClick
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
  * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
@@ -517,7 +607,7 @@
  */
 
 /**
- * @event Происходит при наведении курсора мыши на тег внутри ячейки грида.
+ * @event Происходит при наведении курсора мыши на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagHover
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
  * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.

@@ -48,6 +48,18 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         };
     }
 
+    function stringifyResult(contents) {
+        let result: string;
+        if (contents instanceof Array) {
+            result = `#${contents.join(',')}`;
+        } else if(contents === undefined) {
+            result = '{}';
+        } else {
+            result = contents;
+        }
+        return result;
+    }
+
     let items: Array<TreeItem<string>>;
     let source: IItemsStrategy<any, TreeItem<string>>;
     let strategy: Search<string>;
@@ -144,17 +156,13 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
+                '{}',
                 'd',
                 'e'
             ];
 
             strategy.items.forEach((item, index) => {
-                const contents = item.getContents();
-                assert.equal(
-                    contents instanceof Array ? `#${contents.join(',')}` : contents,
-                    expected[index],
-                    `at ${index}`
-                );
+                assert.equal(stringifyResult(item.getContents()), expected[index], `at ${index}`);
             });
 
             assert.strictEqual(strategy.items.length, expected.length);
@@ -180,10 +188,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             const source = getSource(items);
             const strategy = new Search({source});
 
-            const result = strategy.items.map((item) => {
-                const contents = item.getContents();
-                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents()));
 
             assert.deepEqual(result, ['#A,AA,AAA']);
         });
@@ -213,10 +218,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             const source = getSource(items);
             const strategy = new Search({source});
 
-            const result = strategy.items.map((item) => {
-                const contents = item.getContents();
-                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents()));
 
             assert.deepEqual(result, ['a', '#a,B', '#a', 'c', '#a,D']);
         });
@@ -246,10 +248,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             const source = getSource(items);
             const strategy = new Search({source});
 
-            const result = strategy.items.map((item) => {
-                const contents = item.getContents();
-                return item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents;
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents()));
 
             assert.deepEqual(result, ['#A,B', 'c', '#A', 'd']);
         });
@@ -280,12 +279,9 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 source
             });
 
-            const result = strategy.items.map((item) => {
-                const contents = item.getContents();
-                return (item instanceof BreadcrumbsItem ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents())  + ':' + item.getLevel());
 
-            assert.deepEqual(result, ['#A,AA:0', 'AAa:1', 'b:0']);
+            assert.deepEqual(result, ['#A,AA:0', 'AAa:1', '{}:0', 'b:0']);
         });
 
         it('return breadcrumbs as 1st level parent for leaves', () => {
@@ -371,10 +367,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 source
             });
 
-            const result = strategy.items.map((item) => {
-                const contents: unknown = item.getContents();
-                return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents())  + ':' + item.getLevel());
 
             assert.deepEqual(result, ['#A:0', 'b:1', 'e:1', '#A,C:0', 'd:1']);
         });
@@ -399,10 +392,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 source
             });
 
-            const result = strategy.items.map((item) => {
-                const contents: unknown = item.getContents();
-                return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents())  + ':' + item.getLevel());
 
             assert.deepEqual(result, ['#A:0', 'b:1', 'c:2']);
         });
@@ -440,10 +430,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 source
             });
 
-            const result = strategy.items.map((item) => {
-                const contents: unknown = item.getContents();
-                return (contents instanceof Array ? `#${contents.join(',')}` : contents) + ':' + item.getLevel();
-            });
+            const result = strategy.items.map((item) => stringifyResult(item.getContents())  + ':' + item.getLevel());
 
             assert.deepEqual(result, ['#A:0', 'b:1', 'e:2', '#A,b,C:0', 'd:1', 'f:1']);
         });
@@ -554,14 +541,15 @@ describe('Controls/_display/itemsStrategy/Search', () => {
 
     describe('.count', () => {
         it('should return items count', () => {
-            assert.equal(strategy.count, 11);
+            assert.equal(strategy.count, 12);
         });
     });
 
     describe('.getDisplayIndex()', () => {
         it('should return index in projection', () => {
             const next = strategy.count;
-            const expected = [next, next, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            // 9th item is a separator, created by strategy
+            const expected = [next, next, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 11];
             items.forEach((item, index) => {
                 assert.equal(strategy.getDisplayIndex(index), expected[index], 'at ' + index);
             });
@@ -570,7 +558,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
 
     describe('.getCollectionIndex()', () => {
         it('should return index in collection', () => {
-            const expected = [-1, 3, 4, -1, -1, 7, -1, -1, -1, 11, 12];
+            const expected = [-1, 3, 4, -1, -1, 7, -1, -1, -1, -1, 11, 12];
             strategy.items.forEach((item, index) => {
                 assert.equal(strategy.getCollectionIndex(index), expected[index], 'at ' + index);
             });
@@ -600,6 +588,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
+                '{}',
                 'd',
                 'e'
             ];
@@ -607,9 +596,8 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             strategy.splice(at, 0, newItems as any);
 
             strategy.items.forEach((item, index) => {
-                const contents = item.getContents();
                 assert.equal(
-                    contents instanceof Array ? '#' + contents.join(',') : contents,
+                    stringifyResult(item.getContents()),
                     expected[index],
                     'at ' + index
                 );
@@ -640,6 +628,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
+                '{}',
                 'd',
                 'e'
             ];
@@ -652,9 +641,8 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             assert.strictEqual(strategy.count, expected.length);
 
             strategy.items.forEach((item, index) => {
-                const contents = item.getContents();
                 assert.equal(
-                    contents instanceof Array ? '#' + contents.join(',') : contents,
+                    stringifyResult(item.getContents()),
                     expected[index],
                     'at ' + index
                 );

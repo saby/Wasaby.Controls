@@ -39,6 +39,7 @@ export default class ColumnsInnerView extends Control {
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
     private _spacing: number = SPACING;
+    protected _addingColumnsCounter: number = 0;
 
     protected _beforeMount(options: IColumnsInnerViewOptions): void {
         this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
@@ -56,7 +57,7 @@ export default class ColumnsInnerView extends Control {
         }
 
         if (options.columnsMode === 'auto' && options.initialWidth) {
-            this._recalculateColumnsCountByWidth(options.initialWidth);
+            this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
         } else {
             if (options.columnsCount) {
                 this._columnsCount = options.columnsCount;
@@ -95,8 +96,8 @@ export default class ColumnsInnerView extends Control {
     private saveItemsContainer(e: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._itemsContainerGetter = itemsContainerGetter;
     }
-    private _recalculateColumnsCountByWidth(width: number): void {
-        const newColumnsCount = Math.floor(width / ((this._options.columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
+    private _recalculateColumnsCountByWidth(width: number, columnMinWidth: number): void {
+        const newColumnsCount = Math.floor(width / ((columnMinWidth || DEFAULT_MIN_WIDTH) + SPACING));
         if (newColumnsCount !== this._columnsCount) {
             this._columnsCount = newColumnsCount;
             this.updateColumns();
@@ -108,13 +109,13 @@ export default class ColumnsInnerView extends Control {
 
         // если currentWidth === 0, значит контрол скрыт (на вкладке switchbleArea), и не нужно пересчитывать
         if (this._options.columnsMode === 'auto' && currentWidth > 0) {
-            this._recalculateColumnsCountByWidth(currentWidth);
+            this._recalculateColumnsCountByWidth(currentWidth, this._options.columnMinWidth);
         }
     }
 
     private setColumnOnItem(item: CollectionItem<Model>, index: number): void {
         const model = this._model;
-        const column = this._columnsController.calcColumn(model, index, this._columnsCount);
+        const column = this._columnsController.calcColumn(model, index + this._addingColumnsCounter, this._columnsCount);
         item.setColumn(column);
     }
 
@@ -128,6 +129,7 @@ export default class ColumnsInnerView extends Control {
         });
     }
     private updateColumns(): void {
+        this._addingColumnsCounter = 0;
         this._columnsIndexes = null;
         this._model.each(this.setColumnOnItem.bind(this));
         this.updateColumnIndexesByModel();
@@ -177,7 +179,12 @@ export default class ColumnsInnerView extends Control {
                                   removedItems: [CollectionItem<Model>],
                                   removedItemsIndex: number): void {
         if (action === 'a') {
-            newItems.forEach(this.setColumnOnItem.bind(this));
+            newItems.forEach(this.setColumnOnItem.bind(this));  
+            if (this._options.columnsMode === 'auto' && newItems.length === 1) {
+                this._addingColumnsCounter++;
+            } else {
+                this._addingColumnsCounter = 0;
+            }
         }
         if (action === 'rm') {
             this.processRemoving(removedItemsIndex, removedItems);

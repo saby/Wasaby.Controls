@@ -1,18 +1,27 @@
+<!--
+События висят на div а не на partial пототму что, если в шаблоне partial есть несколько корневых нод,
+то обработчики всплывающих событий не срабатывают и атрибуты не навешиваются.
+https://online.sbis.ru/opendoc.html?guid=10a3ac25-9b67-4b76-9706-ba8e73415246
+-->
 <div class="controls-Scroll-ContainerBase {{_scrollCssClass}} controls-Scroll__content"
     name="content"
-    on:scroll="_scrollHandler()">
+    on:scroll="_scrollHandler()"
+    on:doScroll="_doScrollHandler()"
+    on:register="_registerIt()"
+    on:unregister="_unRegisterIt()"
+    on:scrollToElement="_scrollToElement()"
+    on:saveScrollPosition="_saveScrollPosition()"
+    on:restoreScrollPosition="_restoreScrollPosition()"
+    on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+    on:controlResize="_controlResizeHandler()"
+    on:enableVirtualNavigation="_enableVirtualNavigationHandler()"
+    on:disableVirtualNavigation="_disableVirtualNavigationHandler()"
+    >
     <ws:partial
         attr:class="controls-Scroll-containerBase_userContent"
         template="{{_options.content}}"
         scope="{{_options}}"
-        on:register="_registerIt()"
-        on:unregister="_unRegisterIt()"
-        on:doScroll="_doScrollHandler()"
-
-        on:scrollToElement="_scrollToElement()"
-        on:saveScrollPosition="_saveScrollPosition()"
-        on:restoreScrollPosition="_restoreScrollPosition()"
-        on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+        _scrollCssClass="{{undefined}}"
 
         on:selectedKeysChanged="_selectedKeysChanged()"
         on:excludedKeysChanged="_excludedKeysChanged()"

@@ -3,7 +3,7 @@ import {constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import IDropdownController from 'Controls/_dropdown/interface/IDropdownController';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
-import {DependencyTimer} from 'Controls/fastOpenUtils';
+import {DependencyTimer} from 'Controls/popup';
 import {RecordSet} from 'Types/collection';
 import {IStickyPopupOptions} from 'Controls/popup';
 
@@ -41,7 +41,7 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
             if (!this._dependenciesTimer) {
                 this._dependenciesTimer = new DependencyTimer();
             }
-            this._dependenciesTimer.start(this._controller.loadDependencies.bind(this._controller));
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
         }
     }
 
@@ -81,5 +81,11 @@ export abstract class BaseDropdown extends Control<IControlOptions, DropdownRece
     protected _beforeUnmount(): void {
         UnregisterUtil(this, 'scroll');
         this._controller.destroy();
+    }
+
+    private _loadDependencies(): void {
+        this._controller.loadDependencies().catch((error) => {
+            return error;
+        });
     }
 }

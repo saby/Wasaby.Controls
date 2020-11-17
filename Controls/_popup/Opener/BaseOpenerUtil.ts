@@ -2,8 +2,9 @@ import {Control} from 'UI/Base';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {goUpByControlTree} from 'UI/Focus';
-import {IndicatorOpener} from 'Controls/LoadingIndicator';
+import {ILoadingIndicatorOptions, IndicatorOpener} from 'Controls/LoadingIndicator';
 import rk = require('i18n!Controls');
+import {IBaseOpenerOptions} from './BaseOpener';
 
 interface IModuleInfo {
     parsedModule: {
@@ -57,7 +58,7 @@ export default {
         };
     },
 
-    getIndicatorConfig(id: string, cfg = {}) {
+    getIndicatorConfig(id: string, cfg: IBaseOpenerOptions = {}): ILoadingIndicatorOptions {
         const findParentPopupId = () => {
             const parentControls: Control[] = goUpByControlTree(cfg.opener?._container);
             for (let i = 0; i < parentControls.length; i++) {
@@ -68,11 +69,13 @@ export default {
             return false;
         };
         const popupId = findParentPopupId();
-        const config = {
+        const indicatorConfig = cfg.indicatorConfig || {};
+        const defaultIndicatorCfg = {
             id,
             message: rk('Загрузка'),
             delay: 2000
         };
+        const config = {...defaultIndicatorCfg, ...indicatorConfig};
         if (popupId) {
             config.popupId = popupId;
         }

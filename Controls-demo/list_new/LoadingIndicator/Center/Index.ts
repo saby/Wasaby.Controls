@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/list_new/LoadingIndicator/Center/Ce
 import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 
-const TIMEOUT3000 = 3000;
+const TIMEOUT3500 = 3500;
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -17,7 +17,7 @@ export default class extends Control {
     }
 
     protected _reloadList(): void {
-        this._slowDownSource(this._viewSource, TIMEOUT3000);
+        this._slowDownSource(this._viewSource, TIMEOUT3500);
         this._children.list.reload();
     }
 

@@ -4,15 +4,14 @@ import * as randomId from 'Core/helpers/Number/randomId';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 
 interface IOpenerStaticMethods {
-    openPopup: (popupOptions: IBasePopupOptions) => Promise<string>;
+    openPopup: (popupOptions: IBasePopupOptions, popupController?: string) => Promise<string>;
     closePopup: (popupId: string) => void;
 }
 /**
  * Базовый хелпер для открытия всплывающих окон
  * @class Controls/_popup/PopupHelper/Base
- * @control
+ *
  * @author Красильников А.С.
- * @category Popup
  * @private
  */
 
@@ -20,7 +19,7 @@ export default class Base {
     _popupId: string;
     _opener: IOpenerStaticMethods;
 
-    open(popupOptions: IBasePopupOptions): void {
+    open(popupOptions: IBasePopupOptions, popupController?: string): void {
         const config: IBasePopupOptions = {...popupOptions};
         config.isHelper = true;
 
@@ -31,18 +30,24 @@ export default class Base {
         config.id = this._popupId;
         config._events = {
             onClose: () => {
-                this._popupId = null;
+                // Защита. Могут позвать close и сразу open. В этом случае мы
+                // инициируем закрытие окна, откроем новое и после стрельнет onCLose, который очистит id нового окна.
+                // В итоге повторый вызов метода close ничего не сделает, т.к. popupId уже почищен.
+                if (!this.isOpened()) {
+                    this._popupId = null;
+                }
             }
         };
         if (config.dataLoaders) {
             config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
         }
 
-        this._opener.openPopup(config);
+        this._opener.openPopup(config, popupController);
     }
 
     close(): void {
-        return this._opener.closePopup(this._popupId);
+        this._opener.closePopup(this._popupId);
+        this._popupId = null;
     }
 
     isOpened(): boolean {

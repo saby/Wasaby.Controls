@@ -30,7 +30,8 @@ export default class GroupingLoader extends Control {
         };
         return crudWrapper.query({filter: queryFilter, sorting}).then((loadedItems: RecordSet) => {
             this._loadedGroups[groupId] = true;
-            collection.mergeItems(loadedItems);
+
+            collection.getCollection().merge(loadedItems, { remove: false });
         });
     }
 

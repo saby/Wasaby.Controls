@@ -37,7 +37,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_interface/ISorting
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
@@ -45,20 +45,19 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
  * @implements Controls/_list/interface/IListNavigation
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
- * @category List
  * @demo Controls-demo/list_new/Base/Index
  */
 
 /*
  * Plain list with custom item template. Can load data from data source.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
  *
  * @class Controls/_list/List
  * @extends Core/Control
@@ -74,7 +73,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/interface/IEditableList
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
@@ -82,12 +81,11 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
- * @category List
  * @demo Controls-demo/list_new/Base/Index
  */
 

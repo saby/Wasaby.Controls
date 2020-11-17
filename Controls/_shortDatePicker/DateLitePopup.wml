@@ -1,6 +1,6 @@
 <div class="controls-PeriodLiteDialog controls-PeriodLiteDialog_theme-{{_options.theme}}
-            {{_getWidthCssClass()}} {{_options.popupClassName}}"
-            style="{{_popupHeightStyle}}">
+            {{_getSizeCssClass('width')}} {{_options.popupClassName}}
+            {{!_isExpandedPopup ? _getSizeCssClass('height')}}">
    <ws:if data="{{_options.chooseMonths || _options.chooseQuarters || _options.chooseHalfyears}}">
       <div class="controls-PeriodLiteDialog__header">
          <div class="controls-PeriodLiteDialog__currentValue
@@ -17,7 +17,8 @@
       <div class="controls-PeriodLiteDialog__bodyWrapper controls-PeriodLiteDialog__bodyWrapper_theme-{{_options.theme}}">
          <div class="controls-PeriodLiteDialog__yearWrapper {{_getYearWrapperCssClasses()}}
                      controls-PeriodLiteDialog__yearWrapper_theme-{{_options.theme}}
-         {{(_yearHovered === _position.getFullYear())? ' controls-PeriodLiteDialog__yearHeader-background-hovered_theme-' + _options.theme}}"
+                     controls-PeriodLiteDialog__yearHeader-border{{(_yearHovered === _position.getFullYear())?
+                     '-hovered'}}_theme-{{_options.theme}}"
               title="{[Выбрать год]}">
             <div
                     class="controls-PeriodLiteDialog__year controls-PeriodLiteDialog__year_theme-{{_options.theme}}
@@ -54,7 +55,7 @@
                  stubTemplate="{{_options.stubTemplate}}"
                  _displayedRanges="{{_displayedRanges}}"
                  _position="{{_position}}"
-                 monthTemplate="{{monthTemplate}}"
+                 monthTemplate="{{_options.monthTemplate}}"
                  _yearHovered="{{_yearHovered}}"
                  formatDate="{{_formatDate}}"
                  _isFullPicker="{{_isFullPicker}}"
@@ -102,6 +103,7 @@
               virtualPageSize="{{24}}"
               displayedRanges="{{_displayedRanges}}"
               bind:position="_position"
+              attachLoadTopTriggerToNull="{{ false }}"
               _limit="{{_limit}}"
          class="controls-PeriodLiteDialog__year-list controls-PeriodLiteDialog__year-list_theme-{{_options.theme}}">
          <ws:yearTemplate>

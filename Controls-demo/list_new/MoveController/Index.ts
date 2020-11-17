@@ -3,7 +3,7 @@ import {Memory} from 'Types/source';
 import * as clone from 'Core/core-clone';
 import {IItemAction, TItemActionShowType} from 'Controls/itemActions';
 
-import * as Template from 'wml!Controls-demo/List/Mover/Mover';
+import * as Template from 'wml!Controls-demo/list_new/MoveController/MoveController';
 
 export default class Mover extends Control<IControlOptions> {
    protected _template: TemplateFunction = Template;
@@ -40,8 +40,8 @@ export default class Mover extends Control<IControlOptions> {
    }
 
    protected _onClick(): void {
-      this._children.list.reload();
-      this._children.listSecond.reload();
+      this._children.listMover.reload();
+      this._children.listSecondMover.reload();
       this._countClicked += 1;
       this._reloadCaption = 'Reload ' + this._countClicked;
    }
@@ -59,14 +59,18 @@ export default class Mover extends Control<IControlOptions> {
          icon: 'icon-ArrowUp icon-primary',
          showType: TItemActionShowType.TOOLBAR,
          handler: (item) => {
-            this._children[moverName].moveItemUp(item.getKey());
+            this._children[moverName].moveItemUp(item.getKey()).then(() => {
+               this._children[moverName].reload();
+            });
          }
       }, {
          id: 1,
          icon: 'icon-ArrowDown icon-primary',
          showType: TItemActionShowType.TOOLBAR,
          handler: (item) => {
-            this._children[moverName].moveItemDown(item.getKey());
+            this._children[moverName].moveItemDown(item.getKey()).then(() => {
+               this._children[moverName].reload();
+            });
          }
       }];
    }

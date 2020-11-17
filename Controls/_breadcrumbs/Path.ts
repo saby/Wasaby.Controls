@@ -13,16 +13,15 @@ interface IReceivedState {
  * Контрол "Хлебные крошки".
  * @remark
  * Полезные ссылки:
- * * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/">руководство разработчика</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less">переменные тем оформления</a>
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
  * @see Controls/_breadcrumbs/HeadingPath
  */
@@ -33,13 +32,12 @@ interface IReceivedState {
  *
  * @class Controls/_breadcrumbs/Path
  * @extends Core/Control
- * @mixes Controls/interface/IBreadCrumbs
+ * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * @control
  * @private
- * @author Бондарь А.В.
- * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
+ * @author Красильников А.С.
+ * @demo Controls-demo/breadCrumbs_new/ClickHandler/Index
  */
 
 class BreadCrumbs extends Control<IBreadCrumbsOptions> {

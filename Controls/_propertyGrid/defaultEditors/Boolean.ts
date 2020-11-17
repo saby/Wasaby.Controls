@@ -15,7 +15,7 @@ import 'Controls/toggle';
  * @class Controls/_propertyGrid/defaultEditors/Boolean
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -25,7 +25,7 @@ import 'Controls/toggle';
  * @class Controls/_propertyGrid/defaultEditors/Boolean
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

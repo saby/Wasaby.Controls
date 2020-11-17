@@ -1,11 +1,18 @@
 <div class="controlsDemo__wrapper">
-   <Controls.filter:View
-      attr:class="controls-demo-FilterView__itemsEllipsis"
-      on:itemsChanged="_itemsChangedHandler()"
-      source="{{_source}}"
-      emptyText="Все операции"
-      detailPanelTemplateName="Controls-demo/Filter_new/resources/Panel">
-      <ws:detailPanelTemplateOptions
-         additionalTemplateProperty="additionalTemplate"/>
-   </Controls.filter:View>
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Filter_new/FilterView/EmptyText/WithDetailPanel/Index' }}">
+         <a href="{{content.href}}">EmptyText with detail panel</a>
+      </Router.router:Reference>
+      <Controls-demo.Filter_new.FilterView.EmptyText.WithDetailPanel.Index/>
+   </div>
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/Filter_new/FilterView/EmptyText/WithSimplePanel/Index'}}">
+         <a href="{{content.href}}">EmptyText with simple panel</a>
+      </Router.router:Reference>
+      <Controls-demo.Filter_new.FilterView.EmptyText.WithSimplePanel.Index/>
+   </div>
 </div>

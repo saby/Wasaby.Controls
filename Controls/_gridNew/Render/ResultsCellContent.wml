@@ -1,0 +1,21 @@
+<ws:if data="{{ !!content || !!contentTemplate }}">
+    <ws:partial template="{{ content || contentTemplate }}"
+                colData="{{ colData }}"
+                results="{{ colData.getResults() }}"/>
+</ws:if>
+<ws:else data="{{ colData.data !== undefined }}">
+    <ws:if data="{{ colData.format === 'money' }}">
+        <Controls.decorator:Money value="{{ colData.data }}" useGrouping="{{ true }}"
+                                  fontWeight="{{fontWeight || 'bold'}}"
+                                  fontColorStyle="{{ fontColorStyle || 'secondary'}}"/>
+    </ws:if>
+    <ws:else data="{{ colData.format === 'integer' || colData.format === 'real' }}">
+        <Controls.decorator:Number value="{{ colData.data }}" useGrouping="{{ true }}"
+                                   attr:class="controls-Grid__row-result-cell__content-font-weight_{{ fontWeight || 'bold' }}_theme-{{theme}}
+                                               controls-Grid__row-result-cell__content-font-color-style_{{ fontColorStyle || 'secondary' }}_theme-{{theme}}"
+                                   fractionSize="{{ 2 }}"/>
+    </ws:else>
+    <ws:else>
+        {{ colData.data }}
+    </ws:else>
+</ws:else>

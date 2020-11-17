@@ -11,16 +11,14 @@ import {selectionToRecord} from 'Controls/operations';
 import {TKeysSelection} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
-import * as merge from 'Core/core-merge';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {CrudWrapper} from '../_dataSource/CrudWrapper';
-import {factory} from 'Types/chain';
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
-import {PrefetchProxy, Rpc, ICrud} from 'Types/source';
+import {ICrud, PrefetchProxy, Rpc} from 'Types/source';
 
 export interface IFilterHistoryData {
     items: IFilterItem[];
@@ -29,7 +27,7 @@ export interface IFilterHistoryData {
 
 type THistoryData = IFilterHistoryData | IFilterItem[];
 
-interface IFilterControllerOptions {
+export interface IFilterControllerOptions {
     prefetchParams?: IPrefetchHistoryParams;
     filter: object;
     useStore?: boolean;
@@ -37,23 +35,25 @@ interface IFilterControllerOptions {
     fastFilterSource?: IFilterItem[];
     historyItems?: IFilterItem[];
     historyId?: string;
-    searchValue: string;
-    searchParam: string;
-    minSearchLength: number;
-    parentProperty: string;
+    searchValue?: string;
+    searchParam?: string;
+    minSearchLength?: number;
+    parentProperty?: string;
     selectedKeys?: TKeysSelection;
     excludedKeys?: TKeysSelection;
     source?: ICrud;
     selectionViewMode?: string;
+    historySaveCallback?: (historyData: Record<string, any>, filterButtonItems: IFilterItem[]) => void;
 }
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 const setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
 const ACTIVE_HISTORY_FILTER_INDEX = 0;
+const SELECTION_PATH_FILTER_FIELD = 'SelectionWithPath';
 
 export default class FilterControllerClass {
-    private _options: IFilterControllerOptions = null;
+    private _options: Partial<IFilterControllerOptions> = null;
     private _crudWrapper: CrudWrapper;
     private _filterButtonItems: IFilterItem[] = null;
     private _fastFilterItems: IFilterItem[] = null;
@@ -64,9 +64,9 @@ export default class FilterControllerClass {
    можно получить идентификатор закэшированных данных для этого фильтра */
     private _isFilterChanged: boolean = false;
 
-    constructor(options: IFilterControllerOptions) {
+    constructor(options: Partial<IFilterControllerOptions>) {
         this._options = options;
-        this._filter = options.filter;
+        this._filter = options.filter || {};
 
         if (options.prefetchParams) {
             this._filter = Prefetch.prepareFilter(this._filter, options.prefetchParams);
@@ -75,7 +75,8 @@ export default class FilterControllerClass {
     }
 
     setFilterItems(historyItems: THistoryData): void {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             this._setFilterItems(state.filterSource, [], historyItems);
         } else {
@@ -90,14 +91,15 @@ export default class FilterControllerClass {
     }
 
     loadFilterItemsFromHistory(): Promise<THistoryData> {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             const loadedSources = state && state.loadedSources && state.loadedSources[0];
             if (loadedSources) {
                 return this._resolveItemsWithHistory(loadedSources, loadedSources.filter);
             } else {
                 return this._resolveItemsWithHistory({
-                    historyId: state.historyId,
+                    historyId: state.historyId || this._options.historyId,
                     filterButtonSource: state.filterSource,
                     historyItems: this._options.historyItems
                 }, state.filter);
@@ -111,10 +113,13 @@ export default class FilterControllerClass {
         let filterButtonChanged;
         let fastFilterChanged;
         let filterChanged;
+        let selectionViewModeChanged;
+
         if (!this._options.useStore) {
             filterButtonChanged = this._options.filterButtonSource !== newOptions.filterButtonSource;
             fastFilterChanged = this._options.fastFilterSource !== newOptions.fastFilterSource;
             filterChanged = !isEqual(this._options.filter, newOptions.filter);
+            selectionViewModeChanged = this._options.selectionViewMode !== newOptions.selectionViewMode;
 
             if (filterButtonChanged || fastFilterChanged) {
                 this._setFilterItems(
@@ -144,7 +149,7 @@ export default class FilterControllerClass {
             }
         }
         this._options = newOptions;
-        if (filterChanged) {
+        if (filterChanged || selectionViewModeChanged) {
             this._updateFilter(this._options);
         }
         return filterChanged || filterButtonChanged || fastFilterChanged;
@@ -185,7 +190,8 @@ export default class FilterControllerClass {
 
     handleDataLoad(items: RecordSet): void {
         if (this._options.historyId && this._isFilterChanged) {
-            if (getHistorySource({ historyId: this._options.historyId }).historyReady()) {
+            if (getHistorySource({ historyId: this._options.historyId,
+                                        favorite: !!this._options.prefetchParams }).historyReady()) {
                 this._deleteCurrentFilterFromHistory();
             }
             this._addToHistory(
@@ -253,8 +259,12 @@ export default class FilterControllerClass {
     }
 
     private _updateFilter(options: Partial<IFilterControllerOptions>): void {
-        this._prepareSearchFilter(this._filter, options);
-        this._prepareOperationsFilter(this._filter, options);
+        if (options.searchParam && options.searchValue) {
+            this._prepareSearchFilter(this._filter, options);
+        }
+        if (options.selectedKeys && options.selectedKeys.length) {
+            this._prepareOperationsFilter(this._filter, options);
+        }
     }
 
     private _resolveItemsWithHistory(options: Partial<IFilterControllerOptions>,
@@ -282,7 +292,7 @@ export default class FilterControllerClass {
         historyItems: IFilterItem[],
         prefetchParams: IPrefetchHistoryParams
     ): Promise<THistoryData> {
-        if (historyItems && prefetchParams) {
+        if (historyItems && prefetchParams && historyItems?.length) {
             return this._loadHistoryItems(historyId).then((result) => {
                 return historyItems ? historyItems : result;
             });
@@ -347,7 +357,7 @@ export default class FilterControllerClass {
         let result;
         this._updateMeta = null;
 
-        this._findItemInHistory(historyId, items);
+        result = this._findItemInHistory(historyId, items);
 
         // Метод используется для поиска элемента для удаления и последующего сохранения нового элемента с новыми данными
         // Если элемент запинен или добавлен в избранное, его нельзя удалять.
@@ -398,11 +408,13 @@ export default class FilterControllerClass {
                 }
             });
         }
+
+        return result;
     }
 
     private _minimizeFilterItems(items: IFilterItem[]): IFilterItem[] {
         const minItems = [];
-        factory(items).each((item) => {
+        items.forEach((item) => {
             minItems.push(FilterControllerClass._minimizeItem(item));
         });
         return minItems;
@@ -420,8 +432,9 @@ export default class FilterControllerClass {
                 historyData = this._updateMeta.item;
             } else {
                 historyData = this._getHistoryData(filterButtonItems, fastFilterItems, prefetchParams);
-                // self - пустой объект, если вызывается метод updateFilterHistory c прототипа
-                this._notify?.call(self, 'historySave', [historyData, filterButtonItems]);
+                if (this._options.historySaveCallback instanceof Function) {
+                    this._options.historySaveCallback(historyData, filterButtonItems);
+                }
             }
 
             return getHistorySource({historyId}).update(historyData, meta);
@@ -518,7 +531,7 @@ export default class FilterControllerClass {
         let historyItems;
 
         if (history) {
-            historyItems = history.items || history;
+            historyItems = history.items || (Array.isArray(history) ? history : []);
         }
 
         this._filterButtonItems = FilterControllerClass._getItemsByOption(filterButtonOption, historyItems);
@@ -579,7 +592,7 @@ export default class FilterControllerClass {
     private _calculateFilterByItems(filter: object,
                                     filterButtonItems: IFilterItem[],
                                     fastFilterItems: IFilterItem[]): object {
-        const filterClone = clone(filter || {});
+        const filterClone = {...filter} || {};
         const itemsFilter = this._getFilterByItems(filterButtonItems, fastFilterItems);
         const emptyFilterKeys = this._getEmptyFilterKeys(filterButtonItems, fastFilterItems);
 
@@ -587,9 +600,7 @@ export default class FilterControllerClass {
             delete filterClone[key];
         });
 
-        // FIXME when using merge witout {rec: false} we will get wrong data:
-        // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
-        merge(filterClone, itemsFilter, {rec: false});
+        Object.assign(filterClone, itemsFilter);
 
         return filterClone;
     }
@@ -626,7 +637,7 @@ export default class FilterControllerClass {
                            differentCallback: Function | null,
                            equalCallback?: Function): void {
         const processItems = (items) => {
-            factory(items).each((elem) => {
+            items.forEach((elem) => {
                 const value = getPropValue(elem, 'value');
                 const visibility = getPropValue(elem, 'visibility');
                 const viewMode = getPropValue(elem, 'viewMode');
@@ -658,7 +669,7 @@ export default class FilterControllerClass {
                                      minSearchLength,
                                      parentProperty
                                  }: Partial<IFilterControllerOptions>): void {
-        const preparedFilter = clone(filter) || {};
+        const preparedFilter = {...filter} || {};
         if (searchValue && searchParam &&
             searchValue.length >= minSearchLength) {
             preparedFilter[searchParam] = searchValue;
@@ -672,24 +683,22 @@ export default class FilterControllerClass {
                                          selectedKeys= [],
                                          excludedKeys= [],
                                          source,
-                                         selectionViewMode,
-                                         parentProperty
+                                         selectionViewMode
                                      }: Partial<IFilterControllerOptions>): object {
-        const preparedFilter = {...filter};
-        const addSelectionToFilter = selectionViewMode === 'selected' || (selectedKeys.length && parentProperty);
+        const preparedFilter = {...filter} || {};
 
-        if (addSelectionToFilter) {
+        if (selectionViewMode === 'selected') {
             const listSource = (source as PrefetchProxy).getOriginal ? (source as PrefetchProxy).getOriginal() : source;
-            const selection = selectionToRecord({
+            preparedFilter[SELECTION_PATH_FILTER_FIELD] = selectionToRecord({
                 selected: selectedKeys || [],
                 excluded: excludedKeys || []
             }, (listSource as Rpc).getAdapter(), 'all', false);
-            const filterField = selectionViewMode === 'selected' ? 'SelectionWithPath' : 'entries';
-
-            preparedFilter[filterField] = selection;
+        } else {
+            delete preparedFilter[SELECTION_PATH_FILTER_FIELD];
         }
 
         this._setFilter(preparedFilter);
+        return preparedFilter;
     }
 
     private _setFilter(filter: object): void {
@@ -761,8 +770,8 @@ export default class FilterControllerClass {
     private static _equalItemsIterator(filterButtonItems: IFilterItem[],
                                        fastFilterItems: IFilterItem[],
                                        prepareCallback: Function): void {
-        factory(filterButtonItems).each((buttonItem, index) => {
-            factory(fastFilterItems).each((fastItem) => {
+        filterButtonItems.forEach((buttonItem, index) => {
+            fastFilterItems.forEach((fastItem) => {
                 if (isEqualItems(buttonItem, fastItem)
                     && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                     prepareCallback(index, fastItem);
@@ -771,11 +780,18 @@ export default class FilterControllerClass {
         });
     }
 
-    private static _cloneItems(items: IFilterItem[]): IFilterItem[] {
+    private static _cloneItems(items: IFilterItem[]|RecordSet<IFilterItem>): IFilterItem[] {
+        let resultItems;
+
         if (items['[Types/_entity/CloneableMixin]']) {
-            return items.clone();
+            resultItems = (items as RecordSet<IFilterItem>).clone();
+        } else {
+            resultItems = [];
+            items.forEach((item) => {
+                resultItems.push({...item});
+            });
         }
-        return clone(items);
+        return resultItems;
     }
 }
 

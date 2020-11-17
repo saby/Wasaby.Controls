@@ -3,6 +3,25 @@ import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import {tmplNotify} from 'Controls/eventUtils';
 import {Logger} from 'UI/Utils';
 
+var _private = {
+   getLookup: function(self) {
+      if (typeof self._options.lookupTemplateName === 'string') {
+         return self._children.lookup;
+      } else {
+          Logger.error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type', self);
+      }
+   },
+
+   getCaption: function(self, options) {
+      var caption = options.caption;
+
+      if (options.emptyText && !self._passed && !options.selectedKeys.length) {
+         caption = options.emptyText;
+      }
+
+      return caption;
+   }
+};
 /**
  * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
  *
@@ -12,7 +31,6 @@ import {Logger} from 'UI/Utils';
  * Если хотите расположить поле связи с кнопкой-ссылкой в одну строку, необходимо на корневой элемет навесить класс 'ws-flexbox'.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
  *
  * @class Controls/_filterPopup/Panel/Lookup
@@ -32,12 +50,12 @@ import {Logger} from 'UI/Utils';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * @mixes Controls/_interface/ISelectorDialog
- * @control
  * @public
  * @author Герасимов А.М.
- *
+ * 
+ * @demo Controls-demo/Lookup/Index
  */
 /*
  * Label with a Lookup. While the collection is empty - the Lookup is hidden.
@@ -63,84 +81,11 @@ import {Logger} from 'UI/Utils';
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
- * @control
+ * @mixes Controls/_input/interface/IValueOptions
+ *
  * @public
  * @author Kapustin I.A.
  */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#caption
- * @cfg {String} Caption
- */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#emptyText
- * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
- */
-
-   /**
-    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
-    * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
-    * @default Controls/_lookup/Lookup
-    * @example
-    * <pre>
-    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
-    * @cfg {String} Name of the control with same interface as Lookup.
-    * @default Controls/_lookup/Lookup
-    * @example
-    * <pre>
-    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
-    * </pre>
-    */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
- * @cfg {String} Name of the control with same interface as Lookup.
- * @default Controls/_lookup/Lookup
- * @example
- * <pre>
- *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
- * </pre>
- */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
- * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
- * @example
- * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
- * <pre>
- *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
- * </pre>
- */
-
-
-
-var _private = {
-   getLookup: function(self) {
-      if (typeof self._options.lookupTemplateName === 'string') {
-         return self._children.lookup;
-      } else {
-          Logger.error('Option "Controls/_filterPopup/Panel/Lookup:lookupTemplateName" only supports string type', self);
-      }
-   },
-
-   getCaption: function(self, options) {
-      var caption = options.caption;
-
-      if (options.emptyText && !self._passed && !options.selectedKeys.length) {
-         caption = options.emptyText;
-      }
-
-      return caption;
-   }
-};
-
 var Lookup = Control.extend({
    _template: template,
    _notifyHandler: tmplNotify,
@@ -149,6 +94,7 @@ var Lookup = Control.extend({
 
    _beforeMount: function(options) {
       this._caption = _private.getCaption(this, options);
+      this._passed = !!options.selectedKeys?.length;
    },
 
    _beforeUpdate: function(newOptions) {
@@ -190,6 +136,46 @@ Lookup.getDefaultOptions = function() {
       lookupTemplateName: 'Controls/lookup:Input'
    };
 };
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#caption
+ * @cfg {String} Caption
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#emptyText
+ * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+ * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
+ * @default Controls/_lookup/Lookup
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+ * </pre>
+ */
+
+/*
+   * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+   * @cfg {String} Name of the control with same interface as Lookup.
+   * @default Controls/_lookup/Lookup
+   * @example
+   * <pre>
+   *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+   * </pre>
+   */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
+ * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
+ * @example
+ * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
+ * </pre>
+ */
 
 export = Lookup;
 

@@ -11,7 +11,7 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import {IStickyPopupOptions} from 'Controls/popup';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 
 interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
@@ -35,13 +35,13 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
- * @extends Core/Control
+ * @extends Controls/_buttons/Button
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_dropdown/interface/IBaseDropdown
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/IIcon
@@ -55,10 +55,9 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ISearch
- * @control
+ *
  * @public
  * @author Герасимов А.М.
- * @category Button
  */
 
 /*
@@ -77,17 +76,15 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IDropdown
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_dropdown/interface/IGrouped
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
- * @category Button
- * @demo Controls-demo/Buttons/Menu/MenuPG
+ * @demo Controls-demo/dropdown_new/Button/Source/Index
  */
 
 export default class Button extends BaseDropdown {
@@ -229,7 +226,8 @@ export default class Button extends BaseDropdown {
 }
 
 /**
- * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
+ * @event Происходит при выборе элемента из списка.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
@@ -237,7 +235,8 @@ export default class Button extends BaseDropdown {
  */
 
 /*
- * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
+ * @event Occurs when an item is selected from the list.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
@@ -274,9 +273,4 @@ export default class Button extends BaseDropdown {
  *    });
  * }
  * </pre>
- */
-
-/**
- * @name Controls/_dropdown/Button#additionalProperty
- * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
  */

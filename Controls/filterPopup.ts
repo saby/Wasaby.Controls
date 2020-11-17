@@ -12,6 +12,7 @@
  * @includes Text Controls/_filterPopup/Panel/Text
  * @includes Lookup Controls/_filterPopup/Panel/Lookup
  * @includes HierarchyLookup Controls/_filterPopup/Panel/HierarchyLookup
+ * @includes IFilterButton Controls/_filterPopup/interface/IFilterPanel
  * @public
  * @author Крайнов Д.О.
  */

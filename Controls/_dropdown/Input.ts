@@ -6,7 +6,7 @@ import * as Utils from 'Types/util';
 import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
 import {RecordSet, List} from 'Types/collection';
-import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems, loadSelectedItems, isEmptyItem} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
 import Controller from 'Controls/_dropdown/_Controller';
 import {TKey} from './interface/IDropdownController';
@@ -16,7 +16,7 @@ import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
 import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 
 interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
@@ -27,6 +27,10 @@ interface IInputOptions extends IBaseDropdownOptions {
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
+interface IDropdownInputChildren {
+   infoboxTarget: InfoboxTarget;
+}
+
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
@@ -35,7 +39,6 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
@@ -47,7 +50,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/interface/IDropdown
+ * @mixes Controls/_dropdown/interface/IBaseDropdown
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/interface/ISelectorDialog
@@ -56,17 +59,15 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/ISearch
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
- * @demo Controls-demo/dropdown_new/Input/Source/Index
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
  */
 
 /*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDropdown%2FDropdown">Demo-example</a>.
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
@@ -80,17 +81,219 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/IDropdownEmptyText
- * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ITextValue
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
- * @demo Controls-demo/Input/Dropdown/DropdownPG
+ * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
+export default class Input extends BaseDropdown {
+   protected _template: TemplateFunction = template;
+   protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
+   protected _text: string = '';
+   protected _hasMoreText: string = '';
+   protected _countItems: number;
+   protected _needInfobox: boolean = false;
+   protected _item: Model = null;
+   protected _isEmptyItem: boolean = false;
+   protected _icon: string;
+   protected _tooltip: string;
+   protected _selectedItems: Model[];
+   protected _controller: Controller;
+   protected _children: IDropdownInputChildren;
+
+   _beforeMount(options: IInputOptions,
+                context: object,
+                receivedState: DropdownReceivedState): void | Promise<void|DropdownReceivedState> {
+      this._controller = new Controller(this._getControllerOptions(options));
+
+      if (options.navigation) {
+         return loadSelectedItems(this._controller, receivedState, options.source);
+      } else {
+         return loadItems(this._controller, receivedState, options.source);
+      }
+   }
+
+   _beforeUpdate(options: IInputOptions): void {
+      this._controller.update(this._getControllerOptions(options));
+   }
+
+   _getControllerOptions(options: IInputOptions): object {
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
+            dataLoadCallback: this._dataLoadCallback.bind(this),
+            selectorOpener: this,
+            selectedKeys: options.selectedKeys || [],
+            popupClassName: options.popupClassName || ((options.showHeader ||
+                options.headerTemplate || options.headerContentTemplate) ?
+                'controls-DropdownList__margin-head' : options.multiSelect ?
+                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
+                ' theme_' + options.theme,
+            allowPin: false,
+            selectedItemsChangedCallback: this._prepareDisplayState.bind(this, options),
+            openerControl: this
+         }
+      };
+   }
+
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      return {
+         opener: this._children.infoboxTarget,
+         templateOptions: {
+            selectorDialogResult: this._selectorTemplateResult.bind(this)
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: this._onResult.bind(this)
+         }
+      };
+   }
+
+   _selectedItemsChangedHandler(items: Model[]): void|unknown {
+      const text = this._getText(items[0], this._options) + this._getMoreText(items);
+      this._notify('textValueChanged', [text]);
+      const newSelectedKeys = this._getSelectedKeys(items, this._options.keyProperty);
+      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
+         return this._notify('selectedKeysChanged', [newSelectedKeys]);
+      }
+   }
+
+   _dataLoadCallback(items: RecordSet<Model>): void {
+      this._countItems = items.getCount();
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
+   }
+
+   _prepareDisplayState(options: IInputOptions, items: Model[]): void {
+      if (items.length) {
+         this._selectedItems = items;
+         this._needInfobox = options.readOnly && this._selectedItems.length > 1;
+         this._item = items[0];
+         this._isEmptyItem = isEmptyItem(this._item, options.emptyText, options.keyProperty);
+         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
+         this._text = this._getText(items[0], options);
+         this._hasMoreText = this._getMoreText(items);
+         this._tooltip = this._getTooltip(items, options.displayProperty);
+      }
+   }
+
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
+      this.openMenu();
+   }
+
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._container);
+
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
+         if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
+   }
+
+   protected _onResult(action: string, data: Model|Model[]): void {
+      switch (action) {
+         case 'applyClick':
+            this._applyClick(data);
+            break;
+         case 'itemClick':
+            this._itemClick(data);
+            break;
+         case 'selectorResult':
+            this._selectorResult(data);
+            break;
+         case 'selectorDialogOpened':
+            this._selectorDialogOpened(data);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
+   }
+
+   protected _itemClick(data: Model): void {
+      const item = this._controller.getPreparedItem(data);
+      const res = this._selectedItemsChangedHandler([item]);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.handleSelectedItems(item);
+      }
+   }
+
+   protected _applyClick(data: Model[]): void {
+      this._selectedItemsChangedHandler(data);
+      this._controller.handleSelectedItems(data);
+   }
+
+   protected _selectorResult(data): void {
+      this._controller.handleSelectorResult(data);
+      this._selectedItemsChangedHandler(factory(data).toArray());
+   }
+
+   protected _selectorTemplateResult(event: Event, selectedItems: List<Model>): void {
+      const result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._selectorResult(result);
+   }
+
+   private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
+      const keys = [];
+      factory(items).each((item) => {
+         keys.push(getPropValue(item, keyProperty));
+      });
+      return keys;
+   }
+
+   private _getTooltip(items: Model[], displayProperty: string): string {
+      const tooltips = [];
+      factory(items).each((item) => {
+         tooltips.push(getPropValue(item, displayProperty));
+      });
+      return tooltips.join(', ');
+   }
+
+   private _getText(item: Model,
+                    {emptyText, keyProperty, displayProperty}: Partial<IInputOptions>): string {
+      let text = '';
+      if (isEmptyItem(item, emptyText, keyProperty)) {
+         text = prepareEmpty(emptyText);
+      } else {
+         text = getPropValue(item, displayProperty);
+      }
+      return text;
+   }
+
+   private _getMoreText(items: Model[]): string {
+      let moreText = '';
+      if (items.length > 1) {
+         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
+      }
+      return moreText;
+   }
+
+   protected _deactivated(): void {
+      this.closeMenu();
+   }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): Partial<IBaseDropdownOptions> {
+      return {
+         iconSize: 's'
+      };
+   }
+}
 /**
  * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
@@ -223,7 +426,8 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  */
 
 /**
- * @event Controls/_dropdown/Input#selectedKeysChanged Происходит при изменении выбранных элементов.
+ * @event Происходит при изменении выбранных элементов.
+ * @name Controls/_dropdown/Input#selectedKeysChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} keys Набор ключей выбранных элементов.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
@@ -252,213 +456,3 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * }
  * </pre>
  */
-
-interface IDropdownInputChildren {
-   infoboxTarget: InfoboxTarget;
-}
-
-export default class Input extends BaseDropdown {
-   protected _template: TemplateFunction = template;
-   protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
-   protected _text: string = '';
-   protected _hasMoreText: string = '';
-   protected _countItems: number;
-   protected _needInfobox: boolean = false;
-   protected _item: Model = null;
-   protected _isEmptyItem: boolean = false;
-   protected _icon: string;
-   protected _tooltip: string;
-   protected _selectedItems: Model[];
-   protected _children: IDropdownInputChildren;
-
-   _beforeMount(options: IInputOptions,
-                context: object,
-                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
-      this._prepareDisplayState = this._prepareDisplayState.bind(this);
-      this._dataLoadCallback = this._dataLoadCallback.bind(this);
-      this._controller = new Controller(this._getControllerOptions(options));
-
-      return loadItems(this._controller, receivedState, options.source);
-   }
-
-   _beforeUpdate(options: IInputOptions): void {
-      this._controller.update(this._getControllerOptions(options));
-   }
-
-   _getControllerOptions(options: IInputOptions): object {
-      const controllerOptions = getDropdownControllerOptions(options);
-      return { ...controllerOptions, ...{
-            dataLoadCallback: this._dataLoadCallback,
-            selectorOpener: this,
-            selectedKeys: options.selectedKeys || [],
-            popupClassName: options.popupClassName || ((options.showHeader ||
-                options.headerTemplate || options.headerContentTemplate) ?
-                'controls-DropdownList__margin-head' : options.multiSelect ?
-                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
-                ' theme_' + options.theme,
-            allowPin: false,
-            selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
-            openerControl: this,
-            needLoadSelectedItems: options.needLoadSelectedItems
-         }
-      };
-   }
-
-   _getMenuPopupConfig(): IStickyPopupOptions {
-      return {
-         opener: this._children.infoboxTarget,
-         templateOptions: {
-            selectorDialogResult: this._selectorTemplateResult.bind(this)
-         },
-         eventHandlers: {
-            onOpen: this._onOpen.bind(this),
-            onClose: this._onClose.bind(this),
-            onResult: this._onResult.bind(this)
-         }
-      };
-   }
-
-   _selectedItemsChangedHandler(items: Model[]): void|unknown {
-      this._notify('textValueChanged', [this._getText(items) + this._getMoreText(items)]);
-      const newSelectedKeys = this._getSelectedKeys(items, this._options.keyProperty);
-      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
-         return this._notify('selectedKeysChanged', [newSelectedKeys]);
-      }
-   }
-
-   _dataLoadCallback(items: RecordSet<Model>): void {
-      this._countItems = items.getCount();
-      if (this._options.emptyText) {
-         this._countItems += 1;
-      }
-
-      if (this._options.dataLoadCallback) {
-         this._options.dataLoadCallback(items);
-      }
-   }
-
-   _prepareDisplayState(items: Model[]): void {
-      if (items.length) {
-         this._selectedItems = items;
-         this._needInfobox = this._options.readOnly && this._selectedItems.length > 1;
-         this._item = items[0];
-         this._isEmptyItem = this.isEmptyItem(this._item);
-         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
-         this._text = this._getText(items);
-         this._hasMoreText = this._getMoreText(items);
-         this._tooltip = this._getTooltip(items, this._options.displayProperty);
-      }
-   }
-
-   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
-      if (!isLeftMouseButton(event)) {
-         return;
-      }
-      this.openMenu();
-   }
-
-   openMenu(popupOptions?: IStickyPopupOptions): void {
-      const config = this._getMenuPopupConfig();
-      this._controller.setMenuPopupTarget(this._container);
-
-      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
-         if (result) {
-            this._selectedItemsChangedHandler(result);
-         }
-      });
-   }
-
-   protected _onResult(action: string, data: Model|Model[]): void {
-      switch (action) {
-         case 'applyClick':
-            this._applyClick(data);
-            break;
-         case 'itemClick':
-            this._itemClick(data);
-            break;
-         case 'selectorResult':
-            this._selectorResult(data);
-            break;
-         case 'selectorDialogOpened':
-            this._selectorDialogOpened(data);
-            break;
-         case 'footerClick':
-            this._footerClick(data);
-      }
-   }
-
-   protected _itemClick(data: Model): void {
-      const item = this._controller.getPreparedItem(data);
-      const res = this._selectedItemsChangedHandler([item]);
-
-      // dropDown must close by default, but user can cancel closing, if returns false from event
-      if (res !== false) {
-         this._controller.handleSelectedItems(item);
-      }
-   }
-
-   protected _applyClick(data: Model[]): void {
-      this._selectedItemsChangedHandler(data);
-      this._controller.handleSelectedItems(data);
-   }
-
-   protected _selectorResult(data): void {
-      this._controller.handleSelectorResult(data);
-      this._selectedItemsChangedHandler(factory(data).toArray());
-   }
-
-   protected _selectorTemplateResult(event: Event, selectedItems: List<Model>): void {
-      const result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
-      this._selectorResult(result);
-   }
-
-   private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
-      const keys = [];
-      factory(items).each((item) => {
-         keys.push(getPropValue(item, keyProperty));
-      });
-      return keys;
-   }
-
-   private _getTooltip(items: Model[], displayProperty: string): string {
-      const tooltips = [];
-      factory(items).each((item) => {
-         tooltips.push(getPropValue(item, displayProperty));
-      });
-      return tooltips.join(', ');
-   }
-
-   private isEmptyItem(item: Model): boolean {
-      return this._options.emptyText && (getPropValue(item, this._options.keyProperty) === null || !item);
-   }
-
-   private _getText(items: Model[]): string {
-      let text = '';
-      if (this.isEmptyItem(items[0])) {
-         text = prepareEmpty(this._options.emptyText);
-      } else {
-         text = getPropValue(items[0], this._options.displayProperty);
-      }
-      return text;
-   }
-
-   private _getMoreText(items: Model[]): string {
-      let moreText = '';
-      if (items.length > 1) {
-         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
-      }
-      return moreText;
-   }
-
-   protected _deactivated(): void {
-      this.closeMenu();
-   }
-
-   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
-
-   static getDefaultOptions(): Partial<IBaseDropdownOptions> {
-      return {
-         iconSize: 's'
-      };
-   }
-}

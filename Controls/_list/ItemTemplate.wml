@@ -5,37 +5,35 @@
         </ws:partial>
     </ws:if>
     <ws:if data="{{ (item || itemData).shouldDisplayMarker(marker) }}">
-        <div class="controls-ListView__itemV_marker controls-ListView__itemV_marker_{{style}}_theme-{{theme}}"></div>
+        <div class="{{(item || itemData).getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition)}}"></div>
     </ws:if>
     <ws:if data="{{ contentTemplate }}">
         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
-            <div class="controls-ListView_content-template">
-                <ws:partial
-                        template="{{ contentTemplate }}"
-                        item="{{ item }}"
-                        itemData="{{ itemData }}"
-                        useNewModel="{{ true }}"
-                        useDisplayEditInPlace="{{false}}"
-                        searchValue="{{ searchValue }}"
-                        highlightOnHover="{{ highlightOnHover }}"
-                        itemActionsTemplate="{{ itemActionsTemplate }}"
-                        swipeTemplate="{{ swipeTemplate }}">
-                    <ws:multiSelectTemplate>
-                        <ws:partial template="{{ multiSelectTpl }}"
-                                    if="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition === 'custom' }}"
-                                    attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
-                            <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}" key="{{ (item || itemData).getContents().getKey() }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
-                        </ws:partial>
-                    </ws:multiSelectTemplate>
-                </ws:partial>
-            </div>
+            <ws:partial
+                    template="{{ contentTemplate }}"
+                    item="{{ item }}"
+                    itemData="{{ itemData }}"
+                    useNewModel="{{ true }}"
+                    useDisplayEditInPlace="{{false}}"
+                    searchValue="{{ searchValue }}"
+                    highlightOnHover="{{ highlightOnHover }}"
+                    itemActionsTemplate="{{ itemActionsTemplate }}"
+                    swipeTemplate="{{ swipeTemplate }}">
+                <ws:multiSelectTemplate>
+                    <ws:partial template="{{ multiSelectTpl }}"
+                                if="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition === 'custom' }}"
+                                attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
+                        <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
+                                            key="{{ (item || itemData).getContents().getKey() }}"
+                                            checkboxReadOnly="{{checkboxReadOnly}}"/>
+                    </ws:partial>
+                </ws:multiSelectTemplate>
+            </ws:partial>
         </div>
     </ws:if>
     <ws:else>
         <div attr:class="{{ (item || itemData).getContentClasses(theme, style) }}">
-            <div class="controls-ListView_content-template">
-                {{ (item || itemData).getContents()[displayProperty || 'title'] }}
-            </div>
+            {{ (item || itemData).getContents()[displayProperty || 'title'] }}
         </div>
     </ws:else>
     <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">

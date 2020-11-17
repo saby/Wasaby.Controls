@@ -5,7 +5,7 @@
                 source="{{_viewSource}}">
             <ws:navigation source="page" view="pages">
                 <ws:sourceConfig pageSize="{{25}}" page="{{0}}" hasMore="{{false}}"/>
-                <ws:viewConfig pagingMode="direct" totalInfo="extended"/>
+                <ws:viewConfig totalInfo="extended"/>
             </ws:navigation>
         </Controls.list:View>
     </Controls.scroll:Container>

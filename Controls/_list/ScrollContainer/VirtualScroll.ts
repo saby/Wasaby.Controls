@@ -23,6 +23,7 @@ export default class VirtualScroll {
     private _oldRange: IRange = {start: 0, stop: 0};
     private _savedDirection: IDirection;
     private _itemsCount: number;
+    private _segmentSize: number;
 
     rangeChanged: boolean;
 
@@ -40,7 +41,7 @@ export default class VirtualScroll {
 
     setOptions(options: Partial<IVirtualScrollOptions>): void {
         const pageSize = options.pageSize;
-        let segmentSize: number = options.segmentSize;
+        let segmentSize: number = this._segmentSize || options.segmentSize;
 
         if (!segmentSize) {
             segmentSize = pageSize ? Math.ceil(pageSize / RELATION_COEFFICIENT_BETWEEN_PAGE_AND_SEGMENT) : 0;
@@ -51,6 +52,10 @@ export default class VirtualScroll {
 
     applyContainerHeightsData(containerData: Partial<IContainerHeights>): void {
         this._containerHeightsData = {...this._containerHeightsData, ...containerData};
+    }
+
+    setSegmentSize(size: number): void {
+        this._segmentSize = size;
     }
 
     getRange(): IRange {
@@ -185,7 +190,7 @@ export default class VirtualScroll {
         this._savedDirection = direction;
         const itemsHeightsData = this._itemsHeightData;
         const itemsCount = this._itemsCount;
-        const segmentSize = this._options.segmentSize;
+        const segmentSize = this._segmentSize || this._options.segmentSize;
         let {start, stop} = this._range;
 
         if (segmentSize) {
@@ -364,7 +369,7 @@ export default class VirtualScroll {
      * Обновляет данные о высотах элементов
      * @param itemsHeights
      */
-    updateItemsHeights(itemsHeights: IItemsHeights) {
+    updateItemsHeights(itemsHeights: IItemsHeights): void {
         this._updateItemsHeights(itemsHeights);
         this.rangeChanged = false;
     }
@@ -375,7 +380,8 @@ export default class VirtualScroll {
      * @private
      */
     private _updateItemsHeights(itemsHeightsData: IItemsHeights): void {
-        for (let i = 0, len = Math.min(itemsHeightsData.itemsHeights.length, this._range.stop - this._range.start); i < len; i++) {
+        for (let i = 0, len = Math.min(itemsHeightsData.itemsHeights.length, this._range.stop - this._range.start);
+                i < len; i++) {
             this._itemsHeightData.itemsHeights[this._range.start + i] = itemsHeightsData.itemsHeights[i];
             this._itemsHeightData.itemsOffsets[this._range.start + i] = itemsHeightsData.itemsOffsets[i];
         }

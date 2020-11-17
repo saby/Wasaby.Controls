@@ -23,16 +23,14 @@ import 'Controls/search';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Suggest/SearchInput
- * @control
+ * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
  * @author Герасимов А.М.
- * @category Input
  */
 
 /*
  * Search input that suggests options as you are typing.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
@@ -41,20 +39,8 @@ import 'Controls/search';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
+ * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
- * @category Input
- */
-
-/**
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Определяет, показывать ли иконку поиска.
- */
-
-/*
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Determines whether to show the search icon.
  */
 
 var Suggest = Control.extend({
@@ -123,5 +109,13 @@ Suggest.getDefaultOptions = function() {
       suggestState: false
    };
 };
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ */
 
+/*
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
 export default Suggest;

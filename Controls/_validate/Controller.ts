@@ -9,7 +9,7 @@ import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
  * Валидация запускается при вызове метода {@link Controls/_validate/Controller#submit submit}.
  * @class Controls/_validate/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/Validate/FormController
  * @author Красильников А.С.

@@ -17,7 +17,7 @@ export default interface IFontWeight {
 
 /**
  * @name Controls/_interface/IFontWeight#fontWeight
- * @type {String} Начертание шрифта
+ * @cfg {String} Начертание шрифта
  * @variant default
  * @variant bold
  * @default default

@@ -66,9 +66,11 @@
                 on:activated="_inputActivatedHandler()"
                 on:deactivated="_inputDeactivated()"
                 on:click="_inputClicked()"
+                on:mouseenter="_inputMouseEnterHandler()"
+                on:mouseleave="_inputMouseLeaveHandler()"
                 attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}} controls-Suggest__layout-input"/>
 
-    <ws:if data="{{_options.suggestState && (!_dependenciesDeferred || _dependenciesDeferred.isReady())}}">
+    <ws:if data="{{_suggestOpened && (!_dependenciesDeferred || _dependenciesDeferred.isReady())}}">
         <ws:partial template="{{_options.layerName}}"
                     name="layerOpener" target="{{_container}}"
                     filter="{{_filter}}" searchValue="{{_searchValue}}"

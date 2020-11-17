@@ -18,7 +18,7 @@ import { TSelectionType } from 'Controls/interface';
  * @class Controls/_operations/Controller
  * @extends Core/Control
  * @mixes Controls/interface/IPromisedSelectable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  */
@@ -26,12 +26,12 @@ import { TSelectionType } from 'Controls/interface';
 /*
  * Container for content that can work with multiselection.
  * Puts selection in child context.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
  *
  * @class Controls/_operations/Controller
  * @extends Core/Control
  * @mixes Controls/interface/IPromisedSelectable
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
  */

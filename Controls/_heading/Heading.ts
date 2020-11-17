@@ -26,36 +26,20 @@ export interface IHeadingOptions
  * Кликабельность заголовка зависит от {@link readOnly режима отображения}.
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_heading.less">переменные тем оформления</a>
  *
  * @class Controls/_heading/Heading
  * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
- *
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/ICaption
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
- */
-
-/**
- * @typedef {String} TTextTransform
- * @variant none Без изменения регистра символов.
- * @variant uppercase Все символы текста становятся прописными (верхний регистр).
- */
-
-/**
- * @name Controls/_heading/Heading#textTransform
- * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
- * @default none
- * @demo Controls-demo/Heading/Title/TextTransform/Index
- * @remark
- * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+ * @public
+ * @author Красильников А.С.
+ * 
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ *
  */
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
     protected _template: TemplateFunction = headingTemplate;
@@ -81,5 +65,52 @@ class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFo
         };
     }
 }
+
+/**
+ * @typedef {String} TTextTransform
+ * @variant none Без изменения регистра символов.
+ * @variant uppercase Все символы текста становятся прописными (верхний регистр).
+ */
+
+/**
+ * @name Controls/_heading/Heading#textTransform
+ * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
+ * @default none
+ * @demo Controls-demo/Heading/Title/TextTransform/Index
+ * @remark
+ * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+ */
+
+/**
+ * @name Controls/_heading/Heading#fontSize
+ * @cfg
+ * @default l
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#fontColorStyle
+ * @cfg
+ * @default secondary
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#caption
+ * @cfg
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
 
 export default Header;

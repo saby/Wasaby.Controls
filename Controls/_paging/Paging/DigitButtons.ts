@@ -12,8 +12,9 @@ export interface IDigitButtonsOptions extends IControlOptions {
 
 const SUR_STANDARD_ELEMENTS_STEP = 3;
 const SUR_NUMBERS_ELEMENTS_STEP = 1;
+const DOTS = '. . .'
 
-type DigitElem = number | '...';
+type DigitElem = number | '. . .';
 
 interface ISurroundElements {
     first: number;
@@ -51,7 +52,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
             firstElem = currentDigit - SUR_NUMBERS_ELEMENTS_STEP;
             lastElem = currentDigit + SUR_NUMBERS_ELEMENTS_STEP;
         }
-        if (mode !== 'standard') {
+        if (mode !== 'standard' && mode !== 'numbers') {
             if (currentDigit === 1) {
                 lastElem++;
             }
@@ -86,7 +87,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
 
                     // если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
                     if (surElements.first > 3) {
-                        drawnDigits.push('...');
+                        drawnDigits.push(DOTS);
                         // а если равно шагу, то надо рисовать предыдущий по правилу исключения,
                         // что многоточием не может заменяться одна цифра
                     } else if (surElements.first === 3) {
@@ -96,7 +97,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
                     if (surElements.first === 2) {
                         drawnDigits.push(1);
                     } else {
-                        drawnDigits.push('...');
+                        drawnDigits.push(DOTS);
                     }
                 }
             }
@@ -110,7 +111,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
             if (surElements.last < digitsCount) {
                 if (mode === 'standard') {
                     if (surElements.last < digitsCount - 2) {
-                        drawnDigits.push('...');
+                        drawnDigits.push(DOTS);
                     } else if (surElements.last < digitsCount - 1) {
                         drawnDigits.push(digitsCount - 1);
                     }
@@ -120,7 +121,7 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
                     if (surElements.last === digitsCount - 1) {
                         drawnDigits.push(digitsCount);
                     } else {
-                        drawnDigits.push('...');
+                        drawnDigits.push(DOTS);
                     }
                 }
             }

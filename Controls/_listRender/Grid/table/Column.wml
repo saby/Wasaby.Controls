@@ -1,8 +1,8 @@
 <td
    attr:class="{{ column.getCellClasses(highlightOnHover) }}"
    attr:style="{{ column.getCellStyles() }}">
-   <ws:if data="{{ column.shouldDisplayMarker() }}">
-      <div attr:class="{{ column.getMarkerClasses() }}"></div>
+   <ws:if data="{{ column.shouldDisplayMarker(markerPosition) }}">
+      <div attr:class="{{ column.getMarkerClasses(markerClassName) }}"></div>
    </ws:if>
    <!-- valign, halign -->
    <ws:if data="{{ column.getTemplate() }}">

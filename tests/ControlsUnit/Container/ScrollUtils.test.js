@@ -66,19 +66,19 @@ define(
                assert.equal(result, '');
 
                result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'vertical', {}, {});
-               assert.equal(result, 'margin: 0 -17px -0px 0;');
+               assert.equal(result, 'margin-right: -17px;');
 
                result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'verticalHorizontal', {}, {});
-               assert.equal(result, 'margin: 0 -17px -17px 0;');
+               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
             });
             it('calcStyleHideScrollbar with cached value', function() {
-               ScrollWidthUtil._private.styleHideScrollbar.vertical = 'margin: 0 -17px -0px 0;';
-               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = 'margin: 0 -17px -17px 0;';
+               ScrollWidthUtil._private.styleHideScrollbar.vertical = 'margin-right: -17px;';
+               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = 'margin-right: -17px;margin-bottom: -17px;';
 
                result = ScrollWidthUtil.calcStyleHideScrollbar('vertical');
-               assert.equal(result, 'margin: 0 -17px -0px 0;');
+               assert.equal(result, 'margin-right: -17px;');
                result = ScrollWidthUtil.calcStyleHideScrollbar('verticalHorizontal');
-               assert.equal(result, 'margin: 0 -17px -17px 0;');
+               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
 
                ScrollWidthUtil._private.styleHideScrollbar.vertical = null;
                ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = null;

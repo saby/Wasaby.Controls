@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import PreviewerOpener from './Opener/Previewer';
 import {goUpByControlTree} from 'UI/Focus';
 
+const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
 /**
  * Контрол, отображающий всплывающее окно - превьювер, относительно указанного элемента. Открытие превьювера вызывает событие, указанное в опции trigger. В один момент времени на странице может отображаться только один превьювер.
  * @class Controls/_popup/Previewer
@@ -15,14 +16,11 @@ import {goUpByControlTree} from 'UI/Focus';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
  *
  * @extends Core/Control
- * @control
+ * 
  * @mixes Controls/_popup/interface/IPreviewer
  * @public
  * @author Красильников А.С.
  */
-
-const CALM_DELAY: number = 300; // During what time should not move the mouse to start opening the popup.
-
 class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     readonly '[Controls/_popup/interface/IPreviewer]': boolean;
 
@@ -220,9 +218,6 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                 if (isHoverType && this._enableClose && !this._isLinkedPreviewer(event)) {
                     this._debouncedAction('_close', [event]);
                 }
-                break;
-            case 'mousedown':
-                event.stopPropagation();
                 break;
         }
     }

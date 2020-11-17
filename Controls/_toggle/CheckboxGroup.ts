@@ -12,14 +12,19 @@ import {
     IMultiSelectableOptions, IHierarchy, IHierarchyOptions
 } from 'Controls/interface';
 
+export interface ICheckboxGroupOptions extends IControlOptions,
+            IMultiSelectableOptions,
+            IHierarchyOptions,
+            ISourceOptions,
+            IToggleGroupOptions {
+    direction?: string;
+}
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
  * 
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckboxGroup%2FIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
- *
  *
  * @class Controls/_toggle/CheckboxGroup
  * @extends Core/Control
@@ -27,10 +32,9 @@ import {
  * @implements Controls/_interface/IMultiSelectable
  * @implements Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
@@ -43,21 +47,11 @@ import {
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
-
-export interface ICheckboxGroupOptions extends IControlOptions,
-            IMultiSelectableOptions,
-            IHierarchyOptions,
-            ISourceOptions,
-            IToggleGroupOptions {
-    direction?: string;
-}
-
 class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements ISource,
                                                                       IMultiSelectable, IHierarchy, IToggleGroup {
     '[Controls/_interface/ISource]': boolean = true;

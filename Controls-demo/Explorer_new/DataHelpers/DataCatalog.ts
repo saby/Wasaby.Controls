@@ -1,6 +1,8 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 import * as editingColumnTemplate from 'wml!Controls-demo/Explorer/Editing/editingCellTemplate';
 import * as notEditableTemplate from 'wml!Controls-demo/Explorer/Editing/notEditableCell';
+import * as CntTpl from 'wml!Controls-demo/Explorer_new/SearchWithPhoto/content';
+import * as CntTplLadder from 'wml!Controls-demo/Explorer_new/SearchWithLadderPhoto/content';
 import { IHeader } from 'Controls-demo/types';
 import { IColumn } from 'Controls/grid';
 
@@ -364,30 +366,36 @@ export const Gadgets = {
          },
          {
             id: 1111, parent: 111, 'parent@': null, code: 'ST1000NC001', price: 2800,
-            title: 'Жесткий диск Seagate Original SATA-III 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SATA-III 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 1112, parent: 111, 'parent@': null, code: 'ST1100DX001', price: 3750,
-            title: 'Жесткий диск Seagate Original SATA-III 2Tb ST2000DX001 Desktop SSHD (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SATA-III 2Tb ST2000DX001 Desktop SSHD (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 1113, parent: 111, 'parent@': null, code: 'ST2300CD001', price: 6500,
-            title: 'Жесткий диск Seagate Original SATA-III 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SATA-III 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 112, parent: 11, 'parent@': true, code: null, price: null, title: 'SAS'
          },
          {
             id: 1121, parent: 112, 'parent@': null, code: 'ST1000NC001', price: 3600,
-            title: 'Жесткий диск Seagate Original SAS SATA-III 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SAS SATA-III 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 1122, parent: 112, 'parent@': null, code: 'ST1100DX001', price: 4870,
-            title: 'Жесткий диск Seagate Original SAS SATA-III 2Tb ST2000DX001 Desktop SSHD (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SAS SATA-III 2Tb ST2000DX001 Desktop SSHD (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 1123, parent: 112, 'parent@': null, code: 'ST2300CD001', price: 5250,
-            title: 'Жесткий диск Seagate Original SAS SATA-III 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5'
+            title: 'Жесткий диск Seagate Original SAS SATA-III 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
          },
          {
             id: 2, parent: null, 'parent@': true, code: null, price: null, title: 'Компьютеры'
@@ -421,15 +429,18 @@ export const Gadgets = {
          },
          {
             id: 4111, parent: 411, 'parent@': null, code: 'FR-11434', price: 49500,
-            title: 'Canon EOS 7D Body SATA support'
+            title: 'Canon EOS 7D Body SATA support',
+            image: explorerImages[0]
          },
          {
             id: 4112, parent: 411, 'parent@': null, code: 'FT-13453', price: 144180,
-            title: 'Canon EOS 5D Mark III Body SATA support'
+            title: 'Canon EOS 5D Mark III Body SATA support',
+            image: explorerImages[0]
          },
          {
             id: 5, parent: null, 'parent@': null, code: 'FT-13352', price: 112360,
-            title: 'Canon EOS 5D Mark II Body SATA support'
+            title: 'Canon EOS 5D Mark II Body SATA support',
+            image: explorerImages[0]
          }
       ];
    },
@@ -544,6 +555,40 @@ export const Gadgets = {
          {
             displayProperty: 'price',
             width: 'auto'
+         }
+      ];
+   },
+   getSearchColumnsWithPhoto(): IColumn[] {
+      return [
+         {
+            displayProperty: 'title',
+            template: CntTpl,
+            width: ''
+         },
+         {
+            displayProperty: 'code',
+            width: ''
+         },
+         {
+            displayProperty: 'price',
+            width: ''
+         }
+      ];
+   },
+   getSearchColumnsWithLadderPhoto(): IColumn[] {
+      return [
+         {
+            displayProperty: 'title',
+            template: CntTplLadder,
+            width: ''
+         },
+         {
+            displayProperty: 'code',
+            width: ''
+         },
+         {
+            displayProperty: 'price',
+            width: ''
          }
       ];
    },

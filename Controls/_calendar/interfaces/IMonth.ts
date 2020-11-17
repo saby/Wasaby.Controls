@@ -52,6 +52,7 @@ export default {
             /**
              * @name Controls/_calendar/interfaces/IMonth#dayFormatter
              * @cfg {Function} Коллбэк функция вызываемая перед отображением дня. Используется для переопределения стандартного отображения дня.
+             * @remark
              * Метод получает в аргумент объект даты.
              * Метод должен возвращать конфигурацию для отображения дня в виде объекта.
              * Возможные поля для конфигурации
@@ -90,11 +91,6 @@ export default {
              * @default current
              */
             mode: 'current'
-
-            /**
-             * @name Controls/_calendar/interfaces/IMonth#newMode
-             * @cfg {Boolean} Опция, позволяющая перейти на новую верстку контрола
-             */
 
             /**
              * @name Controls/_calendar/interfaces/IMonth#dayHeaderTemplate

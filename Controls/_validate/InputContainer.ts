@@ -3,13 +3,13 @@ import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/InputContainer');
 
 /**
- * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс {@link Controls/input:IValue IValue}.
+ * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс {@link Controls/_input/interface/IValueOptions IValue}.
  * Валидация запускается автоматически при потере фокуса.
  * @remark
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/InputContainer
  * @extends Controls/_validate/Container
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */

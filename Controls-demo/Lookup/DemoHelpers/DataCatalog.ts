@@ -1,6 +1,21 @@
 import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
 
 const _departmentsDataLong = MemorySourceData.departments.concat(getLongData());
+const _departments = [
+   { id: 1, title: 'Разработка', department: 'Разработка', owner: 'Новиков Д.В.' },
+   { id: 2, title: 'Продвижение СБИС', department: 'Продвижение СБИС', owner: 'Кошелев А.Е.' },
+   { id: 3, title: 'Федеральная клиентская служка', department: 'Федеральная клиентская служка', owner: 'Мануйлова Ю.А.' },
+   { id: 4, title: 'Служба эксплуатации', department: 'Служба эксплуатации', owner: 'Субботин А.В.' },
+   { id: 5, title: 'Технологии и маркетинг', department: 'Технологии и маркетинг', owner: 'Чеперегин А.С.' },
+   { id: 6, title: 'Федеральный центр продаж. Call-центр Ярославль', department: 'Федеральный центр продаж. Call-центр Ярославль', owner: 'Кошелев А.Е.'},
+   { id: 7, title: 'Сопровождение информационных систем', department: 'Сопровождение информационных систем', owner: 'Кошелев А.Е.'},
+   { id: 8, title: 'Платформа', department: 'Платформа', owner: 'Голованов К.А.'},
+   { id: 9, title: 'Предприятие', department: 'Предприятие', owner: 'Макаров С.А.'},
+   { id: 10, title: 'Управленческий и налоговый учет', department: 'Управленческий и налоговый учет', owner: 'Гареева Д.А.'},
+   { id: 11, title: 'Документооборот и УЦ', department: 'Документооборот и УЦ', owner: 'Зафиевский Д.А.'},
+   { id: 12, title: 'Отчетность', department: 'Отчетность', owner: 'Семилетов Д.А..'},
+   { id: 13, title: 'Торговля и склад, EDI и маркет', department: 'Торговля и склад, EDI и маркет', owner: 'Уваров С.В.'}
+];
 
 const _equipment =  [
    {id: 1, title: 'Samsung', type: 'manufacturer'},
@@ -96,6 +111,7 @@ function getLongData() {
 }
 export {
    _departmentsDataLong,
+   _departments,
    _equipment,
    _companies
 }

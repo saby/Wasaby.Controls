@@ -41,12 +41,14 @@ interface IScrollPagingOptions {
     scrollParams: IScrollParams;
     totalElementsCount: number;
     loadedElementsCount: number;
+    showEndButton: boolean;
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
 
 interface IPagingData {
     totalHeight: number;
     pagesCount: number;
+    averageElementHeight: number;
 }
 
 interface IHasMoreData {
@@ -67,22 +69,42 @@ export default class ScrollPagingController {
     }
 
     protected initializePagingData(cfg: IScrollPagingOptions): void {
-
         const averageElementHeight = this._options.scrollParams.scrollHeight / this._options.loadedElementsCount;
         const totalHeight = averageElementHeight * this._options.totalElementsCount;
         const pagesCount = Math.round(totalHeight / this._options.scrollParams.clientHeight);
         this._pagingData = {
             totalHeight,
-            pagesCount
+            pagesCount,
+            averageElementHeight
         };
 
     }
 
-    setNumbersState(state: 'up' | 'down'): void {
+    shiftToEdge(state: 'up' | 'down', hasMoreData: IHasMoreData): void {
         if (this._options.pagingMode === 'numbers') {
             this._numbersState = state;
+            let pagingCfg;
+            if (state === 'up') {
+                pagingCfg = this.getPagingCfg({
+                    begin: 'readonly',
+                    prev: 'readonly',
+                    next: 'visible',
+                    end: 'visible'
+                }, hasMoreData);
+                pagingCfg.selectedPage = 1;
+            } else {
+                pagingCfg = this.getPagingCfg({
+                    begin: 'visible',
+                    prev: 'visible',
+                    next: 'readonly',
+                    end: 'readonly'
+                }, hasMoreData);
+                pagingCfg.selectedPage = this._pagingData.pagesCount;
+            }
+            this._options.pagingCfgTrigger(pagingCfg)
         }
     }
+
     protected isHasMoreData(hasMoreData: boolean): boolean {
         return (!hasMoreData || (this._options.pagingMode !== 'edge' && this._options.pagingMode !== 'end'));
     }
@@ -98,11 +120,29 @@ export default class ScrollPagingController {
             this.handleScrollBottom(hasMoreData);
         }
     }
+    getItemsCountOnPage() {
+        if (this._pagingData.averageElementHeight) {
+            return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
+        }
+    }
+    protected getNeededItemsCountForPage(page: number) {
+        if (this._options.pagingMode === 'numbers') {
+            const itemsOnPage = this.getItemsCountOnPage();
+            let neededItems;
+            if (this._numbersState === 'up') {
+                neededItems = page * itemsOnPage;
+            } else {
+                neededItems = (this._pagingData.pagesCount - page + 1) * itemsOnPage;
+            }
+            return Math.min(neededItems, this._options.totalElementsCount)
+        }
+    }
 
     protected getPagingCfg(arrowState: IArrowState, hasMoreData: IHasMoreData): IPagingCfg {
         const pagingCfg: IPagingCfg = {};
         switch (this._options.pagingMode) {
             case 'basic':
+                pagingCfg.showEndButton = this._options.showEndButton;
                 break;
 
             case 'edge':

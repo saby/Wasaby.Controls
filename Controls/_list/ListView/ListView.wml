@@ -7,6 +7,7 @@
              collection="{{ _listModel }}"
              keyPrefix="listView-item"
              listModel="{{_listModel}}"
+             isEditingRowScrollToElement="{{_options.isEditingRowScrollToElement}}"
 
              style="{{ _options.style }}"
              theme="{{ _options.theme }}"
@@ -14,6 +15,7 @@
              itemTemplate="{{ _itemTemplate }}"
              itemTemplateProperty="{{ _options.itemTemplateProperty }}"
              groupTemplate="{{ _groupTemplate }}"
+             markerPosition="{{ _options.markerPosition }}"
 
              itemActionsPosition="{{ _options.itemActionsPosition }}"
              itemActionsTemplate="{{ _options.itemActionsTemplate }}"

@@ -23,7 +23,7 @@ import {
 
 const ComputeFunctor = functor.Compute;
 
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 import * as coreInstance from 'Core/core-instance';
 
 describe('Controls/_display/Collection', () => {
@@ -1389,7 +1389,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1421,7 +1421,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1475,7 +1475,7 @@ describe('Controls/_display/Collection', () => {
             let index = 0;
             display.setGroup((item) => item.group);
             display.each((item) => {
-                if (item instanceof GroupItem) {
+                if (item['[Controls/_display/GroupItem]']) {
                     assert.strictEqual(item.getContents(), items[index + 1].group);
                 } else {
                     assert.strictEqual(item.getContents(), items[index]);
@@ -1823,6 +1823,26 @@ describe('Controls/_display/Collection', () => {
             check(display.getGroupItems(2), [2, 4]);
             check(display.getGroupItems(3), []);
         });
+    });
+
+    describe('.isAllGroupsCollpsed()', () => {
+        const list = new List({
+            items: [
+                { id: 1, group: 1 },
+                { id: 2, group: 2 }
+            ]
+        });
+        const display = new CollectionDisplay({
+            collection: list,
+            collapsedGroups: [1, 2],
+            groupingKeyCallback: (item) => {
+                return item.group;
+            }
+        });
+
+        assert.isTrue(display.isAllGroupsCollapsed());
+        display.setCollapsedGroups([1]);
+        assert.isFalse(display.isAllGroupsCollapsed());
     });
 
     describe('.getGroupByIndex()', () => {
@@ -4350,6 +4370,52 @@ describe('Controls/_display/Collection', () => {
         );
     });
 
+    describe('add strategy', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
+        let newItem;
+
+        beforeEach(() => {
+            rs = new RecordSet({
+                rawData: [],
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs,
+                groupProperty: 'group'
+            });
+            newItem = display.createItem({
+                contents: new Model({
+                    keyProperty: 'id',
+                    rawData: {
+                        id: 1,
+                        group: '123'
+                    }
+                }),
+                isAdd: true,
+                addPosition: 'bottom'
+            })
+        });
+
+        it('should notify of two added items if adding in empty group', () => {
+            let isCollectionChanged = false;
+
+            const handler = (e, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                assert.equal(newItems.length, 2);
+                assert.instanceOf(newItems[0], GroupItem);
+                assert.instanceOf(newItems[1], CollectionItem);
+                isCollectionChanged = true;
+            };
+
+            display.subscribe('onCollectionChange', handler);
+            display.setAddingItem(newItem);
+            display.addFilter(() => true);
+            display.unsubscribe('onCollectionChange', handler);
+
+            assert.isTrue(isCollectionChanged);
+        });
+    });
+
     describe('version increases on collection change', () => {
         let rs: RecordSet;
         let display: CollectionDisplay<unknown>;
@@ -4466,6 +4532,30 @@ describe('Controls/_display/Collection', () => {
             const testingItem = display.getItemBySourceKey(2);
             display.setActiveItem(display.getItemBySourceKey(2));
             assert.equal(display.getActiveItem(), testingItem);
+        });
+    });
+
+    describe('drag', () => {
+        let display: CollectionDisplay<unknown>;
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            const rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('setDraggedItems', () => {
+            const draggedItem = display.createItem({contents: {getKey: () => '123'}});
+            display.setDraggedItems(draggedItem, ['123']);
+            assert.equal(display.getItems()[2].getContents().getKey(), '123');
         });
     });
 });

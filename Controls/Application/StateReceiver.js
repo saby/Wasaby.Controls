@@ -1,6 +1,6 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
-   'Core/Serializer',
-   'UI/Utils'], function(extend, Serializer, UIUtils) {
+   'UI/State',
+   'UI/Utils'], function(extend, uiState, UIUtils) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -10,7 +10,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          if (modules.hasOwnProperty(key)) {
             moduleInfo = modules[key];
             if (moduleInfo.module) {
-               parts = Serializer.parseDeclaration(moduleInfo.module);
+               parts = uiState.Serializer.parseDeclaration(moduleInfo.module);
                deps[parts.name] = true;
             }
          }
@@ -47,9 +47,9 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             }
          }
 
-         slr = new Serializer();
+         slr = new uiState.Serializer();
          var serializedState = JSON.stringify(serializedMap, slr.serialize);
-         Serializer.componentOptsReArray.forEach(function(re) {
+         uiState.Serializer.componentOptsReArray.forEach(function(re) {
             serializedState = serializedState.replace(re.toFind, re.toReplace);
          });
          serializedState = serializedState.replace(/\\"/g, '\\\\"');
@@ -66,7 +66,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          };
       },
       deserialize: function(str) {
-         var slr = new Serializer();
+         var slr = new uiState.Serializer();
          try {
             this._deserialized = JSON.parse(str, slr.deserialize);
          } catch (e) {

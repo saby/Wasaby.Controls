@@ -23,7 +23,11 @@
         </ws:else>
         <ws:if data="{{ _options.bodyContentTemplate }}">
             <div class="controls-DialogTemplate__content-area">
-                <ws:partial template="{{_options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
+                <ws:partial template="{{_options.bodyContentTemplate}}"
+                            scope="{{_options.contentAreaOptions}}"
+                            bodyContentTemplate="{{null}}"
+                            headerContentTemplate="{{null}}"
+                            footerContentTemplate="{{null}}"/>
             </div>
         </ws:if>
         <ws:if data="{{ _options.footerContentTemplate }}">

@@ -249,21 +249,21 @@ describe('Controls/grid_clean/GridViewModel', () => {
 
             it('hasMoreData: true', () => {
                 gridViewModel.setHasMoreData(true);
-                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_true'));
+                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR'));
                 assert.isFalse(gridViewModel.getCurrent().isLastRow);
 
                 gridViewModel.goToNext();
-                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_true'));
+                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR'));
                 assert.isTrue(gridViewModel.getCurrent().isLastRow);
             });
 
             it('hasMoreData: false', () => {
                 gridViewModel.setHasMoreData(false);
-                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_false'));
+                assert.isFalse(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR'));
                 assert.isFalse(gridViewModel.getCurrent().isLastRow);
 
                 gridViewModel.goToNext();
-                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR_false'));
+                assert.isTrue(gridViewModel.getCurrent().getVersion().includes('WITH_SEPARATOR'));
                 assert.isTrue(gridViewModel.getCurrent().isLastRow);
             });
 
@@ -285,8 +285,17 @@ describe('Controls/grid_clean/GridViewModel', () => {
                 gridViewModel.goToNext();
                 gridViewModel.setHasMoreData(true);
                 assert.isFalse(gridViewModel.getCurrent().isLastRow);
-                gridViewModel.setHasMoreData(false);
-                assert.isTrue(gridViewModel.getCurrent().isLastRow);
+            });
+
+            it('MarkerPosition', () => {
+                gridViewModel.setMarkedKey(1, true);
+                const current = gridViewModel.getCurrent();
+                assert.isTrue(current.shouldDisplayMarker(0));
+                assert.isFalse(current.shouldDisplayMarker(1));
+
+                current.markerPosition = 'right';
+                assert.isFalse(current.shouldDisplayMarker(0));
+                assert.isTrue(current.shouldDisplayMarker(1));
             });
         });
     });

@@ -9,7 +9,7 @@ import {SyntheticEvent} from 'UI/Vdom';
  *
  * @class Controls/_suggestPopup/_ListWrapper
  * @extends Core/Control
- * @control
+ * 
  * @private
  */
 

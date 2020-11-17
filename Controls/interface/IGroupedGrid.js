@@ -28,7 +28,7 @@ define('Controls/interface/IGroupedGrid', [
     * @default undefined
     * @remark
     * Подробнее о параметрах шаблона Controls/grid:GroupTemplate читайте {@link Controls/grid:GroupTemplate здесь}.
-    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/basic/#header-group здесь}.
+    * Подробнее о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grouping/basic/#header-group здесь}.
     * @demo Controls-demo/grid/Grouped/Custom/Index
     * @see groupHistoryId
     * @see collapsedGroups
@@ -58,7 +58,8 @@ define('Controls/interface/IGroupedGrid', [
     */
 
    /**
-    * @event Controls/interface/IGroupedGrid#groupExpanded Происходит при развертывании группы.
+    * @event Происходит при развертывании группы.
+    * @name Controls/interface/IGroupedGrid#groupExpanded
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {String} changes Идентификатор группы.
     * @see groupTemplate
@@ -69,7 +70,8 @@ define('Controls/interface/IGroupedGrid', [
     */
 
    /**
-    * @event Controls/interface/IGroupedGrid#groupCollapsed Происходит при сворачивании группы.
+    * @event Происходит при сворачивании группы.
+    * @name Controls/interface/IGroupedGrid#groupCollapsed
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {String} changes Идентификатор группы.
     * @see groupTemplate

@@ -46,8 +46,8 @@
 <ws:template name="COLUMN_CONTENT">
     <!-- При горизонтальном скролле хлебные крошки выводятся без колспанов (крошка в первой ячейке, остальные пустые, разделитель колонок скрыт). -->
     <!-- Этот механизм вызывает шаблон колонок, как при обычном рендере. -->
-    <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
-    <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
+    <!-- Не нужно рендерить контент ячейки, если это не ячейка с colspanTemplate-->
+   <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
                 editArrowTemplate="{{editArrowTemplate}}"
                 itemActionsClass="{{itemActionsClass}}"
                 itemActionsTemplate="{{itemActionsTemplate}}"
@@ -60,6 +60,13 @@
                 expanderTemplate="{{itemData.expanderTemplate}}"
                 itemData="{{currentColumn}}"
                 tagTemplate="{{tagTemplate}}">
+      <ws:afterItemTemplate>
+         <ws:partial if="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'right')}}"
+                     template="{{itemData.expanderTemplate}}"
+                     itemData="{{itemData}}"
+                     expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                     expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
+      </ws:afterItemTemplate>
        <ws:multiSelectTemplate>
           <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
        </ws:multiSelectTemplate>
@@ -70,8 +77,8 @@
 
    <!-- Маркер, не смотрим на него, если выводим фейковую стики ячейку для лесенки -->
    <ws:if data="{{ !isLadderHeader }}">
-      <div if="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}"
-           class="{{itemData.getMarkerClasses()}}"></div>
+      <div if="{{marker !== false && itemData.shouldDisplayMarker(currentColumn.columnIndex)}}"
+           class="{{itemData.getMarkerClasses(markerClassName)}}"></div>
 
       <div if="{{!!itemData.dragTargetNode}}"
            class="controls-TreeGridView__dragTargetNode_theme-{{itemData.theme}}
@@ -81,7 +88,7 @@
 
    <!-- Колонка с чекбоксами -->
    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
-      <ws:if data="{{!itemData.isAdd}}">
+      <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
          <ws:partial template="multiSelectTemplate"/>
       </ws:if>
       <ws:else>
@@ -97,7 +104,7 @@
                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
             </ws:for>
          </ws:if>
-         <ws:if data="{{ itemData.shouldDrawExpander(itemData, expanderIcon) }}">
+         <ws:if data="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
             <ws:partial template="{{itemData.expanderTemplate}}"
                         itemData="{{itemData}}"
                         expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
@@ -247,7 +254,6 @@
       </ws:else>
    </ws:if>
 </ws:template>
-
 
 <ws:if data="{{itemData.isStickedMasterItem}}">
    <Controls.scroll:Group>

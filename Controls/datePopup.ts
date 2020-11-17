@@ -18,40 +18,6 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IFontColorStyle} from './interface';
 import {ILinkViewControlOptions} from './_dateRange/LinkView';
 
-/**
- * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
- *
- * @class Controls/datePopup
- * @extends Core/Control
- * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/interface/IDateMask
- * @mixes Controls/_datePopup/interfaces/IDatePopup
- * @mixes Controls/_interface/IDateRangeValidators
- * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/datePopup/datePopup
- *
- */
-
-/*
- * A dialog that allows you to choose dates and periods of arbitrary duration.
- *
- * @class Controls/datePopup
- * @extends Core/Control
- * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/interface/IDateMask
- * @mixes Controls/datePopup/interfaces/IDatePopup
- * @mixes Controls/_interface/IDateRangeValidators
- * @control
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/datePopup/datePopup
- */
-
 const HEADER_TYPES = {
         link: 'link',
         input: 'input'
@@ -65,6 +31,39 @@ const STATES = {
 const MONTH_STATE_SELECTION_DAYS = 30;
 const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
 
+/**
+ * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
+ *
+ * @class Controls/datePopup
+ * @extends Core/Control
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_interface/IDateMask
+ * @mixes Controls/_datePopup/interfaces/IDatePopup
+ * @mixes Controls/_interface/IDateRangeValidators
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
+ * 
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/datePopup/datePopup
+ *
+ */
+
+/*
+ * A dialog that allows you to choose dates and periods of arbitrary duration.
+ *
+ * @class Controls/datePopup
+ * @extends Core/Control
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_interface/IDateMask
+ * @mixes Controls/datePopup/interfaces/IDatePopup
+ * @mixes Controls/_interface/IDateRangeValidators
+ * 
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/datePopup/datePopup
+ */
 export default class DatePopup extends Control implements EventProxyMixin {
     _template: TemplateFunction = componentTmpl;
     _headerTmpl: TemplateFunction = headerTmpl;

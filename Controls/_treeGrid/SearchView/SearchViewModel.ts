@@ -43,11 +43,12 @@ var
          }
 
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-         data.breadCrumbs = !!data.item.forEach;
+         data.breadCrumbs = data.item && !!data.item.forEach;
          data.breadCrumbsDisplayProperty = this._options.displayProperty;
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
          data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
+
          data.getColspan = (tmplColspan, isColumnScrollVisible: boolean) => {
              if (data.columnScroll && isColumnScrollVisible) {
                  return false;
@@ -75,6 +76,9 @@ var
             }
             return data.resolvers.baseItemTemplate();
          };
+         data.getLevelIndentClasses = (itemData, tmplExpanderSize: string, levelIndentSize: string): string => {
+             return `controls-TreeGrid__row-levelPadding_size_search_theme-${data.theme}`;
+         }
          return data;
       },
        _convertItemKeyToCacheKey(key: number|string): number|string {
@@ -89,6 +93,9 @@ var
            return correctKey;
        },
        _getItemVersion(item: Record|Record[]): string {
+           if (item === null) {
+               return;
+           }
            if (isBreadCrumbsItem(item)) {
                const versions = [];
                item.forEach((rec) => {
@@ -106,7 +113,8 @@ var
           let result;
 
           // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-          if (!!item.forEach) {
+          // For "search separator" item is null and we can't prevent _isGroup() call for it
+          if (!item || !!item.forEach) {
               result = false;
           } else {
               result = SearchViewModel.superclass._isGroup.call(this, item);

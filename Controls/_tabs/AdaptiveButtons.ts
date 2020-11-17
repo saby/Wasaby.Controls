@@ -29,7 +29,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * Интерфейс для опций контрола адаптивных вкладок.
  * @interface Controls/_tabs/ITabsAdaptiveButtonsOptions
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  */
 /**
  * @name Controls/_tabs/ITabsAdaptiveButtonsOptions#align
@@ -53,10 +53,9 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @mixes Controls/tabs:ITabsAdaptiveButtonsOptions
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
- * @control
+ * 
  * @public
- * @category List
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
  */
 
@@ -89,9 +88,9 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             return new Promise((resolve) => {
                 loadFontWidthConstants().then((getTextWidth: Function) => {
                     this._getTextWidth = getTextWidth;
+                    this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
                     const getReceivedData = (opts: ITabsAdaptiveButtonsOptions) => {
                         this._prepareItems(opts);
-                        this._moreButtonWidth = this._getTextWidth(MORE_BUTTON_TEXT, 'm');
                         resolve({
                             items: this._items
                         });
@@ -270,7 +269,11 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     private _getItemsWidth(items: RecordSet<object>, displayProperty: string): number[] {
         const widthArray = [];
         for (let i = 0; i < items.getCount(); i++) {
-            widthArray.push(this._getTextWidth(items.at(i).get(displayProperty), 'l') + COUNT_OF_MARGIN * MARGIN);
+            let itemTextWidth = this._getTextWidth(items.at(i).get(displayProperty), 'l');
+            if (itemTextWidth < MIN_WIDTH) {
+                itemTextWidth = MIN_WIDTH;
+            }
+            widthArray.push(itemTextWidth + COUNT_OF_MARGIN * MARGIN);
         }
         return widthArray;
     }

@@ -20,7 +20,7 @@ interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
  * @class Controls/menu:Render
  * @extends UI/_base/Control
  * @private
- * @control
+ *
  * @author Герасимов А.М.
  */
 
@@ -63,7 +63,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
             item: treeItem.getContents(),
             treeItem,
             iconPadding: this._iconPadding,
-            iconSize: this._getIconSize(treeItem.getContents()),
+            iconSize: treeItem.getContents() ? this._getIconSize(treeItem.getContents()) : null,
             multiSelect: this._options.multiSelect,
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
@@ -97,7 +97,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     protected _getClassList(treeItem: TreeItem<Model>): string {
         const item = treeItem.getContents();
         let classes = treeItem.getContentClasses(this._options.theme);
-        if (item.get) {
+        if (item && item.get) {
             classes += ' controls-Menu__row_state_' +
                 (item.get('readOnly') ? 'readOnly' : 'default') +
                 '_theme-' + this._options.theme;
@@ -113,7 +113,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
                 !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
                 classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
             }
-        } else {
+        } else if (item) {
             classes += ' controls-Menu__row-breadcrumbs_theme-' + this._options.theme;
         }
         return classes;
@@ -154,7 +154,8 @@ class MenuRender extends Control<IMenuRenderOptions> {
     }
 
     private _isGroupNext(treeItem: TreeItem<Model>): boolean {
-        return this._getNextItem(treeItem) instanceof GroupItem;
+        const nextItem = this._getNextItem(treeItem);
+        return nextItem && nextItem['[Controls/_display/GroupItem]'];
     }
 
     private _getNextItem(treeItem: TreeItem<Model>): TreeItem<Model> {

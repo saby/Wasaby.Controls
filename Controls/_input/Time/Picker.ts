@@ -8,14 +8,13 @@
  *    <li>дату и время.</li>
  * </ol>
  * @class Controls/_input/Time/Picker
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
- * @control
+ * 
  * @private
  * @author Красильников А.С.
- * @category Input
  */
 
 /*
@@ -27,14 +26,13 @@
  *    <li>date and time.</li>
  * </ol>
  * @class Controls/_input/Time/Picker
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/interface/ITimeMask
  * @mixes Controls/interface/IValidation
- * @control
+ * 
  * @private
  * @author Красильников А.С.
- * @category Input
  */
 
 

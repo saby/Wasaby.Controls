@@ -17,24 +17,8 @@ interface IAdditionalRenderOptions extends IControlOptions {
 /**
  * @class Controls/_filterPopup/Panel/AdditionalParams/Render
  * @extends UI/Base:Control
- * @control
  * @public
  * @author Михайлов С.Е
- */
-
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
- * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#keyProperty
- * @cfg {string} Имя свойства, содержащего идентификатор элемента коллекции
- */
-
-/**
- * @name Controls/_filterPopup/Panel/AdditionalParams/Render#groupProperty
- * @cfg {string} Имя свойства, содержащего идентификатор группы элемента списка.
  */
 
 export default class AdditionalParamsRender extends Control<IAdditionalRenderOptions> {
@@ -67,7 +51,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         columnProperty: string,
         currentColumn: string): boolean {
         let column;
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             column = collection.getNext(item).getContents().get(columnProperty);
         } else {
             column = item.getContents().get(columnProperty);
@@ -76,7 +60,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     }
 
     protected _isGroup(collectionItem: CollectionItem<IFilterItem> | GroupItem<IFilterItem>): boolean {
-        return collectionItem instanceof GroupItem;
+        return collectionItem['[Controls/_display/GroupItem]'];
     }
 
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
@@ -95,3 +79,17 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 
     static _theme: string[] = ['Controls/filterPopup'];
 }
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
+ * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#keyProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор элемента коллекции
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/AdditionalParams/Render#groupProperty
+ * @cfg {string} Имя свойства, содержащего идентификатор группы элемента списка.
+ */

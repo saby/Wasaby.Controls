@@ -7,6 +7,7 @@ import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
 import {hasHorizontalScroll} from 'Controls/scroll';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 import {isEqual} from 'Types/object';
 
@@ -213,7 +214,6 @@ var _private = {
  *
  * @class Controls/_input/Base
  * @extends UI/Base:Control
- *
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:IBorderStyle
@@ -221,13 +221,11 @@ var _private = {
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/input:IBase
  * @implements Controls/input:ITag
- * @implements Controls/input:IValue
+ * @implements Controls/_input/interface/IValueOptions
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection
- *
  * @public
- *
  * @author Красильников А.С.
  */
 
@@ -461,6 +459,7 @@ var Base = Control.extend({
         const newViewModelOptions = this._getViewModelOptions(newOptions);
         this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
+        _private.updateSelectionByOptions(this, newOptions);
     },
 
     /**
@@ -537,7 +536,7 @@ var Base = Control.extend({
         // redefinition
     },
     _keyDownHandler: function (event) {
-        // redefinition
+        processKeydownEvent(event);
     },
     _selectHandler: function () {
         // redefinition

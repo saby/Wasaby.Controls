@@ -401,6 +401,9 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _beforeUnmount: function() {
+      if(this.__parentFromCfg && this.__parentFromCfg.unregisterChildControl){
+         this.__parentFromCfg.unregisterChildControl(this);
+      }
       this.__parentFromCfg = null;
       this.__openerFromCfg = null;
       this._logicParent = null;
@@ -1014,7 +1017,9 @@ var CompoundArea = CompoundContainer.extend([
 
    isVisible: function() {
       if (this._options.autoShow === false) {
-         return this._isVisible;
+         const popupContainer = this._container.parentElement;
+         const isHidden = popupContainer?.classList.contains('ws-hidden');
+         return !isHidden && this._isVisible;
       }
       return true;
    },

@@ -8,7 +8,7 @@ import {ISelectionObject} from 'Controls/interface';
  *
  * @class Controls/_list/BaseAction
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

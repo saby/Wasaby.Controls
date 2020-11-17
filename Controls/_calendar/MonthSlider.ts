@@ -36,7 +36,7 @@ var _private = {
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthSlider/SelectionType/Index
@@ -53,7 +53,7 @@ var _private = {
  * @mixes Controls/_calendar/interface/IMonth
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthSlider

@@ -14,7 +14,7 @@ type TSelectedKeys = Array<string | number>;
  * @class Controls/_source/Adapter/SelectedKey
  * @extends Controls/Control
  * @mixes Controls/_interface/ISingleSelectable
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  *
@@ -50,7 +50,7 @@ type TSelectedKeys = Array<string | number>;
  * @class Controls/_source/Adapter/SelectedKey
  * @extends Controls/Control
  * @mixes Controls/_interface/ISingleSelectable
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
  */

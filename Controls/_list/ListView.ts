@@ -5,8 +5,8 @@ import BaseControl = require('Core/Control');
 import {debounce as cDebounce} from 'Types/function';
 import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
-import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
+import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
 import * as forTemplate from 'wml!Controls/_list/Render/For';
 import * as oldForTemplate from 'wml!Controls/_list/resources/For';
 
@@ -124,7 +124,7 @@ var ListView = BaseControl.extend(
         },
 
         _beforeUnmount: function() {
-            if (this._listModel) {
+            if (this._listModel && !this._listModel.destroyed) {
                 this._listModel.unsubscribe('onListChange', this._onListChangeFnc);
             }
         },
@@ -197,7 +197,7 @@ var ListView = BaseControl.extend(
         _onItemContextMenu: function(event, itemData) {
            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
                 this._notify('itemContextMenu', [itemData, event, false]);
-            }
+           }
         },
 
         /**
@@ -207,7 +207,9 @@ var ListView = BaseControl.extend(
          * @private
          */
         _onItemLongTap(event, itemData): void {
-            this._onItemContextMenu(event, itemData);
+            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false && !this._options.listModel.isEditing()) {
+                this._notify('itemLongTap', [itemData, event]);
+            }
         },
 
         _onItemSwipe: function(event, itemData) {

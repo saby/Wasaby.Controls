@@ -23,11 +23,10 @@ var
          * @param storeKey Key to store list of collapsed groups
          * @returns {Core/Deferred}
          */
-        restoreCollapsedGroups: function (storeKey) {
-            var
-                result = new cDeferred(),
-                preparedStoreKey = PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey;
-            Config.UserConfig.getParam(preparedStoreKey).addCallback(function (storedGroups) {
+        restoreCollapsedGroups: function(storeKey) {
+            const result = new cDeferred();
+            const preparedStoreKey = PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey;
+            Config.UserConfig.getParam(preparedStoreKey).addCallback((storedGroups) => {
                 try {
                     if (storedGroups !== undefined) {
                         result.callback(JSON.parse(storedGroups));
@@ -38,6 +37,9 @@ var
                     Logger.error('GroupUtil: In the store by key "' + preparedStoreKey + '" value in invalid format.');
                     result.callback();
                 }
+            }).catch((e) => {
+                Logger.warn(`GroupUtil: An error occurred while getting data.\nError: ${e.message}`);
+                result.callback();
             });
             return result;
         }

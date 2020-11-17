@@ -24,13 +24,6 @@ export interface ILegendOptions extends IControlOptions {
  * @class Controls/_progress/Legend
  * @author Колесов В.А.
  */ 
-
-/**
- * @cfg {Array.<IndicatorCategory>} Array of indicator categories
- * <pre class="brush:html">
- *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
- * </pre>
- */
 class Legend extends Control<ILegendOptions> {
    protected _template: TemplateFunction = legendTemplate;
 
@@ -50,6 +43,12 @@ class Legend extends Control<ILegendOptions> {
 }
 
 export default Legend;
+/**
+ * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * <pre class="brush:html">
+ *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
+ * </pre>
+ */
 
 /**
  * @name Controls/_progress/Legend#data

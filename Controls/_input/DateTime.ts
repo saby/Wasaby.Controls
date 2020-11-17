@@ -13,65 +13,6 @@ import {proxyModelEvents, tmplNotify} from 'Controls/eventUtils';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
 import template = require('wml!Controls/_input/DateTime/DateTime');
 
-/**
- * Базовое универсальное поле ввода даты и времени. Позволяет вводить дату и время одновременно или по отдельности. Данные вводятся только с помощью клавиатуры.
- * @remark
- * В зависимости от маски может использоваться для ввода:
- * <ol>
- *    <li>даты;</li>
- *    <li>времени;</li>
- *    <li>даты и времени.</li>
- * </ol>
- *
- * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
- *
- * @class Controls/_input/DateTime
- * @extends Core/Control
- * @mixes Controls/interface/IInputDateTime
- * @mixes Controls/_input/interface/IDateTimeMask
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/_input/interface/IValueValidators
- *
- * @ignoreOptions Controls/_input/interface/IBase#placeholder
- *
- * @control
- * @public
- * @demo Controls-demo/Input/DateTime/DateTime
- * @author Красильников А.С.
- * @category Input
- */
-
-/*
- * Control for entering date and time.
- * Depending on {@link mask mask} can be used to enter:
- * <ol>
- *    <li>just date,</li>
- *    <li>just time,</li>
- *    <li>date and time.</li>
- * </ol>
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">Demo examples.</a>.
- *
- * @class Controls/_input/DateTime
- * @extends Core/Control
- * @mixes Controls/interface/IInputDateTime
- * @mixes Controls/_input/interface/IDateTimeMask
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/interface/IInputPlaceholder
- * @mixes Controls/_input/interface/IValueValidators
- *
- * @control
- * @public
- * @demo Controls-demo/Input/DateTime/DateTime
- * @author Красильников А.С.
- * @category Input
- */
-
 const _private = {
    updateDateConstructor: function(self, options, oldOptions): void {
       if (!oldOptions || options.mask !== oldOptions.mask) {
@@ -113,7 +54,62 @@ const _private = {
       self._validationContainer = options.validateByFocusOut ? InputContainer : Container;
    }
 };
+/**
+ * Базовое универсальное поле ввода даты и времени. Позволяет вводить дату и время одновременно или по отдельности. Данные вводятся только с помощью клавиатуры.
+ * @remark
+ * В зависимости от маски может использоваться для ввода:
+ * <ol>
+ *    <li>даты;</li>
+ *    <li>времени;</li>
+ *    <li>даты и времени.</li>
+ * </ol>
+ *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+ *
+ * @class Controls/_input/DateTime
+ * @extends Core/Control
+ * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/_input/interface/IDateTimeMask
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/_input/interface/IValueValidators
+ *
+ * @ignoreOptions Controls/_input/interface/IBase#placeholder
+ *
+ * 
+ * @public
+ * @demo Controls-demo/Input/DateTime/DateTime
+ * @author Красильников А.С.
+ */
 
+/*
+ * Control for entering date and time.
+ * Depending on {@link mask mask} can be used to enter:
+ * <ol>
+ *    <li>just date,</li>
+ *    <li>just time,</li>
+ *    <li>date and time.</li>
+ * </ol>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">Demo examples.</a>.
+ *
+ * @class Controls/_input/DateTime
+ * @extends Core/Control
+ * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/_input/interface/IDateTimeMask
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/_input/interface/IValueValidators
+ *
+ * 
+ * @public
+ * @demo Controls-demo/Input/DateTime/DateTime
+ * @author Красильников А.С.
+ */
 var Component = Control.extend([], {
    _template: template,
    _validationContainer: null,

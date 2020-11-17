@@ -19,14 +19,12 @@ define('Controls/Application',
       'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
-      'Application/Page',
-      'UI/Utils',
       'css!theme?Controls/Application/oldCss'
    ],
 
    /**
     * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
-    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+    * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
     *
     * @class Controls/Application
     * @extends Core/Control
@@ -35,7 +33,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
     *
-    * @control
+    *
     * @public
     * @author Санников К.А.
     */
@@ -52,7 +50,7 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
     *
-    * @control
+    *
     * @public
     * @author Санников К.А.
     */
@@ -72,9 +70,7 @@ define('Controls/Application',
       HotKeys,
       TouchDetector,
       dragnDrop,
-      TimeTesterInv,
-      AppPage,
-      UIUtils) {
+      TimeTesterInv) {
       'use strict';
 
       var _private;
@@ -527,40 +523,13 @@ define('Controls/Application',
             return;
          }
 
-         var API = AppPage.Head.getInstance();
-         modules.forEach(function(moduleName) {
-            var path = UIUtils.ModulesLoader.getModuleUrl(moduleName);
-            path = path.indexOf('/') !== 0 ? '/' + path : path;
-            var _type = _getTypeString(path);
-            if (!_type) {
-               Env.IoC.resolve('ILogger').warn('[Controls/Application.js] Для файла ' + path + ' не удалось получить строку-тип');
-               return;
-            }
-
-            var rel = cfg.preload ? 'preload' : 'prefetch';
-            API.createTag('link', { rel: rel, as: _type, href: path });
-         });
-      }
-
-      /**
-       * Получить строку-тип ресурса по его расширению
-       * @param path
-       * @private
-       */
-      function _getTypeString(path) {
-         var types = {
-            'script': new RegExp('\.js'),
-            'fetch': new RegExp('\.wml'),
-            'style': new RegExp('\.css')
-         };
-         for (var _type in types) {
-            if (types.hasOwnProperty(_type) && types[_type].test(path)) {
-               return _type;
-            }
+         var pls = new UIBase.PrefetchLinksStore();
+         if (cfg.prefetch) {
+            pls.addPrefetchModules(modules);
+         } else {
+            pls.addPreloadModules(modules);
          }
-         return null;
       }
-
 
       return Page;
    });

@@ -42,17 +42,20 @@ export interface IMarkerListOptions {
    /*ENG
     * @name Controls/_marker/interface/IMarkerListOptions#markerVisibility
     * @cfg {String} Determines when marker is visible.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
     * @variant visible The marker is always displayed, even if the marked key entry is not specified.
     * @variant hidden The marker is always hidden.
     * @variant onactivated - The marker is displayed on List activating. For example, when user mark a record.
     * @default onactivated
+    * @demo Controls-demo/list_new/Marker/OnActivated/Index
     */
    markerVisibility?: TVisibility;
 
    /**
     * @name Controls/_marker/interface/IMarkerListOptions#markedKey
     * @cfg {CrudEntityKey} Идентификатор элемента, который выделен маркером.
+    * @remark
+    * Если сделан bind на эту опцию, но она передана изначально в значении undefined,
+    * то установка маркера работает аналогично тому, как если бы bind не был задан (по внутреннему состоянию контрола).
     * @demo Controls-demo/List/List/BasePG
     * @see markerVisibility
     */
@@ -60,8 +63,23 @@ export interface IMarkerListOptions {
    /*ENG
     * @name Controls/_marker/interface/IMarkerListOptions#markedKey
     * @cfg {Number} Identifier of the marked collection item.
-    * @remark
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FBasePG">Example</a>.
+    * @demo Controls-demo/List/List/BasePG
     */
    markedKey?: CrudEntityKey;
+
+   /**
+    * @typedef {String} MarkerPosition
+    * @variat left Расположение маркера слева
+    * @variat right Расположение маркера справа
+    */
+   /**
+    * Опция сделана для master. Опция непубличная, т.к. в стандарт её вносить пока не будут
+    * https://online.sbis.ru/opendoc.html?guid=b0bc13cd-986e-44fc-ab6a-93bcd0465ba1
+    *
+    * @name Controls/_marker/interface/IMarkerListOptions#markerPosition
+    * @cfg {MarkerPosition} Расположение маркера.
+    * @default left
+    * @private
+    */
+   markerPosition?: 'left' | 'right';
 }

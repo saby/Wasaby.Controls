@@ -9,7 +9,8 @@ export default interface ITextValue {
     readonly '[Controls/_interface/ITextValue]': boolean;
 }
 /**
- * @event Controls/_interface/ITextValue#textValueChanged Происходит при изменении набора выбранной коллекции.
+ * @event Происходит при изменении набора выбранной коллекции.
+ * @name Controls/_interface/ITextValue#textValueChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Декскриптор события.
  * @param {String} textValue Строка, сформированная из выбранных записей.
  *
@@ -31,7 +32,8 @@ export default interface ITextValue {
  * </pre>
  */
 /*
- * @event Controls/_interface/ITextValue#textValueChanged Occurs when changing the set of the selected collection.
+ * @event Occurs when changing the set of the selected collection.
+ * @name Controls/_interface/ITextValue#textValueChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {String} textValue String formed from selected entries.
  *

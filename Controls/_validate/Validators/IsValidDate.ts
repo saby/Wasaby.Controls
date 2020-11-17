@@ -2,8 +2,7 @@ import rk = require('i18n!Controls');
 import cInstance = require('Core/core-instance');
 /**
  * Функция проверяет дату и время на валидность.
- * @class
- * @name Controls/_validate/Validators/IsValidDate
+ * @class Controls/_validate/Validators/IsValidDate
  * @public
  * @author Красильников А.С.
  * @remark

@@ -20,9 +20,8 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/Link
  *
@@ -39,9 +38,8 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IFontColorStyle
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/Link
  *

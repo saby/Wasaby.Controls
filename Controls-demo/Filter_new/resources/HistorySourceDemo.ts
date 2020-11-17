@@ -1,6 +1,6 @@
 import {register} from 'Types/di';
 import {RecordSet} from 'Types/collection';
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 import {getChangedHistoryItems} from './FilterItemsStorage';
 import {DataSet} from 'Types/source';
 

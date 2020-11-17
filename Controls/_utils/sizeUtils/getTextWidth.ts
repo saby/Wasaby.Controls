@@ -18,7 +18,7 @@
  *      getTextWidth("helloWorld", 18);
  * </pre>
  *
- * @class Controls/sizeUtils:getTextWidth
+ * @class Controls/_utils/sizeUtils/getTextWidth
  * @public
  * @author Красильников А.С.
  */

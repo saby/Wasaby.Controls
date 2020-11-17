@@ -2,7 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения элементов в выпадающих списках.
  * @remark
  * Подробнее о работе с выпадающими списками читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/dropdown-menu/ здесь}.
- * @see Controls/interface/IDropdown#itemTemplate
+ * @see Controls/_menu/interface/IMenuBase#itemTemplate
  * @class Controls/dropdown:ItemTemplate
  * @public
  * @author Герасимов А.М.
@@ -49,7 +49,7 @@
 
 /**
  * @name Controls/dropdown:ItemTemplate#marker
- * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
+ * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
  * @default true
  */
 

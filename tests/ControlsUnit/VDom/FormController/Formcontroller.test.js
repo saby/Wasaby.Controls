@@ -279,6 +279,27 @@ define([
          FC.destroy();
       });
 
+      it('beforeUpdate change isNewRecord', () => {
+         let FC = new form.Controller();
+         FC._isNewRecord = undefined;
+         FC._crudController = {
+            setDataSource: () => {}
+         };
+
+         FC._beforeUpdate({isNewRecord: true, record: 123});
+         assert.equal(FC._isNewRecord, true);
+
+         FC._isConfirmShowed = true;
+         FC._beforeUpdate({isNewRecord: false, record: 123});
+         assert.equal(FC._isNewRecord, true);
+
+         FC._isConfirmShowed = false;
+         FC._beforeUpdate({isNewRecord: false, record: 123});
+         assert.equal(FC._isNewRecord, false);
+
+         FC.destroy();
+      });
+
       it('calcInitializingWay', () => {
          let FC = new form.Controller();
          const options = {};

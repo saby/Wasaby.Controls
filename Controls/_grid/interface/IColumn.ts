@@ -76,13 +76,13 @@ type TColumnSeparatorSizeConfig = {
 /**
  * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
- * @interface Controls/grid:IColumn
+ * @interface Controls/_grid/interface/IColumn
  * @public
  * @author Авраменко А.С.
  */
 export interface IColumn {
     /**
-     * @name Controls/grid:IColumn#width
+     * @name Controls/_grid/interface/IColumn#width
      * @cfg {String} Ширина колонки.
      * @remark
      * В качестве значения свойства можно указать пиксели (px), проценты (%), доли (1fr), "auto", "minmax", "max-content" и "min-content".
@@ -96,7 +96,7 @@ export interface IColumn {
      */
     width: string;
     /**
-     * @name Controls/grid:IColumn#displayProperty
+     * @name Controls/_grid/interface/IColumn#displayProperty
      * @cfg {String} Имя поля, данные которого отображаются в колонке.
      * @demo Controls-demo/grid/Columns/CellNoClickable/Index В демо-примере в конфигурации колонок заданы свойства displayProperty со значениями number, country и capital.
      * @example
@@ -145,7 +145,7 @@ export interface IColumn {
      */
     displayProperty?: string;
     /**
-     * @name Controls/grid:IColumn#compatibleWidth
+     * @name Controls/_grid/interface/IColumn#compatibleWidth
      * @cfg {String} Ширина колонки в браузерах, не поддерживающих {@link https://developer.mozilla.org/ru/docs/web/css/css_grid_layout CSS Grid Layout}.
      * @remark
      * В качестве значения свойства можно указать только пиксели (px) или проценты (%). Если свойство не задано, применяется значение "auto".
@@ -154,16 +154,16 @@ export interface IColumn {
      */
     compatibleWidth?: string;
     /**
-     * @name Controls/grid:IColumn#template
+     * @name Controls/_grid/interface/IColumn#template
      * @cfg {String|Function} Шаблон отображения ячейки.
      * @default undefined
      * @remark
      * Позволяет установить пользовательский шаблон отображения ячейки (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ColumnTemplate}.
-     * 
+     *
      * По умолчанию Controls/grid:ColumnTemplate отображает значение поля, имя которого задано в конфигурации колонки в свойстве {@link displayProperty}. Также шаблон Controls/grid:ColumnTemplate поддерживает {@link Controls/grid:ColumnTemplate параметры}, с помощью которых можно изменить отображение ячейки.
-     * 
+     *
      * При настройке пользовательского шаблона следует использовать директиву <a href="/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial">ws:partial</a>. Также в опцию template можно передавать и более сложные шаблоны, которые содержат иные директивы, например <a href="/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if">ws:if</a>. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ColumnTemplate.
-     * 
+     *
      * Дополнительно о работе с шаблоном вы можете прочитать в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/columns/template/">руководстве разработчика</a>.
      * @see Controls/grid:ColumnTemplate
      * @demo Controls-demo/grid/Columns/Template/Index В демо-примере в конфигурации первой колонки задан пользовательский шаблон отображения ячейки. В конфигурации шаблона переопределён контент ячейки в опции contentTemplate.
@@ -180,14 +180,14 @@ export interface IColumn {
      *     ...
      * ]
      * </pre>
-     * 
+     *
      * <pre class="brush: html; highlight: [4]">
      * <Controls.grid:View
      *     keyProperty="id"
      *     source="{{_viewSource}}"
      *     columns="{{_columns}}" />
      * </pre>
-     * 
+     *
      * <pre class="brush: html">
      * <!-- CountryRatingNumber.wml -->
      * <ws:partial template="Controls/grid:ColumnTemplate" itemData="{{itemData}}">
@@ -200,19 +200,19 @@ export interface IColumn {
      */
     template?: TemplateFunction;
     /**
-     * @name Controls/grid:IColumn#resultTemplate
+     * @name Controls/_grid/interface/IColumn#resultTemplate
      * @cfg {String|Function} Шаблон отображения ячейки в строке итогов.
      * @default undefined
      * @demo Controls-demo/grid/Results/FromMeta/CustomResultsCells/Index
      * @remark
      * Позволяет установить пользовательский шаблон отображения ячейки в строке итогов (именно шаблон, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ResultColumnTemplate}.
-     * 
+     *
      * Также шаблон {@link Controls/grid:ResultColumnTemplate} поддерживает параметры, с помощью которых можно изменить отображение ячейки.
-     * 
+     *
      * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию resultTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultColumnTemplate.
-     * 
+     *
      * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/column/ руководстве разработчика}.
-     * 
+     *
      * Для отображения строки итогов необходимо задать значение в опции {@link Controls/grid:View#resultsPosition resultsPosition}.
      * @example
      * <pre class="brush: html; highlight: [5,6,7,8,9,10,11]">
@@ -236,7 +236,7 @@ export interface IColumn {
      */
     resultTemplate?: TemplateFunction;
     /**
-     * @name Controls/grid:IColumn#align
+     * @name Controls/_grid/interface/IColumn#align
      * @cfg {TCellAlign} Горизонтальное выравнивание для содержимого ячейки.
      * @default left
      * @demo Controls-demo/grid/Columns/Align/Index В демо-примере для каждой колонки задано собственное выравнивание содержимого ячеек.
@@ -244,7 +244,7 @@ export interface IColumn {
      */
     align?: TCellAlign;
     /**
-     * @name Controls/grid:IColumn#valign
+     * @name Controls/_grid/interface/IColumn#valign
      * @cfg {TCellVerticalAlign} Вертикальное выравнивание для содержимого ячейки.
      * @default baseline
      * @demo Controls-demo/grid/Columns/Valign/Index В демо-примере для каждой колонки задано собственное выравнивание содержимого ячеек.
@@ -254,7 +254,7 @@ export interface IColumn {
      */
     valign?: TCellVerticalAlign;
     /**
-     * @name Controls/grid:IColumn#stickyProperty
+     * @name Controls/_grid/interface/IColumn#stickyProperty
      * @cfg {String | Array} Имя поля, которое используется для настройки прилипания данных колонки к верхней границе таблицы. Чтобы сделать прилипание по двум полям в одной колонке, нужно передать массив из двух строк.
      * Прилипание работает только для первой колонки таблицы.
      * @remark Подробнее о настройке колонок с прилипанием читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list/grid/ladder/sticky/">руководстве разработчика</a>.
@@ -263,16 +263,16 @@ export interface IColumn {
      * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере отображение лесенкой включено для колонок "photo" (первая колонка) и "date" (последняя колонка). Прилипание данных работает для колонки photo.
      * @see Controls/grid:IGridControl#ladderProperties
      */
-    stickyProperty?: string;
+    stickyProperty?: string | string[];
     /**
-     * @name Controls/grid:IColumn#textOverflow
+     * @name Controls/_grid/interface/IColumn#textOverflow
      * @cfg {TOverflow} Как отображается текст, если он не умещается в ячейке.
      * @default none
      * @demo Controls-demo/grid/Columns/TextOverflow/Ellipsis/Index В демо-примере для первой колонки свойство textOverflow установлено в значение ellipsis.
      */
     textOverflow?: TOverflow;
     /**
-     * @name Controls/grid:IColumn#columnSeparatorSize
+     * @name Controls/_grid/interface/IColumn#columnSeparatorSize
      * @cfg {TColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
      * @default none
      * @remark
@@ -303,7 +303,7 @@ export interface IColumn {
      */
     columnSeparatorSize?: TColumnSeparatorSizeConfig;
     /**
-     * @name Controls/grid:IColumn#cellPadding
+     * @name Controls/_grid/interface/IColumn#cellPadding
      * @cfg {ICellPadding} Конфигурация левого и правого отступа в ячейках колонки, исключая левый отступ первой и правый последней ячейки.
      * @example
      * <pre class="brush: js; highlight: [6,7,8,14,15,16,17]">

@@ -1,3 +1,9 @@
+/**
+ * Утилиты для работы с датами.
+ * @class Controls/_utils/dateUtils/Date
+ * @public
+ * @author Миронов А.Ю.
+ */
 
 /**
  * Checks if the date is correct.

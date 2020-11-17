@@ -15,32 +15,6 @@ import {SHADOW_VISIBILITY} from './Utils';
 import {RegisterClass} from 'Controls/event';
 import fastUpdate from './FastUpdate';
 
-/**
- * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
- * several headers fixed at the same level, which should simultaneously stick and stick out.
- * Behaves like one fixed header.
- *
- * @remark
- * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
- *
- * @extends Core/Control
- * @class Controls/_scroll/StickyHeader/Group
- * @author Красильников А.С.
- * @public
- */
-
-/**
- * @name Controls/_scroll/StickyHeader/Group#content
- * @cfg {Function} Content in which several fixed headers are inserted.
- */
-
-/**
- * @event Controls/_scroll/StickyHeader/Group#fixed Change the fixation state.
- * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
- * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
- */
-
 interface IHeaderData extends TRegisterEventData {
     top: number;
     bottom: number;
@@ -62,7 +36,20 @@ interface IOffsetCache {
 interface IStickyHeaderGroupOptions extends IControlOptions {
     calculateHeadersOffsets?: boolean;
 }
-
+/**
+ * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
+ * several headers fixed at the same level, which should simultaneously stick and stick out.
+ * Behaves like one fixed header.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
+ *
+ * @extends Core/Control
+ * @class Controls/_scroll/StickyHeader/Group
+ * @author Красильников А.С.
+ * @public
+ */
 export default class Group extends Control<IStickyHeaderGroupOptions> {
     private _index: number = null;
     private _updateFixedRegister: RegisterClass = new RegisterClass({register: 'updateFixed'});
@@ -208,6 +195,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
+    getHeaderContainer(): HTMLElement {
+        return this._container;
+    }
 
     protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
@@ -234,7 +224,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 this._notify('stickyRegister', [{
                     id: this._index,
                     inst: this,
-                    container: this._container,position: data.position,
+                    position: data.position,
                     mode: data.mode,
                 }, true], {bubbling: true});
                 this._isRegistry = true;
@@ -314,3 +304,14 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         };
     }
 }
+/**
+ * @name Controls/_scroll/StickyHeader/Group#content
+ * @cfg {Function} Content in which several fixed headers are inserted.
+ */
+
+/**
+ * @event Change the fixation state.
+ * @name Controls/_scroll/StickyHeader/Group#fixed
+ * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
+ * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
+ */

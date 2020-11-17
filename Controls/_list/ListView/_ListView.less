@@ -12,9 +12,96 @@
    position: absolute;
    width: @marker_thickness_list;
    background-color: @marker_color_list;
-   height: 100%;
-   left: 0;
    top: 0;
+   max-height: 100%;
+}
+
+.controls-ListView__itemV_marker_default {
+   height: @marker_height_default_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_image-l,
+.controls-ListView__itemV_marker_padding-l_image-l {
+   height: @marker_height_padding-l_image-l_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_image-m,
+.controls-ListView__itemV_marker_padding-l_image-m {
+   height: @marker_height_padding-l_image-m_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_image-s,
+.controls-ListView__itemV_marker_padding-l_image-s {
+   height: @marker_height_padding-l_image-s_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_image-xs,
+.controls-ListView__itemV_marker_padding-l_image-xs {
+   height: @marker_height_padding-l_image-xs_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_image-l {
+   height: @marker_height_padding-s_image-l_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_image-m {
+   height: @marker_height_padding-s_image-m_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_image-s {
+   height: @marker_height_padding-s_image-s_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_image-xs {
+   height: @marker_height_padding-s_image-xs_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_text-2xl,
+.controls-ListView__itemV_marker_padding-l_text-2xl {
+   height: @marker_height_padding-l_text-2xl_list;
+}
+
+.controls-ListView__itemV_marker_padding-default_text-xl,
+.controls-ListView__itemV_marker_padding-l_text-xl {
+   height: @marker_height_padding-l_text-xl_list;
+}
+.controls-ListView__itemV_marker_padding-default_text-l,
+.controls-ListView__itemV_marker_padding-l_text-l {
+   height: @marker_height_padding-l_text-l_list;
+}
+.controls-ListView__itemV_marker_padding-default_text-m,
+.controls-ListView__itemV_marker_padding-l_text-m {
+   height: @marker_height_padding-l_text-m_list;
+}
+.controls-ListView__itemV_marker_padding-default_text-2xs,
+.controls-ListView__itemV_marker_padding-l_text-xs {
+   height: @marker_height_padding-l_text-xs_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_text-2xl {
+   height: @marker_height_padding-s_text-2xl_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_text-xl {
+   height: @marker_height_padding-s_text-xl_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_text-l {
+   height: @marker_height_padding-s_text-l_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_text-m {
+   height: @marker_height_padding-s_text-m_list;
+}
+
+.controls-ListView__itemV_marker_padding-s_text-xs {
+   height: @marker_height_padding-s_text-xs_list;
+}
+.controls-ListView__itemV_marker-left {
+   left: 0;
+}
+.controls-ListView__itemV_marker-right {
+   right: 0;
 }
 
 .controls-ListView__itemV .controls-ListView__checkbox_position-default_theme-@{themeName} {
@@ -41,37 +128,6 @@
 .controls-ListView__footer__paddingLeft_default_theme-@{themeName} {
    padding-left: @item_padding-left_m_list;
 }
-
-.controls-ListView_content-template {
-   width: 100%;
-}
-/**
-Пробовал сделать минимальную ширину через padding, но из-за этого некоторые элементы(календарь и тд),
-перестали отображаться корректно. А именно у них появляются лишние отступы.
- */
-.controls-ListView_default-padding_theme-@{themeName} {
-   min-height: @item_min-height_list;
-   align-items: baseline;
-   display: inline-flex;
-   width: 100%;
-   flex-shrink: 1;
-   box-sizing: border-box;
-
-   &:before {
-      content: '\200b';
-      font-size: @item_max-font-size_list;
-      // в ie если задан display: flex, то ширина ставится не в 0, а колеблется от 0.001-0.009. Из-за чего ломается верстка
-      width: 0;
-   }
-   // Нужен для вложенного div, без этого будет ломаться верстка некоторых блоков.
-   // Ломается из-за display: inline-flex, поэтому возвращаем display block
-   & > .controls-ListView_content-template {
-      display: block;
-      width: inherit;
-      height: inherit;
-   }
-}
-
 .controls-ListView__item_default-topPadding_null_theme-@{themeName},
 .controls-ListView__item_master-topPadding_null_theme-@{themeName},
 .controls-ListView__itemV_marker_master_topPadding-null_theme-@{themeName} {
@@ -252,12 +308,15 @@
 }
 
 .controls-ListView__item_editing_theme-@{themeName} {
-   background-color: @item_editing_background-color_list;
    > .controls-itemActionsV,
    .controls-itemActionsV_custom_theme-@{themeName} {
       opacity: 1;
       visibility: visible;
    }
+}
+
+.controls-ListView__item_background-editing_default_theme-@{themeName} {
+   background-color: @item_editing_background-color_list;
 }
 
 .controls-ListView__item_dragging_theme-@{themeName} {
@@ -299,6 +358,7 @@
 .controls-ListView__groupContent {
    display: flex;
    align-items: baseline;
+   min-width: 0;
    // убрал overflow по задаче https://online.sbis.ru/opendoc.html?guid=c2378e36-137e-44e6-a339-1c5bd549a772
    //overflow: hidden;
 }
@@ -492,6 +552,19 @@
    }
 }
 
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
+   // ave safari 13
+   // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
+   // иначе все position: absolute элементы внутри position: sticky
+   // начинают сроиться относительно родителя уровнем выше
+   transform: translateZ(0);
+}
+
 .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    background-color: @masterClassic_item_selected_background-color_list;
 }
@@ -533,31 +606,12 @@
 
 .controls-ListView__itemV_marker_master_theme-@{themeName} {
    position: absolute;
+   box-sizing: border-box;
    width: @master-marker_thickness_list;
-   height: 100%;
-   display: inline-flex;
-   align-items: baseline;
-   top: initial;
-   left: 0;
-}
-
-.ws-is-ie11 .controls-ListView__itemV_marker_master_theme-@{themeName} {
-   top: 0;
-   bottom: 0;
-   height: auto;
-}
-
-.controls-ListView__itemV_marker_master_theme-@{themeName}:before {
-   content: '\200b';
-   font-size: @master-marker_fontSize_list;
-}
-
-.controls-ListView__itemV_marker_master_theme-@{themeName}:after {
-   content: '';
-   display: inline-block;
    background-color: @master-marker_color_list;
-   width: @master-marker_thickness_list;
-   height: @master-marker_height_list;
+   height: 100%;
+   top: 0;
+   left: 0;
 }
 
 .controls-ListView__itemV_marker_masterClassic_theme-@{themeName} {

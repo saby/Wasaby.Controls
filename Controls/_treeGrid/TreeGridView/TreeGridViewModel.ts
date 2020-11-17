@@ -193,7 +193,7 @@ var
             current.getCurrentColumn = function (backgroundColorStyle: string) {
                 let
                     currentColumn = superGetCurrentColumn(backgroundColorStyle);
-                currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
+                currentColumn.nodeType = current.item && current.item.get && current.item.get(current.nodeProperty);
 
                 currentColumn.getExpanderSize = current.getExpanderSize;
 
@@ -356,6 +356,20 @@ var
 
         getDisplayChildrenCount(nodeKey, items) {
             return this._model.getDisplayChildrenCount(nodeKey, items);
+        },
+
+        _setFooter(footerColumns) {
+            TreeGridViewModel.superclass._setFooter.apply(this, arguments);
+
+            if (this._options.expanderIcon !== 'none' && this._options.expanderSize) {
+                const expanderColumnIndex = +(this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default');
+                const superGetter = this._footer[expanderColumnIndex].getContentClasses;
+
+                this._footer[expanderColumnIndex].getContentClasses = () => {
+                    return superGetter.apply(this, arguments) +
+                        ` controls-TreeGridView__footer__expanderPadding-${this._options.expanderSize.toLowerCase()}_theme-${this._options.theme}`
+                }
+            }
         }
     });
 

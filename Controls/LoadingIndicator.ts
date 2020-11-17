@@ -9,7 +9,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {constants} from 'Env/Env';
 
-
+let ManagerController;
 /**
  * Контейнер для контента с возможностью отображения индикатора загрузки.
  * Может использоваться локально для покрытия собственного контента или глобально для покрытия всей страницы.
@@ -30,11 +30,10 @@ import {constants} from 'Env/Env';
  *
  * @class Controls/LoadingIndicator
  * @extends Core/Control
- * @control
+ * 
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
 
@@ -68,14 +67,11 @@ import {constants} from 'Env/Env';
  * @class Controls/LoadingIndicator
  * @extends Core/Control
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
- * @control
+ * 
  * @author Красильников А.С.
  * @public
- * @category Container
  * @demo Controls-demo/LoadingIndicator/Overlay/Index
  */
-let ManagerController;
-
 class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoadingIndicator {
     protected _template: TemplateFunction = tmpl;
 

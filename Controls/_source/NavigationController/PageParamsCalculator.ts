@@ -10,7 +10,8 @@ class PageParamsCalculator implements IParamsCalculator {
     getQueryParams(
         store: PageNavigationStore,
         config: INavigationPageSourceConfig,
-        direction?: TNavigationDirection
+        direction?: TNavigationDirection,
+        paramsCallback?: Function
     ): IQueryParams {
         const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Page};
@@ -32,7 +33,12 @@ class PageParamsCalculator implements IParamsCalculator {
             addParams.meta.hasMore = false;
         }
 
-        // TODO callback
+        if (paramsCallback) {
+            paramsCallback({
+                page,
+                pageSize
+            });
+        }
 
         return addParams;
     }
@@ -65,7 +71,14 @@ class PageParamsCalculator implements IParamsCalculator {
                     }
 
                     // если мы загрузили 0 страницу размера 30 , то мы сейчас на 2 странице размера 10
-                    store.setCurrentPage((config.page + 1) * pageSizeCoef - 1);
+                    let newCurrentPage = (config.page + 1) * pageSizeCoef - 1;
+                    let newPrevPage = config.page * pageSizeCoef - 1;
+                    if (typeof metaMore === 'number') {
+                        const maxPage = Math.ceil(metaMore / storeParams.pageSize) - 1;
+                        newCurrentPage = Math.min(maxPage, newCurrentPage);
+                    }
+                    store.setCurrentPage(newCurrentPage);
+                    store.setPrevPage(newPrevPage);
                 }
             }
         }
@@ -108,21 +121,33 @@ class PageParamsCalculator implements IParamsCalculator {
         shiftMode: TNavigationPagingMode,
         navigationQueryConfig: IBasePageSourceConfig
     ): IBasePageSourceConfig {
-        let page;
-
+        let config: Partial<IBasePageSourceConfig> = {};
         if (direction === 'backward') {
-            page = 0;
+            config.page = 0;
         } else if (direction === 'forward') {
             const metaMore = store.getMetaMore();
 
             if (typeof metaMore === 'number') {
-                page = Math.round(metaMore / store.getState().pageSize) - 1;
+                config.page = Math.ceil(metaMore / store.getState().pageSize) - 1;
+                
+                // если записей на последней странице будет мало, то загружаем еще и предыдущую. 
+                // Например, если есть 4 полные страницы и последняя с одной записью: 
+                // 0..9, 10..19, 20..29, 30..39, 40..44. 
+                // При переходе в конец, нужно получить загрузку с 30..44, 
+                // так как offset рассчитается как page*pageSize.
+                // ставим page = 1 
+                // а pageSize = 30
+                //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
+                if ((metaMore / store.getState().pageSize) % 1 > 0) {
+                    config.pageSize = store.getState().pageSize * (config.page - 1);
+                    config.page = 1;
+                }
             } else {
-                page = -1;
+                config.page = -1;
             }
         }
 
-        return {...navigationQueryConfig, page};
+        return {...navigationQueryConfig, ...config};
     }
 
     updateQueryRange(store: PageNavigationStore): void {

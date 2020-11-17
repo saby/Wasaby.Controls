@@ -17,6 +17,8 @@ import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/IColl
 import {ICollectionItem} from './interface/ICollectionItem';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
+import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
+import {IItemPadding} from '../_list/interface/IList';
 
 export interface IOptions<T> {
     contents?: T;
@@ -29,6 +31,7 @@ export interface IOptions<T> {
     owner?: ICollection<T, CollectionItem<T>>;
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
+    multiSelectVisibility: string;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {
@@ -115,6 +118,8 @@ export default class CollectionItem<T> extends mixin<
     protected _$hovered: boolean;
 
     protected _$rendered: boolean;
+
+    protected _$multiSelectVisibility: string;
 
     protected _$dragged: boolean;
 
@@ -221,6 +226,10 @@ export default class CollectionItem<T> extends mixin<
         }
     }
 
+    isStickyHeader(): boolean {
+        return this.getOwner().isStickyHeader();
+    }
+
     /**
      * Устанавливает содержимое элемента коллекции
      * @param contents Новое содержимое
@@ -299,6 +308,21 @@ export default class CollectionItem<T> extends mixin<
         );
     }
 
+    getMarkerClasses(theme: string, style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
+                     markerPosition: 'left' | 'right' = 'left'): string {
+        let markerClass = 'controls-ListView__itemV_marker controls-ListView__itemV_marker_';
+        if (markerClassName === 'default') {
+            markerClass += 'default';
+        } else {
+            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
+        }
+        markerClass += ` controls-ListView__itemV_marker_${style}_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker_theme-${theme}`;
+        markerClass += ` controls-ListView__itemV_marker-${markerPosition}`;
+        return markerClass;
+    }
+
     increaseCounter(name: string): number {
         if (typeof this._counters[name] === 'undefined') {
             this._counters[name] = 0;
@@ -310,11 +334,11 @@ export default class CollectionItem<T> extends mixin<
         return this._counters;
     }
 
-    getMultiSelectClasses(theme): string {
+    getMultiSelectClasses(theme: string): string {
         let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme} `;
         classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+        if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += ' controls-ListView__checkbox-onhover';
         }
         return classes;
@@ -407,7 +431,7 @@ export default class CollectionItem<T> extends mixin<
         }
         this._$animatedForSelection = animated;
         this._nextVersion();
-        this._notifyItemChangeToOwner('animatedForSelection');
+        this._notifyItemChangeToOwner('animated');
     }
 
     /**
@@ -515,14 +539,16 @@ export default class CollectionItem<T> extends mixin<
                       cursor: string = 'pointer',
                       backgroundColorStyle?: string,
                       style: string = 'default'): string {
-        return `controls-ListView__itemV
-            controls-ListView__item_default
+        const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
+        const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
+        return `controls-ListView__itemV ${this._getCursorClasses(cursor)}
+            controls-ListView__item_${style}
+            controls-ListView__item_${style}_theme-${theme}
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
-            controls-ListView__itemV controls-ListView__itemV_cursor-${cursor}
             controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
-            ${templateHighlightOnHover && !this.isEditing() ? 'controls-ListView__item_highlightOnHover_default_theme_default' : ''}
-            ${this.isEditing() ? ` controls-ListView__item_editing_theme-${theme}` : ''}
+            ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
+            ${this.isEditing() ? (` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`) : ''}
             ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
             ${backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : ''}
             ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
@@ -545,6 +571,10 @@ export default class CollectionItem<T> extends mixin<
         return itemActionClasses;
     }
 
+    getRowSeparatorSize(): string {
+        return this.getOwner().getRowSeparatorSize();
+    }
+
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
@@ -554,13 +584,17 @@ export default class CollectionItem<T> extends mixin<
      * Метод должен уйти в render-модель при её разработке.
      */
     getContentClasses(theme: string, style: string = 'default'): string {
-        const rowSeparatorSize = this.getOwner().getRowSeparatorSize();
+        const isAnimatedForSelection = this.isAnimatedForSelection();
+        const rowSeparatorSize = this.getRowSeparatorSize();
         return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
-        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}`;
+        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
+        ${isAnimatedForSelection ? ' controls-ListView__item_rightSwipeAnimation' : ''}
+        controls-ListView__itemContent_${style}_theme-${theme}`;
     }
 
     /**
      * Возвращает Класс для позиционирования опций записи.
+     * Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку
      * Если новая модель, то в любом случае не считается класс, добавляющий padding
      * Если опции вне строки, то возвращает класс, добавляющий padding согласно itemActionsClass и itemPadding
      * Если опции вне строки и itemActionsClass не задан, возвращает пробел
@@ -569,23 +603,31 @@ export default class CollectionItem<T> extends mixin<
      * Иначе возвращает классы, соответствующие заданным параметрам classes и itemPadding
      * @param itemActionsPosition
      * @param itemActionsClass
-     * @param itemPadding
+     * @param itemPadding @deprecated
      * @param theme
      * @param useNewModel
      */
     getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
+        if (itemPadding === undefined) {
+            itemPadding = {
+                top: this.getOwner().getTopPadding().toLowerCase(),
+                bottom: this.getOwner().getBottomPadding().toLowerCase()
+            }
+        }
         if (itemActionsPosition !== 'outside') {
             result.push(classes);
         }
-        const themedPositionClassCompile = (position) => (
-            `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
-        );
-        if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
-            result.push(themedPositionClassCompile('top'));
-        } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
-            result.push(themedPositionClassCompile('bottom'));
+        if (itemPadding.top !== 'null' || itemPadding.bottom !== 'null') {
+            const themedPositionClassCompile = (position) => (
+                `controls-itemActionsV_padding-${position}_${(itemPadding && itemPadding[position] === 'null' ? 'null' : 'default')}_theme-${theme}`
+            );
+            if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.topRight) !== -1) {
+                result.push(themedPositionClassCompile('top'));
+            } else if (classes.indexOf(ITEMACTIONS_POSITION_CLASSES.bottomRight) !== -1) {
+                result.push(themedPositionClassCompile('bottom'));
+            }
         }
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
@@ -593,6 +635,24 @@ export default class CollectionItem<T> extends mixin<
     getItemTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction|string {
         const templateFromProperty = itemTemplateProperty ? this.getContents().get(itemTemplateProperty) : '';
         return templateFromProperty || userTemplate;
+    }
+
+    getMultiSelectVisibility(): string {
+        return this._$multiSelectVisibility;
+    }
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const multiSelectVisibilityUpdated = this._$multiSelectVisibility !== multiSelectVisibility;
+        if (multiSelectVisibilityUpdated) {
+            this._$multiSelectVisibility = multiSelectVisibility;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
+    getMultiSelectPosition(): string {
+        return this.getOwner().getMultiSelectPosition();
     }
 
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
@@ -603,22 +663,23 @@ export default class CollectionItem<T> extends mixin<
         const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
         const rightSpacing = this.getOwner().getRightPadding().toLowerCase();
 
-        if (topSpacing === 'null' && bottomSpacing === 'null') {
-            classes += ` controls-ListView_default-padding_theme-${theme}`;
-        } else {
-            classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}_theme-${theme}`;
-            classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}_theme-${theme}`;
-        }
+        classes += ` controls-ListView__item_${preparedStyle}-topPadding_${topSpacing}_theme-${theme}`;
+        classes += ` controls-ListView__item_${preparedStyle}-bottomPadding_${bottomSpacing}_theme-${theme}`;
 
         classes += ` controls-ListView__item-rightPadding_${rightSpacing}_theme-${theme}`;
 
-        if (this.getOwner().getMultiSelectVisibility() !== 'hidden') {
+        if (this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom') {
            classes += ` controls-ListView__itemContent_withCheckboxes_theme-${theme}`;
         } else {
            classes += ` controls-ListView__item-leftPadding_${this.getOwner().getLeftPadding().toLowerCase()}_theme-${theme}`;
         }
 
         return classes;
+    }
+
+    protected _getCursorClasses(cursor: string = 'pointer', clickable: boolean = true): string {
+        const cursorStyle = clickable === false ? 'default' : cursor;
+        return `controls-ListView__itemV_cursor-${cursorStyle}`;
     }
 
     protected _setEditingContents(editingContents: T): void {
@@ -724,5 +785,6 @@ Object.assign(CollectionItem.prototype, {
     _instancePrefix: 'collection-item-',
     _contentsIndex: undefined,
     _version: 0,
-    _counters: null
+    _counters: null,
+    _$multiSelectVisibility: null
 });

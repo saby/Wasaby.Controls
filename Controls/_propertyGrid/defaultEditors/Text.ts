@@ -11,7 +11,7 @@ import StringEditor = require('Controls/_propertyGrid/defaultEditors/String');
  * @class Controls/_propertyGrid/defaultEditors/Text
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -21,7 +21,7 @@ import StringEditor = require('Controls/_propertyGrid/defaultEditors/String');
  * @class Controls/_propertyGrid/defaultEditors/Text
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */

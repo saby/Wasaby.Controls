@@ -29,23 +29,22 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_tree/interface/ITreeControlOptions
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/_tile/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
- * @category List
  */
 
 /*
  * List in which items are displayed as tiles. Can load data from data source.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FDemo">Demo examples</a>.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/tile/'>here</a>.
  *
  * @class Controls/_tile/View
  * @extends Controls/list:View
@@ -61,17 +60,16 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_tree/interface/ITreeControlOptions
- * @mixes Controls/interface/IDraggable
+ * @mixes Controls/_interface/IDraggable
  * @mixes Controls/List/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
- * @control
+ * 
  * @author Авраменко А.С.
  * @public
- * @category List
  */
 
 export default class View extends List {

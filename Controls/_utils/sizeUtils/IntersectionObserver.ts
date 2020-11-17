@@ -33,7 +33,7 @@ if (constants.isBrowserPlatform) {
             if (!('isIntersecting' in window.IntersectionObserverEntry.prototype)) {
                 Object.defineProperty(window.IntersectionObserverEntry.prototype,
                     'isIntersecting', {
-                        get: () => {
+                        get: function() {
                             return this.intersectionRatio > 0;
                         }
                     });

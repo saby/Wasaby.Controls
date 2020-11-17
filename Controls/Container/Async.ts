@@ -8,75 +8,10 @@ import rk = require('i18n!Controls');
 import template = require('wml!Controls/Container/Async/Async');
 import {ViewConfig} from "../_error/Handler";
 
-/**
- * Контейнер для асинхронной загрузки контролов.
- * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
- *
- * @class Controls/Container/Async
- * @extends Core/Control
- * @control
- * @public
- * @author Санников К.А.
- * @category Container
- */
-
-/**
- * Container for asynchronously loading components.
- * Подробное описание и примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
- *
- * @class Controls/Container/Async
- * @extends Core/Control
- * @control
- * @public
- * @author Санников К.А.
- * @category Container
- */
-
-/**
- * @name Controls/Container/Async#content
- * @cfg {Content} Содержимое контейнера.
- */
-
-/**
- * @name Controls/Container/Async#content
- * @cfg {Content} Container contents.
- */
-
-/**
- * @name Controls/Container/Async#templateName
- * @cfg {String} Имя асинхронно загружаемого контрола.
- */
-
-/**
- * @name Controls/Container/Async#templateName
- * @cfg {String} Name of asynchronously loading component
- */
-
-/**
- * @name Controls/Container/Async#templateOptions
- * @cfg {Object} Параметры содержимого контейнера Async.
- */
-
-/**
- * @name Controls/Container/Async#templateOptions
- * @cfg {Object} Options for content of Async
- */
-
-/**
- * @name Controls/Container/Async#errorCallback
- * @cfg {function} Callback для обработки ошибки возникнувшей при загрузке компонента,
- * напр. если нужно показать дружелюбную ошибку вместо простого текста ошибки.
- * Если не передавать (т.е. не обрабатывать ошибку), то при ошибке загрузки компонента будет выведен текст ошибки,
- * поясняющий причину ошибки.
- * С этим callback можно обработать ошибку как нужно прикладному разработчику.
- * @see Controls/dataSource:error.Controller
- *
- */
-
 const moduleLoader = new ModuleLoader();
 
 function generateErrorMsg(templateName: string, msg?: string): string {
-   const tTemplate = `Ошибка загрузки контрола ${templateName}`;
+   const tTemplate = `Ошибка загрузки контрола "${templateName}"`;
    const tHint = 'Возможны следующие причины:\n\t \
                   • Ошибка в самом контроле\n\t \
                   • Долго отвечал БЛ метод в _beforeUpdate\n\t \
@@ -93,6 +28,27 @@ interface IOptions extends IControlOptions {
 }
 
 const SUCCESS_BUILDED = 's';
+/**
+ * Контейнер для асинхронной загрузки контролов.
+ * Подробное описание и примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+ *
+ * @class Controls/Container/Async
+ * @extends Core/Control
+ *
+ * @public
+ * @author Санников К.А.
+ */
+
+/**
+ * Container for asynchronously loading components.
+ * Подробное описание и примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
+ *
+ * @class Controls/Container/Async
+ * @extends Core/Control
+ *
+ * @public
+ * @author Санников К.А.
+ */
 class Async extends Control<IOptions, TStateRecivied> {
    protected _template: TemplateFunction = template;
    private currentTemplateName: string;
@@ -110,9 +66,9 @@ class Async extends Control<IOptions, TStateRecivied> {
    private errorCallback: (viewConfig: void|ViewConfig, error: unknown) => void;
 
    _beforeMount(options: IOptions, _: unknown, receivedState: TStateRecivied): Promise<TStateRecivied> {
-      if (typeof options.templateName === 'undefined') {
-         this.error = 'В модуль Async передали не корректное имя шаблона (templateName=undefined)';
-         IoC.resolve('ILogger').warn(this.error);
+      if (!options.templateName) {
+         this.error = 'В модуль Async передали не корректное имя шаблона (templateName=undefined|null|empty)';
+         IoC.resolve('ILogger').error(this.error);
          return Promise.resolve(this.error);
       }
       this.errorCallback = options.errorCallback;
@@ -198,8 +154,10 @@ class Async extends Control<IOptions, TStateRecivied> {
 
       return promise.then<TStateRecivied, TStateRecivied>((loaded) => {
          this.asyncLoading = false;
-         if (loaded === null) {
+         if (!loaded) {
+            this.loadingErrorOccurred = true;
             this.error = generateErrorMsg(name);
+            IoC.resolve('ILogger').warn(this.error);
             this.userErrorMessage = rk('У СБИС возникла проблема');
             return this.error;
          }
@@ -230,6 +188,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    }
 
    _insertComponent(tpl: unknown, opts: IControlOptions, templateName: string): void {
+      this.error = '';
       this.currentTemplateName = templateName;
       this.optionsForComponent = {};
       for (const key in opts) {
@@ -257,3 +216,44 @@ class Async extends Control<IOptions, TStateRecivied> {
 }
 
 export = Async;
+/**
+ * @name Controls/Container/Async#content
+ * @cfg {Content} Содержимое контейнера.
+ */
+
+/**
+ * @name Controls/Container/Async#content
+ * @cfg {Content} Container contents.
+ */
+
+/**
+ * @name Controls/Container/Async#templateName
+ * @cfg {String} Имя асинхронно загружаемого контрола.
+ * Можно использовать только {@link /doc/platform/developmentapl/interface-development/pattern-and-practice/javascript-libraries/#_2 публичные пути библиотеки}.
+ */
+
+/**
+ * @name Controls/Container/Async#templateName
+ * @cfg {String} Name of asynchronously loading component
+ */
+
+/**
+ * @name Controls/Container/Async#templateOptions
+ * @cfg {Object} Параметры содержимого контейнера Async.
+ */
+
+/**
+ * @name Controls/Container/Async#templateOptions
+ * @cfg {Object} Options for content of Async
+ */
+
+/**
+ * @name Controls/Container/Async#errorCallback
+ * @cfg {function} Callback для обработки ошибки возникнувшей при загрузке компонента,
+ * напр. если нужно показать дружелюбную ошибку вместо простого текста ошибки.
+ * Если не передавать (т.е. не обрабатывать ошибку), то при ошибке загрузки компонента будет выведен текст ошибки,
+ * поясняющий причину ошибки.
+ * С этим callback можно обработать ошибку как нужно прикладному разработчику.
+ * @see Controls/dataSource:error.Controller
+ *
+ */

@@ -25,6 +25,10 @@ import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
 import {IContextMenuConfig} from './interface/IContextMenuConfig';
+import {DependencyTimer} from 'Controls/popup';
+import * as mStubs from 'Core/moduleStubs';
+import {getActions} from './measurers/ItemActionMeasurer';
+
 
 const DEFAULT_ACTION_ALIGNMENT = 'horizontal';
 
@@ -33,6 +37,8 @@ const DEFAULT_ACTION_CAPTION_POSITION = 'none';
 const DEFAULT_ACTION_POSITION = 'inside';
 
 const DEFAULT_ACTION_SIZE = 'm';
+
+const DEFAULT_ACTION_MODE = 'strict';
 
 /**
  * @interface Controls/_itemActions/IControllerOptions
@@ -109,6 +115,8 @@ export interface IControllerOptions {
      * Редактируемая запись
      */
     editingItem?: IItemActionsItem;
+
+    actionMode: 'strict' | 'adaptive';
 }
 
 /**
@@ -126,7 +134,7 @@ export class Controller {
     private _editArrowAction: IItemAction;
     private _contextMenuConfig: IContextMenuConfig;
     private _iconSize: TItemActionsSize;
-
+    private _actionMode: 'adaptive' | 'strict';
     // вариант расположения опций в свайпе на момент инициализации
     private _actionsAlignment: 'horizontal' | 'vertical';
 
@@ -143,6 +151,11 @@ export class Controller {
 
     private _activeItemKey: any;
 
+    // Таймер для погрузки зависимостей
+    private _dependenciesTimer: DependencyTimer = null;
+
+    private _loadMenuTempPromise: Promise<>;
+
     /**
      * Метод инициализации и обновления параметров.
      * Для старой модели listViewModel возвращает массив id изменённых значений
@@ -156,6 +169,7 @@ export class Controller {
         this._editArrowVisibilityCallback = options.editArrowVisibilityCallback || ((item: Model) => true);
         this._editArrowAction = options.editArrowAction;
         this._contextMenuConfig = options.contextMenuConfig;
+        this._actionMode = options.actionMode || DEFAULT_ACTION_MODE;
         this._iconSize = options.iconSize || DEFAULT_ACTION_SIZE;
         this._actionsAlignment = options.actionAlignment || DEFAULT_ACTION_ALIGNMENT;
         this._itemActionsPosition = options.itemActionsPosition || DEFAULT_ACTION_POSITION;
@@ -196,6 +210,13 @@ export class Controller {
             this._addEditArrow(item.getActions().showed);
         }
         this._collection.nextVersion();
+    }
+
+    updateItemActions(itemKey: TItemKey, containerWidth: number): void {
+        const item = this._collection.getItemBySourceKey(itemKey);
+        const actions = item.getActions();
+        const visibleActions = getActions(actions, this._iconSize, null, containerWidth);
+        item.setActions(this._fixActionsDisplayOptions(visibleActions), true);
     }
 
     /**
@@ -242,9 +263,19 @@ export class Controller {
             return;
         }
 
-        const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
+        const target = isContextMenu ? null : this._cloneMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
-        const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
+        const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
+        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item,
+            clickEvent,
+            opener,
+            templateOptions,
+            isActionMenu,
+            isContextMenu
+        );
+        if (actionMenuConfig) {
+            return actionMenuConfig;
+        }
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
@@ -282,13 +313,70 @@ export class Controller {
     }
 
     /**
+     * Устанавливает активный Item в коллекции
+     * @param item Текущий элемент коллекции
+     */
+    setActiveItem(item: IItemActionsItem): void {
+        this._collection.setActiveItem(item);
+        if (item && typeof item.getContents !== 'undefined' && typeof item.getContents().getKey !== 'undefined') {
+            this._activeItemKey = item.getContents().getKey();
+        }
+    }
+
+        /**
+     * Возвращает текущий активный Item
+     */
+    getActiveItem(): IItemActionsItem {
+        let activeItem = this._collection.getActiveItem();
+
+        /**
+         * Проверяем что элемент существует, в противном случае пытаемся его найти.
+         */
+        if (activeItem === undefined &&
+           (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)
+        ) {
+            activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
+        }
+        return activeItem;
+    }
+
+    /**
+     * Устанавливает текущее состояние анимации в модель
+     */
+    startSwipeCloseAnimation(): void {
+        const swipeItem = this.getSwipeItem();
+        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+    }
+
+    /**
+     * Стартует таймер загрузки зависимостей меню
+     * @remark
+     * Рендер контрола Controls/dropdown:Button намного дороже, поэтому вместо menuButton используем текущую вёрстку и таймеры
+     */
+    startMenuDependenciesTimer(): void {
+        if (!this._dependenciesTimer) {
+            this._dependenciesTimer = new DependencyTimer();
+        }
+        this._dependenciesTimer.start(this._loadDependencies.bind(this));
+    }
+
+    /**
+     * Останавливает таймер и фактически загружает все зависимости
+     */
+    stopMenuDependenciesTimer(): void {
+        this._dependenciesTimer?.stop();
+    }
+
+    /**
      * Возвращает конфиг для шаблона меню опций
+     * @param item элемент коллекции, для которого выполняется действие
      * @param isActionMenu
      * @param parentAction
      * @param menuActions
      * @private
      */
     private _getActionsMenuTemplateConfig(
+        item: IItemActionsItem,
         isActionMenu: boolean,
         parentAction: IItemAction,
         menuActions: IItemAction[]
@@ -306,6 +394,10 @@ export class Controller {
         const root = parentAction && parentAction.id;
         return {
             source,
+            footerItemData: {
+                item,
+                key: Controller._getItemContents(item).getKey()
+            },
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
@@ -320,38 +412,22 @@ export class Controller {
         };
     }
 
-    /**
-     * Устанавливает активный Item в коллекции
-     * @param item Текущий элемент коллекции
-     */
-    setActiveItem(item: IItemActionsItem): void {
-        this._collection.setActiveItem(item);
-        if (item && typeof item.getContents !== 'undefined' && typeof item.getContents().getKey !== 'undefined') {
-            this._activeItemKey = item.getContents().getKey();
+    private _loadDependencies(): Promise<unknown[]> {
+        if (!this._loadMenuTempPromise) {
+            const templatesToLoad = ['Controls/menu'];
+            if (this._contextMenuConfig) {
+                const templates = ['headerTemplate', 'footerTemplate', 'itemTemplate', 'groupTemplate'];
+                templates.forEach((template) => {
+                    if (typeof this._contextMenuConfig[template] === 'string') {
+                        templatesToLoad.push(this._contextMenuConfig[template]);
+                    }
+                });
+            }
+            this._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
+                return loadedDeps[0].Control.loadCSS(this._theme);
+            });
         }
-    }
-
-    /**
-     * Возвращает текущий активный Item
-     */
-    getActiveItem(): IItemActionsItem {
-        let activeItem = this._collection.getActiveItem();
-
-        /**
-         * Проверяем что элемент существует, в противном случае пытаемся его найти.
-         */
-        if (activeItem === undefined && (typeof this._collection.getItemBySourceKey !== 'undefined' && this._activeItemKey)) {
-            activeItem = this._collection.getItemBySourceKey(this._activeItemKey);
-        }
-        return activeItem;
-    }
-
-    /**
-     * Устанавливает текущее сосяние анимации в модель
-     */
-    startSwipeCloseAnimation(): void {
-        const swipeItem = this.getSwipeItem();
-        swipeItem.setSwipeAnimation(ANIMATION_STATE.CLOSE);
+        return this._loadMenuTempPromise;
     }
 
     /**
@@ -365,10 +441,10 @@ export class Controller {
         let hasChanges = false;
         const changedItemsIds: Array<number | string> = [];
         const assignActionsOnItem = (item): void => {
-            if (!item['[Controls/_display/GroupItem]']) {
+            if (!item['[Controls/_display/GroupItem]'] && !item['[Controls/_display/SearchSeparator]']) {
                 const contents = Controller._getItemContents(item);
                 const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
-                const itemChanged = Controller._setItemActions(item, actionsContainer);
+                const itemChanged = Controller._setItemActions(item, actionsContainer, this._actionMode);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -425,7 +501,7 @@ export class Controller {
             }
             return allActions.filter((action) => (
                 ((!parentAction || parentAction.isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||
-                (!!parentAction && action.parent === parentAction.id)
+                (!!parentAction && !parentAction.isMenu && action.parent === parentAction.id)
             ));
         }
         return [];
@@ -449,16 +525,14 @@ export class Controller {
     }
 
     /**
-     * Запоминает измерения для HTML элемента, к которому привязано выпадающее меню
+     * В процессе открытия меню, запись может пререрисоваться, и таргета не будет в DOM.
+     * Поэтому заменяем метод getBoundingClientRect так, чтобы он возвращал текущие координаты
      * @param realTarget
      */
-    private _getFakeMenuTarget(realTarget: HTMLElement): {
-        getBoundingClientRect(): ClientRect;
-        children: any;
-    } {
+    private _cloneMenuTarget(realTarget: HTMLElement): HTMLElement {
         const rect = realTarget.getBoundingClientRect();
         return {
-            children: [],
+            ...clone(realTarget),
             getBoundingClientRect(): ClientRect {
                 return rect;
             }
@@ -537,7 +611,7 @@ export class Controller {
             );
         }
         this._collection.setActionsTemplateConfig(actionsTemplateConfig);
-        Controller._setItemActions(item, swipeConfig.itemActions);
+        Controller._setItemActions(item, swipeConfig.itemActions, this._actionMode);
 
         if (swipeConfig.twoColumns) {
             const visibleActions = swipeConfig.itemActions.showed;
@@ -593,7 +667,7 @@ export class Controller {
             if (this._isMenuButtonRequired(actions)) {
                 showed.push({
                     id: null,
-                    icon: 'icon-ExpandDown',
+                    icon: 'icon-SettingsNew',
                     style: 'secondary',
                     iconStyle: 'secondary',
                     isMenu: true
@@ -717,14 +791,16 @@ export class Controller {
      * Устанавливает операции с записью для конкретного элемента коллекции
      * @param item
      * @param actions
+     * @param actionMode
      * @private
      */
     private static _setItemActions(
         item: IItemActionsItem,
-        actions: IItemActionsContainer
+        actions: IItemActionsContainer,
+        actionMode: string
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions))) {
+        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions, actionMode))) {
             item.setActions(actions, true);
             return true;
         }
@@ -733,12 +809,12 @@ export class Controller {
 
     private static _isMatchingActions(
         oldContainer: IItemActionsContainer,
-        newContainer: IItemActionsContainer
+        newContainer: IItemActionsContainer,
+        actionMode: string
     ): boolean {
-        return (
-            this._isMatchingActionLists(oldContainer.all, newContainer.all) &&
-            this._isMatchingActionLists(oldContainer.showed, newContainer.showed)
-        );
+        const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
+        const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
+        return isMatchedAll && isMatchedShowed;
     }
 
     private static _calculateSwipeConfig(

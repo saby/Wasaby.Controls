@@ -4,27 +4,23 @@
          <ws:templateOptions multiSelectStatus="{{ item.isSelected() }}" key="{{ item.getContents().getId() }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
       </ws:partial>
    </ws:if>
-   <ws:if data="{{ item.shouldDisplayMarker(marker) }}">
-      <div class="controls-ListView__itemV_marker controls-ListView__itemV_marker_theme-{{theme}}"></div>
+   <ws:if data="{{item.shouldDisplayMarker(marker) }}">
+      <div class="{{item.getMarkerClasses(theme, '', markerClassName, itemPadding, markerPosition)}}"></div>
    </ws:if>
    <ws:if data="{{ contentTemplate }}">
       <div attr:class="{{ item.getContentClasses(theme, style) }}">
-         <div class="controls-ListView_content-template">
-             <ws:partial
-                template="{{ contentTemplate }}"
-                item="{{ item }}"
-                useNewModel="{{ true }}"
-                searchValue="{{ searchValue }}"
-                itemActionsTemplate="{{ itemActionsTemplate }}"
-                swipeTemplate="{{ swipeTemplate }}" />
-         </div>
+         <ws:partial
+                 template="{{ contentTemplate }}"
+                 item="{{ item }}"
+                 useNewModel="{{ true }}"
+                 searchValue="{{ searchValue }}"
+                 itemActionsTemplate="{{ itemActionsTemplate }}"
+                 swipeTemplate="{{ swipeTemplate }}"/>
       </div>
    </ws:if>
    <ws:else>
       <div attr:class="{{ item.getContentClasses(theme, style) }}">
-         <div class="controls-ListView_content-template">
-            {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
-         </div>
+         {{ item.getContents()[item.getDisplayProperty() || 'title'] }}
       </div>
    </ws:else>
    <ws:if data="{{ item.hasVisibleActions() || item.isEditing() }}">

@@ -20,11 +20,12 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
- * @includes IInfoBoxPopupOptions Controls/_popup/interface/IInfoBoxOpener
  * @includes StickyOpener Controls/_popup/PopupHelper/Sticky
  * @includes StackOpener Controls/_popup/PopupHelper/Stack
  * @includes DialogOpener Controls/_popup/PopupHelper/Dialog
  * @includes NotificationOpener Controls/_popup/PopupHelper/Notification
+ * @includes MouseEventHelper Controls/_popup/fastOpenUtils/MouseEventHelper
+ * @includes FastOpen Controls/_popup/fastOpenUtils/FastOpen
  * @public
  * @author Крайнов Д.О.
  */
@@ -52,6 +53,8 @@
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
  * @includes IInfoBoxPopupOptions Controls/_popup/interface/IInfoBoxOpener
+ * @includes MouseEventHelper Controls/_popup/fastOpenUtils/MouseEventHelper
+ * @includes FastOpen Controls/_popup/fastOpenUtils/FastOpen
  * @public
  * @author Крайнов Д.О.
  */
@@ -101,6 +104,9 @@ export {IInfoBoxOptions} from './_popup/interface/IInfoBox';
 export {IInfoBoxPopupOptions} from './_popup/interface/IInfoBoxOpener';
 
 export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
+
+export {isMouseEvent, MouseUp, MouseButtons} from './_popup/fastOpenUtils/MouseEventHelper';
+export {isLeftMouseButton, DependencyTimer} from './_popup/fastOpenUtils/FastOpen';
 
 // TODO Compatible
 import GlobalTemplate = require('wml!Controls/_popup/Global/Global');

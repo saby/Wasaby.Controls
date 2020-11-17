@@ -20,6 +20,12 @@ export interface IHistoryServiceOptions {
     favorite?: HistoryListParam;
     dataLoaded?: boolean;
 }
+
+interface IHistory {
+    recent: RecordSet;
+    frequent: RecordSet;
+    pinned: RecordSet;
+}
 const STORAGES_USAGE = {};
 
 /**
@@ -32,10 +38,10 @@ const STORAGES_USAGE = {};
  * @public
  * @author Герасимов А.М.
  * @example
- * <pre>
- *    new history.Service({
- *       historyId: 'TEST_HISTORY_ID'
- *    })
+ * <pre class="brush: js">
+ * new history.Service({
+ *    historyId: 'TEST_HISTORY_ID'
+ * })
  * </pre>
  */
 
@@ -54,90 +60,6 @@ const STORAGES_USAGE = {};
  *       historyId: 'TEST_HISTORY_ID'
  *    })
  * </pre>
- */
-
-/**
- * @name Controls/_history/Service#historyId
- * @cfg {String} Уникальный идентификатор <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
- */
-
-/*
- * @name Controls/_history/Service#historyId
- * @cfg {String} unique service history identifier
- */
-
-/**
- * @name Controls/_history/Service#historyIds
- * @cfg {Array of String} Уникальные идентификаторы <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
- */
-
-/*
- * @name Controls/_history/Service#historyIds
- * @cfg {Array of String} unique service history identifiers
- */
-
-/**
- * @name Controls/_history/Service#pinned
- * @cfg {Boolean} Загружает закрепленные записи из БЛ.
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/*
- * @name Controls/_history/Service#pinned
- * @cfg {Boolean} Loads pinned items from BL
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/**
- * @name Controls/_history/Service#frequent
- * @cfg {Boolean} Загружает наиболее часто выбираемые записи из БЛ.
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/*
- * @name Controls/_history/Service#frequent
- * @cfg {Boolean} Loads frequent items from BL
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/**
- * @name Controls/_history/Service#recent
- * @cfg {Boolean} Загружает последние записи из БЛ.
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/*
- * @name Controls/_history/Service#recent
- * @cfg {Boolean} Loads recent items from BL
- * @remark
- * true - Load items
- * false - No load items
- */
-
-/**
- * @name Controls/_history/Service#dataLoaded
- * @cfg {Boolean} Записи, загруженные с данными объекта.
- * @remark
- * true - БЛ вернет записи с данными.
- * false - Бл вернет записи без данных.
- */
-
-/*
- * @name Controls/_history/Service#dataLoaded
- * @cfg {Boolean} Items loaded with object data
- * @remark
- * true - BL return items with data
- * false - BL return items without data
  */
 
 export default class HistoryService extends mixin<SerializableMixin, OptionsToPropertyMixin>(
@@ -329,7 +251,7 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
     }
 
     query(): Deferred<DataSet> {
-        const historyId = this._$historyId;
+        const historyId = this.getHistoryIdForStorage();
         const storageDef = LoadPromisesStorage.read(historyId);
         const storageData = DataStorage.read(historyId);
         let resultDef;
@@ -400,11 +322,17 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return this._$historyId;
     }
 
+    getHistoryIdForStorage(): string {
+        // Если задают historyIds в параметрах источника, то кэш сохраняем по строке,
+        // склееной из всех идентификаторов, заданных в опции historyIds
+        return this._$historyId || this._$historyIds?.slice().sort().join();
+    }
+
     /**
      * Save new history
      */
-    saveHistory(historyId: string, newHistory: RecordSet): void {
-        DataStorage.write(historyId, object.clone(newHistory));
+    saveHistory(historyId: string, history: IHistory): void {
+        DataStorage.write(historyId, {...history});
     }
 
     /**
@@ -415,6 +343,91 @@ export default class HistoryService extends mixin<SerializableMixin, OptionsToPr
         return DataStorage.read(historyId);
     }
 }
+
+
+/**
+ * @name Controls/_history/Service#historyId
+ * @cfg {String} Уникальный идентификатор <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
+ */
+
+/*
+ * @name Controls/_history/Service#historyId
+ * @cfg {String} unique service history identifier
+ */
+
+/**
+ * @name Controls/_history/Service#historyIds
+ * @cfg {Array of String} Уникальные идентификаторы <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервиса истории</a>.
+ */
+
+/*
+ * @name Controls/_history/Service#historyIds
+ * @cfg {Array of String} unique service history identifiers
+ */
+
+/**
+ * @name Controls/_history/Service#pinned
+ * @cfg {Boolean} Загружает закрепленные записи из БЛ.
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/*
+ * @name Controls/_history/Service#pinned
+ * @cfg {Boolean} Loads pinned items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/**
+ * @name Controls/_history/Service#frequent
+ * @cfg {Boolean} Загружает наиболее часто выбираемые записи из БЛ.
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/*
+ * @name Controls/_history/Service#frequent
+ * @cfg {Boolean} Loads frequent items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/**
+ * @name Controls/_history/Service#recent
+ * @cfg {Boolean} Загружает последние записи из БЛ.
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/*
+ * @name Controls/_history/Service#recent
+ * @cfg {Boolean} Loads recent items from BL
+ * @remark
+ * true - Load items
+ * false - No load items
+ */
+
+/**
+ * @name Controls/_history/Service#dataLoaded
+ * @cfg {Boolean} Записи, загруженные с данными объекта.
+ * @remark
+ * true - БЛ вернет записи с данными.
+ * false - Бл вернет записи без данных.
+ */
+
+/*
+ * @name Controls/_history/Service#dataLoaded
+ * @cfg {Boolean} Items loaded with object data
+ * @remark
+ * true - BL return items with data
+ * false - BL return items without data
+ */
 
 Object.assign(HistoryService.prototype, {
     _moduleName: 'Controls/history:Service'

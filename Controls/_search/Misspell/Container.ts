@@ -11,7 +11,7 @@ import template = require('wml!Controls/_search/Misspell/Container');
  * 
  * @class Controls/_search/Misspell/Container
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */

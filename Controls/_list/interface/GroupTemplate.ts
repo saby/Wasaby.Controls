@@ -1,8 +1,8 @@
 /**
  * Шаблон, который по умолчанию используется для отображения заголовка {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/grouping/ группы} в {@link Controls/list:View плоских списках}.
  *
- * @class Controls/list:GroupTemplate
- * @mixes Controls/list:BaseGroupTemplate
+ * @class Controls/_list/interface/GroupTemplate
+ * @mixes Controls/_list/interface/BaseGroupTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/IGroupedGrid#groupTemplate
  * @example
@@ -26,7 +26,7 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grouping/ здесь}.
  * @public
  */
 

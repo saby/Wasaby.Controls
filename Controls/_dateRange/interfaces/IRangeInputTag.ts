@@ -17,7 +17,7 @@
 /**
  * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagStyle
  * @cfg {String} Стиль индикатора в стартовом поле.
- * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
  * @variant success
  * @variant primary
@@ -90,7 +90,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagClick Происходит при клике на индикатор в стартовом поле.
+ * @event Происходит при клике на индикатор в стартовом поле.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagClick
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -121,7 +122,8 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagClick Occurs when tag in start field was clicked.
+ * @event Occurs when tag in start field was clicked.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagClick
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -151,7 +153,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagHover Происходит при наведении курсора на индикатор в стартовом поле.
+ * @event Происходит при наведении курсора на индикатор в стартовом поле.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagHover
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -182,7 +185,8 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IRangeInputTag#startTagHover Occurs when tag in start field is hovered.
+ * @event Occurs when tag in start field is hovered.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#startTagHover
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -214,7 +218,7 @@
 /**
  * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagStyle
  * @cfg {String} Стиль индикатора в конечном поле (цветной индикатор, показанный в правом верхнем углу поля).
- * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @variant secondary
  * @variant success
  * @variant primary
@@ -287,8 +291,9 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagClick Происходит при клике по индикатору в конечном поле.
- * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
+ * @event Происходит при клике по индикатору в конечном поле.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagClick
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -319,7 +324,8 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagClick Occurs when tag in end field was clicked.
+ * @event Occurs when tag in end field was clicked.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagClick
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example
@@ -349,8 +355,9 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagHover Происходит при наведении курсора на индикатор в конечном поле.
- * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
+ * @event Происходит при наведении курсора на индикатор в конечном поле.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagHover
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/input/#_3'>здесь</a>.
  * @param {Object} event Нативное событие.
  * Может использоваться для получения таргета (DOM-узла тега), чтобы показать всплывающую подсказку.
  * @remark Событие никогда не запустится, если вы не укажете опцию tagStyle в поле.
@@ -381,7 +388,8 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IRangeInputTag#endTagHover Occurs when tag in end field is hovered.
+ * @event Occurs when tag in end field is hovered.
+ * @name Controls/_dateRange/interfaces/IRangeInputTag#endTagHover
  * @param {Object} event Native event object. Can be used to get target (DOM node of the tag) to show Infobox.
  * @remark The event will never fire unless you specify tagStyle option on the field.
  * @example

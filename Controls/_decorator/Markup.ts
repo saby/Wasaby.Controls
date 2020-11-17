@@ -1,6 +1,3 @@
-/**
- * Created by rn.kondakov on 18.10.2018.
- */
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import template = require('./Markup/resources/template');
@@ -9,16 +6,17 @@ import {delay} from 'Types/function';
 
 
    /**
-    * Создает контрол по данным в json-массиве.
+    * Контрол служит для вставки вёрстки в формате JsonML в шаблон.
     * 
+    * <a href="/doc/platform/developmentapl/service-development/service-contract/logic/json-markup-language/markup/">Руководство разработчика.</a>
     * @remark
     * Полезные ссылки:
     * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
     *
     * @class Controls/_decorator/Markup
     * @extends Core/Control
-    * @category Decorator
     * @author Угриновский Н.В.
+    * @demo Controls-demo/Decorators/Markup/Markup
     * @public
     */
 
@@ -27,19 +25,41 @@ import {delay} from 'Types/function';
     *
     * @class Controls/_decorator/Markup
     * @extends Core/Control
-    * @category Decorator
     * @author Угриновский Н.В.
     * @public
     */
 
+   class MarkupDecorator extends Control<IControlOptions> {
+      _template: TemplateFunction = template;
+
+      _contextMenuHandler(event: SyntheticEvent<MouseEvent>): void {
+         if (event.target.tagName.toLowerCase() === 'a') {
+            // Для ссылок требуется браузерное контекстное меню.
+            event.stopImmediatePropagation();
+         }
+      }
+
+      _copyHandler(event: SyntheticEvent<ClipboardEvent>): void {
+         const decoratedLinkNodes = event.currentTarget.getElementsByClassName(linkDecorateUtils.getClasses().link);
+         Array.prototype.forEach.call(decoratedLinkNodes, (decoratedLink) => {
+            const decoratedLinkImage = decoratedLink.getElementsByTagName('img')[0];
+            const span = document.createElement('span');
+            span.innerHTML = decoratedLink.href;
+
+            // Если заменить картинки на спан с текстом ссылки во время перехвата и вернуть обратно асинхронно,
+            // то в ворд вставятся ссылки, не меняя при этом страницу внешне.
+            decoratedLink.replaceChild(span, decoratedLinkImage);
+            delay(() => {
+               decoratedLink.replaceChild(decoratedLinkImage, span);
+            });
+         });
+      }
+
+      static _theme = ['Controls/decorator'];
+   }
    /**
     * @name Controls/_decorator/Markup#value
     * @cfg {Array} Json-массив на основе JsonML.
-    */
-
-   /*
-    * @name Controls/_decorator/Markup#value
-    * @cfg {Array} Json array, based on JsonML.
     */
 
    /**
@@ -61,33 +81,9 @@ import {delay} from 'Types/function';
     * {@link Controls/decorator:linkDecorate}
     */
 
-   /*
-    * @name Controls/_decorator/Markup#tagResolver
-    * @cfg {Function} Tool to change Json before build, if it need. Applies to every node.
-    * @remark
-    * Function Arguments:
-    * <ol>
-    *    <li>value - Json node to resolve.</li>
-    *    <li>parent - Json node, a parent of "value" argument.</li>
-    *    <li>resolverParams - Object, outer data for tagResolver from resolverParams option.</li>
-    * </ol>
-    * The function should return valid JsonML. If the return value is not equals (!==) to the origin node,
-    * function will not apply to children of the new value.
-    * Note: Function should not change origin value.
-    *
-    * @example
-    * {@link Controls/_decorator/Markup/resolvers/highlight}
-    * {@link Controls/_decorator/Markup/resolvers/linkDecorate}
-    */
-
    /**
     * @name Controls/_decorator/Markup#resolverParams
     * @cfg {Object} Внешние данные для tagResolver.
-    */
-
-   /*
-    * @name Controls/_decorator/Markup#resolverParams
-    * @cfg {Object} Outer data for tagResolver.
     */
 
 
@@ -139,34 +135,4 @@ import {delay} from 'Types/function';
     * В данном примере опция validHtml разрешает в качестве верстки использовать только блочные теги div и картинки img, а также указан набор разрешенных атрибутов: src, alt, height и width. Это значит, что картинка будет вставлена версткой, а параграф будет экранирован и вставлен строкой.
     *
     */
-
-   class MarkupDecorator extends Control<IControlOptions> {
-      _template: TemplateFunction = template;
-
-      _contextMenuHandler(event: SyntheticEvent<MouseEvent>): void {
-         if (event.target.tagName.toLowerCase() === 'a') {
-            // Для ссылок требуется браузерное контекстное меню.
-            event.stopImmediatePropagation();
-         }
-      }
-
-      _copyHandler(event: SyntheticEvent<ClipboardEvent>): void {
-         const decoratedLinkNodes = event.currentTarget.getElementsByClassName(linkDecorateUtils.getClasses().link);
-         Array.prototype.forEach.call(decoratedLinkNodes, (decoratedLink) => {
-            const decoratedLinkImage = decoratedLink.getElementsByTagName('img')[0];
-            const span = document.createElement('span');
-            span.innerHTML = decoratedLink.href;
-
-            // Если заменить картинки на спан с текстом ссылки во время перехвата и вернуть обратно асинхронно,
-            // то в ворд вставятся ссылки, не меняя при этом страницу внешне.
-            decoratedLink.replaceChild(span, decoratedLinkImage);
-            delay(() => {
-               decoratedLink.replaceChild(decoratedLinkImage, span);
-            });
-         });
-      }
-
-      static _theme = ['Controls/decorator'];
-   }
-
    export default MarkupDecorator;

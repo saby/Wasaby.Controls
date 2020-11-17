@@ -24,41 +24,12 @@ interface IDragObject {
  *
  * @class Controls/_popupTemplate/Dialog
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
- * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
+ * @implements Controls/_popupTemplate/interface/IPopupTemplateBaseOptions
  * @demo Controls-demo/PopupTemplate/Dialog/Index
- */
-
-/**
- * @name Controls/_popupTemplate/Dialog#draggable
- * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
- * @default false
- */
-
-/**
- * @name Controls/_popupTemplate/Dialog#headerBackgroundStyle
- * @cfg {String} Определяет цвет фона шапки диалогового окна.
- * @variant default
- * @variant unaccented
- * @default default
- * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
- * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
- */
-
-/**
- * @name Controls/_popupTemplate/Dialog#backgroundStyle
- * @cfg {String} Определяет цвет фона диалогового окна.
- * @variant default
- * @variant unaccented
- * @default default
- * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
- * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
- * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
  */
 
 class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTemplate {
@@ -117,5 +88,33 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         };
     }
 }
+
+/**
+ * @name Controls/_popupTemplate/Dialog#draggable
+ * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
+ * @default false
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog#headerBackgroundStyle
+ * @cfg {String} Определяет цвет фона шапки диалогового окна.
+ * @variant default
+ * @variant unaccented
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
+ * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
+ * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog#backgroundStyle
+ * @cfg {String} Определяет цвет фона диалогового окна.
+ * @variant default
+ * @variant unaccented
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
+ * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
+ * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ */
 
 export default DialogTemplate;

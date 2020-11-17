@@ -5,6 +5,7 @@ import { IControlOptions } from 'UI/Base';
  * Опции компонента {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConfig
  * @author Северьянов А.А.
+ * @pubcli
  */
 export interface IContainerConfig extends IControlOptions {
     /**
@@ -42,6 +43,7 @@ export default interface IContainer {
  * Интерефейс конструктора {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConstructor
  * @author Северьянов А.А.
+ * @public
  */
 export interface IContainerConstructor {
     new(config: IContainerConfig): IContainer;

@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
 import {NavigationController} from 'Controls/source';
-
+import {IBasePageSourceConfig} from 'Controls/interface';
 const dataPrev = [
     {
         id : 1,
@@ -172,6 +172,28 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(START_PAGE + 1, params[0].nextPage, 'Wrong query properties');
                 assert.equal(START_PAGE - 2, params[0].prevPage, 'Wrong query properties');
             });
+            it('updateQueryProperties config', () => {
+                const START_PAGE = 2;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: false
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: 10});
+                const params = nc.updateQueryProperties(rs, null, {page: 1, pageSize: TEST_PAGE_SIZE * 2}, null);
+                assert.equal(4, params[0].nextPage, 'Wrong query properties');
+                assert.equal(3, params[0].page, 'Wrong query properties');
+                assert.equal(1, params[0].prevPage, 'Wrong query properties');
+            });
 
             it('hasMoreData undefined false root', () => {
                 const START_PAGE = 0;
@@ -293,6 +315,30 @@ describe('Controls/_source/NavigationController', () => {
                 assert.isFalse(hasMore, 'Wrong more value');
                 hasMore = nc.hasMoreData('backward');
                 assert.isFalse(hasMore, 'Wrong more value');
+            });
+
+            it('navigationParamsChangedCallback called with new params', () => {
+                const START_PAGE = 0;
+                let newNavigationParams;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE
+                    },
+                    navigationParamsChangedCallback: (newParams) => {
+                        newNavigationParams = newParams;
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+                nc.updateQueryProperties(rs);
+                nc.getQueryParams({filter: {}}, null, null, 'forward');
+                assert.ok(newNavigationParams.page === START_PAGE + 1);
+                assert.ok(newNavigationParams.pageSize === TEST_PAGE_SIZE);
             });
         });
 
@@ -567,6 +613,29 @@ describe('Controls/_source/NavigationController', () => {
                 assert.deepEqual([-1], params[0].backwardPosition, 'Wrong query properties');
             });
 
+            it('updateQueryProperties forward + meta.iterative changed', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward'
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({nextPosition : null, iterative: false});
+                let params = nc.updateQueryProperties(rs, null, null, 'forward');
+                assert.deepEqual([6], params[0].forwardPosition, 'Wrong query properties');
+
+                rs.setMetaData({nextPosition : null, iterative: true});
+                params = nc.updateQueryProperties(rs, null, null, 'forward');
+                assert.deepEqual([null], params[0].forwardPosition, 'Wrong query properties');
+            });
+
             it('hasMoreData botways compatible values false root', () => {
                 const nc = new NavigationController({
                     navigationType: 'position',
@@ -671,6 +740,34 @@ describe('Controls/_source/NavigationController', () => {
                 assert.isFalse(hasMore, 'Wrong more value');
                 hasMore = nc.hasMoreData('backward');
                 assert.isTrue(hasMore, 'Wrong more value');
+            });
+
+            it('navigationParamsChangedCallback called with new params', () => {
+                const QUERY_LIMIT = 3;
+                let newNavigationParams;
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        position: null,
+                        field: 'id',
+                        direction: 'forward',
+                        limit: QUERY_LIMIT
+                    },
+                    navigationParamsChangedCallback: (newParams) => {
+                        newNavigationParams = newParams;
+                    }
+                });
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more : true});
+                nc.updateQueryProperties(rs);
+                nc.getQueryParams({filter: {}}, null, null, 'forward');
+
+                assert.ok(newNavigationParams.limit === QUERY_LIMIT);
+                assert.deepStrictEqual(newNavigationParams.position, [6]);
             });
 
         });
@@ -828,7 +925,7 @@ describe('Controls/_source/NavigationController', () => {
 
     describe('shiftToEdge', () => {
         describe('page', () => {
-            it ('shift to edge with more meta as number', () => {
+            it ('shift to edge with more meta as boolean', () => {
                 const START_PAGE = 0;
                 const nc = new NavigationController({
                     navigationType: 'page',
@@ -847,11 +944,11 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: false});
                 nc.updateQueryProperties(rs);
 
-                const edgeQueryConfig = nc.shiftToEdge('forward');
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
                 assert.equal(edgeQueryConfig.page, -1);
             });
 
-            it ('shift to edge with more meta as boolean', () => {
+            it ('shift to edge with more meta as number', () => {
                 const START_PAGE = 0;
                 const nc = new NavigationController({
                     navigationType: 'page',
@@ -870,8 +967,31 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({more: 18});
                 nc.updateQueryProperties(rs);
 
-                const edgeQueryConfig = nc.shiftToEdge('forward');
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
                 assert.equal(edgeQueryConfig.page, 5);
+            });
+            it ('shift to edge with more meta as number. pageSize = 3, more = 19', () => {
+                const START_PAGE = 0;
+                const nc = new NavigationController({
+                    navigationType: 'page',
+                    navigationConfig: {
+                        page: START_PAGE,
+                        pageSize: TEST_PAGE_SIZE,
+                        hasMore: false
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                rs.setMetaData({more: 19});
+                nc.updateQueryProperties(rs);
+
+                const edgeQueryConfig = nc.shiftToEdge('forward') as IBasePageSourceConfig;
+                assert.equal(edgeQueryConfig.page, 1);
+                assert.equal(edgeQueryConfig.pageSize, 15);
             });
         });
     });

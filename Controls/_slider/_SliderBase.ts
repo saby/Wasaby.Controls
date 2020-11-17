@@ -9,12 +9,23 @@ export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
 }
 
 const MOBILE_TOOLTIP_HIDE_DELAY: number = 3000;
+const maxPercentValue = 100;
 
 class SliderBase extends Control<ISliderBaseOptions> {
     private _tooltipPosition: number | null = null;
     private _hideTooltipTimerId: number;
     protected _tooltipValue: string | null = null;
+    protected _viewMode: string = '';
+    protected _value: number | null = null;
     protected _isDrag: boolean = false;
+
+    protected _beforeMount(options: ISliderBaseOptions): void {
+        this._viewMode = this._getViewMode(options.viewMode);
+    }
+
+    protected _beforeUpdate(newOptions: ISliderBaseOptions): void {
+        this._viewMode = this._getViewMode(newOptions.viewMode);
+    }
 
     _getValue(event: SyntheticEvent<MouseEvent | TouchEvent>): number {
         const target = this._options.direction === 'vertical' ? Utils.getNativeEventPageY(event) :
@@ -26,15 +37,23 @@ class SliderBase extends Control<ISliderBaseOptions> {
         return Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
     }
 
+    _getViewMode(viewMode: string): string {
+        return viewMode === 'default' ? '' : '_' + viewMode;
+    }
+
     _mouseMoveAndTouchMoveHandler(event: SyntheticEvent<MouseEvent>): void {
         if (!this._options.readOnly) {
-            this._tooltipPosition = this._getValue(event);
+            //На мобильных устройствах положение подсказки и ползунка всегда совпадает
+            this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._getValue(event);
+            if ( this._options.direction === 'vertical') {
+                this._tooltipPosition = maxPercentValue - this._tooltipPosition;
+            }
             this._tooltipValue = this._options.tooltipFormatter ? this._options.tooltipFormatter(this._tooltipPosition)
                 : this._tooltipPosition;
 
             // На мобилках события ухода мыши не стреляют (если не ткнуть пальцем в какую-то область)
             // В этом случае, по стандарту, скрываю тултип через 3 секунды.
-            if (constants.browser.isMobileIOS || constants.browser.isMobileAndroid) {
+            if (constants.browser.isMobilePlatform) {
                 if (this._hideTooltipTimerId) {
                     clearTimeout(this._hideTooltipTimerId);
                 }
@@ -69,6 +88,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
     static getDefaultOptions() {
         return {
             size: 'm',
+            viewMode: 'default',
             direction: 'horizontal',
             borderVisible: false,
             tooltipVisible: true,
@@ -95,6 +115,7 @@ class SliderBase extends Control<ISliderBaseOptions> {
             minValue: EntityDescriptor(Number).required,
             maxValue: EntityDescriptor(Number).required,
             scaleStep: EntityDescriptor(Number),
+            viewMode: EntityDescriptor(String),
             precision: EntityDescriptor(Number)
         };
     }

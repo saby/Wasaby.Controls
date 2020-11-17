@@ -13,20 +13,9 @@ import {factory} from 'Types/chain';
  * @class Controls/_filterPopup/Panel/HierarchyLookup
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
  * @public
  * @author Золотова Э.Е.
  *
- */
-
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
- * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
- * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
  */
 
 class HierarchyLookup extends Control {
@@ -58,5 +47,15 @@ class HierarchyLookup extends Control {
 
     static _theme: string[] = ['Controls/filterPopup'];
 }
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
+ * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
+ * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
+ */
 
 export default HierarchyLookup;

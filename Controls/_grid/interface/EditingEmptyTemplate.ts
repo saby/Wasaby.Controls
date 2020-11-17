@@ -16,8 +16,10 @@ interface IEmptyColumnColumns {
 /**
  * Шаблон, который используется для отображения {@link Controls/grid:View таблицы} без элементов с возможностью добавления.
  *
- * @class Controls/grid:EditingEmptyTemplate
+ * @class Controls/_grid/interface/EditingEmptyTemplate
  * @author Авраменко А.С.
+ * @public
+ *
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * В таблице 5 колонок. В пустом представлении поле ввода отображается во второй строке, а надпись растянута на следующие 2 колонки.
@@ -56,13 +58,15 @@ interface IEmptyColumnColumns {
  *     </ws:emptyTemplate>
  * </Controls.list:View>
  * </pre>
+ * 
  * @demo Controls-demo/grid/EmptyGrid/Editing/Index
+ * 
  * @remark
  * Колонки могут быть растянуты и спозиционированы в таблице с помощью опций <b>startIndex</b> и <b>stopIndex</b>.
  * По-умолчанию колонки не растягиваются и идут по порядку, недостающее пространство будет автоматически дополнено.
  * Таким образом, не обязательно конфигурировать все колонки, ровно как и конфигурировать пустые колонки слева, если требуется
  * отображать колонки не с начала.
- * @public
+ * 
  */
 export default interface IEditingEmptyTemplateOptions {
     /**
@@ -76,7 +80,7 @@ export default interface IEditingEmptyTemplateOptions {
      */
 
     /**
-     * @name Controls/list:EmptyTemplate#topSpacing
+     * @name Controls/_grid/interface/EditingEmptyTemplate#topSpacing
      * @cfg {Spacing|null} Отступ между верхней границей  и шаблоном contentTemplate.
      * @remark
      * В значении null отступ отсутствует.
@@ -85,7 +89,7 @@ export default interface IEditingEmptyTemplateOptions {
      */
     topSpacing?: string;
     /**
-     * @name Controls/list:EmptyTemplate#bottomSpacing
+     * @name Controls/_grid/interface/EditingEmptyTemplate#bottomSpacing
      * @cfg {Spacing|null} Отступ между нижней границей и шаблоном contentTemplate.
      * @remark
      * В значении null отступ отсутствует.
@@ -94,8 +98,8 @@ export default interface IEditingEmptyTemplateOptions {
      */
     bottomSpacing?: string;
     /**
-     * @name Controls/list:EmptyTemplate#columns
-     * @cfg {Array.<IEmptyColumnColumns>} Набор конфигураций колонок пустого списка.
+     * @name Controls/_grid/interface/EditingEmptyTemplate#columns
+     * @cfg {Array.<Controls/_grid/interface/EditingEmptyTemplate/IEmptyColumnColumns.typedef>} Набор конфигураций колонок пустого списка.
      */
     columns?: IEmptyColumnColumns[];
 }

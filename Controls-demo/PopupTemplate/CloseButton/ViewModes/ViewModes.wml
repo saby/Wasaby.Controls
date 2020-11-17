@@ -7,4 +7,8 @@
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=linkButton</div>
         <Controls.popupTemplate:CloseButton viewMode="linkButton"></Controls.popupTemplate:CloseButton>
     </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">viewMode=functionalButton</div>
+        <Controls.popupTemplate:CloseButton viewMode="functionalButton"></Controls.popupTemplate:CloseButton>
+    </div>
 </div>

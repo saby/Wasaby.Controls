@@ -4,9 +4,9 @@ import ControllerClass from './ControllerClass';
 import 'Controls/_dragnDrop/DraggingTemplate';
 import {IDragObject} from './Container';
 /**
- * Контроллер обеспечивает взаимосвязь между контейнерами перемещения Controls/dragnDrop:Container.
+ * Контроллер обеспечивает взаимосвязь между контейнерами перемещения {@link Controls/dragnDrop:Container}.
  * Он отслеживает события контейнеров и оповещает о них другие контейнеры.
- * Контроллер отвечает за отображение и позиционирование шаблона, указанного в опции draggingTemplate в контейнерах.
+ * Контроллер отвечает за отображение и позиционирование шаблона, указанного в опции {@link Controls/dragnDrop:Container#draggingTemplate draggingTemplate} в контейнерах.
  * Перетаскивание элементов работает только внутри Controls/dragnDrop:Container.
  *
  * @remark
@@ -17,10 +17,9 @@ import {IDragObject} from './Container';
  *
  * @class Controls/_dragnDrop/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 /*
@@ -31,10 +30,9 @@ import {IDragObject} from './Container';
  * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
  * @class Controls/_dragnDrop/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 class Controller extends Control<IControlOptions> {

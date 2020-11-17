@@ -14,34 +14,22 @@ export interface IListenerOptions extends IControlOptions {
    listenAll?: boolean;
 }
 
-/**
- * Позволяет реагировать на события родителя, использующего {@link Controls/events:Register} в своем шаблоне.
- * @class Controls/_event/Listener
- * @extends UI/Base:Control
- * @control
- * @public
- * @remark
- * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.
- * @author Красильников А.С.
- */
-
-/**
- * @name Controls/_event/Listener#event
- * @cfg {String} Имя события, на которое нужно среагировать.
- */
-
-/**
- * @name Controls/_event/Listener#listenAll
- * @cfg {Boolean} Нужно ли реагировать на события всех родительских контролов с Register в шаблоне,
- * либо же только на события ближайшего такого контрола.
- */
-
 const getConfig = (options: IListenerOptions): IListenerOptions => {
    return {
       listenAll: !!options.listenAll
    };
 };
 
+/**
+ * Позволяет реагировать на события родителя, использующего {@link Controls/events:Register} в своем шаблоне.
+ * @class Controls/_event/Listener
+ * @extends UI/Base:Control
+ * 
+ * @public
+ * @remark
+ * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.
+ * @author Красильников А.С.
+ */
 class EventListener extends Control<IListenerOptions> {
    protected _template: TemplateFunction = template;
    protected config: IListenerOptions =  null;
@@ -68,5 +56,14 @@ class EventListener extends Control<IListenerOptions> {
       };
    }
 }
+/**
+ * @name Controls/_event/Listener#event
+ * @cfg {String} Имя события, на которое нужно среагировать.
+ */
 
+/**
+ * @name Controls/_event/Listener#listenAll
+ * @cfg {Boolean} Нужно ли реагировать на события всех родительских контролов с Register в шаблоне,
+ * либо же только на события ближайшего такого контрола.
+ */
 export default EventListener;

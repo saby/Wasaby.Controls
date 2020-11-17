@@ -18,19 +18,17 @@ interface IValidateContainerOptions extends IControlOptions {
     errorTemplate?: TemplateFunction;
 }
 
+type ValidResult = boolean|null|Promise<boolean>|string[];
 /**
  * Контрол, регулирующий валидацию своего контента. Валидация запускается вызовом метода {@link Controls/_validate/Container#validate validate}.
  * @remark
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */
-
-type ValidResult = boolean|null|Promise<boolean>|string[];
-
 class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;

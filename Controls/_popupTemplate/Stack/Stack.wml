@@ -27,12 +27,20 @@
     <div class="controls-StackTemplate__content-area">
         <ws:partial template="{{_options.bodyContentTemplate}}"
                     scope="{{_options}}"
+                    bodyContentTemplate="{{null}}"
                     headerContentTemplate="{{null}}"
                     footerContentTemplate="{{null}}">  <!-- Опция с тем же названием есть на выпадающем списке.
                                                             Чтобы опция не пролетала до выпадающего списка, который лежит в стеке -->
         </ws:partial>
     </div>
-    <div if="{{_options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea controls-StackTemplate__bottomArea_theme_{{_options.theme}}">
-    <ws:partial template="{{_options.footerContentTemplate}}" scope="{{_options}}"></ws:partial>
-</div>
+
+    <ws:if data="{{_options.footerContentTemplate }}">
+        <div class="controls-StackTemplate__bottomArea controls-StackTemplate__bottomArea_theme_{{_options.theme}}">
+            <ws:partial template="{{_options.footerContentTemplate}}"
+                        scope="{{_options}}"
+                        bodyContentTemplate="{{null}}"
+                        headerContentTemplate="{{null}}"
+                        footerContentTemplate="{{null}}"/>
+        </div>
+    </ws:if>
 </div>

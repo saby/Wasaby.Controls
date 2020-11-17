@@ -44,59 +44,9 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_explorer/interface/IExplorer
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @public
  * @author Авраменко А.С.
- * @category List
- */
-
-/**
- * @name Controls/_moverDialog/Template#displayProperty
- * @cfg {String} Имя поля элемента, данные которого используются для правильной работы <a href="/doc/platform/developmentapl/interface-development/controls/bread-crumbs/">Хлебных крошек</a>.
- */
-
-/**
- * @name Controls/_moverDialog/Template#root
- * @cfg {String} Идентификатор корневого узла.
- * @default null
- */
-
-/**
- * @name Controls/_moverDialog/Template#searchParam
- * @cfg {String} Имя поля, по данным которого происходит поиск.
- * @remark
- * Настройка нужна для правильной работы строки поиска.
- * Значение опции передаётся в контроллер поиска {@link Controls/search:Controller}.
- * Подробнее о работе поиска и фильтрации в Wasaby читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководстве разработчика</a>.
- */
-
-/**
- * @name Controls/_moverDialog/Template#showRoot
- * @cfg {Boolean} Разрешить перемещение записей в корень иерархии.
- * @remark
- * - true Отображается кнопка "В корень" над списком. Клик по кнопке перемещает записи в корень иерархии (см. <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>).
- * - false Кнопка скрыта.
- */
-
-/**
- * @event Controls/_moverDialog/Template#sendResult Происходит при выборе раздела для перемещения записей.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} item Раздел, куда перемещаются выбранные записи.
- * @remark
- * Выбор раздела производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
- * Клик по папке не производит выбора раздела для перемещения.
- * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
- * Событие происходит непосредственно перед событием close.
- * @see close
- */
-
-/**
- * @event Controls/_moverDialog/Template#close Происходит при закрытии диалога перемещения записей.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @remark
- * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
- * Событие происходит непосредственно после события sendResult.
- * @see sendResult
  */
 
 export default class extends Control<IMoverDialogTemplateOptions> {
@@ -171,3 +121,53 @@ export default class extends Control<IMoverDialogTemplateOptions> {
         };
     }
 }
+/**
+ * @name Controls/_moverDialog/Template#displayProperty
+ * @cfg {String} Имя поля элемента, данные которого используются для правильной работы <a href="/doc/platform/developmentapl/interface-development/controls/bread-crumbs/">Хлебных крошек</a>.
+ */
+
+/**
+ * @name Controls/_moverDialog/Template#root
+ * @cfg {String} Идентификатор корневого узла.
+ * @default null
+ */
+
+/**
+ * @name Controls/_moverDialog/Template#searchParam
+ * @cfg {String} Имя поля, по данным которого происходит поиск.
+ * @remark
+ * Настройка нужна для правильной работы строки поиска.
+ * Значение опции передаётся в контроллер поиска {@link Controls/search:Controller}.
+ * Подробнее о работе поиска и фильтрации в Wasaby читайте в <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководстве разработчика</a>.
+ */
+
+/**
+ * @name Controls/_moverDialog/Template#showRoot
+ * @cfg {Boolean} Разрешить перемещение записей в корень иерархии.
+ * @remark
+ * - true Отображается кнопка "В корень" над списком. Клик по кнопке перемещает записи в корень иерархии (см. <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>).
+ * - false Кнопка скрыта.
+ */
+
+/**
+ * @event Происходит при выборе раздела для перемещения записей.
+ * @name Controls/_moverDialog/Template#sendResult
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} item Раздел, куда перемещаются выбранные записи.
+ * @remark
+ * Выбор раздела производится кликом по записи, кнопкам "Выбрать" и "В корень" (см. {@link showRoot}).
+ * Клик по папке не производит выбора раздела для перемещения.
+ * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
+ * Событие происходит непосредственно перед событием {@link close}.
+ * @see close
+ */
+
+/**
+ * @event Происходит при закрытии диалога перемещения записей.
+ * @name Controls/_moverDialog/Template#close
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @remark
+ * Событие всплываемое (см. <a href="/doc/platform/developmentapl/interface-development/ui-library/events/">Работа с событиями</a>).
+ * Событие происходит непосредственно после события sendResult.
+ * @see sendResult
+ */

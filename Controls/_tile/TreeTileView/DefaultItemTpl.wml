@@ -7,6 +7,7 @@
       itemData="{{itemData}}"
       invisible="{{invisible}}"
       titleStyle="{{titleStyle}}"
+      border="{{border}}"
       marker="{{marker}}"
       highlightOnHover="{{highlightOnHover}}"
       staticHeight="{{staticHeight}}"
@@ -31,6 +32,7 @@
       height="{{height}}"
       hasTitle="{{hasTitle}}"
       itemData="{{itemData}}"
+      border="{{border}}"
       invisible="{{invisible}}"
       titleStyle="{{titleStyle}}"
       marker="{{marker}}"
@@ -47,8 +49,8 @@
 </ws:template>
 <ws:if data="{{invisible}}">
    <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} {{itemData.itemClasses}} controls-TileView__item_invisible"
-        attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth ||  itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px; ' +
-                     'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
+        attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.itemWidth || itemData.defaultFolderWidth)) + 'px; ' +
+                     'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.itemWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.dispItem.isNode()}}">

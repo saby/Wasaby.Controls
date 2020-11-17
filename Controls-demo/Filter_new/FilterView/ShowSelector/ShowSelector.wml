@@ -1,0 +1,8 @@
+<div class="controlsDemo__wrapper">
+   <Controls.filter:View
+      attr:class="controls-demo-FilterView__itemsEllipsis"
+      source="{{_source}}"
+      emptyText="Выбор фильтра"
+      detailPanelTemplateName="{{null}}"
+      panelTemplateName="{{null}}"/>
+</div>

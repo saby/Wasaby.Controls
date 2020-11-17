@@ -1,11 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_suggest/_InputController/_InputController';
-import {descriptor, Model} from 'Types/entity';
+import {descriptor, Model, CancelablePromise} from 'Types/entity';
 import {getSwitcherStrFromData} from 'Controls/search';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStackPopupOptions, Stack as StackOpener} from 'Controls/popup';
-import {Controller as SearchController, SearchResolver as SearchResolverController, ISearchResolverOptions} from 'Controls/searchNew';
+import {Controller as SearchController, SearchResolver as SearchResolverController, ISearchResolverOptions} from 'Controls/search';
 import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {__ContentLayer, __PopupLayer} from 'Controls/suggestPopup';
@@ -29,6 +29,7 @@ import mStubs = require('Core/moduleStubs');
 import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
+import {DependencyTimer} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -63,7 +64,7 @@ type CancelableError = Error & { canceled?: boolean };
 
 interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISearchOptions,
    IValidationStatusOptions, ISuggest, ISourceOptions, INavigationOptions<INavigationSourceConfig>,
-   IFilterOptions, ISortingOptions, IValueOptions<string> {
+   ISortingOptions, IValueOptions<string> {
    suggestState: boolean;
    autoDropDown?: boolean;
    searchErrorCallback?: Function;
@@ -73,8 +74,8 @@ interface IInputControllerOptions extends IControlOptions, IFilterOptions, ISear
    historyId?: string | null;
    layerName: string;
    suggestTemplate: ISuggestTemplateProp | null;
-   footerTemplate: ISuggestFooterTemplate;
-   trim: boolean; // TODO: searchValueTrim ???
+   footerTemplate?: ISuggestFooterTemplate;
+   trim?: boolean; // TODO: searchValueTrim ???
    dataLoadCallback?: Function;
 }
 
@@ -90,7 +91,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 
@@ -104,7 +105,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @control
+ * 
  * @private
  */
 export default class InputContainer extends Control<IInputControllerOptions> {
@@ -124,6 +125,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _misspellingCaption: string = null;
    private _suggestDirection: TSuggestDirection = null;
    private _markerVisibility: TVisibility = 'onactivated';
+   private _suggestOpened: boolean = null;
 
    private _errorController: dataSourceError.Controller = null;
    private _errorConfig: dataSourceError.ViewConfig | void = null;
@@ -132,6 +134,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _searchResolverController: SearchResolverController = null;
    private _sourceController: SourceController = null;
    private _searchController: SearchController = null;
+   private _searchLibraryLoader: CancelablePromise<typeof import('Controls/search')> = null;
+
+   private _dependenciesTimer: DependencyTimer = null;
 
    /**
     * three state flag
@@ -165,6 +170,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._errorConfig = null;
       this._pendingErrorConfig = null;
 
+      if (this._sourceController) {
+         this._sourceController.destroy();
+         this._sourceController = null;
+      }
+      if (this._searchResolverController) {
+         this._searchResolverController.clearTimer();
+      }
+      this._searchResult = null;
+
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
@@ -193,7 +207,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _open(): void {
-      this._loadDependencies(this._options).addCallback(() => {
+      this._loadDependencies().addCallback(() => {
          // focus can be moved out while dependencies loading
          if (this._inputActive) {
             this._suggestStateNotify(true);
@@ -207,8 +221,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _openWithHistory(): void {
-      let filter: QueryWhereExpression<unknown>;
-
       const openSuggestIfNeeded = (): void => {
          if (this._historyKeys.length || this._options.autoDropDown) {
             this._open();
@@ -216,23 +228,27 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
 
       if (!this._historyKeys) {
-         this._getRecentKeys().addCallback((keys: string[]) => {
-            this._historyKeys = keys || [];
-            filter = clone(this._options.filter || {});
-
-            if (this._historyKeys.length) {
-               filter[HISTORY_KEYS_FIELD] = this._historyKeys;
-            }
-
-            this._setFilter(filter, this._options);
-
-            openSuggestIfNeeded();
-            return this._historyKeys;
-         });
+         this._loadHistoryKeys().then(() => openSuggestIfNeeded());
       } else {
          this._setFilter(this._options.filter, this._options);
          openSuggestIfNeeded();
       }
+   }
+
+   private _loadHistoryKeys(): Promise<HistoryKeys> {
+      return this._getRecentKeys().then((keys: string[]) => {
+         const filter: QueryWhereExpression<unknown> = clone(this._options.filter || {});
+
+         this._historyKeys = keys || [];
+
+         if (this._historyKeys.length) {
+            filter[HISTORY_KEYS_FIELD] = this._historyKeys;
+         }
+
+         this._setFilter(filter, this._options);
+
+         return this._historyKeys;
+      });
    }
 
    private _suggestDirectionChangedCallback(direction: TSuggestDirection): void {
@@ -242,26 +258,26 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   private _inputActivated(): Promise<void> {
+   private _inputActivated(): Promise<void | RecordSet> {
 
       // toDO Временный костыль, в .320 убрать, должно исправиться с этой ошибкой
       // https://online.sbis.ru/opendoc.html?guid=d0f7513f-7fc8-47f8-8147-8535d69b99d6
       if ((this._options.autoDropDown || this._options.historyId) && !this._options.readOnly
          && !this._getActiveElement().classList.contains('controls-Lookup__icon')) {
-         const sourceController = this._getSourceController();
 
          if (!this._options.suggestState &&
             this._options.source &&
-            !sourceController.isLoading()) {
-            return sourceController.load().then((recordSet) => {
-               if (recordSet instanceof RecordSet) {
-                  this._setItems(recordSet);
-                  if (this._options.dataLoadCallback) {
-                     this._options.dataLoadCallback(recordSet);
-                  }
-                  this._updateSuggestState();
-               }
-            });
+            !this._getSourceController().isLoading() && !this._historyLoad) {
+
+            if (this._options.historyId) {
+
+               return this._loadHistoryKeys().then(() => this._performLoad(this._options, true))
+                  .catch((error) => this._searchErrback(error));
+            }
+
+            return this._performLoad(this._options, true).catch((error) => {
+               this._searchErrback(error);
+            }).then();
          }
       }
       return Promise.resolve();
@@ -284,13 +300,15 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._children.indicator.hide();
       }
    }
-   private _searchErrback(error: CancelableError): void {
+   private _searchErrback(error: CancelableError & {
+      isCancelled?: boolean;
+   }): void {
       // aborting of the search may be caused before the search start, because of the delay before searching
       if (this._loading !== null) {
          this._loading = false;
          this._forceUpdate();
       }
-      if (!error?.canceled) {
+      if (!error?.canceled && !error?.isCancelled ) {
          this._hideIndicator();
 
          this.getErrorController().process({
@@ -409,7 +427,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
          state = true;
-      } else if (shouldSearch || this._options.autoDropDown && !this._options.suggestState) {
+      } else if ((shouldSearch || this._options.autoDropDown && !this._options.suggestState)
+         && this._shouldShowSuggest(this._getSourceController().getItems())) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
@@ -432,10 +451,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return templatesToLoad;
    }
 
-   private _loadDependencies(options: IInputControllerOptions): Deferred {
-      const templatesToLoad = this._getTemplatesToLoad(options);
+   private _loadDependencies(options?: IInputControllerOptions): Deferred {
+      const checkedOptions = options ?? this._options;
+
+      const templatesToLoad = this._getTemplatesToLoad(checkedOptions);
       if (!this._dependenciesDeferred || templatesToLoad.length) {
-         this._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([options.layerName])));
+         this._dependenciesDeferred = mStubs.require(DEPS.concat(templatesToLoad.concat([checkedOptions.layerName])));
       }
       return this._dependenciesDeferred;
    }
@@ -553,9 +574,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._suggestDirectionChangedCallback = this._suggestDirectionChangedCallback.bind(this);
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
       this._searchValue = options.value || '';
+      this._suggestOpened = options.suggestState;
       this._setFilter(options.filter, options);
 
-      if (this._searchValue) {
+      if (this._searchValue && options.suggestState) {
          this._resolveSearch(this._searchValue, options);
       }
    }
@@ -563,6 +585,18 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _beforeUnmount(): void {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
+      }
+      if (this._dependenciesDeferred && !this._dependenciesDeferred.isReady()) {
+         this._dependenciesDeferred.cancel();
+         this._dependenciesDeferred = null;
+      }
+      if (this._sourceController) {
+         this._sourceController.destroy();
+         this._sourceController = null;
+      }
+      if (this._searchLibraryLoader) {
+         this._searchLibraryLoader.cancel();
+         this._searchLibraryLoader = null;
       }
       this._searchResult = null;
       this._loadStart = null;
@@ -590,12 +624,19 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
-            if (!this._searchResult) {
+            if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
-                  this._resolveLoad(this._searchValue);
+                  this._resolveLoad(this._searchValue, newOptions).then(() => {
+                     this._suggestOpened = newOptions.suggestState;
+                  }).catch((error) => {
+                     this._searchErrback(error);
+                  });
                });
+            } else {
+               this._suggestOpened = newOptions.suggestState;
             }
          } else {
+            this._suggestOpened = newOptions.suggestState;
             this._setCloseState();
             this._setSuggestMarkedKey(null);
          }
@@ -613,8 +654,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          }
       }
 
-      if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
+      if (needSearchOnValueChanged || valueCleared || filterChanged) {
          this._setFilter(newOptions.filter, newOptions);
+      }
+      if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
+         this._resolveLoad();
       }
 
       if (emptyTemplateChanged) {
@@ -659,20 +703,48 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       this._searchValue = value;
+      this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
-      this._loadDependencies(this._options);
+      this._loadDependencies();
 
       return this._resolveSearch(value);
    }
 
-   protected async _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
-      if (!this._searchResolverController) {
-         const result = await import('Controls/searchNew');
-         this._searchResolverController = new result.SearchResolver(
-            this._getSearchResolverOptions(options ?? this._options)
-         );
+   private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
+      if (this._searchResolverController) {
+         this._searchResolverController.resolve(value);
+         return Promise.resolve();
+      } else {
+         return this._getSearchResolver(options)
+             .then((searchResolver) => searchResolver.resolve(value))
+             .catch((error) => error);
       }
-      this._searchResolverController.resolve(value);
+   }
+
+   private _getSearchLibrary(): Promise<typeof import('Controls/search')> {
+      if (!this._searchLibraryLoader) {
+         this._searchLibraryLoader = new CancelablePromise(import('Controls/search'));
+      }
+      return this._searchLibraryLoader.promise;
+   }
+
+   private _getSearchResolver(options?: IInputControllerOptions): Promise<SearchResolverController> {
+      let result;
+
+      if (!this._searchResolverController) {
+         result = this._getSearchLibrary()
+             .then((searchLibrary) => {
+                this._searchResolverController = new searchLibrary.SearchResolver(
+                    this._getSearchResolverOptions(options ?? this._options)
+                );
+                return this._searchResolverController;
+             })
+             .catch((error) => error);
+      } else {
+         result = Promise.resolve(this._searchResolverController);
+      }
+
+      return result;
    }
 
    private async _setFilterAndLoad(filter: QueryWhereExpression<unknown>,
@@ -682,7 +754,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._resolveLoad();
    }
 
-   private async _resolveLoad(value?: string): Promise<RecordSet> {
+   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
@@ -691,26 +763,44 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
             if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
                this._setItems(recordSet);
+               if (this._options.dataLoadCallback) {
+                  this._options.dataLoadCallback(recordSet);
+               }
                this._setFilter(this._options.filter, this._options);
                this._open();
                this._markerVisibility = 'visible';
             }
 
             return recordSet;
+         }, (error) => {
+            this._loadEnd();
+            return error;
          });
       } else {
-         return this._getSourceController().load().then((recordSet) => {
-            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
-               this._setItems(recordSet);
-               if (this._options.dataLoadCallback) {
-                  this._options.dataLoadCallback(recordSet);
-               }
-               this._loadEnd(recordSet);
-               this._open();
-               return recordSet as RecordSet;
-            }
-         });
+         return this._performLoad(options);
       }
+   }
+
+   private _performLoad(options?: IInputControllerOptions, openWithChecks?: boolean): Promise<RecordSet> {
+      const scopeOptions = options ?? this._options;
+
+      return this._getSourceController(scopeOptions).load().then((recordSet) => {
+         if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
+            this._setItems(recordSet);
+            if (scopeOptions.dataLoadCallback) {
+               scopeOptions.dataLoadCallback(recordSet);
+            }
+            this._loadEnd(recordSet);
+
+            if (openWithChecks) {
+               this._updateSuggestState();
+            } else {
+               this._open();
+            }
+
+            return recordSet as RecordSet;
+         }
+      });
    }
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {
@@ -733,8 +823,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected async _getSearchController(): Promise<SearchController> {
       if (!this._searchController) {
-         return import('Controls/searchNew').then((result) => {
-            this._searchController = new result.Controller({
+         return this._getSearchLibrary().then((result) => {
+            this._searchController = new result.ControllerClass({
                sourceController: this._getSourceController(),
                minSearchLength: this._options.minSearchLength,
                searchDelay: this._options.searchDelay as number,
@@ -794,6 +884,25 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return Promise.resolve();
    }
 
+   protected _inputMouseEnterHandler(event: SyntheticEvent): void {
+      if (this._options.autoDropDown) {
+         if (!this._options.readOnly) {
+            if (!this._dependenciesTimer) {
+               this._dependenciesTimer = new DependencyTimer();
+            }
+            this._dependenciesTimer.start(this._loadDependencies.bind(this));
+         }
+
+         if (!this._filter) {
+            this._resolveLoad();
+         }
+      }
+   }
+
+   protected _inputMouseLeaveHandler(): void {
+      this._dependenciesTimer?.stop();
+   }
+
    protected async _tabsSelectedKeyChanged(tabId: Key): Promise<void> {
       this._setSuggestMarkedKey(null);
 
@@ -842,7 +951,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   protected _loadEnd(result: RecordSet): void {
+   protected _loadEnd(result?: RecordSet): void {
       if (this._loading) {
          this._loading = false;
 

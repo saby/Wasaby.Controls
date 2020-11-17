@@ -441,7 +441,7 @@ define(
 
          it('_open dropdown', () => {
             let dropdownController = getDropdownController(config),
-               opened = false;
+               opened = false, menuSourceCreated = false;
             dropdownController._items = itemsRecords.clone();
             dropdownController._source = 'testSource';
 
@@ -498,6 +498,17 @@ define(
                assert.equal(dropdownController._items.getCount(), updatedItems.length);
                assert.isTrue(opened);
             });
+
+            //loadDependencies returns error
+            dropdownController.loadDependencies = () => {
+               return Promise.reject(new Error('testError'));
+            };
+            dropdownController._createMenuSource = () => {
+               menuSourceCreated = true;
+            };
+            dropdownController._open().then(function() {
+               assert.isFalse(menuSourceCreated);
+            });
          });
 
          it('_private::loadItemsTemplates', (done) => {
@@ -538,13 +549,14 @@ define(
             let dropdownController;
             let newConfig;
             let selectedKeys;
-            let loadedItems;
+            let selectedItems;
             beforeEach(() => {
                newConfig = { ...config };
+               newConfig.selectedKeys = ['8'];
                dropdownController = getDropdownController(newConfig);
 
                selectedKeys = ['1', '2'];
-               loadedItems = new collection.RecordSet({
+               selectedItems = new collection.RecordSet({
                   rawData: [{
                      id: '1',
                      title: 'Запись 1'
@@ -559,16 +571,7 @@ define(
                });
             });
 
-            it('_getUnloadedSelectedKeys', () => {
-               let result = dropdownController._getUnloadedSelectedKeys(selectedKeys, loadedItems);
-               assert.isNull(result);
-
-               selectedKeys.push('8');
-               result = dropdownController._getUnloadedSelectedKeys(selectedKeys, loadedItems);
-               assert.deepEqual(result, ['8']);
-            });
-
-            it('_loadSelectedKeys', async () => {
+            it('loadSelectedItems', async () => {
                let loadConfig;
                dropdownController._loadItems = (params) => {
                   loadConfig = params;
@@ -584,10 +587,25 @@ define(
                };
                selectedKeys.push('8');
                dropdownController._source = 'testSource';
-               await dropdownController._loadSelectedKeys(newConfig, ['8'], loadedItems);
+               await dropdownController.loadSelectedItems();
                assert.deepEqual(loadConfig.filter, { id: ['8'] });
-               assert.equal(dropdownController._items.getCount(), 4);
-               assert.equal(dropdownController._items.at(0).getKey(), '8');
+               assert.equal(dropdownController._selectedItems.getCount(), 1);
+               assert.equal(dropdownController._selectedItems.at(0).getKey(), '8');
+               assert.isNull(dropdownController._items);
+            });
+
+            it('_resolveLoadedItems', () => {
+               const loadedItems = new collection.RecordSet({
+                  rawData: [{
+                     id: '2',
+                     title: 'Запись 2'
+                  }],
+                  keyProperty: 'id'
+               });
+               dropdownController._source = 'testSource';
+               dropdownController._selectedItems = selectedItems;
+               const result = dropdownController._resolveLoadedItems(newConfig, loadedItems);
+               assert.equal(result.getCount(), 3);
             });
          });
 
@@ -704,6 +722,7 @@ define(
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+               assert.isNull(resultPopupConfig.templateOptions.dataLoadCallback);
                assert.equal(resultPopupConfig.opener, 'test');
             });
 
@@ -725,6 +744,11 @@ define(
                dropdownController._popupOptions = { };
                dropdownController._options.keyProperty = 'key';
                dropdownController._source = new history.Source({});
+               dropdownController._items =  new collection.RecordSet({
+                  rawData: [{
+                     id: '1', HistoryId: 'test'
+                  }]
+               });
                let resultPopupConfig = dropdownController._getPopupOptions();
 
                assert.equal(resultPopupConfig.templateOptions.keyProperty, 'copyOriginalId');
@@ -862,7 +886,7 @@ define(
                   let historyConfig = {...config, historyId: 'TEST_HISTORY_ID'};
                   dropdownController = getDropdownController(historyConfig);
                   return dropdownController._getSourceController(historyConfig).then((sourceController) => {
-                     assert.isTrue(cInstance.instanceOfModule(sourceController._source, 'Controls/history:Source'));
+                     assert.isTrue(cInstance.instanceOfModule(sourceController.getState().source, 'Controls/history:Source'));
                      assert.isOk(dropdownController._sourceController);
                      resolve();
                   });
@@ -928,6 +952,21 @@ define(
                   dropdownController._onResult('applyClick', items);
                   assert.deepEqual(selectedItems, items);
                });
+            });
+
+            it('isHistoryMenu', () => {
+               dropdownController._source = historySource;
+               dropdownController._items = new collection.RecordSet({
+                  rawData: [{
+                     id: '1', title: 'title'
+                  }]
+               });
+               let result = dropdownController._isHistoryMenu();
+               assert.isFalse(result);
+
+               dropdownController._items.at(0).set('HistoryId', 'test');
+               result = dropdownController._isHistoryMenu();
+               assert.isTrue(result);
             });
          });
 

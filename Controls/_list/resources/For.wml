@@ -12,7 +12,10 @@
         <!-- записи (шаблона ITEM), но тогда таких мест получится 6, либо здесь, внутри ITEM. -->
         <ws:if data="{{ wrapEditingRow }}">
             <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
-            <Controls._list.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()">
+            <Controls._list.EditInPlace.EditingRow
+                    name="editingRow"
+                    isScrollToElement="{{isScrollToElement}}"
+                    on:deactivated="_onRowDeactivated()">
                 <ws:partial
                         template="{{ (itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate }}"
                         itemData="{{ itemData }}"
@@ -25,10 +28,11 @@
                         backgroundStyle="{{ backgroundStyle }}"
                         isColumnScrollVisible="{{ isColumnScrollVisible }}"
                         tagTemplate="{{ tagTemplate }}"
+                        markerPosition="{{_options.markerPosition}}"
 
                         on:contextmenu="_onItemContextMenu(itemData)"
                         on:swipe="_onItemSwipe(itemData)"
-                        on:longtap="_onItemLongTap(item)"
+                        on:longtap="_onItemLongTap(itemData)"
                         on:mouseup="_onItemMouseUp(itemData)"
                         on:mouseenter="_onItemMouseEnter(itemData)"
                         on:mouseleave="_onItemMouseLeave(itemData)"
@@ -49,11 +53,12 @@
                     backgroundStyle="{{ backgroundStyle }}"
                     isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{ tagTemplate }}"
+                    markerPosition="{{_options.markerPosition}}"
 
                     on:click="_onItemClick(itemData.dispItem)"
                     on:contextmenu="_onItemContextMenu(itemData)"
                     on:swipe="_onItemSwipe(itemData)"
-                    on:longtap="_onItemLongTap(item)"
+                    on:longtap="_onItemLongTap(itemData)"
                     on:mousedown="_onItemMouseDown(itemData)"
                     on:mouseup="_onItemMouseUp(itemData)"
                     on:mouseenter="_onItemMouseEnter(itemData)"
@@ -77,7 +82,8 @@
                 template="{{ listModel.getCurrent().beforeItemTemplate }}"
                 scope="{{ listModel.getCurrent().beforeItemTemplateOptions }}"
                 itemTemplate="{{ itemTemplate }}"
-                listModel="{{ listModel }}"/>
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
 
 
     <!-- Группа -->
@@ -87,7 +93,8 @@
                     itemData="{{listModel.getCurrent()}}"
                     attr:key="{{listModel.getCurrent().key}}"
                     backgroundStyle="{{backgroundStyle}}"
-                    on:click="_onGroupClick(listModel.getCurrent().dispItem)"/>
+                    on:click="_onGroupClick(listModel.getCurrent().dispItem)"
+                    __notExcessiveRender="{{ true }}" />
     </ws:if>
     <ws:else> <!-- Запись -->
         <ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
@@ -101,6 +108,7 @@
             <!-- [ЗАПИСЬ] Текущая запись -->
             <ws:partial template="ITEM"
                         isVisible="{{ listModel.getCurrent().isVisible }}"
+                        isScrollToElement="{{isEditingRowScrollToElement}}"
                         wrapEditingRow="{{ listModel.getCurrent().isEditing() }}"
                         itemData="{{ listModel.getCurrent() }}"
                         nodeFooters="{{ listModel.getCurrent().nodeFooters }}"
@@ -119,5 +127,6 @@
                 template="{{ listModel.getCurrent().afterItemTemplate }}"
                 scope="{{ listModel.getCurrent().afterItemTemplateOptions }}"
                 itemTemplate="{{ itemTemplate }}"
-                listModel="{{ listModel }}"/>
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
 </ws:for>

@@ -26,8 +26,8 @@
 </ws:template>
 
 <ws:template name="COLUMN_CONTENT">
-    <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0}}">
-        <div class="{{itemData.getMarkerClasses()}}"></div>
+    <ws:if data="{{marker !== false && itemData.shouldDisplayMarker(currentColumn.columnIndex)}}">
+        <div class="{{itemData.getMarkerClasses(markerClassName)}}"></div>
     </ws:if>
 
     <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">

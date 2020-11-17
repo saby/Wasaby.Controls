@@ -1,6 +1,7 @@
 import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {toString, splitIntoTriads} from 'Controls/inputUtils';
+import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
+import toString from 'Controls/_decorator/inputUtils/toString';
 // @ts-ignore
 import * as template from 'wml!Controls/_decorator/Number/Number';
 
@@ -14,6 +15,7 @@ type RoundingFn = (number: string, fractionSize: number) => string;
 export type RoundMode = 'round' | 'trunc';
 
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:Number}.
  * @interface Controls/_decorator/Number/INumberOptions
  * @public
  * @author Красильников А.С.

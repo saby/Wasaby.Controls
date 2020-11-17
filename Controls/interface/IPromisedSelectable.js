@@ -73,7 +73,7 @@ define('Controls/interface/IPromisedSelectable', [
    /*
     * @name Controls/interface/IPromisedSelectable#selectedKeys
     * @cfg {Array.<Number|String>} Array of selected items' keys.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @demo Controls-demo/list_new/MultiSelect/AllSelected/Index
     * @default []
     * @remark
     * You can pass node's {@link Controls/_interface/ISource#keyProperty key property} to select every item inside that node. To select every item in the list you should pass [null].
@@ -130,7 +130,7 @@ define('Controls/interface/IPromisedSelectable', [
    /*
     * @name Controls/interface/IPromisedSelectable#excludedKeys
     * @cfg {Array.<Number|String>} Array of keys of items that should be excluded from the selection.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @demo Controls-demo/list_new/MultiSelect/AllSelected/Index
     * @default []
     * @remark
     * A node will be marked as partially selected if key of any of its children is in excludedKeys. Partially selected nodes are usually rendered with checkbox in indeterminate state near them.
@@ -153,8 +153,8 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Происходит при изменении набора выбранных элементов списка.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @event Происходит при изменении набора выбранных элементов списка.
+    * @name Controls/interface/IPromisedSelectable#selectedKeysChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
     * @param {Array.<Number|String>} added Массив ключей, добавленных в selectedKeys.
@@ -163,27 +163,27 @@ define('Controls/interface/IPromisedSelectable', [
     * Важно помнить, что мы не мутируем массив selectedKeys из опций. Таким образом, ключи в аргументах события и selectedKeys в параметрах компонента не являются одним и тем же массивом.
     * @example
     * В следующем примере создается список с пустым выбором. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга. Источник панели операций будет обновляться при каждом изменении в selectedKeys.
-    * TMPL:
-    * <pre>
-    *    <Controls.operations:Controller on:selectedKeysChanged="onSelectedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
-    *       <Controls.operations:Panel source="{{ _panelSource }} />
-    *    </Controls.operations:Controller>
+    * <pre class="brush: html">
+    * <Controls.operations:Controller on:selectedKeysChanged="onSelectedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *     <Controls.operations:Panel source="{{ _panelSource }} />
+    * </Controls.operations:Controller>
     * </pre>
-    * JS:
-    * <pre>
-    *    _beforeMount: function() {
-    *       this._selectedKeys = [];
-    *       this._excludedKeys = [];
-    *    },
-    *    onSelectedKeysChanged: function(e, selectedKeys, added, deleted) {
-    *       this._panelSource = this._getPanelSource(selectedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
-    *    }
+    * <pre class="brush: js">
+    * // JavaScript
+    * _beforeMount: function() {
+    *    this._selectedKeys = [];
+    *    this._excludedKeys = [];
+    * },
+    * onSelectedKeysChanged: function(e, selectedKeys, added, deleted) {
+    *    this._panelSource = this._getPanelSource(selectedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    * }
     * </pre>
     * @see selectedKeys
     */
 
    /*
-    * @event Controls/interface/IPromisedSelectable#selectedKeysChanged Occurs when selection was changed.
+    * @event Occurs when selection was changed.
+    * @name Controls/interface/IPromisedSelectable#selectedKeysChanged
     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of selected items' keys.
@@ -213,8 +213,8 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Происходит при изменении набора исключенных из выбора элементов списка.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
+    * @event Происходит при изменении набора исключенных из выбора элементов списка.
+    * @name Controls/interface/IPromisedSelectable#excludedKeysChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Набор ключей элементов, которые должны быть исключены из выборки.
     * @param {Array.<Number|String>} added Массив ключей, добавленных в excludedKeys.
@@ -223,27 +223,28 @@ define('Controls/interface/IPromisedSelectable', [
     * Важно помнить, что мы не мутируем массив selectedKeys из опций. Таким образом, ключи в аргументах события и selectedKeys в параметрах компонента не являются одним и тем же массивом.
     * @example
     * В следующем примере создается список с пустым выбором. Последующие изменения, внесенные в selectedKeys и excludedKeys, будут синхронизированы посредством биндинга. Источник панели операций будет обновляться при каждом изменении в excludedKeys.
-    * TMPL:
-    * <pre>
-    *    <Controls.operations:Controller on:excludedKeysChanged="onExcludedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
-    *       <Controls.operations:Panel source="{{ _panelSource }} />
-    *    </Controls.operations:Controller>
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.operations:Controller on:excludedKeysChanged="onExcludedKeysChanged()" bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys">
+    *     <Controls.operations:Panel source="{{ _panelSource }} />
+    * </Controls.operations:Controller>
     * </pre>
-    * JS:
-    * <pre>
-    *    _beforeMount: function() {
-    *       this._selectedKeys = [];
-    *       this._excludedKeys = [];
-    *    },
-    *    onExcludedKeysChanged: function(e, excludedKeys, added, deleted) {
-    *       this._panelSource = this._getPanelSource(excludedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
-    *    }
+    * <pre class="brush: js">
+    * // JavsScript
+    * _beforeMount: function() {
+    *    this._selectedKeys = [];
+    *    this._excludedKeys = [];
+    * },
+    * onExcludedKeysChanged: function(e, excludedKeys, added, deleted) {
+    *    this._panelSource = this._getPanelSource(excludedKeys); //Note that we simultaneously have event handler and bind for the same option, so we don't have to update state manually.
+    * }
     * </pre>
     * @see excludedKeys
     */
 
    /*
-    * @event Controls/interface/IPromisedSelectable#excludedKeysChanged Occurs when selection was changed.
+    * @event Occurs when selection was changed.
+    * @name Controls/interface/IPromisedSelectable#excludedKeysChanged
     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FMultiselectPG">Example</a>.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Array.<Number|String>} keys Array of keys of items that should be excluded from the selection.

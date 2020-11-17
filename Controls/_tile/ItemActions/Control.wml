@@ -1,0 +1,4 @@
+<ws:partial template="{{_options.content}}"
+            showedActions="{{_item.getActions().showed}}"
+            scope="{{_options}}"
+/>

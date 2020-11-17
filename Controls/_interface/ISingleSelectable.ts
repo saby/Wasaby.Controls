@@ -61,7 +61,8 @@ export default interface ISingleSelectable {
  */
 
 /**
- * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Происходит при изменении выбранного значения.
+ * @event Происходит при изменении выбранного значения.
+ * @name Controls/_interface/ISingleSelectable#selectedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number|String} key Ключ выбранного элемента коллекции.
  * @example
@@ -81,7 +82,8 @@ export default interface ISingleSelectable {
  * @see selectedKey
  */
 /*
- * @event Controls/_interface/ISingleSelectable#selectedKeyChanged Occurs when selection was changed.
+ * @event Occurs when selection was changed.
+ * @name Controls/_interface/ISingleSelectable#selectedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Number|String} key Selected item key.
  * @example

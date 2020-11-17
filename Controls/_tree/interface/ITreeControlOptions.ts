@@ -2,6 +2,11 @@ import { IControlOptions, TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 
+
+type TNodeFooterVisibilityCallback = (item: Model) => boolean;
+
+type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
+
 /**
  * Интерфейс для древовидных списков.
  *
@@ -17,15 +22,30 @@ import { RecordSet } from 'Types/collection';
  * @public
  * @author Авраменко А.С.
  */
-
+export interface ITreeControlOptions extends IControlOptions {
+    expandByItemClick?: boolean;
+    expandedItems?: Array<number | string>;
+    collapsedItems?: Array<number | string>;
+    nodeFooterTemplate?: TemplateFunction;
+    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
+    hasChildrenProperty?: string;
+    searchBreadCrumbsItemTemplate?: TemplateFunction;
+    expanderVisibility?: 'visible'|'hasChildren';
+    nodeLoadCallback?: TNodeLoadCallback;
+    deepReload?: boolean;
+    selectAncestors?: boolean;
+    selectDescendants?: boolean;
+    markItemByExpanderClick?: boolean;
+    expanderSize?: 's'|'m'|'l'|'xl';
+}
 /**
- * @typedef {String} hierarchyViewModeEnum
+ * @typedef {String} HierarchyViewModeEnum
  * @variant tree Дерево.
  * @variant breadcrumbs Хлебные крошки.
  */
 
 /*
- * @typedef {String} hierarchyViewModeEnum
+ * @typedef {String} HierarchyViewModeEnum
  * @variant tree Tree-like view.
  * @variant breadcrumbs Just leaves, folders as paths.
  */
@@ -60,6 +80,7 @@ import { RecordSet } from 'Types/collection';
  * @remark
  * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FBasePG">демо-пример</a>
  * Чтобы развернуть все элементы списка, параметр expandedItems должен быть задан как массив, содержащий один элемент — "null". В этом случае предполагается, что все данные будут загружены сразу.
+ * Настройка не работает, если источник данных задан через {@link Types/source:Memory}.
  * @see expandByItemClick
  * @see expanderVisibility
  */
@@ -83,9 +104,11 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#collapsedItems
- * @cfg {Boolean} Массив идентификаторов свернутых узлов дерева.
- * Этот параметр используется только при значении {@link Controls/_treeGrid/interface/ITreeControlOptions#expandedItems expandedItems} - [null].
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FBasePG">Example</a>.
+ * @cfg {Boolean} Массив идентификаторов свернутых узлов в {@link Controls/treeGrid:View дереве}.
+ * @remark
+ * Этот параметр используется, когда {@link Controls/_treeGrid/interface/ITreeControlOptions#expandedItems expandedItems} установлена в значение [null].
+ * @see expandedItems
+ * 
  */
 
 /*
@@ -93,7 +116,6 @@ import { RecordSet } from 'Types/collection';
  * @cfg {Boolean} Array of identifiers of collapsed items.
  * This option is used only when the value of {@link Controls/_treeGrid/interface/ITreeControlOptions#expandedItems expandedItems} is [null].
  * @notice Without binding this option will be static. Use binding to allow expanding/collapsing nodes.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FBasePG">Example</a>.
  * @example
  * <pre>
  *      <Controls.treeGrid:View
@@ -106,10 +128,12 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate
- * @cfg {Function} Шаблон подвала раскрытого узла дерева.
+ * @cfg {Function} Шаблон подвала раскрытого узла в {@link Controls/treeGrid:View дереве}.
  * @remark 
  * В области видимости шаблона доступен объект itemData, внутри доступно свойство item - запись, под которой отрисовывается шаблон.
  * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
+ * @see nodeFooterVisibilityCallback
+ * @see nodeLoadCallback
  */
 
 /*
@@ -120,17 +144,17 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeFooterVisibilityCallback
- * @cfg {Function} Функция обратного вызова для определения видимости шаблона подвала раскрытого узла дерева.
+ * @cfg {Function} Функция обратного вызова для определения видимости шаблона подвала раскрытого узла в {@link Controls/treeGrid:View дереве}.
  * @remark
  * Функция принимает единственный аргумент:
- * <ol>
- *    <li>item — модель (см. {@link Types/entity:Model}), содержащая данные узла, для которого определяется видимость шаблона подвала.</li>
- * </ol>
+ * 
+ * * item — модель (см. {@link Types/entity:Model}), содержащая данные узла, для которого определяется видимость шаблона подвала.
+ * 
  * Для видимости шаблона подвала, из функции следует вернуть true.
  * @example
  * Шаблон подвал скрыт для узлов, у которых свойство footerVisible === false.
- * WML:
- * <pre>
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.treeGrid:View
  *     attr:class="demo-Tree"
  *     source="{{_source}}"
@@ -138,36 +162,35 @@ import { RecordSet } from 'Types/collection';
  *     ...
  * </Controls.list:View>
  * </pre>
- * TS:
- * <pre>
- *  ...
- *  private _nodeFooterVisibilityCallback(item: Model): boolean {
+ * <pre class="brush: js">
+ * // TypeScript
+ * ...
+ * private _nodeFooterVisibilityCallback(item: Model): boolean {
  *   return item.get('footerVisible') !== false;
- *  }
- *  ...
+ * }
+ * ...
  * </pre>
+ * @see nodeFooterTemplate
+ * @see nodeLoadCallback
  */
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#hasChildrenProperty
- * @cfg {String} Имя свойства, содержащего информацию о наличии дочерних элементов в узле дерева.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FExtendedPG">Example</a>.
+ * @cfg {String} Имя свойства, содержащего информацию о наличии дочерних элементов в узле {@link Controls/treeGrid:View дерева}.
  */
 
 /*
  * @name Controls/_tree/interface/ITreeControlOptions#hasChildrenProperty
  * @cfg {String} Name of the field that contains information whether the node has children.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FExtendedPG">Example</a>.
  */
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#searchBreadCrumbsItemTemplate
- * @cfg {TemplateFunction} Шаблон элемента с хлебными крошками в {@link Controls/treeGrid:View дереве} при режиме поиска.
+ * @cfg {TemplateFunction} Шаблон отображения элемента с хлебными крошками в {@link Controls/treeGrid:View дереве} при {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/search/mode/ режиме поиска}.
  * @remark
- * По умолчанию используется шаблон "Controls/treeGrid:SearchBreadCrumbsItemTemplate".
- *
- * Базовый шаблон searchBreadCrumbsItemTemplate поддерживает следующие параметры:
- * - checkboxReadOnly {Boolean} — Флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
+ * По умолчанию используется базовый шаблон "Controls/treeGrid:SearchBreadCrumbsItemTemplate", который поддерживает следующий параметр:
+ * 
+ * * checkboxReadOnly {Boolean} — флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
  */
 
 /*
@@ -188,12 +211,12 @@ import { RecordSet } from 'Types/collection';
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#expanderVisibility
- * @cfg {ExpanderVisibility} Режим отображения элемента развертывания узла {@link Controls/treeGrid:View дерева}.
+ * @cfg {ExpanderVisibility} Режим отображения экспандера в {@link Controls/treeGrid:View дереве}.
  * @default visible
  * @demo Controls-demo/treeGrid/Expander/ExpanderIcon/Node/Index В следующем примере для контрола опция expanderVisibility установлена в значение visible.
  * @demo Controls-demo/treeGrid/Expander/HasChildren/Index В следующем примере для контрола опция expanderVisibility установлена в значение hasChildren.
- * @see expandedItems
- * @see expandByItemClick
+ * @see expanderIcon
+ * @see expanderSize
  */
 
 /*
@@ -202,17 +225,20 @@ import { RecordSet } from 'Types/collection';
  * @variant visible Always show expander for nodes and indentation for leaves.
  * @variant hasChildren Show expander only for nodes with children.
  * @default visible
- * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FExtendedPG">Example</a>.
  */
 
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeLoadCallback
- * @cfg {Function} Функция обратного вызова для определения загрузки содержимого узла дерева.
+ * @cfg {Function} Функция обратного вызова для определения загрузки содержимого узла в {@link Controls/treeGrid:View дереве}.
+ * @see nodeFooterTemplate
+ * @see nodeFooterVisibilityCallback
  */
 
 /*
  * @name Controls/_tree/interface/ITreeControlOptions#nodeLoadCallback
  * @cfg {Function} Callback function that will be called when node data loaded by source.
+ * @see nodeFooterTemplate
+ * @see nodeFooterVisibilityCallback
  */
 
 /**
@@ -222,11 +248,11 @@ import { RecordSet } from 'Types/collection';
  * Перезагрузка выполняется с сохранением раскрытых узлов, даже при изменении опций filter, source, sorting и тд.
  * В поле фильтра, указанное в parentProperty будет отправлен массив раскрытых узлов.
  * Если в результате запроса для этих узлов будут присланы дочерние элементы, то узлы останутся раскрытыми, иначе они будут свёрнуты.
- * @notice Постраничная навигация в запросе передается для корня и её параметр {@link Controls/_interface/INavigation/INavigationPageSourceConfig.typedef pageSize} необходимо применять для всех узлов.
- * @notice Обратите внимание! При смене фильтра/навигации/source список раскрытых узлов сбрасывается.
+ * **Примечание.** Постраничная навигация в запросе передается для корня и её параметр {@link Controls/_interface/INavigation/INavigationPageSourceConfig.typedef pageSize} необходимо применять для всех узлов.
+ * **Обратите внимание!** При смене фильтра/навигации/source список раскрытых узлов сбрасывается.
  * @example
  * Пример списочного метода БЛ
- * <pre>
+ * <pre class="brush: python">
  * def Test.MultiRoot(ДопПоля, Фильтр, Сортировка, Навигация):
  *      rs = RecordSet(CurrentMethodResultFormat())
  *      if Навигация.Type() == NavigationType.ntMULTI_ROOT:
@@ -254,9 +280,12 @@ import { RecordSet } from 'Types/collection';
  * @default true
  * @demo Controls-demo/treeGrid/MultiSelect/SelectAncestors/DoNotSelectAncestors/Index
  * @example
+ * <pre class="brush: html">
  * <Controls.treeGrid.View selectAncestors="{{false}}"/>
+ * </pre>
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @see selectDescendants
  */
 
 /**
@@ -265,9 +294,12 @@ import { RecordSet } from 'Types/collection';
  * @default true
  * @demo Controls-demo/treeGrid/MultiSelect/SelectDescendants/DoNotSelectDescendants/Index
  * @example
+ * <pre class="brush: html">
  * <Controls.treeGrid.View selectDescendants="{{false}}"/>
+ * </pre>
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @see selectAncestors
  */
 
 /**
@@ -275,16 +307,19 @@ import { RecordSet } from 'Types/collection';
  * @cfg {Boolean} Определяет, нужно ли выделять узел маркером.
  * @remark Узел отмечается маркером при клике на иконку разворота узла, если значение true.
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FTreeGrid%2FItemTemplatePG">демо-пример</a>
  */
 
 /**
- * @name Controls/_tree/interface/ITreeControlOptions#expanderSize
- * @cfg {String} Размер области, который отведён под иконку узла или скрытого узла.
+ * @typedef {String} ExpanderSize
  * @variant s
  * @variant m
  * @variant l
  * @variant xl
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControlOptions#expanderSize
+ * @cfg {ExpanderSize} Размер области, который отведён под иконку узла или скрытого узла.
  * @default s
  * @remark
  * Опции {@link Controls/_tree/interface/ITreeControlOptions#expanderSize expanderSize на контроле} и {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} не являются взаимоисключающими.
@@ -293,6 +328,8 @@ import { RecordSet } from 'Types/collection';
  * Опция {@link Controls/treeGrid:ItemTemplate#expanderSize expanderSize на шаблоне элемента} приоритетнее, чем {@link Controls/_tree/interface/ITreeControlOptions#expanderSize expanderSize на контроле}.
  * В случае, если для разных элементов дерева заданы разные значения опции, то для корректного выравнивания подвалов узлов необходимо продублировать опцию на
  * {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблоне подвалов узлов}.
+ * @see expanderIcon
+ * @see expanderVisibility
  */
 
 /**
@@ -313,19 +350,13 @@ import { RecordSet } from 'Types/collection';
  * Опция {@link Controls/treeGrid:ItemTemplate#expanderIcon expanderIcon на шаблоне элемента} приоритетнее, чем {@link Controls/_tree/interface/ITreeControlOptions#expanderIcon expanderIcon на контроле}.
  * В случае, если для разных элементов дерева заданы разные значения опции, то для корректного выравнивания подвалов узлов необходимо продублировать опцию на
  * {@link Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate шаблоне подвалов узлов}.
+ * @see expanderSize
+ * @see expanderVisibility
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpanded Происходит после развертывания узла.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} node Развёрнутый узел.
- * @remark
- * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#afterItemExpand}.
- */
-
-/**
- * @event Controls/_tree/interface/ITreeControlOptions#afterItemExpand Происходит после развертывания узла.
+ * @event Происходит после развертывания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#afterItemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Развёрнутый узел.
  * @remark
@@ -333,7 +364,8 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#beforeItemExpand Происходит перед развертыванием узла.
+ * @event Происходит перед развертыванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#beforeItemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
@@ -341,31 +373,35 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpand Происходит перед развертыванием узла.
+ * @event Происходит перед развертыванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpand
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Разворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#beforeItemExpand}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#beforeItemExpand beforeItemExpand}.
+ */
+
+/**
+ * @event Происходит после развертывания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpanded
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Развёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#afterItemExpand afterItemExpand}.
  */
 
 /*
- * @event Controls/_tree/interface/ITreeControlOptions#itemExpanded Occurs after node expansion.
+ * @event Occurs after node expansion.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemExpanded
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Types/entity:Model} node Expanded node.
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapsed Происходит после сворачивания узла.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/entity:Model} node Свёрнутый узел.
- * @remark
- * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#afterItemCollapse}.
- */
-
-/**
- * @event Controls/_tree/interface/ITreeControlOptions#afterItemCollapse Происходит после сворачивания узла.
+ * @event Происходит после сворачивания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#afterItemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Свёрнутый узел.
  * @remark
@@ -373,45 +409,51 @@ import { RecordSet } from 'Types/collection';
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapse Происходит перед сворачиванием узла.
+ * @event Происходит перед сворачиванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
- * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse beforeItemCollapse}.
  */
 
 /**
- * @event Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse Происходит перед сворачиванием узла.
+ * @event Происходит перед сворачиванием узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#beforeItemCollapse
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} node Сворачиваемый узел.
  * @remark
  * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ */
+
+/**
+ * @event Происходит после сворачивания узла.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapsed
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Model} node Свёрнутый узел.
+ * @remark
+ * Что такое "узел" читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy руководстве разработчика}.
+ * @deprecated Событие устарело и в ближайшее время его поддержка будет прекращена. Используте {@link Controls/_tree/interface/ITreeControlOptions#afterItemCollapse afterItemCollapse}.
  */
 
 /*
- * @event Controls/_tree/interface/ITreeControlOptions#itemCollapsed Occurs after node collapse.
+ * @event Occurs after node collapse.
+ * @name Controls/_tree/interface/ITreeControlOptions#itemCollapsed
  * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
  * @param {Types/entity:Model} node Collapsed node.
  */
 
-type TNodeFooterVisibilityCallback = (item: Model) => boolean;
+/**
+ * @event Происходит при изменении набора развернутых узлов.
+ * @name Controls/_tree/interface/ITreeControlOptions#expandedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Идентификаторы развернутых узлов.
+ */
 
-type TNodeLoadCallback = (list: RecordSet, nodeKey: number | string) => void;
-
-export interface ITreeControlOptions extends IControlOptions {
-    expandByItemClick?: boolean;
-    expandedItems?: Array<number | string>;
-    collapsedItems?: Array<number | string>;
-    nodeFooterTemplate?: TemplateFunction;
-    nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
-    hasChildrenProperty?: string;
-    searchBreadCrumbsItemTemplate?: TemplateFunction;
-    expanderVisibility?: 'visible'|'hasChildren';
-    nodeLoadCallback?: TNodeLoadCallback;
-    deepReload?: boolean;
-    selectAncestors?: boolean;
-    selectDescendants?: boolean;
-    markItemByExpanderClick?: boolean;
-    expanderSize?: 's'|'m'|'l'|'xl';
-}
+/**
+ * @event Происходит при изменении набора свернутых узлов.
+ * @name Controls/_tree/interface/ITreeControlOptions#collapsedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Array.<Number|String>} expandedItems Идентификаторы свернутых узлов.
+ */

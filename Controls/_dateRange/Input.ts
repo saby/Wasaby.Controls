@@ -7,7 +7,7 @@ import {Range, Popup as PopupUtil} from 'Controls/dateUtils';
 import {StringValueConverter, IDateTimeMask, ISelection} from 'Controls/input';
 import {tmplNotify} from 'Controls/eventUtils';
 import template = require('wml!Controls/_dateRange/Input/Input');
-import {DependencyTimer} from 'Controls/fastOpenUtils';
+import {DependencyTimer} from 'Controls/popup';
 import {Logger} from 'UI/Utils';
 
 interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
@@ -18,7 +18,6 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/controls/date-time/date/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a>
  *
@@ -30,31 +29,28 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IDateRangeValidators
- * @control
+ * 
  * @public
- * @demo Controls-demo/Input/Date/RangePG
- * @category Input
+ * @demo Controls-demo/Input/Date/Range
  * @author Красильников А.С.
  */
 
 /*
  * Control for entering date range.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FRange">Demo examples.</a>.
  * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDateMask
  *
- * @control
+ * 
  * @public
- * @demo Controls-demo/Input/Date/RangePG
- * @category Input
+ * @demo Controls-demo/Input/Date/Range
  * @author Красильников А.С.
  */
 export default class DateRangeInput extends Control<IDateRangeInputOptions> implements

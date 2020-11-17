@@ -63,7 +63,8 @@ export class Controller {
    calculateMarkedKeyForVisible(): CrudEntityKey {
       // TODO удалить этот метод, когда избавимся от onactivated
       let newMarkedKey = this._markedKey;
-      if (this._markerVisibility === Visibility.Visible && this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+      if (this._markerVisibility === Visibility.Visible && this._model.getCount()
+            && !this._model.getItemBySourceKey(this._markedKey)) {
          newMarkedKey = this._getFirstItemKey();
       }
 
@@ -96,6 +97,26 @@ export class Controller {
       const index = this._model.getIndex(this._model.getItemBySourceKey(this._markedKey));
       const prevMarkedKey = this._calculateNearbyByDirectionItemKey(index - 1, false);
       return prevMarkedKey === null ? this._markedKey : prevMarkedKey;
+   }
+
+   /**
+    * Возвращает ключ следующего подходящего для установки маркера элемента
+    * по текущему элементу.
+    * Если текущий элемент подходит, для установки маркера то возвращает его ключ.
+    * @remark
+    * Метод необходим для случаев, когда мы пытаемся установить маркер на новый элемент,
+    * но мы не знаем, является ли этот элемент MarkableItem
+    * @param item
+    * @return {CrudEntityKey} Ключ следующего подходящего для установки маркера элемента
+    */
+   getSuitableMarkedKey(item: CollectionItem<Model>) {
+      const contents = item.getContents();
+      if (item.MarkableItem) {
+         return contents.getKey();
+      }
+      const index = this._model.getIndex(item);
+      const nextMarkedKey = this._calculateNearbyByDirectionItemKey(index + 1, true);
+      return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
    /**
@@ -148,7 +169,13 @@ export class Controller {
     * @return {CrudEntityKey} Новый ключ маркера
     */
    onCollectionReset(): CrudEntityKey {
-      const newMarkedKey = this.calculateMarkedKeyForVisible();
+      let newMarkedKey = this._markedKey;
+      // при ресете маркер пересчитаем, только когда маркер всегда виден или виден по активации и маркер был до ресета
+      const needRecalculateMarker = this._markerVisibility === Visibility.Visible
+          || this._markerVisibility === Visibility.OnActivated && this._markedKey !== null && this._markedKey !== undefined;
+      if (needRecalculateMarker && this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+         newMarkedKey = this._getFirstItemKey();
+      }
       if (newMarkedKey === this._markedKey) {
          this.setMarkedKey(newMarkedKey);
       }
@@ -160,6 +187,7 @@ export class Controller {
     * @void
     */
    destroy(): void {
+      this._model.each((it) => it.setMarked(false, true));
       this._markedKey = null;
       this._markerVisibility = null;
       this._model = null;
@@ -173,12 +201,13 @@ export class Controller {
    private _getKey(item: CollectionItem<Model>): CrudEntityKey {
       let contents = item.getContents();
       if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+         // tslint:disable-next-line
          contents = contents[(contents as any).length - 1];
       }
 
       // Для GroupItem нет ключа, в contents хранится не Model
-      if (item['[Controls/_display/GroupItem]']) {
-         return undefined;
+      if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+         return null;
       }
 
       return contents.getKey();
@@ -212,10 +241,11 @@ export class Controller {
       let item;
 
       const indexInBounds = (i) => next ? i < count : i >= 0;
-      while (indexInBounds(index)) {
-         item = this._model.at(index);
+      let resIndex = index;
+      while (indexInBounds(resIndex)) {
+         item = this._model.at(resIndex);
          if (item && item.MarkableItem) { break; }
-         index += next ? 1 : -1;
+         resIndex += next ? 1 : -1;
       }
 
       return item ? this._getKey(item) : null;

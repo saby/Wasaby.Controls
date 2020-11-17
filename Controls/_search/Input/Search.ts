@@ -10,6 +10,17 @@ import {SyntheticEvent} from "Vdom/Vdom";
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
 const SEARCH_BY_CLICK_THROTTLE = 300;
 
+
+var _private = {
+   isVisibleResetButton: function() {
+      return !!this._viewModel.displayValue && !this._options.readOnly;
+   },
+
+   calculateStateButton: function() {
+      return this._options.readOnly ? '_readOnly' : '';
+   }
+};
+
 /**
  * Контрол "Строка поиска". Является однострочным полем ввода. Контрол используют в реестрах для ввода поискового запроса.
  * Функционал контрола идентичен полям ввода из библиотеки {@link Controls/input}, однако в отличие от них имеет собственное визуальное оформление.
@@ -27,39 +38,11 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * @ignoreOptions style
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
- * @category Input
  * @author Золотова Э.Е.
- */
-
-/**
- * @name Controls/_search/Input/Search#searchButtonVisible
- * @cfg {Boolean} Определяет отображение иконки лупы внутри поля поиска, клик по которой запускает поиск.
- * @default true
- * @remark
- * * true - иконка отображается.
- * * false - иконка не отображается.
- */
-
-/**
- * @name Controls/_search/Input/Search#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
- * @default false
- * @remark
- * * true - контрастный фон.
- * * false - фон, гармонично сочетающийся с окружением.
- * Опция используется для визуального выделения контрола, относительно окружения.
- * Например в ситуации когда цвет окружения, близкий к цвету самого контрола.
- * @demo Controls-demo/Search/Input/Base/Index
- * @example
- * У кнопки контрастный фон.
- * <pre>
- *    <Controls.search:Input contrastBackground="{{true}}" bind:value="_searchValue"/>
- * </pre>
- * @see style
  */
 
 /*
@@ -78,82 +61,12 @@ const SEARCH_BY_CLICK_THROTTLE = 300;
  *
  * @ignoreOptions style
  *
- * @control
+ * 
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
- * @category Input
  * @author Золотова Э.Е.
  */
-
-/**
- * @event Controls/_suggest/Input/Search/Suggest#searchClick Происходит при нажатии на иконку поиска (лупы).
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @remark Клик по иконке поиска закрывает автодополнение. Это поведение можно отменить, если из события вернуть false.
- * @example
- * * WML
- * <pre>
- *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
- *        ...
- *     </Controls.suggest:SearchInput>
- * </pre>
- * * TypeScript
- * <pre>
- *     protected _value: string = '';
- *
- *     private _searchClick():boolean {
- *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
- *       return this._value.length < 3;
- *     }
- * <pre>
- * @default true
- */
-
-/**
- * @event Controls/_search/Input/Search#searchClick Происходит при клике на кнопку поиска.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Object} nativeEvent Объект нативного события браузера.
- */
-
-/**
- * @event Controls/_search/Input/Search#resetClick Происходит при клике на кнопку сброса.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- */
-
-/*
- * @event Controls/_suggest/Input/Search/Suggest#searchClick Occurs when search button is clicked.
- * @example
- * WML:
- * <pre>
- *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
- *        ...
- *     </Controls.suggest:SearchInput>
- * </pre>
- *
- * TS:
- * <pre>
- *     protected _value: string = '';
- *
- *     private _searchClick():boolean {
- *       return this._value.length < 3;
- *     }
- * <pre>
- */
-
-/*
- * @event Controls/_search/Input/Search#searchClick Occurs when search button is clicked.
- * @event Controls/_search/Input/Search#resetClick Occurs when reset button is clicked.
- */
-var _private = {
-   isVisibleResetButton: function() {
-      return !!this._viewModel.displayValue && !this._options.readOnly;
-   },
-
-   calculateStateButton: function() {
-      return this._options.readOnly ? '_readOnly' : '';
-   }
-};
-
 var Search = Base.extend({
    _wasActionUser: false,
 
@@ -196,7 +109,7 @@ var Search = Base.extend({
       this._rightFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
    },
 
-   _changeHandler: function() {
+   _notifyInputCompleted: function() {
       if (this._options.trim) {
          var trimmedValue = this._viewModel.displayValue.trim();
 
@@ -206,7 +119,7 @@ var Search = Base.extend({
          }
       }
 
-      Search.superclass._changeHandler.apply(this, arguments);
+      Search.superclass._notifyInputCompleted.apply(this, arguments);
    },
 
    _resetClick: function() {
@@ -283,11 +196,106 @@ Search.getDefaultOptions = function getDefaultOptions() {
    defaultOptions.placeholder = rk('Найти') + '...';
    defaultOptions.searchButtonVisible = true;
    defaultOptions.validationStatus = 'valid';
+   defaultOptions.spellcheck = false;
 
    return defaultOptions;
 };
 
 Search._private = _private;
+
+/**
+ * @event Происходит при нажатии на иконку поиска (лупы).
+ * @name Controls/_suggest/Input/Search/Suggest#searchClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @remark Клик по иконке поиска закрывает автодополнение. Это поведение можно отменить, если из события вернуть false.
+ * @example
+ * * WML
+ * <pre>
+ *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
+ *        ...
+ *     </Controls.suggest:SearchInput>
+ * </pre>
+ * * TypeScript
+ * <pre>
+ *     protected _value: string = '';
+ *
+ *     private _searchClick():boolean {
+ *       //Не закрываем автодополнение при клике на лупу, если введено больше 3 символов
+ *       return this._value.length < 3;
+ *     }
+ * <pre>
+ * @default true
+ */
+
+/**
+ * @event Происходит при клике на кнопку поиска.
+ * @name Controls/_search/Input/Search#searchClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Object} nativeEvent Объект нативного события браузера.
+ */
+
+/**
+ * @event Происходит при клике на кнопку сброса.
+ * @name Controls/_search/Input/Search#resetClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/*
+ * @event Occurs when search button is clicked.
+ * @name Controls/_suggest/Input/Search/Suggest#searchClick
+ * @example
+ * WML:
+ * <pre>
+ *     <Controls.suggest:SearchInput on:searchClick="_searchClick()" bind:value="_value">
+ *        ...
+ *     </Controls.suggest:SearchInput>
+ * </pre>
+ *
+ * TS:
+ * <pre>
+ *     protected _value: string = '';
+ *
+ *     private _searchClick():boolean {
+ *       return this._value.length < 3;
+ *     }
+ * <pre>
+ */
+
+/*
+ * @event Occurs when search button is clicked.
+ * @name Controls/_search/Input/Search#searchClick
+ */
+/*
+ * @event Occurs when reset button is clicked.
+ * @name Controls/_search/Input/Search#resetClick
+ */
+
+ /**
+ * @name Controls/_search/Input/Search#searchButtonVisible
+ * @cfg {Boolean} Определяет отображение иконки лупы внутри поля поиска, клик по которой запускает поиск.
+ * @default true
+ * @remark
+ * * true - иконка отображается.
+ * * false - иконка не отображается.
+ */
+
+/**
+ * @name Controls/_search/Input/Search#contrastBackground
+ * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+ * @default false
+ * @remark
+ * * true - контрастный фон.
+ * * false - фон, гармонично сочетающийся с окружением.
+ * Опция используется для визуального выделения контрола, относительно окружения.
+ * Например в ситуации когда цвет окружения, близкий к цвету самого контрола.
+ * @demo Controls-demo/Search/Input/Base/Index
+ * @example
+ * У кнопки контрастный фон.
+ * <pre>
+ *    <Controls.search:Input contrastBackground="{{true}}" bind:value="_searchValue"/>
+ * </pre>
+ * @see style
+ */
 
 export = Search;
 

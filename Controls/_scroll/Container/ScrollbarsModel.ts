@@ -95,9 +95,11 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             changed = this._models[scrollbar].updatePosition(scrollState) || changed;
         }
         const canScroll = scrollState.canVerticalScroll || scrollState.canHorizontalScroll;
+        let canScrollChanged: boolean = false;
         if (canScroll !== this._canScroll) {
             this._canScroll = canScroll;
             changed = true;
+            canScrollChanged = true;
         }
 
         // Используем clientHeight в качестве offsetHeight если нижний скролбар не отбражается.
@@ -115,8 +117,9 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         if (changed) {
             this._nextVersion();
         }
-
-        this._updateContainerSizes();
+        if (this._canScroll || canScrollChanged) {
+            this._updateContainerSizes();
+        }
     }
 
     _updateScrollState(): void {
@@ -164,12 +167,12 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         }
     }
 
-    setOffsets(offsets: Offsets): void {
+    setOffsets(offsets: Offsets, needUpdate: boolean = true): void {
         let changed: boolean = false;
         for (let scrollbar of Object.keys(this._models)) {
             changed = this._models[scrollbar].setOffsets(offsets) || changed;
         }
-        if (changed) {
+        if (changed && needUpdate) {
             this._nextVersion();
         }
     }
@@ -181,7 +184,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     getScrollContainerClasses(): string {
         let css = '';
         if (this._useNativeScrollbar) {
-            css += ' controls-Scroll__content_auto';
+            css += this._getOverflowClass();
             if (!this._options.scrollbarVisible) {
                 css += ' controls-Scroll__content_hideNativeScrollbar';
             }
@@ -190,12 +193,16 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
             if (this._overflowHidden) {
                 css += ' controls-Scroll__content_hidden';
             } else {
-                css += this._options.scrollMode === SCROLL_MODE.VERTICAL ?
-                   ' controls-Scroll-ContainerBase__scroll_vertical' :
-                   ' controls-Scroll-ContainerBase__scroll_verticalHorizontal';
+                css += this._getOverflowClass();
             }
         }
         return css;
+    }
+
+    private _getOverflowClass(): string {
+        return this._options.scrollMode === SCROLL_MODE.VERTICAL ?
+            ' controls-Scroll-ContainerBase__scroll_vertical' :
+            ' controls-Scroll-ContainerBase__scroll_verticalHorizontal';
     }
 
     take(): boolean {

@@ -63,6 +63,10 @@ class PageNavigationStore implements INavigationStore {
         this._prevPage--;
     }
 
+    setPrevPage(pageNumber: number): void {
+        this._prevPage = pageNumber;
+    }
+
     setCurrentPage(pageNumber: number): void {
         this._initPages(pageNumber);
     }

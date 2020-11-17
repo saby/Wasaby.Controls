@@ -58,6 +58,14 @@
    pointer-events: none;
 }
 
+.ws-is-desktop-safari {
+   // На MacOS Safari если при подгрузке новых элементов списка поменяется ширина колонок в таблице, то появятся пробелы
+   // в тенях. Применяем аппаратное ускорение.
+   .controls-Scroll__shadow {
+      transform: translate3d(0, 0, 0);
+   }
+}
+
 .controls-Scroll__shadow_horizontal {
    left: 0;
    right: 0;
@@ -125,14 +133,6 @@
 .controls-Scroll__scroll_verticalHorizontal {
    overflow-y: scroll;
    overflow-x: scroll;
-}
-
-.controls-Scroll__content_auto {
-   overflow-y: auto;
-   // If the width of the container lying in the scroll container is equal to the width of the scroll of the container,
-   // but one of its children climbs beyond this width, then on some platforms(iPad) this is taken into account when
-   // calculating the scrollWidth. Turn off scrolling horizontally.
-   overflow-x: hidden;
 }
 
 .controls-Scroll__content_hidden {

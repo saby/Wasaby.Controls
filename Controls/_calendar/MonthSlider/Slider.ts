@@ -71,7 +71,7 @@ var _private = {
  *
  * @class Controls/_calendar/MonthSlider:Base
  * @extends Core/Control
- * @control
+ * 
  * @private
  * @author Красильников А.С.
  * @noShow

@@ -8,6 +8,23 @@ import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import dateControlsUtils from "./Utils";
 
+interface IRangeShortSelectorOptions extends IControlOptions {
+    chooseMonths: boolean;
+    chooseQuarters: boolean;
+    chooseHalfyears: boolean;
+    popupClassName: string;
+    chooseYears: boolean;
+    checkedStart: Date;
+    checkedEnd: Date;
+    emptyCaption: string;
+    source: any;
+    monthTemplate: HTMLElement;
+    itemTemplate: HTMLElement;
+    displayedRanges: Date[];
+    stubTemplate: Function;
+    captionFormatter: Function;
+    dateConstructor: Function;
+}
 /**
  * Контрол позволяет пользователю выбрать временной период: месяц, квартал, полугодие, год. Выбор происходит с помощью панели быстрого выбора периода.
  *
@@ -26,9 +43,8 @@ import dateControlsUtils from "./Utils";
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * @control
+ *
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/LiteSelector/Index
  *
@@ -41,32 +57,12 @@ import dateControlsUtils from "./Utils";
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
- * @control
+ *
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLinkLite
  *
  */
-
-interface IRangeShortSelectorOptions extends IControlOptions {
-    chooseMonths: boolean;
-    chooseQuarters: boolean;
-    chooseHalfyears: boolean;
-    popupClassName: string;
-    chooseYears: boolean;
-    checkedStart: Date;
-    checkedEnd: Date;
-    emptyCaption: string;
-    source: any;
-    monthTemplate: HTMLElement;
-    itemTemplate: HTMLElement;
-    displayedRanges: Date[];
-    stubTemplate: Function;
-    captionFormatter: Function;
-    dateConstructor: Function;
-}
-
 export default class RangeShortSelector extends BaseSelector<IRangeShortSelectorOptions> {
     protected _template: TemplateFunction = template;
     protected _fittingMode: string = 'overflow';
@@ -82,6 +78,8 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
 
         return {
             opener: this,
+            template: 'Controls/shortDatePicker:View',
+            closeOnOutsideClick: true,
             target: container,
             className,
             fittingMode: {
@@ -122,8 +120,10 @@ export default class RangeShortSelector extends BaseSelector<IRangeShortSelector
     }
 
     _mouseEnterHandler(): void {
-        const loadCss = ({View}) => View.loadCSS();
-        this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        if (!this._loadCalendarPopupPromise) {
+            const loadCss = ({View}) => View.loadCSS();
+            this._startDependenciesTimer('Controls/shortDatePicker', loadCss);
+        }
     }
 
     _sendResultHandler(event: SyntheticEvent, fittingMode: string): void {

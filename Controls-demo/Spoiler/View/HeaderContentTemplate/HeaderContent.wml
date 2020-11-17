@@ -1,4 +1,4 @@
-<div class="ws-inline-flexbox ws-flex-column" attr:style="background-color: rgb(255 179 128);">
+<div class="ws-inline-flexbox ws-flex-column" attr:style="background-color: rgb(255, 179, 128);">
    <div class="ws-flexbox ws-align-items-baseline">
       <div>прикладной контент слева</div>
       <Controls.spoiler:Heading attr:class="controlsDemo__mr1 controlsDemo__ml1" captions="Заголовок"

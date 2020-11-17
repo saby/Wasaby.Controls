@@ -13,7 +13,8 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInput#inputCompleted Происходит при завершении ввода (поле потеряло фокус или пользователь нажал "enter").
+ * @event Происходит при завершении ввода (поле потеряло фокус или пользователь нажал "enter").
+ * @name Controls/_dateRange/interfaces/IInput#inputCompleted
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} startValue Начальное значение поля.
  * @param {Date} endValue Конечно значение поля.
@@ -39,7 +40,8 @@
  */
 
 /*
- * @event Controls/_dateRange/interfaces/IInput#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @event Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @name Controls/_dateRange/interfaces/IInput#inputCompleted
  * @param {Date} startValue Start field value.
  * @param {Date} endValue End field value.
  * @param {String} displayedStartValue Text value of the start field.

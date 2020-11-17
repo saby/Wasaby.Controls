@@ -5,7 +5,7 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 /**
  *
  * @class Controls/_scroll/VirtualScrollContainer
- * @control
+ * 
  * @author Красильников А.С.
  * @see Controls/_scroll/Container
  * @public

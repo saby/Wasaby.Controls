@@ -6,7 +6,7 @@
                     attr:class="controlsDemo_line-height18"
                     moveMarkerOnScrollPaging="{{true}}"
                     source="{{_viewSource}}">
-                <ws:virtualScrollConfig pageSize="{{20}}"/>
+                <ws:virtualScrollConfig pageSize="{{40}}"/>
                 <ws:navigation source="page" view="infinity">
                     <ws:sourceConfig pageSize="{{50}}" page="{{0}}" hasMore="{{false}}"/>
                     <ws:viewConfig pagingMode="numbers"/>

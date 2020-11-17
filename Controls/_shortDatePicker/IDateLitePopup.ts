@@ -1,7 +1,29 @@
 import rk = require('i18n!Controls');
 import {descriptor} from 'Types/entity';
+import {TemplateFunction, IControlOptions} from 'UI/Base';
 
-   var EMPTY_CAPTIONS = {
+export interface IDateLitePopupOptions extends IControlOptions {
+   year?: Date;
+   chooseMonths?: boolean;
+   chooseQuarters?: boolean;
+   chooseHalfyears?: boolean;
+   chooseYears?: boolean;
+   emptyCaption?: string;
+   popupClassName?: string;
+   captionFormatter?: Function;
+   startValue?: Date;
+   endValue?: Date;
+   displayedRanges?: Date[];
+   dateConstructor?: Function;
+   monthTemplate?: TemplateFunction;
+   itemTemplate?: TemplateFunction;
+   stickyPosition?: object;
+
+   //TODO: устаревшая опция
+   range?: Date[];
+}
+
+const EMPTY_CAPTIONS = {
       NOT_SPECIFIED: rk('Не указан'),
       NOT_SELECTED: rk('Не выбран'),
       WITHOUT_DUE_DATE: rk('Бессрочно', 'ShortForm'),
@@ -14,21 +36,27 @@ import {descriptor} from 'Types/entity';
  * @author Красильников А.С.
  * @public
  */
-   export default {
-      getDefaultOptions: function() {
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#year
+ * @cfg {Date} Отображаемый год.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
+ * @cfg {String} Текст, который отображается, если период не выбран.
+ * @default undefined
+ */
+
+/**
+ * @name Controls/shortDatePicker/IDateLitePopup#popupClassName
+ * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @default undefined
+ */
+export default {
+      getDefaultOptions(): object {
          return {
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#year
-             * @cfg {Date} Отображаемый год.
-             * @default undefined
-             */
-
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#year
-             * @cfg {Date} Displayed period
-             */
-            year: undefined,
 
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#chooseMonths
@@ -36,11 +64,6 @@ import {descriptor} from 'Types/entity';
              * @default true
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#chooseMonths
-             * @cfg {Boolean} Sets the option to choose a month
-             * @default true
-             */
             chooseMonths: true,
 
             /**
@@ -49,11 +72,6 @@ import {descriptor} from 'Types/entity';
              * @default true
              */
 
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#chooseQuarters
-             * @cfg {Boolean} Sets the option to choose a quarter
-             * @default true
-             */
             chooseQuarters: true,
 
             /**
@@ -69,25 +87,6 @@ import {descriptor} from 'Types/entity';
              * @default true
              */
             chooseYears: true,
-
-            /**
-             * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
-             * @cfg {String} Текст, который отображается, если период не выбран.
-             * @default undefined
-             */
-
-            /*
-             * @name Controls/shortDatePicker/IDateLitePopup#emptyCaption
-             * @cfg {String} Text that is used if the period is not selected
-             */
-            emptyCaption: undefined,
-
-             /**
-              * @name Controls/shortDatePicker/IDateLitePopup#popupClassName
-              * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
-              * @default undefined
-              */
-            popupClassName: undefined,
 
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#monthTemplate
@@ -114,6 +113,7 @@ import {descriptor} from 'Types/entity';
              *     </Controls.shortDatePicker:View>
              * </pre>
              */
+
             /**
              * @name Controls/shortDatePicker/IDateLitePopup#source
              * @cfg {Types/source:ICrud} Источник данных, которые используются для отображения отметок на месяцах.
@@ -215,9 +215,9 @@ import {descriptor} from 'Types/entity';
          };
       },
 
-      EMPTY_CAPTIONS: EMPTY_CAPTIONS,
+      EMPTY_CAPTIONS,
 
-      getOptionTypes: function() {
+      getOptionTypes(): object  {
          return {
             chooseMonths: descriptor(Boolean),
             chooseQuarters: descriptor(Boolean),

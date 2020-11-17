@@ -55,6 +55,13 @@
                 expanderTemplate="{{itemData.expanderTemplate}}"
                 itemData="{{currentColumn}}"
                 tagTemplate="{{tagTemplate}}">
+        <ws:afterItemTemplate>
+            <ws:partial if="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'right')}}"
+                        template="{{itemData.expanderTemplate}}"
+                        itemData="{{itemData}}"
+                        expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                        expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
+        </ws:afterItemTemplate>
         <ws:multiSelectTemplate>
             <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
         </ws:multiSelectTemplate>
@@ -78,8 +85,8 @@
             <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, true) }}
                         {{itemData.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}">
                 <!-- Маркер активной записи -->
-                <ws:if data="{{ marker !== false && itemData.markerVisibility !== 'hidden' && !itemData.isEditing() && itemData.isMarked() && currentColumn.columnIndex === 0 }}">
-                    <div class="{{itemData.getMarkerClasses()}}"></div>
+                <ws:if data="{{ marker !== false && itemData.shouldDisplayMarker(currentColumn.columnIndex) }}">
+                    <div class="{{itemData.getMarkerClasses(markerClassName)}}"></div>
                 </ws:if>
 
                 <!-- Какая то запись перемещается в данную папку. Обводка -->
@@ -91,7 +98,7 @@
 
                 <!-- Контент колонки с чекбоксом -->
                 <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
-                    <ws:if data="{{!itemData.isAdd}}">
+                    <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
                         <div class="{{ currentColumn.classList.padding.getAll() }} {{ cellClassName || '' }}">
                             <ws:partial template="multiSelectTemplate"/>
                         </div>
@@ -110,7 +117,7 @@
                                 <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
                             </ws:for>
                         </ws:if>
-                        <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
+                        <ws:if data="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
                             <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
                                         expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
                         </ws:if>

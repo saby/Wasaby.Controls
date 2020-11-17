@@ -60,7 +60,6 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 
 /*
@@ -68,7 +67,6 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 var helpers = {
 
@@ -85,7 +83,7 @@ var helpers = {
      */
 
     /**
-     * Хелпер для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/list/item-actions/ панели опций записи} наверху/внизу.
+     * Хелпер для отображения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} наверху/внизу.
      * @function 
      * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
      * @param {MoveDirection} direction Направление.

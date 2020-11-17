@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/list_new/LoadingIndicator/Down/Down
 import {Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
 
-const TIMEOUT3000 = 3000;
+const TIMEOUT3500 = 3500;
 interface IItem {
     title: string;
     id: string | number;
@@ -24,7 +24,7 @@ export default class extends Control {
             keyProperty: 'id',
             data: this._dataArray
         });
-        this._slowDownSource(this._viewSource, TIMEOUT3000);
+        this._slowDownSource(this._viewSource, TIMEOUT3500);
     }
 
     private _slowDownSource(source: Memory, timeMs: number): void {

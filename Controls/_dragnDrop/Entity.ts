@@ -10,7 +10,6 @@
  * @class Controls/_dragnDrop/Entity
  * @public
  * @author Авраменко А.С.
- * @category DragNDrop
  */
 
 /*
@@ -20,7 +19,6 @@
     * @class Controls/_dragnDrop/Entity
     * @public
     * @author Авраменко А.С.
-    * @category DragNDrop
 */
 
 export default class Entity {

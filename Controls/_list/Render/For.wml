@@ -4,10 +4,12 @@
            item="{{ item }}"
            itemData="{{ item }}"
            isAdd="{{ isAdd }}"
+           markerPosition="{{_options.markerPosition}}"
            multiSelectVisibility="{{ collection.getMultiSelectVisibility() }}"
            multiSelectPosition="{{ collection.getMultiSelectPosition() }}"
            itemActionsPosition="{{ _options.itemActionsPosition }}"
            searchValue="{{ collection.getSearchValue() }}"
+           backgroundStyle="{{ _options.backgroundStyle }}"
            style="{{ _options.style }}"
            theme="{{ _options.theme }}"
            multiSelectTpl="{{ multiSelectTpl }}"
@@ -15,16 +17,15 @@
            attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
 
-           on:click="_onItemClick(item)"
            on:contextmenu="_onItemContextMenu(item)"
            on:swipe="_onItemSwipe(item)"
            on:longtap="_onItemLongTap(item)"
            on:mouseenter="_onItemMouseEnter(item)"
            on:mousedown="_onItemMouseDown(item)"
-           on:mouseup="_onItemMouseUp(item)"
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
-           on:wheel="_onItemWheel(item)">
+           on:wheel="_onItemWheel(item)"
+           __notExcessiveRender="{{ true }}">
       <ws:itemActionsTemplate>
          <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
          <!-- Передача highlightOnHover это костыль, т.к. иначе он не виден внутри шаблона, вставляемого через ws:partial
@@ -50,11 +51,14 @@
 <ws:for data="index, item in collection.getViewIterator()">
    <ws:if data="{{ item.isEditing() }}">
       <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
-      <Controls._list.EditInPlace.EditingRow name="editingRow" on:deactivated="_onRowDeactivated()">
-              <ws:partial template="localItemTemplate"/>
+      <Controls._list.EditInPlace.EditingRow isScrollToElement="{{isScrollToElement}}" name="editingRow" on:deactivated="_onRowDeactivated()">
+              <ws:partial template="localItemTemplate" />
       </Controls._list.EditInPlace.EditingRow>
    </ws:if>
    <ws:else>
-      <ws:partial template="localItemTemplate"/>
+      <ws:partial template="localItemTemplate"
+                  on:click="_onItemClick(item)"
+                  on:mouseup="_onItemMouseUp(item)"
+      />
    </ws:else>
 </ws:for>

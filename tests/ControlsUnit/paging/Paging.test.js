@@ -36,7 +36,9 @@ define([
 
          pg._initArrowStateBySelectedPage(cfg);
          assert.equal('disabled', pg._stateBackward, 'Wrong arrow state in begin position');
+         assert.equal('disabled', pg._stateTop, 'Wrong arrow state in begin position');
          assert.equal('normal', pg._stateForward, 'Wrong arrow state in begin position');
+         assert.equal('normal', pg._stateBottom, 'Wrong arrow state in begin position');
 
          cfg = {
             pagesCount: 5,
@@ -44,7 +46,9 @@ define([
          };
          pg._initArrowStateBySelectedPage(cfg);
          assert.equal('normal', pg._stateBackward, 'Wrong arrow state in middle position');
+         assert.equal('normal', pg._stateTop, 'Wrong arrow state in middle position');
          assert.equal('normal', pg._stateForward, 'Wrong arrow state in middle position');
+         assert.equal('normal', pg._stateBottom, 'Wrong arrow state in middle position');
 
          cfg = {
             pagesCount: 5,
@@ -52,7 +56,9 @@ define([
          };
          pg._initArrowStateBySelectedPage(cfg);
          assert.equal('normal', pg._stateBackward, 'Wrong arrow state in end position');
+         assert.equal('normal', pg._stateTop, 'Wrong arrow state in end position');
          assert.equal('disabled', pg._stateForward, 'Wrong arrow state in end position');
+         assert.equal('disabled', pg._stateBottom, 'Wrong arrow state in end position');
       });
 
       it('changePage', function() {
@@ -184,5 +190,35 @@ define([
       });
       assert.isFalse(pg._isShowContentTemplate());
    });
+   it('_getArrowStateVisibility', function() {
+      var pg = new pagingLib.Paging();
+      pg.saveOptions({
+         arrowState: {
+            begin: "visible",
+            end: "visible",
+            next: "visible",
+            prev: "visible"
+         }
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
+      pg.saveOptions({
+         pagingMode: 'numbers',
+         arrowState: {
+            begin: "visible",
+            end: "hidden",
+            next: "hidden",
+            prev: "hidden"
+         }
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
 
+      pg.saveOptions({
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'hidden');
+
+      pg.saveOptions({
+         pagingMode: 'numbers',
+      });
+      assert.equal(pg._getArrowStateVisibility('begin'), 'visible');
+   });
 });

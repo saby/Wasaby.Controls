@@ -12,21 +12,10 @@ const MOVE_DIALOG_MEASURER_CLASS_TEMPLATE = 'controls-MoveDialog_theme-';
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_moveDialog.less">переменные тем оформления</a>
  *
- * @control
+ * 
  * @public
  * @class Controls/_moverDialog/BaseTemplate
  * @author Авраменко А.С.
- * @category List
- */
-
-/**
- * @name Controls/_moverDialog/BaseTemplate#headerContentTemplate
- * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
- */
-
-/**
- * @name Controls/_moverDialog/BaseTemplate#bodyContentTemplate
- * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
  */
 export default class BaseTemplate extends Control<IControlOptions> {
     _template: TemplateFunction = template;
@@ -44,3 +33,12 @@ export default class BaseTemplate extends Control<IControlOptions> {
 
     static _theme = ['Controls/moverDialog'];
 }
+/**
+ * @name Controls/_moverDialog/BaseTemplate#headerContentTemplate
+ * @cfg {function|String} Контент, располагающийся между заголовком и крестиком закрытия.
+ */
+
+/**
+ * @name Controls/_moverDialog/BaseTemplate#bodyContentTemplate
+ * @cfg {function|String} Основной контент шаблона, располагается под headerContentTemplate.
+ */
