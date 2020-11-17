@@ -7,6 +7,7 @@ import {Model} from 'Types/entity';
 import {List} from 'Types/collection';
 import {Memory} from 'Types/source';
 import {strictEqual, ok, deepStrictEqual} from 'assert';
+import {createSandbox} from 'sinon';
 
 function getMemoryWithFilter(): Memory {
    return new Memory({
@@ -78,6 +79,16 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
    it('getAvailableCollectionWidth', () => {
       const afterFieldWrapperWidth = 20;
       const lookup = new Lookup();
+      const sandbox = createSandbox();
+
+      sandbox.replace(lookup, '_getFieldWrapperComputedStyle', () => {
+         return {
+            paddingLeft: '4px',
+            paddingRight: '4px',
+            borderLeftWidth: '1px',
+            borderRightWidth: '1px'
+         };
+      });
 
       lookup._fieldWrapperWidth = 100;
       lookup._fieldWrapperMinHeight = 24;
@@ -91,6 +102,7 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
 
       lookup._fieldWrapperMinHeight = 5;
       strictEqual(lookup._getAvailableCollectionWidth(afterFieldWrapperWidth, false, true), 60);
+      sandbox.restore();
    });
 
    it('getInputMinWidth', function() {
@@ -283,6 +295,17 @@ describe('Controls/_lookup/Lookup/LookupView', () => {
             fontSize: 's',
             theme: 'testTheme'
          };
+
+      const sandbox = createSandbox();
+
+      sandbox.replace(lookup, '_getFieldWrapperComputedStyle', () => {
+         return {
+            paddingLeft: '4px',
+            paddingRight: '4px',
+            borderLeftWidth: '1px',
+            borderRightWidth: '1px'
+         };
+      });
 
       lookup._fieldWrapper = {
          offsetWidth: FIELD_WRAPPER_WIDTH
