@@ -183,10 +183,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         this._closeHandler = this._closeHandler.bind(this);
     }
 
-    private _coverInPromise(data: ICrudPlus): Promise<void> {
-        return Promise.resolve(data);
-    }
-
     private _createMemory(items: TItems): Memory {
         return new Memory({
             data: items.getRawData(),
