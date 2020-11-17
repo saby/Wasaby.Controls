@@ -35,7 +35,8 @@ import {
     Collection,
     CollectionItem,
     GroupItem, IEditableCollectionItem,
-    TItemKey
+    TItemKey,
+    TreeItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -5816,12 +5817,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const endDrag = () => {
             const targetPosition = this._dndListController.getDragPosition();
+            const draggableItem = this._dndListController.getDraggableItem();
             this._dndListController.endDrag();
 
-            if (this._options.markerVisibility !== 'hidden' && targetPosition) {
-                const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
+            // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+                const moveToCollapsedNode = targetPosition.position === 'on'
+                    && targetPosition.dispItem instanceof TreeItem
+                    && !targetPosition.dispItem.isExpanded();
+                // Ставим маркер на перетаксиваемый элемент всегда, за исключением ситуации
+                // когда перетаскиваем запись в свернутый узел
                 if (!moveToCollapsedNode) {
-                    _private.changeMarkedKey(this, this._draggedKey);
+                    const draggedKey = draggableItem.getContents().getKey();
+                    _private.changeMarkedKey(this, draggedKey);
                 }
             }
         };
