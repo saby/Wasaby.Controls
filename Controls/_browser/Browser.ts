@@ -133,7 +133,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
         if (options.useStore) {
             this._searchValue = Store.getState().searchValue as unknown as string;
-        } else {
+        } else if (options.searchValue) {
             this._searchValue = options.searchValue;
         }
 
