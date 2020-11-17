@@ -3685,9 +3685,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
+
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
+
+        const needReload =
+            !this._loadedBySourceController &&
+            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
+            (sourceChanged || filterChanged || sortingChanged || recreateSource);
+
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
@@ -3716,11 +3723,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(_private.prepareMoverControllerOptions(this, newOptions));
         }
 
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
+        const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
+
+        if ((oldViewModelConstructorChanged || needReload) && this.isEditing()) {
+            // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+            // без возможности отменить закрытие из вне.
+            this._cancelEdit(true);
+        }
+
+        if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            if (_private.isEditing(this)) {
-                this._cancelEdit();
-            }
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
@@ -3856,11 +3868,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader.destroy();
             this._groupingLoader = null;
         }
-
-        const needReload =
-            !this._loadedBySourceController &&
-            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -4832,12 +4839,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _cancelEdit() {
+    _cancelEdit(force: boolean = false) {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
         this.showIndicator();
-        return this._getEditInPlaceController().cancel().finally(() => {
+        return this._getEditInPlaceController().cancel(force).finally(() => {
             if (_private.hasSelectionController(this)) {
                 const controller = _private.getSelectionController(this);
                 controller.setSelection(controller.getSelection());
