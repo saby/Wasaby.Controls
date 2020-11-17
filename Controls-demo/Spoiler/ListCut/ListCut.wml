@@ -2,7 +2,6 @@
    <div class="controlsDemo__cell poiler__listCut-width">
       <div class="spoiler__column-header">ListCut</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
-                     iconSize="s"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
                      expandedNavigation="{{_expandedNavigation}}">
             <Controls.list:View source="{{_source}}" keyProperty="id">
@@ -20,7 +19,6 @@
       <div class="spoiler__column-header">ListCut (readonly)</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
                      readOnly="{{true}}"
-                     iconSize="s"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
                      expandedNavigation="{{_expandedNavigation}}">
             <Controls.list:View source="{{_source2}}" keyProperty="id">
