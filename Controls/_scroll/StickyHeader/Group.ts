@@ -195,7 +195,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
-    getContainer(): HTMLElement {
+    getHeaderContainer(): HTMLElement {
         return this._container;
     }
 
