@@ -1490,6 +1490,9 @@ var
         getLastItem: function() {
             return this._model.getLastItem.apply(this._model, arguments);
         },
+        getLast() {
+            return this._model.getLast();
+        },
         getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
