@@ -458,9 +458,10 @@ describe('Controls/suggest', () => {
 
          const sourceController = inputContainer._getSourceController();
 
-         const loadHistoryKeysStub = sandbox.stub(inputContainer, '_loadHistoryKeys')
-            .callsFake((callback) => callback());
-         const loadSpy = sandbox.spy(sourceController, 'load');
+         const loadSpy = sandbox.stub(inputContainer, '_loadHistoryKeys').callsFake(() => {
+            inputContainer._historyLoad = 'notNull';
+            return Promise.resolve();
+         });
 
          inputContainer._inputActivated();
          await inputContainer._inputActivated();
@@ -1111,13 +1112,14 @@ describe('Controls/suggest', () => {
          assert.isTrue(suggestOpened);
 
          inputContainer._getRecentKeys = () => {
-            return Deferred.success(null);
+            return Promise.resolve(null);
          };
 
          suggestOpened = false;
          inputContainer._options.autoDropDown = false;
          inputContainer._historyKeys = null;
          inputContainer._filter = {};
+
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
@@ -1130,7 +1132,8 @@ describe('Controls/suggest', () => {
          inputContainer._options.historyId = null;
          inputContainer._filter = {};
          inputContainer._options.emptyTemplate = undefined;
-         await inputContainer._updateSuggestState();
+         inputContainer._updateSuggestState();
+
          assert.deepEqual(inputContainer._filter, {});
          assert.isFalse(suggestOpened);
 
