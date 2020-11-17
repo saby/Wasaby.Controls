@@ -206,6 +206,9 @@ define(
                     eventString += e;
                     isNotify = true;
                 };
+                toolbar._sticky = {
+                   open: () => 0
+                };
                 toolbar._itemClickHandler({
                     stopPropagation: () => {
                     }
@@ -214,6 +217,7 @@ define(
                     assert.equal(eventString, 'itemClickmenuOpened');
                     assert.equal(isNotify, true);
                 });
+                done();
             });
             it('menu item click', () => {
                let isMenuClosed = false;
@@ -268,15 +272,15 @@ define(
                      _source: 'items',
                      _items: { getIndexByValue: () => {} },
                      _getSourceForMenu: () => Promise.resolve(testSelf._source),
-                     _getMenuOptions: () => toolbar._getMenuOptions.call(testSelf),
+                     _getMenuOptions: () => '',
                      _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
                   expectedConfig = {
                      opener: testSelf,
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      targetPoint: {
-                        horizontal: 'left',
-                        vertical: 'top'
+                        vertical: 'top',
+                        horizontal: 'left'
                      },
                      direction: {
                         horizontal: 'right'
@@ -285,30 +289,30 @@ define(
                         groupTemplate: 'groupTemplate',
                         groupProperty: undefined,
                         groupingKeyCallback: 'groupingKeyCallback',
+                        keyProperty: 'keyProperty',
+                        parentProperty: 'parent',
+                        nodeProperty: '@parent',
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
-                        keyProperty: 'keyProperty',
-                        nodeProperty: '@parent',
-                        parentProperty: 'parent',
-                        headConfig: {
-                           iconSize: undefined,
-                           caption: 'title',
-                           icon: 'icon icon-size',
-                           iconStyle: 'iconStyle'
-                        },
                         showHeader: true,
-                        closeButtonVisibility: false
+                        closeButtonVisibility: false,
+                        headConfig: {
+                           icon: 'icon icon-size',
+                           caption: 'title',
+                           iconSize: undefined,
+                           iconStyle: 'iconStyle'
+                        }
                      }
                   };
-                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
 
                 testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
-                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
 
                 testItem.set('showHeader', false);
                 expectedConfig.templateOptions.showHeader = false;
                 expectedConfig.templateOptions.closeButtonVisibility = true;
-                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
             });
             it('get button template options by item', function() {
                let item = new entity.Record(
