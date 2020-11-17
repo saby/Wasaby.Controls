@@ -1,18 +1,22 @@
-<div attr:class="controls-FilterViewPanel__group
+<div class="controls-FilterViewPanel__group-wrapper">
+   <div class="controls-FilterViewPanel__group
               controls-FilterViewPanel__group_theme-{{theme}}" attr:key="group-{{item}}">
-   <div class="controls-FilterViewPanel__group-content_theme-{{theme}}">
-      {{item}}
-   </div>
-   <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
-        class="controls-FilterViewPanel__groupExpander
-              controls-icon aa{{collectionItem}}
+      <div class="controls-FilterViewPanel__group-content_theme-{{theme}}">
+         {{item}}
+      </div>
+      <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
+           class="controls-FilterViewPanel__groupExpander
+              controls-icon
               controls-icon_size-s_theme-{{theme}}
               {{collectionItem.isExpanded() ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
+   </div>
    <ws:if data="{{!collectionItem.isExpanded()}}">
       <span class="controls-FilterViewPanel__groupReset controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить фильтр]}"></span>
+      <div class="controls-FilterViewPanel__group-result_theme-{{_options.theme}}">
+         {{_options.groupItems[item]}}
+      </div>
    </ws:if>
-
 </div>

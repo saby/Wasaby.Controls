@@ -1,24 +1,24 @@
 .controls-FilterViewPanel_theme-@{themeName} {
-   width: 250px;
+   width: @width_filterViewPanel;
    height: 100%;
-   background-color: #f8f8f8;
-   border-right: 3px solid #f0f0f0;
+   background-color: @background-color_filterViewPanel;
+   border-right: @border-right_width_filterViewPanel solid @border-right_color_filterViewPanel;
 }
 
 .controls-FilterViewPanel__header_theme-@{themeName} {
    display: flex;
    flex-direction: row;
-   padding: 0 12px;
    align-items: center;
    justify-content: space-between;
-   height: 40px;
-   border-bottom: 1px solid #e4e4e4;
+   padding: @heading_vertical-offset_filterViewPanel @heading_horizontal-offset_filterViewPanel;
+   height: @heading_height_filterViewPanel;
+   border-bottom: @heading_border_width_filterViewPanel solid @heading_border_color_filterViewPanel;
 }
 
 .controls-FilterViewPanel__applyButton_theme-@{themeName},
 .controls-FilterViewPanel__resetButton_theme-@{themeName} {
-   font-size: 14px;
-   color: @label_text-color;
+   font-size: @button_font-size_filterViewPanel;
+   color: @button_color_filterViewPanel;
    cursor: pointer;
 }
 
@@ -29,19 +29,18 @@
 }
 
 .controls-FilterEditors__numberRange_separator_theme-@{themeName} {
-   color: @unaccented_color;
-   padding-left: 2px;
-   padding-right: 2px;
+   color: @separator_color_filterViewPanel;
+   padding: 0 @separator_horizontal-offset_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-content_theme-@{themeName} {
-   color: @label_text-color;
-   font-size: 14px;
+   color: @group_color_filterViewPanel;
+   font-size: @group_font-size_filterViewPanel;
 }
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName} {
    color: @unaccented_icon-color;
-   padding-left: 4px;
+   padding-left: @group-expander_padding-left_filterViewPanel;
    cursor: pointer;
    align-self: center;
 }
@@ -49,11 +48,18 @@
 .controls-FilterViewPanel__group {
    display: flex;
    flex-direction: row;
-   position: relative;
 }
 
 .controls-FilterViewPanel__groupReset {
    position: absolute;
    top: 0;
    right: 0;
+}
+
+.controls-FilterViewPanel__group-wrapper {
+   position: relative;
+}
+
+.controls-FilterViewPanel__group-result_theme-@{themeName} {
+   font-size: @group_font-size_filterViewPanel;
 }

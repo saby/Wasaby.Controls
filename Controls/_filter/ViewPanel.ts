@@ -23,20 +23,23 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _source: object[] = null;
     protected _editingObject: object = {};
+    protected _groupItems: object = {};
 
     protected _beforeMount(options): void {
         this._source = this._getSource(options.source);
-        this._updateEditingObject(this._source);
+        this._updateGroupItems();
+        this._updateEditingObject();
     }
 
     protected _beforeUpdate(newOptions): void {
         this._source = this._getSource(newOptions.source);
-        this._updateEditingObject(this._source);
+        this._updateGroupItems();
+        this._updateEditingObject();
     }
 
     protected _resetFilter(): void {
         resetFilter(this._source);
-        this._updateEditingObject(this._source);
+        this._updateEditingObject();
         this._notifyChanges();
     }
 
@@ -69,7 +72,7 @@ export default class ViewPanel extends Control<IControlOptions> {
                 object.setPropertyValue(item, 'value', resetValue);
             }
         });
-        this._updateEditingObject(this._source);
+        this._updateEditingObject();
         this._notifyChanges();
     }
 
@@ -79,9 +82,15 @@ export default class ViewPanel extends Control<IControlOptions> {
         });
     }
 
-    private _updateEditingObject(source: object[]): void {
-        source.forEach((item) => {
+    private _updateEditingObject(): void {
+        this._source.forEach((item) => {
             this._editingObject[item.name] = item.value;
+        });
+    }
+
+    private _updateGroupItems(): void {
+        this._source.forEach((item) => {
+            this._groupItems[item.group] = item.value;
         });
     }
 

@@ -1,8 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Filter_new/ViewPanel/Index';
-import * as MemorySourceData from 'Controls-demo/Utils/MemorySourceData';
-import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
+import {isEqual} from 'Types/object';
 import {Memory} from 'Types/source';
+import {departments} from 'Controls-demo/Filter_new/resources/DataStorage';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -21,12 +21,33 @@ export default class extends Control {
             }
         };
         this._source = new Memory({
-            data: MemorySourceData.departments,
+            data: departments,
             keyProperty: 'id',
-            filter: MemorySourceFilter({
-                owner: '0',
-                department: '1'
-            })
+            filter: (item, queryFilter) => {
+                let addToData = true;
+                const emptyFields = {
+                    owner: '0',
+                    department: '1'
+                };
+                for (const filterField in queryFilter) {
+                    if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
+                        const filterValue = queryFilter[filterField];
+                        const itemValue = item.get(filterField);
+
+                        if (typeof itemValue === 'string') {
+                            addToData = itemValue === filterValue;
+                        }
+                        if (Array.isArray(filterValue)) {
+                            addToData = itemValue >= filterValue[0] && itemValue <= filterValue[1];
+                        }
+
+                        if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
+                            addToData = true;
+                        }
+                    }
+                }
+                return addToData;
+            }
         });
         this._filterButtonData = [
             {
@@ -34,7 +55,7 @@ export default class extends Control {
                 name: 'amount',
                 itemTemplate: 'Controls/filter:NumberRangeEditor',
                 editorTemplateName: 'Controls/filter:NumberRangeEditor',
-                resetValue: [0, 6],
+                resetValue: [0, 150],
                 value: [0, 15],
                 type: 'text'
             },

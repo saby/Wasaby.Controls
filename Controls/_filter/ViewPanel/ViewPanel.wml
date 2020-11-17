@@ -13,7 +13,7 @@
            on:editingObjectChanged="_editingObjectChanged()"
            on:itemClick="_itemClick()">
       <ws:groupTemplate>
-         <ws:partial template="wml!Controls/_filter/ViewPanel/groupTemplate"/>
+         <ws:partial template="wml!Controls/_filter/ViewPanel/groupTemplate" groupItems="{{_groupItems}}"/>
       </ws:groupTemplate>
    </Controls.propertyGrid:PropertyGrid>
 </div>
