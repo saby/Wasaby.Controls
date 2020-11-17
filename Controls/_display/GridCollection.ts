@@ -130,7 +130,7 @@ export default class GridCollection<
             columns: columns,
             ladderProperties: ladderProperties,
             startIndex: this.getStartIndex(),
-            stopIndex: this.getStopIndex() || this.getCollectionCount(),
+            stopIndex: this.getStopIndex(),
             display: this
         });
     }

@@ -579,15 +579,19 @@ var
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
+        getStickyColumn(self): GridLadderUtil.IStickyColumn {
+            return GridLadderUtil.getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._columns
+            });
+        },
+
         /**
          * Проверяет, присутствует ли "прилипающая" колонка
          * @param self
          */
         hasStickyColumn(self): boolean {
-            return !!GridLadderUtil.getStickyColumn({
-                stickyColumn: self._options.stickyColumn,
-                columns: self._columns
-            });
+            return !!_private.getStickyColumn(self);
         },
 
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
@@ -2330,7 +2334,8 @@ var
                 // активирована колонка для множественного выбора?
                 const offsetForMultiSelect: number = +(this._hasMultiSelectColumn());
                 // к колонкам была добавлена "прилипающая" колонка?
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const ladderStickyColumn = _private.getStickyColumn(this);
+                const offsetForStickyColumn: number = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
                 // к колонкам была добавлена колонка "Действий"?
                 const offsetForActionCell: number = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,

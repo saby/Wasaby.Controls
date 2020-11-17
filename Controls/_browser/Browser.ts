@@ -276,7 +276,7 @@ export default class Browser extends Control {
         const controllerState = this._sourceController.getState();
         this._updateContext(controllerState);
 
-        if (options.searchValue) {
+        if (options.searchValue || options.useStore) {
             this._createSearchControllerWithContext(options, this._dataOptionsContext);
         }
     }

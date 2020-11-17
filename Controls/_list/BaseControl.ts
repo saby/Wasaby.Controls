@@ -641,12 +641,15 @@ const _private = {
                 }], {bubbling: true});
             }
         };
-        return self._scrollController ?
-            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                if (result) {
-                    _private.handleScrollControllerResult(self, result);
-                }
-            }) : Promise.resolve();
+        return new Promise((resolve) => {
+            self._scrollController ?
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+                    resolve();
+                }) : resolve();
+        });
     },
 
     // region key handlers
@@ -1113,7 +1116,25 @@ const _private = {
                 pagingMode = self._options.navigation.viewConfig.pagingMode;
             }
 
-            const navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+            let navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+
+            // Решение проблемы загрузки достаточного количества данных для перехода в конец/начало списка
+            // в зависимости от размеров экрана.
+            // Из размера вьюпорта и записи мы знаем, сколько данных нам хватит.
+            // Не совсем понятно, где должен быть этот код. SourceController не должен знать про
+            // размеры окна, записей, и т.д. Но и список не должен сам вычислять параметры для загрузки.
+            // https://online.sbis.ru/opendoc.html?guid=608aa44e-8aa5-4b79-ac90-d06ed77183a3
+            const itemsOnPage = self._scrollPagingCtr?.getItemsCountOnPage();
+            const metaMore = self._items.getMetaData().more;
+            if (typeof metaMore === 'number' && itemsOnPage && self._options.navigation.source === 'page') {
+                const pageSize = self._options.navigation.sourceConfig.pageSize;
+                const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
+                const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                navigationQueryConfig = {
+                    page: direction === 'up' ? 0 : 1,
+                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                };
+            }
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
@@ -2099,6 +2120,7 @@ const _private = {
             self._scrollController = null;
             self._observerRegistered = false;
         }
+        self._viewReady = false;
     },
 
     hideError(self: BaseControl): void {
@@ -3104,6 +3126,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemReloaded: false,
     _modelRecreated: false,
+    _viewReady: false,
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
@@ -3117,6 +3140,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsController: null,
     _sourceController: null,
     _prevRootId: null,
+    _loadedBySourceController: false,
 
     _notifyHandler: tmplNotify,
 
@@ -3641,12 +3665,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let isItemsResetFromSourceController = false;
         const self = this;
 
-        const loadedBySourceController = newOptions.sourceController &&
+        this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
 
         const needReload =
-            !loadedBySourceController &&
+            !this._loadedBySourceController &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
@@ -3764,10 +3788,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
-                if (loadedBySourceController) {
-                    _private.executeAfterReloadCallbacks(self, items, newOptions);
-                }
-
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
                     && newOptions.selectedKeys && newOptions.selectedKeys.length) {
@@ -3778,6 +3798,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
+            }
+
+            if (this._loadedBySourceController) {
+                _private.executeAfterReloadCallbacks(self, items, newOptions);
             }
         }
 
@@ -3845,7 +3869,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        if (this._items && this._items.getCount()) {
+        // Когда удаляют все записи, мы сбрасываем selection, поэтому мы его должны применить даже когда список пуст
+        if (this._items) {
             const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
@@ -3881,7 +3906,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
+        if (searchValueChanged || this._loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -4072,7 +4097,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
-        if (this._sourceController) {
+
+        // Если sourceController есть в опциях, значит его создали наверху
+        // например list:DataContainer, и разрушать его тоже должен создатель.
+        if (this._sourceController && !this._options.sourceController) {
             this._sourceController.destroy();
         }
 
@@ -4198,7 +4226,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (this._listViewModel && !this._modelRecreated && !this.__error) {
+            if (this._listViewModel && !this._modelRecreated && this._viewReady) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
@@ -4216,7 +4244,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated || positionRestored) {
+            if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
 
@@ -4329,6 +4357,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
+        this._loadedBySourceController = false;
         this._notifyOnDrawItems();
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
@@ -5252,8 +5281,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        // нельзя делать это в процессе обновления
-        if (!this._updateInProgress && !this._scrollController?.getScrollTop()) {
+        // нельзя делать это в процессе обновления или загрузки
+        if (!this._loadingState && !this._updateInProgress && !this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
         }
         if (this._hideTopTrigger && !this._needScrollToFirstItem) {
@@ -5402,7 +5431,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         swipeEvent.stopPropagation();
@@ -5489,7 +5518,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
-        return diCreate(modelName, {...modelConfig, collection: items});
+        return diCreate(modelName, {...modelConfig, collection: items, unique: true});
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {
@@ -5515,6 +5544,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
+        this._viewReady = true;
         if (this._isScrollShown) {
             this._viewSize = _private.getViewSize(this, true);
             this._updateItemsHeights();

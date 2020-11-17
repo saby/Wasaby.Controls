@@ -8,6 +8,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             tileMode: 'static',
             itemsHeight: 300,
             imageProperty: 'image',
+            folderWidth: 250,
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
@@ -212,7 +213,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
 
       it('getTileItemData', function() {
-         var tileItemData = treeTileViewModel.getTileItemData({
+         let tileItemData = treeTileViewModel.getTileItemData({
             isNode: () => true,
             getContents: () => null
          });
@@ -232,6 +233,11 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             imageFit: 'cover',
             imageUrlResolver: urlResolver
          });
+         tileItemData = treeTileViewModel.getTileItemData({
+            isNode: () => false,
+            getContents: () => null
+         });
+         assert.isTrue(tileItemData.itemWidth === 250);
       });
       it('isScaled', function() {
          let itemData = {
