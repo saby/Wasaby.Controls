@@ -26,8 +26,8 @@ export default class extends Control {
             filter: (item, queryFilter) => {
                 let addToData = true;
                 const emptyFields = {
-                    owner: '0',
-                    department: '1'
+                    owner: 'По ответственному',
+                    amount: 1
                 };
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
@@ -62,7 +62,7 @@ export default class extends Control {
             {
                 group: 'Ответственный',
                 name: 'owner',
-                resetValue: '0',
+                resetValue: 'По ответственному',
                 value: '0',
                 editorTemplateName: 'Controls/filter:ListEditor',
                 textValue: '',
@@ -71,7 +71,7 @@ export default class extends Control {
                     displayProperty: 'title',
                     source: new Memory({
                         data: [
-                            { id: 0, title: 'По ответственному', owner: '0' },
+                            { id: 0, title: 'По ответственному', owner: 'По ответственному' },
                             { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
                             { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
                             { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
