@@ -5820,14 +5820,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const draggableItem = this._dndListController.getDraggableItem();
             this._dndListController.endDrag();
 
-            if (this._options.markerVisibility !== 'hidden' && targetPosition) {
-                if (targetPosition.dispItem instanceof TreeItem) {
-                    const moveToCollapsedNode = targetPosition.position === 'on'
-                        && !targetPosition.dispItem.isExpanded();
-                    if (!moveToCollapsedNode) {
-                        const draggedKey = draggableItem.getContents().getKey();
-                        _private.changeMarkedKey(this, draggedKey);
-                    }
+            // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+                const moveToCollapsedNode = targetPosition.position === 'on'
+                    && targetPosition.dispItem instanceof TreeItem
+                    && !targetPosition.dispItem.isExpanded();
+                // Ставим маркер на перетаксиваемый элемент всегда, за исключением ситуации
+                // когда перетаскиваем запись в свернутый узел
+                if (!moveToCollapsedNode) {
+                    const draggedKey = draggableItem.getContents().getKey();
+                    _private.changeMarkedKey(this, draggedKey);
                 }
             }
         };
