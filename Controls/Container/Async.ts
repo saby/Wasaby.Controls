@@ -229,6 +229,7 @@ export = Async;
 /**
  * @name Controls/Container/Async#templateName
  * @cfg {String} Имя асинхронно загружаемого контрола.
+ * Можно использовать только {@link /doc/platform/developmentapl/interface-development/pattern-and-practice/javascript-libraries/#_2 публичные пути библиотеки}.
  */
 
 /**
