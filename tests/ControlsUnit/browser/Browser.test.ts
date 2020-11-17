@@ -85,6 +85,19 @@ describe('Controls/browser:Browser', () => {
                 ok(browser._viewMode === 'table');
             });
 
+            it('searchValue', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._searchValue === '');
+
+                options = {...options};
+                options.searchValue = 'test';
+                await browser._beforeMount(options);
+                ok(browser._searchValue === 'test');
+            });
+
         });
 
         describe('searchController', () => {
@@ -252,6 +265,23 @@ describe('Controls/browser:Browser', () => {
                 browser._sourceController.updateOptions = () => { return true; };
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._options.filter, filter);
+            });
+
+            it('update with searchValue', async () => {
+                let options = getBrowserOptions();
+                const filter = {
+                    testField: 'newFilterValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                options = {...options};
+                options.filter = {};
+                options.searchValue = 'test';
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._filter.name, 'test');
             });
 
         });

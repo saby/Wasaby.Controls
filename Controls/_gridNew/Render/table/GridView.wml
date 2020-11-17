@@ -26,6 +26,7 @@
                 style="{{ _options.style }}"
                 theme="{{ _options.theme }}"
                 itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+                groupTemplate="{{ _groupTemplate }}"
                 itemActionsPosition="{{ _options.itemActionsPosition }}"
                 itemActionsTemplate="{{ _options.itemActionsTemplate }}"
                 itemActionsClass="{{ _options.itemActionsClass }}"
@@ -35,13 +36,14 @@
         </ws:partial>
     </tbody>
     <!-- emptyTemplate -->
-<!--    <ws:if data="{{_options.emptyTemplate}}">-->
-<!--        <ws:partial template="{{ _options.emptyTemplate }}"-->
-<!--                    attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"-->
-<!--                    prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"-->
-<!--                    isFullGridSupport="{{ true }}"-->
-<!--                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>-->
-<!--    </ws:if>-->
+    <ws:if data="{{_options.emptyTemplate}}">
+        <td colspan="{{ _listModel.getColumns().length.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0) }}">
+            <ws:partial template="{{ _options.emptyTemplate }}"
+                    attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
+                    prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
+                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
+        </td>
+    </ws:if>
     <!-- Results (bottom) -->
     <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}">
         <ws:partial template="wml!Controls/_gridNew/Render/table/Header"

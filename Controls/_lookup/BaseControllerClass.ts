@@ -69,10 +69,10 @@ export default class LookupBaseControllerClass {
             updateResult = true;
         } else if (sourceIsChanged || keysChanged) {
             if (this._selectedKeys.length) {
-                if (this._needLoadItems()) {
+                if (this._needLoadItems() || sourceIsChanged) {
                     updateResult = this.loadItems();
                 }
-            } else if (keysChanged) {
+            } else if (keysChanged && this.getItems().getCount()) {
                 this._clearItems();
                 updateResult = true;
             }
@@ -235,7 +235,9 @@ export default class LookupBaseControllerClass {
 
     private _needLoadItems(): boolean {
         const items = this._getItems();
-        return this.getSelectedKeys().some((key) => {
+        const selectedKeys = this.getSelectedKeys();
+
+        return (items.getCount() !== selectedKeys.length) || this.getSelectedKeys().some((key) => {
             return items.getIndexByValue(this._options.keyProperty, key) === -1;
         });
     }

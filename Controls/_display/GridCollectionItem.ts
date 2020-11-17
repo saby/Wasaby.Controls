@@ -121,7 +121,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_additional-with-main';
         }
 
-        if ((stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1 || !ladder) {
+        if ((stickyProperty === ladderProperty || !stickyProperty) && !ladder || !ladder[ladderProperty] || ladder[ladderProperty].ladderLength >= 1) {
 
         } else {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
@@ -142,6 +142,14 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             this._reinitializeColumns();
         }
         return isChangedMultiSelectVisibility;
+    }
+
+    setColumns(newColumns: TColumns): void {
+        if (this._$columns !== newColumns) {
+            this._$columns = newColumns;
+            this._nextVersion();
+            this._reinitializeColumns();
+        }
     }
 
     // region overrides

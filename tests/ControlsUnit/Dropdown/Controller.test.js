@@ -441,7 +441,7 @@ define(
 
          it('_open dropdown', () => {
             let dropdownController = getDropdownController(config),
-               opened = false;
+               opened = false, menuSourceCreated = false;
             dropdownController._items = itemsRecords.clone();
             dropdownController._source = 'testSource';
 
@@ -497,6 +497,17 @@ define(
             dropdownController._open().then(function() {
                assert.equal(dropdownController._items.getCount(), updatedItems.length);
                assert.isTrue(opened);
+            });
+
+            //loadDependencies returns error
+            dropdownController.loadDependencies = () => {
+               return Promise.reject(new Error('testError'));
+            };
+            dropdownController._createMenuSource = () => {
+               menuSourceCreated = true;
+            };
+            dropdownController._open().then(function() {
+               assert.isFalse(menuSourceCreated);
             });
          });
 
@@ -704,6 +715,7 @@ define(
 
                assert.isTrue(resultPopupConfig.templateOptions.closeButtonVisibility);
                assert.equal(resultPopupConfig.templateOptions.source, 'testSource');
+               assert.isNull(resultPopupConfig.templateOptions.dataLoadCallback);
                assert.equal(resultPopupConfig.opener, 'test');
             });
 

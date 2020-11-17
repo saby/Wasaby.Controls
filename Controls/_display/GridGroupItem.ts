@@ -6,6 +6,7 @@ import {IOptions as ICollectionItemOptions} from './CollectionItem';
 import GridColumn from './GridColumn';
 import GridCollection from './GridCollection';
 import GridGroupCell from './GridGroupCell';
+import * as GridLadderUtil from './utils/GridLadderUtil';
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
 
@@ -56,6 +57,10 @@ export default class GridGroupItem<T> extends mixin<
         return this._$owner.isStickyHeader();
     }
 
+    getStickyColumn(): GridLadderUtil.IStickyColumn {
+        return this._$owner.getStickyColumn();
+    }
+
     getCaption(): T {
         return this.contents;
     }
@@ -66,13 +71,12 @@ export default class GridGroupItem<T> extends mixin<
     }
 
     _initializeColumns(): void {
-        if (this._$owner.getColumns()) {
+        if (this._$columns) {
             const columns = [];
-            const factory = this._getColumnsFactory();
 
             columns.push(new GridGroupCell({
                 owner: this,
-                columns: this._$owner.getColumns(),
+                columns: this._$columns,
                 column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE }
             }));
 

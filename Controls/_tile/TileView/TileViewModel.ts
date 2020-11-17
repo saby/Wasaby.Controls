@@ -81,6 +81,11 @@ var TileViewModel = ListViewModel.extend({
 
         current = cMerge(current, this.getTileItemData(dispItem));
 
+        // Совместимость с newModel, https://online.sbis.ru/opendoc.html?guid=0bca7ba3-f49f-46da-986a-a1692deb9c47
+        current.isStickyHeader = () => {
+            return this._options.stickyHeader;
+        }
+
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ` controls-TileView__checkbox_position-${current.multiSelectPosition}_theme-${current.theme} ` +
                 'controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
@@ -224,10 +229,6 @@ var TileViewModel = ListViewModel.extend({
         return this._options.itemsContainerPadding;
     },
 
-    getItemsContainerPadding() {
-        return this._tileModel.getItemsContainerPadding();
-    },
-
     _onCollectionChange(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex): void {
         // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
         //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
@@ -331,14 +332,20 @@ var TileViewModel = ListViewModel.extend({
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     },
 
+    shouldOpenExtendedMenu(isActionMenu: boolean, isContextMenu: boolean, itemData: Record<string, any>): boolean {
+        const isScalingTile = this._options.tileScalingMode !== 'none' && !itemData.dispItem.isNode();
+        return this._options.actionMenuViewMode === 'preview' && !isActionMenu && !(isScalingTile && isContextMenu);
+    },
+
     getActionsMenuConfig(
         itemData,
         clickEvent: SyntheticEvent,
         opener,
         templateOptions,
-        isActionMenu
+        isActionMenu,
+        isContextMenu
     ): Record<string, any> {
-        if (this._options.actionMenuViewMode === 'preview' && !isActionMenu) {
+        if (this.shouldOpenExtendedMenu(isActionMenu, isContextMenu, itemData)) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = templateOptions;
             /* TODO Вынести этот код из модели в контрол плитки

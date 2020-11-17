@@ -169,7 +169,10 @@ export class Controller {
     */
    onCollectionReset(): CrudEntityKey {
       let newMarkedKey = this._markedKey;
-      if (this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
+      // при ресете маркер пересчитаем, только когда маркер всегда виден или виден по активации и маркер был до ресета
+      const needRecalculateMarker = this._markerVisibility === Visibility.Visible
+          || this._markerVisibility === Visibility.OnActivated && this._markedKey !== null && this._markedKey !== undefined;
+      if (needRecalculateMarker && this._model.getCount() && !this._model.getItemBySourceKey(this._markedKey)) {
          newMarkedKey = this._getFirstItemKey();
       }
       if (newMarkedKey === this._markedKey) {
@@ -202,7 +205,7 @@ export class Controller {
 
       // Для GroupItem нет ключа, в contents хранится не Model
       if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
-         return undefined;
+         return null;
       }
 
       return contents.getKey();

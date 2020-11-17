@@ -4,6 +4,7 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { ControllerClass as OperationsController } from 'Controls/operations';
 import { ControllerClass as SearchController } from 'Controls/search';
 import { ControllerClass as FilterController, IFilterItem } from 'Controls/filter';
+import { IFilterControllerOptions } from 'Controls/_filter/ControllerClass';
 import { tmplNotify } from 'Controls/eventUtils';
 import { RecordSet } from 'Types/collection';
 
@@ -43,7 +44,7 @@ export default class Browser extends Control {
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
     private _viewMode: string = undefined;
-    private _searchValue: string = null;
+    private _searchValue: string = '';
     private _misspellValue: string = null;
     private _root: Key = null;
     private _deepReload: boolean = undefined;
@@ -74,7 +75,10 @@ export default class Browser extends Control {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController(options);
+        this._filterController = new FilterController({
+            ...options,
+            historySaveCallback: this._historySaveCallback.bind(this)
+        });
 
         this._filter = options.filter;
         this._groupHistoryId = options.groupHistoryId;
@@ -139,6 +143,10 @@ export default class Browser extends Control {
         }
     }
 
+    protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+        this?._notify('historySave', [historyData, items]);
+    }
+
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {
         let methodResult;
 
@@ -147,7 +155,7 @@ export default class Browser extends Control {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        const isFilterOptionsChanged = this._filterController.update({...newOptions, searchValue: this._searchValue});
+        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
 
         if (isFilterOptionsChanged) {
             this._updateFilterAndFilterItems();
@@ -268,7 +276,7 @@ export default class Browser extends Control {
         const controllerState = this._sourceController.getState();
         this._updateContext(controllerState);
 
-        if (options.searchValue) {
+        if (options.searchValue || options.useStore) {
             this._createSearchControllerWithContext(options, this._dataOptionsContext);
         }
     }
@@ -459,6 +467,14 @@ export default class Browser extends Control {
             filter: this._filter,
             source: this._source,
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+        };
+    }
+
+    private _getFilterControllerOptions(options): IFilterControllerOptions {
+       return {
+           ...options,
+           searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue,
+           historySaveCallback: this._historySaveCallback.bind(this)
         };
     }
 

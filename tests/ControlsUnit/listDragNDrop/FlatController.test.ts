@@ -45,9 +45,7 @@ describe('Controls/_listDragNDrop/FlatController', () => {
          const modelSetDraggedItemsSpy = spy(model, 'setDraggedItems');
          controller.setDraggedItems(new ItemsEntity({items: [1]}));
 
-         // undefined - так как startDrag не был вызван
-         assert.isTrue(modelSetDraggedItemsSpy.withArgs(null, [1]).calledOnce,
-            'setDraggedItems не вызвался или вызвался с неверными параметрами');
+         assert.isFalse(modelSetDraggedItemsSpy.withArgs(null, [1]).calledOnce, 'setDraggedItems вызвался');
       });
 
       it ('pass draggedItem', () => {

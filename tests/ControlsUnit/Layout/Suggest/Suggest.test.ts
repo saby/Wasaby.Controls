@@ -455,10 +455,13 @@ describe('Controls/suggest', () => {
                }
             }));
          }
-
-         const sourceController = inputContainer._getSourceController();
-
-         const loadSpy = sandbox.spy(sourceController, 'load');
+         inputContainer._getRecentKeys = () => {
+            return Promise.resolve(null);
+         };
+         const loadSpy = sandbox.stub(inputContainer, '_loadHistoryKeys').callsFake(() => {
+            inputContainer._historyLoad = 'notNull';
+            return Promise.resolve();
+         });
 
          inputContainer._inputActivated();
          await inputContainer._inputActivated();
@@ -1109,13 +1112,14 @@ describe('Controls/suggest', () => {
          assert.isTrue(suggestOpened);
 
          inputContainer._getRecentKeys = () => {
-            return Deferred.success(null);
+            return Promise.resolve(null);
          };
 
          suggestOpened = false;
          inputContainer._options.autoDropDown = false;
          inputContainer._historyKeys = null;
          inputContainer._filter = {};
+
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
@@ -1128,7 +1132,8 @@ describe('Controls/suggest', () => {
          inputContainer._options.historyId = null;
          inputContainer._filter = {};
          inputContainer._options.emptyTemplate = undefined;
-         await inputContainer._updateSuggestState();
+         inputContainer._updateSuggestState();
+
          assert.deepEqual(inputContainer._filter, {});
          assert.isFalse(suggestOpened);
 
@@ -1354,6 +1359,22 @@ describe('Controls/suggest', () => {
 
          suggestComponent._openSelector(templateOptions);
          assert.isFalse(isOpenPopup);
+      });
+
+      it('changeValueHandler', async () => {
+         const suggestComponent = getComponentObject({
+            suggestTemplate: {},
+            value: 'testValue',
+            searchParam: 'testSearchParam',
+            filter: '',
+            minSearchLength: 3
+         });
+
+         await suggestComponent._beforeMount(suggestComponent._options);
+         assert.strictEqual(suggestComponent._filter.testSearchParam, 'testValue');
+
+         suggestComponent._changeValueHandler({}, '');
+         assert.strictEqual(suggestComponent._filter.testSearchParam, '');
       });
 
       describe('_beforeUnmount', () => {

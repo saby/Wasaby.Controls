@@ -82,8 +82,8 @@ export default class MultipleInput extends BaseLookupInput {
     protected _listOfDependentOptions: string[] = ['displayProperty', 'readOnly', 'placeholder', 'isInputVisible'];
     protected _availableWidthCollection: number;
 
-    showSelector(popupOptions: IStackPopupOptions): void {
-        showSelector(this, popupOptions, false);
+    showSelector(popupOptions?: IStackPopupOptions): boolean {
+        return showSelector(this, popupOptions, false);
     }
 
     _calculateSizes(options: ILookupInputOptions): void {
