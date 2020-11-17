@@ -902,5 +902,48 @@ describe('Controls/list_clean/BaseControl', () => {
             });
 
         });
+
+        describe('_beforeUpdate sourceController', () => {
+
+            it('_beforeUpdate while source controller is loading', async () => {
+                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                let loadStarted = false;
+
+                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
+                baseControlOptions.sourceController.reload = () => {
+                    loadStarted = true;
+                    return Promise.reject();
+                };
+
+                const baseControl = new BaseControl(baseControlOptions);
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl._sourceController = baseControlOptions.sourceController;
+                baseControl.saveOptions(baseControlOptions);
+
+                const newSourceControllerOptions = {...baseControlOptions};
+                newSourceControllerOptions.source = new Memory();
+                baseControlOptions.sourceController.updateOptions(newSourceControllerOptions);
+                baseControlOptions.sourceController.load();
+
+                loadStarted = false;
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.filter = 'testFilter';
+                baseControl._beforeUpdate(baseControlOptions);
+                assert.isFalse(loadStarted);
+            });
+
+        });
+
+        it('should immediately resolve promise if commit edit called without eipController', () => {
+            let isCommitCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                commit() {
+                    isCommitCalled = true;
+                }
+            });
+            return baseControl.commitEdit().then(() => {
+                assert.isFalse(isCommitCalled);
+            });
+        });
     });
 });
