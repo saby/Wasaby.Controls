@@ -169,7 +169,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }, true], {bubbling: true});
     }
 
-    getContainer(): HTMLElement {
+    getHeaderContainer(): HTMLElement {
         return this._container;
     }
 
