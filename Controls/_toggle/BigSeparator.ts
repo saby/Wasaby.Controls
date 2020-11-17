@@ -53,7 +53,8 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
    static getDefaultOptions(): object {
       return {
-         value: false
+         value: false,
+         iconSize: 'm'
       };
    }
 
