@@ -69,8 +69,10 @@ var __PopupContent = BaseLayer.extend({
       }
    },
 
-   _beforeMount(): void {
-      this._suggestWidth = _private.getSuggestWidth(this._options.target[0] || this._options.target);
+   _beforeMount(options): void {
+      if (options.target) {
+         this._suggestWidth = _private.getSuggestWidth(options.target[0] || options.target);
+      }
    },
 
    _afterMount(): void {
