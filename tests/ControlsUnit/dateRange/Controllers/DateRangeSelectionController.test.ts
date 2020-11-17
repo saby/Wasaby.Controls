@@ -2,6 +2,52 @@ import DateRangeSelectionController from 'Controls/_dateRange/Controllers/DateRa
 import calendarTestUtils = require('ControlsUnit/Calendar/Utils');
 
 describe('Controls/_dateRange/Controllers/DateRangeSelectionController', () => {
+    describe('_beforeMount', () => {
+        [{
+            quantum: {
+                days: [1, 3],
+                weeks: [4]
+            },
+            result: false
+        }, {
+            quantum: {
+                days: [1]
+            },
+            result: true
+        }, {
+            quantum: {
+                days: [1, 3]
+            },
+            result: false
+        }, {
+            quantum: {
+                weeks: [4]
+            },
+            result: true
+        }, {
+            quantum: {
+                weeks: [1, 4]
+            },
+            result: false
+        }, {
+            quantum: {
+                days: [1, 3],
+                weeks: [4]
+            },
+            result: false
+        }].forEach((test) => {
+            it('should calculate _isSingleQuant correctly', () => {
+                const component = calendarTestUtils.createComponent(
+                    DateRangeSelectionController,
+                    {
+                        quantum: test.quantum,
+                        selectionType: 'quantum'
+                    }
+                );
+                assert.equal(test.result, component._isSingleQuant);
+            });
+        });
+    });
     describe('_beforeUpdate', () => {
         [{
             initialOptions: {
