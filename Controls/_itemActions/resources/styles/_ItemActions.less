@@ -135,11 +135,19 @@
   flex-shrink: 0;
   position: relative;
   white-space: nowrap;
+  height: 100%;
 }
 
 .controls-itemActionsV__action_padding_theme-@{themeName} {
   padding: 0 @item_padding_itemActions;
-  height: 100%;
+}
+
+.controls-itemActionsV_action_padding_null_theme-@{themeName} {
+   padding: 0;
+}
+
+.controls-itemActionsV_action_padding_xs_theme-@{themeName} {
+   padding: 0;
 }
 
 .controls-action_iconStyle_secondary_theme-@{themeName} {
@@ -216,4 +224,8 @@
 
 .controls-itemActionsV__action_menu_padding_theme-@{themeName} {
    padding-right: @item_padding_itemActions;
+}
+
+.controls-itemActionsV__action_menu_padding_null_theme-@{themeName} {
+   padding-right: 0;
 }
