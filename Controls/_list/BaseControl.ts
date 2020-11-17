@@ -1695,7 +1695,7 @@ const _private = {
                     if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                         // When move items call removeHandler with "forceShift" param.
                         // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
-                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
+                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, true);
                     }
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
@@ -3670,8 +3670,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
 
+        const isSourceControllerLoadingNow = newOptions.sourceController &&
+            newOptions.sourceController.isLoading() &&
+            newOptions.sourceController.getState().source !== this._options.source;
+
         const needReload =
             !this._loadedBySourceController &&
+            !isSourceControllerLoadingNow &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
