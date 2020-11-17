@@ -44,7 +44,7 @@ export default class Browser extends Control {
     private _dataOptions: object = null;
     private _previousViewMode: string = null;
     private _viewMode: string = undefined;
-    private _searchValue: string = null;
+    private _searchValue: string = '';
     private _misspellValue: string = null;
     private _root: Key = null;
     private _deepReload: boolean = undefined;
