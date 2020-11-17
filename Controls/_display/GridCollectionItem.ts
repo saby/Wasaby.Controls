@@ -102,7 +102,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
         return stickyProperties as string[];
     }
+    shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
+        const stickyLadder = this.getStickyLadder();
+        const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const index = stickyProperties.indexOf(stickyProperty);
+        const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
 
+        if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+            index === 1 && !hasMainCell || index === 0 && hasMainCell) || stickyProperty === undefined) {
+            return false;
+        }
+        return true;
+    }
     getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
         let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
         const ladder = this.getLadder();
