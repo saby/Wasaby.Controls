@@ -153,39 +153,6 @@ define(
                   });
                });
             });
-            it('open menu', function() {
-               let isOpened = false;
-               toolbar._notify = (e) => {
-                  isOpened = true;
-                  assert.equal(e, 'menuOpened');
-               };
-               popupLib.Sticky = {
-                  closePopup: setTrue.bind(this, assert),
-                  openPopup: () => {
-                     return new Promise((resolve) => {
-                        setTrue.bind(this, assert);
-                        resolve();
-                     });
-                  }
-               };
-               toolbar._children.menuTarget = {
-                  _container: 'target'
-               };
-               toolbar._options = config;
-               toolbar._setMenuItems = () => {
-                  const then = (func) => {
-                     func();
-                  };
-                  return {
-                     then
-                  };
-               };
-               toolbar._showMenu({
-                  stopPropagation: () => {
-                  }
-               });
-               assert.equal(isOpened, true);
-            });
             it('click toolbar item', function() {
                let isNotify = false;
                toolbar._notify = (e, data) => {
@@ -227,29 +194,26 @@ define(
                      iconSize: 'm'
                   }
                });
-               let itemConfigPromise = (new toolbars.View())._getMenuConfigByItem.call(toolbar, itemWithMenu);
-               itemConfigPromise.then((itemConfig) => {
-                  if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
-                      standart.icon === itemConfig.templateOptions.headConfig.icon &&
-                      standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle &&
-                      standart.iconSize === itemConfig.templateOptions.headConfig.iconSize) {
-                     isHeadConfigCorrect = true;
-                  }
-                  assert.isTrue(isHeadConfigCorrect);
-                  toolbar._notify = (e) => {
-                     eventString += e;
-                     isNotify = true;
-                  };
-                  toolbar._itemClickHandler({
-                     stopPropagation: () => {
-                     }
-                  }, itemWithMenu);
-                  setTimeout(() => {
-                     assert.equal(eventString, 'itemClickmenuOpened');
-                     assert.equal(isNotify, true);
-                  });
-                  done();
-               });
+                let itemConfig = (new toolbars.View())._getMenuConfigByItem.call(toolbar, itemWithMenu);
+                if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
+                    standart.icon === itemConfig.templateOptions.headConfig.icon &&
+                    standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle &&
+                    standart.iconSize === itemConfig.templateOptions.headConfig.iconSize) {
+                    isHeadConfigCorrect = true;
+                }
+                assert.isTrue(isHeadConfigCorrect);
+                toolbar._notify = (e) => {
+                    eventString += e;
+                    isNotify = true;
+                };
+                toolbar._itemClickHandler({
+                    stopPropagation: () => {
+                    }
+                }, itemWithMenu);
+                setTimeout(() => {
+                    assert.equal(eventString, 'itemClickmenuOpened');
+                    assert.equal(isNotify, true);
+                });
             });
             it('menu item click', () => {
                let isMenuClosed = false;
@@ -275,7 +239,7 @@ define(
                };
                assert.equal(isMenuClosed, false);
             });
-            describe('_getMenuConfigByItem', () => {
+            it('item popup config generation', () => {
                var
                   testItem = new entity.Model({
                      rawData: {
@@ -304,7 +268,8 @@ define(
                      _source: 'items',
                      _items: { getIndexByValue: () => {} },
                      _getSourceForMenu: () => Promise.resolve(testSelf._source),
-                     _getMenuOptions: () => testSelf._menuOptions
+                     _getMenuOptions: () => toolbar._getMenuOptions.call(testSelf),
+                     _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
                   expectedConfig = {
                      opener: testSelf,
@@ -335,33 +300,15 @@ define(
                         closeButtonVisibility: false
                      }
                   };
-               it('should generate correct popup config', function(done) {
-                  const configPromise = (new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem);
-                  configPromise.then((config) => {
-                     assert.deepEqual(config, expectedConfig);
-                  });
-                  done();
-               });
+                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
 
-               it('should generate correct popup config', function (done) {
-                  testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
-                  const configPromise = (new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem);
-                  configPromise.then((config) => {
-                     assert.deepEqual(config, expectedConfig);
-                  });
-                  done();
-               });
+                testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
+                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
 
-               it('should generate correct popup config', function (done) {
-                  testItem.set('showHeader', false);
-                  expectedConfig.templateOptions.showHeader = false;
-                  expectedConfig.templateOptions.closeButtonVisibility = true;
-                  const configPromise = (new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem);
-                  configPromise.then((config) => {
-                     assert.deepEqual(config, expectedConfig);
-                  });
-                  done();
-               });
+                testItem.set('showHeader', false);
+                expectedConfig.templateOptions.showHeader = false;
+                expectedConfig.templateOptions.closeButtonVisibility = true;
+                assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), expectedConfig);
             });
             it('get button template options by item', function() {
                let item = new entity.Record(
@@ -454,7 +401,8 @@ define(
                         menuTarget: 'menuTarget'
                      },
                      _menuSource: recordForMenu,
-                     _getMenuOptions: () => testSelf._menuOptions
+                     _getMenuOptions: () => toolbar._getMenuOptions(testSelf),
+                     _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
                   templateOptions = {
                      iconSize: 'm',
@@ -498,16 +446,16 @@ define(
                toolbar._options.source = config.source;
                toolbar._closeHandler();
             });
-            it('_setMenuItems', async() => {
+            it('_setMenuSource', async() => {
                let Toolbar = new toolbars.View(config);
                await Toolbar._beforeMount(config);
                Toolbar._options = config;
-               Toolbar._setMenuItems();
+               Toolbar._setMenuSource();
                assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
                assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
                assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
             });
-            it('_setMenuItems without source', async() => {
+            it('_setMenuSource without source', async() => {
                const cfg = {
                   items: new collection.RecordSet({
                      rawData: defaultItems
@@ -518,7 +466,7 @@ define(
                let Toolbar = new toolbars.View(cfg);
                await Toolbar._beforeMount(cfg);
                Toolbar._options = cfg;
-               Toolbar._setMenuItems();
+               Toolbar._setMenuSource();
                assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
                assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
                assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
@@ -564,11 +512,16 @@ define(
                         }]
                   })
                };
+               const event = {
+                   nativeEvent: {
+                       button: 0
+                   }
+               }
                let isMenuItemsChanged = false;
                let Toolbar = new toolbars.View(options);
                Toolbar._notify = () => {};
                Toolbar._openMenu = () => {};
-               Toolbar._setMenuItems = () => {
+               Toolbar._setMenuSource = () => {
                   isMenuItemsChanged = true;
                   return {
                      then: function(func) {
@@ -577,14 +530,13 @@ define(
                   };
                };
                Toolbar._beforeMount(options);
-               Toolbar._showMenu();
+               Toolbar._mouseDownHandler(event);
                assert.isTrue(isMenuItemsChanged);
-               assert.isTrue(Toolbar._isLoadMenuItems);
 
                Toolbar._beforeUpdate(newOptions);
                isMenuItemsChanged = false;
                assert.isFalse(Toolbar._isLoadMenuItems);
-               Toolbar._showMenu();
+               Toolbar._mouseDownHandler(event);
                assert.isTrue(isMenuItemsChanged);
                assert.isTrue(Toolbar._isLoadMenuItems);
 
