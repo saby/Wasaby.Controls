@@ -383,6 +383,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return ItemsUtil.getLastItem(this._display);
     },
 
+    getLast() {
+        return this._display.getLast();
+    },
+
     getIndexByKey(key: string | number) {
         return this._display.getIndexByKey(key);
     },
