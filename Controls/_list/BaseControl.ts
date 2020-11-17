@@ -660,12 +660,15 @@ const _private = {
                 }], {bubbling: true});
             }
         };
-        return self._scrollController ?
-            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                if (result) {
-                    _private.handleScrollControllerResult(self, result);
-                }
-            }) : Promise.resolve();
+        return new Promise((resolve) => {
+            self._scrollController ?
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+                    resolve();
+                }) : resolve();
+        });
     },
 
     // region key handlers
@@ -1131,11 +1134,11 @@ const _private = {
             }
 
             let navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
-            
+
             // Решение проблемы загрузки достаточного количества данных для перехода в конец/начало списка
-            // в зависимости от размеров экрана. 
+            // в зависимости от размеров экрана.
             // Из размера вьюпорта и записи мы знаем, сколько данных нам хватит.
-            // Не совсем понятно, где должен быть этот код. SourceController не должен знать про 
+            // Не совсем понятно, где должен быть этот код. SourceController не должен знать про
             // размеры окна, записей, и т.д. Но и список не должен сам вычислять параметры для загрузки.
             // https://online.sbis.ru/opendoc.html?guid=608aa44e-8aa5-4b79-ac90-d06ed77183a3
             const itemsOnPage = self._scrollPagingCtr?.getItemsCountOnPage();
@@ -4103,7 +4106,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
-        if (this._sourceController) {
+
+        // Если sourceController есть в опциях, значит его создали наверху
+        // например list:DataContainer, и разрушать его тоже должен создатель.
+        if (this._sourceController && !this._options.sourceController) {
             this._sourceController.destroy();
         }
 
@@ -5535,7 +5541,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
-        return diCreate(modelName, {...modelConfig, collection: items});
+        return diCreate(modelName, {...modelConfig, collection: items, unique: true});
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {

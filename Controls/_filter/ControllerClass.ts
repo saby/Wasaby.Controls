@@ -75,7 +75,8 @@ export default class FilterControllerClass {
     }
 
     setFilterItems(historyItems: THistoryData): void {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             this._setFilterItems(state.filterSource, [], historyItems);
         } else {
@@ -90,14 +91,15 @@ export default class FilterControllerClass {
     }
 
     loadFilterItemsFromHistory(): Promise<THistoryData> {
-        if (this._options.useStore) {
+        // TODO: storefix207100
+        if (this._options.useStore && !this._options.filterButtonSource) {
             const state = Store.getState();
             const loadedSources = state && state.loadedSources && state.loadedSources[0];
             if (loadedSources) {
                 return this._resolveItemsWithHistory(loadedSources, loadedSources.filter);
             } else {
                 return this._resolveItemsWithHistory({
-                    historyId: state.historyId,
+                    historyId: state.historyId || this._options.historyId,
                     filterButtonSource: state.filterSource,
                     historyItems: this._options.historyItems
                 }, state.filter);
@@ -188,7 +190,8 @@ export default class FilterControllerClass {
 
     handleDataLoad(items: RecordSet): void {
         if (this._options.historyId && this._isFilterChanged) {
-            if (getHistorySource({ historyId: this._options.historyId }).historyReady()) {
+            if (getHistorySource({ historyId: this._options.historyId,
+                                        favorite: !!this._options.prefetchParams }).historyReady()) {
                 this._deleteCurrentFilterFromHistory();
             }
             this._addToHistory(
@@ -289,7 +292,7 @@ export default class FilterControllerClass {
         historyItems: IFilterItem[],
         prefetchParams: IPrefetchHistoryParams
     ): Promise<THistoryData> {
-        if (historyItems && prefetchParams) {
+        if (historyItems && prefetchParams && historyItems?.length) {
             return this._loadHistoryItems(historyId).then((result) => {
                 return historyItems ? historyItems : result;
             });

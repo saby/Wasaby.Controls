@@ -10,6 +10,7 @@ import 'Controls/heading';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Record} from 'Types/entity';
+import {Logger} from 'UI/Utils';
 
 interface IReceivedState {
     items: Record[];
@@ -71,6 +72,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     protected calculateBreadcrumbsUtil: object;
     protected _arrowWidth: number;
     protected _paddingRight: number;
+    private _initializingWidth: number;
 
     protected _beforeMount(options?: IBreadCrumbsOptions,
                            contexts?: object,
@@ -85,6 +87,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
 
         if (options.containerWidth) {
+            this._initializingWidth = options.containerWidth;
             return Promise.all([import('Controls/_breadcrumbs/Utils'), loadFontWidthConstants()]).then((res) => {
                 this.calculateBreadcrumbsUtil = res[0].default;
                 this._arrowWidth = res[0].ARROW_WIDTH;
@@ -116,13 +119,21 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
         const isDataChange = isItemsChanged || isContainerWidthChanged || isFontSizeChanged;
 
-        if (isDataChange) {
-            this._prepareItems(newOptions);
-            if (this._breadCrumbsItems) {
-                if (newOptions.containerWidth) {
-                    this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
-                } else {
-                    this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+        if (!this._initializingWidth && newOptions.containerWidth) {
+            const parentModuleName = this._logicParent?._moduleName;
+            const text = `Опция containerWidth должна быть установлена сразу, на момент построения контрола.
+                          Задание значения в цикле обновления некорректно, контрол может работать неправильно.
+                          Контрол, устанавливающий опции: ${parentModuleName}`;
+            Logger.error(text, this);
+        } else {
+            if (isDataChange) {
+                this._prepareItems(newOptions);
+                if (this._breadCrumbsItems) {
+                    if (newOptions.containerWidth) {
+                        this._calculateBreadCrumbsToDraw(this._breadCrumbsItems, newOptions);
+                    } else {
+                        this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(this._breadCrumbsItems);
+                    }
                 }
             }
         }
