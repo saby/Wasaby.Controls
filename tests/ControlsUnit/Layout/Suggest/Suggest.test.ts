@@ -455,9 +455,9 @@ describe('Controls/suggest', () => {
                }
             }));
          }
-
-         const sourceController = inputContainer._getSourceController();
-
+         inputContainer._getRecentKeys = () => {
+            return Promise.resolve(null);
+         };
          const loadSpy = sandbox.stub(inputContainer, '_loadHistoryKeys').callsFake(() => {
             inputContainer._historyLoad = 'notNull';
             return Promise.resolve();
