@@ -5821,12 +5821,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dndListController.endDrag();
 
             if (this._options.markerVisibility !== 'hidden' && targetPosition) {
-                const moveToCollapsedNode = targetPosition.position === 'on'
-                    && targetPosition.dispItem instanceof TreeItem
-                    && !targetPosition.dispItem.isExpanded();
-                if (!moveToCollapsedNode) {
-                    const draggedKey = draggableItem.getContents().getKey();
-                    _private.changeMarkedKey(this, draggedKey);
+                if (targetPosition.dispItem instanceof TreeItem) {
+                    const moveToCollapsedNode = targetPosition.position === 'on'
+                        && !targetPosition.dispItem.isExpanded();
+                    if (!moveToCollapsedNode) {
+                        const draggedKey = draggableItem.getContents().getKey();
+                        _private.changeMarkedKey(this, draggedKey);
+                    }
                 }
             }
         };
