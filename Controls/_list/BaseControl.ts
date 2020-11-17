@@ -3690,8 +3690,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
 
+        const isSourceControllerLoadingNow = newOptions.sourceController &&
+            newOptions.sourceController.isLoading() &&
+            newOptions.sourceController.getState().source !== this._options.source;
+
         const needReload =
             !this._loadedBySourceController &&
+            !isSourceControllerLoadingNow &&
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
