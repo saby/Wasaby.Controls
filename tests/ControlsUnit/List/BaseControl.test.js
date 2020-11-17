@@ -7531,7 +7531,7 @@ define([
          });
 
          it('drag end', () => {
-            baseControl._dndListController = {
+            const dndController = {
                endDrag: () => undefined,
                getDragPosition: () => {
                   return {
@@ -7546,6 +7546,7 @@ define([
                   })
                })
             };
+            baseControl._dndListController = dndController;
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
@@ -7556,6 +7557,7 @@ define([
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
 
             baseControl._insideDragging = true;
+            baseControl._dndListController = dndController;
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
