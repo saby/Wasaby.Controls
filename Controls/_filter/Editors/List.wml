@@ -1,0 +1,7 @@
+<div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
+   <Controls.list:View source="{{_options.source}}"
+                       markedKey="{{_options.propertyValue}}"
+                       keyProperty="{{_options.keyProperty}}"
+                       scope="{{_options}}"
+                       on:markedKeyChanged="_handleMarkedKeyChanged()"/>
+</div>
