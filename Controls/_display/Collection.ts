@@ -2214,6 +2214,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             draggableItem,
             avatarIndex: avatarStartIndex
         });
+        this._reIndex();
 
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
         this._notifyBeforeCollectionChange();
@@ -2231,14 +2232,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
         if (strategy && position) {
             strategy.setAvatarPosition(position.index, position.position);
+            this._reIndex();
             this.nextVersion();
         }
     }
 
     resetDraggedItems(): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-        strategy.reset();
         this.removeStrategy(this._dragStrategy);
+        this._reIndex();
     }
 
     // endregion
