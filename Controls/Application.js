@@ -214,12 +214,6 @@ define('Controls/Application',
          _popupCreatedHandler: function() {
             this._isPopupShow = true;
 
-            // На Ipad необходимо вызывать reflow в момент открытия окон для решения проблем с z-index-ами
-            // https://online.sbis.ru/opendoc.html?guid=3f84a4bc-2973-497c-91ad-0165b5046bbc
-            if (Env.detection.isMobileIOS) {
-               sizeUtils.DOMUtil.reflow();
-            }
-
             this._changeOverflowClass();
          },
 
