@@ -2,12 +2,12 @@
    <Controls.input:Number scope="{{_options}}"
                           contrastBackground="{{false}}"
                           borderVisibility='partial'
-                          bind:value="_options.propertyValue[0]"
+                          value="{{_options.propertyValue[0]}}"
                           on:valueChanged="_handleMinValueChanged()"/>
    <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
    <Controls.input:Number scope="{{_options.editorOptions}}"
                           borderVisibility='partial'
                           contrastBackground="{{false}}"
-                          bind:value="_options.propertyValue[1]"
+                          value="{{_options.propertyValue[1]}}"
                           on:valueChanged="_handleMaxValueChanged()"/>
 </div>
