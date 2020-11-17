@@ -7526,6 +7526,7 @@ define([
             assert.isOk(secondBaseControl._dndListController);
             assert.isOk(secondBaseControl._dndListController.getDragEntity());
             assert.isOk(secondBaseControl._dndListController.getDraggableItem());
+            assert.isOk(secondBaseControl._dndListController.getDragPosition());
             assert.equal(secondBaseControl._dndListController.getDraggableItem().getContents(), newRecord);
          });
 
