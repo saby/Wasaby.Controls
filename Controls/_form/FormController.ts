@@ -284,6 +284,8 @@ class FormController extends Control<IFormController, IReceivedState> {
                     this.update().then(() => {
                         this._isConfirmShowed = false;
                         defaultAnswerCallback();
+                    }, () => {
+                        // Промис с необработанным исключением кидает ошибку в консоль. Ставлю заглушку
                     });
                 } else {
                     this._isConfirmShowed = false;

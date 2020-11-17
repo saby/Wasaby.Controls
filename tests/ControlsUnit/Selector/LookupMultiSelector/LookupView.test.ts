@@ -95,5 +95,13 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
          readOnly: true
       }));
    });
+
+   it('showSelector retunrs boolean result', function() {
+      var lookupView = new Lookup();
+      lookupView.saveOptions({
+         selectorTempalte: null
+      });
+      ok(lookupView.showSelector() === false);
+   });
 });
 
