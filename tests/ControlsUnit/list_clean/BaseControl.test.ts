@@ -806,6 +806,26 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl = undefined;
         });
 
+        it('should cancel edit on changes that leads to reload', async () => {
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl.saveOptions(baseControlCfg);
+            let isEditingCancelled = false;
+            baseControl._editInPlaceController = {
+                cancel() {
+                    isEditingCancelled = true;
+                    return Promise.resolve();
+                },
+                isEditing() {
+                    return true;
+                },
+                updateOptions() {}
+            };
+
+            return baseControl._beforeUpdate({...baseControlCfg, filter: {field: 'ASC'}, useNewModel: true}).then(() => {
+                assert.isTrue(isEditingCancelled);
+            });
+        });
+
         it('should immediately resolve promise if cancel edit called without eipController', () => {
             let isCancelCalled = false;
             baseControl.getEditInPlaceController = () => ({
@@ -815,6 +835,18 @@ describe('Controls/list_clean/BaseControl', () => {
             });
             return baseControl.cancelEdit().then(() => {
                 assert.isFalse(isCancelCalled);
+            });
+        });
+
+        it('should immediately resolve promise if commit edit called without eipController', () => {
+            let isCommitCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                commit() {
+                    isCommitCalled = true;
+                }
+            });
+            return baseControl.commitEdit().then(() => {
+                assert.isFalse(isCommitCalled);
             });
         });
 
@@ -869,18 +901,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 });
             });
 
-        });
-
-        it('should immediately resolve promise if commit edit called without eipController', () => {
-            let isCommitCalled = false;
-            baseControl.getEditInPlaceController = () => ({
-                commit() {
-                    isCommitCalled = true;
-                }
-            });
-            return baseControl.commitEdit().then(() => {
-                assert.isFalse(isCommitCalled);
-            });
         });
     });
 });

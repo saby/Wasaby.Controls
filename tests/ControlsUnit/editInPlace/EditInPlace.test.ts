@@ -819,8 +819,45 @@ describe('Controls/_editInPlace/EditInPlace', () => {
         });
     });
 
-    testEndEditWith('commit');
-    testEndEditWith('cancel');
+    describe('commit', () => {
+        testEndEditWith('commit');
+    });
+
+    describe('cancel', () => {
+        testEndEditWith('cancel');
+
+        it('should ignore cancel as a result of callback if force', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return CONSTANTS.CANCEL;
+                }
+            });
+            return editInPlace.cancel(true).then((res) => {
+                assert.isUndefined(res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
+                assert.isNull(collection.find((i) => i.isEditing()));
+            });
+        });
+
+        it('should ignore promise as a result of callback if force', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return new Promise(() => {});
+                }
+            });
+            return editInPlace.cancel(true).then((res) => {
+                assert.isUndefined(res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
+                assert.isNull(collection.find((i) => i.isEditing()));
+            });
+        });
+    });
 
     it('should not throw console error if it was processed by error controller', () => {
         editInPlace.updateOptions({
@@ -842,156 +879,154 @@ describe('Controls/_editInPlace/EditInPlace', () => {
     });
 
     function testEndEditWith(operation: 'commit' | 'cancel'): void {
-        describe(operation, () => {
-            beforeEach(async () => {
-                if (operation === 'commit') {
-                    editInPlace.cancel = () => {
-                        return Promise.reject('Method shouldn\nt be called');
-                    };
-                } else {
-                    editInPlace.commit = () => {
-                        return Promise.reject('Method shouldn\nt be called');
-                    };
+        beforeEach(async () => {
+            if (operation === 'commit') {
+                editInPlace.cancel = () => {
+                    return Promise.reject('Method shouldn\nt be called');
+                };
+            } else {
+                editInPlace.commit = () => {
+                    return Promise.reject('Method shouldn\nt be called');
+                };
+            }
+            await editInPlace.edit(collection.at(0).contents);
+        });
+
+        it(`skip ${operation} if has no editing`, () => {
+            editInPlace = new EditInPlace({
+                collection,
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                },
+                onAfterEndEdit: () => {
+                    onAfterEndEditCalled = true;
                 }
-                await editInPlace.edit(collection.at(0).contents);
             });
 
-            it(`skip ${operation} if has no editing`, () => {
-                editInPlace = new EditInPlace({
-                    collection,
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                    },
-                    onAfterEndEdit: () => {
-                        onAfterEndEditCalled = true;
-                    }
-                });
-
-                return editInPlace[operation]().then((res) => {
-                    assert.isUndefined(res);
-                    assert.isFalse(onBeforeEndEditCalled);
-                    assert.isFalse(onAfterEndEditCalled);
-                });
+            return editInPlace[operation]().then((res) => {
+                assert.isUndefined(res);
+                assert.isFalse(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
             });
+        });
 
-            it('cancel operation [sync callback]', () => {
+        it('cancel operation [sync callback]', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return CONSTANTS.CANCEL;
+                }
+            });
+            return editInPlace[operation]().then((res) => {
+                assert.isTrue(res && res.canceled);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
                 assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                        return CONSTANTS.CANCEL;
-                    }
-                });
-                return editInPlace[operation]().then((res) => {
-                    assert.isTrue(res && res.canceled);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isFalse(onAfterEndEditCalled);
-                    assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                });
             });
+        });
 
-            it('cancel operation [async callback]', () => {
+        it('cancel operation [async callback]', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return Promise.resolve(CONSTANTS.CANCEL);
+                }
+            });
+            return editInPlace[operation]().then((res) => {
+                assert.isTrue(res && res.canceled);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
                 assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                        return Promise.resolve(CONSTANTS.CANCEL);
-                    }
-                });
-                return editInPlace[operation]().then((res) => {
-                    assert.isTrue(res && res.canceled);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isFalse(onAfterEndEditCalled);
-                    assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                });
             });
+        });
 
-            it('error in before callback [sync callback]', () => {
-                let isPromiseRejected = false;
+        it('error in before callback [sync callback]', () => {
+            let isPromiseRejected = false;
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    throw Error('Some error in callback.');
+                }
+            });
+            return editInPlace[operation]().catch((result) => {
+                isPromiseRejected = true;
+                return result;
+            }).then((result) => {
+                assert.isTrue(result && result.canceled);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
+                assert.isFalse(isPromiseRejected);
                 assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                        throw Error('Some error in callback.');
-                    }
-                });
-                return editInPlace[operation]().catch((result) => {
-                    isPromiseRejected = true;
-                    return result;
-                }).then((result) => {
-                    assert.isTrue(result && result.canceled);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isFalse(onAfterEndEditCalled);
-                    assert.isFalse(isPromiseRejected);
-                    assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                });
             });
+        });
 
-            it('error in before callback [async callback]', () => {
-                let isPromiseRejected = false;
+        it('error in before callback [async callback]', () => {
+            let isPromiseRejected = false;
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return Promise.reject(Error('Some error in callback.'));
+                }
+            });
+            return editInPlace[operation]().catch((result) => {
+                isPromiseRejected = true;
+                return result;
+            }).then((result) => {
+                assert.isTrue(result && result.canceled);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
+                assert.isFalse(isPromiseRejected);
                 assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                        return Promise.reject(Error('Some error in callback.'));
-                    }
-                });
-                return editInPlace[operation]().catch((result) => {
-                    isPromiseRejected = true;
-                    return result;
-                }).then((result) => {
-                    assert.isTrue(result && result.canceled);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isFalse(onAfterEndEditCalled);
-                    assert.isFalse(isPromiseRejected);
-                    assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                });
             });
+        });
 
-            it('correct [sync callback]', () => {
-                assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                return editInPlace[operation]().then((result) => {
-                    assert.isUndefined(result);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isTrue(onAfterEndEditCalled);
-                    assert.isFalse(editInPlace.isEditing());
-                });
+        it('correct [sync callback]', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            return editInPlace[operation]().then((result) => {
+                assert.isUndefined(result);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
+                assert.isFalse(editInPlace.isEditing());
             });
+        });
 
-            it('correct [async callback]', () => {
-                assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: () => {
-                        onBeforeEndEditCalled = true;
-                        return Promise.resolve();
-                    }
-                });
-                return editInPlace[operation]().then((res) => {
-                    assert.isUndefined(res);
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isTrue(onAfterEndEditCalled);
-                    assert.isFalse(editInPlace.isEditing());
-                });
+        it('correct [async callback]', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                    return Promise.resolve();
+                }
             });
+            return editInPlace[operation]().then((res) => {
+                assert.isUndefined(res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
+                assert.isFalse(editInPlace.isEditing());
+            });
+        });
 
-            it('callback arguments', () => {
-                const editingItem = collection.find((i) => i.isEditing());
-                editInPlace.updateOptions({
-                    onBeforeEndEdit: (item: Model, willSave: boolean, isAdd: boolean) => {
-                        onBeforeEndEditCalled = true;
-                        assert.equal(item, editingItem.contents);
-                        assert.isFalse(isAdd);
-                    },
-                    onAfterEndEdit: (item, isAdd) => {
-                        onAfterEndEditCalled = true;
-                        assert.equal(item.contents, editingItem.contents);
-                        assert.isFalse(isAdd);
-                    }
-                });
-                return editInPlace[operation]().then((res) => {
-                    assert.isTrue(onBeforeEndEditCalled);
-                    assert.isTrue(onAfterEndEditCalled);
-                });
+        it('callback arguments', () => {
+            const editingItem = collection.find((i) => i.isEditing());
+            editInPlace.updateOptions({
+                onBeforeEndEdit: (item: Model, willSave: boolean, isAdd: boolean) => {
+                    onBeforeEndEditCalled = true;
+                    assert.equal(item, editingItem.contents);
+                    assert.isFalse(isAdd);
+                },
+                onAfterEndEdit: (item, isAdd) => {
+                    onAfterEndEditCalled = true;
+                    assert.equal(item.contents, editingItem.contents);
+                    assert.isFalse(isAdd);
+                }
+            });
+            return editInPlace[operation]().then((res) => {
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
             });
         });
     }
