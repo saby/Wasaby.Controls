@@ -138,8 +138,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _beforeUpdate(options: IContainerOptions, context) {
         super._beforeUpdate(...arguments);
         if (context.ScrollData?.pagingVisible) {
+            if (!this._paging) {
+                this._paging = new PagingModel();
+            }
             this._paging.isVisible = this._state.canVerticalScroll;
+        } else if (this._paging) {
+            this._paging = null;
         }
+
         this._updateShadows(this._state, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
