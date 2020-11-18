@@ -3,9 +3,9 @@ import {getStore} from 'Application/Env';
 interface IStore {
     getState: () => Record<string, unknown>;
     get: (propertyName: string) => unknown;
-    onPropertyChanged: (propertyName: string, callback: (data: unknown) => void, isGLobal?: boolean) => string;
+    onPropertyChanged: (propertyName: string, callback: (data: unknown) => void, isGlobal?: boolean) => string;
     unsubscribe: (id: string) => void;
-    dispatch: (propertyName: string, data: unknown) => void;
+    dispatch: (propertyName: string, data: unknown, isGlobal?: boolean) => void;
 }
 
 interface IStateCallback {
@@ -26,6 +26,7 @@ interface IState {
 
 const ID_SEPARATOR = '--';
 const PAGE_STATE_FIELD = 'pageState';
+const GLOBAL_CONTEXT_NAME = 'global';
 
 /**
  *
@@ -35,7 +36,7 @@ class Store implements IStore {
      * Получение текущего стейта
      */
     getState(): ICtxState {
-        return Store._getActiveState();
+        return Store._getState()[Store._getActiveContext()] || {};
     }
 
     /**
@@ -43,19 +44,20 @@ class Store implements IStore {
      * @param propertyName название поля в стейте
      */
     get(propertyName: string): unknown {
-        const state = Store._getActiveState();
+        const state = Store._getState()[Store._getActiveContext()] || {};
 
-        return state[propertyName];
+        return state[propertyName] || (Store._getState()[GLOBAL_CONTEXT_NAME] || {})[propertyName];
     }
 
     /**
      * Обновление значения в стейте
      * @param propertyName название поля в стейте
      * @param data данные
+     * @param isGlobal
      */
-    dispatch(propertyName: string, data: unknown): void {
-        this._setValue(propertyName, data);
-        this._notifySubscribers(propertyName);
+    dispatch(propertyName: string, data: unknown, isGlobal?: boolean): void {
+        this._setValue(propertyName, data, isGlobal);
+        this._notifySubscribers(propertyName, isGlobal);
     }
 
     /**
@@ -66,7 +68,7 @@ class Store implements IStore {
      * @return {string} id колбэка, чтоб отписаться при уничтожении контрола
      */
     onPropertyChanged(propertyName: string, callback: (data: unknown) => void, isGlobal?: boolean): string {
-        return this._addCallbackWrapper(propertyName, callback, isGlobal);
+        return this._addCallback(propertyName, callback, isGlobal);
     }
 
     /**
@@ -79,34 +81,23 @@ class Store implements IStore {
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
     updateStoreContext(contextName: string): void {
-        if (Store._getActiveState().searchValue) {
+        if ((Store._getState()[Store._getActiveContext()] || {}).searchValue) {
             this._setValue('searchValue', '');
         }
         Store._setActiveContext(contextName);
 
-        // todo: переписать после создания API глобальных подписок
-        this._notifyGlobal('_contextName', contextName);
+        Store._notifySubscribers('_contextName', true);
     }
 
-    private _notifyGlobal(propertyName: string, contextName: string): void{
-        //  нотифай о смене contextName подписчиков глобальных
-        const globalState = Store._getState()['global'];
-        if (globalState && globalState['_' + propertyName]) {
-            globalState['_' + propertyName].callbacks.forEach(function(callbackObject) {
-                return callbackObject.callbackFn(contextName);
-            });
-        }
-    }
-
-    private _setValue(propertyName: string, value: unknown): void {
-        const state = Store._getActiveState();
+    private _setValue(propertyName: string, value: unknown, isGlobal?: boolean): void {
+        const state = Store._getState()[Store._getContextName(isGlobal)] || {};
 
         if (!state.hasOwnProperty(propertyName)) {
             this._defineProperty(state, propertyName);
         }
         state['_' + propertyName].value = value;
 
-        Store._setActiveState(state);
+        Store._setState(state, Store._getContextName(isGlobal));
     }
 
     // объявление поля в стейте
@@ -127,26 +118,12 @@ class Store implements IStore {
             enumerable: true
         });
 
-        Store._setActiveState(state);
+        Store._setState(state, Store._getActiveContext());
     }
 
-    // todo: переписать после создания API глобальных подписок
-    private _addCallbackWrapper(propertyName: string, callbackFn: Function, isGlobal?: boolean): string {
-        let callbackId;
-        if (isGlobal) {
-            const savedContext = Store._getActiveContext();
-            Store._setActiveContext('global');
-            callbackId = this._addCallback(propertyName, callbackFn);
-            Store._setActiveContext(savedContext);
-        } else {
-            callbackId = this._addCallback(propertyName, callbackFn);
-        }
-        return callbackId;
-    }
-
-    private _addCallback(propertyName: string, callbackFn: Function): string {
-        const state = Store._getActiveState();
-        const activeContext = Store._getActiveContext();
+    private _addCallback(propertyName: string, callbackFn: Function, isGlobal?: boolean): string {
+        const activeContext = Store._getContextName(isGlobal);
+        const state = Store._getState()[activeContext] || {};
 
         if (!state.hasOwnProperty(propertyName)) {
             this._defineProperty(state, propertyName);
@@ -158,7 +135,7 @@ class Store implements IStore {
         const id = [activeContext, '_' + propertyName, +newCallbackId + 1].join(ID_SEPARATOR);
         currentCallbacks.push({id, callbackFn});
 
-        Store._setActiveState(state);
+        Store._setState(state, activeContext);
 
         return id;
     }
@@ -177,26 +154,14 @@ class Store implements IStore {
         Store._setState(state[ctxName], ctxName);
     }
 
-    private _notifySubscribers(propertyName: string): void {
-        const state = Store._getActiveState();
+    private _notifySubscribers(propertyName: string, isGlobal?: boolean): void {
+        const state = Store._getState()[Store._getContextName(isGlobal)] || {};
 
         state['_' + propertyName].callbacks.forEach(
             (callbackObject: IStateCallback) => {
                 return callbackObject.callbackFn(state[propertyName]);
             }
         );
-    }
-
-    static _getActiveState(): ICtxState {
-        const store = Store._getState();
-        const activeContext = Store._getActiveContext();
-
-        return store[activeContext] || {};
-    }
-
-    static _setActiveState(state: ICtxState): void {
-        const activeContext = Store._getActiveContext();
-        Store._setState(state, activeContext);
     }
 
     static _getState(): IState {
@@ -215,6 +180,10 @@ class Store implements IStore {
 
     static _setActiveContext(context: string): string {
         return getStore<Record<string, string>>(PAGE_STATE_FIELD).set('activeContext', context);
+    }
+
+    static _getContextName(isGlobal: boolean): string {
+        return isGlobal ? GLOBAL_CONTEXT_NAME : Store._getActiveContext();
     }
 }
 
