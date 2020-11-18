@@ -1011,6 +1011,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
+   closeSuggest(): void {
+      this._close();
+   }
+
    static _theme: string[] = ['Controls/suggest'];
 
    static getOptionTypes(): object {
