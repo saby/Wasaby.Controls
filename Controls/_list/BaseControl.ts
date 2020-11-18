@@ -2188,9 +2188,9 @@ const _private = {
     },
 
     checkRequiredOptions(options) {
-        /*if (options.keyProperty === undefined) {
+        if (!this._keyProperty) {
             Logger.warn('BaseControl: Option "keyProperty" is required.');
-        }*/
+        }
     },
 
     needBottomPadding(options, listViewModel) {
@@ -3224,12 +3224,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
 
         _private.checkDeprecated(newOptions);
+        this._initKeyProperty(newOptions);
         _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-        this._initKeyProperty(newOptions);
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
@@ -3449,8 +3449,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (keyProperty !== undefined) {
             this._keyProperty = keyProperty;
-        } else {
-            Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
