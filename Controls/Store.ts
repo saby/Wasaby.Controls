@@ -3,7 +3,7 @@ import {getStore} from 'Application/Env';
 interface IStore {
     getState: () => Record<string, unknown>;
     get: (propertyName: string) => unknown;
-    onPropertyChanged: (propertyName: string, callback: (data: unknown) => void) => string;
+    onPropertyChanged: (propertyName: string, callback: (data: unknown) => void, isGLobal?: boolean) => string;
     unsubscribe: (id: string) => void;
     dispatch: (propertyName: string, data: unknown) => void;
 }
@@ -62,10 +62,11 @@ class Store implements IStore {
      * Подписка на изменение поля в стейте, при изменении поля вызовется колбэк с новым значением
      * @param propertyName
      * @param callback
+     * @param isGlobal
      * @return {string} id колбэка, чтоб отписаться при уничтожении контрола
      */
-    onPropertyChanged(propertyName: string, callback: (data: unknown) => void): string {
-        return this._addCallback(propertyName, callback);
+    onPropertyChanged(propertyName: string, callback: (data: unknown) => void, isGlobal?: boolean): string {
+        return this._addCallbackWrapper(propertyName, callback, isGlobal);
     }
 
     /**
@@ -78,7 +79,23 @@ class Store implements IStore {
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
     updateStoreContext(contextName: string): void {
+        if (Store._getActiveState().searchValue) {
+            this._setValue('searchValue', '');
+        }
         Store._setActiveContext(contextName);
+
+        // todo: переписать после создания API глобальных подписок
+        this._notifyGlobal('_contextName', contextName);
+    }
+
+    private _notifyGlobal(propertyName: string, contextName: string): void{
+        //  нотифай о смене contextName подписчиков глобальных
+        const globalState = Store._getState()['global'];
+        if (globalState && globalState['_' + propertyName]) {
+            globalState['_' + propertyName].callbacks.forEach(function(callbackObject) {
+                return callbackObject.callbackFn(contextName);
+            });
+        }
     }
 
     private _setValue(propertyName: string, value: unknown): void {
@@ -111,6 +128,20 @@ class Store implements IStore {
         });
 
         Store._setActiveState(state);
+    }
+
+    // todo: переписать после создания API глобальных подписок
+    private _addCallbackWrapper(propertyName: string, callbackFn: Function, isGlobal?: boolean): string {
+        let callbackId;
+        if (isGlobal) {
+            const savedContext = Store._getActiveContext();
+            Store._setActiveContext('global');
+            callbackId = this._addCallback(propertyName, callbackFn);
+            Store._setActiveContext(savedContext);
+        } else {
+            callbackId = this._addCallback(propertyName, callbackFn);
+        }
+        return callbackId;
     }
 
     private _addCallback(propertyName: string, callbackFn: Function): string {
