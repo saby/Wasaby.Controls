@@ -281,6 +281,7 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REMOVE:
@@ -290,6 +291,7 @@ function onCollectionChange<T>(
             if (this._isFiltered()) {
                 this._reFilter();
             }
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REPLACE:
@@ -300,6 +302,7 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_MOVE:
@@ -307,6 +310,7 @@ function onCollectionChange<T>(
             this._moveItems(newItemsIndex, oldItemsIndex, newItems);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
     }
 
@@ -2690,6 +2694,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
+    }
+
+    protected _handleCollectionChange(action: string): void {
     }
 
     private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
