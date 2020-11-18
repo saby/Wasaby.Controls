@@ -3,7 +3,7 @@
    white-space: nowrap;
 }
 
-.controls-Input-DatePicker__buttonWrapper {
+.controls-Input-DatePicker__buttonWrapper_theme-@{themeName} {
    padding-left: @trigger-offset_inputDate;
    display: inline-flex;
 }
@@ -14,14 +14,26 @@
 
 .controls-Input-DatePicker__button {
    cursor: pointer;
-   font-size: @icon-size_s;
-   line-height: @icon-size_s;
-   width: @icon-size_s;
-   height: @icon-size_s;
+}
+
+.controls-Input-DatePicker__button_theme-@{themeName} {
+   font-size: @trigger_icon-size_inputDate;
+   line-height: @trigger_icon-size_inputDate;
+   width: @trigger_icon-size_inputDate;
+   height: @trigger_icon-size_inputDate;
    font-family: @icon_font-family_s;
 }
 
-.controls-PeriodDialog__picker-withoutModeBtn {
-   margin-top: @shift-top_PeriodDialog-picker;
-   margin-left: @shift-left_PeriodDialog-picker-withoutModeBtn;
+.ws-is-hover {
+   .controls-Input-DatePicker__button_theme-@{themeName}:hover {
+      color: @trigger_hover_icon-color_inputDate;
+   }
 }
+
+.ws-is-no-touch,
+.ws-is-touch {
+   .controls-Input-DatePicker__button_theme-@{themeName}:active {
+      color: @trigger_active_icon-color_inputDate;
+   }
+}
+

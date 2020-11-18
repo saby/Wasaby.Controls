@@ -1,0 +1,15 @@
+<div class="controls-demo_LiteSelector-block">
+    <Controls.dateRange:RangeShortSelector
+            displayedRanges="{{_displayedRanges}}"
+            prevArrowVisibility="{{true}}"
+            nextArrowVisibility="{{true}}"
+            bind:startValue="_startValue"
+            bind:endValue="_endValue"/>
+    <div>
+        <Controls.dateRange:RangeShortSelector
+                chooseHalfyears="{{false}}"
+                chooseMonths="{{false}}"
+                displayedRanges="{{_displayedRanges1}}"
+        />
+    </div>
+</div>

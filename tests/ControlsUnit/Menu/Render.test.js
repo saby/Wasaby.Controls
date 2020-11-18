@@ -5,9 +5,10 @@ define(
       'Core/core-clone',
       'Controls/display',
       'Types/collection',
-      'Types/entity'
+      'Types/entity',
+      'Types/di'
    ],
-   function(menu, source, Clone, display, collection, entity) {
+   function(menu, source, Clone, display, collection, entity, di) {
       describe('Menu:Render', function() {
          let defaultItems = [
             { key: 0, title: 'все страны' },
@@ -16,73 +17,468 @@ define(
             { key: 3, title: 'Великобритания' }
          ];
 
-         let getListModel = function(items) {
+         let getListModel = function(items, nodeProperty) {
             return new display.Tree({
                collection: new collection.RecordSet({
-                  rawData: items || defaultItems,
+                  rawData: Clone(items || defaultItems),
                   keyProperty: 'key'
                }),
-               keyProperty: 'key'
+               keyProperty: 'key',
+               nodeProperty
+            });
+         };
+
+         let getListModelWithSbisAdapter = function() {
+            return new display.Tree({
+               collection: new collection.RecordSet({
+                  rawData: {
+                     _type: 'recordset',
+                     d: [],
+                     s: [
+                        { n: 'id', t: 'Строка' },
+                        { n: 'title', t: 'Строка' },
+                        { n: 'parent', t: 'Строка' },
+                        { n: 'node', t: 'Строка' }
+                     ]
+                  },
+                  keyProperty: 'id',
+                  adapter: new entity.adapter.Sbis()
+               })
             });
          };
 
          let defaultOptions = {
-            listModel: getListModel()
+            listModel: getListModel(),
+            keyProperty: 'key'
          };
 
          let getRender = function(config) {
-            let menuControl = new menu.Render();
-            menuControl.saveOptions(config || defaultOptions);
+            const renderConfig = config || defaultOptions;
+            const menuControl = new menu.Render(renderConfig);
+            menuControl.saveOptions(renderConfig);
             return menuControl;
          };
 
-         it('getLeftSpacing', function() {
+         it('_proxyEvent', function() {
             let menuRender = getRender();
-            let renderOptions = {
-               listModel: getListModel()
+            let actualData;
+            let isStopped = false;
+            menuRender._notify = (e, d) => {
+               if (e === 'itemClick') {
+                  actualData = d;
+               }
             };
-            let leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'l');
-
-            renderOptions.multiSelect = true;
-            leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'null');
-
-            renderOptions.leftSpacing = 'xs';
-            leftSpacing = menuRender.getLeftSpacing(renderOptions);
-            assert.equal(leftSpacing, 'xs');
+            const event = {
+               type: 'click',
+               stopPropagation: () => {isStopped = true;}
+            };
+            menuRender._proxyEvent(event, 'itemClick', { key: 1 }, 'item1');
+            assert.deepEqual(actualData[0], { key: 1 });
+            assert.deepEqual(actualData[1], 'item1');
+            assert.isTrue(isStopped);
          });
 
-         it('getRightSpacing', function() {
-            let menuRender = getRender();
-            let renderOptions = {
-               listModel: getListModel()
-            };
-            let rightSpacing = menuRender.getRightSpacing(renderOptions);
-            assert.equal(rightSpacing, 'l');
-
-            renderOptions.nodeProperty = 'node';
-            let items = Clone(defaultItems);
-            items[0].node = true;
-            renderOptions.listModel = getListModel(items);
-            rightSpacing = menuRender.getRightSpacing(renderOptions);
-            assert.equal(rightSpacing, 'menu-expander');
-
-            renderOptions.rightSpacing = 'xs';
-            rightSpacing = menuRender.getRightSpacing(renderOptions);
-            assert.equal(rightSpacing, 'xs');
-         });
-
-         it('addEmptyItem', function() {
+         it('getLeftPadding', function() {
             let menuRender = getRender();
             let renderOptions = {
                listModel: getListModel(),
-               emptyText: 'Not selected',
-               emptyKey: null
+               itemPadding: {}
             };
-            menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-            assert.equal(renderOptions.listModel.getCollection().getCount(), 5);
+            let leftSpacing = menuRender.getLeftPadding(renderOptions);
+            assert.equal(leftSpacing, 'm');
+
+            renderOptions.multiSelect = true;
+            leftSpacing = menuRender.getLeftPadding(renderOptions);
+            assert.equal(leftSpacing, 'm');
+
+            renderOptions.itemPadding.left = 'xs';
+            leftSpacing = menuRender.getLeftPadding(renderOptions);
+            assert.equal(leftSpacing, 'xs');
          });
+
+         it('getRightPadding', function() {
+            let menuRender = getRender();
+            let renderOptions = {
+               listModel: getListModel(),
+               itemPadding: {},
+               nodeProperty: 'node'
+            };
+            let rightSpacing = menuRender.getRightPadding(renderOptions);
+            assert.equal(rightSpacing, 'm');
+
+            let items = Clone(defaultItems);
+            items[0].node = true;
+            renderOptions.listModel = getListModel(items, 'node');
+            rightSpacing = menuRender.getRightPadding(renderOptions);
+            assert.equal(rightSpacing, 'menu-expander');
+
+            renderOptions.itemPadding.right = 'xs';
+            rightSpacing = menuRender.getRightPadding(renderOptions);
+            assert.equal(rightSpacing, 'xs');
+
+            renderOptions.itemPadding.right = null;
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightPadding(renderOptions);
+            assert.equal(rightSpacing, 'menu-multiSelect');
+
+            renderOptions.itemPadding.right = 'menu-close';
+            renderOptions.multiSelect = true;
+            rightSpacing = menuRender.getRightPadding(renderOptions);
+            assert.equal(rightSpacing, 'menu-close-multiSelect');
+         });
+
+         describe('addEmptyItem', function() {
+            let menuRender, renderOptions;
+            beforeEach(function() {
+               menuRender = getRender();
+               renderOptions = {
+                  listModel: getListModelWithSbisAdapter(),
+                  emptyText: 'Not selected',
+                  emptyKey: null,
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKeys: []
+               };
+            });
+
+            it('check items count', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCount(), 1);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('title'), 'Not selected');
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+            });
+
+            it('check parentProperty', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, {...renderOptions, parentProperty: 'parent', root: null});
+               assert.equal(renderOptions.listModel.getCount(), 1);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('parent'), null);
+            });
+
+            it('check nodeProperty', function() {
+               menuRender.addEmptyItem(renderOptions.listModel, {...renderOptions, nodeProperty: 'node'});
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('node'), false);
+            });
+
+            it('check selected empty item', function() {
+               renderOptions.selectedKeys = [];
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+
+               renderOptions.selectedKeys = [null];
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+            });
+
+            it('check model', function() {
+               let isCreatedModel;
+               let sandbox = sinon.createSandbox();
+               sandbox.replace(menuRender, '_createModel', (model, config) => {
+                  isCreatedModel = true;
+                  return new entity.Model(config);
+               });
+
+               renderOptions.listModel = new display.Tree({
+                  collection: new collection.RecordSet({
+                     rawData: Clone(defaultItems),
+                     keyProperty: 'id'
+                  })
+               });
+
+               menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
+               assert.equal(renderOptions.listModel.getCollection().at(0).get('id'), null);
+               assert.isTrue(isCreatedModel);
+               sandbox.restore();
+            });
+         });
+
+         describe('grouping', function() {
+            let getGroup = (item) => {
+               if (!item.get('group')) {
+                  return 'CONTROLS_HIDDEN_GROUP';
+               }
+               return item.get('group');
+            };
+            it('_isGroupVisible simple', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны' },
+                  { key: 1, title: 'Россия', icon: 'icon-add' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' },
+                  { key: 5, title: 'Великобритания', group: '3' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+
+               let result = menuRender._isGroupVisible(groupListModel.at(0));
+               assert.isFalse(result);
+
+               result = menuRender._isGroupVisible(groupListModel.at(3));
+               assert.isTrue(result);
+            });
+
+            it('_isGroupVisible one group', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны', group: '2' },
+                  { key: 1, title: 'Россия', icon: 'icon-add', group: '2' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+
+               let result = menuRender._isGroupVisible(groupListModel.at(0));
+               assert.isFalse(result);
+            });
+
+            it('_isHistorySeparatorVisible', function() {
+               let groupListModel = getListModel([
+                  { key: 0, title: 'все страны' },
+                  { key: 1, title: 'Россия', icon: 'icon-add' },
+                  { key: 2, title: 'США', group: '2' },
+                  { key: 3, title: 'Великобритания', group: '2' },
+                  { key: 4, title: 'Великобритания', group: '2' },
+                  { key: 5, title: 'Великобритания', group: '3' }
+               ]);
+               groupListModel.setGroup(getGroup);
+
+               let menuRender = getRender(
+                  { listModel: groupListModel }
+               );
+               let result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
+               assert.isFalse(!!result);
+
+               groupListModel.at(1).getContents().set('pinned', true);
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(1));
+               assert.isTrue(result);
+
+               groupListModel.at(2).getContents().set('pinned', true);
+               result = menuRender._isHistorySeparatorVisible(groupListModel.at(2));
+               assert.isFalse(result);
+            });
+
+            describe('check class separator', function() {
+               let groupListModel, menuRender, expectedClasses = 'controls-Menu__row-separator';
+               beforeEach(function() {
+                  groupListModel = getListModel([
+                     { key: 0, title: 'все страны' },
+                     { key: 1, title: 'Россия', icon: 'icon-add' },
+                     { key: 2, title: 'США', group: '2' },
+                     { key: 3, title: 'Великобритания', group: '2' },
+                     { key: 4, title: 'Великобритания', group: '2' },
+                     { key: 5, title: 'Великобритания', group: '3' }
+                  ]);
+                  groupListModel.setGroup(getGroup);
+
+                  menuRender = getRender(
+                     { listModel: groupListModel }
+                  );
+               });
+
+               it('collectionItem', function() {
+                  let expectedClasses = 'controls-Menu__row-separator';
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+               });
+
+               it('next item is groupItem', function() {
+                  // Collection: [GroupItem, CollectionItem, CollectionItem, GroupItem,...]
+                  let actualClasses = menuRender._getClassList(groupListModel.at(2));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+
+               it('history separator is visible', function() {
+                  groupListModel.at(1).getContents().set('pinned', true);
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+            });
+         });
+
+         describe('_getClassList', function() {
+            let menuRender, renderOptions;
+            beforeEach(function() {
+               menuRender = getRender();
+               renderOptions = {
+                  listModel: getListModel(),
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKeys: [],
+                  itemPadding: {
+                     top: 'null',
+                     left: 'l',
+                     right: 'l'
+                  },
+                  theme: 'theme'
+               };
+            });
+
+            it('row_state default|readOnly', function() {
+               let expectedClasses = 'controls-Menu__row_state_default';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               renderOptions.listModel.at(0).getContents().set('readOnly', true);
+               expectedClasses = 'controls-Menu__row_state_readOnly';
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+            });
+
+            it('emptyItem', function() {
+               let expectedClasses = 'controls-Menu__defaultItem';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(1));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               menuRender._options.emptyText = 'Text';
+               menuRender._options.emptyKey = 0;
+               expectedClasses = 'controls-Menu__emptyItem';
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               menuRender._options.multiSelect = true;
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+            });
+
+            it('pinned', function() {
+               let expectedClasses = 'controls-Menu__row_pinned';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+
+               renderOptions.listModel.at(0).getContents().set('pinned', true);
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+
+               renderOptions.listModel.at(0).getContents().set('HistoryId', 'test');
+               actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+            });
+
+            it('lastItem', function() {
+               let expectedClasses = 'controls-Menu__row-separator';
+               let actualClasses = menuRender._getClassList(renderOptions.listModel.at(0));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) !== -1);
+
+               actualClasses = menuRender._getClassList(menuRender._options.listModel.at(3));
+               assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+            });
+         });
+
+         it('_getItemData', function() {
+            let menuRender = getRender();
+            let itemData = menuRender._getItemData(menuRender._options.listModel.at(0));
+            assert.isOk(itemData.itemClassList);
+            assert.isOk(itemData.treeItem);
+            assert.isOk(itemData.multiSelectTpl);
+            assert.isOk(itemData.item);
+            assert.isOk(itemData.isSelected);
+            assert.isOk(itemData.getPropValue);
+            assert.isFalse(itemData.isFixedItem);
+         });
+
+         it('_getIconSize', () => {
+            let menuRender = getRender();
+            let item = new entity.Model({
+               rawData: { iconSize: 's' }
+            });
+            let result = menuRender._getIconSize(item);
+            assert.isUndefined(result);
+
+            menuRender._iconPadding = 's';
+            result = menuRender._getIconSize(item);
+            assert.equal(result, '');
+
+            item = new entity.Model({
+               rawData: { iconSize: 's', icon: 'icon-test' }
+            });
+            result = menuRender._getIconSize(item);
+            assert.equal(result, 's');
+         });
+
+         describe('getIconPadding', function() {
+            let menuRender = getRender();
+            let iconItems = [
+               { key: 0, title: 'все страны' },
+               { key: 1, title: 'Россия', icon: 'icon-add' },
+               { key: 2, title: 'США' },
+               { key: 3, title: 'Великобритания' }
+            ];
+            let renderOptions = {
+               listModel: getListModel(iconItems),
+               iconSize: 'm'
+            };
+
+            it('simple', () => {
+               const iconPadding = menuRender.getIconPadding(renderOptions);
+               assert.equal(iconPadding, 'm');
+            });
+
+            it('iconSize set on item', () => {
+               const itemsIconSize = [
+                  { key: 1, title: 'Россия', icon: 'icon-add', iconSize: 'l' }
+               ];
+               const iconPadding = menuRender.getIconPadding({listModel: getListModel(itemsIconSize)});
+               assert.equal(iconPadding, 'l');
+            });
+
+            it('with headingIcon', () => {
+               delete iconItems[1].icon;
+               renderOptions.listModel = getListModel(iconItems);
+               renderOptions.headingIcon = 'icon-Add';
+               const iconPadding = menuRender.getIconPadding(renderOptions);
+               assert.equal(iconPadding, '');
+            });
+
+            it('hierarchy collection', () => {
+               iconItems = [
+                  { key: 0, title: 'все страны', node: true },
+                  { key: 1, title: 'Россия', icon: 'icon-add', parent: 0 },
+                  { key: 2, title: 'США' },
+                  { key: 3, title: 'Великобритания' }
+               ];
+               renderOptions.listModel = getListModel(iconItems);
+               renderOptions.listModel.setFilter((item) => {
+                  return item.get('parent') === undefined;
+               });
+               let iconPadding = menuRender.getIconPadding(renderOptions);
+               assert.equal(iconPadding, '');
+
+
+               renderOptions.listModel.setFilter((item) => {
+                  return item.get('parent') === 0;
+               });
+               iconPadding = menuRender.getIconPadding(renderOptions);
+               assert.equal(iconPadding, 'm');
+            });
+         });
+
+         describe('_beforeUnmount', () => {
+
+            it('empty item must be removed from collection', () => {
+               const listModel = getListModel();
+               const menuRenderConfig = {
+                  listModel: listModel,
+                  emptyText: 'emptyText',
+                  itemPadding: {},
+                  selectedKeys: [],
+                  emptyKey: 'testKey',
+                  keyProperty: 'key'
+               };
+               const menuRender = getRender(menuRenderConfig);
+               menuRender._beforeMount(menuRenderConfig);
+               menuRender._beforeUnmount();
+               assert.equal(listModel.getCollection().getCount(), 4, 'empty item is not removed from collection on _beforeUnmount');
+            });
+
+         });
+
       });
    }
 );

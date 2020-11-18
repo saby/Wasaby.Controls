@@ -6,7 +6,7 @@ export interface IErrorControllerOptions {
 /**
  * Интерфейс контролов, использующих источники данных и обрабатывающих ошибки от сервисов через {@link Controls/dataSource:error.Controller error-controller}.
  *
- * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>здесь</a>.
+ * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>здесь</a>.
  * @interface Controls/_interface/IErrorController
  * @public
  * @author Заляев А.В
@@ -25,7 +25,8 @@ export default interface IErrorController {
 /**
  * @name Controls/_interface/IErrorController#errorController
  * @cfg {Controls/dataSource:error.Controller} Модуль для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
- * Более подробно об обработке ошибок вы можете почитать <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>в статье</a>
+ * @remark
+ * Более подробно об обработке ошибок вы можете почитать <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>в статье</a>
  * @example
  * <pre>
  *     //...

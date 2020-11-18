@@ -7,21 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from 'Types/entity';
 import * as getZIndex from 'Controls/Utils/getZIndex';
 import template = require('wml!Controls/_popup/InfoBox/InfoBox');
-
-/**
- * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
- * Всплывающую подсказку вызывает событие, указанное в опции trigger.
- * В один момент времени на странице может отображаться только одна всплывающая подсказка.
- * @remark
- * Подробнее о работе с контролом читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/infobox/ здесь}.
- * См. <a href="/materials/demo-ws4-infobox">демо-пример</a>.
- * @class Controls/_popup/InfoBox
- * @mixes Controls/_popup/interface/IInfoBox
- *
- * @public
- * @author Красильников А.С.
- * @demo Controls-demo/InfoBox/InfoBoxPG
- */
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 
 const CALM_DELAY: number = 100; // During what time should not move the mouse to start opening the popup.
 
@@ -30,12 +16,29 @@ interface IInfoBoxTouchContext {
         isTouch: boolean;
     };
 }
-
+/**
+ * Контрол, отображающий всплывающую подсказку относительно указанного элемента.
+ * Всплывающую подсказку вызывает событие, указанное в опции trigger.
+ * В один момент времени на странице может отображаться только одна всплывающая подсказка.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FInfoBox%2FOpener%2FInfoBox">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/infobox/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
+ * @class Controls/_popup/InfoBox
+ * @mixes Controls/_popup/interface/IInfoBox
+ *
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/InfoBox/InfoBox
+ */
 class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
     readonly '[Controls/_popup/interface/IInfoBox]': boolean;
 
     _template: TemplateFunction = template;
-    _isNewEnvironment: Function = InfoBoxOpener.isNewEnvironment;
+    _isNewEnvironment: Function = isNewEnvironment;
     _openId: number;
     _waitTimer: number;
     _closeId: number;

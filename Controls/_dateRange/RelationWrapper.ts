@@ -4,13 +4,16 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 /**
  * Обертка для контрола выбора периодов, с помощью которой периоды могут быть связаны.
  * Используется в сочетании с {@link Controls/_dateRange/RelationController RelationController}.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
  *
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController
  *
@@ -23,17 +26,27 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @class Controls/_dateRange/RelationWrapper
  * @extends Core/Control
  *
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController
  *
  */
 
+class Component extends Control {
+    protected _template: Function = template;
+
+    _onRangeChanged(event, startValue: Date, endValue: Date): void {
+        this._notify('rangeChanged', [startValue, endValue]);
+        this._notify(
+            'relationWrapperRangeChanged',
+            [startValue, endValue, this._options.number, this._options.relationMode],
+            { bubbling: true });
+    }
+}
 /**
  * @name Controls/_dateRange/RelationWrapper#content
- * @cfg {Content} Содержимое контрола. Контрол реализует {@link Controls/_dateRange/interfaces/IInput}.
+ * @cfg {Content} Содержимое контрола. Контрол реализует {@link Controls/_dateRange/interfaces/IDateRange}.
  * @example
  * <pre class="brush: html">
  *    <Controls.dateRange:RelationController
@@ -42,10 +55,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -61,7 +74,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
 
 /*
  * @name Controls/_dateRange/RelationWrapper#content
- * @cfg {Content} Control contents. Must be a control that implement {@link Controls/_dateRange/interfaces/IInput} interface.
+ * @cfg {Content} Control contents. Must be a control that implement {@link Controls/_dateRange/interfaces/IDateRange} interface.
  * @example
  * <pre>
  *    <Controls.dateRange:RelationController
@@ -70,10 +83,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -103,7 +116,7 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  * @name Controls/_dateRange/RelationWrapper#relationMode
  * @cfg {RelationMode} Тип привязки.
  * @example
- * В этом примере изменение первого поля ввода только пересчитывает второе поле ввода, если тип периода изменяется или он становится после второго. 
+ * В этом примере изменение первого поля ввода только пересчитывает второе поле ввода, если тип периода изменяется или он становится после второго.
  * Но изменения во втором поле ввода всегда изменяют первое.
  * <pre class="brush: html">
  *    <Controls.dateRange:RelationController
@@ -112,10 +125,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}" relationMode="byCapacity">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -142,10 +155,10 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *             bind:startValue1="_startValue1"
  *             bind:endValue1="_endValue1">
  *        <Controls.dateRange:RelationWrapper number="{{0}}" ranges="{{content.ranges}}" relationMode="byCapacity">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *        <Controls.dateRange:RelationWrapper number="{{1}}" ranges="{{content.ranges}}">
- *            <Controls.dateRange:LiteSelector/>
+ *            <Controls.dateRange:RangeShortSelector/>
  *        </Controls.dateRange:RelationWrapper>
  *    </Controls.dateRange:RelationController>
  * </pre>
@@ -158,17 +171,4 @@ import template = require('wml!Controls/_dateRange/RelationWrapper/RelationWrapp
  *    });
  * </pre>
  */
-
-class Component extends Control {
-    private _template: Function = template;
-
-    _onRangeChanged(event, startValue: Date, endValue: Date): void {
-        this._notify('rangeChanged', [startValue, endValue]);
-        this._notify(
-            'relationWrapperRangeChanged',
-            [startValue, endValue, this._options.number, this._options.relationMode],
-            { bubbling: true });
-    }
-}
-
 export default Component;

@@ -12,33 +12,45 @@ define([
    const options = {
       mask: 'DD.MM.YYYY',
       value: new Date(2018, 0, 1),
-      replacer: ' ',
+      replacer: ' '
    };
 
    describe('Controls/_input/Date/Picker', function() {
 
-      describe('_openDialog', function() {
+      describe('openPopup', function() {
          it('should open opener with default options', function() {
             const component = calendarTestUtils.createComponent(input.Date, options);
-            component._children.opener = {
-               open: sinon.fake()
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getPopupTarget: sinon.stub().returns()
+               }
             };
-            component._openDialog();
+            component.openPopup();
             sinon.assert.called(component._children.opener.open);
          });
          it('should open dialog with passed dialog options', function() {
             const
                extOptions = {
-                  readOnly: true
+                  readOnly: true,
+                  theme: 'default'
                },
-               component = calendarTestUtils.createComponent(input.Date, extOptions);
-            component._children.opener = {
-               open: sinon.fake()
+               component = calendarTestUtils.createComponent(input.Date, extOptions),
+               TARGET = 'target';
+            component._children = {
+               opener: {
+                  open: sinon.fake()
+               },
+               linkView: {
+                  getPopupTarget: sinon.fake()
+               }
             };
-            component._openDialog();
+            component.openPopup();
             sinon.assert.called(component._children.opener.open);
             sinon.assert.calledWith(component._children.opener.open, sinon.match({
-               className: 'controls-PeriodDialog__picker',
+               className: 'controls-PeriodDialog__picker_theme-default',
                templateOptions: {
                   readOnly: extOptions.readOnly
                }
@@ -90,5 +102,43 @@ define([
          });
       });
 
+      describe('_afterUpdate', function() {
+         it('should start validation', function () {
+            const
+                component = calendarTestUtils.createComponent(input.Date, options),
+                value = new Date(2017, 11, 1);
+
+            let result = false;
+            component._children = {};
+            component._children.opener = {
+               close: sinon.fake()
+            };
+            component._children.input = {
+               validate: function() {
+                  result = true;
+               }
+            };
+            component._onResult(value);
+            component._afterUpdate();
+            assert.isTrue(result);
+         });
+         it('should not start validation', function () {
+            const
+                component = calendarTestUtils.createComponent(input.Date, options);
+
+            let result = false;
+            component._children = {};
+            component._children.opener = {
+               close: sinon.fake()
+            };
+            component._children.input = {
+               validate: function() {
+                  result = true;
+               }
+            };
+            component._afterUpdate();
+            assert.isFalse(result);
+         });
+      });
    });
 });

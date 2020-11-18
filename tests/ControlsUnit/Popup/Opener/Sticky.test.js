@@ -27,8 +27,21 @@ define(
          });
 
          const BODY_HEIGHT = 999;
+         const BASE_VIEWPORT = {
+            width: 1000,
+            height: 1000,
+            offsetLeft: 0,
+            offsetTop: 0,
+            pageLeft: 0,
+            pageTop: 0
+         };
 
-         StickyStrategy._private.getBodyHeight = () => BODY_HEIGHT;
+         StickyStrategy._private.getBody = () => ({
+            width: 1000,
+            height: 1000
+         });
+         StickyStrategy._private.getViewportHeight = () => BODY_HEIGHT;
+         StickyStrategy._private.getVisualViewport = () => BASE_VIEWPORT;
 
          function getPositionConfig() {
             return {
@@ -60,12 +73,25 @@ define(
             };
          }
 
+         StickyStrategy._private.isPortrait = () => false;
+
          it('Sticky initializing state', () => {
             let itemConfig = {
                popupState: StickyController.POPUP_STATE_INITIALIZING
             };
             let destroyDef = StickyController._elementDestroyed(itemConfig);
             assert.equal(destroyDef.isReady(), true);
+         });
+
+         it('Sticky action on scroll', () => {
+            const StickyOpener = new popupLib.Sticky();
+            const config = {};
+            StickyOpener._getConfig(config);
+            assert.equal(StickyOpener._actionOnScroll, 'none');
+
+            config.actionOnScroll = 'close';
+            StickyOpener._getConfig(config);
+            assert.equal(StickyOpener._actionOnScroll, 'close');
          });
 
          it('Sticky gets target node', () => {
@@ -75,18 +101,18 @@ define(
             cfg.popupOptions.target = new UIBase.Control({});
             cfg.popupOptions.target._container = '123';
             assert.equal(cfg.popupOptions.target._container,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
             cfg.popupOptions.target.destroy();
 
             //Тестируем: передаем в опцию target domNode
             cfg.popupOptions.target = '222';
             assert.equal(cfg.popupOptions.target,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
 
             //Тестируем: передаем не контрол и не domNode
             cfg.popupOptions.target = null;
             assert.equal(document && document.body,
-               StickyController._private.getTargetNode(cfg));
+               StickyController.constructor._getTargetNode(cfg));
          });
 
          it('Sticky updated classes', () => {
@@ -97,8 +123,12 @@ define(
                sizes: {}
             };
             let container = {
-               offsetWidth: 100,
-               offsetHeight: 100
+               getBoundingClientRect: () => {
+                  return {
+                     width: 100,
+                     height: 100
+                  };
+               }
             };
             StickyController.elementCreated(item, container);
             assert.equal(typeof item.positionConfig, 'object'); // Конфиг сохранился
@@ -117,7 +147,7 @@ define(
                isRemoveCalled = true;
             };
             StickyController.elementCreated({});
-            assert.equal(isRemoveCalled, true);
+            assert.equal(isRemoveCalled, false);
 
             popupLib.Controller.remove = ManagerControllerRemove;
             StickyController._isTargetVisible = () => true;
@@ -146,6 +176,7 @@ define(
             };
             StickyStrategy._private.getWindow = () => windowData;
             StickyStrategy._private.getKeyboardHeight = () => 50;
+            StickyStrategy._private.isIOS12 = () => true;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
             assert.equal(position.bottom, 50);
             position.bottom = 200;
@@ -154,6 +185,7 @@ define(
             StickyStrategy._private.considerTopScroll = () => true;
             StickyStrategy._private._fixBottomPositionForIos(position, tCoords);
             StickyStrategy._private.considerTopScroll = () => false;
+            StickyStrategy._private.isIOS12 = () => false;
             assert.equal(position.bottom, 210);
          });
 
@@ -198,17 +230,18 @@ define(
             assert.equal(position.left, 1520);
          });
 
-         it('Sticky position', () => {StickyStrategy._private.getWindowSizes = () => ({
-            width: 1000,
-            height: 1000
-         });
+         it('Sticky position', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
             let cfg = getPositionConfig();
 
             // 1 position
             let position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 200);
             assert.equal(position.bottom, 800);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             // 2 position
             cfg = getPositionConfig();
@@ -219,7 +252,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 400);
             assert.equal(position.top, 200);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             // 3 position
             cfg = getPositionConfig();
@@ -231,7 +264,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.right, 600);
             assert.equal(position.top, 400);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             // 4 position
             cfg = getPositionConfig();
@@ -243,7 +276,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.right, 800);
             assert.equal(position.bottom, 600);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
          });
 
 
@@ -272,7 +305,26 @@ define(
             let position = StickyStrategy.getPosition(cfg, targetC);
             assert.equal(position.top, 410);
             assert.equal(position.right, 590);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
+         });
+
+         it('Sticky default Config', () => {
+            let item = {
+               popupOptions: {
+                  maxWidth: 100,
+                  maxHeight: 110,
+                  width: 50,
+                  height: 60
+               }
+            };
+            StickyController.getDefaultConfig(item);
+            assert.equal(item.position.width, item.popupOptions.width);
+            assert.equal(item.position.height, item.popupOptions.height);
+            assert.equal(item.position.maxWidth, item.popupOptions.maxWidth);
+            assert.equal(item.position.maxHeight, item.popupOptions.maxHeight);
+            assert.equal(item.position.left, -10000);
+            assert.equal(item.position.top, -10000);
+            assert.equal(item.position.position, 'fixed');
          });
 
 
@@ -290,7 +342,7 @@ define(
             let position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 410);
             assert.equal(position.top, 210);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             cfg = getPositionConfig();
             cfg.targetPoint.horizontal = 'left';
@@ -305,7 +357,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.right, 790);
             assert.equal(position.bottom, 590);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
          });
 
          it('Sticky revert position', () => {
@@ -318,7 +370,7 @@ define(
             let position = StickyStrategy.getPosition(cfg, targetCoords);
             assert.equal(position.left, 200);
             assert.equal(position.top, 400);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             cfg = getPositionConfig();
             cfg.sizes.width = 400;
@@ -336,7 +388,7 @@ define(
             targetCoords.leftScroll = 0;
             assert.equal(position.left, 400);
             assert.equal(position.bottom, 600);
-            assert.equal(Object.keys(position).length, 4);
+            assert.equal(Object.keys(position).length, 5);
 
             const newTargetCoords = {
                top: 450,
@@ -372,7 +424,7 @@ define(
             assert.equal(position.left, 200);
             assert.equal(position.bottom, 800);
             assert.equal(position.height, 200);
-            assert.equal(Object.keys(position).length, 5);
+            assert.equal(Object.keys(position).length, 6);
 
             cfg = getPositionConfig();
             cfg.fittingMode = {
@@ -389,7 +441,7 @@ define(
             assert.equal(position.right, 800);
             assert.equal(position.bottom, 600);
             assert.equal(position.width, 200);
-            assert.equal(Object.keys(position).length, 5);
+            assert.equal(Object.keys(position).length, 6);
          });
 
 
@@ -409,7 +461,7 @@ define(
             assert.equal(position.left, 200);
             assert.equal(position.bottom, 800);
             assert.equal(position.height, 200);
-            assert.equal(Object.keys(position).length, 5);
+            assert.equal(Object.keys(position).length, 6);
          });
 
          it('Sticky fittingMode', () => {
@@ -500,9 +552,15 @@ define(
          });
 
          it('Centered sticky', () => {
+            const height = 1040;
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1920,
-               height: 1040
+               height: height
+            });
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{height}});
+            StickyStrategy._private.getBody = () => ({
+               width: 1000,
+               height
             });
             let popupCfg = { ...getPositionConfig() };
             popupCfg.direction.horizontal = 'center';
@@ -525,9 +583,18 @@ define(
                   maxHeight: 200,
                   height: 150,
                   minHeight: 110
-               }
+               },
+               fittingMode: {}
             };
             let position = {};
+            const PAGE_TOP = 40;
+            const getViewPort = StickyStrategy._private.getVisualViewport;
+            StickyStrategy._private.getVisualViewport = () => {
+               return {
+                  width: 1000,
+                  height: 1000,
+                  pageTop: PAGE_TOP
+               }};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
             assert.equal(position.maxWidth, popupCfg.config.maxWidth);
             assert.equal(position.width, popupCfg.config.width);
@@ -537,9 +604,59 @@ define(
             assert.equal(position.minHeight, popupCfg.config.minHeight);
 
             popupCfg.config.maxHeight = undefined;
+            popupCfg.fittingMode.vertical = 'adaptive';
             position = {};
             StickyStrategy._private.setMaxSizes(popupCfg, position);
             assert.equal(position.maxHeight, BODY_HEIGHT);
+
+            position = {top: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 20 + PAGE_TOP);
+
+            position = {bottom: 50};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 50);
+
+            popupCfg.config.maxWidth = undefined;
+            popupCfg.fittingMode.horizontal = 'adaptive';
+            position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1920);
+            position = {left: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1900);
+
+            position = {right: 200};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1720);
+
+            popupCfg.config.maxHeight = undefined;
+            popupCfg.fittingMode.vertical = 'fixed';
+            position = {height:4096};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT);
+
+            position = {top: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 20 + PAGE_TOP);
+
+            position = {bottom: 50};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxHeight, BODY_HEIGHT - 50);
+
+            popupCfg.config.maxWidth = undefined;
+            popupCfg.fittingMode.horizontal = 'fixed';
+            position = {};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1920);
+            position = {left: 20};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1900);
+
+            position = {right: 200};
+            StickyStrategy._private.setMaxSizes(popupCfg, position);
+            assert.equal(position.maxWidth, 1720);
+            StickyStrategy._private.getVisualViewport = getViewPort;
          });
 
          it('Centered targetPoint sticky', () => {
@@ -563,26 +680,6 @@ define(
             assert.equal(position.bottom, 740);
          });
 
-         it('isNegativePosition', () => {
-            StickyStrategy._private._isMobileIOS = () => true;
-            let baseFixBottomPositionForIos = StickyStrategy._private._fixBottomPositionForIos;
-            StickyStrategy._private._fixBottomPositionForIos = (pos) => (pos.bottom = -1000);
-
-            let position = {
-               bottom: 100
-            };
-            let isNegative = StickyStrategy._private.isNegativePosition({}, position, {});
-            assert.equal(position.bottom, 100);
-            assert.equal(isNegative, true);
-
-            isNegative = StickyStrategy._private.isNegativePosition({checkNegativePosition: false}, position, {});
-            assert.equal(position.bottom, 100);
-            assert.equal(isNegative, false);
-
-            StickyStrategy._private._fixBottomPositionForIos = baseFixBottomPositionForIos;
-            StickyStrategy._private._isMobileIOS = () => false;
-         });
-
          it('getFakeDivMargins', () => {
             StickyController._private.getFakeDiv = () => {
                return {
@@ -590,7 +687,7 @@ define(
                      marginTop: '10.2px',
                      marginLeft: '11.4px'
                   }
-               }
+               };
             };
 
             const item = {
@@ -610,6 +707,7 @@ define(
                }
             };
             let container = {
+               querySelector: () => null,
                style: {
                   width: '100px',
                   height: '300px'
@@ -617,7 +715,9 @@ define(
             };
             let newContainer = {};
             let prepareConfig = StickyController.prepareConfig;
+            let isTargetVisible = StickyController._isTargetVisible;
             StickyController.prepareConfig = (itemConfig, containerConfig) => newContainer = cClone(containerConfig);
+            StickyController._isTargetVisible = () => true;
             StickyController.elementAfterUpdated(item, container);
 
             // сбрасываем размеры с контейнера
@@ -628,14 +728,15 @@ define(
             // возвращаем их обратно
             assert.strictEqual(container.style.width, '100px');
             assert.strictEqual(container.style.height, '100px');
-            assert.isUndefined(container.style.maxHeight);
+            assert.strictEqual(container.style.maxHeight, '');
 
-            item.position.maxHeight = 300;
+            item.popupOptions.maxHeight = 300;
             container.style.maxHeight = '200px';
             StickyController.elementAfterUpdated(item, container);
             assert.strictEqual(newContainer.style.maxHeight, '300px');
-            assert.strictEqual(container.style.maxHeight, '200px');
+            assert.strictEqual(container.style.maxHeight, '');
             StickyController.prepareConfig = prepareConfig;
+            StickyController._isTargetVisible = isTargetVisible;
          });
 
          it('getMargins', () => {
@@ -704,8 +805,8 @@ define(
             let result = 0;
 
             //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
-            let isMobileIOS = StickyStrategy._private._isMobileIOS;
-            StickyStrategy._private._isMobileIOS = () => true;
+            let _isMobileDevices = StickyStrategy._private._isMobileDevices;
+            StickyStrategy._private._isMobileDevices = () => true;
 
             // правый и нижний край не влезли
             result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
@@ -724,7 +825,183 @@ define(
             result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
             assert.strictEqual(result, 20);
 
+            StickyStrategy._private._isMobileDevices = _isMobileDevices;
+         });
+
+         it('revertPosition outsideOfWindow', () => {
+            let popupCfg = {
+               direction: {
+                  horizontal: 'right'
+               },
+               sizes: {
+                  width: 100
+               },
+               fittingMode: {
+                  horizontal: 'adaptive'
+               }
+            };
+
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
+            let isMobileIOS = StickyStrategy._private._isMobileIOS;
+            StickyStrategy._private._isMobileIOS = () => true;
+
+            let getMargins = StickyStrategy._private.getMargins;
+            StickyStrategy._private.getMargins = () => 0;
+
+            //правый край таргета за пределами области видимости экрана
+            let getTargetCoords = StickyStrategy._private.getTargetCoords;
+            StickyStrategy._private.getTargetCoords = (a, b, coord) => { return coord === 'right' ?  1930 :  1850};
+
+            let invertPosition = StickyStrategy._private.invertPosition;
+            StickyStrategy._private.invertPosition = () => { popupCfg.direction.horizontal = 'left' };
+
+            const width = 1920;
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{width}});
+            StickyStrategy._private.getBody = () => ({
+               width,
+               height: 1000
+            });
+
+            let result = StickyStrategy._private.calculatePosition(popupCfg, {leftScroll: 0},'horizontal');
+            //проверяем, что окно позиционируется с правого края и его ширина не обрезается
+            assert.deepEqual(result, {right: 0});
+
             StickyStrategy._private._isMobileIOS = isMobileIOS;
+            StickyStrategy._private.getMargins = getMargins;
+            StickyStrategy._private.getTargetCoords = getTargetCoords;
+            StickyStrategy._private.invertPosition = invertPosition;
+         });
+
+         it('initial position is outsideOfWindow', () => {
+            let popupCfg = {
+               direction: {
+                  vertical: 'bottom'
+               },
+               sizes: {
+                  height: 200
+               },
+               fittingMode: {
+                  vertical: 'adaptive'
+               }
+            };
+
+            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
+            let isMobileIOS = StickyStrategy._private._isMobileIOS;
+            StickyStrategy._private._isMobileIOS = () => true;
+
+            let getMargins = StickyStrategy._private.getMargins;
+            StickyStrategy._private.getMargins = () => -20;
+
+            // Таргет находится в верхней части экрана, но имеется отрицательный отступ
+            let getTargetCoords = StickyStrategy._private.getTargetCoords;
+            StickyStrategy._private.getTargetCoords = (a, b, coord) => { return coord === 'top' ? 0 : 20};
+
+            let invertPosition = StickyStrategy._private.invertPosition;
+            StickyStrategy._private.invertPosition = () => { popupCfg.direction.vertical = 'top' };
+
+            const width = 1920;
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{width}});
+            StickyStrategy._private.getBody = () => ({
+               width,
+               height: 665
+            });
+
+            let result = StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'vertical');
+
+            // проверяем, что окно позиционируется от верхнего края экрана и его высота не обрезается
+            assert.deepEqual(result, {top: 0});
+            assert.deepEqual(popupCfg.sizes.height, 200);
+
+
+            StickyStrategy._private._isMobileIOS = isMobileIOS;
+            StickyStrategy._private.getMargins = getMargins;
+            StickyStrategy._private.getTargetCoords = getTargetCoords;
+            StickyStrategy._private.invertPosition = invertPosition;
+         });
+
+         it('update sizes from options', () => {
+            let popupCfg = {
+               config: {
+                  width: 100,
+                  maxWidth: 300,
+                  minWidth: 100
+               }
+            };
+            let popupOptions = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200
+            };
+            let resultConfig = {
+               height: 200,
+               minHeight: 200,
+               maxHeight: 500,
+               minWidth: 200,
+               width: 100,
+               maxWidth: 300
+            };
+            StickyController._private.updateSizes(popupCfg, popupOptions);
+            assert.deepEqual(popupCfg.config, resultConfig);
+         });
+
+         it('restrictive container', () => {
+            let getBody = StickyStrategy._private.getBody;
+
+            StickyStrategy._private.getBody = () => ({
+               height: 100,
+               width: 100
+               });
+
+
+         let popupCfg = {
+            restrictiveContainerCoords: {
+               bottom: 50,
+               right: 60
+               },
+               config: {
+                  maxWidth: 300,
+                  minWidth: 100
+               },
+               sizes: {
+                  width: 5,
+                  height: 5
+               }
+            };
+
+            let position = {
+               top: 60,
+               left: 60
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.top, 45);
+            assert.equal(position.left, 55);
+
+            popupCfg.restrictiveContainerCoords = {
+               top: 20,
+               left: 30
+            };
+
+            position = {
+               bottom: 80,
+               right: 80
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.bottom, 75);
+            assert.equal(position.right, 65);
+
+            position = {
+               top: 0,
+               left: 10
+            };
+
+            StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
+            assert.equal(position.top, 20);
+            assert.equal(position.left, 30);
+
+            StickyStrategy._private.getBody = getBody;
          });
       });
    }

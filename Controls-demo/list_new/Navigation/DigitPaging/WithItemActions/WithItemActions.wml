@@ -6,7 +6,7 @@
             itemActions="{{_itemActions}}">
         <ws:navigation source="page" view="pages">
             <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
-            <ws:viewConfig pagingMode="direct" totalInfo="extended"/>
+            <ws:viewConfig totalInfo="extended"/>
         </ws:navigation>
     </Controls.list:View>
 </div>

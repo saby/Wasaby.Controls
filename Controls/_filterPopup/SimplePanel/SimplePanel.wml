@@ -2,21 +2,22 @@
      attr:ws-no-focus="true">
    <Controls.scroll:Container
            attr:class="controls-ScrollContainer__flex controls-SimplePanel__scroll_theme_{{_options.theme}}"
-           shadowVisible="{{false}}"
+           topShadowVisibility="hidden"
+           bottomShadowVisibility="hidden"
            scrollbarVisible="{{false}}">
 
          <ws:for data="index, item in _items">
             <ws:partial template="{{_options.itemTemplate}}"
                         isLast="{{_items.length === index + 1}}"
                         scope="{{item}}"
-                        hasApplyButton="{{_hasApplyButton}}"
+                        hasApplyButton="{{!index && _hasApplyButton}}"
                         on:itemClick="_itemClickHandler(item)"
                         on:checkBoxClick="_checkBoxClickHandler(index)"
                         on:moreButtonClick="_moreButtonClick(item)"/>
          </ws:for>
    </Controls.scroll:Container>
    <ws:if data="{{_needShowApplyButton}}">
-      <div class="controls-SimplePanel__applyButton_theme_{{_options.theme}}">
+      <div class="controls-SimplePanel__applyButton controls-SimplePanel__applyButton_theme_{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"
                                   iconSize="m"

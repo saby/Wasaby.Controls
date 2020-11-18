@@ -1,19 +1,28 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
-import 'css!theme?Controls/masterDetail';
 import {debounce} from 'Types/function';
-import { SyntheticEvent } from 'Vdom/Vdom';
+import {SyntheticEvent} from 'Vdom/Vdom';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
-import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
+import {IPropStorageOptions} from 'Controls/interface';
 
+const RESIZE_DELAY = 50;
+
+interface IMasterDetail extends IControlOptions, IPropStorageOptions {
+    master: TemplateFunction;
+    detail: TemplateFunction;
+    masterWidth: number | string;
+    masterMinWidth: number | string;
+    masterMaxWidth: number | string;
+    contrastBackground: boolean;
+    masterVisibility: string;
+}
 /**
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
- * Подробное описание и инструкцию по настройке читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
+ * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
- * @mixes Controls/_masterDetail/List/Styles
  * @mixes Controls/_interface/IPropStorage
- * @control
+ *
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/MasterDetail/Demo
@@ -21,26 +30,21 @@ import {IPropStorage, IPropStorageOptions} from 'Controls/interface';
 
 /*
  * Control that allows to implement the Master-Detail interface
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
  * @class Controls/_masterDetail/Base
  * @extends Core/Control
- * @mixes Controls/_masterDetail/List/Styles
- * @control
+ *
  * @author Авраменко А.С.
  * @public
  * @demo Controls-demo/MasterDetail/Demo
  */
-const RESIZE_DELAY = 50;
-
-interface IMasterDetail extends IControlOptions, IPropStorageOptions {
-    master: TemplateFunction;
-    detail: TemplateFunction;
-    masterWidth: number|string;
-    masterMinWidth: number|string;
-    masterMaxWidth: number|string;
-}
-
 class Base extends Control<IMasterDetail> {
+    /**
+     * @typedef {String} MasterVisibility
+     * @variant visible Мастер отображается.
+     * @variant hidden Мастер скрыт.
+     */
+
     /**
      * @name Controls/_masterDetail/Base#master
      * @cfg {Function} Задает шаблон контента master.
@@ -80,14 +84,39 @@ class Base extends Control<IMasterDetail> {
      */
 
     /**
+     * @name Controls/_masterDetail/Base#masterVisibility
+     * @cfg {MasterVisibility} Определяет видимость контента мастера.
+     * @default visible
+     * @demo Controls-demo/MasterDetail/MasterVisibility/Index
+     */
+
+    /**
      * @name Controls/_interface/IPropStorage#propStorageId
      * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
      * С помощью этой опции включается функционал движения границ.
      * Помимо propStorageId необходимо задать опции {@link masterWidth}, {@link masterMinWidth}, {@link masterMaxWidth}.
      */
 
+    /**
+     * @name Controls/_masterDetail/Base#contrastBackground
+     * @cfg {Boolean} Определяет контрастность фона контента detail по отношению к контенту master.
+     * @default true
+     * @remark
+     * * true - контрастный фон.
+     * * false - фон, гармонично сочетающийся с окружением.
+     */
+
+    /*
+     * @event Происходит при изменении ширины мастера.
+     * @name Controls/_masterDetail/Base#masterWidthChanged
+     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+     * @param {String} width Ширина мастера.
+     * @remark Событие провоцируется через движение границ, или после изменения размеров родительским контролом.
+     * @see propStorageId
+     */
+
     protected _template: TemplateFunction = template;
-    protected _selected: boolean|null;
+    protected _selected: boolean | null;
     protected _canResizing: boolean = false;
     protected _minOffset: number;
     protected _maxOffset: number;
@@ -118,13 +147,18 @@ class Base extends Control<IMasterDetail> {
                     resolve(this._currentWidth);
                 });
             });
-        } else {
+        } else if (this._canResizing) {
             this.initCurrentWidth(options.masterWidth);
         }
     }
 
     private _getSettings(options: IMasterDetail): Promise<object> {
         return getSettings([options.propStorageId]);
+    }
+    private _dragStartHandler(): void {
+        if (!this._minOffset && !this._maxOffset && this._canResizing) {
+            this._updateOffset(this._options);
+        }
     }
 
     private _setSettings(width: number): void {
@@ -151,7 +185,7 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
-    private initCurrentWidth(width: string|number): void {
+    private initCurrentWidth(width: string | number): void {
         if (this._isPercentValue(width)) {
             this._currentWidth = String(width);
         } else if (width !== undefined) {
@@ -161,13 +195,11 @@ class Base extends Control<IMasterDetail> {
 
     private _updateOffsetDebounced(): void {
         this._updateOffset(this._options);
+        this._notify('masterWidthChanged', [this._currentWidth]);
     }
 
     protected _afterMount(options: IMasterDetail): void {
         this._prevCurrentWidth = this._currentWidth;
-        if (this._canResizing) {
-            this._updateOffset(options);
-        }
     }
 
     protected _beforeUpdate(options: IMasterDetail): void {
@@ -208,7 +240,7 @@ class Base extends Control<IMasterDetail> {
             oldOptions.masterMaxWidth !== newOptions.masterMaxWidth;
     }
 
-    private _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
+    protected _selectedMasterValueChangedHandler(event: Event, value: boolean): void {
         this._selected = value;
         event.stopPropagation();
     }
@@ -219,41 +251,52 @@ class Base extends Control<IMasterDetail> {
             options.masterMinWidth !== undefined) {
             let currentWidth = this._getOffsetValue(this._currentWidth || options.masterWidth);
             this._currentWidth = currentWidth + 'px';
-            this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
-            // Protect against window resize
-            if (this._maxOffset < 0) {
-                currentWidth += this._maxOffset;
-                this._maxOffset = 0;
+
+            // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px maxOffset
+            // Пересчитаем после маунта в px, чтобы работало движение
+            if (this._getContainerWidth() || !this._isPercentValue(options.masterMaxWidth)) {
+                this._maxOffset = this._getOffsetValue(options.masterMaxWidth) - currentWidth;
+                // Protect against window resize
+                if (this._maxOffset < 0) {
+                    currentWidth += this._maxOffset;
+                    this._maxOffset = 0;
+                }
             }
-            this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
-            // Protect against window resize
-            if (this._minOffset < 0) {
-                currentWidth -= this._minOffset;
-                this._minOffset = 0;
+
+            // Если нет контейнера(до маунта) и значение задано в процентах, то мы не можем высчитать в px minOffset
+            // Пересчитаем после маунта в px, чтобы работало движение
+            if (this._getContainerWidth() || !this._isPercentValue(options.masterMinWidth)) {
+                this._minOffset = currentWidth - this._getOffsetValue(options.masterMinWidth);
+                // Protect against window resize
+                if (this._minOffset < 0) {
+                    currentWidth -= this._minOffset;
+                    this._minOffset = 0;
+                }
+                this._currentWidth = currentWidth + 'px';
             }
-            this._currentWidth = currentWidth + 'px';
         }
     }
 
     private _isCanResizing(options: IMasterDetail): boolean {
         const canResizing = options.masterWidth && options.masterMaxWidth && options.masterMinWidth &&
-            options.masterMaxWidth !== options.masterMinWidth;
+            options.masterMaxWidth !== options.masterMinWidth && options.propStorageId;
         return !!canResizing;
     }
 
-    private _offsetHandler(event: Event, offset: number): void {
+    protected _offsetHandler(event: Event, offset: number): void {
         if (offset !== 0) {
             const width = parseInt(this._currentWidth, 10) + offset;
             this._currentWidth = width + 'px';
             this._updateOffset(this._options);
+            this._notify('masterWidthChanged', [this._currentWidth]);
         }
     }
 
-    private _isPercentValue(value: string|number): boolean {
+    private _isPercentValue(value: string | number): boolean {
         return `${value}`.includes('%');
     }
 
-    private _getOffsetValue(value: string|number): number {
+    private _getOffsetValue(value: string | number): number {
         const MaxPercent: number = 100;
         const intValue: number = parseInt(String(value), 10);
         if (!this._isPercentValue(value)) {
@@ -269,10 +312,10 @@ class Base extends Control<IMasterDetail> {
         return this._containerWidth;
     }
 
-    private _resizeHandler(): void {
+    protected _resizeHandler(): void {
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-        // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea)
-        if (!this._container.closest('.ws-hidden')) {
+        // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea) и когда нет движения границ
+        if (!this._container.closest('.ws-hidden') && this._options.propStorageId) {
             this._containerWidth = null;
             this._updateOffsetDebounced(this._options);
             // Нужно чтобы лисенеры, лежащие внутри нашего регистратора, реагировали на ресайз страницы.
@@ -280,6 +323,18 @@ class Base extends Control<IMasterDetail> {
             // чтобы лисенер мог регистрироваться в 2х регистраторах.
             this._startResizeRegister();
         }
+    }
+
+    static _theme: string[] = ['Controls/masterDetail'];
+
+    static getDefaultOptions(): Partial<IMasterDetail> {
+        return {
+            masterWidth: '27%',
+            masterMinWidth: 30,
+            masterMaxWidth: '50%',
+            contrastBackground: true,
+            masterVisibility: 'visible'
+        };
     }
 }
 

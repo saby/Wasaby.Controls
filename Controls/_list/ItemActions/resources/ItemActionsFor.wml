@@ -1,7 +1,5 @@
-<ws:for data="action in showedActions">
-    <ws:partial
-            template="wml!Controls/_list/ItemActions/resources/ItemAction"
+<ws:partial template="Controls/itemActions:ItemActionsForTemplate"
             itemData="{{itemData}}"
-            size="{{action._isMenu ? 'm' : size}}"
-            action="{{action}}"/>
-</ws:for>
+            size="{{size}}"
+            showedActions="{{showedActions}}"
+/>

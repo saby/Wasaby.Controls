@@ -1,12 +1,104 @@
-.controls-ComboBox-InputRender {
-   width: 100%;
+.controls-ComboBox {
+   position: relative;
 }
 
-.controls-ComboBox__nativeField_theme_@{themeName}_caretEmpty, .controls-ComboBox__nativeField_theme_@{themeName}_caretFilled {
+.controls-ComboBox__field {
+   width: 100%;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.controls-ComboBox-wrapper {
+   display: inline-flex;
+   align-items: center;
+   width: 100%;
+   height: 100%;
+}
+
+.controls-ComboBox_theme-@{themeName} {
+   border-width: @border-thickness_inputText;
+   background-color: @background-color_inputText;
+   border-style: @border-style_inputText;
+   box-sizing: border-box;
    cursor: pointer;
 }
 
-.controls-ComboBox__field_theme_@{themeName}_margin {
+.controls-ComboBox_textAlign-left {
+   text-align: left;
+}
+
+.controls-ComboBox_textAlign-right {
+   text-align: right;
+}
+
+.controls-ComboBox-borderStyle-valid_theme-@{themeName} {
+   border-color: @border-color_inputText;
+}
+
+.controls-ComboBox-borderStyle-invalidAccent_theme-@{themeName} {
+   border-style: @invalid_border-style_inputText;
+   border-color: @invalid_border-color_inputText;
+   background-color: @invalid_focus_background-color;
+}
+
+.controls-ComboBox-borderStyle-invalid_theme-@{themeName} {
+   border-style: @invalid_border-style_inputText;
+   border-color: @invalid_border-color_inputText;
+}
+
+.controls-ComboBox-borderStyle-valid_theme-@{themeName}:hover {
+   border-style: @border-style_hover_inputText;
+   border-color: @border-color_hover_inputText;
+}
+
+.controls-ComboBox-borderStyle-invalidAccent_theme-@{themeName}:hover {
+   border-style: @invalid_border-style_inputText;
+}
+
+.controls-ComboBox-borderStyle-invalid_theme-@{themeName}:hover {
+   border-style: @invalid_border-style_inputText;
+}
+
+.controls-ComboBox-borderStyle-valid_theme-@{themeName}:focus-within {
+   border-style: @border-style_focus_inputText;
+   border-color: @border-color_focus_inputText;
+}
+
+.controls-ComboBox-borderStyle-invalidAccent_theme-@{themeName}:focus-within {
+   border-style: @invalid_border-style_inputText;
+   border-color: @invalid_focus_border-color_inputText;
+   background-color: @invalid_focus_background-color;
+}
+
+.controls-ComboBox-borderStyle-invalid_theme-@{themeName}:focus-within {
+   border-style: @invalid_border-style_inputText;
+   border-color: @invalid_focus_border-color_inputText;
+}
+
+.controls-ComboBox-readOnly_theme-@{themeName} {
+   border-color: @readonly_border-color_inputText;
+   background-color: @readonly_background-color_inputText;
+   cursor: default;
+}
+
+.controls-ComboBox__placeholder_theme-@{themeName} {
+   color: @placeholder-color_inputText;
+   width: 100%;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
+.controls-ComboBox__nativeField_caretEmpty_theme_@{themeName}, .controls-ComboBox__nativeField_caretFilled_theme_@{themeName} {
+   cursor: pointer;
+}
+
+.controls-ComboBox__field_theme_@{themeName}_margin-xs {
+   margin: 0 @trigger_padding-right_combobox 0 @padding-horizontal_inputText;
+}
+
+.controls-ComboBox__field_theme_@{themeName}_margin-null {
    margin: 0 @trigger_padding-right_combobox 0 @padding-horizontal_inputText;
 }
 
@@ -27,9 +119,11 @@
    cursor: pointer;
    height: 100%;
 }
+
 .controls-ComboBox__arrow-wrapper_theme-@{themeName} {
    color: @trigger-color_combobox;
    padding-right: @padding-horizontal_inputText;
+   flex-shrink: 0;
 }
 
 .controls-ComboBox__arrow-wrapper:before {
@@ -43,4 +137,40 @@
 .controls-ComboBox__iconArrow {
    display: inline-flex;
    align-items: center;
+}
+
+.controls-Combobox-fontsize-xs_theme-@{themeName} {
+   font-size: @font-size_xs_input;
+}
+
+.controls-Combobox-fontsize-s_theme-@{themeName} {
+   font-size: @font-size_s_input;
+}
+
+.controls-Combobox-fontsize-m_theme-@{themeName} {
+   font-size: @font-size_m_input;
+}
+
+.controls-Combobox-fontsize-l_theme-@{themeName} {
+   font-size: @font-size_l_input;
+}
+
+.controls-Combobox-fontsize-xl_theme-@{themeName} {
+   font-size: @font-size_xl_input;
+}
+
+.controls-Combobox-fontsize-2xl_theme-@{themeName} {
+   font-size: @font-size_2xl_input;
+}
+
+.controls-Combobox-fontsize-3xl_theme-@{themeName} {
+   font-size: @font-size_3xl_input;
+}
+
+.controls-Combobox-fontsize-4xl_theme-@{themeName} {
+   font-size: @font-size_4xl_input;
+}
+
+.controls-Combobox-fontsize-5xl_theme-@{themeName} {
+   font-size: @font-size_5xl_input;
 }

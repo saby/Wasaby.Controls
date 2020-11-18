@@ -1,1 +1,1 @@
-<Controls.decorator:Money attr:class="demo-Grid__item" style="accentResults" value="{{9.71}}"/>
+<Controls.decorator:Money attr:class="demo-Grid__item" fontColorStyle="results" fontSize="l" fontWeight="bold" value="{{9.71}}"/>

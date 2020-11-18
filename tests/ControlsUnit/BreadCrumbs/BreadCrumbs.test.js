@@ -66,7 +66,55 @@ define([
          };
          bc._onHoveredItemChanged({}, hoveredItem);
       });
+      it('_addWithOverflow', function() {
+         //две крошки
+         let View = new crumbs.View();
+         View._items = [{
+            id: 1,
+            item: {
+               get: () => {
+                  return 'title';
+               }
+            },
+            withOverflow: false
+         }, {
+            id: 2,
+            item: {
+               get: () => {
+                  return '1';
+               }
+            },
+            withOverflow: false
+         }];
+         View._addWithOverflow();
+         assert.isTrue(View._items[0].withOverflow);
+         assert.isFalse(View._items[1].withOverflow);
+
+         //крошка и точки
+         View._items = [{
+            id: 1,
+            item: {
+               get: () => {
+                  return '...';
+               }
+            },
+            withOverflow: false,
+            isDots: true
+         }, {
+            id: 2,
+            item: {
+               get: () => {
+                  return 'title';
+               }
+            },
+            withOverflow: false
+         }];
+         View._addWithOverflow();
+         assert.isFalse(View._items[0].withOverflow);
+         assert.isTrue(View._items[1].withOverflow);
+      });
       describe('_onItemClick', function() {
+         const mockEvent = (e) => ({...e, stopPropagation() {}});
          it('item', function() {
             var itemData = {
                item: new entity.Model({
@@ -81,7 +129,7 @@ define([
                   assert.equal(itemData.item.get('id'), args[0].get('id'));
                }
             };
-            bc._onItemClick({}, itemData);
+            bc._onItemClick(mockEvent(), itemData);
 
             // check notify itemClick in readOnly mode
             var notifyClickCalled = false;
@@ -91,7 +139,7 @@ define([
                   notifyClickCalled = true;
                }
             };
-            bc._onItemClick({}, itemData);
+            bc._onItemClick(mockEvent(), itemData);
             assert.isFalse(notifyClickCalled, 'itemClick notified in readOnly mode.');
          });
          it('dots', function() {
@@ -100,45 +148,60 @@ define([
                   title: '...'
                }
             };
-            var stopPropagationCalled = false;
-            bc._children = {
-               menuOpener: {
-                  open: function(openerOptions) {
-                     assert.equal(openerOptions.target, 123);
-                     assert.equal(openerOptions.templateOptions.items.at(0).get('title'), data[0].title);
-                     assert.equal(openerOptions.templateOptions.displayProperty, 'test');
-                  }
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  assert.equal(openerOptions.target, 123);
+                  assert.equal(openerOptions.templateOptions.displayProperty, 'test');
+               },
+               close: function () {
                }
             };
             bc._dotsClick({
                currentTarget: 123,
-               stopPropagation: function() {
-                  stopPropagationCalled = true;
-               }
             }, itemData);
-            assert.isTrue(stopPropagationCalled);
+
+            bc._dotsClick({
+               currentTarget: 123,
+            }, itemData);
+         });
+
+         it('dots with option readOnly', function() {
+            var itemData = {
+               item: {
+                  title: '...'
+               }
+            };
+            bc._options.readOnly = true;
+            let readOnly = false;
+
+            bc._menuOpener = {
+               open: function (openerOptions) {
+                  readOnly = openerOptions.templateOptions.source.data[0].readOnly;
+               },
+               close: function () {
+               }
+            };
+            bc._dotsClick({
+               currentTarget: 123,
+            }, itemData);
+            assert.isTrue(readOnly);
          });
       });
       it('_onResult', function(done) {
-         var args = {
-            action: 'itemClick',
-            data: [new entity.Model({
-               rawData: data[0]
-            })]
-         };
+         var args = new entity.Model({
+            rawData: data[0]
+         });
          bc._notify = function(e, eventArgs) {
             if (e === 'itemClick') {
                assert.equal(bc._options.items[0].get('id'), eventArgs[0].get('id'));
             }
          };
-         bc._children = {
-            menuOpener: {
-               close: function() {
-                  done();
-               }
+         bc._menuOpener = {
+            close: function () {
+               done();
             }
          };
-         bc._onResult(args);
+         bc._onResult('itemClick', args);
       });
    });
 });

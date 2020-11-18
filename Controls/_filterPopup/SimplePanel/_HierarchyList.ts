@@ -88,7 +88,8 @@ var HierarchyList = Control.extend({
             displayProperty: options.displayProperty,
             emptyText: options.emptyText,
             emptyKey: options.emptyKey,
-            hasApplyButton: options.hasApplyButton
+            hasApplyButton: options.hasApplyButton,
+            hasClose: true
         });
     },
 

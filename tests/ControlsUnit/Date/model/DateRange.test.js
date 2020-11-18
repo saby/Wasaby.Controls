@@ -1,9 +1,11 @@
 define([
    'Core/core-instance',
-   'Controls/dateRange'
+   'Controls/dateRange',
+   'Types/entity'
 ], function(
    cInstance,
-   dateRange
+   dateRange,
+   typesEntity
 ) {
    'use strict';
 
@@ -48,13 +50,11 @@ define([
 
                model.subscribe(`${field}Changed`, callback);
                model.subscribe('rangeChanged', rangeChangedCallback);
-               model.subscribe('valueChanged', valueChangedCallback);
                model[field] = value;
 
                assert.strictEqual(model[field], value);
                assert(callback.calledOnce, `${field}Changed callback called ${callback.callCount} times`);
                assert(rangeChangedCallback.calledOnce, `rangeChangedCallback callback called ${callback.callCount} times`);
-               assert(valueChangedCallback.calledOnce, `valueChangedCallback callback called ${callback.callCount} times`);
             });
 
             it(`should not update ${field} if value did not changed`, function() {
@@ -82,6 +82,61 @@ define([
       });
 
       describe('.shiftForward', function() {
+         [{
+            startValue: new Date(2019, 11),
+            endValue: new Date(2019, 11),
+            displayedRanges: [[new Date(2018, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 1),
+            endValue: new Date(2020, 1),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2020, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)], [new Date(2025, 0), new Date(2030, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 12, 0),
+            displayedRanges: [[new Date(2020, 0), new Date(2022, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2022, 0),
+            displayedRanges: [[new Date(2019, 0), null]]
+         }].forEach(function (test) {
+            it(`should shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftForward();
+
+               assert.notEqual(test.startValue.getTime(), model.startValue.getTime());
+               assert.notEqual(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
+
+         [{
+            startValue: new Date(2019, 11),
+            endValue: new Date(2020, 0, 0),
+            displayedRanges: [[new Date(2018, 0), new Date(2019, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2021, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 12, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }].forEach(function (test) {
+            it(`should not shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftForward();
+
+               assert.equal(test.startValue.getTime(), model.startValue.getTime());
+               assert.equal(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
          [
             {
                start: new Date(2018, 0, 1),
@@ -112,9 +167,119 @@ define([
                cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });
+
+         [{
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 11),
+            selectionType: 'quantum',
+            ranges: {
+               'weeks': [1]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() - 2)];
+            },
+            result: [new Date(2019, 0, 14), new Date(2019, 0, 18)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 12),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
+            },
+            result: [new Date(2019, 0, 10), new Date(2019, 0, 15)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 9),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            result: [new Date(2019, 0, 10), new Date(2019, 0, 12)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 13),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [7]
+            },
+            result: [new Date(2019, 0, 14), new Date(2019, 0, 20)]
+         }].forEach(function (test) {
+            it('should shift period with quantum forward', function () {
+               let model = new dateRange.DateRangeModel();
+
+               model.update({
+                  startValue: test.startValue,
+                  endValue: test.endValue,
+                  selectionType: 'quantum',
+                  ranges: test.ranges,
+                  rangeSelectedCallback: test.rangeSelectedCallback
+               });
+               model.shiftForward();
+               assert.equal(model.startValue.getTime(), test.result[0].getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
+               assert.equal(model.endValue.getTime(), test.result[1].getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
+            });
+         });
       });
 
       describe('.shiftBack', function() {
+         [{
+            startValue: new Date(2019, 7),
+            endValue: new Date(2019, 7),
+            displayedRanges: [[new Date(2019, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 1),
+            endValue: new Date(2020, 1),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2020, 2, 0),
+            displayedRanges: [[new Date(2015, 0), new Date(2017, 0)], [new Date(2020, 0), new Date(2030, 0)]]
+         }, {
+            startValue: new Date(2020, 9),
+            endValue: new Date(2020, 11),
+            displayedRanges: [[new Date(2020, 0), new Date(2022, 0)]]
+         }, {
+            startValue: new Date(2020, 0),
+            endValue: new Date(2022, 0),
+            displayedRanges: [[null, new Date(2023, 0)]]
+         }].forEach(function (test) {
+            it(`should shift back with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftBack();
+
+               assert.notEqual(test.startValue.getTime(), model.startValue.getTime());
+               assert.notEqual(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
+
+         [{
+            startValue: new Date(2019, 0),
+            endValue: new Date(2019, 0),
+            displayedRanges: [[new Date(2019, 0), new Date(2019, 0)]]
+         }, {
+            startValue: new Date(2017, 0),
+            endValue: new Date(2017, 0),
+            displayedRanges: [[new Date(2017, 0), new Date(2020, 0)]]
+         }].forEach(function (test) {
+            it(`should not shift forward with displayedRanges`, function () {
+               let model = new dateRange.DateRangeModel({});
+               model.update({ startValue: test.startValue, endValue: test.endValue, displayedRanges: test.displayedRanges });
+
+               model.shiftBack();
+
+               assert.equal(test.startValue.getTime(), model.startValue.getTime());
+               assert.equal(test.endValue.getTime(), model.endValue.getTime());
+            });
+         });
          [
             {
                start: new Date(2018, 0, 1),
@@ -145,6 +310,64 @@ define([
                cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
             });
          });
+         [{
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 11),
+            selectionType: 'quantum',
+            ranges: {
+               'weeks': [1]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() - 2)];
+            },
+            result: [new Date(2018, 11, 31), new Date(2019, 0, 4)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 12),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            rangeSelectedCallback: (startValue, endValue) => {
+               return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate()),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 3)];
+            },
+            result: [new Date(2019, 0, 4), new Date(2019, 0, 9)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 9),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [3]
+            },
+            result: [new Date(2019, 0, 4), new Date(2019, 0, 6)]
+         }, {
+            startValue: new Date(2019, 0, 7),
+            endValue: new Date(2019, 0, 13),
+            selectionType: 'quantum',
+            ranges: {
+               'days': [7]
+            },
+            result: [new Date(2018, 11, 31), new Date(2019, 0, 6)]
+         }].forEach(function (test) {
+            it('should shift period with quantum back', function () {
+               let model = new dateRange.DateRangeModel();
+
+               model.update({
+                  startValue: test.startValue,
+                  endValue: test.endValue,
+                  selectionType: 'quantum',
+                  ranges: test.ranges,
+                  rangeSelectedCallback: test.rangeSelectedCallback
+               });
+               model.shiftBack();
+               assert.equal(model.startValue.getTime(), test.result[0].getTime());
+               cInstance.instanceOfModule(model.startValue, 'Types/entity:DateTime');
+               assert.equal(model.endValue.getTime(), test.result[1].getTime());
+               cInstance.instanceOfModule(model.endValue, 'Types/entity:DateTime');
+            });
+         });
       });
 
       describe('.setRange', function() {
@@ -162,80 +385,6 @@ define([
                sandbox.restore();
                done();
             }, 10);
-         });
-      });
-
-      describe('.slideStartDate', function () {
-         it('should return correct start value', function () {
-            const model = new dateRange.RelationController(),
-               options = {
-                  bindType: "normal"
-               };
-
-            model._beforeMount(options);
-
-            [{
-               expectedResult: new Date(2018, 2, 1),
-               lastDate: new Date(2018, 1, 1),
-               date: new Date(2018, 3, 1),
-               delta: -1,
-               bindType: 'month'
-            }, {
-               expectedResult: new Date(2018, 5, 16),
-               lastDate: new Date(2018, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -5,
-               bindType: 'days'
-            }, {
-               expectedResult: new Date(2019, 5, 11),
-               lastDate: new Date(2019, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -5,
-               bindType: 'days'
-            }
-            ].forEach(function(test) {
-               let result = model._model._slideStartDate(test.lastDate, test.date, test.delta, test.bindType);
-               assert.equal(result.getFullYear(), test.expectedResult.getFullYear());
-               assert.equal(result.getMonth(), test.expectedResult.getMonth());
-               assert.equal(result.getDate(), test.expectedResult.getDate());
-            });
-         });
-      });
-
-      describe('.slideEndDate', function () {
-         it('should return correct end value', function () {
-            const model = new dateRange.RelationController(),
-               options = {
-                  bindType: "normal"
-               };
-
-            model._beforeMount(options);
-
-            [{
-               expectedResult: new Date(2018, 3, 0),
-               lastDate: new Date(2018, 1, 1),
-               date: new Date(2018, 3, 1),
-               delta: -1,
-               bindType: 'month'
-            }, {
-               expectedResult: new Date(2018, 5, 20),
-               lastDate: new Date(2018, 4, 1),
-               date: new Date(2019, 5, 16),
-               periodLength: 5,
-               bindType: 'days'
-            }, {
-               expectedResult: new Date(2019, 5, 15),
-               lastDate: new Date(2019, 4, 1),
-               date: new Date(2019, 5, 16),
-               delta: -1,
-               bindType: 'days'
-            }
-            ].forEach(function(test) {
-               let result = model._model._slideEndDate(test.lastDate, test.date, test.delta, test.bindType, test.periodLength);
-               assert.equal(result.getFullYear(), test.expectedResult.getFullYear());
-               assert.equal(result.getMonth(), test.expectedResult.getMonth());
-               assert.equal(result.getDate(), test.expectedResult.getDate());
-            });
          });
       });
    });

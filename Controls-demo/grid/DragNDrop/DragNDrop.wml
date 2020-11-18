@@ -3,29 +3,27 @@
     <div>
         <div class="controlsDemo__inline-flex">
             <Controls.list:DataContainer name="dataContainer" source="{{_viewSource}}" keyProperty="id">
-                <div>
-                    <Controls.list:Mover name="listMover"/>
-                    <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
+                <Controls.operations:Controller bind:selectedKeys="_selectedKeys">
+                    <div>
+                        <Controls.list:Mover name="listMover"/>
                         <Controls.list:Container>
-                            <Controls.operations:Container>
-                                <Controls.grid:View
-                                        on:dragStart="_dragStart()"
-                                        on:dragEnd="_dragEnd()"
-                                        displayProperty="title"
-                                        multiSelectVisibility="{{_multiselect}}"
-                                        itemsReadyCallback="{{_itemsReadyCallback}}"
-                                        itemsDragNDrop="{{true}}"
-                                        columns="{{_columns}}">
-                                    <ws:draggingTemplate>
-                                        <ws:partial template="Controls/dragnDrop:DraggingTemplate"
-                                                    mainText="{{draggingTemplate.entity._options.title}}">
-                                        </ws:partial>
-                                    </ws:draggingTemplate>
-                                </Controls.grid:View>
-                            </Controls.operations:Container>
+                            <Controls.grid:View
+                                    on:dragStart="_dragStart()"
+                                    on:dragEnd="_dragEnd()"
+                                    displayProperty="title"
+                                    multiSelectVisibility="{{_multiselect}}"
+                                    itemsReadyCallback="{{_itemsReadyCallback}}"
+                                    itemsDragNDrop="{{true}}"
+                                    columns="{{_columns}}">
+                                <ws:draggingTemplate>
+                                    <ws:partial template="Controls/dragnDrop:DraggingTemplate"
+                                                mainText="{{draggingTemplate.entity._options.title}}">
+                                    </ws:partial>
+                                </ws:draggingTemplate>
+                            </Controls.grid:View>
                         </Controls.list:Container>
-                    </Controls.operations:Controller>
-                </div>
+                    </div>
+                </Controls.operations:Controller>
             </Controls.list:DataContainer>
         </div>
     </div>

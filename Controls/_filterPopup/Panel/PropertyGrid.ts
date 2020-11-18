@@ -4,25 +4,6 @@ import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import {isEqual} from 'Types/object';
-import 'css!theme?Controls/filterPopup';
-
-/**
-    * Control PropertyGrid
-    * Provides a user interface for browsing and editing the properties of an object.
-    *
-    * @class Controls/_filterPopup/Panel/PropertyGrid
-    * @extends Core/Control
-    * @mixes Controls/interface/IPropertyGrid
-    * @mixes Controls/_interface/ISource
-    * @mixes Controls/interface/IItemTemplate
-    * @control
-    * @private
-    * @author Золотова Э.Е.
-    *
-    * @css @height_PropertyGrid-item Height of item in the block.
-    * @css @spacing_PropertyGrid-between-items Spacing between items.
-    */
-
 
    const observableItemProps = ['value', 'textValue', 'visibility'];
 
@@ -99,7 +80,19 @@ import 'css!theme?Controls/filterPopup';
          return last_index;
       }
    };
-
+/**
+ * Control PropertyGrid
+ * Provides a user interface for browsing and editing the properties of an object.
+ *
+ * @class Controls/_filterPopup/Panel/PropertyGrid
+ * @extends Core/Control
+ * @mixes Controls/interface/IPropertyGrid
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/interface/IItemTemplate
+ * 
+ * @private
+ * @author Золотова Э.Е.
+ */
    var PropertyGrid = Control.extend({
       _template: template,
 
@@ -113,7 +106,7 @@ import 'css!theme?Controls/filterPopup';
       },
 
       _beforeUpdate: function(newOptions) {
-         if (!isEqual(newOptions.items, this._items)) {
+         if (!isEqual(newOptions.items, this._options.items)) {
             this._changedIndex = _private.getIndexChangedVisibility(newOptions.items, this._items);
             _private.setItems(this, _private.cloneItems(newOptions.items));
          } else {
@@ -165,8 +158,7 @@ import 'css!theme?Controls/filterPopup';
       }
    });
 
+   PropertyGrid._theme = ['Controls/filterPopup'];
    PropertyGrid._private = _private;
 
    export = PropertyGrid;
-
-

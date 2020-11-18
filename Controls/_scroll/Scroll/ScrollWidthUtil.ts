@@ -1,10 +1,13 @@
 import Env = require('Env/Env');
-import {getScrollbarWidth} from 'Controls/Utils/getScrollbarWidth'
+import {getScrollbarWidth} from '../Utils/getScrollbarWidth';
 
 
 var _private = {
 
-    styleHideScrollbar: null,
+    styleHideScrollbar: {
+        vertical: null,
+        verticalHorizontal: null
+    },
 
     /**
      * Расчет ширины нативного скролла.
@@ -22,11 +25,14 @@ var _private = {
      * @param compatibility
      * @return {string}
      */
-    calcStyleHideScrollbar: function (scrollbarWidth) {
+    calcStyleHideScrollbar: function (scrollbarWidth, scrollMode) {
         var style;
 
         if (scrollbarWidth) {
-            style = 'margin-right: -' + scrollbarWidth + 'px;';
+            style =  `margin-right: -${scrollbarWidth}px;`;
+            if (scrollMode === 'verticalHorizontal') {
+                style += `margin-bottom: -${scrollbarWidth}px;`
+            }
         } else if (scrollbarWidth === 0) {
             style = '';
         }
@@ -38,24 +44,24 @@ var _private = {
 export = {
     _private: _private,
 
-    calcStyleHideScrollbar: function () {
+    calcStyleHideScrollbar: function (scrollMode) {
         var scrollbarWidth, styleHideScrollbar;
 
-        if (typeof _private.styleHideScrollbar === 'string') {
-            styleHideScrollbar = _private.styleHideScrollbar;
+        if (typeof _private.styleHideScrollbar[scrollMode] === 'string') {
+            styleHideScrollbar = _private.styleHideScrollbar[scrollMode];
         } else {
             scrollbarWidth = _private.calcScrollbarWidth(Env.detection);
-            styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
+            styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth, scrollMode);
         }
 
         /**
          * Do not cache on the server and firefox.
          */
         if (!(typeof window === 'undefined' || Env.detection.firefox)) {
-            _private.styleHideScrollbar = styleHideScrollbar;
+            _private.styleHideScrollbar[scrollMode] = styleHideScrollbar;
         }
 
         return styleHideScrollbar;
     }
 };
-   
+

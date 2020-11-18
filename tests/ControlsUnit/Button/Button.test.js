@@ -1,10 +1,17 @@
-define(['Controls/buttons'], function(buttons) {
-   'use strict';
-
+define(['Controls/buttons', 'UI/Utils'], function(buttons, {Logger}) {
    var btn;
    var actualAPI = buttons.ActualApi;
 
    describe('Controls.Button', function() {
+      var sandbox;
+      beforeEach(() => {
+         sandbox = sinon.createSandbox();
+         sandbox.stub(Logger, 'error');
+      });
+
+      afterEach(() => {
+         sandbox.restore();
+      });
       describe('styleToViewMode', function() {
          it('style linkMain', function() {
             let cfg = actualAPI.styleToViewMode('linkMain');
@@ -167,40 +174,6 @@ define(['Controls/buttons'], function(buttons) {
             assert.equal('link', cfg, 'wrong cfg');
          });
       });
-      describe('iconSize', function() {
-         it('iconSize', function() {
-            const cfg = actualAPI.iconSize('s', 'icon-16 icon-Author');
-            assert.equal('s', cfg, 'wrong cfg');
-         });
-         it('icon-16', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-16 icon-Author');
-            assert.equal('s', cfg, 'wrong cfg');
-         });
-         it('icon-24', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-24 icon-Author');
-            assert.equal('m', cfg, 'wrong cfg');
-         });
-         it('icon-32', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-32 icon-Author');
-            assert.equal('l', cfg, 'wrong cfg');
-         });
-         it('icon-small', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-small icon-Author');
-            assert.equal('s', cfg, 'wrong cfg');
-         });
-         it('icon-medium', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-medium icon-Author');
-            assert.equal('m', cfg, 'wrong cfg');
-         });
-         it('icon-large', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-large icon-Author');
-            assert.equal('l', cfg, 'wrong cfg');
-         });
-         it('empty', function() {
-            const cfg = actualAPI.iconSize(undefined, 'icon-Author');
-            assert.equal('m', cfg, 'wrong cfg');
-         });
-      });
 
       describe('iconStyle', function() {
          it('readonly', function() {
@@ -324,27 +297,6 @@ define(['Controls/buttons'], function(buttons) {
          });
       });
 
-      describe('constructor() and _beforeUpdate()', function() {
-         var inst;
-
-         beforeEach(function() {
-            inst = {};
-         });
-
-         it('constructor', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-
-         it('_beforeUpdate', function() {
-            buttons.Button.prototype._beforeMount.call(inst, {
-               style: 'primary'
-            });
-            assert.equal(inst._buttonStyle, 'primary');
-         });
-      });
       describe('click', function() {
          var customEvent = {}, eventBublle = true;
 

@@ -1,14 +1,26 @@
 /**
+ * @typedef {String} TCursor
+ * @description Значения для типа курсора, отображаемого при наведении на ячейку.
+ * @variant default Стандартный указатель (стрелка).
+ * @variant pointer Указатель.
+ */
+export type TCursor = 'default' | 'pointer' | 'right';
+
+/**
  * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
+ *
  * @class Controls/grid:ColumnTemplate
  * @author Авраменко А.С.
+ * 
  * @see Controls/_grid/interface/IGridControl/Column.typedef
  * @see Controls/grid:IGridControl#columns
+ * 
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/column/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/columns/template/#_2 здесь}.
+ * 
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
- * <pre class="brush: html">
+ * <pre class="brush: html; highlight: [6,7,8,9,10,11,12]">
  * <Controls.grid:View>
  *    <ws:columns>
  *       <ws:Array>
@@ -33,21 +45,25 @@
  export default interface IColumnTemplateOptions {
    /**
     * @name Controls/grid:ColumnTemplate#contentTemplate
-    * @cfg {String|Function} Устанавливает пользовательский шаблон для отображения содержимого ячейки.
+    * @cfg {String|Function} Пользовательский шаблон для отображения содержимого ячейки.
     * @see Controls/grid:IGridControl#showEditArrow
     * @remark
-    * В области видимости шаблона доступен объект **itemData** со следующими свойствами:
+    * В области видимости шаблона доступны переменные **itemData**, **editArrowTemplate** и **expanderTemplate**.
     * 
+    * Переменная **itemData** позволяет получить доступ к следующими свойствам:
+    *
     * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     * * **index** — порядковый номер строки. Отсчет от 0.
-    * * **isEditing** (тип Boolean) — признак {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирования по месту}.
+    * * **isEditing()** — возвращает true, если для записи выполняется {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирование по месту}.
     * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
-    * * **column** (тип {@link Controls/_grid/interface/IGridControl/Column.typedef Column.typedef}) — объект с конфигурацией колонки.
+    * * **column** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
+    *
+    * Переменная **editArrowTemplate** позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон} в прикладном шаблоне для первой колонки. Переменную достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 4.
     * 
-    * Также в области видимости шаблона есть переменная **editArrowTemplate**, которая позволяет отобразить {@link Controls/grid:IGridControl#showEditArrow стрелку-шеврон}. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}. Работа с переменной показана в примере № 4.
+    * Переменная **expanderTemplate** доступна только, если шаблон используется в контроле {@link Controls/treeGrid:View}. С помощью переменной можно отобразить кнопку раскрытия узла в произвольном месте элемента. При этом опцию {@link Controls/treeGrid:View#expanderPosition expanderPosition} необходимо установить в значение custom. Переменную expanderTemplate достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}, как это показано в примере № 5.
     * @example
     * **Пример 1.** Шаблон и контрол сконфигурированы в одном WML-файле.
-    * <pre class="brush: html">
+    * <pre class="brush: html; highlight: [6,7,8,9,10,11,12]">
     * <Controls.grid:View>
     *    <ws:columns>
     *       <ws:Array>
@@ -66,10 +82,10 @@
     *    </ws:columns>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * **Пример 2.** Контрол и шаблоны сконфигурированы в отдельных WML-файлах.
-    * <pre class="brush: html">
-    * <!-- file1.wml --> 
+    * <pre class="brush: html; highlight: [7]">
+    * <!-- file1.wml -->
     * <Controls.grid:View>
     *    <ws:columns>
     *       <ws:Array>
@@ -82,7 +98,7 @@
     *    </ws:columns>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <ws:partial template="Controls/grid:ColumnTemplate">
@@ -91,10 +107,10 @@
     *    </ws:contentTemplate>
     * </ws:partial>
     * </pre>
-    * 
+    *
     * **Пример 3.** Шаблон contentTemplate сконфигурирован в отдельном WML-файле.
-    * 
-    * <pre class="brush: html">
+    *
+    * <pre class="brush: html; highlight: [8]">
     * <Controls.grid:View>
     *    <ws:columns>
     *       <ws:Array>
@@ -111,16 +127,16 @@
     *    </ws:columns>
     * </Controls.grid:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <div title="{{contentTemplate.itemData.item.Name}}">
     *    {{contentTemplate.itemData.item.Name}}
     * </div>
     * </pre>
-    * 
-    * **Пример 4.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки-шеврона.
-    * <pre class="brush: html">
+    *
+    * **Пример 4.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение {@link Controls/grid:IGridControl#showEditArrow стрелки-шеврона}.
+    * <pre class="brush: html; highlight: [11]">
     * <Controls.grid:View>
     *    <ws:columns>
     *       <ws:Array>
@@ -140,6 +156,71 @@
     *    </ws:columns>
     * </Controls.grid:View>
     * </pre>
+    * 
+    * **Пример 5.** Следующий пример настраивает контрол так, что для первой колонки задан пользовательский шаблон. При этом добавлено отображение кнопки раскрытия узла.
+    * <pre class="brush: html; highlight: [1,13]">
+    * <Controls.treeGrid:View expanderPosition="custom">
+    *    <ws:itemTemplate>
+    *       <ws:partial template="Controls/treeGrid:ItemTemplate" />
+    *    </ws:itemTemplate>
+    *    <ws:columns>
+    *       <ws:Array>
+    *          ...
+    *          <ws:Object>
+    *             <ws:template>
+    *                <ws:partial template="Controls/grid:ColumnTemplate">
+    *                   <ws:contentTemplate>
+    *                      ...
+    *                      <ws:partial template="{{ contentTemplate.expanderTemplate }}" scope="{{ contentTemplate }}"/> 
+    *                   </ws:contentTemplate>
+    *                </ws:partial>
+    *             </ws:template>
+    *          </ws:Object>
+    *       </ws:Array>
+    *    </ws:columns>
+    * </Controls.treeGrid:View>
+    * </pre>
     */
    contentTemplate?: string;
+
+    /**
+     * @name Controls/grid:ColumnTemplate#cursor
+     * @cfg {TCursor} Тип {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора}, когда он находится в пределах ячейки.
+     * @default pointer
+     */
+    cursor?: TCursor;
+
+    /**
+     * @typedef {String} backgroundColorStyle
+     * @variant danger
+     * @variant success
+     * @variant warning
+     * @variant primary
+     * @variant secondary
+     * @variant unaccented
+     * @variant readonly
+     */
+    /**
+     * @name Controls/grid:ColumnTemplate#backgroundColorStyle
+     * @cfg {backgroundColorStyle} Стиль фона ячейки.
+     */
+    backgroundColorStyle?: string;
+
+    /**
+     * @name Controls/grid:ColumnTemplate#tagStyle
+     * @cfg {String} Позволяет задать стиль для цветных индикаторов в ячейке.
+     * @variant info
+     * @variant danger
+     * @variant primary
+     * @variant success
+     * @variant warning
+     * @variant secondary
+     */
+    tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
+
+    /**
+     * @name Controls/grid:ColumnTemplate#expanderTemplate
+     * @cfg {Function} Шаблон позволяет отобразить иконку для узла. Такой шаблон достаточно встроить в нужное место contentTemplate с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial}.
+     */
+    expanderTemplate?: Function;
 }

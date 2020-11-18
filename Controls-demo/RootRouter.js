@@ -6,26 +6,38 @@ define('Controls-demo/RootRouter', [
    'wml!Controls-demo/RootRouter',
    'Application/Initializer',
    'Application/Env',
-   'css!Controls-demo/RootRouter'
+   'Core/Deferred'
 ], function(BaseControl,
-            template,
-            AppInit,
-            AppEnv) {
+   template,
+   AppInit,
+   AppEnv,
+   Deferred) {
    'use strict';
 
    var ModuleClass = BaseControl.extend(
       {
          _template: template,
          isReloading: false,
-         _pathName: '/Controls-demo/app/Controls-demo%2FIndexOld',
+         pathName: 'Controls-demo/app/Controls-demo%2FIndexOld',
+         sourceUrl: null,
          reload: function() {
             this.isReloading = true;
+         },
+         reloadDemo: function() {
+            this.reload();
             // При обновлении демки сбрасываем все что лежит в settingsController (задается на application);
             window.localStorage.setItem('controlSettingsStorage', '{}');
          },
+         _beforeMount: function(options, context, receivedState) {
+            var _state = {
+               sourceUrl: (receivedState && receivedState.sourceUrl) || options.sourceUrl
+            };
+            this.sourceUrl = _state.sourceUrl;
+            return new Deferred().callback(_state);
+         },
 
          _afterMount: function() {
-            window.reloadDemo = this.reload.bind(this);
+            window.reloadDemo = this.reloadDemo.bind(this);
          },
 
          _afterUpdate: function() {
@@ -35,7 +47,7 @@ define('Controls-demo/RootRouter', [
          _isMenuButtonVisible: function() {
             var location = this._getLocation();
             if (location) {
-               return location.pathname !== this._pathName;
+               return location.pathname !== this._options.appRoot + this.pathName;
             }
             return null;
          },
@@ -45,7 +57,7 @@ define('Controls-demo/RootRouter', [
          },
 
          goHomeHandler: function() {
-            window.location = this._pathName;
+            window.location = this._options.appRoot + this.pathName;
          },
          _getLocation: function() {
             if (AppInit.isInit()) {
@@ -57,6 +69,8 @@ define('Controls-demo/RootRouter', [
          }
       }
    );
+
+   ModuleClass._styles = ['Controls-demo/RootRouter'];
 
    return ModuleClass;
 });

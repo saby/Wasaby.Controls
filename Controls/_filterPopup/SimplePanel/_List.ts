@@ -4,6 +4,9 @@ import {ItemTemplate as defaultItemTemplate} from 'Controls/dropdown';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 import {isEqual} from 'Types/object';
 import {DropdownViewModel} from 'Controls/dropdownPopup';
+import collection = require('Types/collection');
+import Merge = require('Core/core-merge');
+import {factory} from 'Types/chain';
 
 var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item) {
@@ -45,6 +48,7 @@ var List = Control.extend({
 
     _beforeMount: function(options) {
         this._listModel = new DropdownViewModel({
+            iconSize: options.iconSize,
             items: options.items || [],
             selectedKeys: options.selectedKeys,
             keyProperty: options.keyProperty,
@@ -53,7 +57,9 @@ var List = Control.extend({
             emptyText: options.emptyText,
             emptyKey: options.emptyKey,
             hasApplyButton: options.hasApplyButton,
-            hasClose: true
+            hasClose: true,
+            nodeProperty: options.nodeProperty,
+            theme: options.theme
         });
 
         this._afterOpenDialogCallback = _private.afterOpenDialogCallback.bind(this);
@@ -91,6 +97,46 @@ var List = Control.extend({
 
     _itemMouseEnter: function() {
         // Заглушка для обработчика на шаблоне dropdownPopup:For
+    },
+
+    _openSelectorDialog: function() {
+        const self = this;
+        const selectorOpener = this._options.selectorOpener;
+        const selectorTemplate = this._options.selectorTemplate;
+        const selectorDialogResult = this._options.selectorDialogResult;
+        let selectedItems = [];
+
+        // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
+        factory(this._options.selectedKeys).each(function(key) {
+            if (key !== undefined && key !== null && self._options.items.getRecordById(key)) {
+                selectedItems.push(self._options.items.getRecordById(key));
+            }
+        });
+
+        var templateConfig = {
+            selectedItems: new collection.List({items: selectedItems}),
+            multiSelect: this._options.multiSelect,
+            handlers: {
+                onSelectComplete: (event, result) => {
+                    selectorDialogResult(result);
+                    selectorOpener.close();
+                }
+            }
+        };
+        Merge(templateConfig, selectorTemplate.templateOptions);
+        selectorOpener.open(Merge({
+            opener: this._options.opener,
+            eventHandlers: {
+                onResult: selectorDialogResult
+            },
+            templateOptions: templateConfig,
+            template: selectorTemplate.templateName,
+            isCompoundTemplate: this._options.isCompoundTemplate
+        }, selectorTemplate.popupOptions || {}));
+
+        if (this._afterOpenDialogCallback) {
+            this._afterOpenDialogCallback(templateConfig.selectedItems);
+        }
     }
 });
 

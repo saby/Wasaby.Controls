@@ -1,9 +1,11 @@
 /**
  * Created by as.krasilnikov on 26.12.2017.
  */
-import {BaseViewModel, getStyle, ItemsUtil, ItemsViewModel} from 'Controls/list';
+import {BaseViewModel, ItemsUtil, ItemsViewModel} from 'Controls/list';
+import {Utils} from 'Controls/itemActions';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
+import * as multiSelectTpl from 'wml!Controls/_dropdownPopup/multiSelectTpl';
 import entity = require('Types/entity');
 
 var _private = {
@@ -56,9 +58,9 @@ var _private = {
             return itemsGroup.length === 0 || itemsGroup.length === numberItemsCurrentRoot;
          },
 
-         getRightPadding: function(rightPadding, itemData, hasHierarchy, hasApplyButton) {
+         getRightPadding: function(options, rightPadding, itemData, hasHierarchy, hasApplyButton) {
             let result = rightPadding || 'default';
-            if (hasApplyButton) {
+            if (hasApplyButton && (itemData.emptyText || !options.emptyText && !itemData.index)) {
                result = 'multiSelect';
             } else if (itemData.hasPinned) {
                result = 'history';
@@ -70,16 +72,37 @@ var _private = {
             return result;
          },
 
-         getSpacingClassList: function(itemPadding, multiSelect, itemData, hasHierarchy, hasApplyButton?) {
-            const paddings = itemPadding || {};
-            let classList = '';
-            if (multiSelect && itemData.emptyText) {
-               classList = 'controls-DropdownList__emptyItem-leftPadding_multiSelect';
-            } else if (!multiSelect) {
-               classList = 'controls-DropdownList__item-leftPadding_' + (paddings.left || 'default');
+         getClassList: function(options, itemData, hasHierarchy) {
+            const item = itemData.item;
+            let classes = 'controls-DropdownList__row_state_' + (item.get('readOnly')  ? 'readOnly' : 'default') ;
+
+            if (item.get('pinned') === true && !itemData.hasParent) {
+               classes += ' controls-DropdownList__row_pinned';
             }
-            classList += ' controls-DropdownList__item-rightPadding_' + _private.getRightPadding(paddings.right, itemData, hasHierarchy, hasApplyButton);
-            return classList;
+
+            const paddings = options.itemPadding || {};
+            if (options.multiSelect && itemData.emptyText) {
+               classes += ' controls-DropdownList__emptyItem-leftPadding_multiSelect';
+            } else if (!options.multiSelect && (!options.nodeProperty || item.get(options.nodeProperty))) {
+               classes += ' controls-DropdownList__item-leftPadding_' + (paddings.left || 'default');
+            } else if (!options.multiSelect) {
+               classes += ' controls-DropdownList__hierarchyItem-leftPadding_' + (paddings.left || 'default') + '_theme-' + options.theme;
+            }
+            classes += ' controls-DropdownList__item-rightPadding_' +
+                _private.getRightPadding(options, paddings.right, itemData, hasHierarchy, options.hasApplyButton);
+            return classes;
+         },
+
+         getNewTreeItem(currentItem): object {
+            return {
+               isNode: () => currentItem.hasChildren,
+               isSelected: () => currentItem.isSelected ? currentItem.isSelected() : currentItem._isSelected,
+               getContents: () => currentItem.item,
+               isSwiped: () => currentItem.isSwiped ? currentItem.isSwiped() : false,
+               shouldDisplayActions: () => false,
+               getLevel: () => undefined,
+               getParent: () => ({getContents: () => currentItem.hasParent})
+            };
          }
    };
 
@@ -94,7 +117,6 @@ var _private = {
             this._itemsModel = new ItemsViewModel({
                groupProperty: cfg.groupProperty,
                groupingKeyCallback: cfg.groupingKeyCallback,
-               groupMethod: cfg.groupMethod,
                groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
@@ -151,9 +173,9 @@ var _private = {
             return filter;
          },
 
-         setItems: function(options) {
+         setItems(options): void {
             this._options.items = options.items;
-            this._itemsModel.setItems(options.items);
+            this._itemsModel.setItems(options.items, options);
          },
 
          setRootKey: function(key) {
@@ -192,18 +214,20 @@ var _private = {
 
             //if we had group element we should return it without changes
             if (itemsModelCurrent.isGroup) {
+
                //FIXME временное решение, переделывается тут: https://online.sbis.ru/opendoc.html?guid=8760f6d2-9ab3-444b-a83b-99019207a9ca
                if (_private.needHideGroup(this, itemsModelCurrent.key)) {
                   itemsModelCurrent.isHiddenGroup = true;
                }
+
                return itemsModelCurrent;
             }
             itemsModelCurrent.hasChildren = this._hasItemChildren(itemsModelCurrent.item);
             itemsModelCurrent.hasParent = this._hasParent(itemsModelCurrent.item);
-            itemsModelCurrent.isSelected = this._isItemSelected(itemsModelCurrent.item);
+            // TODO USE itemsModelCurrent.isSelected()
+            itemsModelCurrent._isSelected = this._isItemSelected(itemsModelCurrent.item);
             itemsModelCurrent.icon = itemsModelCurrent.item.get('icon');
             itemsModelCurrent.iconSize = this._options.iconSize;
-            itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem;
 
             //Draw the separator to split history and nohistory items.
             //Separator is needed only when list has both history and nohistory items
@@ -211,13 +235,18 @@ var _private = {
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item, itemsModelCurrent.hasParent);
             }
-            itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
+            itemsModelCurrent.iconStyle = Utils.getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             itemsModelCurrent.multiSelect = this._options.multiSelect;
+            itemsModelCurrent.parentProperty = this._options.parentProperty;
             itemsModelCurrent.hasClose = this._options.hasClose;
             itemsModelCurrent.hasPinned = this._options.hasIconPin && itemsModelCurrent.item.has('pinned');
-            itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, itemsModelCurrent, this.hasHierarchy());
+            itemsModelCurrent.itemClassList = _private.getClassList(this._options, itemsModelCurrent, this.hasHierarchy());
+            itemsModelCurrent.multiSelectTpl = multiSelectTpl;
+
+            // Для совместимости с menu:Control
+            itemsModelCurrent.treeItem = _private.getNewTreeItem(itemsModelCurrent);
             return itemsModelCurrent;
          },
          _isItemSelected: function(item) {
@@ -292,11 +321,14 @@ var _private = {
                   rawData: itemData
                });
                emptyItem.item = item;
-               emptyItem.isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
+               emptyItem._isSelected = this._options.selectedKeys.length ? this._isItemSelected(item) : true;
                emptyItem.getPropValue = ItemsUtil.getPropertyValue;
                emptyItem.emptyText = this._options.emptyText;
                emptyItem.hasClose = this._options.hasClose;
-               emptyItem.spacingClassList = _private.getSpacingClassList(this._options.itemPadding, this._options.multiSelect, emptyItem, this.hasHierarchy(), this._options.hasApplyButton);
+               emptyItem.itemClassList = _private.getClassList(this._options, emptyItem, this.hasHierarchy());
+
+               // Для совместимости с menu:Control
+               emptyItem.treeItem = _private.getNewTreeItem(emptyItem);
                return emptyItem;
             }
          }

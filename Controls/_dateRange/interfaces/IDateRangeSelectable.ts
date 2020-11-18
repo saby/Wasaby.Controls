@@ -23,13 +23,20 @@ export = {
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#ranges
        * @cfg {Object} Кванты.
        * @remark
-       * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды. 
+       * Если заданы кванты, то нельзя выделить произвольный период, а можно только выделить заданные периоды.
        * Объект принимает свойства days, weeks, months, quarters, halfyears, и years со значениями типа Array.
        * @default []
-       * @example 
+       * @example
        * В данном примере можно выбрать либо 1 день, либо диапазон в 4 дня, либо 2 целые недели, либо 1 месяц.
        * <pre class="brush: html">
-       * <Controls.dateRange:Selector ranges="{days: [1,4], weeks: [2], months: [1] }" />
+       * <!-- WML -->
+       * <Controls.dateRange:RangeSelector ranges="{{ _ranges }}" />
+       * </pre>
+       * <pre class="brush: js">
+       * // TypeScript
+       * _beforeMount(): void {
+       *     this._ranges = {days: [1,4], weeks: [2], months: [1] }
+       * }
        * </pre>
        */
       options.ranges = [];
@@ -44,6 +51,7 @@ export = {
       /**
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#selectionType
        * @cfg {SelectionType} Определяет режим выделения диапазона.
+       * @demo Controls-demo/datePopup/SelectionType/Index
        * @default quantum
        */
 
@@ -58,6 +66,32 @@ export = {
        * @name Controls/_dateRange/interfaces/IDateRangeSelectable#minRange
        * @cfg {MinRange} Задает режим выбора диапазона дат.
        * @default day
+       */
+
+      /**
+       * @name Controls/_dateRange/interfaces/IDateRangeSelectable#rangeSelectedCallback
+       * @cfg {Function} Функция обратного вызова для определения отображаемого диапазона дат и выбора дат из выпадающей панели.
+       * @remark
+       * Функция вызывается во время начала ввода периода, конца ввода периода, во время передвижения курсора по календарю,
+       * во время переходов к следующему/предыдущему диапазону (кликам по стрелкам).
+       * Функция принимает 3 аргумента:
+       * startValue — Начальное значение диапазона.
+       * endValue — Конечное значение диапазона.
+       * Если используются кванты, то в функцию будут передан рассчитанный по квантам диапазон.
+       * Возвращаемым значением функции должен быть массив с двумя элементами, начальным и конечным значением диапазона [startValue, endValue].
+       * @example
+       * <pre class="brush: html">
+       * <Controls.dateRange:RangeSelector rangeSelectedCallback="{{_rangeSelectedCallback}}" />
+       * </pre>
+       * <pre class="brush: js">
+       * // TypeScript
+       * ...
+       * private _rangeSelectedCallback(startValue: Date, endValue: Date): Date[] {
+       *    return [new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 2),
+       *        new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 4)];
+       * }
+       * ...
+       * </pre>
        */
 
       /*

@@ -1,53 +1,20 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Selector/Selector');
 import Merge = require('Core/core-merge');
-import {Controller} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {Service, Source} from 'Controls/history';
 import {object} from 'Types/util';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
-
-/**
- * Поле ввода с выпадающим списком с возможностью автодополнения.
- * <a href="/materials/demo-ws4-selector-suggest">Демо-пример</a>.
- *
- * @class Controls/_suggest/Selector
- * @extends Controls/input:Text
- * @mixes Controls/interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_suggest/Selector/Styles
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
- * @public
- */
-
-/*
- * Combobox input that suggests options as you are typing.
- * <a href="/materials/demo-ws4-selector-suggest">Demo-example</a>.
- *
- * @class Controls/_suggest/Selector
- * @extends Controls/input:Text
- * @mixes Controls/interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_suggest/Selector/Styles
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
- * @public
- */
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 var _private = {
    loadSelectedItem: function(self, options) {
       var filter = {};
       filter[options.keyProperty] = options.selectedKey;
-      self._sourceController = new Controller({
+      self._crudWrapper = new CrudWrapper({
          source: options.source
       });
-      return self._sourceController.load(filter).addCallback(function(items) {
+      return self._crudWrapper.query({filter}).then((items) => {
          _private.setValue(self, items.at(0), options.displayProperty);
          return items.at(0);
       });
@@ -76,7 +43,43 @@ var _private = {
       });
    }
 };
+/**
+ * Поле ввода с выпадающим списком с возможностью автодополнения.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
+ *
+ *
+ * @class Controls/_suggest/Selector
+ * @extends Controls/input:Text
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_suggest/ISuggest
+ * @mixes Controls/_interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * 
+ * @author Герасимов А.М.
+ * @public
+ */
 
+/*
+ * Combobox input that suggests options as you are typing.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FSelector%2FSuggest%2FSuggest">Demo-example</a>.
+ *
+ * @class Controls/_suggest/Selector
+ * @extends Controls/input:Text
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_suggest/ISuggest
+ * @mixes Controls/_interface/INavigation
+ * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+ * 
+ * @public
+ */
 var Suggest = Control.extend({
 
    _template: template,

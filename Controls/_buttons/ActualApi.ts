@@ -1,4 +1,5 @@
 import {Logger} from 'UI/Utils';
+import {constants} from 'Env/Env';
 
 const deprecatedClassesOfButton = {
    iconButtonBordered: {
@@ -68,6 +69,11 @@ interface IButtonClass {
 interface IViewModeAndContrast {
    viewMode?: string;
    contrast?: boolean;
+}
+
+interface IViewModeAndHeight {
+   height: string;
+   viewMode: string;
 }
 
 const ActualApi = {
@@ -155,29 +161,37 @@ const ActualApi = {
          }
       });
    },
-   contrastBackground(options): boolean {
+   contrastBackground(options, hasMsg: boolean = false): boolean {
       if (typeof options.contrastBackground !== 'undefined') {
          return options.contrastBackground;
       } else {
          if (typeof options.transparent !== 'undefined') {
-            // IoC.resolve('ILogger').warn('Button', 'Опция transparent устарела, используйте contrastBackground');
+            if (hasMsg && constants.isBrowserPlatform) {
+               Logger.error('Используется устаревшая опция transparent". ' +
+                   `нужно использовать contrastBackground="${!options.transparent}" ` +
+                   'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+            }
             return !options.transparent;
          } else {
             return false;
          }
       }
    },
-   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean): string {
+   buttonStyle(calcStyle: string, optionStyle: string, optionButtonStyle: string, optionReadonly: boolean, hasMsg: boolean = false): string {
       if (optionReadonly) {
          return 'readonly';
       } else if (optionButtonStyle) {
          return optionButtonStyle;
       } else {
+         if (optionStyle && hasMsg && constants.isBrowserPlatform) {
+            Logger.error('Используется устаревшая опция style". ' +
+                `нужно использовать buttonStyle="${optionStyle}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+         }
          if (calcStyle) {
             return calcStyle;
          } else {
             if (typeof optionStyle !== 'undefined') {
-               // IoC.resolve('ILogger').warn('Button', 'Опция style устарела, используйте buttonStyle и fontColorStyle');
                return optionStyle;
             } else {
                return 'secondary';
@@ -236,34 +250,39 @@ const ActualApi = {
          }
       }
    },
-   fontSize(options: unknown): string {
+   fontSize(options: unknown, hasMsg: boolean = false): string {
       if (options.fontSize) {
          return options.fontSize;
       } else {
          if (typeof(options.size) !== 'undefined') {
-            // IoC.resolve('ILogger').warn('Button', 'Опция size устарела, используйте height и fontSize');
+            let result;
             if (options.viewMode === 'button') {
                // кнопки l размера имеют шрифт xl в теме
                if (options.size === 'l') {
-                  return 'xl';
+                  result = 'xl';
                } else {
-                  return 'm';
+                  result = 'm';
                }
             } else if (options.viewMode === 'link'){
                // для ссылок все сложнее
                switch (options.size) {
                   case 's':
-                     return 'xs';
+                     result = 'xs';
+                     break;
                   case 'l':
-                     return 'l';
+                     result = 'l';
+                     break;
                   case 'xl':
-                     return '3xl';
-                  default:
-                     return 'm';
+                     result = '3xl';
+                     break;
                }
-            } else {
-               return 'm';
             }
+            if (hasMsg && constants.isBrowserPlatform) {
+               Logger.error('Используется устаревшая опция size". ' +
+                   `нужно использовать fontSize="${result}" ` +
+                   'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+            }
+            return result || 'm';
          } else {
             return 'm'
          }
@@ -287,7 +306,7 @@ const ActualApi = {
       };
    },
 
-   actualHeight(optionSize: string, optionHeight: string, viewMode: string): string {
+   actualHeight(optionSize: string, optionHeight: string, viewMode: string, hasMsg: boolean = false): string {
       if (optionHeight) {
          return optionHeight;
       } else {
@@ -299,7 +318,6 @@ const ActualApi = {
                case 'l': height = '2xl'; break;
                default: height = 'default';
             }
-            return height;
          } else if (viewMode === 'toolButton' || viewMode === 'pushButton' || viewMode === 'functionalButton') {
             switch (optionSize) {
                case 's': height = 'default'; break;
@@ -307,9 +325,23 @@ const ActualApi = {
                case 'l': height = 'xl'; break;
                default: height = 'l';
             }
-            return height;
+         } else {
+            height = undefined;
          }
+         if (hasMsg && optionSize && constants.isBrowserPlatform) {
+            Logger.error('Используется устаревшая опция size". ' +
+                `нужно использовать inlineHeight="${height}" ` +
+                'https://online.sbis.ru/news/1e959ad8-7553-4e56-8627-b08d80305422.');
+         }
+         return height;
       }
+   },
+
+   actualLinkButton(viewMode: string, height: string): IViewModeAndHeight {
+      return {
+         viewMode: 'link',
+         height: height ? height : 'default'
+      };
    }
 };
 export default ActualApi;

@@ -1,97 +1,80 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Input/Input');
 import defaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
-import Utils = require('Types/util');
-import chain = require('Types/chain');
-import dropdownUtils = require('Controls/_dropdown/Util');
+import * as Utils from 'Types/util';
+import {factory} from 'Types/chain';
+import {Model} from 'Types/entity';
+import {RecordSet, List} from 'Types/collection';
+import {prepareEmpty, loadItems, isEmptyItem} from 'Controls/_dropdown/Util';
 import {isEqual} from 'Types/object';
+import Controller from 'Controls/_dropdown/_Controller';
+import {TKey} from './interface/IDropdownController';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {IStickyPopupOptions, InfoboxTarget} from 'Controls/popup';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import * as Merge from 'Core/core-merge';
+import {isLeftMouseButton} from 'Controls/popup';
 
-var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+interface IInputOptions extends IBaseDropdownOptions {
+   fontColorStyle?: string;
+   fontSize?: string;
+   showHeader?: boolean;
+   caption?: string;
+}
 
-var _private = {
-   getSelectedKeys: function (items, keyProperty) {
-      var keys = [];
-      chain.factory(items).each(function (item) {
-         keys.push(getPropValue(item, keyProperty));
-      });
-      return keys;
-   },
+const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
-   getTooltip: function (items, displayProperty) {
-      var tooltips = [];
-      chain.factory(items).each(function (item) {
-         tooltips.push(getPropValue(item, displayProperty));
-      });
-      return tooltips.join(', ');
-   },
-
-   isEmptyItem: function(self, item) {
-      return self._options.emptyText && (getPropValue(item, self._options.keyProperty) === null || !item);
-   },
-
-   getText: function(self, items) {
-      let text = '';
-      if (_private.isEmptyItem(self, items[0])) {
-         text = dropdownUtils.prepareEmpty(self._options.emptyText);
-      } else {
-         text = getPropValue(items[0], self._options.displayProperty);
-      }
-      return text;
-   },
-
-   getMoreText: function(items) {
-      let moreText = '';
-      if (items.length > 1) {
-         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
-      }
-      return moreText;
-   }
-};
+interface IDropdownInputChildren {
+   infoboxTarget: InfoboxTarget;
+}
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
  * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию закрыто.
+ *
+ * @remark
  * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
- * <a href="/materials/demo-ws4-input-dropdown">Демо-пример</a>.
- * Руководство разработчика {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/dropdown-menu/ Меню и выпадающий список}.
+ *
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
  *
  * @class Controls/_dropdown/Input
  * @extends Core/Control
- * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/Input/interface/IValidation
+ * @mixes Controls/_menu/interface/IMenuPopup
+ * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/_dropdown/interface/IFooterTemplate
- * @mixes Controls/_dropdown/interface/IHeaderTemplate
- * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/IDropdownEmptyText
+ * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/interface/IDropdown
- * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/Input/interface/IValidation
+ * @mixes Controls/interface/ISelectorDialog
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/ITextValue
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @control
+ * @mixes Controls/_interface/ISearch
+ * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
- * @demo Controls-demo/Input/Dropdown/DropdownPG
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
  */
 
 /*
  * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
  * The full list of options is displayed when you click on the control.
- * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/Input/interface/IValidation
  * @mixes Controls/_interface/IMultiSelectable
@@ -102,13 +85,213 @@ var _private = {
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/ITextValue
- * @control
+ * 
  * @public
  * @author Золотова Э.Е.
- * @category Input
- * @demo Controls-demo/Input/Dropdown/DropdownPG
+ * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
+export default class Input extends BaseDropdown {
+   protected _template: TemplateFunction = template;
+   protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
+   protected _text: string = '';
+   protected _hasMoreText: string = '';
+   protected _countItems: number;
+   protected _needInfobox: boolean = false;
+   protected _item: Model = null;
+   protected _isEmptyItem: boolean = false;
+   protected _icon: string;
+   protected _tooltip: string;
+   protected _selectedItems: Model[];
+   protected _children: IDropdownInputChildren;
+
+   _beforeMount(options: IInputOptions,
+                context: object,
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+      this._prepareDisplayState = this._prepareDisplayState.bind(this);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
+      this._controller = new Controller(this._getControllerOptions(options));
+
+      return loadItems(this._controller, receivedState, options.source);
+   }
+
+   _beforeUpdate(options: IInputOptions): void {
+      this._controller.update(this._getControllerOptions(options));
+   }
+
+   _getControllerOptions(options: IInputOptions): object {
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
+            dataLoadCallback: this._dataLoadCallback,
+            selectorOpener: this,
+            selectedKeys: options.selectedKeys || [],
+            popupClassName: options.popupClassName || ((options.showHeader ||
+                options.headerTemplate || options.headerContentTemplate) ?
+                'controls-DropdownList__margin-head' : options.multiSelect ?
+                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
+                ' theme_' + options.theme,
+            allowPin: false,
+            selectedItemsChangedCallback: this._prepareDisplayState.bind(this),
+            openerControl: this,
+            needLoadSelectedItems: options.needLoadSelectedItems
+         }
+      };
+   }
+
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      return {
+         opener: this._children.infoboxTarget,
+         templateOptions: {
+            selectorDialogResult: this._selectorTemplateResult.bind(this)
+         },
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: this._onResult.bind(this)
+         }
+      };
+   }
+
+   _selectedItemsChangedHandler(items: Model[]): void|unknown {
+      this._notify('textValueChanged', [this._getText(items) + this._getMoreText(items)]);
+      const newSelectedKeys = this._getSelectedKeys(items, this._options.keyProperty);
+      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
+         return this._notify('selectedKeysChanged', [newSelectedKeys]);
+      }
+   }
+
+   _dataLoadCallback(items: RecordSet<Model>): void {
+      this._countItems = items.getCount();
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
+   }
+
+   _prepareDisplayState(items: Model[]): void {
+      if (items.length) {
+         this._selectedItems = items;
+         this._needInfobox = this._options.readOnly && this._selectedItems.length > 1;
+         this._item = items[0];
+         this._isEmptyItem = isEmptyItem(this._item, this._options.emptyText, this._options.keyProperty);
+         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
+         this._text = this._getText(items);
+         this._hasMoreText = this._getMoreText(items);
+         this._tooltip = this._getTooltip(items, this._options.displayProperty);
+      }
+   }
+
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
+      this.openMenu();
+   }
+
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._container);
+
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
+         if (result) {
+            this._selectedItemsChangedHandler(result);
+         }
+      });
+   }
+
+   protected _onResult(action: string, data: Model|Model[]): void {
+      switch (action) {
+         case 'applyClick':
+            this._applyClick(data);
+            break;
+         case 'itemClick':
+            this._itemClick(data);
+            break;
+         case 'selectorResult':
+            this._selectorResult(data);
+            break;
+         case 'selectorDialogOpened':
+            this._selectorDialogOpened(data);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
+   }
+
+   protected _itemClick(data: Model): void {
+      const item = this._controller.getPreparedItem(data);
+      const res = this._selectedItemsChangedHandler([item]);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.handleSelectedItems(item);
+      }
+   }
+
+   protected _applyClick(data: Model[]): void {
+      this._selectedItemsChangedHandler(data);
+      this._controller.handleSelectedItems(data);
+   }
+
+   protected _selectorResult(data): void {
+      this._controller.handleSelectorResult(data);
+      this._selectedItemsChangedHandler(factory(data).toArray());
+   }
+
+   protected _selectorTemplateResult(event: Event, selectedItems: List<Model>): void {
+      const result = this._notify('selectorCallback', [this._initSelectorItems, selectedItems]) || selectedItems;
+      this._selectorResult(result);
+   }
+
+   private _getSelectedKeys(items: Model[], keyProperty: string): TKey[] {
+      const keys = [];
+      factory(items).each((item) => {
+         keys.push(getPropValue(item, keyProperty));
+      });
+      return keys;
+   }
+
+   private _getTooltip(items: Model[], displayProperty: string): string {
+      const tooltips = [];
+      factory(items).each((item) => {
+         tooltips.push(getPropValue(item, displayProperty));
+      });
+      return tooltips.join(', ');
+   }
+
+   private _getText(items: Model[]): string {
+      let text = '';
+      if (isEmptyItem(items[0], this._options.emptyText, this._options.keyProperty)) {
+         text = prepareEmpty(this._options.emptyText);
+      } else {
+         text = getPropValue(items[0], this._options.displayProperty);
+      }
+      return text;
+   }
+
+   private _getMoreText(items: Model[]): string {
+      let moreText = '';
+      if (items.length > 1) {
+         moreText = ', ' + rk('еще') + ' ' + (items.length - 1);
+      }
+      return moreText;
+   }
+
+   protected _deactivated(): void {
+      this.closeMenu();
+   }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): Partial<IBaseDropdownOptions> {
+      return {
+         iconSize: 's'
+      };
+   }
+}
 /**
  * @name Controls/_dropdown/Input#contentTemplate
  * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
@@ -118,6 +301,7 @@ var _private = {
  * Содержимое можно переопределить с помощью параметра "contentTemplate".
  * Базовый шаблон Controls/dropdown:inputDefaultContentTemplate по умолчанию отображает только текст.
  * Для отображения иконки и текста используйте шаблон "Controls/dropdown:defaultContentTemplateWithIcon".
+ * @demo Controls-demo/dropdown_new/Input/ContentTemplate/Index
  * @example
  * Отображение иконки и текста.
  *
@@ -181,6 +365,8 @@ var _private = {
  * @name Controls/_dropdown/Input#multiSelect
  * @cfg {Boolean} Определяет, установлен ли множественный выбор.
  * @default false
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/Simple/Index
+ * @demo Controls-demo/dropdown_new/Input/MultiSelect/PinnedItems/Index
  * @example
  * Множественный выбор установлен.
  * WML:
@@ -238,100 +424,33 @@ var _private = {
  */
 
 /**
- * @event Controls/_dropdown/Input#selectedKeysChanged Происходит при изменении выбранных элементов.
+ * @event Происходит при изменении выбранных элементов.
+ * @name Controls/_dropdown/Input#selectedKeysChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
+ * @param {Array.<Number|String>} keys Набор ключей выбранных элементов.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
  * По умолчанию, когда выбран пункт с иерархией, выпадающий список закрывается.
  * @example
  * В следующем примере создается список и устанавливается опция selectedKeys со значением [1, 2, 3], а также показано, как изменить сообщение, выведенное пользователю на основе выбора.
- * TMPL:
- * <pre>
- *    <Controls.dropdown:Input on:selectedKeysChanged="onSelectedKeysChanged()"
- *                             selectedKeys="{{ _selectedKeys }}"/>
+ * <pre class="brush: html; highlight: [3,4]">
+ * <!-- WML -->
+ * <Controls.dropdown:Input
+ *     on:selectedKeysChanged="onSelectedKeysChanged()"
+ *     selectedKeys="{{ _selectedKeys }}"/>
  *    <h1>{{ _message }}</h1>
  * </pre>
- * JS:
- * <pre>
- *     _beforeMount: function() {
- *       this._selectedKeys = [1, 2, 3];
- *    },
- *    onSelectedKeysChanged: function(e, keys) {
- *       this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
- *       if (keys.length > 0) {
- *          this._message = 'Selected ' + keys.length + ' items.';
- *       } else {
- *          this._message = 'You have not selected any items.';
- *       }
+ * <pre class="brush: js;">
+ * // JavaScript
+ * _beforeMount: function() {
+ *    this._selectedKeys = [1, 2, 3];
+ * },
+ * onSelectedKeysChanged: function(e, keys) {
+ *    this._selectedKeys = keys; //We don't use binding in this example so we have to update state manually.
+ *    if (keys.length > 0) {
+ *       this._message = 'Selected ' + keys.length + ' items.';
+ *    } else {
+ *       this._message = 'You have not selected any items.';
  *    }
+ * }
  * </pre>
  */
-
-var Input = Control.extend({
-   _template: template,
-   _defaultContentTemplate: defaultContentTemplate,
-   _text: '',
-   _hasMoreText: '',
-
-   _beforeMount: function () {
-      this._setText = this._setText.bind(this);
-      this._dataLoadCallback = this._dataLoadCallback.bind(this);
-   },
-
-   _afterMount: function (options) {
-      /* Updating the text in the header.
-      Since the text is set after loading source, the caption stored old value */
-      if (options.showHeader && options.caption !== this._text) {
-         this._forceUpdate();
-      }
-   },
-
-   _selectedItemsChangedHandler: function (event, items) {
-      this._notify('textValueChanged', [_private.getText(this, items) + _private.getMoreText(items)]);
-      const newSelectedKeys = _private.getSelectedKeys(items, this._options.keyProperty);
-      if (!isEqual(this._options.selectedKeys, newSelectedKeys) || this._options.task1178744737) {
-         return this._notify('selectedKeysChanged', [newSelectedKeys]);
-      }
-   },
-
-   _dataLoadCallback: function (items) {
-      this._countItems = items.getCount();
-      if (this._options.emptyText) {
-         this._countItems += 1;
-      }
-
-      if (this._options.dataLoadCallback) {
-         this._options.dataLoadCallback(items);
-      }
-   },
-
-   _setText: function (items) {
-      if (items.length) {
-         this._item = items[0];
-         this._isEmptyItem = _private.isEmptyItem(this, this._item);
-         this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
-         this._text = _private.getText(this, items);
-         this._hasMoreText = _private.getMoreText(items);
-         this._tooltip = _private.getTooltip(items, this._options.displayProperty);
-      }
-   },
-
-   // Делаем через событие deactivated на Controller'e,
-   // т.к в Controller передается просто шаблон, а не контрол, который не обладает состоянием активности,
-   // и подписка на _deactivated на это шаблоне работать не будет
-   _deactivated: function() {
-      this.closeMenu();
-   },
-
-   openMenu(popupOptions?: object): void {
-      this._children.controller.openMenu(popupOptions);
-   },
-
-   closeMenu(): void {
-      this._children.controller.closeMenu();
-   }
-});
-
-Input._theme = ['Controls/dropdown', 'Controls/Classes'];
-
-export = Input;

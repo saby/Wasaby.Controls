@@ -1,9 +1,3 @@
-export const dateMaskConstants = {
-    DD_MM_YYYY: 'DD.MM.YYYY',
-    DD_MM_YY: 'DD.MM.YY',
-    MM_YYYY: 'MM.YYYY'
-};
-
 export type DateMaskType = 'DD.MM.YYYY' | 'DD.MM.YY' | 'MM.YYYY';
 
 export interface IDateMaskOptions {

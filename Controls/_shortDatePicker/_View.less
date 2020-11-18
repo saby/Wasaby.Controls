@@ -1,0 +1,574 @@
+@months-in-year_PeriodLiteDialog: 12;
+@quarters-in-year_PeriodLiteDialog: 4;
+@displayed-years_PeriodLiteDialog: 5;
+
+.controls-PeriodLiteDialog__container () {
+   position: relative;
+   height: auto;
+}
+
+.controls-PeriodLiteDialog__container-caption () {
+   box-sizing: border-box;
+   cursor: pointer;
+   display: none;
+   height: 100%;
+   padding: 0;
+   position: absolute;
+   top: 0;
+}
+
+.controls-PeriodLiteDialog__container-month-caption () {
+   .controls-PeriodLiteDialog__container-caption();
+}
+
+.controls-PeriodLiteDialog {
+   position: relative;
+   box-sizing: border-box;
+   user-select: none;
+   border-radius: 0;
+   padding: 0;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-PeriodLiteDialog_theme-@{themeName} {
+   background-color: @background-color_shortDatePicker;
+   border: @border-thickness_shortDatePicker solid @border-color_shortDatePicker;
+   box-shadow: @box-shadow-color_shortDatePicker @box-shadow-size_shortDatePicker;
+   color: @item_text-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__footer_theme-@{themeName} {
+   background-color: @header_background-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__expandButton_theme-@{themeName} {
+   display: flex;
+   flex-shrink: 0;
+   height: @footer_height_shortDatePicker;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-PeriodLiteDialog__body_theme-@{themeName} {
+   font-size: @item_font-size_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__height-big_theme-@{themeName} {
+   height: @height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__width-big_theme-@{themeName} {
+   min-width: @quarterly_width_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__width-medium_theme-@{themeName} {
+   width: @monthly_width_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__height-medium_theme-@{themeName} {
+   height: @height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__width-small_theme-@{themeName} {
+   width: @width_shortDatePicker + 2 * @border-thickness_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__height-small_theme-@{themeName} {
+   width: @width_shortDatePicker + 2 * @border-thickness_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__vLayout_theme-@{themeName} {
+   background-color: @item_background-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__vLayoutItem {
+   cursor: pointer;
+   position: relative;
+   box-sizing: border-box;
+
+   ~ .controls-PeriodLiteDialog__vLayoutItem {
+      margin-top: -1px;
+   }
+}
+
+.controls-PeriodLiteDialog__vLayoutItem_theme-@{themeName} {
+   border: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   padding: 0 @quarterly_item-padding-left_shortDatePicker;
+}
+
+.ws-is-hover {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:hover {
+      border-color: @item_hover_border-color_shortDatePicker;
+      background-color: @item_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__footer_theme-@{themeName}:hover {
+      .controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
+         fill: @footer_hover_icon_color_shortDatePicker;
+      }
+   }
+
+   .controls-PeriodLiteDialog__arrow-wrapper_theme-@{themeName}:hover {
+      cursor: pointer;
+      border-color: @yearselector_arrow_hover_background-color_shortDatePicker;
+      .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
+         fill: @arrow_hover_icon-color_shortDatePicker;
+      }
+   }
+
+   .controls-PeriodLiteDialog__close_theme-@{themeName}:hover {
+      background-color: @closeButton_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-prev:hover::before,
+   .controls-PeriodLiteDialog__year-next:hover::before {
+      color: @yearselector_arrow_hover_icon-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-clickable:hover {
+      background-color: inherit;
+   }
+
+   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:hover {
+      color: @quarterly_quarters_hover_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:hover {
+      color: @quarterly_quarters_hover_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
+   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:hover {
+      color: @arrow_hover_icon-color_shortDatePicker;
+   }
+}
+
+.ws-is-touch {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:active {
+      border-color: @item_hover_border-color_shortDatePicker;
+      background-color: @item_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-prev:active::before,
+   .controls-PeriodLiteDialog__year-next:active::before {
+      color: @yearselector_arrow_active_icon-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:active {
+      color: @quarterly_quarters_active_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:active {
+      color: @quarterly_quarters_active_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
+   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:active {
+      color: @arrow_active_icon-color_shortDatePicker;
+   }
+}
+
+.controls-PeriodLiteDialog__vLayoutItem-caption_theme-@{themeName} {
+   height: @item_layout_height_shortDatePicker;
+   line-height: @item_layout_line-height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__item-background-hovered {
+   position: absolute;
+   top: 0;
+   height: 100%;
+   width: 100%;
+   box-sizing: border-box;
+}
+
+.controls-PeriodLiteDialog__item-background-hovered_theme-@{themeName} {
+   border: @item_border-thickness_shortDatePicker solid @item_active_border-color_shortDatePicker;
+   background-color: @item_background-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__yearHeader-background-hovered_theme-@{themeName} {
+   border-color: @item_hover_border-color_shortDatePicker !important;
+}
+
+.controls-PeriodLiteDialog__background-transparent {
+   background-color: transparent !important;
+}
+
+.controls-PeriodLiteDialog__text-align-center {
+   text-align: center;
+}
+
+.controls-PeriodLiteDialog__text-align-left {
+   text-align: left;
+}
+
+.controls-PeriodLiteDialog__close_theme-@{themeName} {
+   position: absolute;
+   top: -(@item_border-thickness_shortDatePicker);
+   color: @closeButton_color_shortDatePicker;
+   background-color: @closeButton_background-color_shortDatePicker;
+   box-shadow: @closeButton_box-shadow_shortDatePicker;
+   cursor: pointer;
+
+   &::before {
+      content: '\e66c';
+   }
+}
+
+.controls-PeriodLiteDialog__close_position-left_theme-@{themeName} {
+   left: 0;
+   margin-left: -(@icon-size_m + @closeButton_offset-left_shortDatePicker);
+}
+
+.controls-PeriodLiteDialog__close_position-right_theme-@{themeName} {
+   right: 0;
+   margin-right: -(@icon-size_m + @closeButton_offset-left_shortDatePicker + @item_border-thickness_shortDatePicker);
+}
+
+.controls-PeriodLiteDialog__footer-points_wrapper {
+   display: flex;
+   cursor: pointer;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-PeriodLiteDialog__footer-points_wrapper_theme-@{themeName} {
+   width: @footer_icon-wrapper_width_shortDatePicker;
+   height: @footer_icon-wrapper_height_shortDatePicker;
+   background-color: @footer_icon-wrapper_background-color_shortDatePicker;
+   border-radius: @footer_icon-wrapper_height_shortDatePicker/2;
+}
+
+.controls-PeriodLiteDialog__footer-points_theme-@{themeName} {
+   width: @footer_points_width_shortDatePicker;
+   height: @footer_points_height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__footer-arrow {
+   width: @footer_arrow_width_shortDatePicker;
+   height: @footer_arrow_height_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
+   fill: @footer_icon_color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__header {
+   display: flex;
+   background-color: @header_background-color_shortDatePicker;
+   align-items: center;
+   flex-shrink: 0;
+   position: relative;
+}
+
+.controls-PeriodLiteDialog__currentValue {
+   justify-content: center;
+   border-bottom: none;
+   margin-bottom: 0;
+   cursor: pointer;
+   flex: 1;
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-PeriodLiteDialog__currentValue_theme-@{themeName} {
+   font-size: @header_font-size_shortDatePicker;
+   font-weight: @header_font-weight_shortDatePicker;
+   color: @header_text-color_shortDatePicker;
+   height: @header_height_shortDatePicker;
+   line-height: @header_height_shortDatePicker;
+   padding: 0 @header_padding-horizontal_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__yearWrapper {
+   position: relative;
+   box-sizing: border-box;
+   display: flex;
+   align-items: center;
+   flex-shrink: 0;
+}
+
+.controls-PeriodLiteDialog__yearWrapper_theme-@{themeName} {
+   padding-bottom: @item_border-thickness_shortDatePicker;
+   background-color: @header_background-color_shortDatePicker;
+   height: @yearselector_height_shortDatePicker;
+   border-top: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   border-left: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   border-right: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__year-prev,
+.controls-PeriodLiteDialog__year-next {
+   cursor: pointer;
+   text-align: center;
+}
+
+.controls-PeriodLiteDialog__year-next_theme-@{themeName} {
+   margin: 0 @yearselector_arrow_margin_shortDatePicker - @item_border-thickness_shortDatePicker 0 @yearselector_arrow_margin_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__year-prev_theme-@{themeName} {
+   margin: 0 @yearselector_arrow_margin_shortDatePicker 0 @yearselector_arrow_margin_shortDatePicker;
+
+   &::before {
+      padding-bottom: @yearselector_arrow_padding-bottom_shortDatePicker;
+   }
+}
+
+.controls-PeriodLiteDialog__year-prev::before {
+   content: "\e008 ";
+   width: 100%;
+   color: @yearselector_arrow_icon-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__year-next::before {
+   content: "\e007";
+   width: 100%;
+   color: @yearselector_arrow_icon-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__year {
+   vertical-align: middle;
+   flex-grow: 1;
+   flex-shrink: 0;
+}
+
+.controls-PeriodLiteDialog__arrow_theme-@{themeName} {
+   height: @arrow_icon-size_shortDatePicker;
+   width: @arrow_icon-size_shortDatePicker;
+   fill: @arrow_icon-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__arrow-wrapper_theme-@{themeName} {
+   border: @item_border-thickness_shortDatePicker solid;
+   border-color: @arrow_border-color_shortDatePicker;
+   height: @arrow_height_shortDatePicker;
+   width: @arrow_width_shortDatePicker;
+   box-shadow: @arrow-box-shadow_shortDatePicker;
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.controls-PeriodLiteDialog__year_theme-@{themeName} {
+   color: @yearselector_text-color_shortDatePicker;
+   font-size: @yearselector_font-size_shortDatePicker;
+   font-weight: @header_font-weight_shortDatePicker;
+   height: @yearselector_height_shortDatePicker;
+   line-height: @yearselector_height_shortDatePicker;
+   padding-left: @quarterly_yearselector_padding-left_shortDatePicker - @item_border-thickness_shortDatePicker;
+   align-self: stretch;
+}
+
+.controls-PeriodLiteDialog__year-center-lite {
+   display: flex;
+}
+
+.controls-PeriodLiteDialog__year-clickable {
+   cursor: pointer;
+}
+
+.controls-PeriodLiteDialog-item {
+   margin-top: 0;
+}
+
+.controls-PeriodLiteDialog-item-yearList-years {
+   cursor: pointer;
+   position: relative;
+   box-sizing: border-box;
+}
+
+.controls-PeriodLiteDialog-item-yearList-years_theme-@{themeName} {
+   min-width: @width_shortDatePicker;
+   height: @item_height_shortDatePicker - @item_border-thickness_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__yearList-year_theme-@{themeName} {
+   border: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__bodyWrapper {
+   position: relative;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-PeriodLiteDialog__bodyWrapper_theme-@{themeName} {
+   background-color: @header_background-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog-item__halfYear {
+   .controls-PeriodLiteDialog__container();
+   &:last-child {
+      margin-bottom: 0;
+   }
+}
+
+.controls-PeriodLiteDialog-item__halfYear_theme-@{themeName} {
+   margin-bottom: @separator_thickness_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog-item__halfYear-caption {
+   .controls-PeriodLiteDialog__container-caption();
+   display: flex;
+   right: initial;
+   right: 0;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName} {
+   color: @quarterly_quarters_text-color_shortDatePicker;
+   width: @quarterly_halfyears_width_shortDatePicker;
+   background-color: @background-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog-item__quarter_theme-@{themeName} {
+   .controls-PeriodLiteDialog__container();
+   margin: 0 (@quarterly_halfyears_width_shortDatePicker + @separator_thickness_shortDatePicker) @separator_thickness_shortDatePicker 0;
+}
+
+.controls-PeriodLiteDialog-item__quarter:nth-last-of-type(2) {
+   margin-bottom: 0;
+}
+
+.controls-PeriodLiteDialog-item__quarter-caption {
+   .controls-PeriodLiteDialog__container-caption();
+   display: flex;
+   right: 0;
+   position: absolute;
+   justify-content: center;
+   align-items: center;
+}
+
+.controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName} {
+   background-color: @quarterly_quarters_background-color_shortDatePicker;
+   color: @quarterly_quarters_text-color_shortDatePicker;
+   width: @quarterly_quarters_width_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog-item__checkBox {
+   display: flex;
+   position: absolute;
+   top: 0;
+   right: @item_checkbox_offset-right_shortDatePicker - @item_border-thickness_shortDatePicker;
+   align-items: center;
+   height: 100%;
+}
+
+.controls-PeriodLiteDialog-item__month-wrapper_theme-@{themeName} {
+   background-color: @background-color_shortDatePicker;
+   margin: 0 (@quarterly_quarters_width_shortDatePicker + @separator_thickness_shortDatePicker) 0 0;
+}
+
+.controls-PeriodLiteDialog__years-bold {
+   font-weight: @header_font-weight_shortDatePicker;
+   color: @item_selected_text-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__years-prev,
+.controls-PeriodLiteDialog__years-next {
+   justify-content: center;
+   align-items: center;
+   display: flex;
+}
+
+.controls-PeriodLiteDialog__years-prev_theme-@{themeName},
+.controls-PeriodLiteDialog__years-next_theme-@{themeName} {
+   background-color: @header_background-color_shortDatePicker;
+   color: @arrow_icon-color_shortDatePicker;
+   height: @annually_header_height_shortDatePicker;
+   line-height: @arrow_height_shortDatePicker - @item_border-thickness_shortDatePicker;
+   font-size: @arrow_icon-size_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__years-home {
+   text-align: center;
+}
+
+.controls-PeriodLiteDialog__years-home_theme-@{themeName} {
+   margin: @home_offset-top_shortDatePicker auto @home_offset-bottom_shortDatePicker 0;
+}
+
+.controls-PeriodLiteDialog__selectedYear {
+   font-weight: bold;
+}
+
+.controls-PeriodLiteDialog__selectedYear_theme-@{themeName} {
+   color: @grouping_text-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement {
+   position: relative;
+   font-weight: bold;
+
+   &:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+   }
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement_theme-@{themeName} {
+   height: @grouping_height_shortDatePicker + @separator_thickness_shortDatePicker;
+   background-color: @background-color_shortDatePicker;
+   color: @grouping_text-color_shortDatePicker;
+   padding-left: @quarterly_yearselector_padding-left_shortDatePicker - @item_border-thickness_shortDatePicker;
+   border-top: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   border-left: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+   border-right: @item_border-thickness_shortDatePicker solid @item_border-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__fullPicker_theme-@{themeName} {
+   &::after {
+      border-bottom: solid @separator_thickness_shortDatePicker @separator_color_shortDatePicker;
+   }
+}
+
+.controls-PeriodLiteDialog__yearHeader-background-hovered_theme-@{themeName}::after {
+   border: none;
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-@{themeName} {
+   border: solid @item_border-thickness_shortDatePicker @item_hover_border-color_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__fullYear-listElement-hovered {
+   cursor: pointer;
+   border-bottom: none;
+
+   &::after {
+      border: none;
+   }
+}
+
+.controls-PeriodLiteDialog__year-list_theme-@{themeName} {
+   max-height: @annually_height_shortDatePicker - (2 * (@annually_header_height_shortDatePicker + @border-thickness_shortDatePicker));
+   height: 100%;
+}
+
+.border-top-hidden {
+   border-top: none;
+}
+
+.ws-is-mobile-android {
+
+   // На android на самом маленьком масштабе элементы списка не отображаются, пока мы не поскроллим.
+   // Используем аппаратное ускорение.
+   .controls-PeriodLiteDialog_calendarBody {
+      transform: translate3d(0, 0, 0);
+   }
+}
+
+.controls-PeriodLiteDialog_calendarBody {
+   position: relative;
+}
+
+.controls-PeriodLiteDialog_calendarBody_theme-@{themeName} {
+   border-bottom: @separator_thickness_shortDatePicker solid @separator_color_shortDatePicker;
+}

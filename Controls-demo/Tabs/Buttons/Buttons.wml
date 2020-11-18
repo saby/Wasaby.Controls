@@ -1,10 +1,10 @@
-<div class="root">
+<div class="root {{_options.theme !== 'default' ? ' root__dark_background'}}">
     <div class="separator">Прижатые к правому краю</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__rightAlign">
         <Controls.tabs:Buttons
                       bind:selectedKey='SelectedKey1'
                       keyProperty="id"
-                      source="{{_source1}}"
+                      items="{{_items}}"
         />
     </div>
     <div class="separator">Прижатые к левому краю</div>
@@ -39,13 +39,31 @@
                 bind:selectedKey='SelectedKey5'
                 keyProperty="id"
                 itemTemplateProperty="itemTemplate"
+                leftTemplateProperty="leftTemplate"
                 source="{{_source5}}"
+        >
+            <ws:itemRightTemplate>
+                <ws:if data="{{itemRightTemplate.item.get('rightTemplate')}}">
+                    <ws:partial template="{{ itemRightTemplate.item.get('rightTemplate') }}"
+                                item="{{itemRightTemplate.item}}"
+                                counter="{{1000}}"
+                    />
+                </ws:if>
+            </ws:itemRightTemplate>
+        </Controls.tabs:Buttons>
+    </div>
+    <div class="separator">Ни одной выбранной вкладки</div>
+    <div class="demo-TabButtons ControlsDemo-Tabs__custom">
+        <Controls.tabs:Buttons
+                bind:selectedKey='SelectedKeyNull'
+                keyProperty="id"
+                items="{{_items}}"
         />
     </div>
     <div class="separator">Прикладной контент перед вкладками</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__contentBefore">
         <div class="demo-TabButtons-container controls-Tabs__item-underline_theme-{{_options.theme}}">
-                <Controls.heading:Title caption="Бизнес" style="secondary"/>
+                <Controls.heading:Title caption="Бизнес" fontColorStyle="secondary"/>
         </div>
         <Controls.tabs:Buttons
                 bind:selectedKey='SelectedKey8'

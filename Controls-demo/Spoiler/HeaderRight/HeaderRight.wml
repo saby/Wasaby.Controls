@@ -1,0 +1,10 @@
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
+    <Controls.spoiler:View attr:class="ControlsDemo__SpoilerFirst__heading">
+        <ws:headerContentTemplate>
+            <Controls-demo.Spoiler.HeaderRightTemplate.Index/>
+        </ws:headerContentTemplate>
+        <ws:content>
+            <div>Content</div>
+        </ws:content>
+    </Controls.spoiler:View>
+</div>

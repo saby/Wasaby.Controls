@@ -3,9 +3,10 @@ define(
       'Controls/toolbars',
       'Types/entity',
       'Types/collection',
-      'Types/source'
+      'Types/source',
+      'Controls/popup'
    ],
-   (toolbars, entity, collection, sourceLib) => {
+   (toolbars, entity, collection, sourceLib, popupLib) => {
       describe('Toolbar', () => {
          let defaultItems = [
             {
@@ -49,7 +50,7 @@ define(
             rawData: defaultItems
          });
          let config = {
-            items: new sourceLib.Memory({
+            source: new sourceLib.Memory({
                keyProperty: 'id',
                data: defaultItems
             }),
@@ -137,41 +138,20 @@ define(
          describe('publicMethod', function() {
             it('check received state', () => {
                toolbar._beforeMount(config, null, records);
-               assert.equal(toolbar._items, records);
+               assert.isFalse(toolbar._items.isEqual(records));
                assert.equal(!!toolbar._needShowMenu, true);
-               assert.equal(toolbar._menuItems.getCount(), 4);
             });
             it('need show menu', function() {
                return new Promise((resolve) => {
                   toolbar._beforeMount({
                      keyProperty: 'id',
-                     source: config.items
+                     source: config.source
                   }).addCallback(() => {
                      assert.equal(!!toolbar._needShowMenu, true);
-                     assert.equal(toolbar._menuItems.getCount(), 4);
                      assert.equal(toolbar._items.getCount(), defaultItems.length);
                      resolve();
                   });
                });
-            });
-            it('open menu', function() {
-               let isOpened = false;
-               toolbar._notify = (e) => {
-                  isOpened = true;
-                  assert.equal(e, 'menuOpened');
-               };
-               toolbar._children.menuOpener = {
-                  close: setTrue.bind(this, assert),
-                  open: setTrue.bind(this, assert)
-               };
-               toolbar._children.menuTarget = {
-                  _container: 'target'
-               };
-               toolbar._showMenu({
-                  stopPropagation: () => {
-                  }
-               });
-               assert.equal(isOpened, true);
             });
             it('click toolbar item', function() {
                let isNotify = false;
@@ -192,7 +172,7 @@ define(
                });
                assert.equal(isNotify, true);
             });
-            it('click item with menu', function() {
+            it('click item with menu', function(done) {
                let isNotify = false;
                let eventString = '';
                toolbar._beforeMount(config, null, records);
@@ -203,24 +183,41 @@ define(
                   iconStyle: 'super',
                   iconSize: 'm'
                };
-               let itemConfig = (new toolbars.View())._getMenuConfigByItem.call(toolbar, itemWithMenu);
-               if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
-                  standart.icon === itemConfig.templateOptions.headConfig.icon &&
-                  standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle &&
-                  standart.iconSize === itemConfig.templateOptions.headConfig.iconSize) {
-                  isHeadConfigCorrect = true;
-               }
-               assert.isTrue(isHeadConfigCorrect);
-               toolbar._notify = (e) => {
-                  eventString += e;
-                  isNotify = true;
-               };
-               toolbar._itemClickHandler({
-                  stopPropagation: () => {
+               itemWithMenu = new entity.Model({
+                  rawData: {
+                     id: '2',
+                     title: 'Запись 2',
+                     parent: null,
+                     '@parent': true,
+                     icon: 'icon-Ezy',
+                     iconStyle: 'super',
+                     iconSize: 'm'
                   }
-               }, itemWithMenu);
-               assert.equal(eventString, 'menuOpeneditemClick');
-               assert.equal(isNotify, true);
+               });
+                let itemConfig = (new toolbars.View())._getMenuConfigByItem.call(toolbar, itemWithMenu);
+                if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
+                    standart.icon === itemConfig.templateOptions.headConfig.icon &&
+                    standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle &&
+                    standart.iconSize === itemConfig.templateOptions.headConfig.iconSize) {
+                    isHeadConfigCorrect = true;
+                }
+                assert.isTrue(isHeadConfigCorrect);
+                toolbar._notify = (e) => {
+                    eventString += e;
+                    isNotify = true;
+                };
+                toolbar._sticky = {
+                   open: () => 0
+                };
+                toolbar._itemClickHandler({
+                    stopPropagation: () => {
+                    }
+                }, itemWithMenu);
+                setTimeout(() => {
+                    assert.equal(eventString, 'itemClickmenuOpened');
+                    assert.equal(isNotify, true);
+                });
+                done();
             });
             it('menu item click', () => {
                let isMenuClosed = false;
@@ -246,14 +243,14 @@ define(
                };
                assert.equal(isMenuClosed, false);
             });
-            it('item popup config generation', function() {
+            it('item popup config generation', () => {
                var
                   testItem = new entity.Model({
                      rawData: {
                         buttonViewMode: 'buttonViewMode',
                         popupClassName: 'popupClassName',
                         keyProperty: 'itemKeyProperty',
-                        showHeader: 'showHeader',
+                        showHeader: true,
                         icon: 'icon icon-size',
                         title: 'title',
                         iconStyle: 'iconStyle'
@@ -269,16 +266,21 @@ define(
                         itemTemplateProperty: 'myTemplate',
                         iconSize: 'm',
                         nodeProperty: '@parent',
-                        parentProperty: 'parent'
+                        parentProperty: 'parent',
+                        source: '_options.source'
                      },
-                     _items: 'items'
+                     _source: 'items',
+                     _items: { getIndexByValue: () => {} },
+                     _getSourceForMenu: () => Promise.resolve(testSelf._source),
+                     _getMenuOptions: () => '',
+                     _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
-                  config = {
+                  expectedConfig = {
                      opener: testSelf,
                      className: 'controls-Toolbar__popup__icon_theme-default popupClassName',
                      targetPoint: {
-                        horizontal: 'left',
-                        vertical: 'top'
+                        vertical: 'top',
+                        horizontal: 'left'
                      },
                      direction: {
                         horizontal: 'right'
@@ -287,30 +289,37 @@ define(
                         groupTemplate: 'groupTemplate',
                         groupProperty: undefined,
                         groupingKeyCallback: 'groupingKeyCallback',
+                        keyProperty: 'keyProperty',
+                        parentProperty: 'parent',
+                        nodeProperty: '@parent',
                         iconSize: 'm',
                         itemTemplateProperty: 'myTemplate',
-                        keyProperty: 'keyProperty',
-                        nodeProperty: '@parent',
-                        parentProperty: 'parent',
+                        showHeader: true,
+                        closeButtonVisibility: false,
                         headConfig: {
-                           iconSize: undefined,
-                           caption: 'title',
                            icon: 'icon icon-size',
+                           caption: 'title',
+                           iconSize: undefined,
                            iconStyle: 'iconStyle'
-                        },
-                        items: 'items',
-                        rootKey: 'itemKeyProperty',
-                        showHeader: 'showHeader'
+                        }
                      }
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem), config);
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
+
+                testSelf._items = { getIndexByValue: () => { return -1; } }; // для элемента не найдены записи в списке
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
+
+                testItem.set('showHeader', false);
+                expectedConfig.templateOptions.showHeader = false;
+                expectedConfig.templateOptions.closeButtonVisibility = true;
+                assert.deepEqual(JSON.stringify((new toolbars.View())._getMenuConfigByItem.call(testSelf, testItem)), JSON.stringify(expectedConfig));
             });
             it('get button template options by item', function() {
                let item = new entity.Record(
                   {
                      rawData: {
                         id: '0',
-                        icon: 'icon-24 icon-Linked',
+                        icon: 'icon-Linked',
                         fontColorStyle: 'secondary',
                         viewMode: 'toolButton',
                         iconStyle: 'secondary',
@@ -325,13 +334,14 @@ define(
                let modifyItem = {
                   _buttonStyle: 'readonly',
                   _caption: undefined,
+                  _captionPosition: 'right',
                   _contrastBackground: true,
                   _fontColorStyle: 'secondary',
                   _fontSize: 'm',
                   _hasIcon: true,
                   _height: 'l',
                   _hoverIcon: true,
-                  _icon: 'icon-24 icon-Linked',
+                  _icon: 'icon-Linked',
                   _iconSize: 'm',
                   _iconStyle: 'readonly',
                   _stringCaption: false,
@@ -341,15 +351,35 @@ define(
                assert.deepEqual((new toolbars.View())._getButtonTemplateOptionsByItem(item), modifyItem);
 
             });
+            it('get functionalButton template options by item', function() {
+               let item = new entity.Record(
+                  {
+                     rawData: {
+                        id: '0',
+                        icon: 'icon-RoundPlus',
+                        fontColorStyle: 'secondary',
+                        viewMode: 'functionalButton',
+                        iconStyle: 'contrast',
+                        title: 'Добавить',
+                        '@parent': false,
+                        parent: null
+                     }
+                  }
+               );
+               let modifyItem = (new toolbars.View())._getButtonTemplateOptionsByItem(item);
+               assert.strictEqual(modifyItem._iconSize, 's');
+               assert.strictEqual(modifyItem._height, 'default');
+               assert.strictEqual(modifyItem._icon, 'icon-RoundPlus');
+            });
             it('menu popup config generation', function() {
                let itemsForMenu = [
                   {
                      id: '1',
-                     buttonIcon: 'myIcon'
+                     icon: 'myIcon'
                   },
                   {
                      id: '2',
-                     buttonIconStyle: 'secondary'
+                     iconStyle: 'secondary'
                   }
                ];
 
@@ -374,38 +404,41 @@ define(
                      _children: {
                         menuTarget: 'menuTarget'
                      },
-                     _menuItems: recordForMenu
+                     _menuSource: recordForMenu,
+                     _getMenuOptions: () => toolbar._getMenuOptions(testSelf),
+                     _getMenuTemplateOptions: () => toolbar._getMenuTemplateOptions.call(testSelf)
                   },
-                  config = {
-                     className: 'popupClassName controls-Toolbar__popup__list_theme-default',
-                     target: 'menuTarget',
-                     templateOptions: {
-                        iconSize: 'm',
-                        keyProperty: 'id',
-                        nodeProperty: '@parent',
-                        parentProperty: 'parent',
-                        items: recordForMenu,
-                        additionalProperty: 'additional',
-                        itemTemplateProperty: 'itp',
-                        groupTemplate: 'groupTemplate',
-                        groupingKeyCallback: 'groupingKeyCallback',
-                        groupProperty: undefined
-                     }
+                  templateOptions = {
+                     iconSize: 'm',
+                     keyProperty: 'id',
+                     nodeProperty: '@parent',
+                     parentProperty: 'parent',
+                     source: recordForMenu,
+                     additionalProperty: 'additional',
+                     itemTemplateProperty: 'itp',
+                     groupTemplate: 'groupTemplate',
+                     groupingKeyCallback: 'groupingKeyCallback',
+                     groupProperty: undefined,
+                     footerContentTemplate: undefined,
+                     itemActions: undefined,
+                     itemActionVisibilityCallback: undefined,
+                     closeButtonVisibility: true
                   };
-               assert.deepEqual((new toolbars.View())._getMenuConfig.call(testSelf), config);
+               const toolbar = new toolbars.View();
+               const config = toolbar._getMenuConfig.call(testSelf);
+               assert.deepEqual(config.templateOptions, templateOptions);
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
                toolbar._nodeProperty = '@parent';
-               toolbar._children.menuOpener.close = function() {
-                  isMenuClosed = true;
+               toolbar._sticky = {
+                  close: function () {
+                     isMenuClosed = true;
+                  }
                };
-               toolbar._resultHandler({
-                  action: 'itemClick', event: {
-                     name: 'event', stopPropagation: () => {
-                     }
-                  }, data: [itemWithOutMenu]
-               });
+               toolbar._sticky.isOpened = () => true;
+               toolbar._notify = () => {};
+               toolbar._resultHandler('itemClick', itemWithOutMenu);
                assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
             });
             it('_closeHandler', () => {
@@ -414,7 +447,103 @@ define(
                   assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
                   assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');
                };
+               toolbar._options.source = config.source;
                toolbar._closeHandler();
+            });
+            it('_setMenuSource', async() => {
+               let Toolbar = new toolbars.View(config);
+               await Toolbar._beforeMount(config);
+               Toolbar._options = config;
+               Toolbar._setMenuSource();
+               assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
+               assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
+               assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
+            });
+            it('_setMenuSource without source', async() => {
+               const cfg = {
+                  items: new collection.RecordSet({
+                     rawData: defaultItems
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: '@parent'
+               };
+               let Toolbar = new toolbars.View(cfg);
+               await Toolbar._beforeMount(cfg);
+               Toolbar._options = cfg;
+               Toolbar._setMenuSource();
+               assert.isTrue(Toolbar._menuSource instanceof sourceLib.PrefetchProxy);
+               assert.isTrue(Toolbar._menuSource._$target instanceof sourceLib.Memory);
+               assert.isTrue(Toolbar._menuSource._$data.query instanceof collection.RecordSet);
+            });
+            it('_getMenuOptions - fittingMode', () => {
+               let Toolbar = new toolbars.View(config);
+               Toolbar._beforeMount(config);
+               //все остальное дублируется и проверяется в _getMenuConfigByItem
+               //TODO: https://online.sbis.ru/opendoc.html?guid=36b0e31d-a773-4e11-b3d5-196ffd07058c
+               let fittingMode = {
+                  vertical: 'adaptive',
+                  horizontal: 'overflow'
+               };
+               assert.deepEqual(Toolbar._getMenuOptions().fittingMode, fittingMode);
+            });
+            it('update menuItems when items/source changed', () => {
+               let options = {
+                  items: records
+               };
+               let newOptions = {
+                  items: new collection.RecordSet({
+                     rawData: [{
+                        id: '1',
+                        title: 'Запись 1',
+                        parent: null,
+                        '@parent': null
+                     },
+                        {
+                           id: '2',
+                           title: 'Запись 2',
+                           parent: null,
+                           '@parent': true,
+                           icon: 'icon-Ezy',
+                           iconStyle: 'super'
+                        },
+                        {
+                           id: '3',
+                           title: 'Запись 3',
+                           icon: 'icon-medium icon-Doge icon-primary',
+                           parent: null,
+                           '@parent': null,
+                           showType: 2
+                        }]
+                  })
+               };
+               const event = {
+                   nativeEvent: {
+                       button: 0
+                   }
+               }
+               let isMenuItemsChanged = false;
+               let Toolbar = new toolbars.View(options);
+               Toolbar._notify = () => {};
+               Toolbar._openMenu = () => {};
+               Toolbar._setMenuSource = () => {
+                  isMenuItemsChanged = true;
+                  return {
+                     then: function(func) {
+                        func();
+                     }
+                  };
+               };
+               Toolbar._beforeMount(options);
+               Toolbar._mouseDownHandler(event);
+               assert.isTrue(isMenuItemsChanged);
+
+               Toolbar._beforeUpdate(newOptions);
+               isMenuItemsChanged = false;
+               assert.isFalse(Toolbar._isLoadMenuItems);
+               Toolbar._mouseDownHandler(event);
+               assert.isTrue(isMenuItemsChanged);
+               assert.isTrue(Toolbar._isLoadMenuItems);
+
             });
          });
          function setTrue(assert) {

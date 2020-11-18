@@ -9,7 +9,7 @@
          />
       </ws:if>
    </div>
-   <div class="controls-MonthList__month-body" data-date="{{_dateToDataString(date)}}">
+   <div class="controls-MonthList__month-body">
       <ws:if data="{{bodyTemplate}}">
          <ws:partial
             template="{{bodyTemplate}}"
@@ -19,6 +19,7 @@
       </ws:if>
       <ws:else>
          <Controls._calendar.MonthView
+            newMode="{{_options.newMode}}"
             attr:class="controls-MonthList__month-body"
             attr:data-date="{{dateId}}"
             showWeekdays="{{false}}"

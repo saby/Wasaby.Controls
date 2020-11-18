@@ -3,16 +3,21 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
       let wrapper;
       let options;
 
+      const columns = [{}, {}, {}, {}, {}];
       const header = [{}, {}, {}, {}, {}];
 
       beforeEach(() => {
          options = {
             listModel: {
-               getHeaderMaxEndColumn: () => header.length,
                isMultiHeader: () => false,
                getStickyColumnsCount: () => 1,
+               getMultiSelectVisibility: () => 'hidden',
+               stickyLadderCellsCount: () => 0,
+               _shouldAddActionsCell: () => false,
+               getColumns: () => columns,
                getHeader: () => header,
-               getMultiSelectVisibility: () => 'hidden'
+               getResults: () => null,
+               getResultsPosition: () => null,
             },
             topOffset: 25,
             scrollWidth: 500,
@@ -26,16 +31,16 @@ define(['Controls/_grid/ScrollWrapper'], function(ScrollWrapper) {
 
 
       it('should calculate grid header offset when no extra columns is set', () => {
-         assert.equal('grid-column: 2 / 5;width: 500px', wrapper._getGridStyles(options));
+         assert.equal('grid-column: 2 / 6;width: 500px', wrapper._getGridStyles(options));
       });
       it('should calculate grid header offset when MultiSelect column is visible', () => {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
-         assert.equal('grid-column: 3 / 6;width: 500px', wrapper._getGridStyles(options));
+         assert.equal('grid-column: 3 / 7;width: 500px', wrapper._getGridStyles(options));
       });
-      it('should calculate grid header offset when MaxEndColumn is set and isMultiHeader is false', () => {
+      it('should calculate grid header offset when MultiSelect column and sticky ladder should be added', () => {
          wrapper._options.listModel.getMultiSelectVisibility = () => 'visible';
-         wrapper._options.listModel.getHeaderMaxEndColumn = () => 10;
-         assert.equal('grid-column: 3 / 11;width: 500px', wrapper._getGridStyles(options));
+         wrapper._options.listModel.stickyLadderCellsCount = () => 1;
+         assert.equal('grid-column: 4 / 8;width: 500px', wrapper._getGridStyles(options));
       });
    });
 });

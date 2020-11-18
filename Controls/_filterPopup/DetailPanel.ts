@@ -3,7 +3,7 @@ import Control = require('Core/Control');
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
-import Deferred = require('Core/Deferred');
+import {IFilterItem} from 'Controls/filter';
 import find = require('Core/helpers/Object/find');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import _FilterPanelOptions = require('Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions');
@@ -14,68 +14,6 @@ import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 import {Logger} from 'UI/Utils';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
-
-/**
-    * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
-    * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
-    * <a href="/materials/demo-ws4-filter-button">Демо-пример</a>.
-    *
-    *
-    * @class Controls/_filterPopup/DetailPanel
-    * @extends Core/Control
-    * @mixes Controls/interface/IFilterPanel
-    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
-    * @control
-    * @public
-    * @author Золотова Э.Е.
-    *
-    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
-    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
-    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
-    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
-    *
-    * @cssModifier controls-FilterPanel__DateRange Кастомизирует контрол DateRange для отображения на панели фильтров.
-    * Необходимо навесить на шаблон фильтра DateRange.
-    */
-
-   /*
-    * Component for displaying a filter panel template. Displays each filters by specified templates.
-    * It consists of three blocks: Selected, Also possible to select, Previously selected.
-    * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
-    *
-    *
-    * @class Controls/_filterPopup/DetailPanel
-    * @extends Core/Control
-    * @mixes Controls/interface/IFilterPanel
-    * @demo Controls-demo/Filter/Button/panelOptions/panelPG
-    * @control
-    * @public
-    * @author Золотова Э.Е.
-    *
-    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
-    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
-    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
-    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
-    */
-
-   /**
-    * @event Controls/_filterPopup/DetailPanel#sendResult Происходит при клике по кнопке "Отобрать".
-    * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
-    * @param {Object} items Набор элементов.
-    */
-
-   /*
-    * @event Controls/_filterPopup/DetailPanel#sendResult Happens when clicking the button "Select".
-    * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
-    * @param {Object} items items
-    */
-
-   /**
-    * @event Controls/_filterPopup/DetailPanel#historyApply Происходит при применении фильтра из истории фильтров.
-    * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
-    * @param {Controls/_filter/View/interface/IFilterView#source} source Конфигурация фильтра.
-    */
-
 
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
    var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -93,6 +31,13 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
             throw new Error('Controls/filterPopup:Panel::items option is required');
          }
       },
+      /**
+       * Для совместимости старой и новой панелей, пока не откажемся от filter:Button и поля id в структуре.
+       * @param item
+       */
+      getItemName(item): string {
+         return item.name || item.id;
+      },
 
       resolveHistoryId: function(self, options, context) {
          if (options.historyId) {
@@ -103,53 +48,27 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          }
       },
 
-      //TODO: Delete with old favorite
-      loadFavoriteItems: function(self, historyId) {
-         let loadDef = new Deferred();
-         require(['SBIS3.CONTROLS/History/HistoryList'], (HistoryStorage) => {
-            let pDef = new ParallelDeferred();
-            self._historyGlobalStorage = new HistoryStorage({
-               historyId: historyId,
-               isGlobalUserConfig: true
-            });
-            self._historyStorage = new HistoryStorage({
-               // to save old user favorites
-               historyId: historyId + '-favorite'
-            });
-            pDef.push(self._historyStorage.getHistory(true));
-            pDef.push(self._historyGlobalStorage.getHistory(true));
-
-            return pDef.done().getResult().addCallback((items) => {
-               self._favoriteList = items[0].clone();
-               self._favoriteList.prepend(items[1]);
-               loadDef.callback();
-            });
-         });
-         return loadDef;
-      },
-
-      loadHistoryItems: function(self, historyId, isReportPanel) {
+      loadHistoryItems: function(self, historyId, historySaveMode) {
+         const isFavoriteHistory = historySaveMode === 'favorite';
          if (historyId) {
             const pDef = new ParallelDeferred();
             const config = {
                 historyId,
-                recent: isReportPanel ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY',
-                favorite: isReportPanel
+                recent: isFavoriteHistory ? 'MAX_HISTORY_REPORTS' : 'MAX_HISTORY',
+                favorite: isFavoriteHistory
             };
             const historyLoad = HistoryUtils.loadHistoryItems(config)
                 .addCallback((items) => {
                    const historySource = HistoryUtils.getHistorySource(config);
                    let historyItems;
 
-                   if (isReportPanel) {
-                       // Поправится, как будем хранить избранное на сервисе истории
-                       // https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
-                      historySource.historySource._pinned = false;
+                   if (isFavoriteHistory) {
                       historyItems = historySource.getItems();
                    } else {
                       historyItems = items;
                    }
                    self._historyItems = _private.filterHistoryItems(self, historyItems);
+                   self._hasHistory = !!self._historyItems.getCount();
                    return self._historyItems;
                 })
                 .addErrback(() => {
@@ -157,10 +76,6 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
                 });
 
             pDef.push(historyLoad);
-
-            if (isReportPanel) {
-               pDef.push(_private.loadFavoriteItems(self, historyId));
-            }
             return pDef.done().getResult().addCallback(() => {
                return self._historyItems;
             });
@@ -170,7 +85,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
       filterHistoryItems: function(self, items: object[]): object[] {
          function getOriginalItem(self, historyItem: object): object {
             return find(self._items, (originalItem) => {
-               return originalItem.id === historyItem.id;
+               return _private.getItemName(originalItem) === _private.getItemName(historyItem);
             });
          }
 
@@ -213,6 +128,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
 
       reloadHistoryItems: function(self, historyId) {
          self._historyItems = _private.filterHistoryItems(self, HistoryUtils.getHistorySource({historyId: historyId}).getItems());
+         self._hasHistory = !!self._historyItems.getCount();
       },
 
       cloneItems: function(items) {
@@ -227,7 +143,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          chain.factory(items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
-               filter[item.id] = getPropValue(item, 'value');
+               filter[_private.getItemName(item)] = getPropValue(item, 'value');
             }
          });
          return filter;
@@ -268,6 +184,11 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          return hasAdditional;
       },
 
+      getKeyProperty(items: IFilterItem[]): string {
+         const firstItem = chain.factory(items).first();
+         return firstItem.hasOwnProperty('name') ? 'name' : 'id';
+      },
+
       prepareItems: function(items) {
          let value, isValueReseted;
          chain.factory(items).each(function(item) {
@@ -285,27 +206,75 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          return items;
       }
    };
+   /**
+    * Контрол для отображения шаблона панели фильтров. Отображает каждый фильтр по заданным шаблонам.
+    * Он состоит из трех блоков: Отбираются, Еще можно отобрать, Ранее отбирались.
+    *
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
+    *
+    * @class Controls/_filterPopup/DetailPanel
+    * @extends Core/Control
+    * @mixes Controls/_filterPopup/interface/IFilterPanel
+    * @public
+    * @author Золотова Э.Е.
+    * 
+    * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
+    * 
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
+    * @cssModifier controls-FilterPanel__DateRange Кастомизирует контрол DateRange для отображения на панели фильтров.
+    * Необходимо навесить на шаблон фильтра DateRange.
+    */
 
+   /*
+    * Component for displaying a filter panel template. Displays each filters by specified templates.
+    * It consists of three blocks: Selected, Also possible to select, Previously selected.
+    * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilter%2FButton%2FPanelVDom">demo-example</a>.
+    *
+    *
+    * @class Controls/_filterPopup/DetailPanel
+    * @extends Core/Control
+    * @mixes Controls/_filterPopup/interface/IFilterPanel
+    * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
+    * @public
+    * @author Золотова Э.Е.
+    *
+    * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
+    * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
+    * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
+    * @cssModifier controls-FilterPanel__width-xl Очень большая ширина панели.
+    */
    var FilterPanel = Control.extend({
       _template: template,
       _isChanged: false,
       _hasResetValue: false,
       _hasAdditionalParams: false,
+      _hasHistory: false,
+      _keyProperty: null,
+      _historySaveMode: null,
 
       _beforeMount: function(options, context) {
          _private.resolveItems(this, options, context);
          _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
+         this._keyProperty = _private.getKeyProperty(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasResetValue = FilterUtils.hasResetValue(this._items);
-         const isReportPanel = options.orientation === 'horizontal';
-         return _private.loadHistoryItems(this, this._historyId, isReportPanel);
+         this._historySaveMode = options.orientation === 'horizontal' || options.historySaveMode === 'favorite' ? 'favorite' : 'pinned';
+         return _private.loadHistoryItems(this, this._historyId, this._historySaveMode);
       },
 
       _beforeUpdate: function(newOptions, context) {
          if (!isEqual(this._options.items, newOptions.items)) {
             _private.resolveItems(this, newOptions, context);
          }
+         this._keyProperty = _private.getKeyProperty(this._items);
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._hasResetValue = FilterUtils.hasResetValue(this._items);
@@ -377,7 +346,8 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
          headingCaption: rk('Отбираются'),
          headingStyle: 'secondary',
          orientation: 'vertical',
-         applyButtonCaption: rk('Отобрать')
+         applyButtonCaption: rk('Отобрать'),
+         additionalPanelTemplate: 'Controls/filterPopup:AdditionalPanelTemplate'
       };
    };
 
@@ -391,3 +361,39 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
    FilterPanel._private = _private;
    export = FilterPanel;
 
+/**
+ * @name Controls/_filterPopup/DetailPanel#topTemplate
+ * @cfg {String|Function} Шаблон отображения заголовка на Панели фильтров.
+ */
+
+/**
+ * @typedef {String} HistorySaveMode
+ * @variant pinned По ховеру на элемент появляется команда закрепления записи.
+ * @variant favorite По ховеру на элемент появляется команда добавления записи в избранное.
+ */
+
+/**
+ * @name Controls/_filterPopup/DetailPanel#historySaveMode
+ * @cfg {HistorySaveMode} Режим работы с историей фильтров.
+ */
+
+/**
+ * @event Происходит при клике по кнопке "Отобрать".
+ * @name Controls/_filterPopup/DetailPanel#sendResult
+ * @param {Object} filter Объект фильтра {'filter_id': 'filter_value'}.
+ * @param {Object} items Набор элементов.
+ */
+
+/*
+   * @event Happens when clicking the button "Select".
+   * @name Controls/_filterPopup/DetailPanel#sendResult
+   * @param {Object} filter Filter object view {'filter_id': 'filter_value'}
+   * @param {Object} items items
+   */
+
+/**
+ * @event Происходит при применении фильтра из истории фильтров.
+ * @name Controls/_filterPopup/DetailPanel#historyApply
+ * @param {Vdom/Vdom:SyntheticEvent} event Объект события.
+ * @param {Controls/_filter/View/interface/IFilterView#source} source Конфигурация фильтра.
+ */

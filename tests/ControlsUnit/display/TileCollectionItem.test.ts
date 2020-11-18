@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import { TileCollectionItem } from 'Controls/display';
+import {CollectionItem, TileCollectionItem} from 'Controls/display';
 
 interface IChangedData<T> {
     item?: TileCollectionItem<T>;
@@ -8,6 +8,7 @@ interface IChangedData<T> {
 }
 
 describe('Controls/_display/TileCollectionItem', () => {
+    const theme = 'default';
     describe('.getTileWidth()', () => {
         const owner = {
             getTileWidth(): number {
@@ -242,14 +243,17 @@ describe('Controls/_display/TileCollectionItem', () => {
     it('.getTitleClasses()', () => {
         const item = new TileCollectionItem();
 
-        assert.strictEqual(item.getTitleClasses(true), 'controls-TileView__title');
-        assert.include(item.getTitleClasses(false), 'controls-TileView__title_invisible');
+        assert.strictEqual(item.getTitleClasses(true, theme), `controls-TileView__title controls-TileView__title_theme-${theme}`);
+        assert.include(item.getTitleClasses(false, theme), 'controls-TileView__title_invisible');
     });
 
     it('.getMultiSelectClasses() (override)', () => {
         const owner = {
             getMultiSelectVisibility(): string {
                 return 'visible';
+            },
+            getMultiSelectPosition(): string {
+                return 'default';
             }
         };
 
@@ -263,6 +267,7 @@ describe('Controls/_display/TileCollectionItem', () => {
 
     describe('.getTileContentClasses()', () => {
         const owner = {
+            _swipeAnimation: null,
             getTileScalingMode(): string {
                 return 'dynamic';
             },
@@ -271,6 +276,12 @@ describe('Controls/_display/TileCollectionItem', () => {
             },
             getMarkerVisibility(): string {
                 return 'onactivated';
+            },
+            getSwipeAnimation() {
+                return this._swipeAnimation;
+            },
+            setSwipeAnimation(animation) {
+                this._swipeAnimation = animation;
             }
         };
 
@@ -279,7 +290,7 @@ describe('Controls/_display/TileCollectionItem', () => {
             const classes = item.getTileContentClasses();
 
             assert.include(classes, 'controls-TileView__itemContent');
-            assert.include(classes, 'js-controls-SwipeControl__actionsContainer');
+            assert.include(classes, 'js-controls-ItemActions__swipeMeasurementContainer');
             assert.include(classes, 'controls-ListView__item_shadow_#visibility#');
             assert.include(classes, 'controls-TileView__item_withoutMarker');
         });
@@ -363,6 +374,12 @@ describe('Controls/_display/TileCollectionItem', () => {
             },
             getDisplayProperty(): string {
                 return this._displayProperty;
+            },
+            getSwipeAnimation() {
+                return this._swipeAnimation;
+            },
+            setSwipeAnimation(animation) {
+                this._swipeAnimation = animation;
             }
         };
 

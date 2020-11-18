@@ -1,16 +1,8 @@
 <div class="ControlsDemo-wrapper">
-    <div>
+    <div class="controlsDemo_fixedWidth300">
         <div class="ControlsDemo-options_block">
             <h3>Options</h3>
             <div class="ControlsDemo-options_wrapper">
-                <Controls.input:Label caption="theme:"/>
-                <Controls.dropdown:Combobox
-						attr:class="ControlsDemo-scrollStyleSource"
-                        source="{{_scrollStyleSource}}"
-                        keyProperty="title"
-                        displayProperty="title"
-                        bind:selectedKey="_selectedStyle"/>
-
                 <Controls.toggle:Checkbox bind:value="_scrollbarVisible" caption="scrollbarVisible" attr:class="ControlsDemo-scrollbarVisible"/>
                 <Controls.toggle:Checkbox bind:value="_shadowVisible" caption="shadowVisible" attr:class="ControlsDemo-shadowVisible"/>
             </div>
@@ -27,8 +19,10 @@
             <h2>Scroll</h2>
             <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
                                        scrollbarVisible="{{_scrollbarVisible}}"
-                                       shadowVisible="{{_shadowVisible}}"
-                                       theme="{{_selectedStyle}}">
+                                       topShadowVisibility="{{shadowVisibility}}"
+                                       bottomShadowVisibility="{{shadowVisibility}}"
+
+                                       optimizeShadow="{{false}}">
 
                 <div>
                     <ws:for data="index in _numberOfRecords">

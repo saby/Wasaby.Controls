@@ -1,0 +1,24 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            multiSelectVisibility="onhover"
+            multiSelectPosition="custom"
+            attr:style="display: inline-flex;"
+            bind:selectedKeys="_selectedKeys">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+                <ws:contentTemplate>
+                    <div>
+                        <span>{{ contentTemplate.item.contents.get('title') }}</span>
+                        <ws:partial template="{{ contentTemplate.multiSelectTemplate }}"/>
+                        <div style="padding-top: 10px;">
+                            <i>{{ contentTemplate.item.contents.get('description') }}</i>
+                        </div>
+                    </div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.list:View>
+    <div style="padding-top: 10px;">Selected keys [{{ _selectedKeys.join(', ') }}]</div>
+</div>

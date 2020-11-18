@@ -4,6 +4,25 @@ define(
 
       'use strict';
 
+      function getSuggestItems() {
+         return new collection.RecordSet({
+            data: [
+               {
+                  id: 0,
+                  title: 'Sasha'
+               },
+               {
+                  id: 1,
+                  title: 'Aleksey'
+               },
+               {
+                  id: 2,
+                  title: 'Dmitry'
+               }
+            ]
+         });
+      }
+
       describe('Controls.Container.Suggest.List', function() {
          describe('_beforeUpdate', function() {
             var suggestList = new suggestPopup.ListContainer();
@@ -132,19 +151,6 @@ define(
             });
          });
 
-         it('_searchEndCallback', function() {
-            let
-               items = [1, 2, 3],
-               suggestList = new suggestPopup.ListContainer();
-
-            suggestList._suggestListOptions = {};
-            suggestList._searchEndCallback({
-               data: items
-            });
-
-            assert.equal(suggestList._items, items);
-         });
-
          it('_private:checkContext', function() {
             let suggestList = new suggestPopup.ListContainer();
             let contextObject = {
@@ -180,6 +186,32 @@ define(
             suggestPopup.ListContainer._private.checkContext(suggestList, contextObject);
             assert.deepStrictEqual(suggestList._navigation, expectedNavigation);
          });
+
+         describe('collectionChange', () => {
+
+            it('maxCount navigation', () => {
+               const suggestList = new suggestPopup.ListContainer();
+               const suggestContext = {
+                  suggestOptionsField: {
+                     options: {
+                        navigation: {
+                           view: 'maxCount'
+                        }
+                     }
+                  }
+               };
+               const suggestItems = getSuggestItems();
+               suggestList._beforeMount({}, suggestContext);
+               suggestList._itemsReadyCallback(suggestItems);
+               assert.isFalse(suggestList._isSuggestListEmpty);
+
+               suggestItems.clear();
+               suggestList._collectionChange();
+               assert.isTrue(suggestList._isSuggestListEmpty);
+            });
+
+         });
+
       });
    }
 );

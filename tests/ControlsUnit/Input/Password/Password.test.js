@@ -25,35 +25,6 @@ define(
             };
          });
 
-         it('Checking default values of options.', function() {
-            assert.deepEqual(input.Password.getDefaultOptions(), {
-               tooltip: '',
-               style: 'info',
-               size: 'default',
-               placeholder: '',
-               spellCheck: true,
-               revealable: true,
-               textAlign: 'left',
-               autoComplete: 'on',
-               fontStyle: 'default',
-               selectOnClick: false
-            });
-         });
-         it('Checking types of options.', function() {
-            assert.deepEqual(Object.keys(input.Password.getOptionTypes()).sort(), [
-               'size',
-               'value',
-               'style',
-               'tooltip',
-               'tagStyle',
-               'textAlign',
-               'fontStyle',
-               'spellCheck',
-               'revealable',
-               'inputCallback',
-               'selectOnClick'
-            ].sort());
-         });
          it('The model belongs to the "Controls/_input/Password/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''
@@ -92,6 +63,9 @@ define(
                var init = function(inst, passwordVisible, valueFits) {
                   inst._passwordVisible = passwordVisible;
                   inst._hasHorizontalScroll = function() {
+                     return !valueFits;
+                  };
+                  inst._children[inst._fieldName].hasHorizontalScroll = function() {
                      return !valueFits;
                   };
                   inst._beforeUpdate({

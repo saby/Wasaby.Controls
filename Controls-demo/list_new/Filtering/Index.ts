@@ -1,21 +1,22 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/Filtering/Filtering"
-import {Memory} from "Types/source"
-import {getFewCategories as getData} from "../DemoHelpers/DataCatalog"
-import 'css!Controls-demo/Controls-demo'
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/Filtering/Filtering';
+import {Memory} from 'Types/source';
+import {getFewCategories as getData} from '../DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
+    protected _viewSource: Memory;
 
-    private _filter = {
+    protected _filter: { title: string[] } = {
         title: ['Notebooks', 'Tablets', 'Laptop computers']
     };
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getData()
         });
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -8,16 +8,12 @@ define('Controls-demo/Menu/MenuVdom', [
    'Types/source',
    'Core/Deferred',
    'Types/entity',
-   'Controls/dropdownPopup',
    'wml!Controls-demo/Menu/DemoGroupTemplate',
-   'css!Controls-demo/Dropdown/MenuVdom',
-   'css!Controls-demo/Menu/MenuVdom'
-], function(Control, template, cClone, collection, history, ControlsConstants, source, Deferred, entity, dropdownPopup) {
+], function(Control, template, cClone, collection, history, ControlsConstants, source, Deferred, entity) {
    'use strict';
    var ModuleClass = Control.extend(
       {
          _template: template,
-         _itemsGroupText: null,
          _itemsGroup: null,
          _defaultItems: null,
          _beforeMount: function() {
@@ -135,15 +131,6 @@ define('Controls-demo/Menu/MenuVdom', [
                   title: 'Запись 16'
                },
             ];
-            this._itemsGroupText = {
-               method: function(item) {
-                  if (item.get('group') === 'hidden' || !item.get('group')) {
-                     return ControlsConstants.view.hiddenGroup;
-                  }
-                  return item.get('group');
-               },
-               template: 'wml!Controls-demo/Menu/DemoGroupTemplate',
-            };
             this._itemsGroup = {
                method: function(item) {
                   if (item.get('group') === 'hidden' || !item.get('group')) {
@@ -182,13 +169,13 @@ define('Controls-demo/Menu/MenuVdom', [
                nodeProperty: '@parent'
             });
             // Заглушка, чтобы демка не ломилась не сервис истории
-            hs.historySource.update = function() {
+            hs._$historySource.update = function() {
                return {};
             };
             var query = new source.Query().where({
                $_history: true
             });
-            hs.historySource.query = function() {
+            hs._$historySource.query = function() {
                var def = new Deferred();
                def.addCallback(function(set) {
                   return set;
@@ -197,7 +184,7 @@ define('Controls-demo/Menu/MenuVdom', [
                return def;
             };
             hs.query(query);
-            hs.historySource.query();
+            hs._$historySource.query();
             return hs;
          },
 
@@ -225,7 +212,7 @@ define('Controls-demo/Menu/MenuVdom', [
                items[i].parent = hierConfig[i].parent;
                items[i]['@parent'] = hierConfig[i]['@parent'];
                items[i].icon = hierConfig[i].icon;
-               items[i].group = hierConfig[i].group;
+               items[i].group = hierConfig[i].group || ControlsConstants.view.hiddenGroup;
             }
             return this._createMemory(items);
          },
@@ -239,5 +226,7 @@ define('Controls-demo/Menu/MenuVdom', [
          },
       }
    );
+   ModuleClass._styles = ['Controls-demo/Dropdown/MenuVdom', 'Controls-demo/Menu/MenuVdom'];
+
    return ModuleClass;
 });

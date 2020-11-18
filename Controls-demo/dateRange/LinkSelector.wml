@@ -2,23 +2,23 @@
    <div class="PageBlock">
       <div class="PageBlock__title">
          <div>Controls.dateRange:LinkSelector</div>
-         <div>Text for tests</div>
+         <div class="controlsDemo__wrapper__padding-left">Text for tests</div>
       </div>
       <div class="PageBlock__content">
          <div class="PageBlock__component-left">
-            <Controls.dateRange:LiteSelector
+            <Controls.dateRange:RangeShortSelector
                bind:startValue="_startValue"
                bind:endValue="_endValue"/>
          </div>
          <div class="PageBlock__component-right">
-            <Controls.dateRange:LiteSelector
+            <Controls.dateRange:RangeShortSelector
                bind:startValue="_startValue"
                bind:endValue="_endValue"/>
          </div>
       </div>
       <div class="PageBlock__content">
          <div class="PageBlock__component-left">
-            <Controls.dateRange:LiteSelector
+            <Controls.dateRange:RangeShortSelector
                bind:startValue="_startValue"
                bind:endValue="_endValue"
                chooseHalfyears="{{false}}"
@@ -26,7 +26,7 @@
                chooseQuarters="{{false}}"/>
          </div>
          <div class="PageBlock__component-right">
-            <Controls.dateRange:LiteSelector
+            <Controls.dateRange:RangeShortSelector
                bind:startValue="_startValue"
                bind:endValue="_endValue"
                chooseHalfyears="{{false}}"

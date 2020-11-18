@@ -1,6 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/LoadingIndicator/IndicatorStack/IndicatorStack');
-import 'css!Controls-demo/Controls-demo';
 
 class IndicatorStack extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -9,7 +8,7 @@ class IndicatorStack extends Control<IControlOptions> {
 
     private _firstId = null;
     private _secondId = null;
-    private _firstOpen(): void {
+    protected _firstOpen(): void {
         const cfg = {
             id: this._firstId,
             message: 'first indicator text',
@@ -18,14 +17,14 @@ class IndicatorStack extends Control<IControlOptions> {
         };
         this._firstId = this._notify('showIndicator', [cfg], { bubbling: true });
     }
-    private _close(event, name): void {
+    protected _close(event, name): void {
         const indicatorName = '_' + name + 'Id';
         if (this[indicatorName]) {
             this._notify('hideIndicator', [this[indicatorName]], { bubbling: true });
             this[indicatorName] = null;
         }
     }
-    private _secondOpen(): void {
+    protected _secondOpen(): void {
         const cfg = {
             id: this._secondId,
             overlay: 'none',
@@ -35,7 +34,7 @@ class IndicatorStack extends Control<IControlOptions> {
         this._secondId = this._notify('showIndicator', [cfg], { bubbling: true });
     }
     private _overlayId = null;
-    private _overlay(): void {
+    protected _overlay(): void {
         const delay = 3000;
         let promise = new Promise((resolve) => {
             setTimeout(() => {
@@ -71,5 +70,7 @@ class IndicatorStack extends Control<IControlOptions> {
             }
         }, 1000);
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }
 export default IndicatorStack;

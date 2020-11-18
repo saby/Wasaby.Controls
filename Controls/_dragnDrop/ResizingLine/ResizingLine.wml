@@ -1,20 +1,20 @@
 <ws:if data="{{_isResizing(_options.minOffset, _options.maxOffset)}}">
    <div class="controls-ResizingLine">
       <div class="controls-ResizingLine__wrapper">
-         <div class="controls-ResizingLine__areaWrapper controls-ResizingLine__areaWrapper_theme-{{_options.theme}}
-                     controls-ResizingLine__areaWrapper_direction-{{_options.direction}}">
+         <div class="controls-ResizingLine__areaWrapper controls-ResizingLine__areaWrapper_{{_options.orientation}}
+          controls-ResizingLine__areaWrapper_{{_options.orientation}}_theme-{{_options.theme}} controls-ResizingLine__areaWrapper_{{_options.orientation}}_direction-{{_options.direction}}">
             <ws:if data="{{_dragging}}">
                <div style="{{_styleArea}}"
-                    class="controls-ResizingLine__area controls-ResizingLine__area_theme_{{_options.theme}}">
+                    class="controls-ResizingLine__area controls-ResizingLine__area_{{_options.orientation}} controls-ResizingLine__area_theme_{{_options.theme}}">
                </div>
-               <div class="controls-ResizingLine__cursor"></div>
+               <div class="controls-ResizingLine__cursor controls-ResizingLine__cursor_{{_options.orientation}}"></div>
             </ws:if>
          </div>
          <Controls._dragnDrop.Container name="dragNDrop"
                                         on:dragmove="_onDragHandler()"
                                         on:dragstart="_onStartDragHandler()"
                                         on:documentdragend="_onEndDragHandler()">
-            <div attr:class="controls-ResizingLine__border"
+            <div attr:class="controls-ResizingLine__border controls-ResizingLine__border_{{_options.orientation}}"
                  on:mousedown="_beginDragHandler()" on:touchstart="_beginDragHandler()"></div>
          </Controls._dragnDrop.Container>
       </div>

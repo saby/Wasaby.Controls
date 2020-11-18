@@ -7,7 +7,6 @@ define('Controls/interface/IHighlighter', [
     * маркер поиска, маркер валидации и т.д. Подсветка (маркер) используется при отрисовке элементов списка.
     *
     * @interface Controls/interface/IHighlighter
-    * @public
     * @author Авраменко А.С.
     */
 

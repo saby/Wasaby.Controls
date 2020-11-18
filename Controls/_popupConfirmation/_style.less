@@ -1,0 +1,72 @@
+.controls-ConfirmationTemplate {
+   display: flex;
+   flex-direction: column;
+   border-top-style: solid;
+   height: 100%;
+   box-sizing: border-box;
+}
+
+.controls-ConfirmationTemplate_theme-@{themeName} {
+   border-top-width: @marker_thickness_confirmation;
+   background: @background-color_dialog;
+   box-shadow: @box-shadow_dialog;
+   &.controls-ConfirmationTemplate__status-default_theme-@{themeName} {
+      border-top-color: @secondary_marker_color_confirmation;
+   }
+   &.controls-ConfirmationTemplate__status-success_theme-@{themeName} {
+      border-top-color: @success_color;
+   }
+   &.controls-ConfirmationTemplate__status-danger_theme-@{themeName} {
+      border-top-color: @danger_color;
+   }
+   &.controls-ConfirmationTemplate__status-secondary_theme-@{themeName} {
+      border-top-color: @secondary_marker_color_confirmation;
+   }
+   &.controls-ConfirmationTemplate__status-primary_theme-@{themeName} {
+      border-top-color: @primary_marker_color_confirmation;
+   }
+}
+
+.controls-ConfirmationTemplate__body {
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   box-sizing: border-box;
+}
+
+.controls-ConfirmationTemplate__body_theme-@{themeName} {
+   border-left: @border-thickness_dialog solid @border-color_dialog;
+   border-right: @border-thickness_dialog solid @border-color_dialog;
+   border-bottom: @border-thickness_dialog solid @border-color_dialog;
+}
+
+.controls-ConfirmationTemplate__main {
+   height: 100%;
+   flex-shrink: 1;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-ConfirmationTemplate__main_theme-@{themeName} {
+   padding: @content_padding_confirmation;
+}
+
+.controls-ConfirmationTemplate__footer_theme-@{themeName} {
+   padding: @footer-content_padding_confirmation;
+   border-top: @footer_top-border-thickness_confirmation solid @footer_top-border-color_confirmation;
+   background: @footer_background-color_confirmation;
+}
+
+.controls-ConfirmationTemplate__size-l_theme-@{themeName} {
+   width: @width_l_confirmation;
+}
+
+//TODO: временный класс для поддержки size: 'm'
+.controls-ConfirmationTemplate__size-m_theme-@{themeName} {
+   width: @width_s_confirmation;
+}
+
+.controls-ConfirmationTemplate__size-s_theme-@{themeName} {
+   width: @width_s_confirmation;
+}

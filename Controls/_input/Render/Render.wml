@@ -1,19 +1,25 @@
 <div class="controls-Render controls-Render_theme-{{_options.theme}}
+            {{_border.top ? 'controls-Render_border-top_theme-' + _options.theme : 'controls-Render_border-top-empty'}}
+            {{_border.right ? 'controls-Render_border-right_theme-' + _options.theme : 'controls-Render_border-right-empty'}}
+            {{_border.bottom ? 'controls-Render_border-bottom_theme-' + _options.theme : 'controls-Render_border-bottom-empty'}}
+            {{_border.left ? 'controls-Render_border-left_theme-' + _options.theme : 'controls-Render_border-left-empty'}}
+            controls-Render_background-{{ _options.contrastBackground ? 'contrast' : 'same' }}_theme-{{ _options.theme }}
+            controls-Render-fontsize-{{_options.fontSize}}
             controls-Render_textAlign-{{_options.textAlign}}
-            controls-Render_state-{{_state}}_theme-{{_options.theme}}
-            controls-fontsize-{{_fontSize}}{{_fontSize !== 'inherit' ? '_theme-' + _options.theme}}
-            {{_fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _fontSize + '_theme-' + _options.theme}}
-            controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
-            controls-Render_theme_{{_options.theme}}_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
+            controls-Render{{_statePrefix}}_borderRadius-{{_options.inlineHeight}}_theme-{{_options.theme}}
+            controls-Render_state-{{_state}} controls-Render_state-{{_state}}_theme-{{_options.theme}}
+            controls-fontsize-{{_options.fontSize}}{{_options.fontSize !== 'inherit' ? '_theme-' + _options.theme}}
+            {{_options.fontSize !== 'inherit' ? 'controls-Render-fontsize-' + _options.fontSize + '_theme-' + _options.theme}}
+            controls-text-{{_options.fontColorStyle}}_theme-{{_options.theme}}
+            controls-Render_state-{{_state}}_{{_options.wasActionByUser ? 'caretFilled' : 'caretEmpty'}}_theme-{{_options.theme}}
             {{_options.multiline ? 'controls-Render_multiline' :
-            'controls-inlineheight-' + _inlineHeight + '_theme-' + _options.theme + ' controls-Render-inlineheight-' + _inlineHeight + '_theme-' + _options.theme}}
-            {{_options.roundBorder ? 'controls-Render_theme_' + _options.theme + '_size_' + _inlineHeight + '_roundBorder'}}">
-   <div class="controls-Render__wrapper">
+            'controls-inlineheight-' + _options.inlineHeight + '_theme-' + _options.theme + ' controls-Render-inlineheight-' + _options.inlineHeight + '_theme-' + _options.theme}}">
+   <div class="controls-Render__wrapper {{_options.footerTemplate ? 'controls-Render__wrapper_footer'}}">
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
       </ws:if>
-      <ws:if data="{{_options.beforeFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__beforeField" template="{{_options.beforeFieldWrapper}}"/>
+      <ws:if data="{{_options.leftFieldWrapper}}">
+         <ws:partial attr:class="controls-Render__beforeField" template="{{_options.leftFieldWrapper}}"/>
       </ws:if>
       <ws:partial template="{{_options.content}}"
                   on:focusin="_setContentActive(true)"
@@ -28,19 +34,17 @@
             </ws:if>
          </ws:placeholderTemplate>
       </ws:partial>
-      <ws:if data="{{_options.afterFieldWrapper}}">
-         <ws:partial attr:class="controls-Render__afterField" template="{{_options.afterFieldWrapper}}"/>
+      <ws:if data="{{_options.rightFieldWrapper}}">
+         <ws:partial attr:class="controls-Render__afterField" template="{{_options.rightFieldWrapper}}" inlineHeight="{{_options.inlineHeight}}"/>
+      </ws:if>
+      <ws:if data="{{_options.footerTemplate}}">
+         <ws:partial template="{{_options.footerTemplate}}"/>
       </ws:if>
    </div>
    <ws:if data="{{_options.tagStyle}}">
-      <svg name="tag"
-           viewBox="0 0 1 1"
-           xmlns="http://www.w3.org/2000/svg"
-           class="controls-Render__tagStyle_theme-{{_options.theme}}
-                  controls-Render__tagStyle_style-{{_options.tagStyle}}_theme-{{_options.theme}}"
-           on:click="_tagClickHandler()"
-           on:mouseenter="_tagHoverHandler()">
-         <polygon points="0,0 1,1 1,0"/>
-      </svg>
+      <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
+                  tagStyle="{{_options.tagStyle}}"
+                  on:click="_tagClickHandler()"
+                  on:mouseenter="_tagHoverHandler()"/>
    </ws:if>
 </div>

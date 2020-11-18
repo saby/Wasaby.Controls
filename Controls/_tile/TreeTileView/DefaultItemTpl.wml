@@ -1,11 +1,14 @@
 <ws:template name="folderTemplate">
 <ws:partial
-      template="wml!Controls/_tile/TreeTileView/FolderTpl"
+      template="wml!Controls/_tile/TileView/resources/SmallTemplate"
       width="{{width}}"
+      height="{{height}}"
       hasTitle="{{hasTitle}}"
       itemData="{{itemData}}"
       invisible="{{invisible}}"
       titleStyle="{{titleStyle}}"
+      itemActionsPadding="{{itemActionsPadding}}"
+      border="{{border}}"
       marker="{{marker}}"
       highlightOnHover="{{highlightOnHover}}"
       staticHeight="{{staticHeight}}"
@@ -13,15 +16,25 @@
       shadowVisibility="{{shadowVisibility}}"
       markerVisibility="{{markerVisibility}}"
       itemActionsTemplate="{{itemActionsTemplate}}"
+      itemActionsPosition="{{itemActionsPosition}}"
       swipeTemplate="{{swipeTemplate}}"
+      checkboxReadOnly="{{checkboxReadOnly}}"
+      cursor="{{cursor}}"
+      backgroundColorStyle="{{backgroundColorStyle}}"
       multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:template>
 <ws:template name="leafTemplate">
    <ws:partial
       template="wml!Controls/_tile/TileView/TileTpl"
-      width="{{width}}"
+      width="{{width || itemData.itemWidth || itemData.defaultItemWidth}}"
+      checkboxReadOnly="{{checkboxReadOnly}}"
+      itemActionsPosition="{{itemActionsPosition}}"
+      itemActionsPadding="{{itemActionsPadding}}"
+      cursor="{{cursor}}"
+      height="{{height}}"
       hasTitle="{{hasTitle}}"
       itemData="{{itemData}}"
+      border="{{border}}"
       invisible="{{invisible}}"
       titleStyle="{{titleStyle}}"
       marker="{{marker}}"
@@ -33,12 +46,13 @@
       contentTemplate="{{contentTpl}}"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
+      backgroundColorStyle="{{backgroundColorStyle}}"
       multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:template>
 <ws:if data="{{invisible}}">
-   <div attr:class="controls-TileView__item controls-TileView__item_invisible"
-        attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px; ' +
-                     'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
+   <div attr:class="controls-TileView__item controls-TileView__item_theme-{{theme}} {{itemData.itemClasses}} controls-TileView__item_invisible"
+        attr:style="{{'-ms-flex-preferred-size: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.itemWidth || itemData.defaultFolderWidth)) + 'px; ' +
+                     'flex-basis: ' + (type === 'leaf' ? (itemWidth || itemData.itemWidth || itemData.defaultItemWidth) : (folderWidth || itemData.itemWidth || itemData.defaultFolderWidth)) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.dispItem.isNode()}}">

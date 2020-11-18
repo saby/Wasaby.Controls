@@ -1,19 +1,12 @@
-.controls-Explorer__Path {
-   padding-right: @spacing_Explorer-path-between-content-borderRight;
-   min-height:    @min-height_Explorer-path;
+.controls-Explorer__Path_theme-@{themeName} {
+   padding-right: @breadcrumbs_padding-right_explorer;
+   min-height: @breadcrumbs_min-height_explorer;
 }
 
-//TODO удалить костыль про background-color после https://online.sbis.ru/opendoc.html?guid=e7fc125a-8220-4e2e-b152-f4bbfa0c25d6
-.controls-Explorer__Path_style_master {
-   background-color: @background-color_List-masterList;
+.controls-Explorer__HeadingPath-master_theme-@{themeName} {
+   margin-right: @master_separator_thickness_list;
 }
-.controls-Explorer__Path_style_master:before {
-   content: '';
-   z-index: 0;
-   width: @border-width_List-masterList-right;
-   background-color: @border-color_List-masterList;
-   height: 100%;
-   position: absolute;
-   right: 0;
-   top: 0;
+
+.controls-Explorer__HeadingPath-masterClassic_theme-@{themeName} {
+   margin-right: @masterClassic_separator_thickness_list;
 }

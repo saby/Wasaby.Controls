@@ -1,9 +1,9 @@
 <div attr:class="controls-ListViewV controls-ColumnsView">
    <ws:if data="{{ _options.listModel }}">
-      <div attr:class="controls-ColumnsView__itemsContainer" name="itemsContainer">
+      <div attr:class="controls-ColumnsView__itemsContainer" style="{{_getItemsContainerStyle()}}" name="itemsContainer">
          <ws:for data="i in _options.columnsCount">
-            <div class="controls-ColumnsView_column" style="min-width:{{_options.minWidth}}px; max-width:{{_options.maxWidth}}px;">
-               <div class="controls-ColumnsView_column-placeholder" style="min-width:{{_options.minWidth}}px; max-width:{{_options.maxWidth}}px;"></div>
+            <div class="controls-ColumnsView_column" style="{{_getColumnStyle(i)}}">
+               <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
                <ws:partial
                        template="wml!Controls/_listRender/Columns/resources/For"
                        collection="{{ _options.listModel }}"
@@ -28,7 +28,7 @@
    </ws:if>
    <ws:if data="{{ _options.footerTemplate }}">
       <div
-         attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}">
+         attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}_theme-{{_options.theme}}">
          <ws:partial template="{{ _options.footerTemplate }}" />
       </div>
    </ws:if>

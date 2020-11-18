@@ -1,4 +1,4 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
@@ -6,15 +6,16 @@ import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCa
 import controlTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/resources/SuggestTemplate');
 import footerTemplate = require('wml!Controls-demo/Suggest_new/SearchInput/FooterTemplate/resources/FooterTemplate');
-import 'css!Controls-demo/Controls-demo';
+import standartFooterTemplate = require('wml!Controls-demo/Suggest_new/Input/FooterTemplate/resources/StandartFooterTemplate');
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
-   private _suggestTemplate: TemplateFunction = suggestTemplate;
-   private _demoFooterTemplate: TemplateFunction = footerTemplate;
-   private _source: Memory;
-   private _navigation: object;
-   protected _beforeMount() {
+   protected _suggestTemplate: TemplateFunction = suggestTemplate;
+   protected _demoFooterTemplate: TemplateFunction = footerTemplate;
+   protected _standartFooterTemplate: TemplateFunction = standartFooterTemplate;
+   protected _source: Memory;
+   protected _navigation: object;
+   protected _beforeMount(): void {
       this._source = new SearchMemory({
          keyProperty: 'id',
          data: _departmentsDataLong,
@@ -31,4 +32,6 @@ export default class extends Control{
          }
       };
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Suggest_new/Index'];
 }

@@ -8,58 +8,71 @@
                                               attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount() || _options.orientation === 'horizontal')) ? 'controls-FilterPanel_lastBlock'}}"/>
    </Controls.validate:Controller>
    <ws:if data="{{_hasAdditionalParams}}">
-      <Controls._filterPopup.Panel.AdditionalParams
-              items="{{_items}}"
+      <Controls._filterPopup.Panel.AdditionalParams.Control
+              source="{{_items}}"
+              render="{{_options.additionalPanelTemplate}}"
+              columnProperty="column"
+              keyProperty="{{_keyProperty}}"
+              groupProperty="{{_options.groupProperty}}"
               itemTemplate="{{_options.additionalTemplate}}"
               itemTemplateProperty="{{_options.additionalTemplateProperty}}"
-              on:itemsChanged="_itemsChangedHandler()"
+              on:sourceChanged="_itemsChangedHandler()"
               attr:class="controls-FilterPanel__AdditionalParams {{!_historyId || !_historyItems.getCount() || _options.orientation === 'horizontal' ? 'controls-FilterPanel_lastBlock'}}"/>
+   </ws:if>
+   <ws:if data="{{_options.footerTemplate}}">
+      <ws:partial template="{{_options.footerTemplate}}"/>
    </ws:if>
 </ws:template>
 
 <ws:template name="history">
-   <ws:if data="{{_historyId && (_historyItems.getCount() || _favoriteList && _favoriteList.getCount())}}">
+   <ws:if data="{{_historyId && (_historyItems.getCount() || _options.emptyHistoryTemplate)}}">
       <Controls._filterPopup.History.List
               items="{{_historyItems}}"
-              favoriteItems="{{_favoriteList}}"
-              historyStorage="{{_historyStorage}}"
-              historyGlobalStorage="{{_historyGlobalStorage}}"
               filterItems="{{_items}}"
               historyId="{{_historyId}}"
-              saveMode="{{_options.orientation === 'horizontal' ? 'favorite' : 'pinned'}}"
+              saveMode="{{_historySaveMode}}"
               orientation="{{_options.orientation}}"
+              emptyTemplate="{{_options.emptyHistoryTemplate}}"
               on:historyChanged="_historyItemsChanged()"
-              attr:class="controls-HistoryList__{{_options.orientation}}"
+              attr:class="controls-HistoryList__{{_options.orientation}}_theme-{{_options.theme}}"
               on:applyHistoryFilter="_applyHistoryFilter()"/>
    </ws:if>
 </ws:template>
 
 <Controls.form:PrimaryAction on:triggered="_applyFilter()">
     <Controls.popupTemplate:Dialog headingCaption="{{_options.headingCaption}}"
-                                                    headingStyle="{{_options.headingStyle}}"
+                                                    headingFontColorStyle="{{_options.headingStyle}}"
                                                     attr:class="controls-PanelFilter
-                                                    controls-FilterPanel__{{_options.orientation}}">
+                                                    controls-FilterPanel__{{_options.orientation}}_theme-{{_options.theme}}
+                                                    {{_hasHistory ? 'controls-FilterPanel__' + _options.orientation + '_withHistory'}}">
        <ws:headerContentTemplate>
           <ws:if data="{{_options.topTemplate}}">
              <div class="controls-FilterPanel__header-topTemplate">
                 <ws:partial template="{{_options.topTemplate}}"/>
              </div>
           </ws:if>
-          <ws:if data="{{_hasResetValue}}">
-             <Controls.buttons:Button viewMode="link" fontColorStyle="link" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
-                              on:click="_resetFilter()"
-                              name="resetButton"
+          <div class="controls-FilterPanel__header__buttons">
+             <ws:if data="{{_hasResetValue && _isChanged}}">
+                <div
+                   class="controls-FilterPanel__resetButton
+                          controls-inlineheight-m_theme-{{_options.theme}}
+                          controls-fontsize-m_theme-{{_options.theme}}
+                          controls-FilterPanel__resetButton_theme-{{_options.theme}}"
+                   on:click="_resetFilter()"
+                   name="resetButton"
+                   tabindex="-1"
+                   title="{[По умолчанию]}">{[По умолчанию]}
+                </div>
+             </ws:if>
+             <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                               attr:tabindex="-1"
-                              attr:class="controls-FilterPanel__resetButton"/>
-          </ws:if>
-          <Controls.buttons:Button viewMode="button" buttonStyle="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
-                           attr:tabindex="-1"
-                           attr:class="controls-FilterPanel__filterButton"/>
+                              attr:class="controls-FilterPanel__filterButton"/>
+          </div>
        </ws:headerContentTemplate>
        <ws:bodyContentTemplate>
           <Controls.scroll:Container attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
-                <div class="controls-FilterPanel__content-horizontal">
+                <div class="controls-FilterPanel__content-horizontal_theme-{{_options.theme}}">
                    <div class="controls-FilterPanel__filtersWrapper
                     controls-FilterPanel_{{_historyId && _historyItems.getCount() ? 'twoColumn' : 'oneColumn'}}__filtersWrapper">
                       <ws:partial template="filtersContent"/>
@@ -68,7 +81,9 @@
                 </div>
              </ws:if>
              <ws:else>
-                <ws:partial template="filtersContent"/>
+                <div class="controls-FilterPanel__content-vertical_theme-{{_options.theme}}">
+                    <ws:partial template="filtersContent"/>
+                </div>
                 <ws:partial template="history"/>
              </ws:else>
           </Controls.scroll:Container>

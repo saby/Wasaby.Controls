@@ -1,16 +1,19 @@
 import BaseControl = require('Core/Control');
-import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
-import DateUtil = require('Controls/Utils/Date');
+import {Base as DateUtil} from 'Controls/dateUtils';
+import monthListUtils from './MonthList/Utils';
 
 import {IDateRangeSelectable, Utils as calendarUtils} from 'Controls/dateRange';
 import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
+import dayHeaderTemplate = require('wml!Controls/_calendar/MonthView/dayHeaderTemplate');
+import captionTemplate = require("wml!Controls/_calendar/MonthView/captionTemplate");
+
 import IMonth from './interfaces/IMonth';
 
-import 'css!theme?Controls/calendar'
+import {Logger} from 'UI/Utils';
 
 var _private = {
    _updateView: function(self, options) {
@@ -38,21 +41,21 @@ var _private = {
  * Умеет только отображать представление месяца и поддерживает события взаимодействия пользователя с днями.
  * Есть возможность переопределить конструктор модели и шаблон дня.
  * С помощью этого механизма можно кастомизировать отображение дней.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
+ *
  * @class Controls/_calendar/MonthView
  * @extends Core/Control
- * @mixes Controls/_calendar/interface/IMonth
- * @control
+ * @mixes Controls/_calendar/interfaces/IMonth
+ * @mixes Controls/_interface/IDayTemplate
+ * 
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Date/MonthView
+ * @demo Controls-demo/Calendar/MonthView/LongCellName/LongCellName
+ * @demo Controls-demo/Calendar/MonthView/NewMode/Index
  *
- */
-/**
- * @event Происходит после клика по элементу дня в календаре.
- * @name Controls/_calendar/MonthView#itemClick
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Date} item Дата элемента, по которому произвели клик.
- * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события onclick, при клике по дню месяца.
  */
 var MonthView = BaseControl.extend({
    _template: dotTplFn,
@@ -65,14 +68,12 @@ var MonthView = BaseControl.extend({
    _themeCssClass: '',
 
    _beforeMount: function(options) {
-
-      // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
-      if (options.theme === 'accordion') {
-         this._themeCssClass = 'controls-MonthView__accordionTheme';
-      }
-
       _private._updateView(this, options);
       this._monthViewModel = options.monthViewModel ? new options.monthViewModel(options) : new MonthViewModel(options);
+
+      if (!options.newMode) {
+         Logger.warn('MonthView: Используется устаревшая верстка, используйте newMode=true для перехода на новую');
+      }
    },
 
    _beforeUpdate: function(newOptions) {
@@ -81,22 +82,32 @@ var MonthView = BaseControl.extend({
       this._monthViewModel.updateOptions(newOptions);
    },
 
+    _dateToDataString: function(date) {
+      return monthListUtils.dateToId(date);
+   },
+
    _getDayData: function() {
       return {};
    },
 
-   _dayClickHandler: function(event, item, clickable) {
+   _dayClickHandler: function(event, item, isCurrentMonth) {
       if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable &&
-          !this._options.readOnly && clickable) {
+          !this._options.readOnly && (isCurrentMonth || this._options.mode === 'extended')) {
          this._notify('itemClick', [item, event]);
       }
    },
 
-   _mouseEnterHandler: function(event, item, clickable) {
-      if (clickable) {
+   _mouseEnterHandler: function(event, item, isCurrentMonth) {
+      if (isCurrentMonth || this._options.mode === 'extended') {
          this._notify('itemMouseEnter', [item]);
       }
-   }
+   },
+
+   _mouseLeaveHandler: function(event, item, isCurrentMonth) {
+      if (isCurrentMonth || this._options.mode === 'extended') {
+         this._notify('itemMouseLeave', [item]);
+      }
+   },
 
    // cancelSelection: function () {
    //    var canceled = MonthView.superclass.cancelSelection.call(this);
@@ -112,6 +123,8 @@ MonthView._private = _private;
 var defaultOptions = {
    ...IMonth.getDefaultOptions(),
    dayTemplate: dayTemplate,
+   dayHeaderTemplate: dayHeaderTemplate,
+   captionTemplate: captionTemplate,
    dateConstructor: WSDate
 };
 
@@ -123,4 +136,13 @@ MonthView.getOptionTypes = function() {
    return IMonth.getOptionTypes();
 };
 
+MonthView._theme = ['Controls/calendar'];
+
+/**
+ * @event Происходит после клика по элементу дня в календаре.
+ * @name Controls/_calendar/MonthView#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Date} item Дата элемента, по которому произвели клик.
+ * @param {Vdom/Vdom:SyntheticEvent} event Дескриптор события onclick, при клике по дню месяца.
+ */
 export default MonthView;

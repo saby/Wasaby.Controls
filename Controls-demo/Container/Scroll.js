@@ -4,28 +4,15 @@ define('Controls-demo/Container/Scroll',
       'Types/source',
       'Controls/scroll',
       'wml!Controls-demo/Container/Scroll',
-      'css!Controls-demo/Container/Scroll'
    ],
    function(Control, source, scroll, template) {
-      return Control.extend({
+      var ModuleClass = Control.extend({
          _template: template,
          _pagingVisible: true,
          _scrollbarVisible: true,
          _shadowVisible: true,
          _numberOfRecords: 50,
-         _selectedStyle: 'normal',
          _scrollStyleSource: null,
-
-         _beforeMount: function() {
-            this._scrollStyleSource = new source.Memory({
-               keyProperty: 'title',
-               data: [{
-                  title: 'normal'
-               }, {
-                  title: 'inverted'
-               }]
-            });
-         },
 
          _getChildContext: function() {
             return {
@@ -33,7 +20,15 @@ define('Controls-demo/Container/Scroll',
                   pagingVisible: this._pagingVisible
                })
             };
+         },
+
+         get shadowVisibility() {
+            return this._shadowVisible ? 'auto' : 'hidden';
          }
       });
-   }
+
+      ModuleClass._styles = ['Controls-demo/Controls-demo', 'Controls-demo/Container/Scroll'];
+
+      return ModuleClass;
+}
 );

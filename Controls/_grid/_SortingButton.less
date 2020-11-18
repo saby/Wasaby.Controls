@@ -13,28 +13,37 @@
    align-items: baseline;
 }
 
-.controls-SortingButton__icon {
+.controls-SortingButton,
+.controls-SortingButton__content {
+   max-width: 100%;
+}
+.controls-SortingButton__icon_theme-@{themeName} {
    align-self: baseline;
    display: inline-block;
    flex-shrink: 0;
-   width: @size_SortingButton-icon;
-   height: @size_SortingButton-icon;
+   width: @icon-width_gridSortingButton;
+   height: @icon-width_gridSortingButton;
 }
 
 .controls-SortingButton__caption {
    cursor: pointer;
-   display: inline;
+   display: inline-flex;
 }
 
 .controls-SortingButton_arrow_theme-@{themeName} {
-   fill: @color_SortingButton-icon;
-   width: @size_SortingButton-icon;
-   height: @height_SortingButton-icon;
+   fill: @icon-color_gridSortingButton;
+   width: @icon-width_gridSortingButton;
+   height: @icon-height_gridSortingButton;
 }
 
 .controls-SortingButton__caption_theme-@{themeName} {
-   font-size: @font-size_SortingButton-caption;
-   color: @color_SortingButton-caption;
+   font-size: @font-size_gridSortingButton;
+   color: @text-color_gridSortingButton;
+}
+
+.controls-SortingButton__caption.controls-Grid__header-cell__content-ellipsis {
+   cursor: pointer;
+   display: inline;
 }
 
 .controls-SortingButton__caption:active {

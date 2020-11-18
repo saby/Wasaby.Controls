@@ -1,9 +1,11 @@
 define([
    'Controls/scroll',
-   'Core/core-merge'
+   'Core/core-merge',
+   'Controls/_scroll/StickyHeader/Utils'
 ], function(
    scroll,
-   coreMerge
+   coreMerge,
+   Utils
 ) {
 
    'use strict';
@@ -20,6 +22,7 @@ define([
          return mv;
       },
       options = {
+         calculateHeadersOffsets: false
       };
 
    describe('Controls/_scroll/StickyHeader/Group', function() {
@@ -33,7 +36,7 @@ define([
 
       describe('_fixedHandler', function() {
          const
-            event = { stopImmediatePropagation: sinon.fake() };
+            event = {stopImmediatePropagation: sinon.fake()};
 
          it('should add fixed header to list of fixed headers', function() {
             const
@@ -41,12 +44,12 @@ define([
                headerIdTop = scroll.getNextStickyId(),
                headerIdBottom = scroll.getNextStickyId();
 
-            component._fixedHandler(event, { fixedPosition: 'top', id: headerIdTop });
+            component._fixedHandler(event, {fixedPosition: 'top', id: headerIdTop});
             assert.lengthOf(component._stickyHeadersIds.top, 1);
             assert.lengthOf(component._stickyHeadersIds.bottom, 0);
             assert.include(component._stickyHeadersIds.top, headerIdTop);
 
-            component._fixedHandler(event, { fixedPosition: 'bottom', id: headerIdBottom });
+            component._fixedHandler(event, {fixedPosition: 'bottom', id: headerIdBottom});
             assert.lengthOf(component._stickyHeadersIds.top, 1);
             assert.lengthOf(component._stickyHeadersIds.bottom, 1);
             assert.include(component._stickyHeadersIds.bottom, headerIdBottom);
@@ -61,11 +64,11 @@ define([
             component._stickyHeadersIds.top.push(headerIdTop);
             component._stickyHeadersIds.bottom.push(headerIdBottom);
 
-            component._fixedHandler(event, { fixedPosition: '', prevPosition: 'top', id: headerIdTop });
+            component._fixedHandler(event, {fixedPosition: '', prevPosition: 'top', id: headerIdTop});
             assert.lengthOf(component._stickyHeadersIds.top, 0);
             assert.notInclude(component._stickyHeadersIds.top, headerIdTop);
 
-            component._fixedHandler(event, { fixedPosition: '', prevPosition: 'bottom', id: headerIdBottom });
+            component._fixedHandler(event, {fixedPosition: '', prevPosition: 'bottom', id: headerIdBottom});
             assert.lengthOf(component._stickyHeadersIds.bottom, 0);
             assert.notInclude(component._stickyHeadersIds.bottom, headerIdBottom);
          });
@@ -77,7 +80,7 @@ define([
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+               {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.assert.calledWith(
                component._notify,
@@ -100,11 +103,23 @@ define([
                component = createComponent(scroll.Group, options);
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
+               {
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  id: scroll.getNextStickyId(),
+                  mode: 'replaceable',
+                  offsetHeight: 10
+               });
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
+               {
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  id: scroll.getNextStickyId(),
+                  mode: 'replaceable',
+                  offsetHeight: 10
+               });
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
@@ -116,11 +131,11 @@ define([
                headerId = scroll.getNextStickyId();
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+               {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+               {fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.assert.calledWith(
                component._notify,
@@ -144,73 +159,79 @@ define([
                headerId = scroll.getNextStickyId();
 
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: scroll.getNextStickyId(), mode: 'replaceable', offsetHeight: 10 });
+               {
+                  fixedPosition: 'top',
+                  prevPosition: '',
+                  id: scroll.getNextStickyId(),
+                  mode: 'replaceable',
+                  offsetHeight: 10
+               });
             component._fixedHandler(event,
-                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+               {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.stub(component, '_notify');
             component._fixedHandler(event,
-                { fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+               {fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
          });
       });
 
-      describe('_updateStickyShadow', function() {
-         it('should transfer an event if the header identifier is equal to the current one', function() {
+      describe('updateFixed', function() {
+         it('should update children headers if the header identifier is equal to the current one', function() {
             const
                component = createComponent(scroll.Group, options);
 
-            component._children.stickyHeaderShadow = {
-               start: sinon.fake()
-            };
+            sinon.stub(component, '_updateFixed');
 
-            component._updateStickyShadow([component._index]);
-            sinon.assert.called(component._children.stickyHeaderShadow.start);
+            component.updateFixed([component._index]);
+            sinon.assert.called(component._updateFixed);
+            sinon.restore();
          });
 
-         it('should not transfer an event if the header identifier is not equal to the current one', function() {
+         it('should not update children headers if the header identifier is not equal to the current one', function() {
             const
                component = createComponent(scroll.Group, options);
 
-            component._children.stickyHeaderShadow = {
-               start: sinon.fake()
-            };
+            sinon.stub(component, '_updateFixed');
 
-            component._updateStickyShadow([component._index + 1]);
-            sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+            component.updateFixed([component._index + 1]);
+            sinon.assert.notCalled(component._updateFixed);
+            sinon.restore();
          });
       });
 
       describe('set top', function() {
-         it('should update top on internal headers', function () {
+         it('should update top on internal headers', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
                   top: 0
-               }
-            }
+               },
+               top: 0
+            };
             component.top = 20;
             assert.strictEqual(component._headers[0].inst.top, 20);
          });
       });
 
       describe('set bottom', function() {
-         it('should update bottom on internal headers', function () {
+         it('should update bottom on internal headers', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
                   bottom: 0
-               }
-            }
+               },
+               bottom: 0
+            };
             component.bottom = 20;
             assert.strictEqual(component._headers[0].inst.bottom, 20);
          });
       });
 
       describe('get height', function() {
-         it('should return the height of one of the headers', function () {
+         it('should return the height of one of the headers', function() {
             const
                component = createComponent(scroll.Group, {}),
                height = 10;
@@ -223,7 +244,7 @@ define([
             };
             assert.strictEqual(component.height, height);
          });
-         it('should return 0 if there are no fixed headers', function () {
+         it('should return 0 if there are no fixed headers', function() {
             const
                component = createComponent(scroll.Group, {});
             component._headers = {};
@@ -232,14 +253,28 @@ define([
       });
 
       describe('_stickyRegisterHandler', function() {
+         const event = {
+            stopImmediatePropagation: sinon.fake()
+         }
+         const data = {
+            id: 2,
+            inst: {
+               _container: {}
+            },
+            position: 'top'
+         };
+
+         beforeEach(() => {
+            sinon.stub(Utils, 'getOffset').returns(0);
+         });
+
+         afterEach(() => {
+            sinon.restore();
+         });
+
          it('should stopImmediatePropagation event', function() {
-            const
-               component = createComponent(scroll.Group, options);
-            let event = {
-               blockUpdate: false,
-               stopImmediatePropagation: sinon.fake()
-            };
-            component._stickyRegisterHandler(event, { id: 2 }, true);
+            const component = createComponent(scroll.Group, options);
+            component._stickyRegisterHandler(event, data, true);
             sinon.assert.calledOnce(event.stopImmediatePropagation);
          });
          it('should register new header', function() {
@@ -249,79 +284,74 @@ define([
                event = {
                   blockUpdate: false,
                   stopImmediatePropagation: sinon.fake()
-               },
-               param = { id: 2 };
-            component._stickyRegisterHandler(event, param, true);
-            assert.deepEqual(component._headers, { 2: param });
+               };
+            component._stickyRegisterHandler(event, data, true);
+            assert.property(component._headers, data.id);
          });
          it('should unregister deleted header', function() {
-            const
-               component = createComponent(scroll.Group, options);
-            let event = {
-                  blockUpdate: false,
-                  stopImmediatePropagation: sinon.fake()
-               },
-               id = 2;
-            component._headers[id] = { id: id };
-            component._stickyRegisterHandler(event, { id: id }, false);
-            assert.isUndefined(component._headers[id]);
+            const component = createComponent(scroll.Group, options);
+            component._headers[data.id] = {id: data.id};
+            component._stickyRegisterHandler(event, data, false);
+            assert.isUndefined(component._headers[data.id]);
+         });
+
+         it('should\'t update top/bottom if calculateHeadersOffsets option is equals false', function() {
+            const component = createComponent(scroll.Group, {...options, calculateHeadersOffsets: false});
+            sinon.stub(component, '_updateTopBottom');
+            component._stickyRegisterHandler(event, data, true);
+            sinon.assert.notCalled(component._updateTopBottom);
          });
 
          it('should generate event on first header registered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
+            const component = createComponent(scroll.Group, options);
 
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, { id: 2 }, true);
+            component._stickyRegisterHandler(event, data, true);
 
             sinon.assert.calledWith(component._notify, 'stickyRegister');
             sinon.restore();
          });
 
          it('should not generate event on second header registered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
-            component._stickyRegisterHandler(event, { id: 2 }, true);
+            const component = createComponent(scroll.Group, options);
+            component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, { id: 3 }, true);
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, true);
 
             sinon.assert.notCalled(component._notify);
-            sinon.restore();
          });
 
          it('should generate event on last header unregistered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
-            component._stickyRegisterHandler(event, { id: 2 }, true);
+            const component = createComponent(scroll.Group, options);
+            component._stickyRegisterHandler(event, data, true);
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, { id: 2 }, false);
+            component._stickyRegisterHandler(event, data, false);
 
             sinon.assert.calledWith(component._notify, 'stickyRegister');
-            sinon.restore();
          });
 
          it('should not generate event on not last header unregistered', function() {
-            const
-               component = createComponent(scroll.Group, options),
-               event = {
-                  stopImmediatePropagation: sinon.fake()
-               };
-            component._stickyRegisterHandler(event, { id: 2 }, true);
-            component._stickyRegisterHandler(event, { id: 3 }, true);
+            const component = createComponent(scroll.Group, options);
+            component._stickyRegisterHandler(event, data, true);
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, true);
             sinon.stub(component, '_notify');
-            component._stickyRegisterHandler(event, { id: 3 }, false);
+            component._stickyRegisterHandler(event, {id: 3, inst: data.inst}, false);
 
             sinon.assert.notCalled(component._notify);
             sinon.restore();
+         });
+
+         it('should notify stickyFixed if group already fixed', function() {
+            const component = createComponent(scroll.Group, options);
+            component._updateFixedRegister = {
+               start: sinon.fake()
+            };
+            component._stickyHeadersIds = {
+               top: [10]
+            };
+            component._isFixed = true;
+            component._stickyRegisterHandler(event, data, true);
+            sinon.assert.calledWith(component._updateFixedRegister.start, event, [2, 10]);
          });
       });
    });

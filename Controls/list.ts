@@ -4,6 +4,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
@@ -13,14 +14,26 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Paging Controls/_paging/Paging
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ISorting Controls/_interface/ISorting
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
- * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
+ * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
+ * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
+ * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes MoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
+ * @includes IRemoveControllerOptions Controls/_list/Controllers/RemoveController/IRemoveControllerOptions
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
+ * @includes IClickableView Controls/_list/interface/IClickableView
+ * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IReloadableList Controls/_list/interface/IReloadableList
+ * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -31,6 +44,7 @@
  * @includes AddButton Controls/_list/AddButton
  * @includes Container Controls/_list/Container
  * @includes BaseItemTemplate Controls/list:BaseItemTemplate
+ * @includes IContentTemplate Controls/list:IContentTemplate
  * @includes ItemTemplate Controls/list:ItemTemplate
  * @includes EmptyTemplate Controls/list:EmptyTemplate
  * @includes BaseGroupTemplate Controls/list:BaseGroupTemplate
@@ -40,46 +54,46 @@
  * @includes BaseAction Controls/_list/BaseAction
  * @includes Mover Controls/_list/Mover
  * @includes Remover Controls/_list/Remover
- * @includes Paging Controls/_paging/Paging
+ * @includes IRemovableList Controls/_list/interface/IRemovableList
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
- * @includes IVirtualScroll Controls/_list/interface/IVirtualScroll
+ * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
+ * @includes BaseEditingTemplate Controls/list:BaseEditingTemplate
+ * @includes NumberEditingTemplate Controls/list:NumberEditingTemplate
+ * @includes MoneyEditingTemplate Controls/list:MoneyEditingTemplate
+ * @includes MoveController Controls/_list/Controllers/MoveController
+ * @includes IMoveControllerOptions Controls/_list/Controllers/MoveController/IMoveControllerOptions
+ * @includes RemoveController Controls/_list/Controllers/RemoveController
+ * @includes IClickableView Controls/_list/interface/IClickableView
+ * @includes IListNavigation Controls/_list/interface/IListNavigation
+ * @includes IMovableList Controls/_list/interface/IMovableList
  * @public
  * @author Крайнов Д.О.
  */
 import AddButton = require('Controls/_list/AddButton');
-import Container = require('Controls/_list/Container');
+import {default as Container} from 'Controls/_list/Container';
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
-import View = require('Controls/_list/List');
-import ColumnsView = require('Controls/_list/Columns');
+import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
-import Mover = require('Controls/_list/Mover');
-import Remover = require('Controls/_list/Remover');
-import DataContainer = require('Controls/_list/Data');
+import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
+import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
+import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
-import _swipeActionTemplate = require('wml!Controls/_list/Swipe/resources/SwipeAction');
-import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
-
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
-import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
+import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
+import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
+import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
+
 import BaseViewModel = require('Controls/_list/BaseViewModel');
-import ItemActionsControl = require('Controls/_list/ItemActions/ItemActionsControl');
 import ListViewModel = require('Controls/_list/ListViewModel');
-import ListControl = require('Controls/_list/ListControl');
+import {default as ListControl} from 'Controls/_list/ListControl';
 import ListView = require('Controls/_list/ListView');
-import SwipeTemplate = require('wml!Controls/_list/Swipe/resources/SwipeTemplate');
-import SwipeHorizontalMeasurer = require('Controls/_list/Swipe/HorizontalMeasurer');
-import SwipeVerticalMeasurer = require('Controls/_list/Swipe/VerticalMeasurer');
-import 'css!theme?Controls/list';
 import GroupContentResultsTemplate = require('wml!Controls/_list/GroupContentResultsTemplate');
-import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
-import ItemOutput = require('wml!Controls/_list/resources/ItemOutput');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
 import BaseControl = require('Controls/_list/BaseControl');
@@ -87,13 +101,41 @@ import ScrollEmitter = require('Controls/_list/BaseControl/Scroll/Emitter');
 import SearchItemsUtil = require('Controls/_list/resources/utils/SearchItemsUtil');
 import ItemsView = require('Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/_list/ItemsViewModel');
-import getStyle = require('Controls/_list/ItemActions/Utils/getStyle');
 import HotKeysContainer from 'Controls/_list/HotKeysContainer';
 import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling';
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
+import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
+import {default as ScrollController} from './_list/ScrollController';
 import {IList} from './_list/interface/IList';
+import IListNavigation from './_list/interface/IListNavigation';
+import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 
-import {Paging} from 'Controls/paging';
+import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
+
+// region @deprecated
+
+import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
+import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
+import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
+import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
+import Remover = require('Controls/_list/Remover');
+import * as Mover from 'Controls/_list/Mover';
+export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
+export {
+    _itemActionsForTemplate,
+    ItemActionsTemplate,
+    _swipeActionTemplate,
+    SwipeTemplate
+}
+
+// endregion @deprecated
+
+export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
+export {IMovableList} from 'Controls/_list/interface/IMovableList';
+
+export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
+export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {
     AddButton,
@@ -102,40 +144,39 @@ export {
     GroupTemplate,
     ItemTemplate,
     View,
-    ColumnsView,
     BaseAction,
     Mover,
     Remover,
-    Paging,
     DataContainer,
     _forTemplate,
-    _swipeActionTemplate,
-    _itemActionsForTemplate,
 
-    GridLayoutUtil,
     EditingTemplate,
+    BaseEditingTemplate,
+    MoneyEditingTemplate,
+    NumberEditingTemplate,
     ItemActionsHelpers,
     BaseViewModel,
-    ItemActionsControl,
     ListViewModel,
     ListControl,
     ListView,
-    SwipeTemplate,
-    SwipeHorizontalMeasurer,
-    SwipeVerticalMeasurer,
     GroupContentResultsTemplate,
-    ItemOutputWrapper,
-    ItemOutput,
     ItemsUtil,
     TreeItemsUtil,
     BaseControl,
     ScrollEmitter,
     SearchItemsUtil,
-    getStyle,
+    CssClassList,
+    createClassListCollection,
+    getItemsBySelection,
     ItemsView,
     ItemsViewModel,
+    LoadingIndicatorTemplate,
+    ContinueSearchTemplate,
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IList
+    IList,
+    VirtualScroll,
+    ScrollController,
+    IListNavigation
 };

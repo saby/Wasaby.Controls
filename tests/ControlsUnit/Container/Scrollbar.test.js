@@ -148,6 +148,7 @@ define(
                      return [{}];
                   }
                };
+               component._scrollPosition = options.position;
                component._afterMount(options);
                assert.strictEqual(component._thumbPosition, 2.6666666666666665);
 

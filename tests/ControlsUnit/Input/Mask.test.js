@@ -12,7 +12,7 @@ define(
       let createComponent = function(Component, cfg) {
          let cmp;
          if (Component.getDefaultOptions) {
-            cfg = coreMerge(cfg, Component.getDefaultOptions(), {preferSource: true});
+            cfg = coreMerge(cfg, Component.getDefaultOptions(), { preferSource: true });
          }
          cmp = new Component(cfg);
          cmp.saveOptions(cfg);
@@ -23,15 +23,60 @@ define(
       describe('Controls/_input/Mask', function() {
 
          describe('_beforeUpdate', function() {
-            it('should update selection if value changed', function() {
-               var component = createComponent(input.Mask, {mask: 'dd.dd', replacer: ' '});
+            [{
+               mask: 'dd.dd',
+               replacer: ' ',
+               value: null,
+               startValue: ''
+            }, {
+               mask: 'dd.dd',
+               replacer: ' ',
+               value: '',
+               startValue: '1234'
+            }, {
+               mask: 'dd.dd',
+               replacer: ' ',
+               value: '1234',
+               startValue: ''
+            }].forEach(function(test) {
+               it('should update selection if value changed', function() {
+                  var component = createComponent(input.Mask, {
+                     value: test.startValue,
+                     mask: 'dd.dd',
+                     replacer: ' '
+                  });
+                  component._viewModel.selection = {
+                     start: 3,
+                     end: 3
+                  };
+                  component._beforeUpdate(coreMerge(
+                     test, input.Mask.getDefaultOptions(), { preferSource: true }));
+                  assert.deepEqual(component._viewModel.selection, {
+                     start: 0,
+                     end: 0
+                  });
+               });
+            });
+
+            it('should not update selection if value changed', function() {
+               var component = createComponent(input.Mask, {
+                  mask: 'dd.dd',
+                  replacer: ' '
+               });
                component._viewModel.selection = {
                   start: 3,
                   end: 3
                };
                component._beforeUpdate(coreMerge(
-                  { value: '1234', mask: 'dd.dd', replacer: ' ' }, input.Mask.getDefaultOptions(), {preferSource: true}));
-               assert.deepEqual(component._viewModel.selection, { start: 0, end: 0 });
+                  {
+                     mask: 'dd.dd',
+                     replacer: ' '
+                  }, input.Mask.getDefaultOptions(), { preferSource: true }
+               ));
+               assert.deepEqual(component._viewModel.selection, {
+                  start: 3,
+                  end: 3
+               });
             });
          });
 
@@ -66,7 +111,10 @@ define(
          describe('_focusInHandler', function() {
             it('should set default selection position', function() {
                const sandbox = sinon.sandbox.create();
-               var component = createComponent(input.Mask, {mask: 'dd.dd', replacer: ' '});
+               var component = createComponent(input.Mask, {
+                  mask: 'dd.dd',
+                  replacer: ' '
+               });
                component._viewModel.selection = {
                   start: 3,
                   end: 3
@@ -74,7 +122,9 @@ define(
                sandbox.replace(component, '_getField', function() {
                   return { selectionStart: 0 };
                });
-               component._focusInHandler();
+               component._focusInHandler({
+                  target: {}
+               });
                assert.deepEqual(
                   component._viewModel.selection,
                   {
@@ -87,7 +137,10 @@ define(
             it('should not set update selection position if the focus was set by a mouse click', function() {
                const
                   sandbox = sinon.sandbox.create(),
-                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+                  component = createComponent(input.Mask, {
+                     mask: 'dd.dd',
+                     replacer: ' '
+                  });
                component._viewModel.selection = {
                   start: 3,
                   end: 3
@@ -96,8 +149,13 @@ define(
                   return { selectionStart: 0 };
                });
                component._mouseDownHandler();
-               component._focusInHandler();
-               assert.deepEqual(component._viewModel.selection, { start: 3, end: 3 });
+               component._focusInHandler({
+                  target: {}
+               });
+               assert.deepEqual(component._viewModel.selection, {
+                  start: 3,
+                  end: 3
+               });
                sandbox.restore();
             });
          });
@@ -106,28 +164,45 @@ define(
             it('should set default selection position', function() {
                const
                   sandbox = sinon.sandbox.create(),
-                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+                  component = createComponent(input.Mask, {
+                     mask: 'dd.dd',
+                     replacer: ' '
+                  });
                component._viewModel.selection = {
                   start: 3,
                   end: 3
                };
                sandbox.replace(component, '_getField', function() {
                   return {
-                     selectionStart: 0,
-                     setSelectionRange: function() {}
+                     getFieldData: function(name) {
+                        if (name === 'selectionStart') {
+                           return 0;
+                        }
+                     },
+                     setSelectionRange: function() {
+                     }
                   };
                });
-               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
+               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {
+               });
                component._mouseDownHandler();
-               component._focusInHandler();
+               component._focusInHandler({
+                  target: {}
+               });
                component._clickHandler();
-               assert.deepEqual(component._viewModel.selection, { start: 0, end: 0 });
+               assert.deepEqual(component._viewModel.selection, {
+                  start: 0,
+                  end: 0
+               });
                sandbox.restore();
             });
             it('should not update selection position on click on already focused field', function() {
                const
                   sandbox = sinon.sandbox.create(),
-                  component = createComponent(input.Mask, { mask: 'dd.dd', replacer: ' ' });
+                  component = createComponent(input.Mask, {
+                     mask: 'dd.dd',
+                     replacer: ' '
+                  });
                component._viewModel.selection = {
                   start: 3,
                   end: 3
@@ -135,10 +210,14 @@ define(
                sandbox.replace(component, '_getField', function() {
                   return { selectionStart: 0 };
                });
-               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {});
+               sandbox.replace(input.Mask.superclass, '_clickHandler', function() {
+               });
                component._mouseDownHandler();
                component._clickHandler();
-               assert.deepEqual(component._viewModel.selection, { start: 3, end: 3 });
+               assert.deepEqual(component._viewModel.selection, {
+                  start: 3,
+                  end: 3
+               });
                sandbox.restore();
             });
          });

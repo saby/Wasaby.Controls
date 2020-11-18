@@ -7,6 +7,8 @@ import {goUpByControlTree} from 'UI/Focus';
 
 export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
    draggable?: boolean;
+   headerBackgroundStyle?: string;
+   backgroundStyle?: string;
 }
 
 interface IDragObject {
@@ -15,21 +17,19 @@ interface IDragObject {
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template диалогового окна}.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/dialog/#template">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
  * @class Controls/_popupTemplate/Dialog
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
- * @demo Controls-demo/Popup/Templates/DialogTemplatePG
- */
-
-/**
- * @name Controls/_popupTemplate/Dialog#draggable
- * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
- * @default false
+ * @demo Controls-demo/PopupTemplate/Dialog/Index
  */
 
 class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTemplate {
@@ -68,12 +68,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     }
 
     private _needStartDrag(target: EventTarget): boolean {
-        const controlsArray = goUpByControlTree(target);
-
-        // if click to control then control must handle click
-        // Шапка диалога - отдельный контрол, поэтому теперь индекс диалога в дереве контролов сместился
-        //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=33010df1-501e-4874-a02c-a5f45394a661
-        return this._options.draggable && controlsArray[1]._container === this._container;
+        return this._options.draggable && target.tagName !== 'INPUT';
     }
 
     private _startDragNDrop(event: SyntheticEvent<Event>): void {
@@ -83,13 +78,43 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
     static _theme: string[] = ['Controls/popupTemplate'];
     static getDefaultOptions(): IDialogTemplateOptions {
         return {
-            headingStyle: 'secondary',
-            headingSize: '3xl',
+            headingFontColorStyle: 'secondary',
+            headerBackgroundStyle: 'default',
+            backgroundStyle: 'default',
+            headingFontSize: '3xl',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'popup',
+            closeButtonViewMode: 'toolButton',
             closeButtonTransparent: true
         };
     }
 }
+
+/**
+ * @name Controls/_popupTemplate/Dialog#draggable
+ * @cfg {Boolean} Определяет, может ли окно перемещаться с помощью <a href='/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/'>d'n'd</a>.
+ * @default false
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog#headerBackgroundStyle
+ * @cfg {String} Определяет цвет фона шапки диалогового окна.
+ * @variant default
+ * @variant unaccented
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
+ * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
+ * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ */
+
+/**
+ * @name Controls/_popupTemplate/Dialog#backgroundStyle
+ * @cfg {String} Определяет цвет фона диалогового окна.
+ * @variant default
+ * @variant unaccented
+ * @default default
+ * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
+ * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
+ * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ */
 
 export default DialogTemplate;

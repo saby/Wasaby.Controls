@@ -6,11 +6,11 @@ define(
    function(filterPopup, Clone) {
       describe('FilterHistory:EditDialog', function() {
          let items = [
-            {id: 'period', value: [2], textValue: 'Today'},
-            {id: 'warehouse', value: [], textValue: ''},
-            {id: 'sender', value: '', textValue: ''},
-            {id: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', visibility: true},
-            {id: 'responsible', value: 'Petrov T.T.',  textValue: 'Petrov T.T.', visibility: false}
+            {name: 'period', value: [2], textValue: 'Today'},
+            {name: 'warehouse', value: [], textValue: ''},
+            {name: 'sender', value: '', textValue: ''},
+            {name: 'author', value: 'Ivanov K.K.', textValue: 'Ivanov K.K.', visibility: true},
+            {name: 'responsible', value: 'Petrov T.T.',  textValue: 'Petrov T.T.', visibility: false}
          ];
 
          let defaultConfig = {
@@ -22,6 +22,7 @@ define(
 
          it('prepareConfig', function() {
             let dialog = new filterPopup._EditDialog();
+            dialog._keyProperty = dialog._getKeyProperty(defaultConfig.items);
             dialog.prepareConfig(dialog, defaultConfig);
             assert.equal(dialog._placeholder, defaultConfig.editedTextValue);
             assert.equal(dialog._textValue, '');
@@ -33,6 +34,7 @@ define(
          it('_beforeUpdate', function() {
             let dialog = new filterPopup._EditDialog();
             dialog.saveOptions(defaultConfig);
+            dialog._keyProperty = dialog._getKeyProperty(defaultConfig.items);
 
             let newConfig = {...defaultConfig};
             newConfig.editedTextValue = 'new text';
@@ -65,6 +67,7 @@ define(
             let dialog = new filterPopup._EditDialog();
             let isShowedConfirm = false;
             dialog.saveOptions(defaultConfig);
+            dialog._keyProperty = dialog._getKeyProperty(defaultConfig.items);
             dialog.prepareConfig(dialog, defaultConfig);
             dialog._selectedFilters = [];
             let expectedResult = {}, isClosed = false;
@@ -93,9 +96,33 @@ define(
 
          it ('getItemsToSave', function() {
             let dialog = new filterPopup._EditDialog();
+            dialog._keyProperty = dialog._getKeyProperty(defaultConfig.items);
             dialog.prepareConfig(dialog, defaultConfig);
 
             let itemsToSave = Clone(items);
+            itemsToSave[4].visibility = true;
+
+            let expectedItems = Clone(itemsToSave);
+            expectedItems[4].value = null;
+            expectedItems[4].textValue = '';
+            expectedItems[4].visibility = false;
+            let resultItems = dialog.getItemsToSave(itemsToSave, dialog._selectedFilters);
+            assert.deepEqual(expectedItems, resultItems);
+         });
+
+         it('getItemsToSaveOldItems', () => {
+            let dialog = new filterPopup._EditDialog();
+            let oldItems = Clone(items);
+            oldItems.forEach((item) => {
+               item.id = item.name;
+               delete item.name;
+            });
+            const config = Clone(defaultConfig);
+            config.items = oldItems;
+            dialog._keyProperty = dialog._getKeyProperty(config.items);
+            dialog.prepareConfig(dialog, config);
+
+            let itemsToSave = Clone(oldItems);
             itemsToSave[4].visibility = true;
 
             let expectedItems = Clone(itemsToSave);

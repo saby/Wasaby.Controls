@@ -1,18 +1,22 @@
 export interface ISliderOptions {
     borderVisible?: boolean;
+    tooltipVisible?: boolean;
     scaleStep?: number;
     precision: number;
     tooltipFormatter?: Function;
     size?: string;
+    direction?: string;
     minValue: number;
     maxValue: number;
+    scaleLabelFormatter?: Function;
+    viewMode?: string;
 }
 /**
  * Интерфейс для контрола Слайдер.
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Бондарь А.В.
+ * @author Колесова П.C.
  */
 
 /*
@@ -20,7 +24,7 @@ export interface ISliderOptions {
  *
  * @interface Controls/_slider/interface/ISlider
  * @public
- * @author Бондарь А.В.
+ * @author Колесова П.C.
  */
 
 export interface ISlider {
@@ -30,20 +34,25 @@ export interface ISlider {
 /**
  * @name Controls/_slider/interface/ISlider#borderVisible
  * @cfg {Boolean} Устанавливает границу вокруг контрола.
+ * @demo Controls-demo/Slider/Base/BorderVisible/Index
+ * @demo Controls-demo/Slider/Range/BorderVisible/Index
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
- *   <Controls.slider:Base borderVisible="{{true}}"/>
+ *   <Controls.slider:Base borderVisible="{{true}}" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  */
 
-/*
- * @name Controls/_slider/interface/ISlider#borderVisible
- * @cfg {Boolean} sets the stroke around control
+/**
+ * @name Controls/_slider/interface/ISlider#tooltipVisible
+ * @cfg {Boolean} Устанавливает подсказку при наведении на шкалу.
+ * @default true
+ * @demo Controls-demo/Slider/Base/TooltipVisible/Index
+ * @demo Controls-demo/Slider/Range/TooltipVisible/Index
  * @example
- * Slider with border
+ * Слайдер с тултипом:
  * <pre class="brush:html">
- *   <Controls.slider:Base borderVisible="{{true}}"/>
+ *   <Controls.slider:Base tooltipVisible="{{true}}" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  */
 
@@ -51,21 +60,12 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#scaleStep
  * @cfg {Number} Параметр scaleStep определяет шаг шкалы, расположенной под слайдером.
  * @remark Шкала отображается, когда опция {@link borderVisible} установлена в значения false, а параметр scaleStep положительный.
+ * @demo Controls-demo/Slider/Base/ScaleStep/Index
+ * @demo Controls-demo/Slider/Range/ScaleStep/Index
  * @example
  * Слайдер со шкалой с шагом 20:
  * <pre class="brush:html">
- *   <Controls.slider:Base scaleStep="{{20}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/interface/ISlider#scaleStep
- * @cfg {Number} The scaleStep option determines the step in the scale grid under the slider
- * @remark Scale displayed only if borderVisible is false and scaleStep is positive.
- * @example
- * Slider with scale step of 20
- * <pre class="brush:html">
- *   <Controls.slider:Base scaleStep="{{20}}"/>
+ *   <Controls.slider:Base scaleStep="{{20}}" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  */
 
@@ -73,41 +73,24 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#precision
  * @cfg {Number} Количество символов в десятичной части.
  * @remark Должно быть неотрицательным.
+ * @demo Controls-demo/Slider/Base/Precision/Index
+ * @demo Controls-demo/Slider/Range/Precision/Index
  * @example
  * Слайдер с целыми значениями:
  * <pre class="brush:html">
- *   <Controls.slider:Base precision="{{0}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/interface/ISlider#precision
- * @cfg {Number} Number of characters in decimal part.
- * @remark Must be non-negative
- * @example
- * Slider with integer values;
- * <pre class="brush:html">
- *   <Controls.slider:Base precision="{{0}}"/>
+ *   <Controls.slider:Base precision="{{0}}" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  */
 
 /**
  * @name Controls/_slider/interface/ISlider#tooltipFormatter
  * @cfg {Function} Функция форматирования подсказки.
+ * @demo Controls-demo/Slider/Base/TooltipFormatter/Index
+ * @demo Controls-demo/Slider/Range/TooltipFormatter/Index
  * @remark
  * Аргументы функции:
  * <ul>
  *    <li>value - текущее положение слайдера</li>
- * </ul>
- */
-
-/*
- * @name Controls/_slider/interface/ISlider#tooltipFormatter
- * @cfg {Function} Tooltip formatter function.
- * @remark
- * Function Arguments:
- * <ul>
- *    <li>value - slider current position</li>
  * </ul>
  */
 
@@ -117,20 +100,12 @@ export interface ISlider {
  * @variant s
  * @variant m
  * @default m
+ * @demo Controls-demo/Slider/Base/Size/Index
+ * @demo Controls-demo/Slider/Range/Size/Index
  * @example
  * Слайдер с диаметром ползунка = 12px
  * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/interface/ISlider#size
- * @cfg {String} sets the size of slider point
- * @example
- * Slider with diameter of point = 12px
- * <pre class="brush:html">
- *   <Controls.slider:Base size="s"/>
+ *   <Controls.slider:Base size="s" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  */
 
@@ -138,22 +113,11 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#minValue
  * @cfg {Number} Устанавливает минимальное значение слайдера.
  * @remark Должно быть меньше, чем {@link maxValue}.
+ * @demo Controls-demo/Slider/Base/MinValue/Index
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
- * </pre>
- * @see maxValue
- */
-
-/*
- * @name Controls/_slider/interface/ISlider#minValue
- * @cfg {Number} sets the minimum value of slider
- * @remark must be less than maxValue
- * @example
- * Slider with border
- * <pre class="brush:html">
- *   <Controls.slider:Base minValue="{{10}}"/>
+ *   <Controls.slider:Base minValue="{{10}}" maxValue="{{100}}" bind:value="_value"/>
  * </pre>
  * @see maxValue
  */
@@ -162,22 +126,41 @@ export interface ISlider {
  * @name Controls/_slider/interface/ISlider#maxValue
  * @cfg {Number} Устанавливает максимальное значение слайдера.
  * @remark Должно быть больше, чем {@link minValue}.
+ * @demo Controls-demo/Slider/Base/MaxValue/Index
  * @example
  * Слайдер с границей:
  * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
+ *   <Controls.slider:Base maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
  * </pre>
  * @see minValue
  */
 
-/*
- * @name Controls/_slider/interface/ISlider#maxValue
- * @cfg {Number} sets the maximum value of slider
- * @remark must be greater than minValue
+/**
+ * @name Controls/_slider/interface/ISlider#direction
+ * @cfg {string} Определяет направление расположения слайдера.
+ * @variant horizontal Горизонтальный слайдер.
+ * @variant vertical Вертикальный слайдер.
+ * @demo Controls-demo/Slider/Base/Direction/Index
  * @example
- * Slider with border
  * <pre class="brush:html">
- *   <Controls.slider:Base maxValue="{{100}}"/>
+ *   <Controls.slider:Base direction="vertical" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"
+ *   attr:class="mySliderBase_height"/>
  * </pre>
- * @see minValue
+ *
+ * <pre class="brush: css">
+ * .mySliderBase_height {
+ *    height: 200px;
+ * }
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/interface/ISlider#scaleLabelFormatter
+ * @cfg {Function} Функция форматирования метки шкалы.
+ * @demo Controls-demo/Slider/Base/ScaleLabelFormatter/Index
+ * @remark
+ * Аргументы функции:
+ * <ul>
+ *    <li>value - текущее положение слайдера</li>
+ * </ul>
  */

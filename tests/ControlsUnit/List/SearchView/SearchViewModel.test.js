@@ -45,7 +45,9 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          SearchViewModel.superclass.getItemDataByItem = function(breadCrumbs) {
             const itemData = {
                item: {},
-               resolveBaseItemTemplate: treeView._resolveBaseItemTemplate.bind(treeView)
+               resolvers: {
+                  baseItemTemplate: treeView._resolveBaseItemTemplate.bind(treeView)
+               }
             };
 
             if (breadCrumbs) {
@@ -73,34 +75,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          assert.equal(itemData.resolveItemTemplate(itemData).name, 'Controls__treeGrid_TreeGridView_layout_grid_Item');
 
          SearchViewModel.superclass.getItemDataByItem = superclassGetItemDataByItem;
-      });
-      it('getItemActions', function() {
-         var
-            searchViewModel = new SearchViewModel({
-               items: new Collection.RecordSet({
-                  rawData: [{
-                     id: 1,
-                     type: true,
-                     parent: null
-                  }, {
-                     id: 2,
-                     type: null,
-                     parent: 1
-                  }],
-                  keyProperty: 'id'
-               }),
-               parentProperty: 'parent',
-               nodeProperty: 'type',
-               keyProperty: 'id'
-            }),
-            item1 = searchViewModel._display.at(0).getContents(),
-            item2 = searchViewModel._display.at(1).getContents();
-
-         searchViewModel.setItemActions(item1[0], [{ id: 'action_for_node' }]);
-         searchViewModel.setItemActions(item2, [{ id: 'action_for_leaf' }]);
-
-         assert.deepEqual(searchViewModel.getItemActions(item1), [{ id: 'action_for_node' }]);
-         assert.deepEqual(searchViewModel.getItemActions(item2), [{ id: 'action_for_leaf' }]);
       });
 
       it('_getItemVersion', function() {
@@ -143,70 +117,6 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          assert.isTrue(searchViewModel._isGroup(itemGroupMock));
       });
 
-      it('isGroup', function() {
-         var cfg = {
-            items: new Collection.RecordSet({
-               rawData: [{
-                  id: 1,
-                  type: true,
-                  parent: null,
-               },
-                  {
-                     id: 2,
-                     type: null,
-                     parent: 1
-                  },
-                  {
-                     id: 3,
-                     type: null,
-                     parent: 1
-                  },
-                  {
-                     id: 4,
-                     type: true,
-                     parent: null
-                  },
-                  {
-                     id: 5,
-                     type: null,
-                     parent: 4
-                  },
-                  {
-                     id: 6,
-                     type: null,
-                     parent: 4
-                  },
-                  {
-                     id: 7,
-                     type: null,
-                     parent: 4
-                  }
-               ],
-               keyProperty: 'id'
-            }),
-            parentProperty: 'parent',
-            nodeProperty: 'type',
-            keyProperty: 'id'
-         },
-         model;
-
-         cfg.markedKey = 3;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(2);
-         assert.equal(5, model.getMarkedKey());
-
-         cfg.markedKey = 2;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(1);
-         assert.equal(5, model.getMarkedKey());
-
-         cfg.markedKey = 7;
-         model = new SearchViewModel(cfg);
-         model.getItems().removeAt(4);
-         assert.equal(6, model.getMarkedKey());
-
-      });
-
       it('setHoveredItem', function() {
          const model = new SearchViewModel({
             root: 'myTestRoot',
@@ -244,9 +154,104 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
          // emulate breadcrumbs
          const crumbsDisplay = { getContents: () => [{}, {}, { id: 456 }] };
          assert.strictEqual(
-            model._getDisplayItemCacheKey(crumbsDisplay),
-            '456_breadcrumbs'
+             model._getDisplayItemCacheKey(crumbsDisplay),
+             '456_breadcrumbs'
          );
+      });
+
+      describe('variants of breadcrumbs colspan', () => {
+         let itemData;
+         const _model = new SearchViewModel({
+            keyProperty: 'id',
+            nodeProperty: 'type',
+            items: new Collection.RecordSet({
+               rawData: [{
+                  id: 456,
+                  type: true,
+               }],
+               keyProperty: 'id'
+            }),
+         });
+
+         beforeEach(() => {
+            _model.reset();
+            itemData = _model.getCurrent();
+         });
+
+         describe('without column scroll', () => {
+            beforeEach(() => {
+               itemData.columnScroll = false;
+            });
+
+            it('no colspan params', () => {
+               // Нет горизонтального скролла, ничего не задано прикладником. Растягиваем крошку на всю строку
+               assert.isTrue(itemData.getColspan(undefined, undefined));
+               assert.isUndefined(itemData.getColspanLength(undefined, undefined));
+            });
+
+            it('colspan true', () => {
+               // Нет горизонтального скролла, прикладник задал колспан. Растягиваем крошку на всю строку
+               assert.isTrue(itemData.getColspan(true, undefined));
+               assert.isUndefined(itemData.getColspanLength(true, undefined));
+            });
+
+            it('colspan false', () => {
+               // Нет горизонтального скролла, прикладник запретил колспан. НЕ растягиваем крошку, рисуем по колонкам
+               assert.isFalse(itemData.getColspan(false, undefined));
+               assert.equal(itemData.getColspanLength(false, undefined), 1);
+            });
+         });
+
+         describe('with column scroll', () => {
+            beforeEach(() => {
+               itemData.columnScroll = true;
+               itemData.stickyColumnsCount = 2;
+               itemData.columns = [{}, {}, {}, {}];
+            });
+
+            it('no colspan params, column scroll visible', () => {
+               // Есть горизонтальный скролл, ничего не задано прикладником.
+               // Не растягиваем, т.к. при скролле колонок нужно рисовать ячейки.
+               assert.isFalse(itemData.getColspan(undefined, true));
+               assert.equal(itemData.getColspanLength(undefined, true), 2);
+            });
+
+            it('colspan true, column scroll visible', () => {
+               // Есть горизонтальный скролл, прикладник задал колспан.
+               // Не растягиваем, т.к. при скролле колонок нужно рисовать ячейки.
+               assert.isFalse(itemData.getColspan(true, true));
+               assert.equal(itemData.getColspanLength(true, true), 2);
+            });
+
+            it('colspan false, column scroll visible', () => {
+               // Есть горизонтальный скролл, прикладник запретил колспан.
+               // Не растягиваем, т.к. при скролле колонок нужно рисовать ячейки.
+               assert.isFalse(itemData.getColspan(true, true));
+               assert.equal(itemData.getColspanLength(true, true), 2);
+            });
+
+
+            it('no colspan params, column scroll hidden', () => {
+               // Есть горизонтальный скролл, но он не виден(контент влезает), ничего не задано прикладником.
+               // Растягиваем, т.к. без видимого скролла колонок можно растягивать.
+               assert.isTrue(itemData.getColspan(undefined, false));
+               assert.isUndefined(itemData.getColspanLength(undefined, false));
+            });
+
+            it('colspan true, column scroll hidden', () => {
+               // Есть горизонтальный скролл, но он не виден(контент влезает), прикладник задал колспан.
+               // Растягиваем, т.к. без видимого скролла колонок можно растягивать.
+               assert.isTrue(itemData.getColspan(true, false));
+               assert.isUndefined(itemData.getColspanLength(true, false));
+            });
+
+            it('colspan false, column scroll hidden', () => {
+               // Есть горизонтальный скролл, но он не виден(контент влезает), прикладник запретил колспан.
+               // Не растягиваем, т.к. при скролле колонок нужно рисовать ячейки.
+               assert.isFalse(itemData.getColspan(false, false));
+               assert.equal(itemData.getColspanLength(false, false), 1);
+            });
+         });
       });
    });
 });

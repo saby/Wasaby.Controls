@@ -1,6 +1,7 @@
 <ws:partial template="{{ _options.content }}"
+            validationStatus="{{_validationStatus}}"
+            attr:class="controls-ValidateContainer__validationStatus-{{_validationStatus}}"
             scope="{{_options}}"
-            on:valueChanged="_valueChangedHandler()"
             on:rangeChanged="_rangeChangedHandler()"
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"

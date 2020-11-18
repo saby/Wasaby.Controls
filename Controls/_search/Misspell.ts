@@ -4,13 +4,17 @@ import template = require('wml!Controls/_search/Misspell');
 
 /**
   * Контрол, отображающий подсказку, если в запросе при поиске найдена и исправлена опечатка.
+  * 
   * @remark
-  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
-  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
+  * Полезные ссылки:
+  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+  * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
+  * 
   * @class Controls/_search/Misspell
   * @mixes Controls/_interface/ICaption
   * @extends Core/Control
-  * @control
+  * 
   * @public
   * @author Крайнов Д.О.
   */
@@ -19,13 +23,13 @@ import template = require('wml!Controls/_search/Misspell');
  * @class Controls/_search/Misspell
  * @mixes Controls/_interface/ICaption
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */
 
 class Misspell extends Control<IControlOptions & ICaption> implements ICaption{
-   private _template: TemplateFunction = template;
+   protected _template: TemplateFunction = template;
 
    readonly '[Controls/_interface/ICaption]': true;
    static _theme: string[] = ['Controls/search'];

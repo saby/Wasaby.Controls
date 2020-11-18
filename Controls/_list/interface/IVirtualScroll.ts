@@ -1,24 +1,8 @@
 export type IDirection = 'up' | 'down';
-export interface IVirtualScrollConfig {
-    pageSize: number;
-    segmentSize: number;
-    itemHeightProperty: string;
-    viewportHeight: number;
-}
-
-/**
- * @typedef {object} IVirtualScrollConfig
- * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
- * @property {IVirtualScrollMode} mode Режим скрытия записей в виртуальном скроллинге
- * @property {number} viewportHeight Высота вьюпорта контейнера в котором лежит список
- * @property {number} segmentSize Количество подгружаемых элементов при скроллировании
- * @property {string} itemHeightProperty Поле в элементе, которое содержит его высоту для оптимистичного рендеринга
- */
-
 /**
  * Интерфейс для поддержки виртуального скроллирования в списках.
  *
- * @interface Controls/_list/interface/IVirtualScroll
+ * @interface Controls/_list/interface/IVirtualScrollConfig
  * @public
  * @author Авраменко А.С.
  */
@@ -26,77 +10,52 @@ export interface IVirtualScrollConfig {
 /*
  * Interface for lists that can use virtual scroll.
  *
- * @interface Controls/_list/interface/IVirtualScroll
+ * @interface Controls/_list/interface/IVirtualScrollConfig
  * @public
  * @author Авраменко А.С.
  */
-
-/**
- * @name Controls/_list/interface/IVirtualScroll#virtualScrolling
- * @cfg {Boolean} Включает и выключает виртуальный скролл в списке.
- * @remark
- * Также необходимо установить "navigation" в значение "infinity".
- */
-
-/*
- * @name Controls/_list/interface/IVirtualScroll#virtualScrolling
- * @cfg {Boolean} Turns on and off virtual scrolling in the list.
- * @remark
- * It is also necessary to set the view navigation to 'infinity'
- */ 
-
-/**
- * 
- * @name Controls/_list/interface/IVirtualScroll#virtualPageSize
- * @cfg {Number} Размер виртуальной страницы. Указывает максимальное количество одновременно отображаемых элементов в списке.
- * @default 100
- * @remark
- * Оптимальное значение параметра virtualPageSize можно рассчитать по формуле: <b>virtualPageSize = M + (2 * S)</b>, где
- * 
- * * M - максимальное количество элементов в клиентской области списка;
- * * S - количество элементов, которые будут добавлены/удалены по достижении конца списка отображаемых элементов.
- * 
- * Для Controls/grid:View и Controls/treeGrid:View значение опции virtualPageSize должно быть меньше 1000/общее количество столбцов в таблице.
- * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
- */
-
-/*
- * @name Controls/_list/interface/IVirtualScroll#virtualPageSize
- * @cfg {Number} The size of the virtual page indicates maximum number of simultaneously displayed items in the list.
- * @default 100
- * @remark
- * The optimal value of the virtualPageSize option can be calculated by the formula: <b>virtualPageSize = M + (2 * S)</b>, where
- * <ul>
- *     <li>M - maximum number of items in the client area of the list;</li>
- *     <li>S - number of items that will be inserted/removed on reaching the end of displayed items.</li>
- * </ul>
- * <b>Note for Controls/Grid:View and Controls/TreeGrid:View</b>: the value of the virtualPageSize should be less then 1000/total columns count in grid.
- */
-
-/**
- * 
- * @name Controls/_list/interface/IVirtualScroll#virtualSegmentSize
- * @cfg {number} Количество подгружаемых элементов при скроллировании.
- * @remark Если опция не задана, то virtualSegmentSize высчитывается по формуле virtualPageSize / 4.
- * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
- */
+export interface IVirtualScrollConfig {
+    pageSize: number;
+    segmentSize: number;
+    itemHeightProperty: string;
+    viewportHeight: number;
+    mode: 'hide'|'remove';
+}
 
 /**
  * @typedef {String} IVirtualScrollMode
- * @variant remove Скрытые записи удаляются из DOM.
- * @variant hide Скрытые записи скрываются из DOM с помощью ws-hidden.
+ * @variant remove Скрытые элементы удаляются из DOM.
+ * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
  */
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
- * 
- * @name Controls/_list/interface/IVirtualScroll#virtualScrollMode
- * @cfg {IVirtualScrollMode} Режим скрытия записей в виртуальном скроллинге.
- * @default remove
- * @deprecated Опция устарела, используйте опцию {@link virtualScrollConfig}.
+ * @typedef {object} IVirtualScrollConfig
+ * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
+ * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
+ * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
+ * @property {number} [segmentSize] Количество подгружаемых элементов при скроллировании. По умолчанию равен четверти размера виртуальной страницы, который задан в опции pageSize.
+ * @property {string} [itemHeightProperty=undefined] Поле в элементе, которое содержит его высоту для оптимистичного рендеринга.
  */
 
 /**
- * @name Controls/_list/interface/IVirtualScroll#virtualScrollConfig
+ * @name Controls/_list/interface/IVirtualScrollConfig#virtualScrollConfig
  * @cfg {IVirtualScrollConfig} Конфигурация виртуального скроллинга.
+ * Виртуальный скроллинг работает только при включенной <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/">навигации</a>.
+ * @remark Подробнее о конфигурации виртуального скролла читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/">здесь</a>.
+ * @example
+ * В следующем примере показана конфигурация виртуального скролла: в свойстве pageSize задан размер виртуальной страницы.
+ * Также задана конфигурация навигации в опции navigation.
+ * <pre class="brush: js; highlight: [4,5]">
+ * <Controls.scroll:Container ...>
+ *     <Controls.list:View
+ *         source="{{_viewSource}}"
+ *         keyProperty="id"
+ *         navigation="{{_options.navigation}}">
+ *         <ws:virtualScrollConfig pageSize="{{100}}"/>
+ *     </Controls.list:View>
+ * </Controls.scroll:Container>
+ * </pre>
+ * @demo Controls-demo/list_new/VirtualScroll/ConstantHeights/Default/Index
+ * @see Controls/interface/INavigation#navigation
  */

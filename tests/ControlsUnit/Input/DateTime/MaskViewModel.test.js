@@ -1,8 +1,10 @@
 define([
    "Core/core-merge",
+   'Env/Env',
    "Controls/_input/DateTime/MaskViewModel"
 ], function(
     cMerge,
+    Env,
     MaskViewModel
 ) {
    "use strict";
@@ -23,8 +25,17 @@ define([
 
    describe("Controls/_input/DateTime/MaskViewModel", function() {
       describe("handleInput", function() {
+         beforeEach(() => {
+            sinon.stub(Env.constants, 'isServerSide').value(false);
+         });
+
+         afterEach(() => {
+            sinon.restore();
+         });
+
          [
             // Inserting date from buffer
+            { mask: "DD.MM.YYYY", before: "", after: "  .  .    ", insert: "23", delete: "", displayValue: "23.  .    ", value: "23      ", selection: 3},
             { mask: "DD.MM.YYYY", before: "0", after: "1.01.2017", insert: "05.11.21", delete: "", displayValue: "05.11.2021", value: "05112021"},
             { mask: "DD.MM.YYYY", before: "01.01.20", after: "17", insert: "05.11.79", delete: "", displayValue: "05.11.1979", value: "05111979"},
             { mask: "DD.MM.YYYY", before: "", after: "", insert: "05.11.21", delete: "", displayValue: "05.11.2021", value: "05112021"},

@@ -1,29 +1,29 @@
 <Controls._input.Render attr:title="{{_tooltip}}"
-                        style="{{_options.style}}"
+                        borderVisibility="{{_options.borderVisibility}}"
                         state="{{_renderStyle()}}"
                         viewModel="{{_viewModel}}"
-                        size="{{_options.size}}"
                         multiline="{{_multiline}}"
                         roundBorder="{{_roundBorder}}"
                         tagStyle="{{_options.tagStyle}}"
-                        fontStyle="{{_options.fontStyle}}"
                         textAlign="{{_options.textAlign}}"
                         placeholder="{{_options.placeholder}}"
-                        fontSize="{{_options.fontSize}}"
-                        inlineHeight="{{_options.inlineHeight}}"
-                        fontColorStyle="{{_options.fontColorStyle}}"
+                        fontSize="{{_fontSize || _options.fontSize}}"
+                        inlineHeight="{{_inlineHeight || _options.inlineHeight}}"
+                        fontColorStyle="{{_fontColorStyle || _options.fontColorStyle}}"
                         borderStyle="{{_options.borderStyle}}"
                         validationStatus="{{_options.validationStatus}}"
+                        wasActionByUser="{{_wasActionUser}}"
+                        contrastBackground="{{ _options.contrastBackground }}"
                         on:mouseenter="_mouseEnterHandler()"
                         on:tagClick="_notifyHandler('tagClick')"
                         on:tagHover="_notifyHandler('tagHover')">
-   <ws:beforeFieldWrapper>
-      <ws:if data="{{_beforeFieldWrapper.template}}">
+   <ws:leftFieldWrapper>
+      <ws:if data="{{_leftFieldWrapper.template}}">
          <ws:partial options="{{_options}}"
-                     scope="{{_beforeFieldWrapper.scope}}"
-                     template="{{_beforeFieldWrapper.template}}"/>
+                     scope="{{_leftFieldWrapper.scope}}"
+                     template="{{_leftFieldWrapper.template}}"/>
       </ws:if>
-   </ws:beforeFieldWrapper>
+   </ws:leftFieldWrapper>
    <ws:content>
       <ws:if data="{{_options.readOnly}}">
          <ws:partial options="{{_options}}"
@@ -33,6 +33,7 @@
       </ws:if>
       <ws:else>
          <ws:partial type="{{_type}}"
+                     model="{{_viewModel}}"
                      options="{{_options}}"
                      scope="{{_field.scope}}"
                      autoWidth="{{_autoWidth}}"
@@ -42,15 +43,17 @@
                      value="{{_viewModel.displayValue}}"
                      hidePlaceholder="{{_hidePlaceholder}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     isBrowserPlatform="{{_isBrowserPlatform}}"
+                     inputKey="{{ _inputKey }}"
                      ieVersion="{{_ieVersion}}"
                      isEdge="{{_isEdge}}"/>
       </ws:else>
    </ws:content>
-   <ws:afterFieldWrapper>
-      <ws:if data="{{_afterFieldWrapper.template}}">
+   <ws:rightFieldWrapper>
+      <ws:if data="{{_rightFieldWrapper.template}}">
          <ws:partial options="{{_options}}"
-                     scope="{{_afterFieldWrapper.scope}}"
-                     template="{{_afterFieldWrapper.template}}"/>
+                     scope="{{_rightFieldWrapper.scope}}"
+                     template="{{_rightFieldWrapper.template}}"/>
       </ws:if>
-   </ws:afterFieldWrapper>
+   </ws:rightFieldWrapper>
 </Controls._input.Render>

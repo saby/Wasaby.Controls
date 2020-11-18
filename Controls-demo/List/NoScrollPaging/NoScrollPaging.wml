@@ -46,7 +46,7 @@
                      <ws:Array>
                         <ws:Object title=""/>
                         <ws:Object>
-                           <ws:template name="infoColumn">
+                           <ws:template>
                               <Controls.dropdown:Input
                                  keyProperty="key"
                                  displayProperty="title"

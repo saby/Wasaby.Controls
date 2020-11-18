@@ -1,11 +1,13 @@
 define([
+   'Controls/_breadcrumbs/MultilinePath',
    'Controls/_breadcrumbs/HeadingPath',
    'Controls/_breadcrumbs/Path',
    'Controls/_breadcrumbs/Utils',
-   'Controls/Utils/FontLoadUtil',
+   'Controls/_breadcrumbs/resources/FontLoadUtil',
    'Core/Deferred',
    'Types/entity'
 ], function(
+    MultilinePath,
    HeadingPath,
    Path,
    BreadCrumbsUtil,
@@ -120,5 +122,121 @@ define([
          };
 
       BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
+   });
+   describe('Controls.BreadCrumbs.MultilinePath', function() {
+      var MultilinePathCrumbs = new MultilinePath.default();
+      var Util = BreadCrumbsUtil.default;
+      MultilinePathCrumbs.ARROW_WIDTH = 10;
+      MultilinePathCrumbs.DOTS_WIDTH = 20;
+      BreadCrumbsUtil.ARROW_WIDTH = 10;
+      BreadCrumbsUtil.DOTS_WIDTH = 20;
+      BreadCrumbsUtil.getMinWidth = () => {
+         return 30;
+      };
+      // 2 крошки
+      var options1 = {
+         containerWidth: 100,
+         displayProperty: 'title'
+      };
+      var options2 = {
+         containerWidth: 350,
+         displayProperty: 'title'
+      };
+      var options3 = {
+         containerWidth: 320,
+         displayProperty: 'title'
+      };
+      var items1 = [
+         {
+            id: 1,
+            title: 'Очень длинное название',
+            secondTitle: 'тест1',
+            parent: null
+         },
+         {
+            id: 2,
+            title: 'Длинное название второй папки',
+            secondTitle: 'тест2',
+            parent: 1
+         }
+      ].map((item) => {
+         return new entity.Model({
+            rawData: item,
+            keyProperty: 'id'
+         });
+      });
+      // несколько крошек
+      var items2 = [
+         {
+            id: 1,
+            title: 'Очень длинное название',
+            secondTitle: 'тест1',
+            parent: null
+         },
+         {
+            id: 2,
+            title: 'Длинное название второй папки',
+            secondTitle: 'тест2',
+            parent: 1
+         },
+         {
+            id: 2,
+            title: 'Длинное название папки',
+            secondTitle: 'тест2',
+            parent: 1
+         },
+         {
+            id: 2,
+            title: 'Длинное название папки',
+            secondTitle: 'тест2',
+            parent: 1
+         }
+      ].map((item) => {
+         return new entity.Model({
+            rawData: item,
+            keyProperty: 'id'
+         });
+      });
+      it('2 crumbs', function() {
+         BreadCrumbsUtil.getItemsWidth = () => {
+            return [50, 50];
+         };
+         MultilinePathCrumbs._width = 100;
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items1, options1);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 2);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 0);
+      });
+      it('несколько крошек, причем последняя не влезает в первый контейнер без сокращения', function() {
+         BreadCrumbsUtil.getItemsWidth = () => {
+            return [100, 100, 100, 100];
+         };
+         MultilinePathCrumbs._width = 350;
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, options2);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 4);
+         // последняя крошка сократилась, а не упала вниз.
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 0);
+      });
+      it('несколько крошек, причем последняя не влезает в первый контейнер с сокращением', function() {
+         BreadCrumbsUtil.getItemsWidth = () => {
+            return [100, 100, 100, 100];
+         };
+         MultilinePathCrumbs._width = 320;
+         MultilinePathCrumbs._calculateBreadCrumbsToDraw(items2, options3);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsFirst.length === 3);
+         assert.isTrue(MultilinePathCrumbs._visibleItemsSecond.length === 1);
+      });
+
+      it('path caption', () => {
+         const hPath = new HeadingPath();
+         const record = {
+            get: () => '123'
+         };
+         const items = ['111', record];
+         let result = hPath._getCounterCaption(items);
+         assert.equal(result, '123');
+
+         result = hPath._getCounterCaption([]);
+         assert.equal(result, undefined);
+      });
    });
 });

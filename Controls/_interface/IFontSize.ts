@@ -31,8 +31,12 @@ export default interface IFontSize {
  * @variant 3xl
  * @variant 4xl
  * @variant 5xl
+ * @variant 6xl
+ * @variant 7xl
  * @demo Controls-demo/Buttons/SizesAndHeights/Index
  * @demo Controls-demo/Input/SizesAndHeights/Index
+ * @demo Controls-demo/Decorator/Money/FontSize/Index
+ * @demo Controls-demo/breadCrumbs_new/FontSize/Index
  * @remark
  * Размер шрифта задается константой из стандартного набора размеров шрифта, который определен для текущей темы оформления.
  * @example

@@ -1,21 +1,21 @@
 <Controls.input:Render attr:title="{{_tooltip}}"
                        state="{{_renderStyle()}}"
                        viewModel="{{_viewModel}}"
-                       size="{{_options.size}}"
                        style="{{_options.style}}"
                        multiline="{{_options.multiline}}"
                        tagStyle="{{_options.tagStyle}}"
-                       fontStyle="{{_options.fontStyle}}"
                        textAlign="{{_options.textAlign}}"
-                       fontSize="{{_options.fontSize}}"
-                       inlineHeight="{{_options.inlineHeight}}"
-                       fontColorStyle="{{_options.fontColorStyle}}"
+                       fontSize="{{_fontSize}}"
+                       inlineHeight="{{_inlineHeight}}"
+                       fontColorStyle="{{_fontColorStyle}}"
                        borderStyle="{{_options.borderStyle}}"
+                       validationStatus="{{_options.validationStatus}}"
+                       borderVisibility="{{ _options.borderVisibility }}"
                        on:mouseenter="_mouseEnterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')"
-                       beforeFieldWrapper="{{_options.beforeFieldWrapper}}"
-                       afterFieldWrapper="{{_options.afterFieldWrapper}}">
+                       leftFieldWrapper="{{_options.leftFieldWrapper}}"
+                       rightFieldWrapper="{{_options.rightFieldWrapper}}">
    <ws:placeholder>
       <ws:if data="{{_options.placeholder && !_options.readOnly}}">
          <ws:if data="{{_options.multiline}}">
@@ -30,21 +30,31 @@
       </ws:if>
    </ws:placeholder>
    <ws:content>
-      <ws:if data="{{ _options.isInputVisible }}">
+      <ws:if data="{{_options.readOnly && !_options.multiline && _options.value && _options.forComment}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_readOnlyField.scope}}"
+                     value="{{_viewModel.displayValue}}"
+                     template="{{_readOnlyField.template}}"
+                     attr:class="{{_options.forComment ? 'controls-Lookup__fieldWrapper_for_comment'}}"
+         />
+      </ws:if>
+      <ws:else data="{{ _options.isInputVisible }}">
          <ws:partial type="{{_type}}"
                      options="{{_options}}"
+                     model="{{_viewModel}}"
                      scope="{{_field.scope}}"
                      fieldName="{{_fieldName}}"
                      template="{{_field.template}}"
                      value="{{_viewModel.displayValue}}"
+                     isBrowserPlatform="{{_isBrowserPlatform}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                      isEdge="{{_isEdge}}"
                      attr:class="controls-Lookup__fieldWrapper
-                     controls-Lookup__fieldWrapper-size-{{_options.size}}
+                     {{_options.multiline ? 'controls-Lookup__fieldWrapper-size-' + _inlineHeight + '_theme-' + _options.theme }}
                      controls-Lookup__fieldWrapper_content_width_{{_options.multiline && _options.inputWidth ? 'custom' : 'default'}}
                      {{_options.forComment ? 'controls-Lookup__fieldWrapper_for_comment'}}"
                      attr:style="width: {{_options.inputWidth}}px;"
                      on:keyDown="_keyDownInput()"/>
-      </ws:if>
+      </ws:else>
    </ws:content>
 </Controls.input:Render>

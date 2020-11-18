@@ -71,23 +71,24 @@ define('Controls/interface/IMovable', [
    /**
     * @name Controls/interface/IMovable#moveDialogTemplate
     * @cfg {IMoveDialogTemplateProp|null} Шаблон диалогового окна выбора целевой записи для перемещения.
-    * Рекомендуется использовать стандартный шаблон {@link Controls/MoveDialog}.
+    * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
     * @example
-    * <pre>
-    *    <Controls.list:Mover>
-    *       <ws:moveDialogTemplate templateName="Controls/MoveDialog">
-    *          <ws:templateOptions
-    *             root="rootId"
-    *             searchParam="folderTitle"
-    *             parentProperty="parent"
-    *             nodeProperty="parent@">
+    * <pre class="brush: html; highlight: [2,3,4,5,6,7,8,9,10]">
+    * <Controls.list:Mover>
+    *    <ws:moveDialogTemplate templateName="Controls/moverDialog:Template">
+    *       <ws:templateOptions
+    *          root="rootId"
+    *          searchParam="folderTitle"
+    *          parentProperty="parent"
+    *          nodeProperty="parent@">
     *             <ws:filter moveDialog="{{true}}"/>
-    *          </ws:templateOptions>
-    *       </ws:moveDialogTemplate>
-    *    </Controls.list:Mover>
+    *       </ws:templateOptions>
+    *    </ws:moveDialogTemplate>
+    * </Controls.list:Mover>
     * </pre>
     * @see moveItemsWithDialog
-    * @see Controls/MoveDialog
+    * @see Controls/moverDialog:Template
+    * @demo Controls-demo/treeGrid/Mover/Base/Index
     */
 
    /*
@@ -162,7 +163,8 @@ define('Controls/interface/IMovable', [
     */
 
    /**
-    * @event Controls/interface/IMovable#beforeItemsMove Происходит до перемещения элементов.
+    * @event Происходит до перемещения элементов.
+    * @name Controls/interface/IMovable#beforeItemsMove
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
@@ -188,7 +190,8 @@ define('Controls/interface/IMovable', [
     */
 
    /*
-    * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
+    * @event Occurs before the items are moved.
+    * @name Controls/interface/IMovable#beforeItemsMove
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
@@ -214,7 +217,8 @@ define('Controls/interface/IMovable', [
     */
 
    /**
-    * @event Controls/interface/IMovable#afterItemsMove Происходит после перемещения элементов.
+    * @event Происходит после перемещения элементов.
+    * @name Controls/interface/IMovable#afterItemsMove
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
@@ -230,7 +234,7 @@ define('Controls/interface/IMovable', [
     * <pre>
     *    Control.extend({
     *       ...
-    *       _beforeItemsMove: function(eventObject, movedItems, target, position, result) {
+    *       _afterItemsMove: function(eventObject, movedItems, target, position, result) {
     *          if (result instanceof Error) {
     *             return this._children.popupOpener.open({
     *                message: 'Removing records failed.',
@@ -245,7 +249,8 @@ define('Controls/interface/IMovable', [
     */
 
    /*
-    * @event Controls/interface/IMovable#afterItemsMove Occurs after moving items.
+    * @event Occurs after moving items.
+    * @name Controls/interface/IMovable#afterItemsMove
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
@@ -261,7 +266,7 @@ define('Controls/interface/IMovable', [
     * <pre>
     *    Control.extend({
     *       ...
-    *       _beforeItemsMove: function(eventObject, movedItems, target, position, result) {
+    *       _afterItemsMove: function(eventObject, movedItems, target, position, result) {
     *          if (result instanceof Error) {
     *             return this._children.popupOpener.open({
     *                message: 'Removing records failed.',

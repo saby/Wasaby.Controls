@@ -5,7 +5,7 @@ import {date as formatDate} from 'Types/formatter';
 import IMonth from './interfaces/IMonth';
 import Slider from './MonthSlider/Slider';
 import {Utils as calendarUtils} from 'Controls/dateRange';
-import DateUtil = require('Controls/Utils/Date');
+import {Base as DateUtil} from 'Controls/dateUtils';
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
 
 var _private = {
@@ -26,15 +26,21 @@ var _private = {
  * Календарь, который отображает 1 месяц и позволяет переключаться на следующий и предыдущий месяцы с помощью кнопок.
  * Предназначен для выбора даты или периода в пределах нескольких месяцев или лет.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
+ *
  * @class Controls/_calendar/MonthSlider
  * @extends Core/Control
- * @mixes Controls/_calendar/interface/IMonth
+ * @mixes Controls/_calendar/interfaces/IMonth
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @control
+ * @mixes Controls/_interface/IDayTemplate
+ * 
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Calendar/MonthSlider
+ * @demo Controls-demo/Calendar/MonthSlider/SelectionType/Index
+ * @demo Controls-demo/Calendar/MonthSlider/ReadOnly/Index
  *
  */
 
@@ -47,7 +53,7 @@ var _private = {
  * @mixes Controls/_calendar/interface/IMonth
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthSlider
@@ -63,10 +69,6 @@ var Component = BaseControl.extend({
     _formatDate: formatDate,
 
     _beforeMount: function (options) {
-        // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
-        if (options.theme === 'accordion') {
-            this._themeCssClass = 'controls-MonthSlider__accordionTheme';
-        }
         this._days = calendarUtils.getWeekdaysCaptions();
         _private._setMonth(this, options.month, true, options.dateConstructor);
     },
@@ -74,6 +76,16 @@ var Component = BaseControl.extend({
     _beforeUpdate: function (options) {
         this._days = calendarUtils.getWeekdaysCaptions();
         _private._setMonth(this, options.month, true, options.dateConstructor);
+    },
+
+    _wheelHandler(event) {
+        event.preventDefault();
+        if (event.nativeEvent.deltaY < 0) {
+            this._slideMonth(null, 1);
+        }
+        else if (event.nativeEvent.deltaY > 0) {
+            this._slideMonth(null, -1);
+        }
     },
 
     _slideMonth: function (event, delta) {

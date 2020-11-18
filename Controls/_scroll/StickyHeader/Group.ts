@@ -1,166 +1,317 @@
-import Control = require('Core/Control');
-import {isStickySupport, getNextId, getOffset} from 'Controls/_scroll/StickyHeader/Utils';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {
+    isStickySupport,
+    getNextId,
+    getOffset,
+    POSITION,
+    IOffset,
+    IFixedEventData,
+    TRegisterEventData,
+    getGapFixSize
+} from 'Controls/_scroll/StickyHeader/Utils';
 import template = require('wml!Controls/_scroll/StickyHeader/Group');
+import {SHADOW_VISIBILITY} from './Utils';
+import {RegisterClass} from 'Controls/event';
+import fastUpdate from './FastUpdate';
 
+interface IHeaderData extends TRegisterEventData {
+    top: number;
+    bottom: number;
+}
 
+interface IHeadersMap {
+    [key: string]: IHeaderData;
+}
 
-      /**
-       * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
-       * several headers fixed at the same level, which should simultaneously stick and stick out.
-       * Behaves like one fixed header.
-       *
-       * @extends Core/Control
-       * @class Controls/_scroll/StickyHeader/Group
-       * @author Красильников А.С.
-       * @public
-       */
+interface IHeadersIds {
+    top: number[];
+    bottom: number[];
+}
 
-      /**
-       * @name Controls/_scroll/StickyHeader/Group#content
-       * @cfg {Function} Content in which several fixed headers are inserted.
-       */
+interface IOffsetCache {
+    [key: string]: number;
+}
 
-      /**
-       * @event Controls/_scroll/StickyHeader/Group#fixed Change the fixation state.
-       * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
-       * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
-       */
+interface IStickyHeaderGroupOptions extends IControlOptions {
+    calculateHeadersOffsets?: boolean;
+}
+/**
+ * Allows you to combine sticky headers with the same behavior. It is necessary if you need to make
+ * several headers fixed at the same level, which should simultaneously stick and stick out.
+ * Behaves like one fixed header.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
+ *
+ * @extends Core/Control
+ * @class Controls/_scroll/StickyHeader/Group
+ * @author Красильников А.С.
+ * @public
+ */
+export default class Group extends Control<IStickyHeaderGroupOptions> {
+    private _index: number = null;
+    private _updateFixedRegister: RegisterClass = new RegisterClass({register: 'updateFixed'});
+    protected _template: TemplateFunction = template;
+    protected _isStickySupport: boolean = false;
 
-      var _private = {
-         _notifyFixed: function(self, fixedHeaderData) {
-            self._notify(
-               'fixed',
-               [{
-                  id: self._index,
-                  offsetHeight: fixedHeaderData.offsetHeight,
-                  fixedPosition: fixedHeaderData.fixedPosition,
-                  prevPosition: fixedHeaderData.prevPosition,
-                  mode: fixedHeaderData.mode
-               }],
-               { bubbling: true }
-            );
-         }
-      };
+    protected _fixed: boolean = false;
+    protected _cachedOffset: IOffsetCache = {};
 
-      var Component = Control.extend({
+    protected _stickyHeadersIds: IHeadersIds = {
+        top: [],
+        bottom: []
+    };
+    protected _offset: IOffset = {
+        top: 0,
+        bottom: 0
+    };
+    protected _isFixed: boolean = false;
+    protected _isShadowVisibleByController: boolean = true;
 
-         _template: template,
-         _index: null,
-         _isStickySupport: null,
+    protected _headers: IHeadersMap = {};
+    protected _isRegistry: boolean = false;
 
-         _fixed: null,
+    private _delayedHeaders: number[] = [];
 
-         _stickyHeadersIds: null,
-         _shadowVisible: false,
+    protected _beforeMount(options: IControlOptions, context): void {
+        this._isStickySupport = isStickySupport();
+        this._index = getNextId();
+    }
 
-         _headers: null,
-         _isRegistry: false,
+    protected _beforeUnmount(): void {
+        this._updateFixedRegister.destroy();
+    }
 
-         _beforeMount: function(options, context, receivedState) {
-            this._isStickySupport = isStickySupport();
-            this._index = getNextId();
-            this._stickyHeadersIds = {
-               top: [],
-               bottom: []
-            };
-            this._headers = {};
-         },
+    protected _registerHandler(event, registerType, component, callback, config): void {
+        this._updateFixedRegister.register(event, registerType, component, callback, config);
+    }
 
-         _afterMount: function() {
-            this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
-         },
+    protected _unregisterHandler(event, registerType, component, config): void {
+        this._updateFixedRegister.unregister(event, component, config);
+    }
 
-         _beforeUnmount: function() {
-            this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
-         },
+    getOffset(parentElement: HTMLElement, position: POSITION): number {
+        let offset: number = getOffset(parentElement, this._container, position);
+        if (this._fixed) {
+            offset += getGapFixSize();
+        }
+        return offset;
+    }
 
-         getOffset: function(parentElement, position) {
-            return getOffset(parentElement, this._container, position);
-         },
+    resetSticky(): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.resetSticky();
+        }
+    }
 
-         get height() {
-            // Group can be with style display: content. Use the height of the first header as the height of the group.
-            const headersIds = Object.keys(this._headers);
-            return headersIds.length ? this._headers[headersIds[0]].inst.height : 0;
-         },
+    get height(): number {
+        // Group can be with style display: content. Use the height of the first header as the height of the group.
+        const headersIds: number[] = Object.keys(this._headers);
+        return headersIds.length ? this._headers[headersIds[0]].inst.height : 0;
+    }
 
-         set top(value) {
-            for (var id in this._headers) {
-               this._headers[id].inst.top = value;
+    set top(value: number) {
+        this._setOffset(value, POSITION.top);
+    }
+
+    set bottom(value: number) {
+        this._setOffset(value, POSITION.bottom);
+    }
+
+    get shadowVisibility(): SHADOW_VISIBILITY {
+        for (let id in this._headers) {
+            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+                return SHADOW_VISIBILITY.visible;
             }
-            this._top = value;
-         },
-         set bottom(value) {
-            for (var id in this._headers) {
-               this._headers[id].inst.bottom = value;
-            }
-         },
+        }
+        return SHADOW_VISIBILITY.hidden;
+    }
 
-         _fixedHandler: function(event, fixedHeaderData) {
-            event.stopImmediatePropagation();
+    getChildrenHeaders(): TRegisterEventData[] {
+        return Object.keys(this._headers).map(id => this._headers[id]);
+    }
+
+    private _setOffset(value: number, position: POSITION): void {
+        for (let id in this._headers) {
+            const positionValue: number = this._headers[id][position] + value;
+            this._headers[id].inst[position] = positionValue;
+        }
+        this._offset[position] = value;
+    }
+
+    protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
+        event.stopImmediatePropagation();
+        if (!fixedHeaderData.isFakeFixed) {
             if (!!fixedHeaderData.fixedPosition) {
-               this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
-               if (this._shadowVisible === true) {
-                  this._children.stickyHeaderShadow.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
-               }
+                this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
+                if (this._isFixed === true) {
+                    this._updateFixedRegister.start(event, this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+                }
             } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-               this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
+                this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
             }
+        }
 
-            if (!!fixedHeaderData.fixedPosition && !this._fixed) {
-               this._fixed = true;
-               _private._notifyFixed(this, fixedHeaderData);
-            } else if (!fixedHeaderData.fixedPosition && this._fixed &&
-                        this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
-               this._fixed = false;
-               _private._notifyFixed(this, fixedHeaderData);
+        if (!!fixedHeaderData.fixedPosition && !this._fixed) {
+            if (!fixedHeaderData.isFakeFixed) {
+                this._fixed = true;
             }
-         },
-
-         _updateStickyShadow: function(ids) {
-            var shadowVisible = ids.indexOf(this._index) !== -1;
-            if (this._shadowVisible !== shadowVisible) {
-               this._shadowVisible = shadowVisible;
-               if (shadowVisible) {
-                  this._children.stickyHeaderShadow.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
-               } else {
-                  this._children.stickyHeaderShadow.start([]);
-               }
+            this._notifyFixed(fixedHeaderData);
+        } else if (!fixedHeaderData.fixedPosition && this._fixed &&
+                this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
+            if (!fixedHeaderData.isFakeFixed) {
+                this._fixed = false;
             }
-         },
+            this._notifyFixed(fixedHeaderData);
+        }
+    }
 
-         _stickyRegisterHandler: function(event, data, register) {
-            event.stopImmediatePropagation();
-            if (register) {
-               if (this._top) {
-                  data.inst.top = this._top;
-               }
-               this._headers[data.id] = data;
-
-               // Register group after first header is registred
-               if (!this._isRegistry) {
-                  this._notify('stickyRegister', [{
-                     id: this._index,
-                     inst: this,
-                     container: this._container,
-                     position: data.position,
-                     mode: data.mode,
-                  }, true], { bubbling: true });
-                  this._isRegistry = true;
-               }
+    protected updateFixed(ids: number[]): void {
+        var isFixed = ids.indexOf(this._index) !== -1;
+        if (this._isFixed !== isFixed) {
+            this._isFixed = isFixed;
+            if (isFixed) {
+               this._updateFixed(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             } else {
-               delete this._headers[data.id];
-
-               // Unregister group after last header is unregistred
-               if (!Object.keys(this._headers).length) {
-                  this._notify('stickyRegister', [{ id: this._index }, false], { bubbling: true });
-                  this._isRegistry = false;
-               }
+               this._updateFixed([]);
             }
-         }
-      });
+        }
+    }
 
-      Component._private = _private;
+    _updateFixed(ids: number[]): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.updateFixed(ids);
+        }
+    }
 
-      export = Component;
+    protected updateShadowVisibility(isVisible: boolean): void {
+        if (this._isShadowVisibleByController !== isVisible) {
+            this._isShadowVisibleByController = isVisible;
+            for (const id in this._headers) {
+                this._headers[id].inst.updateShadowVisibility(isVisible);
+            }
+        }
+    }
 
+    getHeaderContainer(): HTMLElement {
+        return this._container;
+    }
+
+    protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+        event.stopImmediatePropagation();
+        if (register) {
+            this._headers[data.id] = {
+                ...data,
+                top: 0,
+                bottom: 0
+            };
+
+            if (this._options.calculateHeadersOffsets) {
+                this._updateTopBottom(data);
+            } else {
+                data.inst[POSITION.top] = this._offset[POSITION.top];
+                data.inst[POSITION.bottom] = this._offset[POSITION.bottom];
+            }
+
+            if (this._isFixed) {
+                this._updateFixedRegister.start(event, [data.id].concat(this._stickyHeadersIds[data.position]));
+            }
+
+            // Register group after first header is registered
+            if (!this._isRegistry) {
+                this._notify('stickyRegister', [{
+                    id: this._index,
+                    inst: this,
+                    position: data.position,
+                    mode: data.mode,
+                }, true], {bubbling: true});
+                this._isRegistry = true;
+            }
+        } else {
+            delete this._headers[data.id];
+
+            // Unregister group after last header is unregistered
+            if (!Object.keys(this._headers).length) {
+                this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
+                this._isRegistry = false;
+            }
+        }
+    }
+
+    private _updateTopBottom(data: TRegisterEventData): void {
+        // Проблема в том, что чтобы узнать положение заголовка относительно группы нам надо снять position: sticky.
+        // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
+        // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
+        // один раз сняв со всех загоовков position: sticky.
+        if (!this._delayedHeaders.length) {
+            Promise.resolve().then(this._updateTopBottomDelayed.bind(this));
+        }
+        this._delayedHeaders.push(data.id);
+    }
+
+    private _updateTopBottomDelayed(): void {
+        let
+            offsets: Record<POSITION, Record<string, number>> = {
+                top: {},
+                bottom: {}
+            },
+            data: TRegisterEventData,
+            offset: number;
+
+        this.resetSticky();
+
+        fastUpdate.measure(() => {
+            for (const id of this._delayedHeaders) {
+                data = this._headers[id];
+                for (const position of [POSITION.top, POSITION.bottom]) {
+                    if (data.inst._options.position.indexOf(position) !== -1) {
+                        offset = data.inst.getOffset(this._container, position);
+                        this._headers[data.id][position] = offset;
+                        offsets[position][data.id] = this._offset[position] + offset;
+                    }
+                }
+            }
+            this._delayedHeaders = [];
+        });
+
+        fastUpdate.mutate(() => {
+            for (const position of [POSITION.top, POSITION.bottom]) {
+                let positionOffsets = offsets[position];
+                let headerId;
+                for (headerId in offsets[position]) {
+                    this._headers[headerId].inst[position] = positionOffsets[headerId];
+                }
+            }
+        });
+    }
+
+    private _notifyFixed(fixedHeaderData: IFixedEventData): void {
+        this._notify(
+            'fixed',
+            [{
+                ...fixedHeaderData,
+                id: this._index
+            }],
+            {bubbling: true}
+        );
+    }
+
+    static getDefaultOptions(): Partial<IStickyHeaderGroupOptions> {
+        return {
+            calculateHeadersOffsets: true
+        };
+    }
+}
+/**
+ * @name Controls/_scroll/StickyHeader/Group#content
+ * @cfg {Function} Content in which several fixed headers are inserted.
+ */
+
+/**
+ * @event Change the fixation state.
+ * @name Controls/_scroll/StickyHeader/Group#fixed
+ * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
+ * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
+ */

@@ -1,19 +1,19 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/ItemActions/ItemActionClickHandler/ItemActionClickHandler"
-import {Memory} from "Types/source"
-import {Model} from "Types/entity"
-import {getContactsCatalog as getData} from "../../DemoHelpers/DataCatalog"
-import {getActionsForContacts as getItemActions} from "../../DemoHelpers/ItemActionsCatalog"
-import 'css!Controls-demo/Controls-demo'
-import {SyntheticEvent} from "Vdom/Vdom";
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/ItemActions/ItemActionClickHandler/ItemActionClickHandler';
+import {Memory} from 'Types/source';
+import {Model} from 'Types/entity';
+import {getContactsCatalog as getData} from '../../DemoHelpers/DataCatalog';
+import {getActionsForContacts as getItemActions} from '../../DemoHelpers/ItemActionsCatalog';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
-    private _itemActions = getItemActions();
-    private _clickedMessage: string;
+    protected _viewSource: Memory;
+    private _itemActions: IItemAction[] = getItemActions();
+    protected _clickedMessage: string;
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._itemActions[0].handler = (item: Model): void => {
             this._clickedMessage = `У операции "Прочитано" отдельный обработчик. Элемент с id=${item.getId()}.`;
         };
@@ -24,11 +24,16 @@ export default class extends Control {
         });
     }
 
-    private _actionClick(e: SyntheticEvent<null>, itemAction, item: Model): void {
+    protected _actionClick(e: SyntheticEvent<null>, itemAction: IItemAction, item: Model): void {
         this._clickedMessage = `Кликнули на операцию "${itemAction.title}" у элемента с id="${item.getId()}".`;
     }
 
-    private _clearMessage(): void {
+    protected _clearMessage(): void {
         this._clickedMessage = '';
     }
+
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/list_new/ItemActions/ItemActionClickHandler/ItemActionClickHandler'
+    ];
 }

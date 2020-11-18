@@ -1,5 +1,5 @@
 /**
- * Библиотека контролов, отвечающих за отображение диалога перемещения
+ * Библиотека контролов, отвечающих за отображение диалога перемещения.
  * @library Controls/moverDialog
  * @includes BaseTemplate Controls/_moverDialog/BaseTemplate
  * @includes Template Controls/_moverDialog/Template
@@ -7,4 +7,4 @@
  */
 
 export {default as BaseTemplate} from './_moverDialog/BaseTemplate';
-export {default as Template} from './_moverDialog/Template';
+export {default as Template, IMoverDialogTemplateOptions} from './_moverDialog/Template';

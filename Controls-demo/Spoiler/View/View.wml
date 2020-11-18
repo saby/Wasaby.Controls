@@ -1,7 +1,17 @@
-<div class="controlsDemo__wrapper">
-   <div class="controlsDemo__cell">
-      <Controls.spoiler:View captions="{{['Свернуть', 'Развернуть']}}" bind:expanded="_expanded">
-         <div>Контентная область</div>
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
+   <div class="controlsDemo__cell demo-spoiler__first">
+      <Controls.spoiler:View captions="{{['Collapse', 'Expand']}}" bind:expanded="_expanded">
+         <div>Content</div>
+      </Controls.spoiler:View>
+   </div>
+   <div class="controlsDemo__cell demo-spoiler__second">
+      <Controls.spoiler:View captions="{{['Collapse', 'Expand']}}">
+         <div>Content</div>
+      </Controls.spoiler:View>
+   </div>
+   <div class="controlsDemo__cell demo-spoiler__third">
+      <Controls.spoiler:View attr:style="width: 150px;" captions="Много много много много текста">
+         <div>Content</div>
       </Controls.spoiler:View>
    </div>
 </div>

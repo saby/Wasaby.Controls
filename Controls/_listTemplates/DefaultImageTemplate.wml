@@ -1,0 +1,11 @@
+<div class="controls-listTemplates__imageTemplate" attr:style="{{(height ? 'height:' + (height * (!isNode || viewMode !== 'rectangle' ? 1 : compressionCoefficient)) + 'px; ' : '')
++ 'width:' + (width ? width + 'px;' : '')}}">
+   <div class="controls-listTemplates__imageTemplate_image
+               controls-listTemplates__imageTemplate_image_{{imageFit || 'cover'}}
+               controls-listTemplates__imageTemplate_image_viewMode-{{viewMode}}"
+        style="{{'background-image: url(' + src + ')'}}"></div>
+   <ws:if data="{{effect !== 'none'}}">
+      <div class="controls-listTemplates__imageTemplate_image_effect-{{effect}}"
+           style="{{effect === 'gradient' ? 'background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%,' + (gradientColor || '#ffffff') + ' 100%);' : ''}}"></div>
+   </ws:if>
+</div>

@@ -1,87 +1,113 @@
 <ws:template name="itemActionsTemplateChooser">
-    <ws:if data="{{itemData.isSwiped}}">
+    <ws:if data="{{itemData.isSwiped()}}">
         <ws:partial template="{{swipeTemplate}}"
                     itemData="{{itemData}}"
                     itemActionsTemplate="{{itemActionsTemplate}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    highlightOnHover="{{highlightOnHover}}"/>
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
+                    highlightOnHover="{{highlightOnHover}}"
+                    theme="{{itemData.theme}}"/>
     </ws:if>
     <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
         <ws:partial template="{{itemActionsTemplate}}"
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    attr:class="controls-Grid__itemAction"
-                    highlightOnHover="{{highlightOnHover}}"/>
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
+                    highlightOnHover="{{highlightOnHover}}"
+                    theme="{{itemData.theme}}"/>
     </ws:else>
 </ws:template>
 
-<ws:template name="columnContent">
-    <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
-        <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-            <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}" key="{{itemData.key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
-        </ws:partial>
+<ws:template name="multiSelectTemplate">
+    <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
+        <ws:templateOptions multiSelectStatus="{{itemData.isSelected()}}" key="{{itemData.key}}" checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"/>
+    </ws:partial>
+</ws:template>
+
+<ws:template name="COLUMN_CONTENT">
+    <ws:if data="{{marker !== false && itemData.shouldDisplayMarker(currentColumn.columnIndex)}}">
+        <div class="{{itemData.getMarkerClasses()}}"></div>
+    </ws:if>
+
+    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+        <ws:if data="{{!itemData.isAdd}}">
+            <div class="{{ currentColumn.classList.padding.getAll() }}">
+                <ws:partial template="multiSelectTemplate"/>
+            </div>
+        </ws:if>
+        <ws:else>
+            <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' +itemData.theme}}"></div>
+        </ws:else>
     </ws:if>
     <ws:else>
         <ws:if data="{{colspan}}">
-            <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}"/>
+            <div class="controls-Grid__row-cell__content_colspaned {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}">
+                <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}">
+                    <ws:multiSelectTemplate>
+                        <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+                    </ws:multiSelectTemplate>
+                </ws:partial>
+            </div>
         </ws:if>
         <ws:else>
             <ws:partial template="{{currentColumn.template}}"
                         editArrowTemplate="{{editArrowTemplate}}"
+                        itemActionsTemplate="{{itemActionsTemplate}}"
                         ladderWrapper="{{currentColumn.ladderWrapper}}"
                         attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                             {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}
-                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}"
-                        itemData="{{currentColumn}}"/>
+                                    {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}"
+                        itemData="{{currentColumn}}"
+                        backgroundStyle="{{backgroundStyle}}"
+                        tagTemplate="{{tagTemplate}}">
+                <ws:multiSelectTemplate>
+                    <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+                </ws:multiSelectTemplate>
+            </ws:partial>
         </ws:else>
     </ws:else>
+
     <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
     <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
         <ws:partial template="itemActionsTemplateChooser"/>
     </ws:if>
 </ws:template>
 
-<ws:template name="columnContentWrapper">
-    <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-        <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
-    </ws:if>
-    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-</ws:template>
-
-<ws:template name="tableTD">
+<ws:template name="COLUMN_CONTENT_WRAPPER">
     <td colspan="{{ itemData.getColspanFor(colspanFor) }}"
         style="{{ currentColumn.tableCellStyles }}"
-        attr:class="{{currentColumn.cellClasses}} js-controls-SwipeControl__actionsContainer
-                    {{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}
-                    {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
-                    {{currentColumn.column.valign ?' controls-Grid__table-layout__cell_valign_' + currentColumn.column.valign}}
-                    {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-                    {{className || ''}}"
-        attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}">
-        <ws:partial template="{{content}}" />
+        attr:key="{{ itemData.getCurrentColumnKey() }}{{ keyPostfix ? ('_' + keyPostfix) : '' }}"
+        attr:class="js-controls-ItemActions__swipeMeasurementContainer
+                    {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+                    {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
+                    {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
+                    {{ marker !== false ? currentColumn.classList.marked }}
+                    controls-Grid__cell_valign_{{currentColumn.column.compatibleValign || 'top'}}
+                    {{className || ''}}">
+        <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, true) }}">
+            <ws:partial template="{{content}}" />
+        </div>
     </td>
 </ws:template>
 
-<ws:template name="colTpl">
+<ws:template name="COLUMN">
     <ws:if data="{{itemData.columnScroll && colspan}}">
 
         <!-- При включенном горизонтальном скролле и включенном объединении ячеек, запись представляется двумя блоками: -->
         <!-- первый растянут на ширину фиксированных ячеек и содержит весь контент записи, второй - растянут на количество -->
         <!-- нефиксированных ячеек. Второй блок пустой. -->
-        <ws:partial template="tableTD" colspanFor="fixedColumnOfColumnScroll" keyPostfix="_fixed">
-            <ws:partial template="columnContentWrapper"/>
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="fixedColumnOfColumnScroll" keyPostfix="_fixed">
+            <ws:partial template="COLUMN_CONTENT"/>
         </ws:partial>
-        <ws:partial template="tableTD" colspanFor="scrollableColumnOfColumnScroll" keyPostfix="_scrollable">
-            <ws:partial template="columnContentWrapper"/>
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="scrollableColumnOfColumnScroll" keyPostfix="_scrollable">
+            <ws:partial template="COLUMN_CONTENT"/>
         </ws:partial>
 
     </ws:if>
     <ws:else>
         <!-- При включеном colspan растягиваем контент (если включен мультивыбор, дополнительно выводим под него колонку). -->
-        <ws:partial template="tableTD" colspanFor="{{(colspan && !(itemData.hasMultiSelect && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
-            <ws:partial template="columnContentWrapper"/>
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" colspanFor="{{(colspan && !(itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0)) ? 'colspanedRow' : null}}">
+            <ws:partial template="COLUMN_CONTENT"/>
         </ws:partial>
     </ws:else>
 
@@ -90,8 +116,8 @@
     <!-- скролла(как если бы колонки были полностью проскролены). -->
     <!-- Стиль смещения задается в ColumnScroll. Ячейка не должна иметь ширины, чтобы быть идеально прижатой справа. -->
     <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan)}}">
-        <ws:partial template="tableTD" keyPostfix="_actions"
-                    attr:class="controls-Grid-table-layout__itemActions__container"
+        <ws:partial template="COLUMN_CONTENT_WRAPPER" keyPostfix="_actions"
+                    attr:class="controls-Grid-table-layout__itemActions__container {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}"
                     attr:style="width: 0; min-width: 0; max-width: 0; padding: 0px;">
             <ws:partial template="itemActionsTemplateChooser"/>
         </ws:partial>
@@ -99,9 +125,8 @@
 
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-           {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+<tr class="{{ itemData.getRowClasses(_options) }}">
     <ws:for data="itemData.resetColumnIndex(); itemData.hasNextColumn(colspan); itemData.goToNextColumn();">
-        <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+        <ws:partial template="COLUMN" currentColumn="{{ itemData.getCurrentColumn(backgroundColorStyle) }}" attr:key="{{ itemData.getCurrentColumnKey() }}"/>
     </ws:for>
 </tr>

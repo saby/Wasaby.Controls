@@ -1,5 +1,8 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {IEventHandlers} from './IPopup';
+import {IEventHandlers, IPopupItemInfo} from './IPopup';
+import {List} from 'Types/collection';
+import {IControlOptions} from 'UI/Base';
+import {ILoadingIndicatorOptions} from 'Controls/LoadingIndicator';
 
 /**
  * Интерфейс базовых опций опенеров.
@@ -10,20 +13,25 @@ import {IEventHandlers} from './IPopup';
  */
 
 export interface IBasePopupOptions {
+    id?: string;
     className?: string;
-    template?: Control | TemplateFunction | string | any; // TODO: https://online.sbis.ru/opendoc.html?guid=875d74bf-5b84-4a5b-802c-e7f47f1f98d1
+    template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     closeOnOutsideClick?: boolean;
-    templateOptions?: any;
-    opener?: Control | any; // TODO: https://online.sbis.ru/opendoc.html?guid=875d74bf-5b84-4a5b-802c-e7f47f1f98d1
+    templateOptions?: unknown;
+    opener?: Control<IControlOptions, unknown> | null;
     autofocus?: boolean;
+    topPopup?: boolean;
     modal?: boolean;
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
+    showIndicator?: boolean;
+    indicatorConfig?: ILoadingIndicatorOptions;
+    zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
-    _vdomOnOldPage?: boolean; // TODO Compatible
     isCompoundTemplate?: boolean; // TODO Compatible
     _type?: string; // TODO Compatible
+    isHelper?: boolean; //TODO удалить после перехода со статических методов на хелперы
 }
 
 export interface IOpener {
@@ -36,7 +44,7 @@ export interface IBaseOpener {
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
 }
 
-/**
+/*  https://online.sbis.ru/opendoc.html?guid=f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * Открывает всплывающее окно.
  * @function Controls/_popup/interface/IBaseOpener#open
  * @param popupOptions Конфигурация всплывающего окна
@@ -50,7 +58,7 @@ export interface IBaseOpener {
  * @param controller Popup Controller
  */
 
-/**
+/* https://online.sbis.ru/opendoc.html?guid=f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * @name Controls/_popup/interface/IBaseOpener#close
  * @description Метод вызова закрытия всплывающего окна
  * @function
@@ -105,6 +113,22 @@ export interface IBaseOpener {
  */
 
 /**
+ * @name Controls/_popup/interface/IBaseOpener#showIndicator
+ * @cfg {Boolean} Определяет, будет ли показываться индикатор при открытии окна
+ * @default true
+ */
+
+/**
+ * @typedef {String} indicatorConfig
+ * @description Конфигурация {@link Controls/LoadingIndicator/interface/ILoadingIndicator индикатора загрузки}
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#indicatorConfig
+ * @cfg {indicatorConfig} Определяет конфигурацию индикатора загрузки, показываемого при открытии окна
+ */
+
+/**
  * @name Controls/_popup/interface/IBaseOpener#autofocus
  * @cfg {Boolean} Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @default true
@@ -155,6 +179,42 @@ export interface IBaseOpener {
  * @cfg {String|Function} Шаблон всплывающего окна
  */
 
+/**
+ * @name Controls/_popup/interface/IBaseOpener#zIndexCallback
+ * @cfg {Function} Функция, позволяющая высчитать z-index окна вручную.
+ * На вход принимает параметры:
+ * <b>currentItem</b> - конфигурация текущего окна, для которого высчитывается z-index.
+ * <b>popupList</b> - Список с конфигурацией открытых на данный момент окон.
+ * @remark
+ * Функция позволяет решить нетривиальные сценарии взаимодействия окон и не должна использоваться повсеместно.
+ * Для большинства сценариев должно быть достаточно базового механизма простановки z-index.
+ * @example
+ * В этом примере открывается окно с подсказкой. Для этого окна z-index выставляется на 1 больше чем у родителя,
+ * чтобы не конфликтовать с другими окнами.
+ * <pre>
+ *    // MyTooltip.wml
+ *    <Controls.popup:Sticky zIndexCallback="_zIndexCallback" />
+ * </pre>
+ *
+ * <pre>
+ *    // MyTooltip.js
+ *    Control.extend({
+ *       ...
+ *       _zIndexCallback(currentItem) {
+ *          if (currentItem.parentZIndex) {
+ *             return currentItem.parentZIndex + 1;
+ *          }
+ *       }
+ *       ...
+ *    });
+ * </pre>
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#topPopup
+ * @cfg {Boolean} Определяет, будет ли окно открываться выше всех окон на странице.
+ */
+
 /*
  * @name Controls/_popup/interface/IBaseOpener#template
  * @cfg {String|Function} Template inside popup.
@@ -176,7 +236,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#result Происходит, когда дочерний контрол всплывающего окна инициирует событие 'sendResult'
+ * @event Происходит, когда дочерний контрол всплывающего окна инициирует событие 'sendResult'.
+ * @name Controls/_popup/interface/IBaseOpener#result
  * @example
  * В этом примере мы подписываемся на событие 'result' и в его обработчике сохраняем данные с шаблона.
  * <pre>
@@ -208,7 +269,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#result Occurs when child control of popup notify "sendResult" event.
+ * @event Occurs when child control of popup notify "sendResult" event.
+ * @name Controls/_popup/interface/IBaseOpener#result
  * @example
  * In this example, we subscribe to result event and save user data.
  * <pre>
@@ -240,7 +302,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#open Происходит при открытии всплывающего окна
+ * @event Происходит при открытии всплывающего окна.
+ * @name Controls/_popup/interface/IBaseOpener#open
  * @example
  * В этом примере мы подписываемся на событие 'open' и в его обработчике меняем состояние '_popupOpened'
  * <pre>
@@ -260,7 +323,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#open Occurs when popup is opened.
+ * @event Occurs when popup is opened.
+ * @name Controls/_popup/interface/IBaseOpener#open
  * @example
  * In this example, we subscribe to open event and change text at input control
  * <pre>
@@ -280,7 +344,8 @@ export interface IBaseOpener {
  */
 
 /**
- * @event Controls/_popup/interface/IBaseOpener#close Происходит при закрытии всплывающего окна
+ * @event Происходит при закрытии всплывающего окна.
+ * @name Controls/_popup/interface/IBaseOpener#close
  * @example
  * В этом примере мы подписываемся на событие 'close' и в его обработчике удаляем элемент из списка.
  * <pre>
@@ -299,7 +364,8 @@ export interface IBaseOpener {
  */
 
 /*
- * @event Controls/_popup/interface/IBaseOpener#close Occurs when popup is closed.
+ * @event Occurs when popup is closed.
+ * @name Controls/_popup/interface/IBaseOpener#close
  * @example
  * In this example, we subscribe to close event and remove item at list
  * <pre>

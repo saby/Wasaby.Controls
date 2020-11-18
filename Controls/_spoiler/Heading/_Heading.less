@@ -1,21 +1,19 @@
 .controls-SpoilerHeading__wrapper {
+   width: 100%;
    cursor: pointer;
    align-items: center;
    display: inline-flex;
 }
 
 .controls-SpoilerHeading__icon {
-   margin: auto;
-}
-
-.controls-SpoilerHeading__caption_expanded {
-   font-weight: bold;
+   fill: none;
+   margin: 0 auto;
 }
 
 .controls-SpoilerHeading__iconWrapper {
    display: flex;
-   height: 100%;
    order: 1;
+   flex-shrink: 0;
 }
 
 .controls-SpoilerHeading__caption_captionPosition-left {
@@ -35,44 +33,40 @@
 }
 
 .controls-SpoilerHeading__icon_theme-@{themeName} {
-   font-size: @icon-size_spoilerHeading;
-   line-height: @icon-size_spoilerHeading;
    width: @icon-size_spoilerHeading;
    height: @icon-size_spoilerHeading;
-   font-family: @icon_font-family_spoilerHeading;
 }
 
-.controls-SpoilerHeading__icon_expanded_theme-@{themeName} {
-   color: @icon-color_expanded_spoilerHeading;
+.controls-SpoilerHeading__icon_fontColorStyle-secondary_theme-@{themeName} {
+   fill: @icon-color_expanded_spoilerHeading;
 }
 
-.controls-SpoilerHeading__icon_collapsed_theme-@{themeName} {
-   color: @icon-color_collapsed_spoilerHeading;
+.controls-SpoilerHeading__icon_fontColorStyle-label_theme-@{themeName} {
+   fill: @icon-color_collapsed_spoilerHeading;
 }
 
-.controls-SpoilerHeading__caption_expanded_theme-@{themeName} {
+.controls-SpoilerHeading__caption_fontColorStyle-secondary_theme-@{themeName} {
    color: @text-color_expanded_spoilerHeading;
 }
 
-.controls-SpoilerHeading__caption_collapsed_theme-@{themeName} {
-   font-weight: @font-weight;
+.controls-SpoilerHeading__caption_fontColorStyle-label_theme-@{themeName} {
    color: @text-color_collapsed_spoilerHeading;
 }
 
 .ws-is-hover .controls-SpoilerHeading__wrapper:hover {
-   .controls-SpoilerHeading__icon_expanded_theme-@{themeName} {
-      color: @icon-color_expanded_hover_spoilerHeading;
+   .controls-SpoilerHeading__icon_fontColorStyle-secondary_theme-@{themeName} {
+      fill: @icon-color_expanded_hover_spoilerHeading;
    }
 
-   .controls-SpoilerHeading__icon_collapsed_theme-@{themeName} {
-      color: @icon-color_collapsed_hover_spoilerHeading;
+   .controls-SpoilerHeading__icon_fontColorStyle-label_theme-@{themeName} {
+      fill: @icon-color_collapsed_hover_spoilerHeading;
    }
 
-   .controls-SpoilerHeading__caption_expanded_theme-@{themeName} {
+   .controls-SpoilerHeading__caption_fontColorStyle-secondary_theme-@{themeName} {
       color: @text-color_expanded_hover_spoilerHeading;
    }
 
-   .controls-SpoilerHeading__caption_collapsed_theme-@{themeName} {
+   .controls-SpoilerHeading__caption_fontColorStyle-label_theme-@{themeName} {
       color: @text-color_collapsed_hover_spoilerHeading;
    }
 }

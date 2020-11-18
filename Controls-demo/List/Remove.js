@@ -1,10 +1,10 @@
 define('Controls-demo/List/Remove', [
    'Core/Control',
    'Core/core-clone',
+   'Controls/Utils/Toolbar',
    'Controls-demo/List/Remove/RemoveDemoSource',
    'wml!Controls-demo/List/Remove/Remove',
-   'css!Controls-demo/List/Remove/Remove'
-], function(BaseControl, cClone, DemoSource, template) {
+], function(BaseControl, cClone, Toolbar, DemoSource, template) {
    'use strict';
    var ModuleClass = BaseControl.extend({
       _template: template,
@@ -49,7 +49,7 @@ define('Controls-demo/List/Remove', [
             {
                id: 0,
                icon: 'icon-Erase icon-error',
-               showType: 2,
+               showType: Toolbar.showType.TOOLBAR,
                handler: function(item) {
                   self._children[listName].removeItems([item.getId()]);
                }
@@ -66,19 +66,11 @@ define('Controls-demo/List/Remove', [
          }
       },
 
-      _afterItemsRemove: function(event, items, result) {
-         if (result instanceof Error) {
-            this._showError(result.message);
-         }
-      },
-
-      _showError: function(message) {
-         this._children.popupOpener.open({
-            message: message,
-            style: 'danger',
-            type: 'ok'
-         });
+      _afterItemsRemove: function() {
+         return false;
       }
    });
+   ModuleClass._styles = ['Controls-demo/List/Remove/Remove'];
+
    return ModuleClass;
 });

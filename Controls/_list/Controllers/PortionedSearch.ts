@@ -1,4 +1,7 @@
-const MAX_SEARCH_DURATION = 10000;
+import {IDirection} from '../interface/IVirtualScroll';
+
+const SEARCH_MAX_DURATION = 30 * 1000;
+const SEARCH_CONTINUED_MAX_DURATION = 2 * 60 * 1000;
 enum SEARCH_STATES {
   NOT_STARTED = 0,
   STARTED = 'started',
@@ -15,7 +18,7 @@ export interface IPortionedSearchOptions {
 }
 
 export default class PortionedSearch<PortionedSearchOptions> {
-    protected _searchTimer: number = null;
+    protected _searchTimer: NodeJS.Timeout = null;
     protected _searchState: SEARCH_STATES = 0;
     protected _options: IPortionedSearchOptions = null;
 
@@ -26,7 +29,7 @@ export default class PortionedSearch<PortionedSearchOptions> {
     startSearch(): void {
         if (this._getSearchState() === SEARCH_STATES.NOT_STARTED) {
             this._setSearchState(SEARCH_STATES.STARTED);
-            this._startTimer();
+            this._startTimer(SEARCH_MAX_DURATION);
             this._options.searchStartCallback();
         }
     }
@@ -46,7 +49,7 @@ export default class PortionedSearch<PortionedSearchOptions> {
     resetTimer(): void {
         if (!this._isSearchContinued()) {
             this._clearTimer();
-            this._startTimer();
+            this._startTimer(SEARCH_MAX_DURATION);
         }
     }
 
@@ -56,14 +59,26 @@ export default class PortionedSearch<PortionedSearchOptions> {
 
     continueSearch(): void {
         this._setSearchState(SEARCH_STATES.CONTINUED);
+        this._startTimer(SEARCH_CONTINUED_MAX_DURATION);
         this._options.searchContinueCallback();
     }
 
-    private _startTimer(): void {
+    stopSearch(direction?: IDirection): void {
+        this._clearTimer();
+
+        if (!this._isSearchContinued()) {
+            this._stopSearch(direction);
+        }
+    }
+
+    destroy(): void {
+        this._clearTimer();
+    }
+
+    private _startTimer(duration: number): void {
         this._searchTimer = setTimeout(() => {
-            this._setSearchState(SEARCH_STATES.STOPPED);
-            this._options.searchStopCallback();
-        }, MAX_SEARCH_DURATION);
+            this._stopSearch();
+        }, duration);
     }
 
     private _clearTimer(): void {
@@ -83,5 +98,10 @@ export default class PortionedSearch<PortionedSearchOptions> {
 
     private _isSearchContinued(): boolean {
         return this._getSearchState() === SEARCH_STATES.CONTINUED;
+    }
+
+    private _stopSearch(direction?: IDirection): void {
+        this._setSearchState(SEARCH_STATES.STOPPED);
+        this._options.searchStopCallback(direction);
     }
 }

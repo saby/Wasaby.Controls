@@ -5,8 +5,7 @@ export interface IDropdownSourceOptions {
 }
 
 /**
- * Интерфейс для источника данных, который возвращает данные в формате,
- * необходимом для контролов Dropdown:Input, Dropdown:Button
+ * Интерфейс для источника данных, который возвращает данные в формате, необходимом для контролов {@link Controls/dropdown:Input} и {@link Controls/dropdown:Button}.
  *
  * @interface Controls/_dropdown/interface/IDropdownSource
  * @public
@@ -22,6 +21,9 @@ export default interface IDropdownSource {
  * @property {String} [item.iconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
  * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
  * @property {String} [item.title] Определеяет текст элемента.
+ * @property {String} [item.tooltip] Определеяет текст всплывающей подсказки, появляющейся при наведении на элемент, если он отличается от title.
+ * @property {String} [item.pinned] Определеяет является ли пункт закрепленным.
+ * Пункт будет отображен на той же позиции, на которой он находится в загруженном рекордсете. В меню с множественным выбором клик по такому пункту сбрасывает выделение.
  *
  */
 
@@ -37,13 +39,11 @@ export default interface IDropdownSource {
 
 /**
  * @name Controls/_dropdown/interface/IDropdownSource#source
- * @cfg {SourceCfg} Объект, который реализует интерфейс {@link Types/source/ICrud ICrud}, необходимый для работы с источником данных.
+ * @cfg {SourceCfg} Объект, который реализует интерфейс {@link Types/source:ICrud ICrud}, необходимый для работы с источником данных.
  * @default undefined
  * @remark
- * Может иметь свойства 'title' и 'showType':
- * * 'icon' определяет иконку элемента.
- * * 'iconStyle' определяет стиль иконки.
- * * 'readOnly' указывает на элемент в режиме чтения.
+ * Запись может иметь следующие {@link Item свойства}.
+ * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @example
  * Записи будут отображены из источника _source.
  * <pre>

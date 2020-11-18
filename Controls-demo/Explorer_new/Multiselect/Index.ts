@@ -2,26 +2,26 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Explorer_new/Multiselect/Multiselect';
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
-
-import 'css!Controls-demo/Controls-demo';
+import { IColumn } from 'Controls/grid';
+import { TRoot, IHeader } from 'Controls-demo/types';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   private _viewSource;
-   private _columns = Gadgets.getGridColumns();
-   private _viewMode: string = 'table';
-   private _root = null;
+   protected _viewSource: MemorySource;
+   protected _columns: IColumn[] = Gadgets.getGridColumns();
+   protected _viewMode: string = 'table';
+   protected _root: TRoot = null;
    private _multiselect: 'visible'|'hidden'|'onhover' = 'visible';
-   private _header = Gadgets.getHeader();
+   protected _header: IHeader[] = Gadgets.getHeader();
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._viewSource = new MemorySource({
          keyProperty: 'id',
          data: Gadgets.getData()
       });
    }
 
-   private _onToggle() {
+   protected _onToggle(): void {
       switch (this._multiselect) {
          case 'visible':
             this._multiselect = 'hidden';
@@ -35,4 +35,6 @@ export default class extends Control {
       }
       this._forceUpdate();
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

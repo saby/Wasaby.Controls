@@ -1,7 +1,9 @@
+import {TemplateFunction} from 'UI/Base';
 /**
  * Интерфейс свойств PropertyGrid.
  * @interface Controls/_propertyGrid/IProperty
  * @author Герасимов А.М.
+ * @public
  */
 
 /*
@@ -10,80 +12,192 @@
  * @author Герасимов А.М.
  */
 
+/**
+ * @name Controls/_propertyGrid/IProperty#name
+ * @cfg {String} Имя свойства.
+ * @required
+ * @remark Значения из редакторов свойств попадают в editingObject по имени свойства.
+ * @example
+ * <pre class="brush: js">
+ * // JavaScript
+ * _beforeMount() {
+ *    this._editingObject = {
+ *       description: 'This is http://mysite.com',
+ *       showBackgroundImage: true,
+ *    };
+ *
+ *    this._source = [
+ *       {
+ *          name: 'description',
+ *          caption: 'Описание',
+ *          type: 'text'
+ *       },
+ *       {
+ *          name: "showBackgroundImage",
+ *          caption: "Показывать изображение",
+ *          group: "boolean"
+ *       }
+ *    ]
+ * }
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.propertyGrid:PropertyGrid
+ *     bind:editingObject="_editingObject"
+ *     source="{{_source}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#caption
+ * @cfg {String} Текст метки редактора свойства.
+ * @example
+ * <pre class="brush: js">
+ * // JavaScript
+ * _beforeMount() {
+ *    this._editingObject = {
+ *       description: 'This is http://mysite.com',
+ *       showBackgroundImage: true,
+ *    };
+ *
+ *    this._source = [
+ *       {
+ *          name: 'description',
+ *          caption: 'Описание',
+ *          type: 'text'
+ *       },
+ *       {
+ *          name: "showBackgroundImage",
+ *          caption: "Показывать изображение",
+ *          group: "boolean"
+ *       }
+ *    ]
+ * }
+ * </pre>
+ * 
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.propertyGrid:PropertyGrid
+ *     bind:editingObject="_editingObject"
+ *     source="{{_source}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#captionTemplate
+ * @cfg {Function} Шаблон для метки редактора свойства.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <div class='myBlueLabel'>
+ *    label
+ * </div>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#editorTemplateName
+ * @cfg {String} Имя контрола, который будет использоваться в качестве редактора. Если параметр не задан, будет использоваться редактор по-умолчанию.
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#editorOptions
+ * @cfg {Object} Опции редактора свойства.
+ * @example
+ * <pre class="brush: js">
+ * // JavaScript
+ * _beforeMount() {
+ *    this._editingObject = {
+ *       description: 'This is http://mysite.com',
+ *    };
+ *
+ *    this._source = [
+ *       {
+ *          name: 'description',
+ *          caption: 'Описание',
+ *          type: 'text',
+ *          editorOptions: {
+ *             fontSize: 'm',
+ *             fontColorStyle: 'danger'
+ *          }
+ *       }
+ *    ]
+ * }
+ * </pre>
+ */
+
+/**
+ * @typedef {String} PropertyType
+ * @variant int
+ * @variant boolean
+ * @variant string
+ * @variant text
+ * @variant enum
+ * @variant date
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#type
+ * @cfg {PropertyType} Тип свойства.
+ * @remark Если параметр не задан, тип будет определен по значению {@link propertyValue свойства}.
+ * @example
+ * <pre class="brush: js">
+ * // JavaScript
+ * _beforeMount() {
+ *    this._editingObject = {
+ *       description: 'This is http://mysite.com'
+ *    };
+ *
+ *    this._source = [
+ *       {
+ *          name: 'description',
+ *          caption: 'Описание',
+ *          type: 'text'
+ *       }
+ *    ]
+ * }
+ * </pre>
+ */
+
+/**
+ * @name Controls/_propertyGrid/IProperty#group
+ * @cfg {String} Поле, по которому будут сгруппированы редакторы.
+ * @example
+ * <pre class="brush: js">
+ * // JavaScript
+ * _beforeMount() {
+ *    this._editingObject = {
+ *       description: 'This is http://mysite.com',
+ *       showBackgroundImage: true
+ *    };
+ *
+ *    this._source = [
+ *       {
+ *          name: 'description',
+ *          caption: 'Описание',
+ *          type: 'text',
+ *          group: 'siteDescription'
+ *       }, {
+ *          name: 'showBackgroundImage',
+ *          caption: 'Показывать изображение',
+ *          group: 'siteDescription'
+ *       }
+ *    ]
+ * }
+ * </pre>
+ */
+
 type TProperty = String | Boolean | Number | Date | number[] | string[];
 
 export default interface IProperty {
-    /**
-     * @name Controls/_propertyGrid/IProperty#name
-     * @cfg {String} Название свойства.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#name
-     * @cfg {String} property name
-     */     
     name: string;
-    /**
-     * @name Controls/_propertyGrid/IProperty#caption
-     * @cfg {String} Заголовок отображается как метка для поля.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#caption
-     * @cfg {String} caption A custom caption to appear as label for this field.
-     * If specified, the caption will be shown in the name column instead of the property name.
-     */     
     caption?: string;
-    /**
-     * @name Controls/_propertyGrid/IProperty#editorTemplateName
-     * @cfg {String} Имя контрола, который будет использоваться в качестве редактора, если не используется редактор по умолчанию.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#editorTemplateName
-     * @cfg {String} Name of the control, the will be user as editor, if left unset the default editor will used
-     */
+    captionTemplate?: TemplateFunction;
     editorTemplateName?: string;
-    /**
-     * @name Controls/_propertyGrid/IProperty#editorOptions
-     * @cfg {Object} Параметры редактора.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#editorOptions
-     * @cfg {Object} Options for the editor
-     */
     editorOptions?: object;
-    /**
-     * @name Controls/_propertyGrid/IProperty#editorClass
-     * @cfg {Object} Имя класса редактора.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#editorClass
-     * @cfg {Object} Class name for the editor
-     */     
     editorClass?: string;
-    /**
-     * @name Controls/_propertyGrid/IProperty#type
-     * @cfg {String} Тип свойства. Опция принимает значения:
-     * 'int', 'boolean', 'string', 'enum', 'date'. Если не задано, тип определяется по значению.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#type
-     * @cfg {String} type of property, the available values are:
-     * ‘int’, ‘boolean’, ‘string’, ‘enum’, ‘date’,if left unset, type will detected by value.
-     */     
     type?: TProperty;
-    /**
-     * @name Controls/_propertyGrid/IProperty#group
-     * @cfg {String} Поле, по которому будут сгруппированы редакторы.
-     */
-
-    /*
-     * @name Controls/_propertyGrid/IProperty#group
-     * @cfg {String} by this fieldeditors will grouped.
-     */     
     group?: string;
+    propertyValue?: unknown;
 }

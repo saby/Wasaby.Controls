@@ -6,6 +6,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
       let searchReseted = false;
       let serachContinued = false;
       let searchStarted = false;
+      let stopSearchDirection = null;
       let clock;
 
       beforeEach(() => {
@@ -14,8 +15,9 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
             searchStartCallback: () => {
                searchStarted = true;
             },
-            searchStopCallback: () => {
+            searchStopCallback: (direction) => {
                searchStopped = true;
+               stopSearchDirection = direction;
             },
             searchResetCallback: () => {
                searchReseted = true;
@@ -36,6 +38,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          searchReseted = false;
          serachContinued = false;
          portionedSearchController = null;
+         stopSearchDirection = null;
       });
 
       it('startSearch', () => {
@@ -43,7 +46,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          assert.isTrue(searchStarted);
          assert.isFalse(searchStopped);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isTrue(searchStopped);
       });
 
@@ -54,7 +57,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          portionedSearchController.abortSearch();
          assert.isTrue(searchAborted);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
       });
 
@@ -65,7 +68,7 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          portionedSearchController.reset();
          assert.isTrue(searchReseted);
 
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
       });
 
@@ -76,13 +79,13 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(5000);
          assert.isTrue(portionedSearchController.shouldSearch());
 
-         clock.tick(11000);
+         clock.tick(26000);
          assert.isFalse(portionedSearchController.shouldSearch());
       });
 
       it('continueSearch', () => {
          portionedSearchController.startSearch();
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isTrue(searchStopped);
          assert.isTrue(searchStarted);
 
@@ -92,8 +95,12 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          searchStopped = false;
          searchStarted = false;
          portionedSearchController.startSearch();
-         clock.tick(11000);
+         clock.tick(31000);
          assert.isFalse(searchStopped);
+         assert.isFalse(searchStarted);
+
+         clock.tick(120000);
+         assert.isTrue(searchStopped);
          assert.isFalse(searchStarted);
       });
 
@@ -106,8 +113,26 @@ define(['Controls/_list/Controllers/PortionedSearch'], function(PortionedSearch)
          clock.tick(9000);
          assert.isFalse(searchStopped);
 
-         clock.tick(9000);
+         clock.tick(22000);
          assert.isTrue(searchStopped);
+      });
+
+      it('stopSearch', () => {
+         portionedSearchController.startSearch();
+         clock.tick(9000);
+         assert.isFalse(searchStopped);
+
+         portionedSearchController.stopSearch('down');
+         assert.isTrue(searchStopped);
+         assert.equal(stopSearchDirection, 'down');
+      });
+
+      it('destroy', () => {
+         portionedSearchController.startSearch();
+         portionedSearchController.destroy();
+
+         clock.tick(31000);
+         assert.isFalse(searchStopped);
       });
    });
 });

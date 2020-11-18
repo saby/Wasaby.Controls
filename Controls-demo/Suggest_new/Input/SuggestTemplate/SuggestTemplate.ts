@@ -1,27 +1,35 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
-import {Memory} from 'Types/source';
-import {_departmentsDataLong} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
+import * as ExplorerMemory from 'Controls-demo/Explorer/ExplorerMemory';
+import {_departmentsDataLong, _treeData} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/SuggestTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplate');
 import suggestTemplateGrid = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplateGrid');
-import 'css!Controls-demo/Controls-demo';
+import suggestTemplateTreeGrid = require('wml!Controls-demo/Suggest_new/Input/SuggestTemplate/resources/SuggestTemplateTreeGrid');
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
-   private _suggestTemplate: TemplateFunction = suggestTemplate;
-   private _suggestTemplateGrid: TemplateFunction = suggestTemplateGrid;
-   private _source: Memory;
-   private _navigation: object;
+   protected _suggestTemplate: TemplateFunction = suggestTemplate;
+   protected _suggestTemplateGrid: TemplateFunction = suggestTemplateGrid;
+   protected _suggestTemplateTreeGrid: TemplateFunction = suggestTemplateTreeGrid;
+   protected _source: SearchMemory;
+   protected _treeSource: SearchMemory;
+   protected _navigation: object;
 
-   protected _beforeMount() {
+   protected _beforeMount(): void {
       this._source = new SearchMemory({
          keyProperty: 'id',
          data: _departmentsDataLong,
          searchParam: 'title',
          filter: MemorySourceFilter()
       });
+
+      this._treeSource = new ExplorerMemory({
+         keyProperty: 'id',
+         data: _treeData
+      });
+
       this._navigation = {
          source: 'page',
          view: 'page',
@@ -32,4 +40,6 @@ export default class extends Control{
          }
       };
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

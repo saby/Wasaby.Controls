@@ -27,22 +27,17 @@
  */
 
 /**
- * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingStyle
- * @cfg {String} Стиль отображения заголовка.
- * @variant secondary
- * @variant primary
- * @variant info
+ * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingFontColorStyle
+ * @cfg {String} Стиль отображения заголовка. Подробнее: {@link Controls/_interface/IFontColorStyle#fontColorStyle}
  * @default secondary
+ * @see Controls.heading:Title#fontColorStyle
  */
 
 /**
- * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingSize
+ * @name Controls/_popupTemplate/interface/IPopupTemplateBase#headingFontSize
  * @cfg {String} Размер заголовка
- * @variant s
- * @variant m
- * @variant l
- * @variant xl
- * @default l
+ * @default 3xl
+ * @see Controls.heading:Title#fontSize
  */
 
 /**
@@ -57,8 +52,8 @@ export interface IPopupTemplateBaseOptions {
     bodyContentTemplate?: TemplateFunction;
     footerContentTemplate?: TemplateFunction;
     headingCaption?: string;
-    headingStyle?: string;
-    headingSize?: string;
+    headingFontSize?: string;
+    headingFontColorStyle?: string;
     closeButtonVisibility?: boolean;
 }
 

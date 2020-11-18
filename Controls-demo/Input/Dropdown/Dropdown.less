@@ -1,3 +1,4 @@
+@import "Controls-default-theme/_theme";
 .ControlsDemo-InputDropdown {
    margin: 20px 230px 20px 35px;
    min-height: 800px;
@@ -15,6 +16,10 @@
    max-width: 130px;
 }
 
+.ControlsDemo-InputDropdown__item-MinWidth {
+   min-width: 130px;
+}
+
 .ControlsDemo-InputDropdown__wrapper {
    display: flex;
    flex-direction: column;
@@ -23,7 +28,7 @@
 }
 
 .ControlsDemo-InputDropdown__scroll {
-   height: 400px;
+   max-height: 300px;
 }
 
 .ControlsDemo-InputDropdown-bottom-right {
@@ -69,7 +74,7 @@
 
 .ControlsDemo-InputDropdown-contentTemplate:hover {
    .ControlsDemo-InputDropdown-myIcon {
-      color: @color_link-hover;
+      color: @link_hover_text-color;
    }
 }
 
@@ -137,4 +142,8 @@
 
 .ControlsDemo-InputDropdown__item-limitWidth {
    max-width: 250px;
+}
+
+.ControlsDemo-InputDropdown__item-limitMaxWidth.ws-flexbox {
+   display: flex;
 }

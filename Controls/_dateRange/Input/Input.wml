@@ -13,14 +13,16 @@
       selectOnClick="{{_options.selectOnClick}}"
       autoComplete="{{_options.autoComplete}}"
       style="{{_options.style}}"
-      validationErrors="{{_options.validationErrors}}"
+      validationStatus="{{_options.validationStatus}}"
       autocompleteType="start"
-      on:keyup="_keyUpHandler()"
+      valueValidators="{{_startValueValidators}}"
+      validateByFocusOut="{{_options.validateByFocusOut}}"
+      on:inputControl="_inputControlHandler()"
       on:inputCompleted="_notifyInputCompleted()"
       on:tagClick="_proxyEvent('startTagClick')"
       on:tagHover="_proxyEvent('startTagHover')">
    </Controls.input:DateBase>
-   <div class="controls-Input-DateRange__dash"></div>
+   <div class="controls-Input-DateRange__dash controls-Input-DateRange__dash_theme-{{_options.theme}}"></div>
    <Controls.input:DateBase
       name="endValueField"
       class="controls-Input-DateRange_endValue"
@@ -36,18 +38,27 @@
       selectOnClick="{{_options.selectOnClick}}"
       autoComplete="{{_options.autoComplete}}"
       style="{{_options.style}}"
-      validationErrors="{{_options.validationErrors}}"
+      validationStatus="{{_options.validationStatus}}"
+      _yearSeparatesCenturies="{{_rangeModel.startValue}}"
       autocompleteType="end"
+      valueValidators="{{_endValueValidators}}"
+      validateByFocusOut="{{_options.validateByFocusOut}}"
       on:inputCompleted="_notifyInputCompleted()"
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">
    </Controls.input:DateBase>
-   <span class="controls-Input-DateRange__buttonWrapper" attr:tabindex="-1">
+   <span class="controls-Input-DateRange__buttonWrapper
+                controls-Input-DateRange__buttonWrapper_theme-{{_options.theme}}"
+         attr:tabindex="-1">
       <span class="ws-flexbox ws-align-items-center controls-Input-DateRange__buttonBaseLine">
          <span
-            attr:class="controls-Input-DateRange__button controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
+            attr:class="controls-Input-DateRange__button controls-icon icon-Calendar2
+                        controls-Input-DateRange__button_theme-{{_options.theme}}
+                        controls-icon_style-secondary_theme-{{_options.theme}}"
             iconStyle="secondary"
-            on:click="_openDialog()">
+            on:mousedown="openPopup()"
+            on:mouseenter="_mouseEnterHandler()"
+            on:mouseleave="_mouseLeaveHandler()">
          </span>
       </span>
    </span>

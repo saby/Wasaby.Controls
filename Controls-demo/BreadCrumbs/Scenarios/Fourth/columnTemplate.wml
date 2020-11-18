@@ -3,8 +3,8 @@
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
-                                style="{{itemData.column.displayProperty !== 'sum' ? 'noBasicRegistry' : 'default'}}"
-                                delimiters="{{true}}"/>
+                                fontColorStyle="{{itemData.column.displayProperty !== 'sum' ? 'unaccented' : 'default'}}"
+                                useGrouping="{{true}}"/>
       <span if="{{!itemData.dispItem.isNode() && itemData.columnIndex === 1}}">шт</span>
    </ws:contentTemplate>
 </ws:partial>

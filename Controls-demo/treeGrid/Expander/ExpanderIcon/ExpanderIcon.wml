@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow">
 
-    <div class="controlsDemo__cell controlsDemo__mr2">
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_fixedWidth300">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/Expander/ExpanderIcon/None/Index' }}">
@@ -9,7 +9,7 @@
         <Controls-demo.treeGrid.Expander.ExpanderIcon.None.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr2">
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_fixedWidth300">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/Expander/ExpanderIcon/Node/Index' }}">
@@ -18,7 +18,7 @@
         <Controls-demo.treeGrid.Expander.ExpanderIcon.Node.Index/>
     </div>
 
-    <div class="controlsDemo__cell controlsDemo__mr2">
+    <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_fixedWidth300">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGrid/Expander/ExpanderIcon/HiddenNode/Index' }}">

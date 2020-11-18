@@ -40,6 +40,7 @@ define(
          let detailPanelItems = [
             {
                id: 'text',
+               name: 'text',
                value: 'value1',
                resetValue: 'resetValue1',
                visibility: undefined,
@@ -47,6 +48,7 @@ define(
             },
             {
                id: 'boolean',
+               name: 'boolean',
                value: 'value2',
                resetValue: 'resetValue2',
                textValue: '123',
@@ -56,6 +58,7 @@ define(
             },
             {
                id: 'Array',
+               name: 'Array',
                value: 'value3',
                resetValue: 'resetValue3',
                viewMode: 'extended',
@@ -64,6 +67,7 @@ define(
             },
             {
                id: 'Number',
+               name: 'Number',
                value: 'value4',
                resetValue: 'resetValue4',
                viewMode: 'frequent',

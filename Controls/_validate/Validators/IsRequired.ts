@@ -3,8 +3,7 @@ import cInstance = require('Core/core-instance');
 /**
  *
  * Функция проверяет наличие значения в контейнере.
- * @class
- * @name Controls/_validate/Validators/IsRequired
+ * @class Controls/_validate/Validators/IsRequired
  * @public
  * @author Красильников А.С.
  * @remark

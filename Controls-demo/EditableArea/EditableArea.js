@@ -4,16 +4,12 @@ define('Controls-demo/EditableArea/EditableArea', [
    'Types/entity',
    'Types/source',
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate',
-   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2',
-
-   'css!Controls-demo/EditableArea/EditableArea'
+   'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2'
 ], function(
    Control,
    template,
    entity,
-   source,
-   exampleTabTemplate,
-   exampleTabTemplate2
+   source
 ) {
    'use strict';
    var tabsData = [
@@ -23,7 +19,7 @@ define('Controls-demo/EditableArea/EditableArea', [
             align: 'left',
             number: '3565654',
             date: '09.01.17',
-            itemTemplate: exampleTabTemplate
+            itemTemplate: 'wml!Controls-demo/EditableArea/resources/exampleTabTemplate'
          },
          {
             id: 1,
@@ -36,18 +32,25 @@ define('Controls-demo/EditableArea/EditableArea', [
             id: 0,
             align: 'left',
             name: 'Компания "Сбис плюс"',
-            itemTemplate: exampleTabTemplate2
+            itemTemplate: 'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2'
          }];
 
    var EditableArea = Control.extend({
       _template: template,
       _record: null,
+      _record1: null,
       _selectedTab: 0,
       _selectedTab2: 0,
       _tabSource: null,
 
       _beforeMount: function() {
          this._record = new entity.Record({
+            rawData: {
+               id: 1,
+               text1: 'Мой отдел'
+            }
+         });
+         this._record1 = new entity.Record({
             rawData: {
                id: 1,
                text1: 'Мой отдел'
@@ -63,5 +66,7 @@ define('Controls-demo/EditableArea/EditableArea', [
          });
       }
    });
+   EditableArea._styles = ['Controls-demo/EditableArea/EditableArea'];
+
    return EditableArea;
 });

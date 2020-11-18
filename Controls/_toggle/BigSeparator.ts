@@ -9,12 +9,15 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
 
 /**
  * Контрол служит для визуального ограничения контента. При клике на него отображаются скрытые записи, попавшие в ограничение.
- *
- * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
  * @class Controls/_toggle/BigSeparator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
@@ -25,27 +28,17 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
 /*
  * Limit separator, limit the number of entries to display. By clicking on it, you should show other entries.
  *
- * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_toggle/BigSeparator
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/toggle/BigSeparator/Index
  *
- */
-
-/**
- * @name Controls/_toggle/Separator#value
- * @cfg {Boolean} Если значение - "true", то будет отображаться иконка открытия, иначе будет отображаться иконка закрытия.
- */
-
-/*
- * @name Controls/_toggle/Separator#value
- * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
  */
 class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    '[Controls/_toggle/interface/ICheckable]': true;
@@ -63,7 +56,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
       }
    }
 
-   private _clickHandler(): void {
+   protected _clickHandler(): void {
       this._notify('valueChanged', [!this._options.value]);
    }
 
@@ -88,5 +81,13 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
       };
    }
 }
+/**
+ * @name Controls/_toggle/Separator#value
+ * @cfg {Boolean} Если значение - "true", то будет отображаться иконка открытия, иначе будет отображаться иконка закрытия.
+ */
 
+/*
+ * @name Controls/_toggle/Separator#value
+ * @cfg {Boolean} If value is true, that opening icon will be displaying, else closing icon will be displaying.
+ */
 export default BigSeparator;

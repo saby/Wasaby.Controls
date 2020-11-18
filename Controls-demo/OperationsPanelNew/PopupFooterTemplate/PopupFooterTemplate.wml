@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper controlsDemo__maxWidth500">
+   <Controls.operations:Panel
+         bind:selectedKeys="_selectedKeys"
+         bind:excludedKeys="_excludedKeys"
+         parentProperty="parent"
+         nodeProperty="@parent"
+         keyProperty="id"
+         source="{{_panelSource}}">
+      <ws:popupFooterTemplate>
+         <div class="controls-text-label_theme-{{_options.theme}}
+                 controlsDemo__wrapper
+                 controlsDemo_fixedWidth300">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+         </div>
+      </ws:popupFooterTemplate>
+   </Controls.operations:Panel>
+</div>

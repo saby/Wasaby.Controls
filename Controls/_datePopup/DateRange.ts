@@ -4,22 +4,12 @@ import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import EventProxy from './Mixin/EventProxy';
 import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumUtils} from 'Controls/dateRange';
+import {proxyModelEvents} from 'Controls/eventUtils';
 import {MonthModel} from 'Controls/calendar';
-import dateUtils = require('Controls/Utils/Date');
+import {Base as dateUtils} from 'Controls/dateUtils';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import 'wml!Controls/_datePopup/DateRangeItem';
-import 'css!theme?Controls/datePopup';
-
-/**
- * Component that allows you to select periods of multiple days.
- *
- * @class Controls/_datePopup/DateRange
- * @extends Core/Control
- * @control
- * @author Красильников А.С.
- * @private
- */
 
 const _private = {
     updateView: function (self, options, dontUpdateScroll) {
@@ -55,7 +45,15 @@ const _private = {
         }
     }
 };
-
+/**
+ * Component that allows you to select periods of multiple days.
+ *
+ * @class Controls/_datePopup/DateRange
+ * @extends Core/Control
+ * 
+ * @author Красильников А.С.
+ * @private
+ */
 var Component = BaseControl.extend([EventProxy], {
     _template: componentTmpl,
 
@@ -76,7 +74,7 @@ var Component = BaseControl.extend([EventProxy], {
     constructor: function (options) {
         Component.superclass.constructor.apply(this, arguments);
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
-        DateControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+        proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
     },
 
     _beforeMount: function (options) {
@@ -152,19 +150,29 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _onPositionChanged: function(e: Event, position: Date) {
-        _private.notifyPositionChanged(this, position);
+        if (position.getFullYear() !== this._position.getFullYear()) {
+            _private.notifyPositionChanged(this, position);
+        }
     },
 
     _getSeparatorCssClass: function(): string {
         return this._isStickySupport ?
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
-            'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
+            'controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
+            'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
+    },
+
+    _preventEvent(event: Event): void {
+        // Отключаем скролл ленты с месяцами, если свайпнули по колонке с месяцами
+        // Для тач-устройств нельзя остановить событие скрола, которое стреляет с ScrollContainer,
+        // внутри которого лежит 2 контейнера для которых требуется разное поведение на тач устройствах
+        event.preventDefault();
+        event.stopPropagation();
     }
 
 });
 
 Component._private = _private;
-
+Component._theme = ['Controls/datePopup'];
 // Component.EMPTY_CAPTIONS = IPeriodSimpleDialog.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function() {

@@ -9,12 +9,19 @@ type IOptions = IModelOptions;
  * Поле ввода временного интервала.
  * @remark
  * Позволяет вводить время с точностью от суток до секунд.
- * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
+ * @ignoreOptions Controls/_input/Base#value
  *
  * @mixes Controls/interface/ITimeInterval
+ *
+ * @ignoreOptions Controls/_input/Base#placeholder
  *
  * @public
  * @demo Controls-demo/Input/TimeInterval/Base/Index
@@ -24,7 +31,7 @@ type IOptions = IModelOptions;
 
 /*
  * Controls that allows user to enter some amount of time with the accuracy from day to seconds.
- * <a href="/materials/demo-ws4-input">Demo examples.</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Demo examples.</a>.
  * @remark
  * If container with width: auto, then the width is determined based on the content.
  *
@@ -38,6 +45,7 @@ type IOptions = IModelOptions;
  *
  * @author Красильников А.С.
  */
+// TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
 class TimeInterval extends Base {
     protected _autoWidth: boolean = true;
@@ -54,12 +62,12 @@ class TimeInterval extends Base {
         return ViewModel;
     }
 
-    protected _changeHandler() {
+    protected _notifyInputCompleted() {
         if (this._viewModel.autoComplete()) {
             this._notifyValueChanged();
         }
 
-        super._changeHandler();
+        super._notifyInputCompleted();
     }
 
     protected _focusInHandler(...args) {

@@ -1,15 +1,21 @@
 <Controls-demo.ContainerTheme>
    <Controls.Application scope="{{_options}}"
                          theme="{{content.theme}}"
+                         popupHeaderTheme="{{_getPopupHeaderTheme(content.theme)}}"
                          bodyClass="controls-default-bg"
                          title="{{_title}}"
+                         dataLoaderModule="Controls-demo/DataLoader"
                          loadDataProviders="{{false}}"
                          settingsController="{{_settigsController}}">
       <ws:head>
-         <link data-vdomignore="true" rel="shortcut icon" href="/Controls-demo/wasaby.ico?v=1" type="image/x-icon"/>
+         <link data-vdomignore="true" rel="shortcut icon" href="{{_options.resourceRoot}}Controls-demo/wasaby.ico?v=1" type="image/x-icon"/>
       </ws:head>
       <ws:content>
-         <Controls-demo.RootRouter correctTemplate="{{_correctTemplate}}"/>
+         <Controls-demo.RootRouter
+            correctTemplate="{{_correctTemplate}}"
+            appRoot="{{_options.appRoot}}"
+            sourceUrl="{{_options.sourceUrl}}"
+         />
       </ws:content>
    </Controls.Application>
 </Controls-demo.ContainerTheme>

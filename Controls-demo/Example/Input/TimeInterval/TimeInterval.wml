@@ -1,5 +1,5 @@
 <div class="example-TimeInterval">
-   <Controls-demo.Example.resource.BaseDemoInput title="Time interval input field" blocker="{{true}}" autoWidth>
+   <Controls-demo.Example.resource.BaseDemoInput title="Time interval input field" blocker="{{true}}">
       <ws:contents>
          <ws:Array>
             <ws:Object autoWidth="{{true}}">
@@ -9,7 +9,7 @@
             </ws:Object>
             <ws:Object autoWidth="{{true}}" spacing="normal">
                <ws:template>
-                  <Controls.input:TimeInterval bind:value="_default2Value" mask="HH:MM:SS"/>
+                  <Controls.input:TimeInterval bind:value="_default2Value" mask="HH:MM:SS" attr:class="Controls-Demo_TimeInterval__HHMMSS"/>
                </ws:template>
             </ws:Object>
             <ws:Object autoWidth="{{true}}" spacing="normal">

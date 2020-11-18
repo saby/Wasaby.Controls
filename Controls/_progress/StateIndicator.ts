@@ -9,7 +9,6 @@ const defaultColors = [
    'controls-StateIndicator__sector2',
    'controls-StateIndicator__sector3'
 ];
-const DEFAULT_EMPTY_COLOR_CLASS = 'controls-StateIndicator__emptySector';
 const defaultScaleValue = 10;
 const maxPercentValue = 100;
 
@@ -26,98 +25,36 @@ export interface IStateIndicatorOptions extends IControlOptions {
 /**
  * Диаграмма состояния процесса.
  * Позволяет получить наглядную информацию по состоянию выполнения некоторого процесса в разрезе нескольких категорий.
- * <a href="/materials/demo-ws4-stateindicator">Демо-пример</a>.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
+ *
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
  *
  * @public
- * @demo Controls-demo/StateIndicator/StateIndicatorDemo
+ * @demo Controls-demo/progress/StateIndicator/Base/Index
  */
 
 /*
  * Progress state indicator
- * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex">Демо-пример</a>.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
  *
  * @public
- * @demo Controls-demo/StateIndicator/StateIndicatorDemo
- */
-
-/**
- * @name Controls/_progress/StateIndicator#scale
- * @cfg {Number} Определяет размер (процентное значение) одного сектора диаграммы.
- * @remark
- * Положительное число до 100.
- * @example
- * Шкала из 5 установит индикатор с 20-ю секторами.
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator scale="{{5}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_progress/StateIndicator#scale
- * @cfg {Number} Defines percent count shown by each sector.
- * @remark
- * A positive number up to 100.
- * @example
- * Scale of 5 will set indicator with 20 sectors
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator scale="{{5}}"/>
- * </pre>
- */
-
-/**
- * @typedef {Object} IndicatorCategory
- * @property {Number} [value=0] Процент от соответствующей категории.
- * @property {String} [className=''] Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
- * @property {String} [title=''] Название категории.
- */
-
-/*
- * @typedef {Object} IndicatorCategory
- * @property {Number} value=0 Percents of the corresponding category
- * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
- * @property {String} title='' category note
- */
-
-/**
- * @name Controls/_progress/StateIndicator#data
- * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
- * </pre>
- * @remark
- * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
- */
-
-/*
- * @name Controls/_progress/StateIndicator#data
- * @cfg {Array.<IndicatorCategory>} Array of indicator categories
- * <pre class="brush:html">
- *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
- * </pre>
- */
-
-/**
- * @event Controls/_progress/StateIndicator#itemEnter Происходит при наведении курсора мыши на диаграмму.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- *
- */
-
-/*
- * @event Controls/_progress/StateIndicator#itemEnter Occurs when mouse enters sectors of indicator
- * @param {Vdom/Vdom:SyntheticEvent} eventObject event descriptor.
- *
+ * @demo Controls-demo/progress/StateIndicator/Base/Index.ts
  */
 class StateIndicator extends Control<IStateIndicatorOptions>{
    protected _template: TemplateFunction = stateIndicatorTemplate;
-   private _colorState: number[];
+   protected _colorState: number[];
    private _colors: string[];
    private _numSectors: number = 10;
+   private _percentageDifferences: number[] = [];
 
    private _checkData(opts: IStateIndicatorOptions): void {
       let sum = 0;
@@ -159,6 +96,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       let itemValue;
       let itemNumSectors;
       let excess;
+      this._percentageDifferences = [];
 
       if (opts.scale <= 0 || opts.scale > maxPercentValue) {
          correctScale = defaultScaleValue;
@@ -170,6 +108,8 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
             // convert to number, ignore negative ones
             itemValue = Math.max(0, + opts.data[i].value || 0);
             itemNumSectors = Math.floor(itemValue / sectorSize);
+            const percentageDeviation = itemValue - sectorSize * itemNumSectors;
+            this._percentageDifferences.push(percentageDeviation);
             if (itemValue > 0 && itemNumSectors === 0) {
                // if state value is positive and corresponding sector number is 0, increase it by 1 (look specification)
                itemNumSectors = 1;
@@ -193,12 +133,28 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       opts.data.forEach((item) => {
          sum += item.value;
       });
-
-      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то прибавим сектор к наибольшему значению.
+      // Если сумма значений равна 100%, но при этом мы получили меньше секторов, то будем прибавлять сектор к такому элементу, у которого процентное отклонение больше остальных.
       if (totalSectorsUsed < _numSectors && sum === maxPercentValue) {
-         colorValues.splice(longestValueStart, 0,  colorValues[longestValueStart]);
+         while (totalSectorsUsed !== _numSectors) {
+            const maxDeviationIndex = this._getMaxPercentageDeviationIndex();
+            colorValues.splice(colorValues.indexOf(maxDeviationIndex + 1), 0,  maxDeviationIndex + 1);
+            totalSectorsUsed++;
+            this._percentageDifferences[maxDeviationIndex] -= sectorSize;
+         }
       }
       return colorValues;
+   }
+
+   private _getMaxPercentageDeviationIndex(): number {
+      let maxDeviation = this._percentageDifferences[0];
+      let maxDeviationIndex = 0;
+      for (let i = 1; i < this._percentageDifferences.length; i++) {
+         if (this._percentageDifferences[i] > maxDeviation) {
+            maxDeviation = this._percentageDifferences[i];
+            maxDeviationIndex = i;
+         }
+      }
+      return maxDeviationIndex;
    }
 
    private _applyNewState(opts: IStateIndicatorOptions): void {
@@ -212,7 +168,7 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       this._colorState  = this._calculateColorState(opts, this._colors, this._numSectors);
    }
 
-   private _mouseEnterIndicatorHandler(e: SyntheticEvent<MouseEvent>): void {
+   protected _mouseEnterIndicatorHandler(e: SyntheticEvent<MouseEvent>): void {
       this._notify('itemEnter', [e.target]);
    }
 
@@ -232,16 +188,99 @@ class StateIndicator extends Control<IStateIndicatorOptions>{
       return {
          theme: 'default',
          scale: 10,
-         data: [{value: 0, title: '', className: ''}]
+         data: [{value: 0, title: '', className: ''}],
+         sectorSize: 'm'
       };
    }
 
    static getOptionTypes(): object {
       return {
          scale: EntityDescriptor(Number),
-         data: EntityDescriptor(Array)
+         data: EntityDescriptor(Array),
+         sectorSize: EntityDescriptor(String)
       };
    }
 }
+/**
+ * @name Controls/_progress/StateIndicator#scale
+ * @cfg {Number} Определяет размер (процентное значение) одного сектора диаграммы.
+ * @remark
+ * Положительное число до 100.
+ * @example
+ * Шкала из 5 установит индикатор с 20-ю секторами.
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator scale="{{5}}"/>
+ * </pre>
+ */
 
+/*
+ * @name Controls/_progress/StateIndicator#scale
+ * @cfg {Number} Defines percent count shown by each sector.
+ * @remark
+ * A positive number up to 100.
+ * @example
+ * Scale of 5 will set indicator with 20 sectors
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator scale="{{5}}"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_progress/StateIndicator#sectorSize
+ * @cfg {String} Размер одного сектора диаграммы.
+ * @variant s
+ * @variant m
+ * @variant l
+ * @default m
+ * @demo Controls-demo/progress/StateIndicator/SectorSize/Index
+ */
+
+/**
+ * @typedef {Object} IndicatorCategory
+ * @property {Number} [value=0] Процент от соответствующей категории.
+ * @property {String} [className=''] Имя css-класса, который будет применяться к секторам этой категории. Если не указано, будет использоваться цвет по умолчанию.
+ * @property {String} [title=''] Название категории.
+ */
+
+/*
+ * @typedef {Object} IndicatorCategory
+ * @property {Number} value=0 Percents of the corresponding category
+ * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
+ * @property {String} title='' category note
+ */
+
+/**
+ * @name Controls/_progress/StateIndicator#data
+ * @cfg {Array.<IndicatorCategory>} Массив категорий диаграммы.
+ * @example
+ * <pre class="brush: html">
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+ * </pre>
+ * @remark
+ * Используется, если для диаграммы нужно установить несколько категорий. Количество элементов массива задает количество категорий диаграммы.
+ */
+
+/*
+ * @name Controls/_progress/StateIndicator#data
+ * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * @example
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]}}"/>
+ * </pre>
+ */
+
+/**
+ * @event Происходит при наведении курсора мыши на диаграмму.
+ * @name Controls/_progress/StateIndicator#itemEnter
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Node} target Элемент, на котоорый навели курсор мыши
+ *
+ */
+
+/*
+ * @event Occurs when mouse enters sectors of indicator
+ * @name Controls/_progress/StateIndicator#itemEnter
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject event descriptor.
+ *
+ */
 export default StateIndicator;

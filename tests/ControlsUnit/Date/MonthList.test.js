@@ -1,5 +1,6 @@
 define([
    'Core/core-merge',
+   'Types/entity',
    'Types/collection',
    'Controls/calendar',
    'Controls/Utils/Date',
@@ -9,6 +10,7 @@ define([
    'wml!Controls/_calendar/MonthList/YearTemplate'
 ], function(
    coreMerge,
+   entity,
    collection,
    calendar,
    DateUtil,
@@ -19,7 +21,8 @@ define([
 ) {
    'use strict';
    let config = {
-      startPosition: new Date(2018, 0, 1)
+      position: new Date(2018, 0, 1),
+      intersectionRatio: 0.5
    };
 
    ItemTypes = ItemTypes.default;
@@ -29,9 +32,20 @@ define([
          it('default options', function() {
             let ml = calendarTestUtils.createComponent(calendar.MonthList, config);
             assert.strictEqual(ml._itemTemplate, YearTemplate);
-            assert.strictEqual(ml._positionToScroll, config.startPosition);
-            assert.strictEqual(ml._displayedPosition, config.startPosition);
+            assert.strictEqual(ml._positionToScroll, config.position);
+            assert.strictEqual(ml._displayedPosition, config.position);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +config.position);
+         });
+
+         it('viewMode = "year", position = 2020.03.01', function() {
+            const
+                position = new Date(2020, 2, 1),
+                ml = calendarTestUtils.createComponent(calendar.MonthList, {viewMode: 'year', position: position});
+            assert.strictEqual(ml._positionToScroll, position);
+            assert.strictEqual(ml._displayedPosition, position);
+            assert.strictEqual(ml._startPositionId, '2020-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +(new Date(2020, 0, 1)));
          });
 
          it('should render by month if viewMode is equals "month"', function() {
@@ -64,14 +78,18 @@ define([
             sinon.replace(ml, '_updateSource', () => {
                return;
             });
+            let result = false;
             ml._extData = {
                enrichItems: function() {
-                  return;
+                  return {
+                     catch: function () {
+                        result = true;
+                     }
+                  };
                }
             };
-            sandBox.stub(ml._extData, 'enrichItems');
             ml._beforeMount({});
-            sinon.assert.calledOnce(ml._extData.enrichItems);
+            assert.isTrue(result);
             sandBox.restore();
          });
          it('with receivedState', function() {
@@ -103,8 +121,36 @@ define([
 
             sandbox.stub(control, '_canScroll').returns([true]);
             sandbox.stub(control, '_scrollToDate');
-            control._afterMount();
+            control._afterMount({});
             sinon.assert.called(control._scrollToDate);
+            sandbox.restore();
+         });
+
+         it('should not reset lastPositionFromOptions if positionToScroll is different', function() {
+            let
+                sandbox = sinon.createSandbox(),
+                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 1, 1) });
+
+            sandbox.stub(control, '_canScroll').returns([true]);
+            sandbox.stub(control, '_scrollToDate').returns(true);
+            control._positionToScroll = new Date(2017, 1, 1);
+            control._lastPositionFromOptions = new Date(2017, 2, 1);
+            control._updateScrollAfterViewModification(false);
+            assert.equal(control._positionToScroll, control._positionToScroll);
+            sandbox.restore();
+         });
+
+         it('should reset lastPositionFromOptions if positionToScroll is not different', function() {
+            let
+                sandbox = sinon.createSandbox(),
+                control = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 1, 1) });
+
+            sandbox.stub(control, '_canScroll').returns([true]);
+            sandbox.stub(control, '_scrollToDate').returns([true]);
+            control._positionToScroll = new Date(2017, 1, 1);
+            control._lastPositionFromOptions = new Date(2017, 1, 1);
+            control._updateScrollAfterViewModification(false);
+            assert.equal(control._positionToScroll, null);
             sandbox.restore();
          });
       });
@@ -117,6 +163,7 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_canScroll');
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
             ml._displayedDates = [1, 2];
@@ -156,6 +203,7 @@ define([
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2017, 2, 3) });
 
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             sandbox.stub(ml, '_findElementByDate').returns(null);
             ml._children.months = { reload: sinon.fake() };
             ml._container = {};
@@ -191,6 +239,35 @@ define([
             sandbox.restore();
          });
 
+         it('should update source if changed', function () {
+            const sandbox = sinon.createSandbox();
+            const oldSource = {
+               query: function () {
+                  return {
+                     then: function () {
+                        return 'source1';
+                     }
+                  };
+               }
+            };
+            const newSource = {
+               query: function () {
+                  return {
+                     then: function () {
+                        return 'source2';
+                     }
+                  };
+               }
+            };
+            const ml = calendarTestUtils.createComponent(calendar.MonthList, {});
+            ml._beforeUpdate({ source: oldSource });
+
+            const stub = sandbox.stub(ml, '_enrichItems');
+
+            ml._beforeUpdate({ source: newSource });
+
+            sinon.assert.calledOnce(stub);
+         });
       });
 
       describe('_afterUpdate', function() {
@@ -270,6 +347,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: position });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()
@@ -278,6 +356,7 @@ define([
             ml._scrollToPosition(position);
             assert.isEmpty(ml._displayedDates);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +position);
             sinon.assert.called(ml._children.months.reload);
             sandbox.restore();
          });
@@ -288,6 +367,7 @@ define([
                position = new Date(2018, 0, 1),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()
@@ -306,6 +386,7 @@ define([
                position = new Date(2018, 0, 2),
                ml = calendarTestUtils.createComponent(calendar.MonthList, { position: new Date(2019, 0, 1) });
             sandbox.stub(ml, '_canScroll').returns(false);
+            sandbox.stub(ml, '_isHidden').returns(false);
             ml._children = {
                months: {
                   reload: sinon.fake()
@@ -315,6 +396,7 @@ define([
             assert.isEmpty(ml._displayedDates);
             assert.strictEqual(ml._startPositionId, '2018-01-01');
             assert.strictEqual(ml._positionToScroll, position);
+            assert.strictEqual(+ml._lastNotifiedPositionChangedDate, +(new Date(2018, 0, 1)));
             sinon.assert.notCalled(ml._children.months.reload);
             sandbox.restore();
          });
@@ -356,7 +438,7 @@ define([
                }
             }],
             options: {},
-            date: new Date(2020, 0)
+            date: new entity.applied.Date(2020, 0)
          }, {
             title: 'Should generate an event when the element appeared on top and the next one is half visible. viewMode: "month"',
             entries: [{
@@ -371,7 +453,7 @@ define([
                }
             }],
             options: { viewMode: 'month' },
-            date: new Date(2019, 1)
+            date: new entity.applied.Date(2019, 1)
          }, {
             title: 'Should generate an event when the 2 elements appeared on top and the next one is half visible. viewMode: "month"',
             entries: [{
@@ -396,7 +478,7 @@ define([
                }
             }],
             options: { viewMode: 'month' },
-            date: new Date(2019, 2)
+            date: new entity.applied.Date(2019, 2)
          }].forEach(function(test) {
             it(test.title, function() {
                const
@@ -432,7 +514,8 @@ define([
                nativeEntry: {
                   boundingClientRect: { top: 10, bottom: 30 },
                   rootBounds: { top: 20 },
-                  isIntersecting: true
+                  isIntersecting: true,
+                  intersectionRatio: 0.5
                },
                data: {
                   date: new Date(2019, 0),
@@ -442,14 +525,44 @@ define([
             displayedDates: [],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     };
                   }
                }
             },
             resultDisplayedDates: [(new Date(2019, 0)).getTime()],
+            date: new Date(2019, 0)
+         }, {
+            title: 'Should\'t add date to displayed dates.',
+            entries: [{
+               nativeEntry: {
+                  boundingClientRect: { top: 10, bottom: 30 },
+                  rootBounds: { top: 20 },
+                  isIntersecting: true,
+                  intersectionRatio: 0.05
+               },
+               data: {
+                  date: new Date(2019, 0),
+                  type: ItemTypes.body
+               }
+            }],
+            displayedDates: [],
+            options: {
+               source: {
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     };
+                  }
+               }
+            },
+            resultDisplayedDates: [],
             date: new Date(2019, 0)
          }, {
             title: 'Should\'t add date to displayed dates if header item is has been shown.',
@@ -457,7 +570,8 @@ define([
                nativeEntry: {
                   boundingClientRect: { top: 10, bottom: 30 },
                   rootBounds: { top: 20 },
-                  isIntersecting: true
+                  isIntersecting: true,
+                  intersectionRatio: 0.5
                },
                data: {
                   date: new Date(2019, 0),
@@ -467,10 +581,12 @@ define([
             displayedDates: [],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     };
                   }
                }
             },
@@ -492,10 +608,12 @@ define([
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     };
                   }
                }
             },
@@ -517,10 +635,12 @@ define([
             displayedDates: [(new Date(2019, 0)).getTime(), 123],
             options: {
                source: {
-                  query:function (data) {
-                     return new Promise(function(resolve) {
-                        resolve(data);
-                     });
+                  query:function () {
+                     return {
+                        then: function () {
+                           return;
+                        }
+                     };
                   }
                }
             },
@@ -528,14 +648,26 @@ define([
             date: new Date(2019, 0)
          }].forEach(function(test) {
             it(test.title, function() {
-               const
-                  sandbox = sinon.createSandbox(),
-                  component = calendarTestUtils.createComponent(
-                     calendar.MonthList, coreMerge(test.options, config, { preferSource: true })
-                  );
-
+               const sandbox = sinon.createSandbox();
+               const component = calendarTestUtils.createComponent(calendar.MonthList);
+               sinon.replace(component, '_updateSource', () => {
+                  return;
+               });
+               let result = false;
+               component._extData = {
+                  enrichItems: function() {
+                     return {
+                        catch: function () {
+                           result = true;
+                        }
+                     };
+                  }
+               };
+               const options = coreMerge(test.options, component._options, { preferSource: true });
+               component._beforeMount(options);
                sandbox.stub(component, '_enrichItemsDebounced');
                component._displayedDates = test.displayedDates;
+               component._options = options;
                component._intersectHandler(null, test.entries);
                assert.deepEqual(component._displayedDates, test.resultDisplayedDates);
                sandbox.restore();
@@ -580,6 +712,9 @@ define([
             },
             returnYears = function(selector, date) {
                return selector === ITEM_BODY_SELECTOR.year ? selector : null;
+            },
+            returnMainTemplate = function(selector, date) {
+               return selector === ITEM_BODY_SELECTOR.mainTemplate ? selector : null;
             };
 
          [{
@@ -602,6 +737,10 @@ define([
             date: new Date(2020, 1, 2),
             getElementByDateStub: returnYears,
             result: ITEM_BODY_SELECTOR.year
+         }, {
+            date: new Date(2020, 1, 2),
+            getElementByDateStub: returnMainTemplate,
+            result: ITEM_BODY_SELECTOR.mainTemplate
          }].forEach(function(test, index) {
             it(`test ${index}`, function () {
                let
@@ -612,6 +751,37 @@ define([
                sandbox.stub(control, '_getElementByDate').callsFake(test.getElementByDateStub);
                assert.strictEqual(control._findElementByDate(test.date), test.result);
                sandbox.restore();
+            });
+         });
+      });
+
+      describe('_calculateInitialShadowVisibility', () => {
+         [{
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2019, 0),
+            position: 'top',
+            result: 'auto'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2024, 0)]],
+            displayedPosition: new Date(2022, 0),
+            position: 'top',
+            result: 'visible'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2022, 0),
+            position: 'bottom',
+            result: 'auto'
+         }, {
+            displayedRanges: [[new Date(2019, 0), new Date(2022, 0)]],
+            displayedPosition: new Date(2019, 0),
+            position: 'bottom',
+            result: 'visible'
+         }].forEach((test, index) => {
+            it(`should return correct shadowVisibility value ${index}`, () => {
+               const control = calendarTestUtils.createComponent(calendar.MonthList, {});
+               control._displayedPosition = test.displayedPosition;
+               const result = control._calculateInitialShadowVisibility(test.displayedRanges, test.position);
+               assert.equal(test.result, result);
             });
          });
       });

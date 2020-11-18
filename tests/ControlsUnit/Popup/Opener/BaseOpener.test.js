@@ -1,8 +1,9 @@
 define(
    [
-      'Controls/popup'
+      'Controls/popup',
+      'i18n!ControlsUnits'
    ],
-   (popup) => {
+   (popup, rk) => {
       'use strict';
 
       describe('Controls/_popup/Opener/BaseOpener', () => {
@@ -25,8 +26,6 @@ define(
             };
             var popupOptions = {
                closeOnOutsideClick: true,
-               _vdomOnOldPage: true,
-               actionOnScroll: 'close',
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
@@ -41,23 +40,15 @@ define(
             assert.equal(baseConfig.closeOnOutsideClick, true);
             assert.equal(baseConfig.templateOptions.type, 'stack');
             assert.equal(baseConfig.opener, null);
-            assert.equal(baseConfig.actionOnScroll, 'close');
-            assert.equal(opener._actionOnScroll, 'close');
-            assert.equal(opener._vdomOnOldPage, true);
             let opener2 = new popup.BaseOpener();
             popupOptions = {
-               _vdomOnOldPage: false,
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
                },
                opener: null
             };
-            popupOptions.templateOptions.opener = 123;
-            baseConfig = opener2._getConfig(popupOptions);
-            assert.equal(opener2._actionOnScroll, 'none');
-            assert.equal(opener2._vdomOnOldPage, false);
-            assert.equal(baseConfig.templateOptions.opener, undefined);
+            opener2._getConfig(popupOptions);
 
             opener.destroy();
 			      opener2.destroy();
@@ -66,6 +57,7 @@ define(
          it('_beforeUnmount', () => {
             let opener = new popup.BaseOpener();
             let isHideIndicatorCall = false;
+            opener.saveOptions(popup.BaseOpener.getDefaultOptions());
             opener._indicatorId = '123';
             opener._openPopupTimerId = '145';
             opener._options.closePopupBeforeUnmount = true;
@@ -79,7 +71,6 @@ define(
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, true);
-            assert.equal(opener._openPopupTimerId, null);
 
             isHideIndicatorCall = false;
             opener._indicatorId = null;
@@ -87,7 +78,6 @@ define(
             opener._options.closePopupBeforeUnmount = false;
             opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
-            assert.equal(opener._openPopupTimerId, '145');
             assert.equal(isHideIndicatorCall, false);
             opener.destroy();
          });
@@ -116,17 +106,40 @@ define(
       });
 
       it('getIndicatorConfig', () => {
-         const opener = new popup.BaseOpener();
          const standartCfg = {
-            id: '',
+            id: undefined,
             message: rk('Загрузка'),
             delay: 2000
          };
-         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
-         opener._indicatorId = '123';
+         assert.deepEqual(standartCfg, popup.BaseOpener.util.getIndicatorConfig());
+         const indicatorId = '123';
          standartCfg.id = '123';
-         assert.deepEqual(standartCfg, opener._getIndicatorConfig());
-         opener.destroy();
+         assert.deepEqual(standartCfg, popup.BaseOpener.util.getIndicatorConfig(indicatorId));
+         const cfg = {
+            indicatorConfig: {
+               message: 'Error',
+               delay: 0
+            }
+         };
+         const newConfig = {
+            id: '123',
+            message: 'Error',
+            delay: 0
+         };
+         assert.deepEqual(newConfig, popup.BaseOpener.util.getIndicatorConfig(indicatorId, cfg));
+      });
+
+      it('showDialog remove old id', (done) => {
+         const baseOpenPopup = popup.BaseOpener._openPopup;
+         popup.BaseOpener._openPopup = (cfg) => {
+            popup.BaseOpener._openPopup = baseOpenPopup;
+            assert.equal(cfg.id, undefined); // id почистился, т.к. такого окна не было открыто
+            done();
+         };
+         const config = {
+            id: 'badId'
+         };
+         popup.BaseOpener.showDialog({}, config);
       });
    }
 );

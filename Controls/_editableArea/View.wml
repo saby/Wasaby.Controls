@@ -1,24 +1,34 @@
+<ws:template name="buttonsTemplateBase">
+   <ws:partial template="{{_buttonsTemplate}}"
+               attr:class="controls-EditableArea_isEditing_wrapper_theme-{{_options.theme}}"
+               on:applyButtonClick="commitEdit()"
+               on:closeButtonClick="cancelEdit()"/>
+</ws:template>
+
 <Controls.validate:Controller
    name="formController"
    on:deactivated="_onDeactivatedHandler()"
 >
    <div
       class="controls-EditableArea
-      {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}
+      {{_isEditing ? _backgroundStyleClass}}
       controls-EditableArea_{{_options.readOnly ? 'readonly' : 'clickable'}}"
    >
-      <ws:partial
-         template="{{_options.content}}"
-         editObject="{{_editObject}}"
-         on:click="_onClickHandler()"
-         on:keyDown="_onKeyDown()"
-         isEditing="{{_isEditing}}"
-      />
-      <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
-          <ws:partial template="{{_buttonsTemplate}}"
-                      attr:class="controls-EditableArea_isEditing_wrapper"
-                      on:applyButtonClick="commitEdit()"
-                      on:closeButtonClick="cancelEdit()" />
-      </ws:if>
+      <div class="controls-EditableArea__wrapper">
+         <ws:partial
+            template="{{_options.content}}"
+            editObject="{{_editObject}}"
+            on:mousedown="_onClickHandler()"
+            on:keyDown="_onKeyDown()"
+            isEditing="{{_isEditing}}"
+         >
+            <ws:buttonsTemplate>
+               <ws:partial template="buttonsTemplateBase"/>
+            </ws:buttonsTemplate>
+         </ws:partial>
+         <ws:if data="{{_toolbarVisible && _isEditing}}">
+            <ws:partial template="buttonsTemplateBase"/>
+         </ws:if>
+      </div>
    </div>
 </Controls.validate:Controller>

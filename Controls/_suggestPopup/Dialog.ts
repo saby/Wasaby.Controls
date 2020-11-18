@@ -7,44 +7,22 @@ import 'Controls/popupTemplate';
 
       /**
        * Контрол-контейнер, который обеспечивает связь поля ввода и списка внутри выпадающего блока.
-       * @example
-       * JavaScript
-       * <pre class="brush: js">
-       * define('myControl/SuggestList',
-       *    [
-       *       'UI/Base',
-       *       'wml!myControl/SuggestList'
-       *    ], function(Base, template) {
-       *       'use strict';
-       *         
-       *       return Base.Control.extend({
-       *          _template: template
-       *       });
-       *    }
-       * );
-       * </pre>
-       * WML
-       * <pre class="brush: html">
-       * <Controls.suggestPopup:ListContainer>
-       *    <Controls.list:View
-       *       displayProperty="title"
-       *       keyProperty="id"
-       *       attr:class="demo-SuggestList"/>
-       * </Controls.suggestPopup:ListContainer>
-       * </pre>
-       * @class Controls/_suggestPopup/List
+       * 
+       * @remark
+       * Полезные ссылки:
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less">переменные тем оформления</a>
+       * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
-       * @author Герасимов Александр
-       * @control
-       * @public
+       * @author Герасимов А.М.
+       * 
        */
 
       /*
        * Dialog for list in Suggest component.
-       * @class Controls/_suggestPopup/List
+       * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов Александр
-       * @control
+       * 
        * @public
        */
 

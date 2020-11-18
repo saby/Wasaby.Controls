@@ -7,7 +7,6 @@ define('Controls-demo/Combobox/ComboboxVDom',
       'Controls/dropdown',
       'wml!Controls-demo/Combobox/itemTemplateCombobox',
       'wml!Controls-demo/Combobox/itemTemplateMultiline',
-      'css!Controls-demo/Combobox/ComboboxVDom'
    ],
    function(Control, template, source, historySourceCombobox) {
 
@@ -36,10 +35,6 @@ define('Controls-demo/Combobox/ComboboxVDom',
                {
                   id: '2',
                   title: 'Moscow'
-               },
-               {
-                  id: '3',
-                  title: 'St-Petersburg'
                }
             ];
             this._itemsCode = [
@@ -110,6 +105,8 @@ define('Controls-demo/Combobox/ComboboxVDom',
             return this._createMemory(items);
          }
       });
+
+      ComboBox._styles = ['Controls-demo/Combobox/ComboboxVDom', 'Controls-demo/Controls-demo'];
 
       return ComboBox;
    }

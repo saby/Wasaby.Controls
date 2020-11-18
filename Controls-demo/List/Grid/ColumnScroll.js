@@ -3,39 +3,43 @@ define('Controls-demo/List/Grid/ColumnScroll', [
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/ColumnScroll',
    'Types/source',
+   'Controls/Utils/Toolbar',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoBalancePrice',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
    'wml!Controls-demo/List/Grid/DemoName',
-   'css!Controls-demo/List/Grid/Grid',
    'Controls/scroll',
    'Controls/grid',
    'wml!Controls-demo/List/Grid/Results'
-], function(BaseControl, GridData, template, source) {
+], function(BaseControl, GridData, template, source, Toolbar) {
    'use strict';
    var
       columns = [
          {
             displayProperty: 'name',
             width: 'minmax(600px, 1fr)',
+            compatibleWidth: '600px',
             template: 'wml!Controls-demo/List/Grid/DemoName'
          },
          {
             displayProperty: 'price',
             width: 'auto',
+            compatibleWidth: '51px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
          },
          {
             displayProperty: 'balance',
             width: 'auto',
+            compatibleWidth: '69px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
          },
          {
             displayProperty: 'costPrice',
             width: 'auto',
+            compatibleWidth: '78px',
             align: 'right',
             template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
             resultTemplate: 'wml!Controls-demo/List/Grid/Results',
@@ -143,7 +147,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
             id: 1,
             icon: 'icon-EmptyMessage icon-primary',
             title: 'message',
-            showType: 2,
+            showType: Toolbar.showType.TOOLBAR,
             handler: function() {
                alert('Message click');
             }
@@ -152,7 +156,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
             id: 2,
             icon: 'icon-Erase icon-error',
             title: 'delete',
-            showType: 2,
+            showType: Toolbar.showType.TOOLBAR,
             handler: function() {
                alert('Delete click');
             }
@@ -176,6 +180,8 @@ define('Controls-demo/List/Grid/ColumnScroll', [
             this._itemActions = itemActions;
          }
       });
+
+   ModuleClass._styles = ['Controls-demo/List/Grid/Grid'];
 
    return ModuleClass;
 });

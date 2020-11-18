@@ -1,12 +1,13 @@
 /**
  * Библиотека контролов, которые служат для организации поиска в списках.
- * Подробнее об организации поиска и фильтрации данных в реестре {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
+ * Подробнее об организации поиска и фильтрации данных в реестре <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">здесь</a>.
  * @library Controls/search
  * @includes InputContainer Controls/_search/Input/Container
  * @includes Misspell Controls/_search/Misspell
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
+ * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
  * @public
  * @author Крайнов Д.О.
  */
@@ -19,12 +20,13 @@
  * @includes MisspellContainer Controls/_search/Misspell/Container
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
+ * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
  * @public
  * @author Крайнов Д.О.
  */
 
 import {default as Misspell} from 'Controls/_search/Misspell';
-import {default as FilterController} from 'Controls/_search/FilterController';
+import {default as ExpandableInput} from 'Controls/_search/Input/ExpandableInput/Search';
 import InputContainer = require('Controls/_search/Input/Container');
 import MisspellContainer = require('Controls/_search/Misspell/Container');
 import Controller = require('Controls/_search/Controller');
@@ -34,6 +36,7 @@ import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherSt
 
 export {default as _Search} from './_search/_Search';
 export {default as _SearchController} from './_search/_SearchController';
+export {default as ControllerClass} from './_search/ControllerClass';
 
 export {
    InputContainer,
@@ -41,7 +44,7 @@ export {
    MisspellContainer,
    Controller,
    Input,
-   FilterController,
+   ExpandableInput,
 
    getSwitcherStrFromData
 };

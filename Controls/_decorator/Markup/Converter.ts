@@ -12,7 +12,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
  *
  * @class Controls/_decorator/Markup/Converter
  * @public
- * @author Кондаков Р.Н.
+ * @author Угриновский Н.В.
  */
 
    // Convert node to jsonML array.
@@ -70,7 +70,8 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 
    /**
     * Преобразует html-строки в допустимый JsonML. Используется только на стороне клиента.
-    * @function Controls/_decorator/Markup/Converter#htmlToJson
+    * @name Controls/_decorator/Markup/Converter#htmlToJson
+    * @function
     * @param html {String}
     * @returns {Array}
     */
@@ -132,7 +133,8 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 
    /**
     * Преобразует json-строки в строки формата html.
-    * @function Controls/_decorator/Markup/Converter#jsonToHtml
+    * @name Controls/_decorator/Markup/Converter#jsonToHtml
+    * @function 
     * @param json {Array} Json на основе JsonML.
     * @param tagResolver {Function} точно как в {@link Controls/_decorator/Markup#tagResolver}.
     * @param resolverParams {Object} точно как в {@link Controls/_decorator/Markup#resolverParams}.
@@ -162,7 +164,8 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 
    /**
     * Преобразует json-массив в его копию по значению во всех узлах.
-    * @function Controls/_decorator/Markup/Converter#deepCopyJson
+    * @name Controls/_decorator/Markup/Converter#deepCopyJson
+    * @function 
     * @param json
     * @return {Array}
     */
@@ -176,12 +179,6 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
    var deepCopyJson = function(json) {
       return objectMerge([], json, { clone: true });
    };
-
-   /**
-    * @class Controls/_decorator/Markup/Converter
-    * @author Кондаков Р.Н.
-    * @public
-    */
 
    var MarkupConverter = {
       htmlToJson: htmlToJson,

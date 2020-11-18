@@ -6,17 +6,17 @@
 .controls-Stack__resizingLine {
    position: absolute;
    height: 100%;
-   z-index: 2;
+   z-index: 40; // https://docs.google.com/document/d/1jKYv2go53aYc-zjOhUERS0CzvfihVJ5ZdRrbN-WL9WA/edit
 }
 
 .ws-is-desktop-platform .controls-Stack__resizingLine {
    left: 0;
 }
 .ws-is-mobile-platform .controls-Stack__resizingLine_theme-@{themeName} {
-   left: -@resizing-line_mobile_left_stack;
-   width: @resizing-line_mobile_width_stack;
-   .controls-ResizingLine__areaWrapper_theme-@{themeName} {
-      width: @resizing-line_mobile_width_stack - @resizing-line_mobile_left_stack;
+   left: -@resizingLine_mobile_offset-left_stack;
+   width: @resizingLine_mobile_thickness_stack;
+   .controls-ResizingLine__areaWrapper_horizontal_theme-@{themeName} {
+      width: @resizingLine_mobile_thickness_stack - @resizingLine_mobile_offset-left_stack;
    }
 }
 

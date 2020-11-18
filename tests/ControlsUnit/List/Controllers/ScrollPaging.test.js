@@ -1,136 +1,221 @@
-/**
- * Created by kraynovdo on 20.02.2018.
- */
-/**
- * Created by kraynovdo on 07.02.2018.
- */
-define([
-   'Controls/_list/Controllers/ScrollPaging',
-   'Types/source',
-   'Core/core-instance'
-], function(ScrollPaging, sourceLib, cInstance){
-   describe('Controls.Controllers.ScrollPaging', function () {
-      var data, source;
-      beforeEach(function() {
-         data = [
-            {
-               id : 1,
-               title : 'Первый',
-               type: 1
-            },
-            {
-               id : 2,
-               title : 'Второй',
-               type: 2
-            },
-            {
-               id : 3,
-               title : 'Третий',
-               type: 2
-            }
-         ];
-         source = new sourceLib.Memory({
-            data: data,
-            keyProperty: 'id'
-         });
+define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports", "chai", "Controls/_list/Controllers/ScrollPaging"], function (require, exports, chai, ScrollPaging) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    describe('Controls.Controllers.ScrollPaging', function () {
+        describe('constructor', function () {
+            it('top position', function () {
+                var result;
+                var spInstance = new ScrollPaging.default({
+                    scrollParams: {
+                        scrollTop: 0,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai.assert.equal('top', spInstance._curState, 'Wrong curState after ctor');
+                chai.assert.deepEqual({
+                    arrowState: {
+                        begin: "readonly",
+                        end: "visible",
+                        next: "visible",
+                        prev: "readonly"
+                    }
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+            it('middle position', function () {
+                var result;
+                var spInstance = new ScrollPaging.default({
+                    scrollParams: {
+                        scrollTop: 50,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai.assert.equal('middle', spInstance._curState, 'Wrong curState after ctor');
+                chai.assert.deepEqual({
+                    arrowState: {
+                        begin: "visible",
+                        end: "visible",
+                        next: "visible",
+                        prev: "visible"
+                    }
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+            it('top position', function () {
+                var result;
+                var spInstance = new ScrollPaging.default({
+                    scrollParams: {
+                        scrollTop: 100,
+                        scrollHeight: 150,
+                        clientHeight: 50
+                    },
+                    pagingCfgTrigger: function (cfg) {
+                        result = cfg;
+                    }
+                });
+                chai.assert.equal('bottom', spInstance._curState, 'Wrong curState after ctor');
+                chai.assert.deepEqual({
+                    arrowState: {
+                        begin: "visible",
+                        end: "readonly",
+                        next: "readonly",
+                        prev: "visible"
+                    }
+                }, result, 'Wrong pagingCfg after ctor');
+            });
+        });
+        describe('updateScrollParams', function () {
+            var result;
+            var spInstance = new ScrollPaging.default({
+                scrollParams: {
+                    scrollTop: 150,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                },
+                pagingCfgTrigger: function (cfg) {
+                    result = cfg;
+                }
+            });
+            it('make big window and reach bottom', function () {
+                spInstance.updateScrollParams({
+                    scrollTop: 150,
+                    scrollHeight: 250,
+                    clientHeight: 100
+                });
+                chai.assert.equal('bottom', spInstance._curState, 'Wrong curState after updateScrollParams');
+                chai.assert.deepEqual({
+                    arrowState: {
+                        begin: "visible",
+                        end: "readonly",
+                        next: "readonly",
+                        prev: "visible"
+                    }
+                }, result, 'Wrong pagingCfg after scroll');
+            });
+        });
+        describe('numbers', () => {
+            var result;
+            var spInstance = new ScrollPaging.default({
+                pagingMode: 'numbers',
+                loadedElementsCount: 10,
+                totalElementsCount: 100,
+                scrollParams: {
+                    scrollTop: 0,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                },
+                pagingCfgTrigger: function (cfg) {
+                    result = cfg;
+                }
+            });
+            it('initPagingData', () => {
+                chai.assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50, averageElementHeight: 25});
+            });
+            it('getItemsCountOnPage', () => {
+                chai.assert.deepEqual(spInstance.getItemsCountOnPage(), 2);
+            });
+            it('getNeededItemsCountForPage', () => {
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(1), 2);
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(2), 4);
+                spInstance.shiftToEdge('down', {up: true});
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(50), 2);
+                chai.assert.deepEqual(spInstance.getNeededItemsCountForPage(49), 4);
+            });
+            it('getScrollTopByPage numbersState = up', () => {
+                spInstance.shiftToEdge('up', {down: true});
+                spInstance.updateScrollParams({
+                    scrollTop: 0,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                }, { up: false, down: true });
+                chai.assert.equal(spInstance.getScrollTopByPage(1), 0, 'wrong scrollTop for page 1');
+                chai.assert.equal(spInstance.getScrollTopByPage(2), 50, 'wrong scrollTop for page 2');
+                chai.assert.equal(spInstance.getScrollTopByPage(3), 100, 'wrong scrollTop for page 3');
+            });
+            it('getScrollTopByPage numbersState = down', () => {
+                spInstance.shiftToEdge('down', {up: true});
+                spInstance.updateScrollParams({
+                    scrollTop: 50,
+                    scrollHeight: 250,
+                    clientHeight: 50
+                }, { up: true, down: false });
+                chai.assert.equal(spInstance.getScrollTopByPage(50), 200, 'wrong scrollTop for page 10');
+                chai.assert.equal(spInstance.getScrollTopByPage(49), 150, 'wrong scrollTop for page 9');
+                chai.assert.equal(spInstance.getScrollTopByPage(48), 100, 'wrong scrollTop for page 8');
+            });
+            describe('getPagingCfg', () => {
+                it('top', () => {
+                   spInstance.shiftToEdge('up', {});
+                   spInstance.updateScrollParams({
+                       scrollTop: 0,
+                       scrollHeight: 250,
+                       clientHeight: 50
+                   }, { up: false, down: true });
+                   chai.assert(result.selectedPage, 1, 'wrong selected page at the top');
+                });
 
-      });
+                it('2 page', () => {
+                    spInstance.shiftToEdge('up', {});
+                    spInstance.updateScrollParams({
+                        scrollTop: 50,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: false, down: true });
+                    chai.assert(result.selectedPage, 2, 'wrong selected page at the 2 page');
+                });
 
-      it('constructor', function () {
-         var result;
-         var spInstance = new ScrollPaging({
-            pagingCfgTrigger: function(cfg) {
-               result = cfg;
-            }
-         });
-         assert.equal('top', spInstance._curState, 'Wrong curState after ctor');
+                it('last page from top', () => {
+                    spInstance.shiftToEdge('up', {});
+                    spInstance.updateScrollParams({
+                        scrollTop: 200,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: false, down: false });
+                    chai.assert(result.selectedPage, 50, 'wrong selected page at the last page');
+                    spInstance.updateScrollParams({
+                        scrollTop: 150,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: false, down: false });
+                    chai.assert(result.selectedPage, 49, 'wrong selected page at the last page');
+                });
 
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after ctor');
-      });
+                it('last page from bottom', () => {
+                    spInstance.shiftToEdge('down', {});
+                    spInstance.updateScrollParams({
+                        scrollTop: 200,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: true, down: false });
+                    chai.assert(result.selectedPage, 50, 'wrong selected page at the last page');
+                });
 
-      it('scroll', function () {
-         var result;
-         var spInstance = new ScrollPaging({
-            pagingCfgTrigger: function(cfg) {
-               result = cfg;
-            }
-         });
+                it('prev page from bottom', () => {
+                    spInstance.shiftToEdge('down', {});
+                    spInstance.updateScrollParams({
+                        scrollTop: 150,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: true, down: false });
+                    chai.assert(result.selectedPage, 49, 'wrong selected page at the last page');
+                });
 
-         spInstance.handleScroll();
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollTop(false);
-         assert.equal('top', spInstance._curState, 'Wrong curState after scroll to top');
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollBottom(false);
-         assert.equal('bottom', spInstance._curState, 'Wrong curState after scroll to bottom');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'disabled',
-            stateEnd: 'disabled'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScroll();//to reset _curState
-         spInstance.handleScrollBottom(true);
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll to bottom');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollEdge('up', {down: true, up: false});
-         assert.equal('top', spInstance._curState, 'Wrong curState after scroll to edge up');
-         assert.deepEqual({
-            stateBegin: 'disabled',
-            statePrev: 'disabled',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScrollEdge('down', {down: false, up: true});
-         assert.equal('bottom', spInstance._curState, 'Wrong curState after scroll to edge down');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'disabled',
-            stateEnd: 'disabled'
-         }, result, 'Wrong pagingCfg after scroll');
-
-         spInstance.handleScroll();//to reset _curState
-         spInstance.handleScrollEdge('down', {down: true, up: false});
-         assert.equal('middle', spInstance._curState, 'Wrong curState after scroll to edge down');
-         assert.deepEqual({
-            stateBegin: 'normal',
-            statePrev: 'normal',
-            stateNext: 'normal',
-            stateEnd: 'normal'
-         }, result, 'Wrong pagingCfg after scroll');
-
-      });
-
-      it('_private.getStateByHasMore', function() {
-         assert.equal(ScrollPaging._private.getStateByHasMoreData(true), 'normal');
-         assert.equal(ScrollPaging._private.getStateByHasMoreData(false), 'disabled');
-      });
-   })
+                it('first page from bottom', () => {
+                    spInstance.shiftToEdge('down', {});
+                    spInstance.updateScrollParams({
+                        scrollTop: 0,
+                        scrollHeight: 250,
+                        clientHeight: 50
+                    }, { up: false, down: false });
+                    chai.assert(result.selectedPage, 1, 'wrong selected page at the first page');
+                });
+            });
+        });
+    });
 });

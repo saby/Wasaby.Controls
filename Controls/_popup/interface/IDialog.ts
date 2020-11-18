@@ -18,6 +18,7 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     top?: number;
     left?: number;
     maximize?: boolean;
+    restrictiveContainer?: string;
 }
 
 export interface IDialogOpener extends IOpener {
@@ -70,6 +71,46 @@ export interface IDialogOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IDialog#maximize
  * @cfg {Boolean} Определяет, должно ли всплывающее окно открываться на весь экран.
+ */
+
+/**
+ * @name Controls/_popup/interface/IDialog#restrictiveContainer
+ * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
+ * @remark
+ * Алгоритм поиска контейнера, внутри которого будут строиться окна:
+ * <ol>
+ *     <li>Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
+ *     Если ничего не нашли или опция не задана см. следующий шаг</li>
+ *     <li>Если опция не задана, то ищем глобальным селектором класс <b>controls-Popup__dialog-target-container</b></li>
+ *     <li>Если ничего не нашли, позиционируемся по body
+ * </ol>
+ *
+ * Класс controls-Popup__dialog-target-container является зарезервированным и должен быть объявлен на странице только 1 раз.
+ * Классом должен быть добавлен на контейнер, по которому позиционируются стековые окна по умолчанию.
+ * @example
+ * wml
+ * <pre>
+ *     <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
+ *     <Controls.buttons:Button caption="open dialog" on:click="_openDialog()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * import {DialogOpener} from 'Controls/popup';
+ * _beforeMount(): void{
+ *    this._dialogOpener = new DialogOpener();
+ * }
+ * _openStack(): void {
+ *     const config = {
+ *          template: 'Controls-demo/Popup/TestDialog',
+ *          closeOnOutsideClick: true,
+ *          autofocus: true,
+ *          opener: null,
+ *          restrictiveContainer: '.myRestrictiveContainer'
+ *     };
+ *     this._dialogOpener.open(config);
+ * }
+ * </pre>
+ * @demo Controls-demo/Popup/Dialog/RestrictiveContainer/Index
  */
 
 /**
@@ -164,66 +205,5 @@ export interface IDialogOpener extends IOpener {
  *       ...
  *   });
  * </pre>
- * @see close
- * @see openPopup
- * @see closePopup
- */
-
-/**
- * Статический метод для открытия диалогового окна. При использовании метода не требуется создавать popup:Dialog в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup Подробнее}.
- * @function Controls/_popup/interface/IDialog#openPopup
- * @param {PopupOptions} config Конфигурация диалогового окна
- * @return {Promise<string>} Метод возвращает Promise, который в качестве результата отдаёт идентификатор окна. Идентификатор используется для закрытия диалога с помощью метода {@link closePopup}.
- * @remark
- * Для обновления уже открытого окна в config нужно передать свойство id с идентификатором открытого окна.
- * @static
- * @example
- * <pre>
- *    import {Dialog} from 'Controls/popup';
- *    ...
- *    openDialog() {
- *        Dialog.openPopup({
- *          template: 'Example/MyDialogTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeDialog() {
- *       Dialog.closePopup(this._popupId);
- *    }
- * </pre>
- * @see closePopup
- * @see close
- * @see open
- */
-
-/**
- * Статический метод для закрытия окна по идентификатору.
- * Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup здесь}.
- * @function Controls/_popup/interface/IDialog#closePopup
- * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
- * @static
- * @example
- * <pre>
- *    import {Dialog} from 'Controls/popup';
- *    ...
- *    openDialog() {
- *        Dialog.openPopup({
- *          template: 'Example/MyDialogTemplate',
- *          opener: this._children.myButton
- *        }).then((dialogId) => {
- *          this._dialogId = dialogId;
- *        });
- *    },
- *
- *    closeDialog() {
- *       Dialog.closePopup(this._dialogId);
- *    }
- * </pre>
- * @see openPopup
- * @see opener
  * @see close
  */

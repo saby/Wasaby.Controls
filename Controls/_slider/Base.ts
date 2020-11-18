@@ -1,14 +1,17 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
 import SliderBase from './_SliderBase';
 import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
-import {IScaleData, ILineData, IPointDataList, default as Utils} from './Utils';
+import {IScaleData, ILineData, IPointDataList, IPositionedInterval, default as Utils} from './Utils';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {IInterval} from './interface/IInterval';
+import {constants} from 'Env/Env';
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
    value: number;
+   intervals: IInterval[];
 }
 
 const maxPercentValue = 100;
@@ -16,63 +19,48 @@ const maxPercentValue = 100;
 /**
  * Базовый слайдер с одним подвижным ползунком для выбора значения.
  *
- * <a href="/materials/demo-ws4-sliderbase">Демо-пример</a>.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less">переменные тем оформления</a>
+ *
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
- * @author Колесов В.А.
- * @demo Controls-demo/Slider/Base/SliderBaseDemo
+ * @author Красильников А.С.
+ * @demo Controls-demo/Slider/Base/Base/Index
  */
 
 /*
  * Basic slider with single movable point for choosing value.
  *
- * <a href="/materials/demo-ws4-sliderbase">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">Demo-example</a>.
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Base/SliderBaseDemo
+ * @demo Controls-demo/Slider/Base/Base/Index
  */
-
-/**
- * @name Controls/_slider/Base#value
- * @cfg {Number} Устанавливает текущее значение слайдера.
- * @remark Должно находиться в диапазоне [minValue..maxValue]
- * @example
- * Слайдер с ползунком, установленным в положение 40.
- * <pre class="brush:html">
- *   <Controls.slider:Base value="{{40}}"/>
- * </pre>
- */
-
-/*
- * @name Controls/_slider/Base#value
- * @cfg {Number} sets the current value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base value="{{40}}"/>
- * </pre>
- */
-
 
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
    private _pointData: IPointDataList = undefined;
-   private _scaleData: IScaleData[] = undefined;
+   protected _scaleData: IScaleData[] = undefined;
    private _tooltipPosition: number | null = null;
-   private _tooltipValue: string | null = null;
-   private _isDrag: boolean = false;
+   protected _tooltipValue: string | null = null;
+   protected _isDrag: boolean = false;
+   protected _intervals: IPositionedInterval[] = [];
 
    private _render(minValue: number, maxValue: number, value: number): void {
       const rangeLength = maxValue - minValue;
-      const right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      let right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      if (this._options.direction === 'vertical') {
+         right = maxPercentValue - right;
+      }
       this._pointData[0].position = right;
       this._lineData.width = right;
    }
@@ -91,9 +79,24 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    private _checkOptions(opts: ISliderBaseOptions): void {
+      const {minValue, maxValue, value, intervals} = opts;
       Utils.checkOptions(opts);
-      if (opts.value < opts.minValue || opts.value > opts.maxValue) {
+      if (value < minValue || value > maxValue) {
          Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
+      }
+
+      if (intervals?.length) {
+         intervals.forEach(({start, end}) => {
+            if (start > end) {
+               Logger.error('Slider: start of the interval must be less than end.');
+            }
+            if (start < minValue || start > maxValue) {
+               Logger.error('Slider: start of the interval must be between minValue and maxValue.');
+            }
+            if (end < minValue || end > maxValue) {
+               Logger.error('Slider: end of the interval must be between minValue and maxValue.');
+            }
+         });
       }
    }
 
@@ -102,8 +105,11 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    protected _beforeMount(options: ISliderBaseOptions): void {
+      super._beforeMount(options);
       this._checkOptions(options);
-      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+          options.scaleLabelFormatter);
+      this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
       this._value = options.value === undefined ? options.maxValue : options.value;
       this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
       this._lineData = {position: 0, width: 100};
@@ -111,28 +117,37 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    protected _beforeUpdate(options: ISliderBaseOptions): void {
+      super._beforeUpdate(options);
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
-         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+             options.scaleLabelFormatter);
       }
+
+      if (this._options.intervals !== options.intervals) {
+         this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
+      }
+
       this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
+      this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._tooltipPosition;
       this._render(options.minValue, options.maxValue, this._value);
       this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
    }
 
-   private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+   protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._isDrag = true;
          this._value = this._getValue(event);
          this._setValue(this._value);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
 
-   private _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
+   protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
-         const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
+         const ratio = this._options.direction === 'vertical' ?
+             Utils.getRatio(dragObject.position.y, box.top + window.pageYOffset, box.height) :
+             Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
          this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
          this._setValue(this._value);
       }
@@ -141,18 +156,111 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    static _theme: string[] = ['Controls/slider'];
 
    static getDefaultOptions(): object {
-      return {...{
-         theme: 'default',
-         value: undefined
-      }, ...SliderBase.getDefaultOptions()};
+      return {
+         ...{
+            theme: 'default',
+            value: undefined,
+            intervals: []
+         }, ...SliderBase.getDefaultOptions()
+      };
 
    }
+
    static getOptionTypes(): object {
-      return {...{
-         value: EntityDescriptor(Number)
-      }, ...SliderBase.getOptionTypes()};
+      return {
+         ...{
+            value: EntityDescriptor(Number),
+            intervals: EntityDescriptor(Array)
+         }, ...SliderBase.getOptionTypes()
+      };
 
-}
+   }
 }
 
+/**
+ * @name Controls/_slider/Base#value
+ * @cfg {Number} Устанавливает текущее значение слайдера.
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер с ползунком, установленным в положение 40.
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
+ * </pre>
+ */
+
+/*
+ * @name Controls/_slider/Base#value
+ * @cfg {Number} sets the current value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:value="{{_value}}"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._value = 40;
+ * </pre>
+ */
+
+/**
+ * @name Controls/_slider/Base#intervals
+ * @cfg {Array<IInterval>>} Интервалы шкалы выбора значения, закрашенные выбранным цветом.
+ * @example
+ * Слайдер с закрашенным интервалом.
+ * <pre class="brush:html">
+ *    <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
+ *       <ws:intervals>
+ *          <ws:Array>
+ *             <ws:Object
+ *                color="primary"
+ *                start="{{0}}"
+ *                end="{{10}}"/>
+ *             <ws:Object
+ *                color="danger"
+ *                start="{{30}}"
+ *                end="{{70}}"/>
+ *          </ws:Array>
+ *       </ws:intervals>
+ *    </Controls.slider:Base>
+ * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
+ */
+
+/*
+ * @name Controls/_slider/Base#intervals
+ * @cfg {Array<IInterval>>} Colored intervals of the scale for choose value.
+ * @example
+ * Colored slider.
+ * <pre class="brush:html">
+ *   <Controls.slider:Base minValue="{{0}}" maxValue="{{100}}">
+ *       <ws:intervals>
+ *          <ws:Array>
+ *             <ws:Object
+ *                color="primary"
+ *                start="{{0}}"
+ *                end="{{10}}"
+ *             </ws:Object>
+ *             <ws:Object
+ *                color="danger"
+ *                start="{{30}}"
+ *                end="{{70}}"
+ *             </ws:Object>
+ *          </ws:Array>
+ *       </ws:intervals>
+ *    </Controls.slider:Base>
+ * </pre>
+ * @demo Controls-demo/Slider/Base/Intervals/Index
+ */
+
+/**
+ * @event Происходит при изменении значения слайдера.
+ * @name Controls/_slider/Base#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {number} value Новое значение.
+ */
 export default Base;

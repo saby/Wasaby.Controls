@@ -1,21 +1,22 @@
 define(
    [
       'Core/core-instance',
-      'Controls/_input/Money',
+      'Controls/input',
       'ControlsUnit/resources/TemplateUtil',
       'ControlsUnit/Input/Base/InputUtility',
       'wml!ControlsUnit/Input/Money/ZeroValueTest',
       'wml!ControlsUnit/Input/Money/EmptyValueTest'
    ],
-   function(instance, Money, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
+   function(instance, input, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
       'use strict';
 
       describe('Controls/_input/Money', function() {
          var ctrl, calls;
+         var Money = input.Money;
 
          beforeEach(function() {
             calls = [];
-            ctrl = new Money.default();
+            ctrl = new Money();
             var beforeMount = ctrl._beforeMount;
 
             ctrl._beforeMount = function() {
@@ -42,7 +43,8 @@ define(
                });
                ctrl._readOnlyField.scope.options = {
                   theme: 'default',
-                  precision: 2
+                  precision: 2,
+                  horizontalPadding: 'xs'
                };
                ctrl._readOnlyField.template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
             });
@@ -58,22 +60,18 @@ define(
             });
          });
 
-         describe('User input.', function() {
-            it('Enter "0" in the empty field.', function() {
-               ctrl._beforeMount({
-                  value: '',
-                  precision: 2
-               });
-               InputUtility.init(ctrl);
-               InputUtility.insert(ctrl, '0');
-               InputUtility.triggerInput(ctrl);
-
-               assert.equal(ctrl._viewModel.displayValue, '0.00');
-               assert.equal(ctrl._viewModel.value, '0');
-               assert.deepEqual(ctrl._viewModel.selection, {
-                  start: 1,
-                  end: 1
-               });
+         describe('Money part', function() {
+            it('value = 100.00, precision = 2', function() {
+               const value = '100.00';
+               const precision = 2;
+               assert.equal(Money.integerPart(value, precision), '100');
+               assert.equal(Money.fractionPart(value, precision), '.00');
+            });
+            it('value = 100, precision = 0', function() {
+               const value = '100';
+               const precision = 0;
+               assert.equal(Money.integerPart(value, precision), '100');
+               assert.equal(Money.fractionPart(value, precision), '');
             });
          });
       });

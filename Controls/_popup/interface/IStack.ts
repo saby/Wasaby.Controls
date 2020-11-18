@@ -13,6 +13,7 @@ export interface IStackPopupOptions extends IBasePopupOptions {
     width?: number;
     maxWidth?: number;
     propStorageId?: number;
+    restrictiveContainer?: string;
 }
 
 export interface IStackOpener extends IOpener {
@@ -51,8 +52,6 @@ export interface IStackOpener extends IOpener {
  *     });
  * </pre>
  * @see close
- * @see openPopup
- * @see closePopup
  */
 
 /*
@@ -93,92 +92,12 @@ export interface IStackOpener extends IOpener {
  * @description Close Stack Popup.
  */
 
-
-
-/**
- * Статический метод для открытия стекового окна. При использовании метода не требуется создавать popup:Stack в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ Подробнее}.
- * @function Controls/_popup/interface/IStack#openPopup
- * @param {PopupOptions} config Конфигурация стекового окна
- * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
- * @remark
- * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
- * @static
- * @example
- * js
- * <pre>
- *    import {Stack} from 'Controls/popup';
- *    ...
- *    openStack() {
- *        Stack.openPopup({
- *          template: 'Example/MyStackTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeStack() {
- *       Stack.closePopup(this._popupId);
- *    }
- * </pre>
- * @see closePopup
- * @see close
- * @see open
- */
-
-/*
- * Open Stack popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
- * @function Controls/_popup/interface/IStack#openPopup
- * @param {PopupOptions} config Stack popup options.
- * @return {Promise<string>} Returns id of popup. This id used for closing popup.
- * @static
- * @see closePopup
- */
-
-/**
- * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/#open-popup Подробнее}.
- * @function Controls/_popup/interface/IStack#closePopup
- * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
- * @static
- * @example
- * js
- * <pre>
- *    import {Stack} from 'Controls/popup';
- *    ...
- *    openStack() {
- *        Stack.openPopup({
- *          template: 'Example/MyStackTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeStack() {
- *       Stack.closePopup(this._popupId);
- *    }
- * </pre>
- * @see openPopup
- * @see opener
- * @see close
- */
-
-/*
- * Close Stack popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
- * @function Controls/_popup/interface/IStack#closePopup
- * @param {String} popupId Id of popup.
- * @static
- * @see openPopup
- */
-
-
 /**
  * @name Controls/_popup/interface/IStack#minWidth
  * @cfg {Number} Минимально допустимая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
@@ -189,6 +108,9 @@ export interface IStackOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStack#maxWidth
  * @cfg {Number} Максимально допустимая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
@@ -199,6 +121,9 @@ export interface IStackOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStack#width
  * @cfg {Number} Текущая ширина стековой панели.
+ * @remark
+ * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
+ * Приоритетнее то, которое задано на Controls/popup:Stack.
  */
 
 /*
@@ -211,6 +136,46 @@ export interface IStackOpener extends IOpener {
  * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
  * С помощью этой опции включается функционал движения границ.
  * Помимо propStorageId необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
+ */
+
+/**
+ * @name Controls/_popup/interface/IStack#restrictiveContainer
+ * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
+ * @remark
+ * Алгоритм поиска контейнера, внутри которого будут строиться окна:
+ * <ol>
+ *     <li>Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
+ *     Если ничего не нашли или опция не задана см. следующий шаг</li>
+ *     <li>Если у окна есть родитель, то опрашиваем родителя, в каком контейнере он спозиционировался и выбираем его.</li>
+ *     <li>Если родителя нет, то ищем глобальным селектором класс <b>controls-Popup__stack-target-container</b></li>
+ * </ol>
+ *
+ * Класс controls-Popup__stack-target-container является зарезервированным и должен быть объявлен на странице только 1 раз.
+ * Классом должен быть добавлен на контейнер, по которому позиционируются стековые окна по умолчанию.
+ * @example
+ * wml
+ * <pre>
+ *     <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
+ *     <Controls.buttons:Button caption="open stack" on:click="_openStack()"/>
+ * </pre>
+ *
+ * <pre class="brush: js">
+ * import {StackOpener} from 'Controls/popup';
+ * _beforeMount(): void{
+ *    this._stackOpener = new StackOpener();
+ * }
+ * _openStack(): void {
+ *     const config = {
+ *          template: 'Controls-demo/Popup/TestStack',
+ *          closeOnOutsideClick: true,
+ *          autofocus: true,
+ *          opener: null,
+ *          restrictiveContainer: '.myRestrictiveContainer'
+ *     };
+ *     this._stackOpener.open(config);
+ * }
+ * </pre>
+ * @demo Controls-demo/Popup/Stack/RestrictiveContainer/Index
  */
 
 /**

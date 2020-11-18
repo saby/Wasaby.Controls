@@ -2,20 +2,21 @@ import Control = require('Core/Control');
 import {descriptor} from 'Types/entity';
 import template = require('wml!Controls/_dateRange/RelationButton/RelationButton');
 
+const valueMap = {
+    normal: 'byCapacity',
+    byCapacity: 'normal'
+};
 /**
  * Кнопка для связывания периодов. Контрол, который может использоваться с {@link Controls/_dateRange/RelationController RelationController}.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less">переменные тем оформления</a> 
+ *
  * @class Controls/_dateRange/RelationButton
  * @extends Core/Control
- *
- * @css @color_DateRangeRelationButton-normal_hovered Color of the button in normal hovered state.
- * @css @color_DateRangeRelationButton-byCapacity_hovered Color of the button in by capacity hovered state.
- * @css @color_DateRangeRelationButton-normalColor of the button in normal state.
- * @css @color_DateRangeRelationButton-byCapacity Color of the button in by capacity state.
- *
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController
  *
@@ -27,22 +28,12 @@ import template = require('wml!Controls/_dateRange/RelationButton/RelationButton
  * @class Controls/_dateRange/RelationButton
  * @extends Core/Control
  *
- * @css @color_DateRangeRelationButton-normal_hovered Color of the button in normal hovered state.
- * @css @color_DateRangeRelationButton-byCapacity_hovered Color of the button in by capacity hovered state.
- *
- * @control
+ * 
  * @public
- * @category Input
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/RelationController
  *
  */
-
-const valueMap = {
-    normal: 'byCapacity',
-    byCapacity: 'normal'
-};
-
 const Component = Control.extend({
     _template: template,
 

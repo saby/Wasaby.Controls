@@ -4,14 +4,15 @@ define('Controls-demo/List/NoScrollPaging', [
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/NoScrollPaging/NoScrollPaging',
    'Types/source',
-   'css!Controls-demo/List/NoScrollPaging/NoScrollPaging',
+   'Controls/Utils/Toolbar',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoName'
 ], function (Env, BaseControl,
              GridData,
              template,
-             source
+             source,
+             Toolbar
 ) {
    'use strict';
 
@@ -262,6 +263,8 @@ define('Controls-demo/List/NoScrollPaging', [
 
    var mySource = source.Memory.extend({
       query: function(query) {
+         mySource._styles = ['Controls-demo/List/NoScrollPaging/NoScrollPaging'];
+
          return mySource.superclass.query.apply(this, arguments);
       }
    });
@@ -282,7 +285,7 @@ define('Controls-demo/List/NoScrollPaging', [
                {
                   id: 5,
                   title: 'прочитано',
-                  showType: 2,
+                  showType: Toolbar.showType.TOOLBAR,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action read Click');
                   }
@@ -307,7 +310,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   id: 3,
                   icon: 'icon-primary icon-Profile',
                   title: 'profile',
-                  showType: 2,
+                  showType: Toolbar.showType.TOOLBAR,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action profile Click');
                   }
@@ -316,7 +319,7 @@ define('Controls-demo/List/NoScrollPaging', [
                   id: 4,
                   icon: 'icon-Erase icon-error',
                   title: 'delete pls',
-                  showType: 2,
+                  showType: Toolbar.showType.TOOLBAR,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action delete Click');
                   }

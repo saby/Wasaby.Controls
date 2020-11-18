@@ -114,11 +114,15 @@
 				parentProperty="parent"
 				nodeProperty="@parent"
             additionalProperty="additional"
-            style="secondary" viewMode="link"
+			buttonStyle="secondary"
+			fontColorStyle="link" viewMode="link"
             icon="icon-Author"
 				iconSize="m"
             menuStyle="cross"
             source="{{_getAdditionalData()}}">
+			 <ws:headerTemplate>
+				 <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с доп параметрами" />
+			 </ws:headerTemplate>
          </Controls.dropdown:Button>
       </div>
 	   <div style="padding: 5px;">
@@ -127,7 +131,7 @@
 			 attr:test_name="plain_menu"
 			 name="myMenuButton1"
 			 keyProperty="id"
-			 style="buttonDefault"
+			 buttonStyle="secondary"
 			 icon="icon-Author"
 			 iconSize="m"
 			 caption="обычное меню"
@@ -141,7 +145,7 @@
 			 name="myMenuButton12"
 			 attr:test_name="custom_menu"
 			 keyProperty="id"
-			 style="buttonDefault"
+			 buttonStyle="secondary"
 			 icon="icon-Author"
 			 iconSize="m"
 			 caption="кастомный контент"
@@ -156,7 +160,8 @@
 			 name="myMenuButton2"
 			 attr:test_name="link_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="m"
 			 caption="кнопка-ссылка с меню"
@@ -170,7 +175,8 @@
 			 name="myMenuButton3"
 			 attr:test_name="link_small_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="s"
 			 caption="меню с малой иконкой"
@@ -184,32 +190,40 @@
 			 name="myMenuButton4"
 			 attr:test_name="icon_small_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="s"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
-			 source="{{_getHierarchyItems()}}"
-		  />
+			 source="{{_getHierarchyItems()}}">
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
+		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">Кнопка-иконка medium
 		  <Controls.dropdown:Button
 			 name="myMenuButton5"
 			 attr:test_name="icon_medium_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="m"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
-			 source="{{_getHierarchyItems()}}"
-		  />
+			 source="{{_getHierarchyItems()}}">
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
+		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">
 		  <Controls.dropdown:Button
 			 name="myMenuButton6"
 			 keyProperty="id"
-			 style="buttonDefault"
+			 buttonStyle="buttonDefault"
 			 icon="icon-Author"
 			 iconSize="m"
 			 caption="с переворотом"
@@ -224,13 +238,16 @@
 			 name="myMenuButton8"
 			 attr:test_name="mirror_small_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="s"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
-			 <ws:headConfig menuStyle="duplicateHead" blabla="123"/>
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
 		  </Controls.dropdown:Button>
 	   </div>
 	   <div style="padding: 5px;">Дублирование большой иконки
@@ -238,13 +255,16 @@
 			 name="myMenuButton9"
 			 attr:test_name="dupl_big_icon_menu"
 			 keyProperty="id"
-			 style="secondary" viewMode="link"
+			 buttonStyle="secondary"
+			 fontColorStyle="link" viewMode="link"
 			 icon="icon-Author"
 			 iconSize="m"
 			 parentProperty="parent"
 			 nodeProperty="@parent"
 			 source="{{_getHierarchyItems()}}">
-			 <ws:headConfig menuStyle="duplicateHead" />
+			  <ws:headerTemplate>
+				  <ws:partial template="Controls/dropdown:HeaderTemplate" caption="с иконкой" />
+			  </ws:headerTemplate>
 		  </Controls.dropdown:Button>
 	   </div>
   </div>
@@ -253,7 +273,8 @@
               name="myMenuButton11"
               attr:test_name="cross_menu"
               keyProperty="id"
-              style="secondary" viewMode="link"
+			  buttonStyle="secondary"
+			  fontColorStyle="link" viewMode="link"
               icon="icon-Author"
 				  iconSize="m"
               source="{{_getDefaultMemory()}}"

@@ -5,13 +5,16 @@
             template="wml!Controls/_listRender/Render/resources/For"
             collection="{{ _options.listModel }}"
             keyPrefix="{{ _templateKeyPrefix }}"
+            style="{{_options.style}}"
 
             itemActionsPosition="{{ _options.itemActionsPosition }}"
-            itemActionsTemplate="{{ _options.itemActionsTemplate }}"
-            swipeTemplate="{{ _options.swipeTemplate }}"
             multiSelectTpl="{{ _options.multiSelectTpl }}"
-            isAdd="{{ _options.isAdd }}"
-            itemTemplate="{{ _options.itemTemplate }}"/>
+            itemTemplate="{{ _options.itemTemplate }}"
+            groupTemplate="{{ _options.groupTemplate }}"
+            menuIsShown="{{ _options.menuIsShown }}"
+
+            itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+            swipeTemplate="{{ _options.swipeTemplate }}" />
       </div>
    </ws:if>
    <ws:if data="{{ _options.emptyTemplate }}">
@@ -21,7 +24,7 @@
       <ws:if data="{{ _options.stickyFooter }}">
          <Controls.scroll:StickyHeader
             position="bottom"
-            attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}">
+            attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}_theme-{{_options.theme}}">
             <div>
                <ws:partial template="{{ _options.footerTemplate }}" />
             </div>
@@ -29,7 +32,7 @@
       </ws:if>
       <ws:else>
          <div
-            attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}">
+            attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}_theme-{{_options.theme}}">
             <ws:partial template="{{ _options.footerTemplate }}" />
          </div>
       </ws:else>

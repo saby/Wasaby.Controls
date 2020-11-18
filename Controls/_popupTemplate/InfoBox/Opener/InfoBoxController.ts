@@ -3,8 +3,7 @@ import StickyController = require('Controls/_popupTemplate/Sticky/StickyControll
 import themeConstantsGetter = require('Controls/_popupTemplate/InfoBox/Opener/resources/themeConstantsGetter');
 import cMerge = require('Core/core-merge');
 import StickyStrategy = require('Controls/_popupTemplate/Sticky/StickyStrategy');
-import {IPopupItem, IPopupSizes, IPopupPosition} from 'Controls/popup';
-import * as ThemesController from 'Core/Themes/ThemesControllerNew';
+import {IPopupItem, IPopupSizes, IPopupPosition, Controller} from 'Controls/popup';
 
 import collection = require('Types/collection');
 
@@ -36,22 +35,13 @@ function getConstants() {
 
 // todo: https://online.sbis.ru/opendoc.html?guid=b385bef8-31dd-4601-9716-f3593dfc9d41
 let constants: IInfoBoxThemeConstants = {};
-
-function initConstants(): Promise<any> {
-    return ThemesController.getInstance().loadCssWithAppTheme('Controls/popupTemplate').then(() => {
-        constants = getConstants();
-    });
-}
-
-if (document) {
-    if (document.body) {
-        initConstants();
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            initConstants();
-        });
-    }
-}
+const constantsInit = new Promise<void>((resolve, reject) => {
+    if (!document) { return resolve(); }
+    import('Controls/popupTemplate')
+        .then(({ InfoBox }) => InfoBox.loadCSS())
+        .then(() => { constants = getConstants(); })
+        .then(resolve, reject);
+});
 
 const SIDES: IInfoBoxSide = {
     t: 'top',
@@ -72,32 +62,52 @@ const INVERTED_SIDES: IInfoBoxSide = {
 /**
  * InfoBox Popup Controller
  * @class Controls/_popupTemplate/InfoBox/Opener/InfoBoxController
- * @control
+ * 
  * @private
- * @category Popup
  */
 class InfoBoxController extends StickyController.constructor {
     _openedPopupId: string = null;
+    _checkHiddenId: number | null = null;
     TYPE: string = 'InfoBox';
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         // Only one popup can be opened
         if (this._openedPopupId) {
-            require('Controls/popup').Controller.remove(this._openedPopupId);
+            Controller.remove(this._openedPopupId);
         }
         this._openedPopupId = item.id;
 
-        // Remove the width obtained in getDefaultOptions
+        // Not calculate the coordinates of target, when it is located on the hidden popup.
+        if (InfoBoxController._removeHiddenElement(item)) {
+            return false;
+        } else {
+            /**
+             * TODO: когда таргет скрывается через ws-hidden, на нём или родительских нодах, тогда нужно
+             * удалить инфобокс привязанный к нему. Точно узнать момент нельзя, поэтому делаем это через
+             * определённый интервал. Для корректного решения требуется выполнение задачи
+             * https://online.sbis.ru/opendoc.html?guid=a88a5697-5ba7-4ee0-a93a-221cce572430
+             */
+            this._checkHiddenId = setInterval(() => {
+                InfoBoxController._removeHiddenElement(item);
+            }, 1000);
+        }
+
+        // Remove the width and height obtained in getDefaultOptions
         item.position.maxWidth = undefined;
+        item.position.maxHeight = undefined;
         //Removes set value to get real size of the content
+        const maxWidth = container.style.maxWidth;
         container.style.maxWidth = '';
+        container.style.maxHeight = '';
+        this.prepareConfig(item, container);
+        container.style.maxWidth = maxWidth;
 
         return super.elementCreated.apply(this, arguments);
     }
 
     elementUpdated(): boolean {
         // Hide popup then page scroll or resize
-        require('Controls/popup').Controller.remove(this._openedPopupId);
+        Controller.remove(this._openedPopupId);
         return true;
     }
 
@@ -107,7 +117,9 @@ class InfoBoxController extends StickyController.constructor {
 
     elementDestroyed(item: IPopupItem): Promise<null> {
         if (item.id === this._openedPopupId) {
+            clearInterval(this._checkHiddenId);
             this._openedPopupId = null;
+            this._checkHiddenId = null;
         }
         return (new Deferred()).callback();
     }
@@ -116,7 +128,7 @@ class InfoBoxController extends StickyController.constructor {
         return isActive;
     }
 
-    getDefaultConfig(item: IPopupItem): void {
+    getDefaultConfig(item: IPopupItem): Promise<void> {
         super.getDefaultConfig.apply(this, arguments);
         const defaultPosition: IPopupPosition = {
             left: -10000,
@@ -124,16 +136,18 @@ class InfoBoxController extends StickyController.constructor {
             right: undefined,
             bottom: undefined
         };
-        if (item.popupOptions.target) {
-            // Calculate the width of the infobox before its positioning.
-            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
-            cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
+        return constantsInit.then(() => {
+            if (item.popupOptions.target) {
+                // Calculate the width of the infobox before its positioning.
+                // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+                cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
             const sizes: IPopupSizes = {width: constants.MAX_WIDTH, height: 1, margins: {left: 0, top: 0}};
-            const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
-            this.prepareConfig(item, sizes);
-            item.position.maxWidth = position.width;
-        }
-        item.position = {...item.position, ...defaultPosition};
+                const position: IPopupPosition = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), this._getTargetCoords(item));
+                this.prepareConfig(item);
+                item.position.maxWidth = position.width;
+            }
+            item.position = {...item.position, ...defaultPosition};
+        });
     }
 
     _getPopupConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {
@@ -143,16 +157,7 @@ class InfoBoxController extends StickyController.constructor {
         return baseConfig;
     }
 
-    getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number|null {
-        const parentItem: IPopupItem = this._findItemById(popupItems, item.parentId);
-        if (parentItem) {
-            const parentZIndex = parentItem.currentZIndex;
-            return parentZIndex + 1;
-        }
-        return null;
-    }
-
-    prepareConfig(item: IPopupItem, sizes: IPopupSizes): IPopupItem {
+    prepareConfig(item: IPopupItem, container?: HTMLElement): IPopupItem {
         cMerge(item.popupOptions, this._prepareConfig(item.popupOptions.position, item.popupOptions.target));
         return super.prepareConfig.apply(this, arguments);
     }
@@ -231,6 +236,16 @@ class InfoBoxController extends StickyController.constructor {
             return popupItems.at(index);
         }
         return null;
+    }
+
+    private static _removeHiddenElement(item: IPopupItem): boolean {
+        const targetHidden: boolean = InfoBoxController._getTargetNode(item).closest('.ws-hidden');
+        if (targetHidden) {
+            Controller.remove(item.id);
+            return true;
+        }
+
+        return false;
     }
 }
 export = new InfoBoxController();

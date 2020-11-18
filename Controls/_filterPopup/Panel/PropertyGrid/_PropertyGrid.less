@@ -1,9 +1,21 @@
 .controls-PropertyGrid__item {
    display: flex;
-   align-items: baseline;
-   margin-bottom: @spacing_PropertyGrid-between-items;
+   align-items: center;
+}
+
+.controls-PropertyGrid__item_theme-@{themeName} {
+   min-height: @basic_item_height_filterPanel;
+}
+
+.controls-PropertyGrid__item_theme-@{themeName}:empty {
+   min-height: 0;
+   margin-bottom: 0;
+}
+
+.controls-PropertyGrid__notLastItem {
+   margin-bottom: @basic_item_padding-bottom_filterPanel;
 }
 
 .controls-PropertyGrid__lastItem {
-   margin-bottom: @spacing_PropertyGrid-between-lastItem-bottomBorder;
+   margin-bottom: 0;
 }

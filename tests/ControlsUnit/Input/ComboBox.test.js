@@ -83,54 +83,105 @@ define(
                   assert.equal(data[0], '2');
                }
             };
-            combobox._selectedItemsChangedHandler('itemClick', [itemsRecords.at(1)]);
-            assert.isFalse(combobox._isOpen);
          });
 
-         it('popupVisibilityChanged', function() {
-            let combobox = getCombobox(config);
+         describe('_beforeMount', function() {
+            it('beforeMount with selectedKeys', () => {
+               let combobox = getCombobox(config);
+               combobox._beforeMount(config);
+               assert.equal(combobox._value, 'New text');
+               assert.equal(combobox._placeholder, 'This is placeholder');
+            });
 
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, true);
-            assert.isTrue(combobox._isOpen);
-
-            dropdown.Combobox._private.popupVisibilityChanged.call(combobox, false);
-            assert.isFalse(combobox._isOpen);
+            it('beforeMount without source', () => {
+               const comboboxOptions = {...config};
+               delete comboboxOptions.source;
+               const combobox = getCombobox(comboboxOptions);
+               assert.ok(combobox._beforeMount(comboboxOptions) === undefined);
+            });
          });
 
-         it('_beforeMount', function() {
+         it('_beforeUpdate', function() {
             let combobox = getCombobox(config);
-            combobox._beforeMount(config);
-            assert.equal(combobox._value, 'New text');
-            assert.equal(combobox._placeholder, 'This is placeholder');
-         });
-
-         it('_beforeUpdate width change', function() {
-            let combobox = getCombobox(config);
-            combobox._container = {offsetWidth: 250};
-            assert.equal(combobox._width, undefined);
-            combobox._beforeUpdate({});
-            assert.equal(combobox._width, 250);
-         });
-         it('_afterMount', function() {
-            let combobox = getCombobox(config);
-            combobox._container = {offsetWidth: 250};
-            assert.equal(combobox._width, undefined);
-            assert.equal(combobox._targetPoint, undefined);
-            combobox._afterMount();
-            assert.equal(combobox._width, 250);
-            assert.deepEqual(combobox._targetPoint, {vertical: 'bottom'});
-         });
-
-         it('_deactivated', () => {
-            let combobox = getCombobox(config);
-            let closed = false;
-
-            combobox.closeMenu = () => {
-               closed = true;
+            let isUpdated = false;
+            combobox._controller = {
+               update: () => {isUpdated = true}
             };
+            combobox._beforeUpdate({});
+            assert.isTrue(isUpdated);
+         });
 
-            combobox._deactivated();
-            assert.isTrue(closed);
+         it('_beforeUpdate readOnly changes', function() {
+            let combobox = getCombobox(config);
+            let isUpdated = false;
+            combobox._controller = {
+               update: () => {isUpdated = true}
+            };
+            combobox._beforeUpdate({
+               readOnly: true
+            });
+            assert.isTrue(combobox._readOnly);
+         });
+
+
+         it('dataLoadCallback option', function() {
+            let isCalled = false;
+            let combobox = getCombobox(config);
+            combobox._options.dataLoadCallback = () => {
+               isCalled = true;
+            };
+            combobox._dataLoadCallback(itemsRecords);
+
+            assert.isTrue(isCalled);
+         });
+
+         it('_getMenuPopupConfig', () => {
+            let combobox = getCombobox(config);
+            combobox._container = {offsetWidth: 250};
+
+            let result = combobox._getMenuPopupConfig();
+            assert.equal(result.templateOptions.width, 250);
+
+            combobox._container.offsetWidth = null;
+            result = combobox._getMenuPopupConfig();
+            assert.equal(result.templateOptions.width, null);
+         });
+
+         describe('check readOnly state', () => {
+            let combobox;
+            beforeEach(() => {
+               combobox = getCombobox(config);
+               combobox._controller = {
+                  update: () => {}
+               };
+            });
+
+            it('count of items = 1', () => {
+               const itemsCallback = { getCount: () => 1 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+            });
+
+            it('count of items = 1, with emptyText', () => {
+               combobox._options.emptyText = 'test';
+               combobox._options.readOnly = false;
+               const itemsCallback = { getCount: () => 1 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+            });
+
+            it('count of items = 2', () => {
+               const itemsCallback = { getCount: () => 2 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+            });
+
+            it('count of items = 2, with options.readOnly', () => {
+               combobox._options.readOnly = true;
+               const itemsCallback = { getCount: () => 2 };
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+            });
          });
       });
    }

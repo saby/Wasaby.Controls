@@ -5,7 +5,6 @@ define('Controls-demo/FormController/FormController', [
    'Types/source',
    'Core/Deferred',
    'Types/entity',
-   'css!Controls-demo/FormController/FormController',
    'Controls/validate'
 ], function(Env, Control, tmpl, source, Deferred, entity) {
    'use strict';
@@ -28,6 +27,7 @@ define('Controls-demo/FormController/FormController', [
          var self = this;
          var resultDef = new Deferred();
          var initValues = config.initValues;
+         this._finishUnmountPending();
          var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          initValues.id = this.idCount;
@@ -53,10 +53,18 @@ define('Controls-demo/FormController/FormController', [
 
          return resultDef;
       },
+
+      _finishUnmountPending: function() {
+         if (this._children.formControllerInst._unmountPromise) {
+            this._children.formControllerInst._unmountPromise.callback();
+            this._children.formControllerInst._unmountPromise = null;
+         }
+      },
+
       _read: function(config) {
          var self = this;
          var resultDef = new Deferred();
-
+         this._finishUnmountPending();
          var finishDef = this._children.registrator.finishPendingOperations(this.__$resultForTests);
 
          finishDef.addCallback(function(finishResult) {
@@ -176,6 +184,8 @@ define('Controls-demo/FormController/FormController', [
          return false;
       }
    });
+
+   module._styles = ['Controls-demo/FormController/FormController'];
 
    return module;
 });

@@ -6,7 +6,7 @@ import collection = require('Types/collection');
 import Deferred = require('Core/Deferred');
 import sourceLib = require('Types/source');
 import entity = require('Types/entity');
-import Serializer = require('Core/Serializer');
+import {Serializer} from 'UI/State';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 
@@ -16,6 +16,14 @@ var DEFAULT_FILTER = '{}';
 var _private = {
    isOldPinned: function(data) {
       return !JSON.parse(data, _private.getSerialize().desirialize).hasOwnProperty('linkText');
+   },
+
+   createRecordSet(data: object): collection.RecordSet {
+       return new collection.RecordSet({
+           rawData: data,
+           keyProperty: 'ObjectId',
+           adapter: 'adapter.sbis'
+       });
    },
 
    deleteOldPinned: function(self, history, query) {
@@ -76,24 +84,6 @@ var _private = {
       }
    },
 
-    // TODO Delete with old favorite
-   getItemsWithOldFavorite: function(self, history, favorite) {
-      let id;
-      factory(favorite).each((favoriteItem) => {
-         id = favoriteItem.get('id');
-         if (!history.pinned.getRecordById(id) && !history.client.getRecordById(id)) {
-            let objectData = JSON.stringify(favoriteItem.get('data').getRawData(), _private.getSerialize().serialize);
-            let newFormatItem = _private.getRawHistoryItem(self, id, objectData);
-            if (objectData.globalParams) {
-               history.client.add(newFormatItem);
-            } else {
-               history.pinned.add(newFormatItem);
-            }
-         }
-      });
-      return _private.getItemsWithHistory(self, history);
-   },
-
    getItemsWithHistory: function (self, history) {
       var items = new collection.RecordSet({
          adapter: new entity.adapter.Sbis(),
@@ -109,7 +99,7 @@ var _private = {
          this.fillClient(self, history, items);
          this.fillFavoritePinned(self, history, items);
       }
-      if (self.historySource._pinned !== false) {
+      if (self.historySource._$pinned !== false) {
          this.fillPinned(self, history, items);
       }
       this.fillRecent(self, history, items);
@@ -177,8 +167,8 @@ var _private = {
    },
 
    fillRecent: function(self, history, items) {
-      let pinnedCount = self.historySource._pinned !== false ? history.pinned.getCount() : 0;
-      let maxLength = self.historySource._recent - pinnedCount - 1;
+      let pinnedCount = self.historySource._$pinned !== false ? history.pinned.getCount() : 0;
+      let maxLength = self.historySource._$recent - pinnedCount - 1;
       let currentCount = 0;
       let isPinned;
 
@@ -230,7 +220,7 @@ var _private = {
       _private.deleteHistoryItem(self._history.recent, item.getId());
       _private.deleteHistoryItem(self._history.pinned, item.getId());
 
-      self.historySource.saveHistory(self._history);
+      self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
    addClient: function(self, item) {
@@ -257,7 +247,7 @@ var _private = {
       } else if (!isPinned) {
          pinned.remove(pinned.getRecordById(item.getId()));
       }
-      self.historySource.saveHistory(self._history);
+       self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
    updateDataItem: function(item, ObjectData) {
@@ -280,7 +270,7 @@ var _private = {
 
       records = [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))];
       recent.prepend(records);
-      self.historySource.saveHistory(self._history);
+      self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
    },
 
    getRawHistoryItem: function (self, id, objectData, hId?) {
@@ -354,10 +344,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -378,10 +367,9 @@ var _private = {
  * @class Controls/_history/FilterSource
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * @control
+ * 
  * @private
  * @author Герасимов А.М.
- * @category Menu
  * @example
  * <pre>
  *    var source = new filterSource({
@@ -395,28 +383,6 @@ var _private = {
  *           })
  *       });
  * </pre>
- */ 
-
-/**
- * @name Controls/_history/FilterSource#originSource
- * @cfg {Source} Источник данных.
- */
-
-/*
- * @name Controls/_history/FilterSource#originSource
- * @cfg {Source} A data source
- */
-
-/**
- * @name Controls/_history/FilterSource#historySource
- * @cfg {Source} Источник, который работает с историей.
- * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
- */
-
-/*
- * @name Controls/_history/FilterSource#historySource
- * @cfg {Source} A source which work with history
- * @see {Controls/_history/Service} Source working with the service of InputHistory
  */
 
 var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
@@ -464,11 +430,13 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
          serData = JSON.stringify(data, _private.getSerialize(this).serialize);
 
          return _private.getSourceByMeta(this, meta).update(serData, meta).addCallback(function (dataSet) {
-            _private.updateRecent(
-               self,
-               _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
-            );
-            return dataSet.getRawData();
+            if (dataSet) {
+               _private.updateRecent(
+                   self,
+                   _private.getRawHistoryItem(self, dataSet.getRawData(), serData, item ? item.get('HistoryId') : self.historySource.getHistoryId())
+               );
+            }
+            return dataSet?.getRawData() || '';
          });
       }
       return _private.getSourceByMeta(this, meta).update(data, meta);
@@ -516,13 +484,17 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
 
             self.historySource.query().addCallback((data) => {
                _private.initHistory(self, data);
-               if (self._history.client) {  // TODO Delete with old favorite
-                  if (_private.deleteOldPinned(self, self._history, query)) {
-                     prepareHistory();
-                  }
-               } else {
-                  prepareHistory();
-               }
+               prepareHistory();
+            }).addErrback((error): Promise<sourceLib.DataSet> => {
+               _private.initHistory(this, new sourceLib.DataSet({
+                  rawData: {
+                      pinned: _private.createRecordSet({}),
+                      frequent: _private.createRecordSet({}),
+                      recent: _private.createRecordSet({})
+                  }}));
+               prepareHistory();
+               error.processed = true;
+               return error;
             });
          }
          return self._loadDef;
@@ -536,11 +508,6 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     */
    getItems: function () {
       return _private.getItemsWithHistory(this, this._history);
-   },
-
-   // TODO: Delete with old favorite https://online.sbis.ru/opendoc.html?guid=68e3c08e-3064-422e-9d1a-93345171ac39
-   getItemsWithOldFavorite: function(oldFavoriteItems) {
-      return _private.getItemsWithOldFavorite(this, this._history, oldFavoriteItems);
    },
 
    /**
@@ -561,9 +528,34 @@ var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
     */
    getDataObject: function(data) {
       return _private.deserialize(this, data.get('ObjectData'));
+   },
+
+   historyReady(): boolean {
+      return !!this._history;
    }
 });
 
 Source._private = _private;
 
+/**
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} Источник данных.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#originSource
+ * @cfg {Source} A data source
+ */
+
+/**
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} Источник, который работает с историей.
+ * @see {Controls/_history/Service} Источник, который работает с <a href="/doc/platform/developmentapl/middleware/input-history-service/">сервисом истории ввода</a>.
+ */
+
+/*
+ * @name Controls/_history/FilterSource#historySource
+ * @cfg {Source} A source which work with history
+ * @see {Controls/_history/Service} Source working with the service of InputHistory
+ */
 export = Source;

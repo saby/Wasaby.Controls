@@ -1,6 +1,6 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrud, ICrudPlus, IData} from 'Types/source';
 export interface ISourceOptions {
-   source?: ICrudPlus;
+   source?: ICrudPlus | ICrud & ICrudPlus & IData;
    keyProperty: string;
 }
 
@@ -25,6 +25,7 @@ export default interface ISource {
 /**
  * @name Controls/_interface/ISource#source
  * @cfg {Types/source:ICrud} Объект реализующий интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
+ * @remark
  * Более подробно об источниках данных вы можете почитать <a href='/doc/platform/developmentapl/interface-development/data-sources/'>здесь</a>.
  * @example
  * В приведённом примере для контрола {@link Controls/list:View} в опцию source передаётся {@link Types/source:Memory} источник.
@@ -77,8 +78,8 @@ export default interface ISource {
  *          })
  *     }
  * </pre>
- * @see https://wi.sbis.ru/docs/js/Types/source/ICrudPlus/
- * @see https://wi.sbis.ru/docs/js/Types/source/ICrud/
+ * @see Types/source:ICrudPlus
+ * @see Types/source:ICrud
  * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/
  */
 /*
@@ -126,8 +127,8 @@ export default interface ISource {
  *          })
  *     }
  * </pre>
- * @see https://wi.sbis.ru/docs/js/Types/source/ICrudPlus/
- * @see https://wi.sbis.ru/docs/js/Types/source/ICrud/
+ * @see Types/source:ICrudPlus
+ * @see Types/source:ICrud
  * @see https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/
  */
 

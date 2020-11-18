@@ -6,8 +6,7 @@ define('Controls-demo/Index', [
    'wml!Controls-demo/Index',
    'Application/Initializer',
    'Application/Env',
-   'Core/Deferred',
-   'css!SBIS3.CONTROLS/themes/AreaBlocks'
+   'Core/Deferred'
 ], function (BaseControl,
              template,
              AppInit,
@@ -27,8 +26,8 @@ define('Controls-demo/Index', [
                   var controlId = ids[0];
                   if (!storage[controlId]) {
                      storage[controlId] = 1000;
-                     if (controlId === 'master111') {
-                        storage[controlId] = 300;
+                     if (controlId.indexOf('master') > -1) {
+                        storage[controlId] = undefined;
                      }
                   }
                   return (new Deferred()).callback(storage);
@@ -42,6 +41,14 @@ define('Controls-demo/Index', [
          },
          _afterMount: function() {
             window.localStorage.setItem('controlSettingsStorage', JSON.stringify({}));
+         },
+         _getPopupHeaderTheme: function(theme) {
+            var retailHead = 'retail__';
+
+            if (theme.indexOf(retailHead) !== -1) {
+               return retailHead + 'header-' + theme.slice(retailHead.length);
+            }
+            return theme;
          },
          _getTitle: function() {
             var location = this._getLocation();

@@ -2,7 +2,8 @@ define([
    'Controls/validate',
    'Core/Deferred',
    'ControlsUnit/resources/ProxyCall',
-], function(validateMod, Deferred, ProxyCall) {
+   'Types/function'
+], function(validateMod, Deferred, ProxyCall, types) {
    'use strict';
 
    function getValidator(validateResult, readOnly) {
@@ -11,6 +12,7 @@ define([
          _activateCall: false,
          _validationResult: false,
          _isValidCall: false,
+         _isOpened: false,
          _options: {
             readOnly: readOnly
          },
@@ -21,39 +23,35 @@ define([
          activate: () => {
             validator._activateCall = true;
          },
+         openInfoBox: () => {
+            validator._isOpened = true;
+         },
          setValidationResult: (result) => {
             validator._validationResult = result;
          },
          isValid: () => {
-            validator._isValidCall = true; return true;
+            validator._isValidCall = true; return !validator._validationResult;
          }
       };
 
       return validator;
    }
 
-   describe('Validate/Controller', () => {
-      var stubP;
-      var calls = [];
-      var validCtrl = new validateMod.Container();
-      validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
-      beforeEach(function() {
-         stubP = sinon.stub(validCtrl._private, 'callInfoBox').callsFake(() => undefined);
-      });
-      afterEach(function() {
-         stubP.restore();
-      });
-      it('valueChangedNotify', () => {
-         validCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(calls, [{
-            name: 'notify',
-            arguments: ['valueChanged', ['test']]
-         }]);
-      });
+   describe('Validate/Container', () => {
+       var stubP;
+       var calls = [];
+       var validCtrl = new validateMod.Container();
+       validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+       beforeEach(function() {
+           stubP = sinon.stub(validCtrl, '_callInfoBox').callsFake(() => undefined);
+       });
+       afterEach(function() {
+           stubP.restore();
+       });
       it('closeInfoBox', () => {
          validCtrl._isOpened = false;
          validCtrl._validationResult = 'error';
-         validCtrl._private.openInfoBox(validCtrl);
+         validCtrl._openInfoBox(validCtrl);
          validCtrl._mouseInfoboxHandler({type: 'mouseenter'});
          assert.deepEqual(validCtrl._isOpened, true);
          validCtrl._mouseInfoboxHandler({type: 'close'});
@@ -62,8 +60,9 @@ define([
       });
       it('cleanValid', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          validCtrl._valueChangedHandler(null, 'test');
-         assert.deepEqual(validCtrl._validationResult, undefined);
+         assert.deepEqual(validCtrl._validationResult, null);
          validCtrl._validationResult = 'Error';
          validCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(validCtrl._validationResult, 'Error');
@@ -71,88 +70,154 @@ define([
       });
       it('setValidResult', () => {
          var validCtrl = new validateMod.Container();
+         validCtrl._callInfoBox = () => {};
          var validConfig = {
             hideInfoBox: true,
          };
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404');
          assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не закрывает инфобокс
+         validCtrl.setValidationResult(null, validConfig);
+         assert.deepEqual(validCtrl._isOpened, true);
+
+         // вызов с hideInfobox = true не октрывает инфобокс
          validCtrl._isOpened = false;
          validCtrl.setValidationResult('Error 404', validConfig);
          assert.deepEqual(validCtrl._isOpened, false);
          validCtrl.destroy();
       });
    });
-   describe('Validate/FormController', () => {
+   describe('Validate/ControllerClass', () => {
       it('add/remove validator', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
 
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         assert.equal(FC._validates.length, 2);
+         assert.equal(Controller._validates.length, 2);
 
-         FC.onValidateDestroyed({}, validator1);
-         FC.onValidateDestroyed({}, validator2);
+         Controller.removeValidator(validator1);
+         Controller.removeValidator(validator2);
 
-         assert.equal(FC._validates.length, 0);
+         assert.equal(Controller._validates.length, 0);
 
-         FC.destroy();
+         Controller.destroy();
       });
 
       it('isValid', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         let results = FC.isValid();
-         assert.equal(validator1._isValidCall, results[0], true);
-         assert.equal(validator2._isValidCall, results[1], true);
+         let isValid = Controller.isValid();
+         assert.equal(validator1._isValidCall, true);
+         assert.equal(validator2._isValidCall, true);
+         assert.equal(isValid, true);
 
-         FC.destroy();
+         let validator3 = getValidator();
+         validator3.setValidationResult('Error');
+         Controller.addValidator(validator3);
+         isValid = Controller.isValid();
+         assert.equal(validator3._isValidCall, true);
+         assert.equal(isValid, false);
+
+         Controller.destroy();
       });
       it('activateFirstValidField', (done) => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
+         Controller.scrollToInvalidContainer = () => {};
          let validator1 = getValidator();
          let validator2 = getValidator(null, true);
          let validator3 = getValidator('Error');
          let validator4 = getValidator('Error');
 
-         FC._validates.push(validator1, validator2, validator3, validator4);
-         FC.submit().then(() => {
+         Controller._validates.push(validator1, validator2, validator3, validator4);
+         Controller.submit().then(() => {
             assert.equal(validator3._activateCall, true);
-            FC.destroy();
+            Controller.destroy();
             done();
          });
+      });
 
+      it('openInfoBox at first valid container', (done) => {
+         let Controller = new validateMod.ControllerClass();
+         Controller.scrollToInvalidContainer = () => {};
+         let validator1 = getValidator('Error');
+
+         const sandBox = sinon.createSandbox();
+
+         // Deal with propery getter
+         const delay = types.delay;
+         delete types.delay;
+         types.delay = delay;
+
+         sandBox.replace(types, 'delay', () => {validator1.openInfoBox()});
+         Controller._validates.push(validator1);
+         Controller.submit().then(() => {
+            assert.equal(validator1._activateCall, true);
+            assert.equal(validator1._isOpened, true);
+            Controller.destroy();
+            sandBox.restore();
+            done();
+         });
       });
 
       it('setValidationResult', () => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
 
-         FC.setValidationResult();
+         Controller.setValidationResult();
          assert.equal(validator1._validationResult, null);
          assert.equal(validator2._validationResult, null);
 
-         FC.destroy();
+         Controller.destroy();
+      });
+
+      it('config for openInfoBox', () => {
+         let validCtrl = new validateMod.Container();
+         validCtrl.saveOptions({
+            errorTemplate: 'myTemplate'
+         });
+         validCtrl._validationResult = 'Error';
+         validCtrl._container = 'myContainer';
+         let newCfg = {
+            target: 'myContainer',
+            validationStatus: 'invalid',
+            template: 'myTemplate',
+            templateOptions: {
+               errors: 'Error'
+            },
+            eventHandlers: {},
+            closeOnOutsideClick: false,
+         };
+
+         validCtrl._callInfoBox = (cfg) => {
+            cfg.eventHandlers = {};
+            assert.deepEqual(newCfg, cfg);
+         };
+         validCtrl._openInfoBox();
       });
 
       it('submit', (done) => {
-         let FC = new validateMod.Controller();
+         let Controller = new validateMod.ControllerClass();
+         Controller.scrollToInvalidContainer = () => {};
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
-         FC.onValidateCreated({}, validator1);
-         FC.onValidateCreated({}, validator2);
+         Controller.addValidator(validator1);
+         Controller.addValidator(validator2);
+         const sandBox = sinon.createSandbox();
+         sandBox.replace(types, 'delay', () => {validator1.openInfoBox()});
 
-         FC.submit().then((result) => {
+         Controller.submit().then((result) => {
             assert.equal(validator1._validateCall, true, 'is validate1 call');
             assert.equal(validator2._validateCall, true, 'is validate2 call');
 
@@ -161,11 +226,26 @@ define([
 
             assert.equal(validator1._activateCall, true, 'is validate1 activate');
             assert.equal(validator2._activateCall, false, 'is validate2 activate');
+            Controller.destroy();
+            sandBox.restore();
             done();
          }).catch((error) => {
             done(error);
          });
-         FC.destroy();
+      });
+      it('closeInfobox by submit ', (done) => {
+         let validCtrl = new validateMod.Container();
+         let Controller = new validateMod.ControllerClass();
+         validCtrl._isOpened = true;
+         validCtrl._validationResult = true;
+         Controller._validates.push(validCtrl);
+         Controller.submit().then(() => {
+            assert.strictEqual(validCtrl._isOpened, false);
+            Controller.destroy();
+            done();
+         }).catch((error) => {
+            done(error);
+         });
       });
    });
 });

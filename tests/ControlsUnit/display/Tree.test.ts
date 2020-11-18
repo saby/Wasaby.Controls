@@ -14,7 +14,7 @@ import {
 
 import { Model } from 'Types/entity';
 
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 
 interface IData {
     id: number;
@@ -536,6 +536,26 @@ describe('Controls/_display/Tree', () => {
             });
             assert.strictEqual(tree.getCount(), index);
             assert.strictEqual(items.getCount(), index);
+        });
+    });
+
+    describe('.getRootLevel()', () => {
+        it('should return 0 if root is not enumerable', () => {
+            const collection = new List();
+            const tree = new Tree({
+                collection,
+                rootEnumerable: false
+            });
+            assert.strictEqual(tree.getRootLevel(), 0);
+        });
+
+        it('should return 1 if root is enumerable', () => {
+            const collection = new List();
+            const tree = new Tree({
+                collection,
+                rootEnumerable: true
+            });
+            assert.strictEqual(tree.getRootLevel(), 1);
         });
     });
 

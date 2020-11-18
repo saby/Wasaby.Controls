@@ -4,24 +4,31 @@
                   scope="{{_options}}"
                   items="{{_items}}"
                   name="Path"
-                  attr:class="controls-Explorer__Path {{_options.style == 'master' ? 'controls-Explorer__Path_style_master'}}"
+                  displayMode="{{_options.breadcrumbsDisplayMode}}"
+                  withoutBackButton="{{_withoutBackButton}}"
+                  attr:class="controls-Explorer__Path_theme-{{_options.theme}}"
                   on:backButtonClick="_notifyHandler('backButtonClick')"
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                   on:arrowActivated="_notifyHandler('arrowActivated')"
                   on:itemClick="_notifyHandler('itemClick')"
-                  on:itemMouseDown="_notifyHandler('itemMouseDown')"
-                  on:arrowClick="_notifyHandler('arrowClick')"/>
+                  on:itemMouseDown="_notifyHandler('itemMouseDown')"/>
    </Controls.Container.Async>
 </ws:template>
 
 <ws:if data="{{_needCrumbs}}">
    <ws:if data="{{_options.stickyHeader}}">
-      <Controls.scroll:StickyHeader mode="stackable" shadowVisibility="{{_options.needShadow ? 'visible' : 'hidden'}}" fixedZIndex="{{5}}">
+      <Controls.scroll:StickyHeader
+              mode="stackable"
+              shadowVisibility="{{_options.needShadow ? 'lastVisible' : 'hidden'}}"
+              fixedZIndex="{{5}}"
+              backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+              attr:class="controls-Explorer__HeadingPath-{{_options.style}}_theme-{{_options.theme}}">
          <ws:partial template="headingPath" />
       </Controls.scroll:StickyHeader>
    </ws:if>
    <ws:else>
-      <ws:partial template="headingPath" />
+      <ws:partial template="headingPath"
+                  on:arrowClick="_notifyHandler('arrowClick')"/>
    </ws:else>
 </ws:if>
 <ws:else>

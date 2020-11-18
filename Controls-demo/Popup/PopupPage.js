@@ -3,7 +3,6 @@ define('Controls-demo/Popup/PopupPage',
       'Core/Control',
       'wml!Controls-demo/Popup/PopupPage',
       'Controls/popup',
-      'css!Controls-demo/Popup/PopupPage'
    ],
    function (Control, template, popupLib) {
       'use strict';
@@ -25,6 +24,16 @@ define('Controls-demo/Popup/PopupPage',
             this._children.sticky.open({
                target: this._children.stickyButton,
                opener: this._children.stickyButton,
+               templateOptions: {
+                  template: 'Controls-demo/Popup/TestDialog',
+                  type: 'sticky'
+               }
+            });
+         },
+         openStickyInScroll: function () {
+            this._children.stickyInScroll.open({
+               target: this._children.stickyInScrollButton,
+               opener: this._children.stickyInScrollButton,
                templateOptions: {
                   template: 'Controls-demo/Popup/TestDialog',
                   type: 'sticky'
@@ -62,6 +71,10 @@ define('Controls-demo/Popup/PopupPage',
                opener: this._children.stackButton,
                templateOptions: {text: 'second open'}
             });
+         },
+
+         openIndicatorPopup: function () {
+            this._children.executingIndicatorStack.open();
          },
 
          openNotifyStack: function() {
@@ -187,6 +200,8 @@ define('Controls-demo/Popup/PopupPage',
             }
          }
       });
+
+      PopupPage._styles = ['Controls-demo/Popup/PopupPage'];
 
       return PopupPage;
    }

@@ -1,28 +1,21 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import LookupTemplate = require('wml!Controls/_filterPopup/Panel/HierarchyLookup/HierarchyLookup');
 
 import {factory} from 'Types/chain';
 
 /**
  * Обертка над контролом {@link Controls/_filterPopup/Panel/Lookup Controls/filterPopup:Lookup} для работы с иерархическим фильтром.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
  *
  * @class Controls/_filterPopup/Panel/HierarchyLookup
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
  * @public
  * @author Золотова Э.Е.
  *
- */
-
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
- * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
- * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
  */
 
 class HierarchyLookup extends Control {
@@ -54,5 +47,15 @@ class HierarchyLookup extends Control {
 
     static _theme: string[] = ['Controls/filterPopup'];
 }
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#keyProperty
+ * @cfg {String} Имя свойства, уникально идентифицирующего элемент коллекции.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/HierarchyLookup#parentProperty
+ * @cfg {String} Имя свойства, содержащего информацию о родительском узле элемента.
+ */
 
 export default HierarchyLookup;

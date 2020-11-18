@@ -2,132 +2,215 @@
    position: relative;
 }
 
-.controls-ListViewV__loading {
-   min-height: @height_BaseControl-loadingIndicator-img +
-               @spacing_BaseControl-loadingIndicator-between-top-border-content +
-               @spacing_BaseControl-loadingIndicator-between-bottom-border-content;
+.controls-ListViewV__loading_all_theme-@{themeName},
+.controls-ListViewV__loading_up_theme-@{themeName} {
+   min-height: @spinner_l_size_loadingIndicator +
+               @content_l_padding_loadingIndicator * 2;
 }
 
-.controls-ListView__itemV_marker {
+.controls-ListView__itemV_marker_default_theme-@{themeName} {
    position: absolute;
-   width: @width_ListView-marker;
-   background-color: @color_ListView-marker;
+   width: @marker_thickness_list;
    height: 100%;
-   left: 0;
+   background-color: @marker_color_list;
    top: 0;
 }
+.controls-ListView__itemV_marker-left {
+   left: 0;
+}
+.controls-ListView__itemV_marker-right {
+   right: 0;
+}
 
-.controls-ListView__itemV .controls-ListView__checkbox {
+.controls-ListView__itemV .controls-ListView__checkbox_position-default_theme-@{themeName} {
    float: left;
-   margin-top: @spacing_ListView-item-between-checkbox-borderTop;
+   margin-top: @checkbox_offset-top_list;
+}
+
+.controls-ListView__itemV .controls-ListView__checkbox_position-custom_theme-@{themeName} {
+   display: inline-block;
 }
 
 .ws-is-desktop-platform .controls-ListView__checkbox-onhover {
    visibility: hidden;
 }
 
-.ws-is-desktop-platform .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
+.ws-is-hover .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
    visibility: visible;
 }
 
-.controls-ListView__footer__paddingLeft_withCheckboxes {
-   padding-left: @spacing_ListView-between-content-checkbox + @click-area_width_checkbox;
+.controls-ListView__footer__paddingLeft_withCheckboxes_theme-@{themeName} {
+   padding-left: @checkbox_offset-left_list + @click-area_width_checkbox;
 }
 
-.controls-ListView__footer__paddingLeft_default {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+.controls-ListView__footer__paddingLeft_default_theme-@{themeName} {
+   padding-left: @item_padding-left_m_list;
+}
+.controls-ListView__item_default-topPadding_null_theme-@{themeName},
+.controls-ListView__item_master-topPadding_null_theme-@{themeName},
+.controls-ListView__itemV_marker_master_topPadding-null_theme-@{themeName} {
+   padding-top: 0;
 }
 
-.controls-ListView__item-topPadding_null {
-  padding-top: 0;
+.controls-ListView__item_default-topPadding_s_theme-@{themeName},
+.controls-ListView__item_master-topPadding_s_theme-@{themeName},
+.controls-ListView__itemV_marker_master_topPadding-s_theme-@{themeName} {
+   padding-top: @item_padding-top_s_list + @item-separator_s_thickness_list;
+   &.controls-ListView__rowSeparator_size-s_theme-@{themeName} {
+      padding-top: @item_padding-top_s_list;
+   }
+   &.controls-ListView__rowSeparator_size-l_theme-@{themeName} {
+      padding-top: @item_padding-top_s_list + @item-separator_s_thickness_list - @item-separator_l_thickness_list;
+   }
 }
 
-.controls-ListView__item-bottomPadding_null {
-  padding-bottom: 0;
+.controls-ListView__item_default-topPadding_l_theme-@{themeName},
+.controls-ListView__item_master-topPadding_l_theme-@{themeName},
+.controls-ListView__itemV_marker_master_topPadding-l_theme-@{themeName} {
+   padding-top: @item_padding-top_l_list + @item-separator_s_thickness_list;
+   &.controls-ListView__rowSeparator_size-s_theme-@{themeName} {
+      padding-top: @item_padding-top_l_list;
+   }
+   &.controls-ListView__rowSeparator_size-l_theme-@{themeName} {
+      padding-top: @item_padding-top_l_list + @item-separator_s_thickness_list - @item-separator_l_thickness_list;
+   }
 }
 
-.controls-ListView__item-topPadding_default {
-  padding-top: @spacing_ListView-item-between-content-borderTop;
+.controls-ListView__item_default-topPadding_default_theme-@{themeName} {
+   padding-top: @item_padding-top_default_list + @item-separator_s_thickness_list;
+   &.controls-ListView__rowSeparator_size-s_theme-@{themeName} {
+      padding-top: @item_padding-top_default_list;
+   }
+   &.controls-ListView__rowSeparator_size-l_theme-@{themeName} {
+      padding-top: @item_padding-top_default_list + @item-separator_s_thickness_list - @item-separator_l_thickness_list;
+   }
 }
 
-.controls-ListView__item-bottomPadding_default {
-  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+.controls-ListView__item_master-topPadding_default_theme-@{themeName},
+.controls-ListView__itemV_marker_master_topPadding-default_theme-@{themeName}{
+   padding-top: @master_item_padding-top_list;
 }
 
-.controls-ListView__item-topPadding_s {
-  padding-top: @spacing_ListView-item-between-content-borderTop;
+
+.controls-ListView__item_default-bottomPadding_null_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_null_theme-@{themeName},
+.controls-ListView__itemV_marker_master_bottomPadding-null_theme-@{themeName} {
+   padding-bottom: 0;
 }
 
-.controls-ListView__item-bottomPadding_s {
-  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+.controls-ListView__item_default-bottomPadding_s_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_s_theme-@{themeName},
+.controls-ListView__itemV_marker_master_bottomPadding-s_theme-@{themeName} {
+   padding-bottom: @item_padding-bottom_s_list;
 }
 
-.controls-ListView__itemContent_withCheckboxes {
-   padding-left: @spacing_ListView-between-content-checkbox + @click-area_width_checkbox;
+.controls-ListView__item_default-bottomPadding_l_theme-@{themeName},
+.controls-ListView__item_master-bottomPadding_l_theme-@{themeName},
+.controls-ListView__itemV_marker_master_bottomPadding-l_theme-@{themeName} {
+   padding-bottom: @item_padding-bottom_l_list;
 }
 
-.controls-ListView__item-leftPadding_default {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+.controls-ListView__item_default-bottomPadding_default_theme-@{themeName} {
+   padding-bottom: @item_padding-bottom_default_list;
 }
 
-.controls-ListView__item-leftPadding_null {
+.controls-ListView__item_master-bottomPadding_default_theme-@{themeName},
+.controls-ListView__itemV_marker_master_bottomPadding-default_theme-@{themeName} {
+   padding-bottom: @master_item_padding-bottom_list;
+}
+
+.controls-ListView__itemContent_withCheckboxes_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_withCheckboxes_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_withCheckboxes_theme-@{themeName} {
+   padding-left: @checkbox_offset-left_list + @click-area_width_checkbox;
+}
+
+.controls-ListView__item-leftPadding_default_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_default_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_default_theme-@{themeName} {
+   padding-left: @item_padding-left_default_list;
+}
+
+.controls-ListView__item-leftPadding_null_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_null_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_null_theme-@{themeName} {
    padding-left: 0;
 }
 
-.controls-ListView__item-leftPadding_xs {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_xs;
+.controls-ListView__item-leftPadding_xs_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_xs_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_xs_theme-@{themeName} {
+   padding-left: @item_padding-left_xs_list;
 }
 
-.controls-ListView__item-leftPadding_s {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_s;
+.controls-ListView__item-leftPadding_s_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_s_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_s_theme-@{themeName} {
+   padding-left: @item_padding-left_s_list;
 }
 
-.controls-ListView__item-leftPadding_m {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_m;
+.controls-ListView__item-leftPadding_m_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_m_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_m_theme-@{themeName} {
+   padding-left: @item_padding-left_m_list;
 }
 
-.controls-ListView__item-leftPadding_l {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+.controls-ListView__item-leftPadding_l_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_l_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_l_theme-@{themeName} {
+   padding-left: @item_padding-left_l_list;
 }
 
-.controls-ListView__item-leftPadding_xl {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_xl;
+.controls-ListView__item-leftPadding_xl_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_xl_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_xl_theme-@{themeName} {
+   padding-left: @item_padding-left_xl_list;
 }
 
-.controls-ListView__item-leftPadding_xxl {
-   padding-left: @spacing_ListView-item-between-content-borderLeft_xxl;
+.controls-ListView__item-leftPadding_xxl_theme-@{themeName},
+.controls-ListView__groupContent__leftPadding_xxl_theme-@{themeName},
+.controls-ListView__footer__paddingLeft_xxl_theme-@{themeName} {
+   padding-left: @item_padding-left_2xl_list;
 }
 
-.controls-ListView__item-rightPadding_default {
-   padding-right: @spacing_ListView-item-between-content-borderRight_l;
+.controls-ListView__item-rightPadding_default_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_default_theme-@{themeName} {
+   padding-right: @item_padding-right_default_list;
 }
 
-.controls-ListView__item-rightPadding_null {
+.controls-ListView__item-rightPadding_null_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_null_theme-@{themeName} {
    padding-right: 0;
 }
 
-.controls-ListView__item-rightPadding_xs {
-   padding-right: @spacing_ListView-item-between-content-borderRight_xs;
+.controls-ListView__item-rightPadding_xs_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_xs_theme-@{themeName} {
+   padding-right: @item_padding-right_xs_list;
 }
 
-.controls-ListView__item-rightPadding_s {
-   padding-right: @spacing_ListView-item-between-content-borderRight_s;
+.controls-ListView__item-rightPadding_s_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_s_theme-@{themeName} {
+   padding-right: @item_padding-right_s_list;
 }
 
-.controls-ListView__item-rightPadding_m {
-   padding-right: @spacing_ListView-item-between-content-borderRight_m;
+.controls-ListView__item-rightPadding_m_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_m_theme-@{themeName} {
+   padding-right: @item_padding-right_m_list;
 }
 
-.controls-ListView__item-rightPadding_l {
-   padding-right: @spacing_ListView-item-between-content-borderRight_l;
+.controls-ListView__item-rightPadding_l_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_l_theme-@{themeName} {
+   padding-right: @item_padding-right_l_list;
 }
 
-.controls-ListView__item-rightPadding_xl {
-   padding-right: @spacing_ListView-item-between-content-borderRight_xl;
+.controls-ListView__item-rightPadding_xl_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_xl_theme-@{themeName} {
+   padding-right: @item_padding-right_xl_list;
 }
 
-.controls-ListView__item-rightPadding_xxl {
-   padding-right: @spacing_ListView-item-between-content-borderRight_xxl;
+.controls-ListView__item-rightPadding_xxl_theme-@{themeName},
+.controls-ListView__groupContent__rightPadding_xxl_theme-@{themeName} {
+   padding-right: @item_padding-right_2xl_list;
 }
 
 .controls-ListView__itemContent {
@@ -138,69 +221,88 @@
    z-index: 1;
 }
 
-.controls-ListView__item_active {
-   background-color: @background-color_ListView-item_active;
+.controls-ListView__item_active_theme-@{themeName} {
+   background-color: @item_active_background-color_list;
 }
 
-.controls-ListView__item_editing {
-   background-color: @background-color_ListView-item_editing;
-   > .controls-itemActionsV {
-      display: inline-block;
+.controls-ListView__item_editing_theme-@{themeName} {
+   background-color: @item_editing_background-color_list;
+   > .controls-itemActionsV,
+   .controls-itemActionsV_custom_theme-@{themeName} {
       opacity: 1;
-   }
-   .controls-itemActionsV_custom {
-      display: inline-block;
-      opacity: 1;
+      visibility: visible;
    }
 }
 
-.controls-ListView__item_dragging {
-   opacity: @opacity_ListView-item_dragging;
+.controls-ListView__item_dragging_theme-@{themeName} {
+   opacity: @item_dragging_opacity_list;
 }
 
-.ws-is-hover .controls-BaseControl_showActions {
+.controls-BaseControl_showActions_visible {
    .controls-ListView__item_showActions {
-      &:hover {
-         > .controls-itemActionsV {
-            display: inline-block;
-            opacity: 1;
-         }
-         .controls-itemActionsV_custom {
-            display: inline-block;
-            opacity: 1;
-         }
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         visibility: visible;
+         opacity: 1;
       }
    }
-   .controls-ListView__item_highlightOnHover_editing {
-      &:hover {
-         background-color: @background-color_ListView-item_editing;
+}
+
+.ws-is-hover .controls-BaseControl_showActions_delayed {
+   .controls-ListView__item_showActions:hover {
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         animation: timeout .5s;
       }
+   }
+}
+.ws-is-hover .controls-BaseControl_showActions_delayed,
+.ws-is-hover .controls-BaseControl_showActions_onhover {
+   .controls-ListView__item_showActions:hover {
+      .controls-itemActionsV_custom_theme-@{themeName},
+      > .controls-itemActionsV {
+         visibility: visible;
+         opacity: 1;
+      }
+   }
+   .controls-ListView__item_highlightOnHover_editing:hover {
+      background-color: @item_editing_background-color_list;
    }
 }
 
 .controls-ListView__groupContent {
    display: flex;
    align-items: baseline;
+   min-width: 0;
    // убрал overflow по задаче https://online.sbis.ru/opendoc.html?guid=c2378e36-137e-44e6-a339-1c5bd549a772
    //overflow: hidden;
 }
 
-.controls-ListView__groupSeparator-left, .controls-ListView__groupSeparator-right {
-   height: @spacing_ListView-groupSeparator-between-content-borderTop;
-   margin-bottom: @spacing_ListView-groupSeparator-between-content-borderBottom;
-   border-bottom: @border-width_ListView-groupSeparator solid @border-color_ListView-groupSeparator;
+.controls-ListView__groupSeparator-left_theme-@{themeName}, .controls-ListView__groupSeparator-right_theme-@{themeName} {
+   height: @grouping_height_list / 2 - @grouping_separator_thickness_list;
+   margin-bottom: @grouping_height_list / 2;
+   border-bottom: @grouping_separator_thickness_list solid @grouping_separator_color_list;
    min-width: 10%;
    flex-grow: 1;
    flex-shrink: 1;
-   font-size: @font-size_ListView-groupExpander;
+   font-size: @grouping_expander_icon-size_list;
 }
 
-.controls-ListView__groupContent-text {
+.controls-ListView__groupSeparator-left_theme-@{themeName} {
+   margin-right: @grouping_expander_padding-left_list;
+}
+
+.controls-ListView__groupSeparator-right_theme-@{themeName} {
+   margin-left: @grouping_expander_padding-right_list;
+}
+
+.controls-ListView__groupContent-text_default_theme-@{themeName} {
+   font-size: @grouping_expander_font-size_list;
+}
+
+.controls-ListView__groupContent-text_theme-@{themeName} {
    display: inline-block;
-   padding-left: @spacing_ListView-group-between-text-separator;
-   padding-right: @spacing_ListView-group-between-text-separator;
-   color: @color_ListView-group-text;
-   font-size: @font-size_ListView-group-text;
+   color: @grouping_expander_text-color_list;
    white-space: nowrap;
    text-align: center;
    flex-shrink: 1;
@@ -209,30 +311,55 @@
    text-overflow: ellipsis;
 }
 
+/* В safari на iPad так отрисовывается Tensor-font, что у блоков с текстом сверху на ~1 пиксель больше отступ, чем
+    у тех же блоков в любых других браузерах, в том числе на macOS. Это приводит к тому, что разделители у групп визуально
+    задраны на ~1px */
+.ws-is-mobile-safari {
+   .controls-ListView__groupContent-text_theme-@{themeName} {
+      position: relative;
+      top: -1px;
+   }
+}
+
 .controls-ListView__groupExpander {
    cursor: pointer;
 }
 
-.controls-ListView__groupExpander_left:before {
-   width: @width_ListView-groupExpander;
-   font-size: @font-size_ListView-groupExpander;
-   padding-right: @spacing_ListView-group-between-text-expander;
+.controls-ListView__groupExpander_left_theme-@{themeName}::before {
+   padding-right: @grouping_expander_icon_offset_list;
    content: '\e000';
 }
 
-.controls-ListView__groupExpander_right:after {
-   width: @width_ListView-groupExpander;
-   font-size: @font-size_ListView-groupExpander;
-   padding-left: @spacing_ListView-group-between-text-expander;
+.controls-ListView__groupExpander_right_theme-@{themeName}::after {
+   padding-left: @grouping_expander_icon_offset_list;
    content: '\e000';
 }
 
-.controls-ListView__groupExpander:hover {
-   color: @color_ListView-groupExpander_hover;
+.controls-ListView__groupExpander-iconSize_default_theme-@{themeName} {
+   &::before,
+   &::after {
+      width: @grouping_expander_icon-size_list;
+      font-size: @grouping_expander_icon-size_list;
+   }
 }
 
-.controls-ListView__groupExpander:active {
-   color: @color_ListView-groupExpander_active;
+.controls-ListView__groupExpander-iconSize_ {
+   @variants: 2xs, xs, s, m, l;
+   .for(@variants, { &@{_item}_theme-@{themeName} {
+      &::before,
+      &::after {
+         width: ~"@{grouping_expander_icon-size-@{_item}_list}";
+         font-size: ~"@{grouping_expander_icon-size-@{_item}_list}";
+      }
+   }});
+}
+
+.ws-is-hover .controls-ListView__groupExpander_theme-@{themeName}:hover {
+   color: @grouping_expander_hover_text-color_list;
+}
+
+.controls-ListView__groupExpander_theme-@{themeName}:active {
+   color: @grouping_expander_active_text-color_list;
 }
 
 .controls-ListView__groupExpander_collapsed_left:before {
@@ -247,83 +374,105 @@
    display: none;
 }
 
-.controls-ListView__groupContent-rightTemplate {
-   padding-left: @spacing_ListView-group-between-rightTemplate-separator;
+.controls-ListView__groupContent-rightTemplate_theme-@{themeName} {
+   padding-left: @grouping_right-template_padding-left_list;
    flex-shrink: 0;
 }
 
-.controls-ListView__empty {
-   color: @color_ListView-empty;
+.controls-ListView__empty_theme-@{themeName} {
+   color: @placeholder_text-color_list;
    text-align: center;
-   font-size: @font-size_ListView-empty-template;
+   font-size: @placeholder_font-size_list;
 }
 
-.controls-ListView__empty_topSpacing_null {
+.controls-ListView__empty_topSpacing_null_theme-@{themeName} {
    margin-top: 0;
 }
 
-.controls-ListView__empty_topSpacing_xs {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_xs;
+.controls-ListView__empty_topSpacing_xs_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_xs_list;
 }
 
-.controls-ListView__empty_topSpacing_s {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_s;
+.controls-ListView__empty_topSpacing_s_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_s_list;
 }
 
-.controls-ListView__empty_topSpacing_m {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_m;
+.controls-ListView__empty_topSpacing_m_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_m_list;
 }
 
-.controls-ListView__empty_topSpacing_l {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_l;
+.controls-ListView__empty_topSpacing_l_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_l_list;
 }
 
-.controls-ListView__empty_topSpacing_xl {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_xl;
+.controls-ListView__empty_topSpacing_xl_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_xl_list;
 }
 
-.controls-ListView__empty_topSpacing_xxl {
-   margin-top: @spacing_ListView-empty-between-content-borderTop_xxl;
+.controls-ListView__empty_topSpacing_xxl_theme-@{themeName} {
+   margin-top: @placeholder_padding-top_2xl_list;
 }
 
-.controls-ListView__empty_bottomSpacing_null{
+.controls-ListView__empty_bottomSpacing_null_theme-@{themeName} {
    margin-bottom: 0;
 }
 
-.controls-ListView__empty_bottomSpacing_xs {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xs;
+.controls-ListView__empty_bottomSpacing_xs_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_xs_list;
 }
 
-.controls-ListView__empty_bottomSpacing_s {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_s;
+.controls-ListView__empty_bottomSpacing_s_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_s_list;
 }
 
-.controls-ListView__empty_bottomSpacing_m {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_m;
+.controls-ListView__empty_bottomSpacing_m_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_m_list;
 }
 
-.controls-ListView__empty_bottomSpacing_l {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_l;
+.controls-ListView__empty_bottomSpacing_l_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_l_list;
 }
 
-.controls-ListView__empty_bottomSpacing_xl {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xl;
+.controls-ListView__empty_bottomSpacing_xl_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_xl_list;
 }
 
-.controls-ListView__empty_bottomSpacing_xxl {
-   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xxl;
+.controls-ListView__empty_bottomSpacing_xxl_theme-@{themeName} {
+   margin-bottom: @placeholder_padding-bottom_2xl_list;
 }
 
 //MasterList styles
 
-.controls-ListView_master {
-   padding-right: @border-width_List-masterList-right;
+.controls-ListView_master_theme-@{themeName} {
+   padding-right: @master_separator_thickness_list;
    box-sizing: border-box;
 }
 
-.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master,
-.ws-is-desktop-safari .controls-ListView__item__marked_master,
-.ws-is-mobile-safari .controls-ListView__item__marked_master {
+.controls-ListView_masterClassic_theme-@{themeName} {
+   padding-right: @masterClassic_separator_thickness_list;
+   box-sizing: border-box;
+}
+
+.controls-ListView__item__unmarked_master_theme-@{themeName} {
+   font-size: @master_item_font-size_list;
+}
+
+.controls-ListView__itemContent_master_theme-@{themeName} {
+   display: flex;
+   align-items: baseline;
+
+   &:before {
+      content: '\200b';
+      font-size: @item_font-size_2xl_grid;
+   }
+}
+
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-chrome-ios .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-desktop-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_master_theme-@{themeName},
+.ws-is-mobile-safari .controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    // ave safari 13
    // https://online.sbis.ru/opendoc.html?guid=6d560d7a-c140-4d06-a1b6-53b326efe950
    // иначе все position: absolute элементы внутри position: sticky
@@ -331,19 +480,21 @@
    transform: translateZ(0);
 }
 
-.controls-ListView__item__marked_master {
-   background-color: @background-color_List-masterList-item_selected;
-   //z-index 1 is needed to overlap the right line of master
+.controls-ListView__item__marked_masterClassic_theme-@{themeName} {
+   background-color: @masterClassic_item_selected_background-color_list;
+}
+.controls-ListView__item__marked_masterClassic_theme-@{themeName} {
    z-index: 1;
+
    &:before {
-      content: '';
+      content: '\200b';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
+      border-width: @masterClassic_item_selected_border-thickness_list 0 @masterClassic_item_selected_border-thickness_list 0;
       border-style: solid;
-      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
-      box-shadow: @box-shadow_List-masterList-item_selected;
-      width: ~'calc(100% + @{border-width_List-masterList-right})';
+      border-color: @masterClassic_item_selected_border-top-color_list transparent @masterClassic_item_selected_border-bottom-color_list transparent;
+      box-shadow: @masterClassic_item_selected_box-shadow_list;
+      width: ~'calc(100% + @{masterClassic_separator_thickness_list})';
       position: absolute;
       bottom: 0;
       left: 0;
@@ -355,11 +506,36 @@
       z-index: 1;
       height: 100%;
       top: 0;
-      width: @border-width_List-masterList-right;
+      width: @masterClassic_separator_thickness_list;
       position: absolute;
-      right: -@border-width_List-masterList-right;
-      background-color: @background-color_List-masterList-item_marked;
+      right: -@masterClassic_separator_thickness_list;
+      background-color: @masterClassic_item_selected_background-color_list;
    }
+}
+
+.controls-ListView__item__marked_master_theme-@{themeName} {
+   font-size: @master_item_selected_font-size_list;
+   font-weight: bold;
+   color: @master_item_selected_text-color_list;
+}
+
+.controls-ListView__itemV_marker_master_theme-@{themeName} {
+   position: absolute;
+   box-sizing: border-box;
+   width: @master-marker_thickness_list;
+   background-color: @master-marker_color_list;
+   height: 100%;
+   top: 0;
+   left: 0;
+}
+
+.controls-ListView__itemV_marker_masterClassic_theme-@{themeName} {
+   position: absolute;
+   width: @masterClassic-marker_thickness_list;
+   background-color: @marker_color_list;
+   height: 100%;
+   left: 0;
+   top: 0;
 }
 
 .controls-ListView__groupContent_cursor-default {
@@ -377,9 +553,10 @@
 //Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
 //TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
 .ws-is-hover:not(.ws-is-mobile-platform) {
-   .controls-ListView__item_master {
+   .controls-ListView__item_master_theme-@{themeName},
+   .controls-ListView__item_masterClassic_theme-@{themeName} {
       &:hover {
-         background-color: @background-color_List-masterList-item_hover;
+         background-color: @master_item_hover_background-color_list;
       }
    }
 }
@@ -404,6 +581,85 @@
    justify-content: flex-end;
 }
 
-.controls-ListView__stickyGroup_master.controls-StickyHeader__background {
-   background-color: @background-color_List-masterList;
+.controls-ListView__groupContent_align-center {
+   justify-content: center;
+}
+
+.ws-is-hover {
+   .controls-ListView__item_highlightOnHover_default_theme_@{themeName} {
+      &:hover {
+         background-color: @item_hover_background-color_list;
+      }
+      &:hover .controls-background-default_theme-@{themeName} {
+         background-color: @item_hover_background-color_list;
+      }
+   }
+   .controls-ListView__item_highlightOnHover_default_theme_@{themeName} {
+      &:hover .controls-background-default_theme-@{themeName}{
+         background-color: @item_hover_background-color_list;
+      }
+   }
+}
+//TODO это должно уехать в BaseControl после задачи https://online.sbis.ru/opendoc.html?guid=92bedbf7-6038-4c1f-826e-b096b4cddd6d
+.controls-Checkbox__iconWrapper_inList_theme-@{themeName} {
+   height: @checkbox_height_list;
+}
+/// decorator:money in list, grid
+.controls-text-group_theme-@{themeName}{
+   color: @group-text-color_decoratorMoney;
+}
+
+.controls-text-list_theme-@{themeName}{
+   color: @list-text-color_decoratorMoney;
+}
+
+.controls-ListView__item_background_danger_theme-@{themeName} {
+   background-color: @danger_color;
+}
+
+.controls-ListView__item_background_success_theme-@{themeName} {
+   background-color: @success_color;
+}
+
+.controls-ListView__item_background_warning_theme-@{themeName} {
+   background-color: @warning_color;
+}
+
+.controls-ListView__item_background_primary_theme-@{themeName} {
+   background-color: @primary_color;
+}
+
+.controls-ListView__item_background_secondary_theme-@{themeName} {
+   background-color: @secondary_color;
+}
+
+.controls-ListView__item_background_unaccented_theme-@{themeName} {
+   background-color: @unaccented_color;
+}
+
+.controls-ListView__item_background_readonly_theme-@{themeName} {
+   background-color: @readonly_color;
+}
+
+.controls-ListView__rowSeparator_size-s_theme-@{themeName} {
+   border: 0 solid transparent;
+   border-top-width: @item-separator_s_thickness_list;
+   border-top-color: @item_separator_s_color_list;
+}
+
+.controls-ListView__rowSeparator_size-l_theme-@{themeName} {
+   border: 0 solid transparent;
+   border-top-width: @item-separator_l_thickness_list;
+   border-top-color: @item_separator_l_color_list;
+}
+
+// Последняя граница списка, самая нижняя
+.controls-ListView__itemV:last-child {
+   .controls-ListView__rowSeparator_size-s_theme-@{themeName} {
+      border-bottom: @item-separator_s_thickness_list solid @item_edge_separator_s_color_list;
+   }
+
+   .controls-ListView__rowSeparator_size-l_theme-@{themeName} {
+      border-bottom: @item-separator_l_thickness_list solid @item_edge_separator_l_color_list;
+   }
 }

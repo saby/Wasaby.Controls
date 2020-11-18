@@ -1,6 +1,7 @@
 <ws:partial
     template="{{_options.content}}"
     scope="{{_options}}"
+    observerName="{{null}}"
     on:intersectionObserverRegister="_registerHandler()"
     on:intersectionObserverUnregister="_unregisterHandler()"
 />

@@ -5,6 +5,9 @@ import template = require('wml!Controls/_popup/Opener/Edit/Edit');
 import CoreMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
+
+
+interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
 /**
  * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
  * @remark
@@ -12,24 +15,25 @@ import Deferred = require('Core/Deferred');
  * * 'stack' — используйте опции {@link Controls/popup:Stack}
  * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
  * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
- * <a href="/materials/demo-ws4-popup-edit">Демо-пример</a>
+ * 
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popup/Opener/Edit
  * @mixes Controls/_popup/interface/IBaseOpener
  * @mixes Controls/_popup/interface/IEdit
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
- * @category Popup
  */
-
-interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
-
 class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
     readonly '[Controls/_popup/interface/IEditOpener]': boolean;
-    private _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
     private _resultHandler: Function;
-    private _openerTemplate: Control;
+    protected _openerTemplate: Control;
     private _linkedKey: string = null; // key to obtain a synchronized record
     private _children: {
         Opener: BaseOpener
@@ -124,6 +128,17 @@ class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
                 RecordSynchronizer.mergeRecord(data.record, items, editKey);
             }
         } else if (data.formControllerEvent === 'delete') {
+            this._deleteRecord(RecordSynchronizer, items, editKey);
+        } else if (data.formControllerEvent === 'deletestarted') {
+            data.additionalData.removePromise.then(() => {
+                this._deleteRecord(RecordSynchronizer, items, editKey);
+            });
+        }
+    }
+
+    private _deleteRecord(RecordSynchronizer, items, editKey): void {
+        // Если нет editKey - удаляют черновик, которого нет в списке
+        if (editKey) {
             RecordSynchronizer.deleteRecord(items, editKey);
         }
     }

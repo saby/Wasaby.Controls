@@ -1,6 +1,5 @@
 import CollectionItem from './CollectionItem';
 import Flags from './Flags';
-import {register} from 'Types/di';
 
 /**
  * Элемент коллекции флагов
@@ -33,4 +32,3 @@ Object.assign(FlagsItem.prototype, {
     _moduleName: 'Controls/display:FlagsItem'
 });
 
-register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});

@@ -6,14 +6,21 @@ define('ControlsUnit/Calendar/Utils', [
    coreMerge
 ) {
    return {
-      createComponent: function(Component, cfg) {
+      createComponent: function(Control, cfg) {
          let mv;
+         let Component = Control.default || Control;
          if (Component.getDefaultOptions) {
             cfg = this.prepareOptions(Component, cfg);
          }
          mv = new Component(cfg);
          //в afterMount идут дейтсвия с контейнером
          mv._container = mv._container || {};
+         mv._children = {
+            startValueField: {},
+            endValueField: {
+               activate: () => true
+            }
+         };
          mv.saveOptions(cfg);
          mv._beforeMount(cfg);
          return mv;

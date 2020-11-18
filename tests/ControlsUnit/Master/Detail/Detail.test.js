@@ -54,11 +54,12 @@ define(['Controls/masterDetail'], function (masterDetail) {
          let options = {
             masterMinWidth: 100,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
 
          Control._canResizing = Control._isCanResizing(options);
-         Control._afterMount(options);
+         Control._updateOffset(options);
          assert.equal(Control._minOffset, 100);
          assert.equal(Control._maxOffset, 99);
          assert.equal(Control._currentWidth, '200px');
@@ -106,12 +107,29 @@ define(['Controls/masterDetail'], function (masterDetail) {
          Control.destroy();
       });
 
+      it ('_dragStartHandler', () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            masterMinWidth: 100,
+            masterWidth: 150,
+            masterMaxWidth: 200
+         };
+         Control._options = options;
+         Control._canResizing = true;
+         Control._dragStartHandler();
+         assert.equal(Control._minOffset, 50);
+         assert.equal(Control._maxOffset, 50);
+         assert.equal(Control._currentWidth, '150px');
+         Control.destroy();
+      });
+
       it('is can resizing', () => {
          let Control = new masterDetail.Base();
          let options = {
             masterMinWidth: 250,
             masterWidth: 200,
-            masterMaxWidth: 299
+            masterMaxWidth: 299,
+            propStorageId: 10
          };
          assert.equal(Control._isCanResizing(options), true);
 
@@ -140,6 +158,59 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(isSetSettings, true);
 
          Control.destroy();
-      })
+      });
+
+      it('_resizeHandler with propStorageId', () => {
+         const Control = new masterDetail.Base();
+         let isUpdateOffset = false;
+         Control._startResizeRegister = () => {};
+         Control._updateOffsetDebounced = () => isUpdateOffset = true;
+
+         Control._options = {
+            propStorageId: '123'
+         };
+         Control._container = {
+            closest: () => {
+               return false;
+            }
+         };
+         Control._resizeHandler();
+         assert.isTrue(isUpdateOffset);
+
+         Control.destroy();
+      });
+
+      it('_resizeHandler without propStorageId', () => {
+         const Control = new masterDetail.Base();
+         let isUpdateOffset = false;
+         Control._updateOffsetDebounced = () => isUpdateOffset = true;
+         Control._startResizeRegister = () => {};
+
+
+         Control._container = {
+            closest: () => {
+               return false;
+            }
+         };
+         Control._resizeHandler();
+         assert.isFalse(isUpdateOffset);
+
+         Control.destroy();
+      });
+
+      it('masterWidthChanged', () => {
+         const control = new masterDetail.Base();
+         const sandbox = sinon.createSandbox();
+         const event = {};
+         const offset = 100;
+         sandbox.stub(control, '_notify');
+         control._currentWidth = 100;
+
+         control._offsetHandler(event, offset);
+
+         sinon.assert.calledWith(control._notify, 'masterWidthChanged', ['200px']);
+
+         sandbox.restore();
+      });
    });
 });

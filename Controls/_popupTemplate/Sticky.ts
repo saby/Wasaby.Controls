@@ -1,15 +1,25 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Sticky/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
-import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interface/IPopupTemplateBase";
+import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from './interface/IPopupTemplateBase';
+
+interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions {
+    shadowVisible?: boolean;
+}
 
 /**
  * Базовый шаблон для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ прилипающих блоков}.
+ * Имеет три контентные опции - для шапки, контента и подвала, а так же крестик закрытия, соответствующие стандарту выпадающих списков.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/sticky/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
  * @class Controls/_popupTemplate/Sticky
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
  * @demo Controls-demo/PopupTemplate/Sticky/FooterContentTemplate/Index
@@ -17,7 +27,8 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from "./interf
  * @demo Controls-demo/PopupTemplate/Sticky/HeaderContentTemplate/Index
  */
 
-class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopupTemplateBase {
+class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTemplateBase {
+
     protected _template: TemplateFunction = template;
     protected _headerTheme: string;
 
@@ -33,19 +44,28 @@ class StickyTemplate extends Control<IPopupTemplateBaseOptions> implements IPopu
         this._notify('close', [], {bubbling: true});
     }
 
+    protected _proxyEvent(event, eventName): void {
+        this._notify(eventName, [event]);
+    }
+
     private _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }
 
     static _theme: string[] = ['Controls/popupTemplate'];
 
-    static getDefaultOptions(): IPopupTemplateBaseOptions {
+    static getDefaultOptions(): IStickyTemplateOptions {
         return {
-            headingStyle: 'secondary',
-            headingSize: 'm',
-            closeButtonVisibility: true
+            headingFontSize: 'l',
+            headingFontColorStyle: 'secondary',
+            closeButtonVisibility: true,
+            shadowVisible: false
         };
     }
 }
-
+/**
+ * @name Controls/_popupTemplate/Sticky#shadowVisible
+ * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
+ * @default false
+ */
 export default StickyTemplate;

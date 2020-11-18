@@ -1,8 +1,0 @@
-<ws:partial template="{{_options.content}}"
-            source="{{_source}}"
-            filter="{{_filter}}"
-            navigation="{{_navigation}}"
-            emptyTemplate="{{_options.emptyTemplate}}"
-            footerTemplate="{{_options.footerTemplate}}"
-            searchMode="{{_searchMode}}"
-            markedKey="{{_options.markedKey}}"/>

@@ -6,7 +6,7 @@ define(
    function(PopupClass) {
       'use strict';
 
-      describe('Controls/_popup/Popup', () => {
+      describe('Controls/_popup/Manager/Popup', () => {
          it('isResized', () => {
             const Popup = new PopupClass.default();
             let oldOptions = { position: {} };
@@ -26,10 +26,25 @@ define(
             newOptions.position.height = 10;
             assert.equal(false, Popup._isResized(oldOptions, newOptions));
 
-            oldOptions = { hidden: true, position: {} };
-            newOptions = { hidden: false, position: {} };
+            oldOptions = { position: { hidden: true } };
+            newOptions = { position: { hidden: false } };
 
             assert.equal(true, Popup._isResized(oldOptions, newOptions));
+         });
+         it('_showIndicatorHandler', () => {
+            const Popup = new PopupClass.default();
+            let config = '';
+            let promise = '';
+            let stopPropagation = () => {
+            };
+            Popup._notify = (eventName, eventArgs, eventOptions) => {
+               config = eventArgs[0];
+               promise = eventArgs[1];
+            };
+            Popup._showIndicatorHandler({ event: 'event', stopPropagation }, 'config', 'promise');
+            assert.equal(config, 'config');
+            assert.equal(promise, 'promise');
+            Popup.destroy();
          });
       });
    }

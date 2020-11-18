@@ -1,9 +1,8 @@
-import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
-import Formatter = require('Controls/_input/Mask/Formatter');
+import {FormatBuilder, Formatter} from 'Controls/decorator';
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
 
-      
+
 
       /**
        * @class Controls/_input/Text/ViewModel
@@ -42,22 +41,23 @@ import BaseViewModel = require('Controls/_input/Base/ViewModel');
 
          _convertToValue(displayValue) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
-            const value = Formatter.getClearData(this._format, displayValue).value;
+            const value = Formatter.clearData(this._format, displayValue).value;
             return value;
          }
          _convertToDisplayValue(value) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             this._nextVersion();
             const fValue = value === null ? '' : value;
-            const fDate = Formatter.getFormatterData(this._format, { value: fValue, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            if (fDate && fDate.value) {
+            try {
+               const fDate = Formatter.formatData(this._format, { value: fValue, carriagePosition: 0 });
                return fDate.value;
+            } catch (e) {
+               if (this.options.replacer) {
+                  return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
+               }
+               return '';
             }
-            if (this.options.replacer) {
-               return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
-            }
-            return '';
          }
          handleInput(splitValue, inputType) {
             this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);

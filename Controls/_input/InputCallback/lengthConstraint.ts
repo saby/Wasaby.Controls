@@ -1,11 +1,11 @@
-import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
+import splitIntoTriads, {NUMBER_DIGITS_TRIAD} from 'Controls/Utils/splitIntoTriads';
 
 import ICallback from 'Controls/interface/ICallback';
 
 const charOfIntegerPart: RegExp = /[-0-9]/;
 
 function getCountTriads(valueLength: number): number {
-    return Math.max(0, Math.floor((valueLength - 1) / 3));
+    return Math.max(0, Math.floor((valueLength - 1) / NUMBER_DIGITS_TRIAD));
 }
 
 /**
@@ -48,8 +48,12 @@ export default function lengthConstraint(maxLength: number, useGrouping: boolean
         }
 
         if (useGrouping) {
-            const countTriads = getCountTriads(formattedDisplayValue.length);
-            const countTriadsAfterCarriage = getCountTriads(formattedDisplayValue.length - relativePosition);
+            let integerLength: number = formattedDisplayValue.length;
+            if (formattedDisplayValue.charAt(0) === '-' ) {
+                integerLength--;
+            }
+            const countTriads = getCountTriads(integerLength);
+            const countTriadsAfterCarriage = getCountTriads(integerLength - relativePosition);
 
             formattedDisplayValue = splitIntoTriads(formattedDisplayValue);
             relativePosition += countTriads - countTriadsAfterCarriage;

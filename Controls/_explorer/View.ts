@@ -1,17 +1,24 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import cInstance = require('Core/core-instance');
-import keysHandler = require('Controls/Utils/keysHandler');
+import {tmplNotify, keysHandler} from 'Controls/eventUtils';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
 import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/explorer';
-import 'css!theme?Controls/tile';
-import 'Types/entity';
+import {Model} from 'Types/entity';
+import {ListView} from 'Controls/list';
+import {isEqual} from 'Types/object';
+import {
+   INavigationSourceConfig,
+   INavigationPositionSourceConfig as IPositionSourceConfig,
+   INavigationOptionValue as INavigation
+}  from '../_interface/INavigation';
+import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
+import {ISelectionObject} from 'Controls/interface';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import { RecordSet } from 'Types/collection';
 
 var
       HOT_KEYS = {
@@ -28,34 +35,41 @@ var
       VIEW_NAMES = {
          search: SearchView,
          tile: null,
-         table: TreeGridView
+         table: TreeGridView,
+         list: ListView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: SearchGridViewModel,
          tile: null,
-         table: TreeGridViewModel
+         table: TreeGridViewModel,
+         list: TreeGridViewModel
       },
       _private = {
-         setRoot: function(self, root) {
+         setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
-               self._options.itemOpenHandler(root, self._items);
+               self._options.itemOpenHandler(root, self._items, dataRoot);
             }
             self._forceUpdate();
          },
-          setRestoredKeyObject: function(self, root) {
-              const curRoot = _private.getRoot(self, self._options.root);
-              self._restoredMarkedKeys[root] = {
-                  parent: curRoot,
-                  markedKey: null
-              };
-              if (self._restoredMarkedKeys[curRoot]) {
-                  self._restoredMarkedKeys[curRoot].markedKey = root;
-              }
-          },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            const rootId = root.getId();
+            self._restoredMarkedKeys[rootId] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = rootId;
+
+               if (_private.isCursorNavigation(self._options.navigation)) {
+                  self._restoredMarkedKeys[curRoot].cursorPosition = _private.getCursorPositionFor(root, self._options.navigation);
+               }
+            }
+         },
           cleanRestoredKeyObject: function(self, root) {
               _private.pathCleaner(self, root);
           },
@@ -63,9 +77,11 @@ var
             if (self._restoredMarkedKeys[root]) {
                if (self._restoredMarkedKeys[root].parent === undefined) {
                   const markedKey = self._restoredMarkedKeys[root].markedKey;
+                  const cursorPosition = self._restoredMarkedKeys[root].cursorPosition;
                   self._restoredMarkedKeys = {
                      [root]: {
-                        markedKey: markedKey
+                        markedKey: markedKey,
+                        cursorPosition: cursorPosition
                      }
                   };
                   return;
@@ -81,7 +97,7 @@ var
 
             function _remover(key) {
                Object.keys(self._restoredMarkedKeys).forEach((cur) => {
-                  if (self._restoredMarkedKeys[cur] && self._restoredMarkedKeys[cur].parent === String(key)) {
+                  if (self._restoredMarkedKeys[cur] && String(self._restoredMarkedKeys[cur].parent) === String(key)) {
                      const nextKey = cur;
                      delete self._restoredMarkedKeys[cur];
                      _remover(nextKey);
@@ -107,6 +123,13 @@ var
             if (self._firstLoad) {
                resolver(result);
                self._firstLoad = false;
+               _private.fillRestoredMarkedKeysByBreadCrumbs(
+                   _private.getDataRoot(self, self._options),
+                   self._breadCrumbsItems,
+                   self._restoredMarkedKeys,
+                   self._options.parentProperty,
+                   self._options.navigation
+               );
             }
          },
          dataLoadErrback: function(self, cfg, error) {
@@ -120,6 +143,28 @@ var
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
+         fillRestoredMarkedKeysByBreadCrumbs: function(root, breadCrumbs, restoredMarkedKeys, parentProperty, navigation) {
+            restoredMarkedKeys[root] = {
+               markedKey: null
+            };
+            if (breadCrumbs && breadCrumbs.forEach) {
+               breadCrumbs.forEach((crumb) => {
+                  const parentKey = crumb.get(parentProperty);
+                  const crumbKey = crumb.getKey();
+                  restoredMarkedKeys[crumbKey] = {
+                     parent: parentKey,
+                     markedKey: null
+                  };
+                  if (restoredMarkedKeys[parentKey]) {
+                     restoredMarkedKeys[parentKey].markedKey = crumbKey;
+
+                     if (_private.isCursorNavigation(navigation)) {
+                        restoredMarkedKeys[parentKey].cursorPosition = _private.getCursorPositionFor(crumb, navigation);
+                     }
+                  }
+               });
+            }
+         },
          itemsReadyCallback: function(self, items) {
             self._items = items;
             if (self._options.itemsReadyCallback) {
@@ -130,7 +175,12 @@ var
             if (self._isGoingBack) {
                const curRoot = _private.getRoot(self, self._options.root);
                if (self._restoredMarkedKeys[curRoot]) {
-                  self._children.treeControl.setMarkedKey(self._restoredMarkedKeys[curRoot].markedKey);
+                  const { markedKey } = self._restoredMarkedKeys[curRoot];
+                  self._children.treeControl.setMarkedKey(markedKey);
+                  self._markerForRestoredScroll = markedKey;
+               }
+               if (self._children.treeControl.isAllSelected()) {
+                  self._children.treeControl.clearSelection();
                }
                self._isGoingBack = false;
             }
@@ -143,11 +193,6 @@ var
                self._pendingViewMode = null;
             }
          },
-         setVirtualScrolling(self, viewMode, cfg): void {
-            // todo https://online.sbis.ru/opendoc.html?guid=7274717e-838d-46c4-b991-0bec75bd0162
-            // For viewMode === 'tile' disable virtualScrolling.
-            self._virtualScrolling = viewMode === 'tile' ? false : cfg.virtualScrolling;
-         },
 
          setViewConfig: function (self, viewMode) {
             self._viewName = VIEW_NAMES[viewMode];
@@ -155,19 +200,15 @@ var
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
-            _private.setVirtualScrolling(self, self._viewMode, cfg);
             _private.setViewConfig(self, self._viewMode);
+            _private.applyNewVisualOptions(self);
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
-            var currentRoot = _private.getRoot(self, cfg.root);
-            var dataRoot = _private.getDataRoot(self);
             var result;
 
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
+               _private.updateRootOnViewModeChanged(self, viewMode, cfg);
                self._breadCrumbsItems = null;
-               if (dataRoot !== currentRoot) {
-                  _private.setRoot(self, dataRoot);
-               }
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
@@ -181,19 +222,25 @@ var
 
             return result;
          },
+         applyNewVisualOptions(self): void {
+            if (self._newItemPadding) {
+               self._itemPadding = self._newItemPadding;
+               self._newItemPadding = null;
+            }
+         },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                self._isGoingBack = true;
                _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
             }
          },
-         getDataRoot: function(self) {
+         getDataRoot: function(self, options) {
             var result;
 
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                result = self._breadCrumbsItems[0].get(self._options.parentProperty);
             } else {
-               result = _private.getRoot(self, self._options.root);
+               result = _private.getRoot(self, options.root);
             }
 
             return result;
@@ -202,7 +249,7 @@ var
             var
                item,
                itemFromRoot = true,
-               root = _private.getDataRoot(self);
+               root = _private.getDataRoot(self, self._options);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
@@ -247,51 +294,120 @@ var
             if (cfg.searchNavigationMode !== 'expand') {
                self._children.treeControl.resetExpandedItems();
             }
-         }
+         },
+
+         isCursorNavigation(navigation: INavigation<INavigationSourceConfig>): boolean {
+            return !!navigation && navigation.source === 'position';
+         },
+
+         /**
+          * Собирает курсор для навигации относительно заданной записи.
+          * @param item - запись, для которой нужно "собрать" курсор
+          * @param positionNavigation - конфигурация курсорной навигации
+          */
+         getCursorPositionFor(item: Model, positionNavigation: INavigation<IPositionSourceConfig>): IPositionSourceConfig['position'] {
+            const position: unknown[] = [];
+            const optField = positionNavigation.sourceConfig.field;
+            const fields: string[] = (optField instanceof Array) ? optField : [optField];
+
+            fields.forEach((field) => {
+               position.push(item.get(field));
+            });
+
+            return position;
+         },
+
+         /**
+          * Восстанавливает значение курсора для курсорной навигации при выходе из папки.
+          * Одна из частей механизма сохранения позиции скролла и отмеченной записи при проваливании в папку и выходе назад.
+          *
+          * @param self
+          * @param itemId id узла из которого выходим
+          */
+         restorePositionNavigation(self, itemId): void {
+            const hasRestoreDataForCurrent = !!self._restoredMarkedKeys[itemId];
+            if (hasRestoreDataForCurrent) {
+               const parentId = self._restoredMarkedKeys[itemId].parent;
+               const restoreDataForParent = self._restoredMarkedKeys[parentId];
+               if (restoreDataForParent && typeof restoreDataForParent.cursorPosition !== 'undefined') {
+                  self._navigation.sourceConfig.position = restoreDataForParent.cursorPosition;
+               } else {
+                  const fromOptions = self._options._navigation && self._options._navigation.sourceConfig && self._options._navigation.sourceConfig.position;
+                  self._navigation.sourceConfig.position = fromOptions || null;
+               }
+            }
+         },
+
+         setPendingViewMode(self, viewMode: string, options): void {
+            self._pendingViewMode = viewMode;
+
+            if (viewMode === 'search') {
+               _private.updateRootOnViewModeChanged(self, viewMode, options);
+            }
+         },
+
+         updateRootOnViewModeChanged(self, viewMode: string, options): void {
+            if (viewMode === 'search' && options.searchStartingWith === 'root') {
+               const currentRoot = _private.getRoot(self, options.root);
+               const dataRoot = _private.getDataRoot(self, options);
+
+               if (dataRoot !== currentRoot) {
+                  _private.setRoot(self, dataRoot, dataRoot);
+               }
+            }
+         },
       };
 
    /**
     * Контрол "Иерархический проводник".
     * Отображает данные иерархического списка, узел которого можно развернуть и перейти в него.
     * Позволяет переключать отображение элементов в режимы "таблица", "список" и "плитка".
-    * Инструкции по настройке контрола доступны в <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>руководстве разработчика</a>.
-    * Демо-примеры:
-    * <ul>
-    *    <li><a href="/materials/demo-ws4-explorer">Иерархический проводник в режимах "список" и "плитка"</a></li>
-    *    <li><a href="/materials/demo-ws4-explorer-with-search">Иерархический проводник в режиме "список" и строкой поиска</a></li>
-    * </ul>
+    *
+    * @remark
+    * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
+    *
+    * Полезные ссылки:
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
+    *
+    * @demo Controls-demo/Explorer/Explorer
+    * @demo Controls-demo/Explorer/Search
     *
     * @class Controls/_explorer/View
     * @extends Core/Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
-    * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
-    * @control
+    * @mixes Controls/_list/interface/IClickableView
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
+    *
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
 
    /*
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
-    * <a href="/materials/demo-ws4-explorer">Demo example</a>.
-    * <a href="/materials/demo-ws4-explorer-with-search">Demo example with search</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Demo example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Demo example with search</a>.
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
@@ -304,50 +420,27 @@ var
     * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedList
     * @mixes Controls/_interface/INavigation
-    * @mixes Controls/_interface/IFilter
+    * @mixes Controls/_interface/IFilterChanged
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_treeGrid/interface/ITreeControl
+    * @mixes Controls/_tree/interface/ITreeControlOptions
     * @mixes Controls/_explorer/interface/IExplorer
-    * @mixes Controls/interface/IDraggable
+    * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
-    * @control
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerListOptions
+    *
     * @public
-    * @category List
     * @author Авраменко А.С.
     */
-
-   /**
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
-    * @remark Поле используется для вывода хлебных крошек.
-    * @example
-    * <pre>
-    * <Controls.explorers:View displayProperty="title">
-    *     ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_explorer/View#displayProperty
-    * @cfg {string} sets the property to be displayed in search results
-    * @example
-    * <pre class="brush:html">
-    * <Controls.explorers:View
-    *   ...
-    *   displayProperty="title">
-    *       ...
-    * </Controls.explorer:View>
-    * </pre>
-    */
-
-   var Explorer = Control.extend({
+    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
       _root: null,
@@ -356,17 +449,24 @@ var
       _viewModelConstructor: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
-      _virtualScrolling: false,
+      _virtualScrolling: undefined,
       _dragControlId: null,
       _firstLoad: true,
       _itemsPromise: null,
       _itemsResolver: null,
+      _markerForRestoredScroll: null,
+      _navigation: null,
+      _resetScrollAfterViewModeChange: false,
+      _itemPadding: {},
 
       _resolveItemsPromise() {
          this._itemsResolver();
       },
 
       _beforeMount: function(cfg) {
+         if (cfg.itemPadding) {
+            this._itemPadding = cfg.itemPadding;
+         }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -374,6 +474,10 @@ var
          this._canStartDragNDrop = _private.canStartDragNDrop.bind(null, this);
          this._updateHeadingPath = this._updateHeadingPath.bind(this);
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
+         this._needSetMarkerCallback = (item: Model, domEvent: any): boolean => {
+            return domEvent.target.closest('.js-controls-ListView__checkbox')
+               || item instanceof Array || item.get(this._options.nodeProperty) !== ITEM_TYPES.node;
+         };
 
          this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
          if (!cfg.source) {
@@ -381,36 +485,86 @@ var
          }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
-         [root]: {
+            [root]: {
                markedKey: null
             }
          };
 
+         this._headerVisibility = root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
+
+         // TODO: для 20.5100. в 20.6000 можно удалить
+         if (cfg.displayMode) {
+            Logger.error(`${this._moduleName}: Для задания многоуровневых хлебных крошек вместо displayMode используйте опцию breadcrumbsDisplayMode`, this);
+         }
+
          this._dragControlId = randomId();
+         this._navigation = cfg.navigation;
          return _private.setViewMode(this, cfg.viewMode, cfg);
       },
       _beforeUpdate: function(cfg) {
-         //todo: после доработки стандарта, убрать флаг _isGoingFront по задаче: https://online.sbis.ru/opendoc.html?guid=ffa683fa-0b8e-4faa-b3e2-a4bb39671029
-         if (this._isGoingFront && this._options.hasOwnProperty('root') && cfg.root === this._options.root) {
-            this._isGoingFront = false;
+         const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
+         const isSearchViewMode = cfg.viewMode === 'search';
+         const isRootChanged = cfg.root !== this._options.root;
+         const loadedBySourceController = isSearchViewMode && cfg.sourceController;
+         this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
+         this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
+
+         if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
+            this._newItemPadding = cfg.itemPadding;
+         }
+         /*
+         * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
+         * Чтобы список мог восстановить позицию скрола по отмеченой записи, она должна быть в наборе данных.
+         * Чтобы обеспечить ее присутствие, нужно загружать именно ту страницу, на которой она есть.
+         * Восстановление работает только при курсорной навигации.
+         * Если в момент возвращения из папки был изменен тип навигации, не нужно восстанавливать, иначе будут смешаны опции
+         * курсорной и постраничной навигаций.
+         * */
+         const navigationChanged = !isEqual(cfg.navigation, this._options.navigation);
+
+         if (this._isGoingBack && _private.isCursorNavigation(this._options.navigation) && !navigationChanged) {
+            const newRootId = _private.getRoot(this, this._options.root);
+            _private.restorePositionNavigation(this, newRootId);
+         } else if (navigationChanged) {
+            this._navigation = cfg.navigation;
          }
 
-         if (
-            cfg.viewMode !== this._viewMode && cfg.root !== this._options.root ||
-            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode
-         ) {
+         if ((isViewModeChanged && isRootChanged && !loadedBySourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
             // Вместо этого запомним, какой режим отображения от нас хотят, и проставим
             // его, когда новые записи будут установлены в модель (itemsSetCallback).
-            this._pendingViewMode = cfg.viewMode;
-         } else if (cfg.viewMode !== this._viewMode && !this._pendingViewMode) {
-            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            _private.setPendingViewMode(this, cfg.viewMode, cfg);
+         } else if (isViewModeChanged && !this._pendingViewMode) {
+            // Также отложенно необходимо устанавливать viewMode, если при переходе с viewMode === "search" на "table"
+            // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
+            // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
+            const filterChanged = !isEqual(cfg.filter, this._options.filter);
+            const recreateSource = cfg.source !== this._options.source;
+            const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
+            if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
+               _private.setPendingViewMode(this, cfg.viewMode, cfg);
+            } else {
+               _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
+            }
+         } else {
+            _private.applyNewVisualOptions(this);
+         }
+      },
+      _beforeRender(): void {
+          // Сбрасываем скролл при режима отображения
+          // https://online.sbis.ru/opendoc.html?guid=d4099117-ef37-4cd6-9742-a7a921c4aca3
+         if (this._resetScrollAfterViewModeChange) {
+            this._notify('doScroll', ['top'], {bubbling: true});
+            this._resetScrollAfterViewModeChange = false;
          }
 
-         if (cfg.virtualScrolling !== this._options.virtualScrolling) {
-            _private.setVirtualScrolling(this, this._viewMode, cfg);
+      },
+      _beforePaint: function() {
+         if (this._markerForRestoredScroll !== null) {
+            this.scrollToItem(this._markerForRestoredScroll);
+            this._markerForRestoredScroll = null;
          }
       },
       _getRoot: function() {
@@ -437,7 +591,7 @@ var
             dragObject.entity.dragControlId === this._dragControlId
          ) {
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this, this._options.root) !== _private.getDataRoot(this, this._options) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
@@ -447,19 +601,64 @@ var
          // but is not called, because the template has no reactive properties.
          this._forceUpdate();
       },
-      _onItemClick: function(event, item, clickEvent, columnIndex?: number) {
-         event.stopPropagation();
+      _onItemClick(event, item, clickEvent, columnIndex?: number): boolean {
          const res = this._notify('itemClick', [item, clickEvent, columnIndex]);
-         if (res !== false) {
-            if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
-                _private.setRestoredKeyObject(this, item.getId());
-                _private.setRoot(this, item.getId());
-                this._isGoingFront = true;
-                this.cancelEdit();
-                return false;
+         event.stopPropagation();
+
+         const changeRoot = () => {
+            _private.setRoot(this, item.getId());
+            // При search не должны сбрасывать маркер, так как он встанет на папку
+            if (this._options.searchNavigationMode !== 'expand') {
+               this._isGoingFront = true;
             }
-         }
-         return res;
+         };
+
+         // Не нужно проваливаться в папку, если должно начаться ее редактирование.
+         // TODO: После перехода на новую схему редактирования это должен решать baseControl или treeControl.
+         //    в данной реализации получается, что в дереве с возможностью редактирования не получится
+         //    развернуть узел кликом по нему (expandByItemClick).
+         //    https://online.sbis.ru/opendoc.html?guid=f91b2f96-d6e7-45d0-b929-a0030f0a2788
+         const isNodeEditable = () => {
+            const hasEditOnClick = !!this._options.editingConfig && !!this._options.editingConfig.editOnClick;
+            return hasEditOnClick && !clickEvent.target.closest(`.${EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE}`);
+         };
+
+         const shouldHandleClick = res !== false && !isNodeEditable();
+
+         if (shouldHandleClick) {
+              const nodeType = item.get(this._options.nodeProperty);
+              const isSearchMode = this._viewMode === 'search';
+
+              // Проваливание возможно только в узел (ITEM_TYPES.node).
+              // Проваливание невозможно, если по клику следует развернуть узел/скрытый узел.
+              if ((!isSearchMode && this._options.expandByItemClick && nodeType !== ITEM_TYPES.leaf) || (nodeType !== ITEM_TYPES.node)) {
+                  return res;
+              }
+
+              // При проваливании ОБЯЗАТЕЛЬНО дополняем restoredKeyObject узлом, в который проваливаемся.
+              // Дополнять restoredKeyObject нужно СИНХРОННО, иначе на момент вызова restoredKeyObject опции уже будут
+              // новые и маркер запомнится не для того root'а. Ошибка:
+              // https://online.sbis.ru/opendoc.html?guid=38d9ca66-7088-4ad4-ae50-95a63ae81ab6
+              _private.setRestoredKeyObject(this, item);
+
+             // Если в списке запущено редактирование, то проваливаемся только после успешного завершения.
+             if (!this._children.treeControl.isEditing()) {
+                  changeRoot();
+              } else {
+                 this.commitEdit().then((result) => {
+                     if (!(result && result.canceled)) {
+                         changeRoot();
+                     }
+                     return result;
+                 });
+              }
+
+              // Проваливание в папку и попытка проваливания в папку не должны вызывать разворот узла.
+              // Мы не можем провалиться в папку, пока на другом элементе списка запущено редактирование.
+              return false;
+          }
+
+          return res;
       },
       _onBreadCrumbsClick: function(event, item) {
           _private.cleanRestoredKeyObject(this, item.getId());
@@ -497,20 +696,56 @@ var
       commitEdit: function() {
          return this._children.treeControl.commitEdit();
       },
-      reload: function() {
-         return this._children.treeControl.reload();
+      reload: function(keepScroll, sourceConfig) {
+         return this._children.treeControl.reload(keepScroll, sourceConfig);
       },
+      getItems(): RecordSet {
+         return this._children.treeControl.getItems();
+      },
+
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
          this._children.treeControl.toggleExpanded(id);
       },
+
+      // region mover
+
+      moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
+         return this._children.treeControl.moveItems(selection, targetKey, position);
+      },
+
+      moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemUp(selectedKey);
+      },
+
+      moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
+         return this._children.treeControl.moveItemDown(selectedKey);
+      },
+
+      moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.moveItemsWithDialog(selection);
+      },
+
+      // endregion mover
+
+      // region remover
+
+      removeItems(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItems(selection);
+      },
+
+      removeItemsWithConfirmation(selection: ISelectionObject): Promise<void> {
+         return this._children.treeControl.removeItemsWithConfirmation(selection);
+      },
+
+      // endregion remover
+
       _onArrowClick: function(e) {
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);
       },
-      _notifyHandler: tmplNotify,
-      _applyHighlighter: applyHighlighter
+      _notifyHandler: tmplNotify
    });
 
    Explorer._private = _private;
@@ -520,21 +755,77 @@ var
       VIEW_NAMES: VIEW_NAMES,
       VIEW_MODEL_CONSTRUCTORS: VIEW_MODEL_CONSTRUCTORS
    };
+   Explorer._theme = ['Controls/explorer', 'Controls/tile'];
 
    Explorer.getDefaultOptions = function() {
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         backButtonStyle: 'secondary',
+         backButtonIconStyle: 'primary',
+         backButtonFontColorStyle: 'secondary',
          stickyHeader: true,
-         searchStartingWith: 'root'
+         searchStartingWith: 'root',
+         showActionButton: false
       };
    };
 
-   export = Explorer;
+   /**
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} Имя свойства элемента, содержимое которого будет отображаться.
+    * @remark Поле используется для вывода хлебных крошек.
+    * @example
+    * <pre>
+    * <Controls.explorers:View displayProperty="title">
+    *     ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
+
+   /*
+    * @name Controls/_explorer/View#displayProperty
+    * @cfg {string} sets the property to be displayed in search results
+    * @example
+    * <pre class="brush:html">
+    * <Controls.explorers:View
+    *   ...
+    *   displayProperty="title">
+    *       ...
+    * </Controls.explorer:View>
+    * </pre>
+    */
 
    /**
-    * @event Controls/_explorer/View#arrowClick  Происходит при клике на кнопку "Просмотр записи".
-    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка показывается.
+    * @name Controls/_explorer/View#breadcrumbsDisplayMode
+    * @cfg {Boolean} Отображение крошек в несколько строк {@link Controls/breadcrumbs:HeadingPath#displayMode}
+    */
+
+   /**
+    * @name Controls/_explorer/View#tileItemTemplate
+    * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
+    * @default undefined
+    * @remark
+    * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
+    *
+    * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
+    *
+    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    *
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
+    * @example
+    * <pre class="brush: html;">
+    * <Controls.explorer:View>
+    *     <ws:tileItemTemplate>
+    *         <ws:partial template="Controls/tile:ItemTemplate" highlightOnHover="{{false}}" />
+    *     </ws:tileItemTemplate>
+    * </Controls.explorer:View>
+    * </pre>
+    * @see itemTemplate
+    * @see itemTemplateProprty
+    */
+   /**
+    * @event Происходит при клике на кнопку "Просмотр записи".
+    * @name Controls/_explorer/View#arrowClick
+    * @remark Кнопка отображается при наведении курсора на текущую папку хлебных крошек. Отображение кнопки "Просмотр записи" задаётся с помощью опции {@link Controls/_explorer/interface/IExplorer#showActionButton}. По умолчанию кнопка скрыта.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     */
+   export = Explorer;

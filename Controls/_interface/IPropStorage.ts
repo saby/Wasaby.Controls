@@ -1,5 +1,5 @@
 export interface IPropStorageOptions {
-    propStorageId: string;
+    propStorageId?: string;
 }
 
 /**

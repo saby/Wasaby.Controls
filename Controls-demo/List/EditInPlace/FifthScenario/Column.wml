@@ -1,17 +1,18 @@
 <ws:partial template="Controls/grid:ColumnTemplate" attr:class="controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
    <ws:contentTemplate>
-      <ws:partial template="Controls/list:EditingTemplate"
-                  attr:style="padding-right: 80px;"
-                  attr:class="ControlsDemo-EipScenarios__editorWrapper"
-                  value="{{ itemData.item[itemData.column.displayProperty] }}"
-                  itemData="{{itemData}}"
-                  align="{{ itemData.column.align }}"
-                  enabled="{{true}}">
-         <ws:editorTemplate>
-            <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty]"
-                                 textAlign="right"
-                                 selectOnClick="{{ false }}" />
-         </ws:editorTemplate>
-      </ws:partial>
+      <div attr:style="width: 100%; padding-right: 80px;">
+         <ws:partial template="Controls/list:EditingTemplate"
+                     attr:class="ControlsDemo-EipScenarios__editorWrapper"
+                     value="{{ itemData.item[itemData.column.displayProperty] }}"
+                     itemData="{{itemData}}"
+                     align="{{ itemData.column.align }}"
+                     enabled="{{true}}">
+            <ws:editorTemplate>
+               <Controls.input:Text bind:value="itemData.item[itemData.column.displayProperty]"
+                                    textAlign="right"
+                                    selectOnClick="{{ false }}" />
+            </ws:editorTemplate>
+         </ws:partial>
+      </div>
    </ws:contentTemplate>
 </ws:partial>

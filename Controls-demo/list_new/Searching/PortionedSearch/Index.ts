@@ -6,8 +6,8 @@ import {generateData} from 'Controls-demo/list_new/DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: PortionedSearchSource = null;
-    private _filter: Object = null;
+    protected _viewSource: PortionedSearchSource = null;
+    protected _filter: Object = null;
     private _dataArray: object[] = generateData({count: 100, entityTemplate: {title: 'lorem'}});
     private _searchValue: string = '';
 
@@ -16,7 +16,8 @@ export default class extends Control {
             source: new Memory({
                 keyProperty: 'id',
                 data: this._dataArray,
-                filter: (item, query) => {
+                // tslint:disable-next-line
+                filter: (item: any, query: any) => {
                     let res = true;
 
                     if (query.title) {
@@ -30,19 +31,23 @@ export default class extends Control {
         this._filter = {};
     }
 
-    private _startSearch(): void {
+    protected _startSearch(): void {
         this._searchValue = 'lorem';
-        this._filter = {
-           title: this._searchValue
-        };
     }
 
-    private _resetSearch(): void {
+    protected _afterUpdate(): void {
+        if (this._searchValue && !this._filter.title) {
+            this._filter = {
+                title: this._searchValue
+            };
+        }
+    }
+
+    protected _resetSearch(): void {
         this._searchValue = '';
         this._filter = {};
     }
 
     static _theme: string[] = ['Controls/Classes'];
     static _styles: string[] = ['Controls-demo/Controls-demo'];
-
 }

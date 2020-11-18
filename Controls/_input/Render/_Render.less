@@ -5,9 +5,44 @@
    box-sizing: border-box;
 }
 
+.controls-Render__wrapper_footer {
+   flex-wrap: wrap;
+}
+
 .controls-Render_theme-@{themeName} {
    border-style: @border-style_inputText;
-   border-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-top_theme-@{themeName} {
+   border-top-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-right_theme-@{themeName} {
+   border-right-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-bottom_theme-@{themeName} {
+   border-bottom-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-left_theme-@{themeName} {
+   border-left-width: @border-thickness_inputText;
+}
+
+.controls-Render_border-top-empty {
+   border-top-width: 0;
+}
+
+.controls-Render_border-right-empty {
+   border-right-width: 0;
+}
+
+.controls-Render_border-bottom-empty {
+   border-bottom-width: 0;
+}
+
+.controls-Render_border-left-empty {
+   border-left-width: 0;
 }
 
 /**
@@ -57,6 +92,10 @@
    align-items: center;
 }
 
+.controls-Render-fontsize-3xl {
+   font-weight: bold;
+}
+
 .controls-Render__placeholder_theme-@{themeName} {
    color: @placeholder-color_inputText;
 }
@@ -65,69 +104,80 @@
    .text-overflow();
 }
 
-.controls-Render_theme_@{themeName}_size {
-   @variants: s, m, l, default;
-
-   .for(@variants, { &_@{_item}_roundBorder {
-      border-radius: ~"@{border-radius_Render_size_@{_item}}";
-   } });
-}
-
-.controls-Render_theme_@{themeName}_fontStyle {
-   @variants: default s, primary s, secondary s, default m, primary m, secondary m, default l, primary l, secondary l, default default, primary default, secondary default;
-   .for(@variants, { @fontStyle: extract(@_item, 1); @size: extract(@_item, 2); &_@{fontStyle}_size_@{size} {
-      font-weight: ~"@{font-weight_Render_fontStyle_@{fontStyle}_size_@{size}}";
-   } });
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-valid_theme-@{themeName} {
+   background-color: @background-color_inputText;
 }
 
 .controls-Render_state-valid_theme-@{themeName} {
    border-style: @border-style_inputText;
    border-color: @border-color_inputText;
-   background-color: @background-color_inputText;
 }
 
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalidAccent_theme-@{themeName} {
+   background-color: @invalid_focus_background-color;
+}
 .controls-Render_state-invalidAccent_theme-@{themeName} {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_border-color_inputText;
-   background-color: @invalid_focus_background-color;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalid_theme-@{themeName} {
+   background-color: @invalid_background-color_inputText;
 }
 
 .controls-Render_state-invalid_theme-@{themeName} {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_border-color_inputText;
-   background-color: @invalid_background-color_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-success_theme-@{themeName} {
+   background-color: @background-color_inputText;
 }
 
 .controls-Render_state-success_theme-@{themeName} {
    border-color: @success_color;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-secondary_theme-@{themeName} {
    background-color: @background-color_inputText;
 }
 
 .controls-Render_state-secondary_theme-@{themeName} {
    border-color: @secondary_color;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-warning_theme-@{themeName} {
    background-color: @background-color_inputText;
 }
 
 .controls-Render_state-warning_theme-@{themeName} {
    border-color: @warning_color;
-   background-color: @background-color_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-readonly_theme-@{themeName} {
+   background-color: @readonly_background-color_inputText;
 }
 
 .controls-Render_state-readonly_theme-@{themeName} {
    border-color: @readonly_border-color_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-readonly-multiline_theme-@{themeName} {
    background-color: @readonly_background-color_inputText;
 }
 
 .controls-Render_state-readonly-multiline_theme-@{themeName} {
    border-color: @readonly_border-color_inputArea;
-   background-color: @readonly_background-color_inputText;
 }
 
 .ws-is-hover {
+   .controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-valid_theme-@{themeName}:hover {
+      background-color: @background-color_hover_inputText;
+   }
+
    .controls-Render_state-valid_theme-@{themeName}:hover {
       border-style: @border-style_hover_inputText;
       border-color: @border-color_hover_inputText;
-      background-color: @background-color_hover_inputText;
    }
 
    .controls-Render_state-invalidAccent_theme-@{themeName}:hover {
@@ -143,115 +193,139 @@
  * Do not use a selector enumeration if at least one uses focus-within.
  * They will not apply!!!
  */
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-valid_theme-@{themeName}:focus-within {
+   background-color: @background-color_focus_inputText;
+}
+
 .controls-Render_state-valid_theme-@{themeName}:focus-within {
    border-style: @border-style_focus_inputText;
    border-color: @border-color_focus_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalid_theme-@{themeName}:focus-within {
    background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalid_theme-@{themeName}:focus-within {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalidAccent-active_theme-@{themeName}:focus-within {
    background-color: @invalid_focus_background-color;
 }
 
 .controls-Render_state-invalidAccent-active_theme-@{themeName}:focus-within {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
-   background-color: @invalid_focus_background-color;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-valid-active_theme-@{themeName} {
+   background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-valid-active_theme-@{themeName} {
    border-style: @border-style_focus_inputText;
    border-color: @border-color_focus_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalid-active_theme-@{themeName} {
    background-color: @background-color_focus_inputText;
 }
 
 .controls-Render_state-invalid-active_theme-@{themeName} {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
+}
+
+.controls-Render_background-contrast_theme-@{themeName}.controls-Render_state-invalidAccent-active_theme-@{themeName} {
    background-color: @invalid_focus_background-color;
 }
 
 .controls-Render_state-invalidAccent-active_theme-@{themeName} {
    border-style: @invalid_border-style_inputText;
    border-color: @invalid_focus_border-color_inputText;
-   background-color: @invalid_focus_background-color;
-}
-
-.controls-Render__tagStyle_theme-@{themeName} {
-   top: 0;
-   right: 0;
-   cursor: pointer;
-   position: absolute;
-   width: @tag-size;
-   height: @tag-size;
-}
-
-.controls-Render__tagStyle_style- {
-   @variants: danger, primary, success, secondary, warning;
-   .for(@variants, { &@{_item}_theme-@{themeName} {
-      fill: ~"@{@{_item}_color}";
-   } });
-}
-
-.controls-Render__tagStyle_style-info_theme-@{themeName} {
-   fill: @unaccented_color;
 }
 
 .controls-Render_textAlign {
    @variants: right, left;
-   .for(@variants, { &-@{_item} {
-      text-align: @_item;
-   } });
+   .for(@variants, {
+      &-@{_item} {
+         text-align: @_item;
+      }
+   });
+}
+
+.controls-Render_borderRadius {
+   @variants: xs, s, m, l, xl, 2 xl, default;
+   .for(@variants, {
+      &-@{_item}_theme-@{themeName} {
+         border-radius: ~"@{border-radius_@{_item}_inputText}";
+      }
+   });
 }
 
 //fontsize
 .controls-fontsize-xs_theme-@{themeName}.controls-Render-fontsize-xs_theme-@{themeName} when not (@font-size_xs_input = @font-size_xs) {
    font-size: @font-size_xs_input;
 }
+
 .controls-fontsize-s_theme-@{themeName}.controls-Render-fontsize-s_theme-@{themeName} when not (@font-size_s_input = @font-size_s) {
    font-size: @font-size_s_input;
 }
+
 .controls-fontsize-m_theme-@{themeName}.controls-Render-fontsize-m_theme-@{themeName} when not (@font-size_m_input = @font-size_m) {
    font-size: @font-size_m_input;
 }
+
 .controls-fontsize-l_theme-@{themeName}.controls-Render-fontsize-l_theme-@{themeName} when not (@font-size_l_input = @font-size_l) {
    font-size: @font-size_l_input;
 }
+
 .controls-fontsize-xl_theme-@{themeName}.controls-Render-fontsize-xl_theme-@{themeName} when not (@font-size_xl_input = @font-size_xl) {
    font-size: @font-size_xl_input;
 }
+
 .controls-fontsize-2xl_theme-@{themeName}.controls-Render-fontsize-2xl_theme-@{themeName} when not (@font-size_2xl_input = @font-size_2xl) {
    font-size: @font-size_2xl_input;
 }
+
 .controls-fontsize-3xl_theme-@{themeName}.controls-Render-fontsize-3xl_theme-@{themeName} when not (@font-size_3xl_input = @font-size_3xl) {
    font-size: @font-size_3xl_input;
 }
+
 .controls-fontsize-4xl_theme-@{themeName}.controls-Render-fontsize-4xl_theme-@{themeName} when not (@font-size_4xl_input = @font-size_4xl) {
    font-size: @font-size_4xl_input;
 }
+
 .controls-fontsize-5xl_theme-@{themeName}.controls-Render-fontsize-5xl_theme-@{themeName} when not (@font-size_5xl_input = @font-size_5xl) {
    font-size: @font-size_5xl_input;
 }
+
 .controls-inlineheight-xs_theme-@{themeName}.controls-Render-inlineheight-xs_theme-@{themeName} when not (@inline_height_xs_input = @inline_height_xs) {
    height: @inline_height_xs_input;
 }
+
 .controls-inlineheight-s_theme-@{themeName}.controls-Render-inlineheight-s_theme-@{themeName} when not (@inline_height_s_input = @inline_height_s) {
    height: @inline_height_s_input;
 }
+
 .controls-inlineheight-m_theme-@{themeName}.controls-Render-inlineheight-m_theme-@{themeName} when not (@inline_height_m_input = @inline_height_m) {
    height: @inline_height_m_input;
 }
+
 .controls-inlineheight-l_theme-@{themeName}.controls-Render-inlineheight-l_theme-@{themeName} when not (@inline_height_l_input = @inline_height_l) {
    height: @inline_height_l_input;
 }
+
 .controls-inlineheight-xl_theme-@{themeName}.controls-Render-inlineheight-xl_theme-@{themeName} when not (@inline_height_xl_input = @inline_height_xl) {
    height: @inline_height_xl_input;
 }
+
 .controls-inlineheight-2xl_theme-@{themeName}.controls-Render-inlineheight-2xl_theme-@{themeName} when not (@inline_height_2xl_input = @inline_height_2xl) {
    height: @inline_height_2xl_input;
 }
+
 .controls-inlineheight-default_theme-@{themeName}.controls-Render-inlineheight-default_theme-@{themeName} when not (@inline_height_default_input = @inline_height_default) {
    height: @inline_height_default_input;
 }

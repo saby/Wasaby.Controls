@@ -3,13 +3,13 @@ import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/SelectionContainer');
 
 /**
- * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс {@link Controls/interface/IMultiSelectable IMultiSelectable}.
+ * Контрол, регулирующий валидацию своего контента. Используется с контролами, поддерживающими интерфейс {@link Controls/_interface/IMultiSelectable IMultiSelectable}.
  * Валидация запускается автоматически при смене значения в контроле и при его деактивации.
  * @remark
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/SelectionContainer
  * @extends Controls/_validate/Container
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */

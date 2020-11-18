@@ -5,8 +5,6 @@ define('Controls-demo/Popup/Opener/StackDemo',
       'wml!Controls-demo/Popup/Opener/resources/footer',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
       'wml!Controls-demo/Popup/Opener/resources/StackTemplateWithoutHead',
-      'css!Controls-demo/Popup/PopupPage',
-      'css!Controls-demo/Popup/Opener/resources/StackHeader'
    ],
    function(Control, template) {
       'use strict';
@@ -33,9 +31,13 @@ define('Controls-demo/Popup/Opener/StackDemo',
             this._children.dialog.open({
                opener: this._children.button3,
                closeOnOutsideClick: true,
+               templateOptions: {
+                  draggable: true
+               },
+               propStorageId: 'draggableDialog',
                maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 450
+               width: 600,
+               minWidth: 500
             });
          },
          openModalDialog: function() {
@@ -46,8 +48,8 @@ define('Controls-demo/Popup/Opener/StackDemo',
                },
                modal: true,
                maxHeight: 700,
-               maxWidth: 700,
-               minWidth: 450
+               width: 600,
+               minWidth: 500
             });
          },
          openSticky: function() {
@@ -83,6 +85,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
          openStackCustomHeader: function() {
             this._children.stack.open({
                opener: this._children.button6,
+               closeOnOutsideClick: true,
                template: 'Controls-demo/Popup/Opener/resources/StackTemplateHeader',
             });
          },
@@ -94,5 +97,7 @@ define('Controls-demo/Popup/Opener/StackDemo',
             });
          }
       });
+      PopupPage._styles = ['Controls-demo/Popup/PopupPage', 'Controls-demo/Popup/Opener/resources/StackHeader'];
+
       return PopupPage;
    });

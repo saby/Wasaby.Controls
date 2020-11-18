@@ -74,13 +74,13 @@ describe('Controls/_display/TreeItem', () => {
             assert.strictEqual(level2.getLevel(), level1.getLevel() + 1);
         });
 
-        it('should return 1 for root if it\'s enumerable', () => {
-            const Owner = function(): void {
-                this.isRootEnumerable = () => {
-                    return true;
-                };
+        it('should start counter with value given by getRootLevel() method', () => {
+            const rootLevel = 3;
+            const OwnerWithRoot = function(): void {
+                this.getRoot = () => root;
+                this.getRootLevel = () => rootLevel;
             };
-            const owner = new Owner();
+            const owner = new OwnerWithRoot();
             const root = new TreeItem({owner});
             const level1 = new TreeItem({
                 parent: root,
@@ -91,7 +91,7 @@ describe('Controls/_display/TreeItem', () => {
                 owner
             });
 
-            assert.strictEqual(root.getLevel(), 1);
+            assert.strictEqual(root.getLevel(), rootLevel);
             assert.strictEqual(level1.getLevel(), root.getLevel() + 1);
             assert.strictEqual(level2.getLevel(), level1.getLevel() + 1);
         });
@@ -170,9 +170,9 @@ describe('Controls/_display/TreeItem', () => {
     });
 
     describe('.isHasChildren()', () => {
-        it('should return true by default', () => {
+        it('should return false by default', () => {
             const item = new TreeItem();
-            assert.isTrue(item.isHasChildren());
+            assert.isFalse(item.isHasChildren());
         });
 
         it('should return value passed to the constructor', () => {
@@ -190,30 +190,6 @@ describe('Controls/_display/TreeItem', () => {
 
             item.setHasChildren(true);
             assert.isTrue(item.isHasChildren());
-        });
-    });
-
-    describe('.isLoaded()', () => {
-        it('should return false by default', () => {
-            const item = new TreeItem();
-            assert.isFalse(item.isLoaded());
-        });
-
-        it('should return value passed to the constructor', () => {
-            const item = new TreeItem({loaded: true});
-            assert.isTrue(item.isLoaded());
-        });
-    });
-
-    describe('.setLoaded()', () => {
-        it('should set the new value', () => {
-            const item = new TreeItem();
-
-            item.setLoaded(true);
-            assert.isTrue(item.isLoaded());
-
-            item.setLoaded(false);
-            assert.isFalse(item.isLoaded());
         });
     });
 

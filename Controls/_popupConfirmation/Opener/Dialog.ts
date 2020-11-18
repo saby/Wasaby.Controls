@@ -19,75 +19,6 @@ import template = require('wml!Controls/_popupConfirmation/Opener/Dialog/Dialog'
 
 import {Logger} from 'UI/Utils';
 
-/**
- * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
- * @class Controls/_popupConfirmation/Opener/Dialog
- * @control
- * @private
- * @author Красильников А.С.
- * @mixes Controls/_popupConfirmation/Opener/Dialog/DialogStyles
- * @demo Controls-demo/Popup/Confirmation/Template
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#type
- * @cfg {String} Тип диалога
- * @variant ok Диалог с кнопкой "Ок"
- * @variant yesno Диалог с кнопками "Да" и "Нет"
- * @variant yesnocancel Диалог с кнопками "Да", "Нет" и "Отмена"
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#style
- * @cfg {String} Стилевое оформление диалога
- * @variant default По умоланию
- * @variant success Успех
- * @variant error Ошибка
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#message
- * @cfg {String} Устанавливает сообщение
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#details
- * @cfg {String} Устанавливает детали сообщения
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#yesCaption
- * @cfg {String} Устанавливает текст кнопки yes
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#noCaption
- * @cfg {String} Устанавливает текст кнопки no
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#cancelCaption
- * @cfg {String} Устанавливает текст кнопки cancel
- */
-
-/**
- * @name Controls/_popupConfirmation/Opener/Dialog#okCaption
- * @cfg {String} Устанавливает текст кнопки ok
- */
-
-/**
- * @typedef {Boolean|undefined} Result
- * @remark
- * true - Нажата кнопка "Да"
- * false - Нажата кнопка "Нет"
- * undefined - Нажата кнопка "ОК" или "Отмена"
- */
-
-/**
- * @event Controls/_popupConfirmation/Opener/Dialog#sendResult Происходит при нажатии на кнопку диалога
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
- * @param {Result} Результат
- */
 
 var _private = {
    keyPressed: function (e) {
@@ -99,7 +30,15 @@ var _private = {
       }
    }
 };
-
+/**
+ * Класс контрола "Окно подтверждения". В зависимости от типа, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
+ * @class Controls/_popupConfirmation/Opener/Dialog
+ * 
+ * @private
+ * @author Красильников А.С.
+ * @mixes Controls/_popupConfirmation/Opener/Dialog/DialogStyles
+ * @demo Controls-demo/Popup/Confirmation/Template
+ */
 var Submit = Control.extend({
    _template: template,
    _messageMaxLength: 100,
@@ -122,6 +61,12 @@ var Submit = Control.extend({
    _keyDown: function (event) {
       if (event.nativeEvent.keyCode === constants.key.esc) {
          this._isEscDown = true;
+      }
+      if (!(event.nativeEvent.altKey || event.nativeEvent.shiftKey) && (event.nativeEvent.ctrlKey || event.nativeEvent.metaKey) && event.nativeEvent.keyCode === constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+         // If "primary action" processed event, then event must be stopped.
+         // Otherwise, parental controls (including other primary action) can react to pressing ctrl+enter and call one more handler
+         event.stopPropagation();
+         this._onTriggerHandler();
       }
    },
 
@@ -193,12 +138,71 @@ Submit.getOptionTypes = function () {
          'default',
          'secondary',
          'success',
-         'done',
+         'primary',
          'error',
          'danger'
       ])
    };
 };
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#type
+ * @cfg {String} Тип диалога
+ * @variant ok Диалог с кнопкой "Ок"
+ * @variant yesno Диалог с кнопками "Да" и "Нет"
+ * @variant yesnocancel Диалог с кнопками "Да", "Нет" и "Отмена"
+ */
 
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#style
+ * @cfg {String} Стилевое оформление диалога
+ * @variant default По умоланию
+ * @variant success Успех
+ * @variant error Ошибка
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#message
+ * @cfg {String} Устанавливает сообщение
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#details
+ * @cfg {String} Устанавливает детали сообщения
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#yesCaption
+ * @cfg {String} Устанавливает текст кнопки yes
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#noCaption
+ * @cfg {String} Устанавливает текст кнопки no
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#cancelCaption
+ * @cfg {String} Устанавливает текст кнопки cancel
+ */
+
+/**
+ * @name Controls/_popupConfirmation/Opener/Dialog#okCaption
+ * @cfg {String} Устанавливает текст кнопки ok
+ */
+
+/**
+ * @typedef {Boolean|undefined} Result
+ * @remark
+ * true - Нажата кнопка "Да"
+ * false - Нажата кнопка "Нет"
+ * undefined - Нажата кнопка "ОК" или "Отмена"
+ */
+
+/**
+ * @event Происходит при нажатии на кнопку диалога.
+ * @name Controls/_popupConfirmation/Opener/Dialog#sendResult
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события
+ * @param {Result} Результат
+ */
 export default Submit;
 

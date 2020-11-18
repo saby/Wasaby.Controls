@@ -202,12 +202,12 @@ define([
             explorer = new explorerMod.View(cfg);
 
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromOptions');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromOptions');
 
          delete cfg.root;
          explorer.saveOptions(cfg);
          explorer._root = 'rootFromState';
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromState');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromState');
 
          explorer._breadCrumbsItems = [new entityLib.Model({
             rawData: {
@@ -215,11 +215,11 @@ define([
             },
             keyProperty: 'id'
          })];
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromBreadCrumbs');
 
          cfg.root = 'rootFromOptions';
          explorer.saveOptions(cfg);
-         assert.equal(explorerMod.View._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+         assert.equal(explorerMod.View._private.getDataRoot(explorer, cfg), 'rootFromBreadCrumbs');
       });
 
       it('itemsReadyCallback', function() {
@@ -241,7 +241,7 @@ define([
       });
 
       it('itemsSetCallback', function() {
-         let markedKey = '';
+         let markedKey = '', clearSelectionCalled = false;
          const cfg = {};
          const explorer = new explorerMod.View(cfg);
          explorer.saveOptions(cfg);
@@ -253,15 +253,21 @@ define([
          };
          explorer._children = {
             treeControl: {
-               setMarkedKey: (key) => markedKey = key
+               setMarkedKey: (key) => markedKey = key,
+               isAllSelected: () => true,
+               clearSelection: () => clearSelectionCalled = true
             }
          };
 
+         assert.equal(explorer._markerForRestoredScroll, null);
          explorerMod.View._private.itemsSetCallback(explorer);
 
          assert.strictEqual(markedKey, 'test');
+         assert.strictEqual(explorer._markerForRestoredScroll, 'test');
          assert.isFalse(explorer._isGoingBack);
+         assert.isTrue(clearSelectionCalled);
 
+         clearSelectionCalled = false;
          explorer._isGoingFront = true;
          explorer._root = 'test';
          explorer._restoredMarkedKeys = {
@@ -272,6 +278,7 @@ define([
 
          assert.strictEqual(markedKey, null);
          assert.isFalse(explorer._isGoingFront);
+         assert.isFalse(clearSelectionCalled);
       });
 
       it('setViewMode', function() {
@@ -279,26 +286,35 @@ define([
             cfg = {
                root: 'rootNode',
                viewMode: 'tree',
-               virtualScrolling: true
+               virtualScrollConfig: {
+                  pageSize: 100
+               }
             };
          var newCfg = {
             viewMode: 'search',
             root: 'rootNode',
-            virtualScrolling: true
+            virtualScrollConfig: {
+               pageSize: 100
+            }
          };
          var newCfg2 = {
             viewMode: 'tile',
             root: 'rootNode',
-            virtualScrolling: true
+            virtualScrollConfig: {
+               pageSize: 100
+            }
          };
          var newCfg3 = {
             viewMode: 'search',
             root: 'rootNode',
-            virtualScrolling: true,
+            virtualScrollConfig: {
+               pageSize: 100
+            },
             searchStartingWith: 'root'
          };
          var instance = new explorerMod.View(cfg);
          var rootChanged = false;
+         let root;
 
          instance.saveOptions(cfg);
 
@@ -308,11 +324,11 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tree);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tree);
                assert.isFalse(rootChanged);
-               assert.isTrue(instance._virtualScrolling);
 
-               instance._notify = function(eventName) {
+               instance._notify = function(eventName, eventValue) {
                   if (eventName === 'rootChanged') {
                      rootChanged = true;
+                     root = eventValue[0];
                   }
                };
                return explorerMod.View._private.setViewMode(instance, newCfg.viewMode, newCfg);
@@ -322,7 +338,6 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.search);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.search);
                assert.isFalse(rootChanged);
-               assert.isTrue(instance._virtualScrolling);
 
                instance._breadCrumbsItems = new collection.RecordSet({
                   rawData: [
@@ -344,7 +359,6 @@ define([
             })
             .then(() => {
                assert.isFalse(rootChanged);
-               assert.isTrue(instance._virtualScrolling);
 
                return explorerMod.View._private.setViewMode(instance, newCfg2.viewMode, newCfg2);
             })
@@ -353,9 +367,17 @@ define([
                assert.equal(instance._viewName, explorerMod.View._constants.VIEW_NAMES.tile);
                assert.equal(instance._viewModelConstructor, explorerMod.View._constants.VIEW_MODEL_CONSTRUCTORS.tile);
                assert.isFalse(rootChanged);
-               assert.isFalse(instance._virtualScrolling);
-            }).then(() => {
+
+               instance._breadCrumbsItems = [new entityLib.Model({
+                  rawData: {
+                     id: 1,
+                     title: 'crumb'
+                  },
+                  keyProperty: 'id'
+               })];
                explorerMod.View._private.setViewMode(instance, newCfg3.viewMode, newCfg3);
+               assert.isTrue(rootChanged);
+               assert.equal(root, 1);
                assert.equal(instance._breadCrumbsItems, null);
             });
       });
@@ -457,17 +479,35 @@ define([
             instance._viewMode = cfg2.viewMode;
 
             instance._beforeUpdate(cfg2);
-            assert.isFalse(resetExpandedItemsCalled);
+            assert.isTrue(resetExpandedItemsCalled);
 
             instance._isGoingFront = true;
             instance.saveOptions(cfg);
             instance._beforeUpdate(cfg2);
-            assert.isFalse(instance._isGoingFront);
+            assert.isTrue(instance._isGoingFront);
          });
 
-         it('changes viewMode on items set if both viewMode and root changed', () => {
+         it('changes viewMode on items set if both viewMode and root changed(tree -> search)', () => {
             const cfg = { viewMode: 'tree', root: null };
             const cfg2 = { viewMode: 'search' , root: 'abc' };
+            const instance = new explorerMod.View(cfg);
+            instance._children = {
+               treeControl: {
+                  resetExpandedItems: () => null
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._viewMode = 'tree';
+
+            instance._beforeUpdate(cfg2);
+            instance.saveOptions(cfg2);
+            assert.strictEqual(instance._pendingViewMode, 'search');
+         });
+
+         it('changes viewMode on items set if both viewMode and root changed(tree -> tile)', () => {
+            const cfg = { viewMode: 'tree', root: null };
+            const cfg2 = { viewMode: 'tile' , root: 'abc' };
             const instance = new explorerMod.View(cfg);
             instance._children = {
                treeControl: {
@@ -483,7 +523,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tree');
 
             explorerMod.View._private.itemsSetCallback(instance);
-            assert.strictEqual(instance._viewMode, 'search');
+            assert.strictEqual(instance._viewMode, 'tile');
          });
       });
 
@@ -641,17 +681,90 @@ define([
 
          });
 
-         it('_onItemClick', function() {
+         it('should do nothing by item click with option wxpandByItemClick', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+
+            const rootBefore = explorer._root;
+            explorer.commitEdit = () => {
+               throw Error('Explorer:commitEdit shouldn\'t be called!')
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            explorer._children.treeControl = { isEditing: () => false };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => true  }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => false }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+            assert.doesNotThrow(() => { explorer._onItemClick(event, { get: () => null  }, clickEvent) });
+            assert.equal(rootBefore, explorer._root);
+         });
+
+         it('should open node by item click with option expandByItemClick in search mode', () => {
+            const cfg = {
+               editingConfig: {},
+               expandByItemClick: true,
+               nodeProperty: 'node@'
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._viewMode = 'search';
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+            const rootBefore = explorer._root;
+            explorer._children = {
+               treeControl: {
+                  _children: {
+
+                  },
+                  commitEdit: () => ({
+                     addCallback(callback) {
+                        callback();
+                        assert.notEqual(rootBefore, explorer._root);
+                     }
+                  }),
+                  isEditing: () => false
+               }
+            };
+            const event = { stopPropagation: () => {} };
+            const clickEvent = {
+               target: {closest: () => {}}
+            };
+            const item = {
+               get: () => true,
+               getId: () => 'itemId'
+            };
+            assert.doesNotThrow(() => { explorer._onItemClick(event, item, clickEvent) });
+         });
+
+         it('_onItemClick', async function() {
             isNotified = false;
             isWeNotified = false;
 
+            const successfulCommit = Promise.resolve({});
+            const unSuccessfulCommit = Promise.resolve({ validationFailed: true });
+
+            let commitEditResult = successfulCommit;
+
             var
-               explorer = new explorerMod.View({}),
+               explorer = new explorerMod.View({
+                  editingConfig: {}
+               }),
                isEventResultReturns = false,
-               cancelEditCalled = false,
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
-            explorer.saveOptions({});
+            explorer.saveOptions({
+               editingConfig: {}
+            });
             explorer._notify = (eName, eArgs) => {
                if (eName === 'itemClick') {
                   assert.equal(3, eArgs[2]);
@@ -666,44 +779,40 @@ define([
             explorer._children = {
                treeControl: {
                   _children: {
-
                   },
-                  cancelEdit: function() {
-                     cancelEditCalled = true;
+                  isEditing: () => false,
+                  commitEdit: () => commitEditResult
+               }
+            };
+            await (new Promise((res) => {
+               isEventResultReturns = explorer._onItemClick({
+                  stopPropagation: function() {
+                     isPropagationStopped = true;
                   }
-               }
-            };
+               }, {
+                  get: function() {
+                     return true;
+                  },
+                  getId: function() {
+                     return 'itemId';
+                  }
+               }, {
+                  nativeEvent: 123
+               }, 3);
 
-            explorer._restoredMarkedKeys = {
-               null: {
-                  markedKey: null
-               }
-            };
+               assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+               assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
 
+               setTimeout(() => {
+                  res();
+               }, 0);
+            }));
 
-            isEventResultReturns = explorer._onItemClick({
-               stopPropagation: function() {
-                  isPropagationStopped = true;
-               }
-            }, {
-               get: function() {
-                  return true;
-               },
-               getId: function() {
-                  return 'itemId';
-               }
-            }, {
-               nativeEvent: 123
-            }, 3);
             assert.isFalse(isEventResultReturns);
-            assert.isTrue(cancelEditCalled);
-            assert.deepEqual({
-               ...explorer._restoredMarkedKeys,
-               itemId: {
-                  parent: null,
-                  markedKey: null
-               }
-            }, explorer._restoredMarkedKeys);
+            assert.strictEqual(explorer._restoredMarkedKeys['null'].markedKey, 'itemId');
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].parent, null);
+            assert.strictEqual(explorer._restoredMarkedKeys['itemId'].markedKey, null);
             assert.isTrue(isPropagationStopped);
             // Click
             assert.isTrue(isWeNotified);
@@ -722,23 +831,75 @@ define([
 
             isPropagationStopped = false;
 
-            explorer._onItemClick({
-               stopPropagation: function() {
-                  isPropagationStopped = true;
-               }
-            }, {
-               get: function() {
-                  return true;
-               },
-               getId: function() {
-                  return 'itemIdOneMore';
-               }
-            }, {
-               nativeEvent: 123
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: function () {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: function () {
+                     return true;
+                  },
+                  getId: function () {
+                     return 'itemIdOneMore';
+                  }
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
             });
+
             assert.isTrue(isPropagationStopped);
             // Root wasn't changed
             assert.equal(root, 'itemId');
+
+
+            explorer._notify = () => true;
+            commitEditResult = unSuccessfulCommit;
+            isPropagationStopped = false;
+
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: () => {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: () => true,
+                  getId: () => 'itemIdOneMore'
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
+            });
+
+            assert.isTrue(isPropagationStopped);
+            // Root wasn't changed
+            assert.equal(root, 'itemId');
+
+            explorer._isGoingFront = false;
+            explorer.saveOptions({
+               searchNavigationMode: 'expand'
+            });
+            await new Promise((res) => {
+               explorer._onItemClick({
+                  stopPropagation: () => {
+                     isPropagationStopped = true;
+                  }
+               }, {
+                  get: () => true,
+                  getId: () => 'itemIdOneMore'
+               }, {
+                  nativeEvent: 123
+               });
+               setTimeout(() => {
+                  res();
+               }, 0);
+            });
+            assert.isFalse(explorer._isGoingFront);
          });
 
          it('_onBreadCrumbsClick', function() {
@@ -756,9 +917,10 @@ define([
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: null}
             };
 
             explorer._onBreadCrumbsClick({}, {
@@ -769,16 +931,18 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
             }, explorer._restoredMarkedKeys);
 
             explorer._restoredMarkedKeys = {
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
-               itemId1: {parent: 'itemId', markedKey: null}
+               itemId: {parent: null, cursorPosition: '1', markedKey: 'itemId1'},
+               itemId1: {parent: 'itemId', cursorPosition: '2', markedKey: null}
             };
             explorer._root = 'itemId1';
 
@@ -790,9 +954,10 @@ define([
 
             assert.deepEqual({
                null: {
-                  markedKey: null
+                  markedKey: null,
+                  cursorPosition: '0'
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
+               itemId: {parent: null, markedKey: 'itemId1', cursorPosition: '1'},
             }, explorer._restoredMarkedKeys);
 
             assert.isTrue(isNotified);
@@ -815,21 +980,19 @@ define([
                null: {
                   markedKey: null
                },
-               itemId: {parent: null, markedKey: 'itemId1'},
-               itemId1: {parent: 'itemId', markedKey: 'itemId12'},
-               itemId12: {parent: 'itemId1', markedKey: null},
+               1: {parent: null, markedKey: 11},
+               11: {parent: 1, markedKey: 112},
+               112: {parent: 11, markedKey: null},
             };
-            explorer._root = 'itemId12';
-            explorerMod.View._private.pathCleaner(explorer, 'itemId');
+            explorer._root = 112;
+            explorerMod.View._private.pathCleaner(explorer, 1);
 
             assert.deepEqual({
-               itemId: {parent: null, markedKey: "itemId1"},
+               1: {parent: null, markedKey: 11},
                null: {markedKey: null}
             }, explorer._restoredMarkedKeys);
          });
       });
-
-
 
       describe('EditInPlace', function() {
          it('beginEdit', function() {
@@ -1046,6 +1209,189 @@ define([
             assert.equal(dragEnrArgs[0], dragEntity);
             assert.equal(dragEnrArgs[1], 'hoveredItemKey');
             assert.equal(dragEnrArgs[2], 'on');
+         });
+      });
+
+      describe('restore position navigation when going back', () => {
+         it('_private::isCursorNavigation', () => {
+            assert.isFalse(explorerMod.View._private.isCursorNavigation({}));
+            assert.isFalse(explorerMod.View._private.isCursorNavigation({}));
+            assert.isFalse(explorerMod.View._private.isCursorNavigation({
+               source: 'page'
+            }));
+
+            assert.isTrue(explorerMod.View._private.isCursorNavigation({
+               source: 'position'
+            }));
+         });
+
+         it('_private::getCursorPositionFor', () => {
+            const item = new entityLib.Model({
+               keyProperty: 'id',
+               rawData: {
+                  id: 12,
+                  title: 'Title'
+               }
+            });
+            const navigation = {
+               sourceConfig: {
+                  field: 'id'
+               }
+            };
+
+            assert.deepEqual(
+               explorerMod.View._private.getCursorPositionFor(item, navigation),
+               [12]
+            );
+
+            navigation.sourceConfig.field = ['id'];
+            assert.deepEqual(
+               explorerMod.View._private.getCursorPositionFor(item, navigation),
+               [12]
+            );
+
+            navigation.sourceConfig.field = ['id', 'title'];
+            assert.deepEqual(
+               explorerMod.View._private.getCursorPositionFor(item, navigation),
+               [12, 'Title']
+            );
+         });
+
+         it('step front', () => {
+
+            const cfg = {
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               navigation: {
+                  source: 'position',
+                  sourceConfig: {
+                     field: ['title', 'id']
+                  }
+               }
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: null
+               }
+            };
+            explorer._children.treeControl = {
+               isEditing: () => false
+            };
+
+            const mockEvent = { stopPropagation: () => {} };
+            const rootItem = new entityLib.Model({
+               keyProperty: 'id',
+               rawData: {
+                  id: 1,
+                  title: 'Title1',
+                  type: true,
+                  parent: null
+               }
+            });
+            const childItem = new entityLib.Model({
+               keyProperty: 'id',
+               rawData: {
+                  id: 2,
+                  title: 'Title2',
+                  type: true,
+                  parent: 1
+               }
+            });
+
+
+            explorer._onItemClick(mockEvent, rootItem);
+            explorer._onItemClick(mockEvent, childItem);
+
+            assert.deepEqual(explorer._restoredMarkedKeys, {
+               null: {
+                  markedKey: 1,
+                  cursorPosition: ['Title1', 1]
+               },
+               1: {
+                  markedKey: 2,
+                  parent: null,
+                  cursorPosition: ['Title2', 2]
+               },
+               2: {
+                  markedKey: null,
+                  parent: 1
+               }
+            });
+         });
+
+         it('step back', () => {
+
+            const cfg = {
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               navigation: {
+                  source: 'position',
+                  sourceConfig: {
+                     field: ['title', 'id']
+                  }
+               }
+            };
+            const explorer = new explorerMod.View(cfg);
+            explorer.saveOptions(cfg);
+            explorer._navigation = cfg.navigation;
+            explorer._restoredMarkedKeys = {
+               null: {
+                  markedKey: 1,
+                  cursorPosition: ['Title1', 1]
+               },
+               1: {
+                  markedKey: 2,
+                  parent: null,
+                  cursorPosition: ['Title2', 2]
+               },
+               2: {
+                  markedKey: null,
+                  parent: 1
+               }
+            };
+
+            const mockEvent = { stopPropagation: () => {} };
+            const rootItem = new entityLib.Model({
+               keyProperty: 'id',
+               rawData: {
+                  id: 1,
+                  title: 'Title1',
+                  type: true,
+                  parent: null
+               }
+            });
+            const childItem = new entityLib.Model({
+               keyProperty: 'id',
+               rawData: {
+                  id: 2,
+                  title: 'Title2',
+                  type: true,
+                  parent: 1
+               }
+            });
+            explorer._viewMode = undefined;
+            explorer._forceUpdate = () => {
+               explorer._beforeUpdate(cfg);
+            };
+
+            explorer._breadCrumbsItems = [rootItem, childItem];
+            explorerMod.View._private.backByPath(explorer);
+
+            assert.deepEqual(
+               explorer._navigation.sourceConfig.position,
+               ['Title1', 1]
+            );
+
+
+            explorer._breadCrumbsItems = [rootItem];
+            explorerMod.View._private.backByPath(explorer);
+
+            assert.deepEqual(
+               explorer._navigation.sourceConfig.position,
+               null
+            );
          });
       });
    });

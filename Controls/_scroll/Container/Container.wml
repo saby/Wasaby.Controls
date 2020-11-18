@@ -1,0 +1,82 @@
+<ws:template name="scrollTpl">
+    <div class="controls-Scroll-Container controls-Scroll">
+        <ws:partial template="{{_baseTemplate}}"
+                    scope="{{_options}}"
+                    topShadowVisibility="{{undefined}}"
+                    bottomShadowVisibility="{{undefined}}"
+                    _scrollCssClass="{{_scrollCssClass}}"
+                    attr:style="{{_scrollbars.scrollContainerStyles}}"
+                    attr:class="controls-Scroll-Container__base controls-BlockLayout__blockGroup_theme-{{_options.theme}} controls-BlockLayout__blockGroup_theme-{{_options.theme}}
+                    {{ _optimizeShadowClass }}{{ _scrollbars.scrollContainerStyles === undefined ? ' controls-Scroll-Container__content_hidden' }}"
+                    on:intersectionObserverRegister="_intersectionObserverRegisterHandler()"
+                    on:intersectionObserverUnregister="_intersectionObserverUnregisterHandler()"
+                    on:fixed="_stickyFixedHandler()"
+                    on:stickyRegister="_stickyRegisterHandler()"
+                    on:keydown="_keydownHandler()"
+                    on:updateShadowMode="_updateShadowVisibility()"/>
+        <ws:if data="{{_shadows.top.isEnabled && !_isOptimizeShadowEnabled }}">
+            <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_top {{!_shadows.top.isVisible ? ' ws-invisible'}}"></div>
+        </ws:if>
+        <ws:if data="{{_shadows.bottom.isEnabled && !_isOptimizeShadowEnabled }}">
+            <div class="controls-Scroll__shadow controls-Scroll__shadow_horizontal controls-Scroll__shadow_bottom {{!_shadows.bottom.isVisible ? ' ws-invisible'}}"></div>
+        </ws:if>
+        <ws:if data="{{_shadows.left.isEnabled}}">
+            <div class="controls-Scroll__shadow controls-Scroll__shadow_vertical controls-Scroll__shadow_left {{!_shadows.left.isVisible ? ' ws-invisible'}}"></div>
+        </ws:if>
+        <ws:if data="{{_shadows.right.isEnabled}}">
+            <div class="controls-Scroll__shadow controls-Scroll__shadow_vertical controls-Scroll__shadow_right {{!_shadows.right.isVisible ? ' ws-invisible'}}"></div>
+        </ws:if>
+
+        <ws:if data="{{_scrollbars.isVisible}}">
+            <ws:if data="{{_scrollbars.vertical.isVisible}}">
+                <Controls._scroll.Scroll.Scrollbar
+                        position="{{_scrollbars.vertical.position}}"
+                        name="scrollBar"
+                        contentSize="{{_scrollbars.vertical.contentSize}}"
+                        attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
+                            {{_scrollbars.horizontal.isVisible ? 'controls-VScrollbar_vertical_offset'}}"
+                        on:positionChanged="_positionChangedHandler('vertical')"
+                        on:draggingChanged="_draggingChangedHandler('vertical')"
+                        attr:style="{{_scrollbars.vertical.style}}"/>
+            </ws:if>
+
+            <ws:if data="{{_scrollbars.horizontal.isVisible}}">
+                <Controls._scroll.Scroll.Scrollbar
+                        position="{{_scrollbars.horizontal.position}}"
+                        direction="horizontal"
+                        name="horizontalScrollBar"
+                        contentSize="{{_scrollbars.horizontal.contentSize}}"
+                        thumbStyle="accented"
+                        thumbThickness="l"
+                        attr:class="controls-Scroll__scrollbar controls-ScrollContainer__scrollbar_horizontal {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
+                            {{_scrollbars.vertical.isVisible ? 'controls-VScrollbar_horizontal_offset'}}"
+                        on:positionChanged="_positionChangedHandler('horizontal')"
+                        on:draggingChanged="_draggingChangedHandler('horizontal')"
+                        attr:style="{{_scrollbars.horizontal.style}}"/>
+            </ws:if>
+        </ws:if>
+
+        <ws:if data="{{_paging.isVisible}}">
+            <Controls.Container.Async templateName="Controls/paging:Paging">
+                <ws:partial template="{{content.resolvedTemplate}}"
+                            class="controls-Scroll__paging"
+                            contrastBackground="{{true}}"
+                            backwardEnabled="{{_paging.stateUp}}"
+                            forwardEnabled="{{_paging.stateDown}}"
+                            arrowState="{{_paging.arrowState}}"
+                            on:onArrowClick="_arrowClickHandler()"/>
+            </Controls.Container.Async>
+        </ws:if>
+    </div>
+</ws:template>
+
+<ws:if data="{{_useNativeScrollbar}}">
+    <ws:partial template="scrollTpl"/>
+</ws:if>
+<ws:else>
+    <ws:partial template="scrollTpl"
+                on:mouseenter="_mouseenterHandler()"
+                on:mouseleave="_mouseleaveHandler()"
+                on:scrollbarTaken="_scrollbarTakenHandler()"
+                on:scrollbarReleased="_scrollbarReleasedHandler()"/>
+</ws:else>

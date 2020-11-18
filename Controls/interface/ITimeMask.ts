@@ -18,15 +18,15 @@ interface ITimeMask {
       /**
        * @name Controls/interface/ITimeMask#mask
        * @cfg {String} Формат ввода даты.
+       * @remark
        *
        * Необходимо выбрать одну из перечисленных масок. Разрешенные символы маски:
-       * <ol>
-       *    <li>H — час.</li>
-       *    <li>I — минута.</li>
-       *    <li>S — секунда.</li>
-       *    <li>U — миллисекунда.</li>
-       *    <li>".", "-", ":", "/" — разделитель.</li>
-       * </ol>
+       * 
+       * * H — час.
+       * * I — минута.
+       * * S — секунда.
+       * * U — миллисекунда.
+       * * ".", "-", ":", "/" — разделитель.
        * @variant 'HH:II:SS.UUU'
        * @variant 'HH:II:SS'
        * @variant 'HH:II'
@@ -37,13 +37,13 @@ interface ITimeMask {
        * @cfg {String} Data format.
        *
        * One of the listed mask must be choosen. Allowed mask chars:
-       * <ol>
-       *    <li>H — hour.</li>
-       *    <li>I — minute.</li>
-       *    <li>S — second.</li>
-       *    <li>U — millisecond.</li>
-       *    <li>".", "-", ":", "/" — delimiters.</li>
-       * </ol>
+       * 
+       * * H — hour.
+       * * I — minute.
+       * * S — second.
+       * * U — millisecond.
+       * * ".", "-", ":", "/" — delimiters.
+       * 
        * @variant 'HH:II:SS.UUU'
        * @variant 'HH:II:SS'
        * @variant 'HH:II'

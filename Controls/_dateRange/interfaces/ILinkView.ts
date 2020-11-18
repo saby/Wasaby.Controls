@@ -1,9 +1,8 @@
 import rk = require('i18n!Controls');
 import {descriptor} from 'Types/entity';
-import dateControlsUtils from './../Utils';
 
 /**
- * Интерфейс для визуального отображения контрола {@link Controls/dataRange:Link}.
+ * Интерфейс для визуального отображения контрола {@link Controls/dateRange:DateSelector}.
  * @interface Controls/_dateRange/interfaces/ILinkView
  * @public
  * @author Красильников А.С.
@@ -31,53 +30,29 @@ export default {
               * @description Display view of control.
               * @variant selector Control display as default style.
               * @variant link Control display as link button.
-              * @variant label Control display as lable. 
+              * @variant label Control display as lable.
               */
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#viewMode
              * @cfg {ViewMode} Режим отображения контрола.
+             * @demo Controls-demo/Input/Date/RangeLinkView
              * @default selector
              */
 
             /*
              * @name Controls/_dateRange/interfaces/ILinkView#viewMode
+             * @demo Controls-demo/Input/Date/RangeLinkView
              * @cfg {ViewMode} Display view of control.
              */
             viewMode: 'selector',
-
-            /**
-             * @typedef {String} StyleMode
-             * @description Стиль отображения контрола.
-             * @variant secondary Стиль отображения "secondary" (см.{@link http://axure.tensor.ru/standarts/v7/%D1%88%D1%80%D0%B8%D1%84%D1%82%D1%8B__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html Axure}).
-             * Используется по умолчанию, когда опция {@link viewMode} установлена в значения selector и link.
-             * @variant info Стиль отображения "info" (см.{@link http://axure.tensor.ru/standarts/v7/%D1%88%D1%80%D0%B8%D1%84%D1%82%D1%8B__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html Axure}).
-             */
-
-            /*
-             * @typedef {String} StyleMode
-             * @variant secondary Default style for selector and link view mode. Control display as secondry style.
-             * @variant info Style for selector and link view mode. Control display as info style.
-             */
-
-            /**
-             * @name Controls/_dateRange/interfaces/ILinkView#styleMode
-             * @cfg {StyleMode} Стиль отображения контрола.
-             * @default undefined
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/ILinkView#styleMode
-             * @cfg {StyleMode} Display style of control. Different view modes support different styles.
-             * @default undefined
-             */
-            styleMode: undefined,
 
             clickable: true,
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#nextArrowVisibility
              * @cfg {Boolean} Отображает стрелку перехода к следующему периоду.
+             * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
              * @default false
              */
 
@@ -91,6 +66,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#prevArrowVisibility
              * @cfg {Boolean} Отображает стрелку перехода к предыдущему периоду.
+             * @demo Controls-demo/dateRange/LiteSelector/ArrowVisibility/Index
              * @default false
              */
 
@@ -124,18 +100,7 @@ export default {
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
              */
-            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED,
-
-            /**
-             * @name Controls/_dateRange/interfaces/ILinkView#captionFormatter
-             * @cfg {Function} Функция форматирования заголовка.
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/ILinkView#captionFormatter
-             * @cfg {Function} Caption formatting function.
-             */
-            captionFormatter: dateControlsUtils.formatDateRangeCaption
+            emptyCaption: EMPTY_CAPTIONS.NOT_SPECIFIED
         };
     },
 
@@ -143,27 +108,15 @@ export default {
 
     getOptionTypes: function () {
         return {
-            style: descriptor(String).oneOf([
-                'default',
-                'linkMain',
-                'linkMain2',
-                'linkAdditional',
-                'secondary'
-            ]),
             viewMode: descriptor(String).oneOf([
                'selector',
                'link',
                'label'
             ]),
-            styleMode: descriptor(String).oneOf([
-               'secondary',
-               'info'
-            ]),
             nextArrowVisibility: descriptor(Boolean),
             prevArrowVisibility: descriptor(Boolean),
             showDeleteButton: descriptor(Boolean),
-            emptyCaption: descriptor(String),
-            captionFormatter: descriptor(Function)
+            emptyCaption: descriptor(String)
         };
     }
 };

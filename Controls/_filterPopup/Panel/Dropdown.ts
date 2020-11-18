@@ -1,82 +1,71 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
+import {List} from 'Types/collection';
+import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import 'css!theme?Controls/filterPopup';
+
    /**
     * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
     * Текст ссылки отображает выбранные значения. Значения выбирают в выпадающем меню, которое по умолчанию скрыто.
+    * 
+    * @remark
     * Меню можно открыть кликом на контрол. Для работы единичным параметром selectedKeys используйте контрол с {@link Controls/source:SelectedKey}.
     *
+    * Полезные ссылки:
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
+    * 
     * @class Controls/_filterPopup/Panel/Dropdown
     * @extends Controls/_dropdown/Input
-    * @control
     * @public
     * @author Герасимов А.М.
     */
 
-   /*
-    * Input for selection from the list of options with cross.
-    *
-    * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
-    *
-    * @class Controls/_filterPopup/Panel/Dropdown
-    * @extends Controls/_dropdown/Input
-    * @control
-    * @public
-    * @author Герасимов А.М.
-    */
+class FilterDropdown extends Control<IControlOptions> {
+      protected _template: TemplateFunction = template;
 
-   /**
-    * @name Controls/_filterPopup/Panel/Dropdown#showCross
-    * @cfg {Boolean} Показать крестик сброса рядом с выпадающим списком.
-    * Используется для контрола в блоке "Отбираются".
-    * По клику на крестик выпадающий список переместится в блок "Еще можно отобрать".
-    * @default false
-    * @example
-    * <pre>
-    *     <Controls.filterPopup:Dropdown showCross="{{true}}"/>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_filterPopup/Panel/Dropdown#showCross
-    * @cfg {Boolean} Show reset button near dropdown. If you click on this button, dropdown will hide.
-    * @default false
-    * @example
-    * <pre>
-    *     <Controls.filterPopup:Dropdown showCross="{{true}}"/>
-    * </pre>
-    */
-
-   var FilterDropdown = Control.extend({
-      _template: template,
-
-      _selectedKeysChangedHandler: function(event, keys:Array):Boolean|undefined {
+      protected _selectedKeysChangedHandler(event: SyntheticEvent, keys: any[]): Boolean|undefined {
          return this._notify('selectedKeysChanged', [keys]);
-      },
+      }
 
-      _textValueChangedHandler: function(event, text) {
+      protected _textValueChangedHandler(event: SyntheticEvent, text): void {
          this._notify('textValueChanged', [text]);
-      },
+      }
 
-      _resetHandler: function() {
+      protected _selectorCallbackHandler(event: SyntheticEvent,
+                                         initSelectorItems: List<Model>,
+                                         selectedItems: List<Model>): {} {
+         return this._notify('selectorCallback', [initSelectorItems, selectedItems]);
+      }
+
+      protected _resetHandler(): void {
          this._notify('visibilityChanged', [false]);
-      },
+      }
 
-      _dropDownOpen(event: SyntheticEvent<Event>): void {
+      protected _dropDownOpen(event: SyntheticEvent<Event>): void {
          this._notify('dropDownOpen');
-      },
+      }
 
-      _dropDownClose(event: SyntheticEvent<Event>): void {
+      protected _dropDownClose(event: SyntheticEvent<Event>): void {
          this._notify('dropDownClose');
       }
 
-   });
+      static _theme: string[] = ['Controls/filterPopup'];
 
-   FilterDropdown.getDefaultOptions = function() {
-      return {
-         displayProperty: 'title'
-      };
-   };
-
-   export = FilterDropdown;
+      static getDefaultOptions(): object {
+         return {
+            displayProperty: 'title'
+         };
+      }
+   }
+export default FilterDropdown;
+/**
+ * @name Controls/_filterPopup/Panel/Dropdown#showCross
+ * @cfg {Boolean} Показать крестик сброса рядом с выпадающим списком.
+ * Используется для контрола в блоке "Отбираются".
+ * По клику на крестик выпадающий список переместится в блок "Еще можно отобрать".
+ * @default false
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Dropdown showCross="{{true}}"/>
+ * </pre>
+ */

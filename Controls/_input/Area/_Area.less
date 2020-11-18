@@ -43,22 +43,34 @@
    visibility: hidden;
 }
 
-.controls-Area_theme_@{themeName}_size {
-   @variants: s, m, l, default;
+.controls-Area__footer {
+   flex-grow: 1;
+}
 
-   /**
-    * When using line-height: normal, the row height in Firefox differs from the row height in other browsers.
-    * This behavior is independent of the font. Therefore, you must specify the value explicitly.
-    */
+/**
+ * When using line-height: normal, the row height in Firefox differs from the row height in other browsers.
+ * This behavior is independent of the font. Therefore, you must specify the value explicitly.
+ */
+.controls-Area_line-height {
+   @variants: xs, s, m, l, xl, 2xl, 3xl, 4xl, 5xl;
+
    .for(@variants, {
-      &_@{_item} {
-         line-height: ~"@{height_Area_oneLine_size_@{_item}}";
+      &_@{_item}_theme-@{themeName} {
+         line-height: ~"@{line-height_@{_item}_inputArea}";
       }
    });
 }
 
-.controls-Area__field_theme_@{themeName}_margin {
-   margin: @padding-vertical_inputArea @padding-horizontal_inputText;
+.controls-Area__footer_theme_@{themeName},
+.controls-Area__field_theme_@{themeName}_margin-xs {
+   margin: @padding-vertical_inputArea @padding-horizontal_inputText 0 @padding-horizontal_inputText;
+   // Для нижнего отступа используем padding потому что в firefox, в отличии от других браузеров,
+   // margin не добавляет scrollHeight.
+   padding-bottom: @padding-vertical_inputArea;
+}
+
+.controls-Area__field_theme_@{themeName}_margin-null {
+   margin: @padding-vertical_inputArea 0;
 }
 
 .ws-is-firefox .controls-Area__field_theme_@{themeName}_margin {

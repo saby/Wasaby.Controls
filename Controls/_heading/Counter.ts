@@ -1,22 +1,29 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import counterTemplate = require('wml!Controls/_heading/Counter/Counter');
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import {IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
 
-export interface ICounterOptions extends IControlOptions {
-    style?: 'primary' | 'secondary' | 'disabled';
-    size?: 's' | 'm' | 'l';
+export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions, IFontSizeOptions {
 }
 
 /**
  * Счетчик с поддержкой различных стилей отображения и размеров.
- * @remark
- * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
  *
- * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
+ * @remark
+ * Используется в составе сложных заголовков, состоящих из {@link Controls/heading:Separator}, {@link Controls/heading:Counter} и {@link Controls/heading:Title}.
+ * Для одновременной подсветки всех частей сложного заголовка при наведении используйте класс controls-Header_all__clickable на контейнере.
+ *
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_heading.less">переменные тем оформления</a>
  *
  * @class Controls/_heading/Counter
  * @extends Core/Control
- * @control
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
+ * 
  * @public
  * @author Красильников А.С.
  *
@@ -27,78 +34,35 @@ export interface ICounterOptions extends IControlOptions {
  * Counter with support different display styles and sizes. Used as part of complex headers(you can see it in Demo-example)
  * consisting of a <a href="/docs/js/Controls/_heading/?v=3.18.500">header</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
  *
- * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_heading/Counter
  * @extends Core/Control
- * @control
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
  * @public
  * @author Красильников А.С.
  *
  * @demo Controls-demo/Heading/Counters/Index
  */
+class Counter extends Control<ICounterOptions> implements IFontColorStyle, IFontSize {
+    '[Controls/_interface/IFontColorStyle]': boolean = true;
+    '[Controls/_interface/IFontSize]': boolean = true;
 
-/**
- * @name Controls/_heading/Counter#size
- * @cfg {String} Размер счетчика.
- * @variant l Большой счетчик.
- * @variant m Средний счетчик.
- * @variant s Маленький счетчик.
- * @default m
- */
-
-/*
- * @name Controls/_heading/Counter#size
- * @cfg {String} Size of Counter.
- * @variant l Large counter size.
- * @variant m Medium counter size.
- * @variant s Small counter size.
- * @default m
- */
-
-/**
- * @name Controls/_heading/Counter#style
- * @cfg {String} Стиль отображения счетчика.
- * @variant primary
- * @variant secondary
- * @variant disabled
- * @default primary
- */
-
-/*
- * @name Controls/_heading/Counter#style
- * @cfg {String} Counter displaying style.
- * @variant primary
- * @variant secondary
- * @variant disabled
- * @default primary
- */
-
-class Counter extends Control<ICounterOptions> {
     protected _template: TemplateFunction = counterTemplate;
 
-    static _theme: string[] = ['Controls/heading'];
+    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
-            style: 'primary',
-            size: 'm'
+            fontSize: 'l',
+            fontColorStyle: 'primary'
         };
     }
 
     static getOptionTypes(): object {
         return {
-            value: EntityDescriptor(Number),
-            style: EntityDescriptor(String).oneOf([
-                'primary',
-                'secondary',
-                'disabled'
-            ]),
-            size: EntityDescriptor(String).oneOf([
-                'm',
-                's',
-                'l'
-            ])
+            value: EntityDescriptor(Number)
         };
     }
 }

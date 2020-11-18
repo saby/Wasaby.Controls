@@ -1,18 +1,16 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import {Memory} from 'Types/source';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/EmptyTemplate');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/SuggestTemplate');
-import emptyTemplate = require('wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate');
-import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/Suggest_new/Index';
+import 'wml!Controls-demo/Suggest_new/Selector/EmptyTemplate/resources/EmptyTemplate';
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
-   private _suggestTemplate: TemplateFunction = suggestTemplate;
-   private _demoEmptyTemplate: TemplateFunction = suggestTemplate;
-   private _source: Memory;
-   private _navigation: object;
-   protected _beforeMount() {
+   protected _suggestTemplate: TemplateFunction = suggestTemplate;
+   protected _demoEmptyTemplate: TemplateFunction = suggestTemplate;
+   protected _source: Memory;
+   protected _navigation: object;
+   protected _beforeMount(): void {
       this._source = new Memory({
          data: []
       });
@@ -26,4 +24,6 @@ export default class extends Control{
          }
       };
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Suggest_new/Index'];
 }

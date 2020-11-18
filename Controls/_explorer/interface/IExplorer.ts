@@ -19,6 +19,7 @@
  * @variant table Таблица.
  * @variant search Режим поиска.
  * @variant tile Плитка.
+ * @variant list Список.
  */
 
 /*
@@ -31,11 +32,13 @@
 /**
  * @name Controls/_explorer/interface/IExplorer#viewMode
  * @cfg {ExplorerViewMode} Режим отображения списка.
+ * @demo Controls-demo/Explorer/Explorer
  */
 
 /*
  * @name Controls/_explorer/interface/IExplorer#viewMode
  * @cfg {explorerViewMode} List view mode.
+ * @demo Controls-demo/Explorer/Explorer
  */
 
 /**
@@ -49,23 +52,22 @@
  */
 
 /**
- * @event Controls/_explorer/interface/IExplorer#rootChanged Происходит при изменении корня иерархии (например, при переходе пользователя по хлебным крошкам).
+ * @event Происходит при изменении корня иерархии (например, при переходе пользователя по хлебным крошкам).
+ * @name Controls/_explorer/interface/IExplorer#rootChanged
  * @param event {eventObject} Дескриптор события.
  * @param root {String|Number} Идентификатор корневой записи.
  */
 
 /**
- * @name Controls/_explorer/interface/IExplorer#backButtonStyle
- * @cfg {String} Стиль отображения кнопки "Назад".
- * @default secondary
- * @see Controls/_heading/Back#style
+ * @name Controls/_explorer/interface/IExplorer#backButtonIconStyle
+ * @cfg {String} Стиль отображения иконки кнопки "Назад".
+ * @see Controls/_heading/Back#iconStyle
  */
 
-/*
- * @name Controls/_explorer/interface/IExplorer#backButtonStyle
- * @cfg {String} Back heading display style.
- * @default secondary
- * @see Controls/_heading/Back#style
+/**
+ * @name Controls/_explorer/interface/IExplorer#backButtonFontColorStyle
+ * @cfg {String} Стиль цвета кнопки "Назад".
+ * @see Controls/_heading/Back#fontColorStyle
  */
 
 /**

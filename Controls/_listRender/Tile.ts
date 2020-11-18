@@ -25,10 +25,11 @@ export default class TileRender extends BaseRender {
     protected _shouldPerformAnimation: boolean;
 
     private _debouncedSetHoveredItem: typeof TileRender.prototype._setHoveredItem;
+    private _destroyed: boolean = false;
 
     protected _beforeMount(options: ITileRenderOptions): void {
         super._beforeMount(options);
-        this._templateKeyPrefix = `tile-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'tile-render';
 
         this._debouncedSetHoveredItem = debounce(
             this._setHoveredItem.bind(this),
@@ -46,6 +47,7 @@ export default class TileRender extends BaseRender {
         super._beforeUpdate(newOptions);
         if (newOptions.listModel !== this._options.listModel) {
             this._animatedItem = null;
+            this._debouncedSetHoveredItem(null);
         }
         this._shouldPerformAnimation =
             this._animatedItem && !this._animatedItem.destroyed && this._animatedItem.isFixed();
@@ -87,7 +89,7 @@ export default class TileRender extends BaseRender {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
-        if (!item.isFixed() && this._shouldProcessHover() /* && !this._listModel.getDragEntity() */) {
+        if (!item.isFixed() && this._shouldProcessHover() /* && !this._listModel.getDragItemData() */) {
             // TODO Might be inefficient, can get called multiple times per hover. Should
             // be called immediately before or after the hovered item is set in the model,
             // but then we can't get the hover target element.
@@ -106,7 +108,7 @@ export default class TileRender extends BaseRender {
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
         super._onItemMouseLeave(e, item);
-        if (!this._context.isTouch.isTouch && !item.isActive()) {
+        if (!this._isTouch() && !item.isActive()) {
             this._debouncedSetHoveredItem(null);
         }
     }
@@ -170,25 +172,39 @@ export default class TileRender extends BaseRender {
         return result;
     }
 
+    destroy(): void {
+        this._destroyed = true;
+        super.destroy();
+    }
+
     private _setHoveredItem(item: CollectionItem<unknown>): void {
         // TODO Adding this to prevent constantly resetting null and
         // causing version change. But version should only change when
         // the state actually changes, so probably managers should
         // keep track of the version and not the collection itself.
+        // The "destroyed" check is necessary, because _setHoveredItem is called using debouncer
         if (
+            !this._destroyed &&
             this._options.listModel && !this._options.listModel.destroyed &&
-            this._options.listModel.getHoveredItem() !== item
+            this._options.listModel.getHoveredItem() !== item &&
+            !this._options.listModel.getActiveItem()
         ) {
             this._options.listModel.setHoveredItem(item);
         }
     }
 
+    private _isTouch(): boolean {
+        return this._context?.isTouch?.isTouch;
+    }
+
     private _shouldProcessHover(): boolean {
         return (
-            !this._context.isTouch.isTouch &&
+            !this._isTouch() &&
             !document.body.classList.contains('ws-is-drag')
         );
     }
+
+    static _theme: string[] = ['Controls/tile'];
 
     static getDefaultOptions(): Partial<ITileRenderOptions> {
         return {

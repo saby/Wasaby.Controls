@@ -1,0 +1,53 @@
+.controls-listTemplates__imageTemplate_image_viewMode-circle {
+   border-radius: 50%;
+}
+
+.controls-listTemplates__imageTemplate_image_effect-gradient {
+   position: absolute;
+   pointer-events: none;
+   height: 30%;
+   width: 100%;
+   bottom: 0;
+   left: 0;
+}
+// FIXME: Костыль, до выполнения задачи https://online.sbis.ru/opendoc.html?guid=7251d305-2779-4142-8683-cdadec29d917
+
+.controls-listTemplates__imageTemplate_image_viewMode-ellipse {
+   clip-path: url("#NavigationPanels-Accordion__image_ellipse");
+}
+
+.controls-listTemplates__imageTemplate {
+   overflow: hidden;
+   box-sizing: border-box;
+   position: relative;
+   display: flex;
+   flex-shrink: 0;
+   max-width: 100%;
+}
+
+/* ie не поддерживает clip-path на html элементах
+   Согласованное исключение https://online.sbis.ru/doc/1adda6e0-2c93-465b-b5d4-e1be21788ff2
+ */
+.ws-is-ie .controls-listTemplates__imageTemplate_image_viewMode-ellipse {
+   border-radius: 60px;
+}
+
+.controls-listTemplates__imageTemplate::after {
+   content: "";
+   display: block;
+   padding-bottom: 100%;
+}
+
+.controls-listTemplates__imageTemplate_image {
+   width: 100%;
+   background-repeat: no-repeat;
+   background-position: center;
+}
+
+.controls-listTemplates__imageTemplate_image_cover {
+   background-size: cover;
+}
+
+.controls-listTemplates__imageTemplate_image_contain {
+   background-size: contain;
+}

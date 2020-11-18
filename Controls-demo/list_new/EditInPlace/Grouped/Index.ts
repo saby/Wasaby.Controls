@@ -3,8 +3,7 @@ import * as Template from 'wml!Controls-demo/list_new/EditInPlace/Grouped/Groupe
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
 import {getGroupedCatalog as getData} from '../../DemoHelpers/DataCatalog';
-import Constants = require('Controls/Constants');
-import 'css!Controls-demo/Controls-demo';
+import {view as constView} from 'Controls/Constants';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 export default class extends Control {
@@ -12,6 +11,12 @@ export default class extends Control {
     private _viewSource: Memory;
     private _fakeItemId: number;
     private _activeGroup: string;
+    private _editingConfig = {
+        editOnClick: true,
+        sequentialEditing: true,
+        addPosition: 'top'
+    };
+    private _addPosition = 'top';
 
     protected _beforeMount(): void {
         const data = getData();
@@ -22,12 +27,20 @@ export default class extends Control {
         this._fakeItemId = data.length;
     }
 
-    private _groupingKeyCallback(item: Model): string {
-        const groupId = item.get('brand');
-        return groupId === 'apple' ? Constants.view.hiddenGroup : groupId;
+    protected _setPosition(e, position: 'top' | 'bottom'): void {
+        this._addPosition = position;
+        this._editingConfig.addPosition = position;
     }
 
-    private _onBeforeBeginEdit(e: SyntheticEvent<null>, options: { item?: Model }, isAdd: boolean): Promise<{item: Model}> | void {
+    private _groupingKeyCallback(item: Model): string {
+        const groupId = item.get('brand');
+        return groupId === 'apple' ? constView.hiddenGroup : groupId;
+    }
+
+    protected _onBeforeBeginEdit(
+        e: SyntheticEvent<null>,
+        options: { item?: Model },
+        isAdd: boolean): Promise<{item: Model}> | void {
         if (!isAdd) {
             this._activeGroup = this._groupingKeyCallback(options.item);
             return;
@@ -36,11 +49,13 @@ export default class extends Control {
             model.set('id', ++this._fakeItemId);
             model.set('title', '');
             model.set('brand', this._activeGroup || 'asd');
-            return {item: model};
-        }) as unknown as Promise<{item: Model}>;
+            return model;
+        }) as unknown as Promise<Model>;
     }
 
-    private _beginAdd(): void {
+    protected _beginAdd(): void {
         this._children.list.beginAdd();
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

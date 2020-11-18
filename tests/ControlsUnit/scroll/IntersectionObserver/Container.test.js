@@ -15,23 +15,6 @@ define([
    };
 
    describe('Controls/scroll:IntersectionObserverContainer', function() {
-
-      describe('itemClick', function() {
-         it('should return event result', function() {
-            const container = new scroll.Container(options);
-            const event = {
-               type: "itemclick",
-               _bubbling: true,
-               stopped: false,
-               propagating: () => false,
-            };
-            var result = container.itemClick(event);
-            assert.isUndefined(result);
-            event.result = 'result';
-            result = container.itemClick(event);
-            assert.equal(result, 'result');
-         });
-      });
       describe('_afterMount', function() {
          it('should notify intersectionObserverRegister event', function() {
             const
@@ -43,7 +26,12 @@ define([
             sinon.assert.calledWith(
                component._notify,
                'intersectionObserverRegister',
-               [component.getInstanceId(), options.observerName, component._container, options.data],
+               [sinon.match({
+                  instId: component.getInstanceId(),
+                  observerName: options.observerName,
+                  element: component._container,
+                  data: options.data
+               })],
                { bubbling: true }
             );
             sandbox.restore();
@@ -60,7 +48,7 @@ define([
             sinon.assert.calledWith(
                component._notify,
                'intersectionObserverUnregister',
-               [component.getInstanceId()],
+               [component.getInstanceId(), options.observerName],
                { bubbling: true }
             );
             sandbox.restore();

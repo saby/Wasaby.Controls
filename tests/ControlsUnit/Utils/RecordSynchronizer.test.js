@@ -72,6 +72,24 @@ define(
             assert.equal(items.at(0).get('club'), undefined);
          });
 
+         it('is Changed by merge record', () => {
+            let editRecord = new entity.Model({
+               rawData: {
+                  id: 0,
+                  title: 'Rashford',
+                  club: 'mu'
+               },
+               keyProperty: 'id'
+            });
+            let linkedKey = 0;
+            RecordSynchronizer.mergeRecord(editRecord, items, linkedKey);
+            assert.equal(editRecord.isChanged(), false);
+
+            editRecord._setChangedField('title', 'Rashford');
+            RecordSynchronizer.mergeRecord(editRecord, items, linkedKey);
+            assert.equal(editRecord.isChanged(), true);
+         });
+
          it('delete record', () => {
             let linkedKey = 0;
             RecordSynchronizer.deleteRecord(items, linkedKey);

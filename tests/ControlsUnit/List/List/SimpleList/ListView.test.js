@@ -124,10 +124,7 @@ define([
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
 
-         lv._listModel.setMarkedKey(1);
-         assert.equal(lv._listModel.getMarkedKey(), 1);
          lv._beforeUpdate(cfg);
-         assert.equal(lv._listModel.getMarkedKey(), 2);
 
          model = new lists.ListViewModel({
             items: testData2,
@@ -157,14 +154,14 @@ define([
 
       it('should notify about resize after the list was updated with new items', function() {
          var
-            cfg = {
-               listModel: new lists.ListViewModel({
-                  items: [],
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id'
-            },
-            listView = new lists.ListView(cfg);
+             cfg = {
+                listModel: new lists.ListViewModel({
+                   items: [],
+                   keyProperty: 'id'
+                }),
+                keyProperty: 'id'
+             },
+             listView = new lists.ListView(cfg);
          listView.saveOptions(cfg);
          listView._beforeMount(cfg);
          var stub = sandbox.stub(listView, '_notify').withArgs('controlResize', [], { bubbling: true });
@@ -173,6 +170,35 @@ define([
          assert.isFalse(stub.called);
          listView._afterRender(cfg);
          assert.isTrue(stub.calledOnce);
+      });
+
+      it('set actual item padding in existing model', function() {
+         const oldItemPadding = {
+            top: 'null',
+            bottom: 'null',
+            left: 'null',
+            right: 'null'
+         };
+         const newItemPadding = {
+            top: 'xl',
+            bottom: 'xl',
+            left: 'm',
+            right: 'xs'
+         };
+         const cfg = {
+            itemPadding: newItemPadding,
+            listModel: new lists.ListViewModel({
+               items: [],
+               itemPadding: oldItemPadding,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         };
+         assert.deepEqual(cfg.listModel._options.itemPadding, oldItemPadding);
+         const listView = new lists.ListView(cfg);
+         listView.saveOptions(cfg);
+         listView._beforeMount(cfg);
+         assert.deepEqual(listView._listModel._options.itemPadding, newItemPadding);
       });
 
       it('should notify about resize only once even if the list was changed multiple times during an update', function() {
@@ -214,6 +240,10 @@ define([
          listView._listModel._notify('onListChange', 'hoveredItemChanged');
          listView._listModel._notify('onListChange', 'activeItemChanged');
          listView._listModel._notify('onListChange', 'markedKeyChanged');
+         listView._listModel._notify('onListChange', 'itemActionsUpdated');
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'marked' });
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'hovered' });
+         listView._listModel._notify('onListChange', 'collectionChanged', 'ch', { properties: 'active' });
          listView._beforeUpdate(cfg);
          listView._afterUpdate();
          assert.isTrue(stubControlResize.notCalled);
@@ -365,30 +395,10 @@ define([
                notifyStub = sandbox.stub(lv, '_notify').withArgs('itemContextMenu', [{}, {}, false]);
             lv.saveOptions(cfg);
             lv._beforeMount(cfg);
-            sandbox.stub(model, 'getEditingItemData').returns(null);
+            sandbox.stub(model, 'isEditing').returns(false);
 
             lv._onItemContextMenu({}, {});
             assert.isTrue(notifyStub.calledOnce);
-         });
-         it('itemContextMenu event shouldn\'t fire during editing', function() {
-            var
-               model = new lists.ListViewModel({
-                  items: data,
-                  keyProperty: 'id',
-                  markedKey: null
-               }),
-               cfg = {
-                  listModel: model,
-                  keyProperty: 'id',
-                  contextMenuVisibility: true
-               },
-               lv = new lists.ListView(cfg);
-            lv.saveOptions(cfg);
-            lv._beforeMount(cfg);
-            sandbox.stub(model, 'getEditingItemData').returns({});
-            sandbox.stub(lv, '_notify').withArgs('itemContextMenu').throws('itemContextMenu event shouldn\'t fire during editing');
-
-            lv._onItemContextMenu({}, {});
          });
       });
 
@@ -427,56 +437,6 @@ define([
       });
 
       describe('_afterMount', function() {
-         it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
-            var model = new lists.ListViewModel({
-               items: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id',
-               markerVisibility: 'visible'
-            });
-            var cfg = {
-               listModel: model,
-               keyProperty: 'id',
-               markerVisibility: 'visible'
-            };
-            var lv = new lists.ListView(cfg);
-            lv.saveOptions(cfg);
-            lv._beforeMount(cfg);
-            var stub = sandbox.stub(lv, '_notify').withArgs('markedKeyChanged', [1]);
-
-            lv._afterMount();
-
-            assert.isTrue(stub.calledOnce);
-         });
-
-         it('should fire markedKeyChanged if _options.markedKey has been changed', function() {
-            var model = new lists.ListViewModel({
-               items: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               }),
-               keyProperty: 'id',
-               markedKey: 0,
-               markerVisibility: 'visible'
-            });
-            var cfg = {
-               listModel: model,
-               keyProperty: 'id',
-               markedKey: 0,
-               markerVisibility: 'visible'
-            };
-            var lv = new lists.ListView(cfg);
-            lv.saveOptions(cfg);
-            lv._beforeMount(cfg);
-            var stub = sandbox.stub(lv, '_notify').withArgs('markedKeyChanged', [1]);
-
-            lv._afterMount();
-
-            assert.isTrue(stub.calledOnce);
-         });
-
          it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
             var model = new lists.ListViewModel({
                items: new collection.RecordSet({

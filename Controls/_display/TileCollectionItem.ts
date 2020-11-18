@@ -1,5 +1,4 @@
 import CollectionItem from './CollectionItem';
-import { register } from 'Types/di';
 import { TileCollection } from '../display';
 
 export default class TileCollectionItem<T> extends CollectionItem<T> {
@@ -54,21 +53,6 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         }
     }
 
-    isHovered(): boolean {
-        return this._$hovered;
-    }
-
-    setHovered(hovered: boolean, silent?: boolean): void {
-        if (this._$hovered === hovered) {
-            return;
-        }
-        this._$hovered = hovered;
-        this._nextVersion();
-        if (!silent) {
-            this._notifyItemChangeToOwner('hovered');
-        }
-    }
-
     setActive(active: boolean, silent?: boolean): void {
         // TODO This is copied from TileViewModel, but there must be a better
         // place for it. For example, somewhere in ItemAcrions container
@@ -117,8 +101,9 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         return this._$animated;
     }
 
-    getWrapperClasses(templateClickable?: boolean): string {
-        let classes = 'controls-TileView__item controls-ListView__itemV';
+    getWrapperClasses(templateClickable?: boolean, theme?: string): string {
+        let classes = `controls-TileView__item controls-listRender__tileItem
+                       controls-TileView__item_theme-${theme} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ' controls-ListView__itemV_cursor-pointer';
         }
@@ -136,11 +121,12 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         `;
     }
 
-    getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean): string {
-        let classes = 'controls-TileView__itemContent js-controls-SwipeControl__actionsContainer';
-        classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}`;
+    getTileContentClasses(templateShadowVisibility?: string, templateMarker?: boolean, theme?:string): string {
+        const theme = `_theme-${theme}`;
+        let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ItemActions__swipeMeasurementContainer`;
+        classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}${theme}`;
         if (this.isActive()) {
-            classes += ' controls-TileView__item_active';
+            classes += ` controls-TileView__item_active${theme}`;
         }
         if (this.isActive() || this.isHovered()) {
             classes += ' controls-TileView__item_hovered';
@@ -152,29 +138,30 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
             classes += ' controls-TileView__item_scaled';
         }
         if (this.isFixed()) {
-            classes += ' controls-TileView__item_fixed';
+            classes += ` controls-TileView__item_fixed controls-TileView__item_fixed${theme}`;
         }
         if (this.isSwiped()) {
-            classes += ' controls-TileView__item_swiped';
+            classes += ` controls-TileView__item_swiped${theme}`;
         }
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
         }
         if (this.shouldDisplayMarker(templateMarker)) {
-            classes += ' controls-TileView__item_withMarker';
+            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker${theme}`;
         } else {
-            classes += ' controls-TileView__item_withoutMarker';
+            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker${theme}`;
         }
         return classes;
     }
 
-    getImageWrapperClasses(templateHasTitle?: boolean): string {
+    getImageWrapperClasses(templateHasTitle?: boolean, theme: string): string {
+        const th = `_theme-${theme}`;
         let classes = 'controls-TileView__imageWrapper';
         if (this.isAnimated()) {
             classes += ' controls-TileView__item_animated';
         }
         if (templateHasTitle) {
-            classes += ' controls-TileView__imageWrapper_reduced';
+            classes += ` controls-TileView__imageWrapper_reduced${th}`;
         }
         return classes;
     }
@@ -187,17 +174,17 @@ export default class TileCollectionItem<T> extends CollectionItem<T> {
         return `height: ${height}px;`;
     }
 
-    getTitleClasses(templateHasTitle?: boolean): string {
-        let classes = 'controls-TileView__title';
+    getTitleClasses(templateHasTitle?: boolean, theme: string): string {
+        let classes = `controls-TileView__title controls-TileView__title_theme-${theme}`;
         if (!templateHasTitle) {
             classes += ' controls-TileView__title_invisible';
         }
         return classes;
     }
 
-    getMultiSelectClasses(): string {
+    getMultiSelectClasses(theme): string {
         return (
-            super.getMultiSelectClasses() +
+            super.getMultiSelectClasses(theme) +
             ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom'
         );
     }
@@ -212,4 +199,3 @@ Object.assign(TileCollectionItem.prototype, {
     _$canShowActions: false,
 });
 
-register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate: false});

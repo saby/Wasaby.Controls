@@ -1,13 +1,20 @@
-define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(TileViewModel, collection) {
+define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/entity'], function(TileViewModel, collection, entity) {
    'use strict';
 
    describe('Controls/_tile/TileView/TileViewModel', function() {
+      const urlResolver = () => '';
       var
          tileViewModel = new TileViewModel({
             tileMode: 'static',
             itemsHeight: 300,
+            tileWidth: 150,
             imageProperty: 'image',
             keyProperty: 'id',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            multiSelectPosition: 'default',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
             items: new collection.RecordSet({
                rawData: [{
                   'id': 1
@@ -15,7 +22,9 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
                   'id': 2
                }],
                keyProperty: 'id'
-            })
+            }),
+            theme: 'default',
+            displayProperty: 'title'
          });
 
       it('constructor', function() {
@@ -50,7 +59,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
          tileViewModel.setActiveItem(null);
          assert.equal(tileViewModel.getHoveredItem(), null);
          tileViewModel.setHoveredItem({key: 2});
-         tileViewModel.setActiveItem({key: 3});
+         tileViewModel.setActiveItem({key: 3, setActive: function() {return null;}});
          assert.equal(tileViewModel.getHoveredItem().key, 2);
       });
 
@@ -68,7 +77,14 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
             imageProperty: 'image',
             defaultItemWidth: 250,
             defaultShadowVisibility: 'visible',
-            itemCompressionCoefficient: 0.7
+            itemClasses: 'controls-TileView__item_spacingLeft_default_theme-default controls-TileView__item_spacingRight_default_theme-default controls-TileView__item_spacingTop_default_theme-default controls-TileView__item_spacingBottom_default_theme-default',
+            itemCompressionCoefficient: 0.7,
+            displayProperty: 'title',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            itemWidth: 150,
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
          });
       });
 
@@ -82,29 +98,94 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection'], function(T
       it('getMultiSelectClassList visible', function() {
          tileViewModel.setMultiSelectVisibility('visible');
          var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
-
-      it('getMultiSelectClassList onhover selected', function() {
-         tileViewModel.setMultiSelectVisibility('onhover');
-         tileViewModel._selectedKeys = {2: true};
-         var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
-         tileViewModel._selectedKeys = {};
-      });
 
       it('getMultiSelectClassList onhover unselected', function() {
          tileViewModel.setMultiSelectVisibility('onhover');
          var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
       });
 
-      it('getItemPaddingClasses', () => {
-         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_default controls-TileView__itemPaddingContainer_spacingRight_default');
+      it('getMultiSelectClassList onhover selected', function() {
+         tileViewModel.setMultiSelectVisibility('onhover');
+         tileViewModel.setSelectedItems([tileViewModel.getItemBySourceKey(2)], true);
+         var item = tileViewModel.getItemDataByItem(tileViewModel.getItemById(2, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox_position-default_theme-default controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom');
+      });
+
+      it('getItemsPaddingContainerClasses', () => {
+         assert.equal(tileViewModel.getItemsPaddingContainerClasses(), 'controls-TileView__itemsPaddingContainer_spacingLeft_default_theme-default controls-TileView__itemsPaddingContainer_spacingRight_default_theme-default controls-TileView__itemsPaddingContainer_spacingTop_default_theme-default controls-TileView__itemsPaddingContainer_spacingBottom_default_theme-default');
          tileViewModel.setItemPadding({left: 's', right: 'null'});
-         assert.equal(tileViewModel.getItemPaddingClasses(), 'controls-TileView__itemPaddingContainer_spacingLeft_s controls-TileView__itemPaddingContainer_spacingRight_null');
+         assert.equal(tileViewModel.getItemsPaddingContainerClasses(), 'controls-TileView__itemsPaddingContainer_spacingLeft_s_theme-default controls-TileView__itemsPaddingContainer_spacingRight_null_theme-default controls-TileView__itemsPaddingContainer_spacingTop_default_theme-default controls-TileView__itemsPaddingContainer_spacingBottom_default_theme-default');
       });
 
+      it('getItemsPaddingContainer with itemPaddingsContainerOptions', () => {
+         const tileViewModel2 = new TileViewModel({
+            tileMode: 'static',
+            itemsHeight: 300,
+            tileWidth: 150,
+            imageProperty: 'image',
+            keyProperty: 'id',
+            imageWidthProperty: 'imageWidth',
+            itemsContainerPadding: {
+               left: 's',
+               right: 'null',
+            },
+            imageHeightProperty: 'imageHeight',
+            multiSelectPosition: 'default',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
+            items: new collection.RecordSet({
+               rawData: [{
+                  'id': 1
+               }, {
+                  'id': 2
+               }],
+               keyProperty: 'id'
+            }),
+            theme: 'default',
+            displayProperty: 'title'
+         });
+         assert.equal(tileViewModel2.getItemsPaddingContainerClasses(), 'controls-TileView__itemsPaddingContainer_spacingLeft_s_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingRight_null_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingTop_default_itemPadding_default_theme-default controls-TileView__itemsPaddingContainer_spacingBottom_default_itemPadding_default_theme-default');
+      });
+
+      describe('getTileWidth', () => {
+         it('image width proportion <= 0.5', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 100,
+                  imageHeight: 200,
+               }
+            });
+            let width = tileViewModel.getTileWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, null);
+            assert.strictEqual(width, 300);
+         });
+         it('image width proportion > 1.5', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 300,
+                  imageHeight: 100,
+               }
+            });
+            let width = tileViewModel.getTileWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, null);
+            assert.strictEqual(width, 150);
+         });
+
+         it('returns custom minimal item width', () => {
+            const tileItem = new entity.Model({
+               rawData: {
+                  id: '1',
+                  imageWidth: 300,
+                  imageHeight: 100,
+               }
+            });
+            let width = tileViewModel.getTileWidth(tileItem, 'imageHeight', 'imageWidth', 'dynamic', 200, 400);
+            assert.strictEqual(width, 150);
+         });
+      });
    });
 });

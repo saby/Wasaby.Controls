@@ -21,40 +21,53 @@ define(
             assert.equal(item.position.bottom, undefined);
          });
          it('InfoBoxController: elementCreated', () => {
-            let prepareConfig = popupTemplate.InfoBoxController._prepareConfig;
-            popupTemplate.InfoBoxController._prepareConfig = () => true;
             let container = {
                style: {
                   maxWidth: 100
                }
             };
-            popupTemplate.InfoBoxController.elementCreated({
+            let item = {
                position: {
                   maxWidth: 20
                },
                popupOptions: {
-                  maxWidth: 50
+                  maxWidth: 50,
+                  target: {
+                     closest: () => false
+                  }
                }
-            }, container);
+            };
+            let prepareConfig = popupTemplate.InfoBoxController._prepareConfig;
+            popupTemplate.InfoBoxController.prepareConfig = (i, cont) => {
+               assert.equal(i, item);
+               assert.equal(cont, container);
+               return true;
+            };
+            let prepareConfigPublic = popupTemplate.InfoBoxController.prepareConfig;
+            popupTemplate.InfoBoxController.elementCreated(item, container);
             popupTemplate.InfoBoxController._prepareConfig = prepareConfig;
-            assert.equal(container.style.maxWidth, '');
+            popupTemplate.InfoBoxController.prepareConfig = prepareConfigPublic;
+            assert.equal(container.style.maxWidth, 100);
+            assert.isUndefined(item.position.maxWidth);
+            popupTemplate.InfoBoxController.elementDestroyed(item);
          });
 
          it('getCustomZIndex', () => {
             let popupList = new collection.List();
             let infoBoxItem = {
                id: 2,
-               parentId: 1
+               parentZIndex: 10
             };
             popupList.add({
                id: 1,
                currentZIndex: 10
             });
             popupList.add(infoBoxItem);
-            let zIndex = popupTemplate.InfoBoxController.getCustomZIndex(popupList, infoBoxItem);
+            const zIndexCallback = popup.Infobox._getInfoBoxConfig({}).zIndexCallback;
+            let zIndex = zIndexCallback(infoBoxItem, popupList);
             assert.equal(zIndex, 11);
-            infoBoxItem.parentId = 3;
-            zIndex = popupTemplate.InfoBoxController.getCustomZIndex(popupList, infoBoxItem);
+            infoBoxItem.parentZIndex = null;
+            zIndex = zIndexCallback(infoBoxItem, popupList);
             assert.equal(zIndex, null);
             popupList.destroy();
          });
@@ -78,6 +91,17 @@ define(
             assert.equal(newConfig.position, 'tl');
             assert.equal(newConfig.template, popup.PreviewerTemplate);
             assert.equal(newConfig.showDelay, 300, 'error showDelay');
+         });
+
+         it('PopupInfoBox: getDefaultOptions', () => {
+            let config = {
+               showIndicator: false,
+               closePopupBeforeUnmount: true,
+               actionOnScroll: 'close'
+            };
+            let newConfig = popup.Infobox.getDefaultOptions();
+
+            assert.deepEqual(newConfig, config);
          });
 
          it('PopupInfoBox: resetTimeOut', () => {

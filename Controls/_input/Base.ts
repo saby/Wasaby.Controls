@@ -1,26 +1,17 @@
 import Control = require('Core/Control');
 import Env = require('Env/Env');
 import entity = require('Types/entity');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import {isEqual} from 'Types/object';
-import getTextWidth = require('Controls/Utils/getTextWidth');
+import {tmplNotify} from 'Controls/eventUtils';
 import ViewModel = require('Controls/_input/Base/ViewModel');
-import {delay as runDelayed} from 'Types/function';
 import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
-import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
+import {hasHorizontalScroll} from 'Controls/scroll';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
+import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
+import {isEqual} from 'Types/object';
 
-import {
-    split,
-    getInputType,
-    getAdaptiveInputType,
-    IInputType,
-    INativeInputType,
-    ISplitValue
-} from 'Controls/_input/Base/InputUtil';
-import MobileFocusController from 'Controls/_input/Base/MobileFocusController';
+import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
 
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
@@ -48,70 +39,7 @@ var _private = {
      */
     WIDTH_CURSOR: 1,
 
-    HYPHEN: '–',
 
-    DASH: '—',
-
-    /**
-     * @param {Controls/_input/Base} self Control instance.
-     * @param {Object} Ctr View model constructor.
-     * @param {Object} options View model options.
-     * @param {String} value View model value.
-     */
-    initViewModel: function (self, Ctr, options, value) {
-        self._viewModel = new Ctr(options, value);
-    },
-
-    /**
-     * @param {Controls/_input/Base} self Control instance.
-     */
-    initField: function (self) {
-        /**
-         * When you mount a field in the DOM, the browser can auto fill the field.
-         * Then the displayed value in the model will not match the value in the field.
-         * In this case, you change the displayed value in the model to the value in the field and
-         * must notify the parent that the value in the field has changed.
-         */
-        _private.forField(self, function (field) {
-            if (_private.hasAutoFillField(field, self._viewModel)) {
-                self._viewModel.displayValue = field.value;
-                _private.notifyValueChanged(self);
-            }
-        });
-    },
-
-    /**
-     * @param {Controls/_input/Base} self Control instance.
-     * @param {Object} newOptions New view model options.
-     * @param {String} newValue New view model value.
-     */
-    updateViewModel: function (self, newOptions, newValue) {
-        if (!isEqual(self._viewModel.options, newOptions)) {
-            self._viewModel.options = newOptions;
-        }
-
-        if (self._viewModel.value !== newValue) {
-            self._viewModel.value = newValue;
-        }
-    },
-
-    /**
-     * @param {Controls/_input/Base} self Control instance.
-     * @param {String} value The value to be set in the field.
-     * @param {Controls/_input/Base/Types/Selection.typedef} selection The selection to be set in the field.
-     */
-    updateField: function (self, value: string, selection) {
-        _private.updateValue(self, value);
-        self._updateSelection(selection);
-    },
-
-    updateValue: function (self, value) {
-        const field = self._getField();
-
-        if (field.value !== value) {
-            field.value = value;
-        }
-    },
 
     /**
      * Determines whether the value of the selection in the field with the checked value is equal.
@@ -121,19 +49,6 @@ var _private = {
      */
     hasSelectionChanged: function (field, selection) {
         return field.selectionStart !== selection.start || field.selectionEnd !== selection.end;
-    },
-
-    /**
-     * Determinate whether the field has been auto fill.
-     * @param {HTMLInputElement} field
-     * @param {String} modelValue
-     * @return {Boolean}
-     */
-    hasAutoFillField: function (field: HTMLInputElement, model: ViewModel) {
-        const fieldValue: string = field.value;
-        const modelValue: string = model.displayValue;
-
-        return fieldValue !== '' && fieldValue !== modelValue;
     },
 
     isFieldFocused: function (self) {
@@ -158,18 +73,15 @@ var _private = {
         return isEdge && model.displayValue === valueField && model.selection.start === model.selection.end;
     },
 
-    callChangeHandler: function (self) {
-        if (self._viewModel.displayValue !== self._fixedDisplayValue) {
-            self._changeHandler();
-            self._fixedDisplayValue = self._viewModel.displayValue;
-        }
-    },
-
     /**
      * @param {Controls/_input/Base} self Control instance.
      */
     notifyValueChanged: function (self) {
         self._notify('valueChanged', [self._viewModel.value, self._viewModel.displayValue]);
+    },
+
+    notifyInputControl: function (self) {
+        self._notify('inputControl', [self._viewModel.value, self._viewModel.displayValue, self._viewModel.selection]);
     },
 
     /**
@@ -179,83 +91,6 @@ var _private = {
         self._notify('inputCompleted', [self._viewModel.value, self._viewModel.displayValue]);
     },
 
-    /**
-     * @param {Controls/_input/Base} self Control instance.
-     * @param splitValue Parsed value after user input.
-     * @param inputType Type of user input.
-     */
-    handleInput: function (self, splitValue: ISplitValue, inputType) {
-        const displayValue: string = self._viewModel.displayValue;
-
-        if (self._viewModel.handleInput(splitValue, inputType)) {
-            if (self._options.inputCallback) {
-                const formattedText = self._options.inputCallback({
-                    value: self._viewModel.value,
-                    position: self._viewModel.selection.start,
-                    displayValue: self._viewModel.displayValue
-                });
-
-                self._viewModel.displayValue = formattedText.displayValue;
-                self._viewModel.selection = formattedText.position;
-            }
-
-            if (self._viewModel.displayValue !== displayValue) {
-                _private.notifyValueChanged(self);
-            }
-        }
-    },
-
-    /**
-     * Calculate what type of input was carried out by the user.
-     * @param {Controls/_input/Base} self Control instance.
-     * @param {String} oldValue The value of the field before user input.
-     * @param {String} newValue The value of the field after user input.
-     * @param {Number} position The caret position of the field after user input.
-     * @param {Controls/_input/Base/Types/Selection.typedef} selection The selection of the field before user input.
-     * @param {Controls/_input/Base/Types/NativeInputType.typedef} [nativeInputType]
-     * The value of the type property in the handle of the native input event.
-     * @return {Controls/_input/Base/Types/InputType.typedef}
-     */
-    calculateInputType: function (self, oldValue, newValue, position, selection, nativeInputType): IInputType {
-        /**
-         * On Android if you have enabled spell check and there is a deletion of the last character
-         * then the type of event equal insertCompositionText.
-         * However, in this case, the event type must be deleteContentBackward.
-         * Therefore, we will calculate the event type.
-         */
-        if (self._isMobileAndroid && nativeInputType === 'insertCompositionText') {
-            return getInputType(oldValue, newValue, position, selection);
-        }
-
-        return nativeInputType
-            ? getAdaptiveInputType(nativeInputType, selection)
-            : getInputType(oldValue, newValue, position, selection);
-    },
-
-    /**
-     * @param {String} pastedText
-     * @param {String} displayedText
-     * @param {Controls/_input/Base/Types/Selection.typedef} selection
-     * @return {Controls/_input/Base/Types/SplitValue.typedef}
-     */
-    calculateSplitValueToPaste: function (pastedText, displayedText, selection): ISplitValue {
-        return {
-            before: displayedText.substring(0, selection.start),
-            insert: pastedText,
-            delete: displayedText.substring(selection.start, selection.end),
-            after: displayedText.substring(selection.end)
-        };
-    },
-
-    /**
-     * Change the location of the visible area of the field so that the cursor is visible.
-     * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
-     * the cursor is visible in the middle of the area.
-     * @param {Controls/_input/Base} self Control instance.
-     * @param {Node} field
-     * @param {String} value
-     * @param {Controls/_input/Base/Types/Selection.typedef} selection
-     */
     recalculateLocationVisibleArea: function (self, field, value, selection) {
         var textWidthBeforeCursor = self._getTextWidth(value.substring(0, selection.end));
 
@@ -324,27 +159,24 @@ var _private = {
         return width;
     },
 
-    saveSelection: function (self) {
-        /**
-         * Input processing occurs on the input event. At the time of processing,
-         * the data in the field has already changed. To work properly,
-         * we need to know the selection before the changes. To do this, save it in the model.
-         */
-        self._viewModel.selection = self._getFieldSelection();
-        /**
-         * If the model is changed, we apply all changes and inform the model that the changes are applied.
-         * The selection changes after a user action. Therefore, we do not need to change anything ourselves,
-         * only to inform the model about it.
-         */
-        self._viewModel.changesHaveBeenApplied();
-    },
-
     compatAutoComplete: function (autoComplete) {
         if (typeof autoComplete === 'boolean') {
             return autoComplete ? 'on' : 'off';
         }
 
         return autoComplete;
+    },
+
+    updateViewModel: function (self, newOptions, newValue) {
+        if (!isEqual(self._viewModel.options, newOptions)) {
+            self._viewModel.options = newOptions;
+        }
+
+        if (self._viewModel.value !== newValue) {
+            self._viewModel.value = newValue;
+        }
+
+        _private.updateSelectionByOptions(self, newOptions);
     },
 
     getValue: function (self, options) {
@@ -357,25 +189,43 @@ var _private = {
         }
 
         return self._defaultValue;
+    },
+
+    updateSelectionByOptions: function(self, options) {
+        if (
+            options.hasOwnProperty('selectionStart') &&
+            options.hasOwnProperty('selectionEnd') &&
+            (self._options.selectionStart !== options.selectionStart || self._options.selectionEnd !== options.selectionEnd)
+        ) {
+            self._viewModel.selection = {
+                start: options.selectionStart,
+                end: options.selectionEnd
+            };
+        }
     }
 };
 
 /**
  * Базовый класс для текстовых полей ввода.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+ *
  * @class Controls/_input/Base
- * @extends UI/_base/Control
- *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_input/interface/ITag
- * @mixes Controls/_input/interface/IValue
- * @mixes Controls/_interface/IValidationStatus
- *
+ * @extends UI/Base:Control
+ * @implements Controls/interface:IHeight
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IBorderStyle
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IValidationStatus
+ * @implements Controls/input:IBase
+ * @implements Controls/input:ITag
+ * @implements Controls/input:IValue
+ * @implements Controls/input:IBorderVisibility
+ * @implements Controls/input:IPadding
+ * @implements Controls/input:ISelection
  * @public
- *
  * @author Красильников А.С.
  */
 
@@ -415,8 +265,6 @@ var Base = Control.extend({
 
     _wasActionUser: true,
 
-    _firstFocus: true,
-
     /**
      * @type {Controls/Utils/tmplNotify}
      * @protected
@@ -438,6 +286,11 @@ var Base = Control.extend({
     _type: 'text',
 
     /**
+     * Значение атрибута inputmode в нативном поле ввода.
+     */
+    _inputMode: 'text',
+
+    /**
      * @type {String} Value of the name attribute in the native field.
      * @protected
      */
@@ -455,40 +308,8 @@ var Base = Control.extend({
      */
     _roundBorder: false,
 
-    /**
-     * @type {Number} The number of skipped save the current field selection to the model.
-     * @private
-     */
-    _numberSkippedSaveSelection: 0,
-
-    /**
-     * Зафиксированное отображаемое значение.
-     * @remark
-     * Значение фиксируется после события inputCompleted. Или после изменения отображаемого значения, в результате изменения родителем опции value.
-     * Требуется для определения вызова события inputCompleted. Одним из условий является, что текущее значение отличается от зафиксированного.
-     * @type {String}
-     * @private
-     */
-    _fixedDisplayValue: null,
-
     _updateSelection: function (selection) {
-        const field: HTMLInputElement = this._getField();
-
-        /**
-         * In IE, change the selection leads to the automatic focusing of the field.
-         * Therefore, we change it only if the field is already focused.
-         */
-        if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(this)) {
-            /**
-             * After calling setSelectionRange the select event is triggered and saved the selection in model.
-             * Bug detected in all browsers except IE. Can check with the demo https://jsfiddle.net/xcnmbg9e/
-             * Do not need to do this because the model is now the actual selection.
-             */
-            if (!this._isIE) {
-                this._numberSkippedSaveSelection++;
-            }
-            field.setSelectionRange(selection.start, selection.end);
-        }
+        return this._getField().setSelectionRange(selection.start, selection.end);
     },
 
     /**
@@ -508,7 +329,7 @@ var Base = Control.extend({
     },
 
     /**
-     * @type {Controls/Utils/hasHorizontalScroll}
+     * @type {Controls/_utils/sizeUtils/hasHorizontalScroll}
      * @private
      */
     _hasHorizontalScroll: hasHorizontalScroll,
@@ -543,6 +364,13 @@ var Base = Control.extend({
      * @private
      */
     _isEdge: null,
+
+    /**
+     * Содержит методы для исправления багов полей ввода связанных с нативным поведением в браузерах.
+     */
+    _fixBugs: null,
+
+    _currentVersionModel: null,
 
     /**
      * @type {Controls/_input/Render#style}
@@ -589,12 +417,13 @@ var Base = Control.extend({
 
     _beforeMount: function (options) {
         this._autoComplete = _private.compatAutoComplete(options.autoComplete);
-
-        const viewModelCtr = this._getViewModelConstructor();
-        const viewModelOptions = this._getViewModelOptions(options);
-
+        const ctr = this._getViewModelConstructor();
+        this._viewModel = new ctr(
+            this._getViewModelOptions(options),
+            _private.getValue(this, options)
+        );
+        _private.updateSelectionByOptions(this, options);
         this._initProperties(options);
-        _private.initViewModel(this, viewModelCtr, viewModelOptions, _private.getValue(this, options));
 
         if (this._autoComplete !== 'off') {
             /**
@@ -613,8 +442,6 @@ var Base = Control.extend({
                 }
             }
         }
-
-        this._fixedDisplayValue = this._viewModel.displayValue;
         /**
          * Placeholder is displayed in an empty field. To learn about the emptiness of the field
          * with AutoFill enabled is possible through css or the status value from <input>.
@@ -624,45 +451,21 @@ var Base = Control.extend({
     },
 
     _afterMount: function () {
-        _private.initField(this);
-
         this._hidePlaceholder = false;
     },
 
     _beforeUpdate: function (newOptions) {
         const newViewModelOptions = this._getViewModelOptions(newOptions);
-        const oldDisplayValue = this._viewModel.displayValue;
-
+        this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         _private.updateViewModel(this, newViewModelOptions, _private.getValue(this, newOptions));
-
-        /**
-         * Когда опция readOnly меняется, тогда перестраивается верстка. В режиме чтения рисуется <div>, в режиме
-         * редактирования <input>. Элемент <input> при создании может иметь позицию каретки отличную от позиции в модели.
-         * Начальная позиция управляется браузером. Поэтому при фокусировке происходит обновление позиции каретки в соответствии с моделью.
-         * Так происходит только при первой фокусировке. Потому что в дальнейшем позиция управляется только контролом, а значит позиция
-         * уже будет соответствать модели. Будем считать, что пересоздавая <input>, работа с фокусом начинается заново.
-         */
-        if (this._options.readOnly === false && newOptions.readOnly === true) {
-            this._firstFocus = true;
-        } else if (this._options.readOnly === true && newOptions.readOnly === false) {
-            // oldDisplayValue запоминается при клике на поле ввода. Если контрол был задизаблен и прикладной разработчик по
-            // клику на поле ввода меняет опцию readonly с true на false, то обработчик на клик не вызовется, т.к. в режиме
-            // readOnly поле ввода не отображается. Подробнее:
-            // TODO: https://online.sbis.ru/opendoc.html?guid=ba1ec63e-1915-499d-9e05-babfa3b79b41
-            this._viewModel._oldDisplayValue = oldDisplayValue;
-        }
-
-        const displayValueChangedByParent: boolean = oldDisplayValue !== this._viewModel.displayValue;
-        if (displayValueChangedByParent) {
-            this._fixedDisplayValue = this._viewModel.displayValue;
-        }
+        _private.updateSelectionByOptions(this, newOptions);
     },
 
     /**
      * @param {Object} options Control options.
      * @protected
      */
-    _initProperties: function () {
+    _initProperties: function (options) {
         /**
          * Init the name of the control and to pass it to the templates.
          * Depending on it, classes will be generated. An example of class is controls-{{controlsName}}...
@@ -677,7 +480,10 @@ var Base = Control.extend({
             scope: {
                 controlName: CONTROL_NAME,
                 autoComplete: this._autoComplete,
+                inputMode: this._inputMode,
+                inputCallback: options.inputCallback,
                 calculateValueForTemplate: this._calculateValueForTemplate.bind(this),
+                recalculateLocationVisibleArea: this._recalculateLocationVisibleArea.bind(this),
                 isFieldFocused: _private.isFieldFocused.bind(_private, this)
             }
         };
@@ -687,12 +493,12 @@ var Base = Control.extend({
                 controlName: CONTROL_NAME
             }
         };
-        this._beforeFieldWrapper = {
-            template: null,
+        this._leftFieldWrapper = {
+            template: options.leftFieldTemplate,
             scope: {}
         };
-        this._afterFieldWrapper = {
-            template: null,
+        this._rightFieldWrapper = {
+            template: options.rightFieldTemplate,
             scope: {}
         };
 
@@ -719,153 +525,37 @@ var Base = Control.extend({
         this._notify('mouseenter', [event]);
     },
 
+    _cutHandler: function () {
+        // redefinition
+    },
+    _copyHandler: function () {
+        // redefinition
+    },
+    _keyUpHandler: function () {
+        // redefinition
+    },
     _keyDownHandler: function (event) {
-        const processedKeys: number[] = [
-            Env.constants.key.end,
-            Env.constants.key.home,
-            Env.constants.key.left,
-            Env.constants.key.right
-        ];
-
-        /**
-         * The keys processed by the input field should not handle the controls above.
-         * To do this, stop the bubbling of the event.
-         */
-        /**
-         * Клавиши обрабатываемые полем ввода не должны обрабатывать контролы выше.
-         * Для этого останавливаем всплытие события.
-         */
-        if (processedKeys.includes(event.nativeEvent.keyCode)) {
-            event.stopPropagation();
-        }
-
-        const keyCode = event.nativeEvent.keyCode;
-        if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
-            _private.callChangeHandler(this);
-        }
+        processKeydownEvent(event);
     },
-    /**
-     * Event handler key up in native field.
-     * @param {Object} event Event descriptor.
-     * @private
-     */
-    _keyUpHandler: function (event) {
-        const keyCode = event.nativeEvent.keyCode;
-
-        /**
-         * Clicking the arrows and keys home, end moves the cursor.
-         */
-        if (keyCode >= Env.constants.key.end && keyCode <= Env.constants.key.down) {
-            _private.saveSelection(this);
-        }
+    _selectHandler: function () {
+        // redefinition
     },
-
+    _focusOutHandler: function () {
+        // redefinition
+    },
+    _touchStartHandler: function () {
+        // redefinition
+    },
     /**
      * Event handler click in native field.
      * @private
      */
     _clickHandler: function () {
-        var self = this;
-
-        /**
-         * If the value in the field is selected, when you click on the selected area,
-         * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
-         * Therefore, we remember the selection from the field at the next drawing cycle.
-         */
-        runDelayed(function () {
-            self._viewModel.selection = self._getFieldSelection();
-
-            /**
-             * Changes are applied during the synchronization cycle. We are not in it,
-             * so we need to inform the model that the changes have been applied.
-             */
-            self._viewModel.changesHaveBeenApplied();
-        });
-
         this._firstClick = false;
     },
 
-    /**
-     * Event handler select in native field.
-     * @private
-     */
-    _selectHandler: function () {
-        if (this._numberSkippedSaveSelection > 0) {
-            this._numberSkippedSaveSelection--;
-        } else {
-            _private.saveSelection(this);
-        }
-    },
-
     _inputHandler: function (event) {
-        var field = this._getField();
-        var model = this._viewModel;
-        var value = model.oldDisplayValue;
-        var selection = model.oldSelection;
-        var newValue = field.value;
-        var position = field.selectionEnd;
-
-        const inputType: IInputType = _private.calculateInputType(
-            this, value, newValue, position,
-            selection, event.nativeEvent.inputType
-        );
-        const splitValue: ISplitValue = split(value, newValue, position, selection, inputType);
-
-        /**
-         * The iPad has a feature to replace the twice-entered "-" with hyphen or dash.
-         * After the second input, the previous character is deleted and, the hyphen or dash is entered.
-         * An error occurs if the previous character is not "-". For example, during the previous processing "-"
-         * could not be entered because of the logic of the control. The previous character must not be deleted in this case.
-         * It is necessary to restore it and consider that entered "-".
-         */
-        if (this._isMobileIOS) {
-            if (this._remoteChar && (splitValue.insert === _private.HYPHEN || splitValue.insert === _private.DASH)) {
-                splitValue.before += this._remoteChar;
-                splitValue.insert = '-';
-            }
-
-            this._remoteChar = inputType === 'deleteBackward' && splitValue.delete !== '-' ? splitValue.delete : '';
-        }
-
-        _private.handleInput(this, splitValue, inputType);
-
-        /**
-         * Некоторые браузеры предоставляют возможность пользователю выбрать значение из предложенного списка.
-         * Список формируется на основе введенного слова, путем попытки предугадать, какое слово вы пытаетесь набрать.
-         * Выбранное значение полностью заменяет введенное слово.
-         * Опытным путем удалось определить, что после ввода возможны 2 сценария:
-         * 1. Каретка стоит в конце слова. Свойство selectionStart = selectionEnd = конец слова. Например, устройство ASUS_Z00AD, Android 5, браузер chrome.
-         * 2. Слово выделено целиком. Свойство selectionStart = 0, а selectionEnd = конец слова. Например, устройство ASUS_Z00AD, Android 5, встроенный браузер.
-         * Данные в первом случае ничем не отличаются от обычного ввода, поэтому он не вызывает проблем.
-         * Разберем работу контрола во втором случае. Контрол всегда должен отображаться в соответствии со своей моделью.
-         * После ввода selectionStart в модели равен текущей позиции каретки, а у поля, как говорилось ранее, selectionStart = 0. Из-за этого контрол будет менять выделение.
-         * В этом случае возникает нативный баг. Он проявляется в том, что последующего ввода символов не происходит. https://jsfiddle.net/fxzsqug4/1/
-         * Чтобы избавиться от бага, нужно поставить операцию изменения выделение в конец стека.
-         * Например, можно воспользоваться setTimeout. https://jsfiddle.net/fxzsqug4/2/
-         * Однако, можно просто не синхронизироваться с моделью во время обработки события input.
-         * Потому что модель синхронизируется с полем во время цикла синхронизации, если изменения
-         * не были применены (у модели не был вызван метод changesHaveBeenApplied). Такой подход увеличит время перерисоки,
-         * но в местах с багом этого визуально не заметно.
-         */
-        if (!this._isMobileAndroid) {
-            _private.updateField(this, model.displayValue, model.selection);
-            model.changesHaveBeenApplied();
-        }
-    },
-
-    /**
-     * Handler for the change event.
-     * @remark
-     * The handler cannot be called through a subscription to the change event in the control template.
-     * The reason is that the native event does not work in all browsers.
-     * Therefore you need to call it on focus in or press enter.
-     * Bug in firefox: If the value in the field after the input event is not changed,
-     * but changed after a timeout, then the browser considers that it has not changed and event is not triggered.
-     * https://jsfiddle.net/v6g0fz7u/
-     * @protected
-     */
-    _changeHandler: function () {
-        _private.notifyInputCompleted(this);
+        // redefinition
     },
 
     _placeholderClickHandler: function () {
@@ -884,57 +574,14 @@ var Base = Control.extend({
     },
 
     _focusInHandler: function (event) {
-        let firstFocusByTab = this._firstFocus;
-
         if (this._options.selectOnClick) {
             this._viewModel.select();
         }
 
         if (this._focusByMouseDown) {
-            firstFocusByTab = false;
             this._firstClick = true;
+            this._focusByMouseDown = false;
         }
-
-        this._focusByMouseDown = false;
-
-        MobileFocusController.focusHandler(event);
-
-        /**
-         * When a filled field was mounted, its carriage is placed at the beginning of the text. For example, in chrome, firefox,
-         * IE10-11, can still where. The carriage needs to have a position in accordance with the model. So we change it to first focus and tab.
-         */
-        if (firstFocusByTab) {
-            this._firstFocus = false;
-            this._updateSelection(this._viewModel.selection);
-        }
-    },
-
-    /**
-     * Event handler focus out in native field.
-     * @protected
-     */
-    _focusOutHandler: function (event) {
-        /**
-         * TODO: KINGO
-         * Когда меняется режим редактирования на чтения происходит перерисовка. Поле удаляется и
-         * фокус уходит. Поэтому в обработчике потери фокуса поля не будет, и все действия с ним не могут быть совершены.
-         * Обрабатываем такую ситуация проверкой на существование поля.
-         */
-        if (this._getField()) {
-            /**
-             * After the focus disappears, the field should be scrolled to the beginning.
-             * Each browser works differently. For example, chrome scrolled to the beginning.
-             * IE, Firefox does not scrolled. So we do it ourselves.
-             */
-            this._getField().scrollLeft = 0;
-        }
-
-        MobileFocusController.blurHandler(event);
-        _private.callChangeHandler(this);
-    },
-
-    _touchStartHandler: function (event) {
-        MobileFocusController.touchStartHandler(event);
     },
 
     _mouseDownHandler: function () {
@@ -982,20 +629,6 @@ var Base = Control.extend({
     },
 
     /**
-     * Get the beginning and end of the selected portion of the field's text.
-     * @return {Controls/_input/Base/Types/Selection.typedef}
-     * @private
-     */
-    _getFieldSelection: function () {
-        var field = this._getField();
-
-        return {
-            start: field.selectionStart,
-            end: field.selectionEnd
-        };
-    },
-
-    /**
      * Get the options for the view model.
      * @return {Object} View model options.
      * @private
@@ -1020,34 +653,28 @@ var Base = Control.extend({
      * @return {String} Tooltip.
      * @private
      */
-    _getTooltip: function () {
-        const valueDisplayElement: HTMLElement = this._getField() || this._getReadOnlyField();
-        const hasFieldHorizontalScroll: boolean = this._hasHorizontalScroll(valueDisplayElement);
+    _getTooltip(): string {
+        let hasFieldHorizontalScroll: boolean = false;
+        const field = this._getField();
+        const readOnlyField: HTMLInputElement = this._getReadOnlyField();
+
+        if (field) {
+            hasFieldHorizontalScroll = field.hasHorizontalScroll();
+        } else if (readOnlyField) {
+            hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
+        }
 
         return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
     },
 
     _calculateValueForTemplate: function () {
-        const model = this._viewModel;
-        const field = this._getField();
-
-        if (model.shouldBeChanged && field) {
-            this._updateFieldInTemplate();
-            model.changesHaveBeenApplied();
-
-            if (_private.isFieldFocused(this) && !field.readOnly) {
-                this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
-            }
-        }
-
-        return model.displayValue;
+        return this._viewModel.displayValue;
     },
 
-    _updateFieldInTemplate: function() {
-        const model = this._viewModel;
-        _private.updateField(this, model.displayValue, model.selection);
-    },
-
+    /**
+     * Изменение расположения видимой области поля так, чтобы отобразился курсор.
+     * Если курсор виден, расположение не изменяется. В противном случае новое местоположение будет таким, что курсор отобразится в середине области.
+     */
     _recalculateLocationVisibleArea: function (field, displayValue, selection) {
         if (displayValue.length === selection.end) {
             /**
@@ -1068,15 +695,8 @@ var Base = Control.extend({
         _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
     },
 
-    _isTriggeredChangeEventByEnterKey: function () {
-        return true;
-    },
-
-    paste: function (text) {
-        var model = this._viewModel;
-        var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
-
-        _private.handleInput(this, splitValue, 'insert');
+    paste(text: string): void {
+        this._getField().paste(text);
     }
 });
 
@@ -1086,13 +706,14 @@ Base._private = _private;
 
 Base.getDefaultOptions = function () {
     return {
+        ...getDefaultPaddingOptions(),
         tooltip: '',
-        style: 'info',
-        size: 'default',
+        inlineHeight: 'default',
         placeholder: '',
         textAlign: 'left',
         autoComplete: 'off',
-        fontStyle: 'default',
+        fontSize: 'm',
+        fontColorStyle: 'default',
         spellCheck: true,
         selectOnClick: false
     };
@@ -1100,8 +721,10 @@ Base.getDefaultOptions = function () {
 
 Base.getOptionTypes = function () {
     return {
-
+        ...getOptionPaddingTypes(),
         value: entity.descriptor(String, null),
+        selectionStart: entity.descriptor(Number),
+        selectionEnd: entity.descriptor(Number),
         tooltip: entity.descriptor(String),
         /*autoComplete: entity.descriptor(String).oneOf([
          'on',
@@ -1120,28 +743,9 @@ Base.getOptionTypes = function () {
          * https://online.sbis.ru/opendoc.html?guid=af7e16d7-139f-4414-b7af-9e3a1a0dae05
          * placeholder: entity.descriptor(String, Function, Array),
          */
-        size: entity.descriptor(String).oneOf([
-            's',
-            'm',
-            'l',
-            'default'
-        ]),
-        fontStyle: entity.descriptor(String).oneOf([
-            'default',
-            'primary',
-            'secondary'
-        ]),
         textAlign: entity.descriptor(String).oneOf([
             'left',
             'right'
-        ]),
-        style: entity.descriptor(String).oneOf([
-            'info',
-            'danger',
-            'invalid',
-            'primary',
-            'success',
-            'warning'
         ]),
         tagStyle: entity.descriptor(String).oneOf([
             'info',
@@ -1155,4 +759,3 @@ Base.getOptionTypes = function () {
 };
 
 export = Base;
-

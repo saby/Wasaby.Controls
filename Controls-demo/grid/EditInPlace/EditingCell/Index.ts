@@ -1,65 +1,85 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/EditInPlace/EditingCell/EditingCell"
-import {Memory} from "Types/source"
-import {getEditing} from "../../DemoHelpers/DataCatalog"
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/EditInPlace/EditingCell/EditingCell';
+import {Memory} from 'Types/source';
+import {getEditing, IColumnRes} from '../../DemoHelpers/DataCatalog';
+import {showType} from 'Controls/Utils/Toolbar';
 import 'wml!Controls-demo/grid/EditInPlace/EditingCell/_cellEditor';
-
-import 'css!Controls-demo/Controls-demo'
+import {Model, Record} from 'Types/entity';
+import { TItemsReadyCallback } from 'Controls-demo/types';
+import {RecordSet} from 'Types/collection';
+import { IItemAction } from 'Controls/itemActions';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
-    private _columns = getEditing().getEditingColumns();
-    private _markedKey;
-    private _dataLoadCallback = this._dataCallback.bind(this);
-    private _items;
-    private _viewModel;
-    private _showType = {
-        //show only in Menu
-        MENU: 0,
-        //show in Menu and Toolbar
-        MENU_TOOLBAR: 1,
-        //show only in Toolbar
-        TOOLBAR: 2
-    };
-    private _itemActions = [{
+    protected _viewSource: Memory;
+    protected _columns: IColumnRes[] = getEditing().getEditingColumns();
+    protected _markedKey: number;
+    protected _dataLoadCallback: TItemsReadyCallback = this._dataCallback.bind(this);
+    protected _items: RecordSet;
+    protected _lastId: number;
+    protected _selectedKeys: number[] = [];
+    protected _viewModel: unknown;
+
+    protected _itemActions: IItemAction = [{
         id: 1,
         icon: 'icon-Erase icon-error',
         title: 'delete',
         style: 'bordered',
-        showType: this._showType.MENU_TOOLBAR,
-        handler: function(item) {
+        showType: showType.TOOLBAR,
+        handler: function(item: Record): void {
             this._children.remover.removeItems([item.get('id')]);
         }.bind(this)
-    },]
+    }];
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
+        const data = getEditing().getEditingData();
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: getEditing().getEditingData()
+            data
         });
+        this._lastId = data.length + 1;
     }
 
-    protected _afterMount() {
+    protected _afterMount(): void {
         this._viewModel = this._children.list._children.listControl._children.baseControl.getViewModel();
     }
 
-    private _dataCallback(items) {
+    private _dataCallback(items: RecordSet): void {
         this._items = items;
     }
 
-    private _afterItemsRemove(e,i) {
+    protected _afterItemsRemove(): void {
         this._toggleAddButton();
     }
 
-    private _toggleAddButton() {
+    protected _beginAdd(): void {
+        this._children.list.beginAdd({
+           item: new Model({
+              keyProperty: 'id',
+              rawData: {
+                 id: this._lastId++,
+                 title: '',
+                 description: '',
+                 price: '',
+                 balance: '',
+                 balanceCostSumm: '',
+                 reserve: '',
+                 costPrice: ''
+              }
+           })
+        });
+    }
+
+    private _toggleAddButton(): void {
+        // tslint:disable-next-line
         const self = this;
         this._viewSource.query().addCallback((items) => {
             const rawData = items.getRawData();
-            const getSumm = (title) => rawData.items.reduce((acc, cur) => {
+            const getSumm = (title) => rawData.items.reduce((acc: number, cur: unknown) => {
+                // tslint:disable-next-line
                 acc += parseInt(cur[title], 10) || 0;
                 return acc;
-            }, 0)
+            }, 0);
             const newColumns = self._columns.map((cur) => {
                 if (cur.results || cur.results === 0) {
                     return {
@@ -67,9 +87,11 @@ export default class extends Control {
                     };
                 }
                 return cur;
-            })
+            });
             self._columns = newColumns;
             return items;
         });
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

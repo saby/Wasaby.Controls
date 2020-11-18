@@ -11,7 +11,6 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'wml!Controls-demo/Dropdown/resources/headerTemplate',
    'wml!Controls-demo/Dropdown/resources/footerTemplate',
    'wml!Controls-demo/Dropdown/resources/contentTemplate',
-   'css!Controls-demo/Dropdown/MenuVdom',
    'Types/collection' // TODO: удалить это когда появится асинк и технология патчинга jsLinks
    // сейчас зависимость тянется асинхронно и десериализовать данные пытаемся раньше, чем это произойдет
 ], function(Control, template, cClone, source, ControlsConstants) {
@@ -123,7 +122,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
                { parent: null, '@parent': true },
                { parent: null, '@parent': false },
                { parent: null, '@parent': true },
-               { parent: '1', '@parent': false },
+               { parent: '1', '@parent': true },
                { parent: '4', '@parent': false },
                { parent: '4', '@parent': false },
                { parent: '3', '@parent': true },
@@ -182,5 +181,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
          }
       }
    );
+   ModuleClass._styles = ['Controls-demo/Dropdown/MenuVdom'];
+
    return ModuleClass;
 });

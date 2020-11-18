@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 export default {
    _managerWrapper: null,
    _globalPopup: null,
+   _theme: undefined,
    registerManager: function(ManagerWrapper) {
       this._managerWrapper = ManagerWrapper;
    },
@@ -18,6 +19,13 @@ export default {
    },
    getGlobalPopup: function() {
       return this._globalPopup;
+   },
+   getTheme(): string {
+      return this._theme;
+   },
+   setTheme(theme: string): void {
+      this._theme = theme;
+      this._managerWrapper?.setTheme(theme);
    },
    registerGlobalPopupOpeners: function(GlobalPopupOpeners) {
       this._globalPopupOpeners = GlobalPopupOpeners;
@@ -40,6 +48,14 @@ export default {
          this._managerWrapper.unregisterListener(event, registerType, component);
       }
    },
+
+   getMaxZIndex: function() {
+      if (this._managerWrapper) {
+         return this._managerWrapper.getMaxZIndex();
+      }
+      return 0;
+   },
+
    startResizeEmitter(): void {
       if (this._managerWrapper) {
          const eventCfg = {

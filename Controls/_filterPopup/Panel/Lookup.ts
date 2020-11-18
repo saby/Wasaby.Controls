@@ -1,126 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import {Logger} from 'UI/Utils';
-import 'Controls/lookup';
-
-/**
- * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
- * Здесь вы можете увидеть <a href="/materials/demo-ws4-engine-selector-lookup">демо пример</a>.
- * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
- * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
- * Если хотите расположить поле связи с кнопкой-ссылкой в одну строку, необходимо на корневой элемет навесить класс 'ws-flexbox'.
- *
- * @class Controls/_filterPopup/Panel/Lookup
- * @extends Core/Control
- * @mixes Controls/_interface/ILookup
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/ISuggest
- * @mixes Controls/interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/_interface/ISorting
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_input/interface/IText
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
- * @mixes Controls/_lookup/BaseLookupView/LookupStyles
- * @control
- * @public
- * @author Капустин И.А.
- *
- * @css @spacing_FilterPanelLookup-between-lookup-link Отступ между полем связи и кнопкой-ссылкой, когда они расположены на одной строке.
- */
-/*
- * Label with a Lookup. While the collection is empty - the Lookup is hidden.
- * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
- * If you use the link to open the directory inside the tooltip of the input field, you will need {@link Controls/lookup:Link}.
- * If you want to make a dynamic placeholder of the input field, which will vary depending on the selected collection, use {@link Controls/lookup:PlaceholderChooser}.
- *
- * @class Controls/_filterPopup/Panel/Lookup
- * @extends Core/Control
- * @mixes Controls/_interface/ILookup
- * @mixes Controls/interface/ISelectedCollection
- * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/interface/ISuggest
- * @mixes Controls/interface/ISearch
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/_interface/ISorting
- * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_input/interface/IText
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/interface/IInputField
- * @mixes Controls/interface/IInputStyle
- * @mixes Controls/_lookup/BaseLookupView/LookupStyles
- * @control
- * @public
- * @author Kapustin I.A.
- */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#caption
- * @cfg {String} Caption
- */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#emptyText
- * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
- */
-
-   /**
-    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
-    * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
-    * @default Controls/_lookup/Lookup
-    * @example
-    * <pre>
-    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
-    * </pre>
-    */
-
-   /*
-    * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
-    * @cfg {String} Name of the control with same interface as Lookup.
-    * @default Controls/_lookup/Lookup
-    * @example
-    * <pre>
-    *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
-    * </pre>
-    */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
- * @cfg {String} Name of the control with same interface as Lookup.
- * @default Controls/_lookup/Lookup
- * @example
- * <pre>
- *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
- * </pre>
- */
-
-/**
- * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
- * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
- * @example
- * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
- * <pre>
- *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
- * </pre>
- */
-
-
 
 var _private = {
    getLookup: function(self) {
@@ -141,7 +22,70 @@ var _private = {
       return caption;
    }
 };
-
+/**
+ * Метка с полем связи. Пока коллекция пуста - поле связи скрыто.
+ *
+ * @remark
+ * Если вы используете внутри подсказки поля ввода ссылку на открытие справочника - вам понадобиться {@link Controls/lookup:Link}.
+ * Если вы хотите сделать динамичную подсказку поля ввода, которая будет меняться в зависимости от выбранной коллекции, используйте {@link Controls/lookup:PlaceholderChooser}.
+ * Если хотите расположить поле связи с кнопкой-ссылкой в одну строку, необходимо на корневой элемет навесить класс 'ws-flexbox'.
+ *
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
+ *
+ * @class Controls/_filterPopup/Panel/Lookup
+ * @extends Core/Control
+ * @mixes Controls/_interface/ILookup
+ * @mixes Controls/interface/ISelectedCollection
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/ISorting
+ * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/input:IValue
+ * @mixes Controls/_interface/ISelectorDialog
+ * @public
+ * @author Герасимов А.М.
+ * 
+ * @demo Controls-demo/Lookup/Index
+ */
+/*
+ * Label with a Lookup. While the collection is empty - the Lookup is hidden.
+ * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FLookup%2FIndex">demo-example</a>.
+ * If you use the link to open the directory inside the tooltip of the input field, you will need {@link Controls/lookup:Link}.
+ * If you want to make a dynamic placeholder of the input field, which will vary depending on the selected collection, use {@link Controls/lookup:PlaceholderChooser}.
+ *
+ * @class Controls/_filterPopup/Panel/Lookup
+ * @extends Core/Control
+ * @mixes Controls/_interface/ILookup
+ * @mixes Controls/interface/ISelectedCollection
+ * @mixes Controls/interface/ISelectorDialog
+ * @mixes Controls/interface/ISuggest
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IMultiSelectable
+ * @mixes Controls/_interface/ISorting
+ * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/_input/interface/IText
+ * @mixes Controls/_interface/IHeight
+ * @mixes Controls/_interface/IFontSize
+ * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/interface/IInputTag
+ * @mixes Controls/input:IValue
+ *
+ * @public
+ * @author Kapustin I.A.
+ */
 var Lookup = Control.extend({
    _template: template,
    _notifyHandler: tmplNotify,
@@ -150,6 +94,7 @@ var Lookup = Control.extend({
 
    _beforeMount: function(options) {
       this._caption = _private.getCaption(this, options);
+      this._passed = !!options.selectedKeys?.length;
    },
 
    _beforeUpdate: function(newOptions) {
@@ -191,6 +136,46 @@ Lookup.getDefaultOptions = function() {
       lookupTemplateName: 'Controls/lookup:Input'
    };
 };
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#caption
+ * @cfg {String} Caption
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#emptyText
+ * @cfg {String} Текст ссылки, который отображается до первого выбора записи в контролле.
+ */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+ * @cfg {String} Имя контрола с тем же интерфейсом, что и Lookup.
+ * @default Controls/_lookup/Lookup
+ * @example
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+ * </pre>
+ */
+
+/*
+   * @name Controls/_filterPopup/Panel/Lookup#lookupTemplateName
+   * @cfg {String} Name of the control with same interface as Lookup.
+   * @default Controls/_lookup/Lookup
+   * @example
+   * <pre>
+   *   <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup"/>
+   * </pre>
+   */
+
+/**
+ * @name Controls/_filterPopup/Panel/Lookup#lookupClassName
+ * @cfg {String} Класс, который вешается на корневой элемент шаблона lookupTemplateName
+ * @example
+ * На корневой элемент шаблона "namePace/Lookup" навешивается класс "myClass"
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Lookup lookupTempalteName="namePace/Lookup" lookupClassName="myClass"/>
+ * </pre>
+ */
 
 export = Lookup;
 

@@ -9,6 +9,11 @@ export interface ILegendOptions extends IControlOptions {
 /**
  * Контрол используют для создания легенды к диаграмме состояния процесса (см. {@link https://wi.sbis.ru/docs/js/Controls/progress/StateIndicator/?v=20.2000 Controls/progress:StateIndicator}).
  * Отображение легенды можно настроить во всплывающем окне при наведении курсора мыши на диаграмму состояния процесса.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
+ * 
  * @class Controls/_progress/Legend
  * @author Колесов В.А.
  * @public
@@ -19,20 +24,6 @@ export interface ILegendOptions extends IControlOptions {
  * @class Controls/_progress/Legend
  * @author Колесов В.А.
  */ 
-
-/**
- * @typedef {Object} IndicatorCategory
- * @property {Number} value=0 Percents of the corresponding category
- * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
- * @property {String} title='' category note
- */
-
-/**
- * @cfg {Array.<IndicatorCategory>} Array of indicator categories
- * <pre class="brush:html">
- *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
- * </pre>
- */
 class Legend extends Control<ILegendOptions> {
    protected _template: TemplateFunction = legendTemplate;
 
@@ -52,10 +43,16 @@ class Legend extends Control<ILegendOptions> {
 }
 
 export default Legend;
+/**
+ * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * <pre class="brush:html">
+ *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]]}}"/>
+ * </pre>
+ */
 
 /**
  * @name Controls/_progress/Legend#data
- * @cfg {Array.<IndicatorCategory>} Конфигурация элементов легенды.
+ * @cfg {Array.<Controls/_progress/StateIndicator/IndicatorCategory.typedef>} Конфигурация элементов легенды.
  * @example
  * <pre class="brush:html">
  *   <Controls.progress:Legend data="{{[{value: 10, className: '', title: 'done'}]}}"/>

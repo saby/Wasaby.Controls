@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.toolbars:View
+         parentProperty="parent"
+         nodeProperty="@parent"
+         keyProperty="id"
+         items="{{_items}}"
+         isNewOptions="{{true}}"
+      />
+   </div>
+</div>

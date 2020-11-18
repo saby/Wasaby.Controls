@@ -2,7 +2,7 @@ import Base = require('Controls/_input/Base');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Money/ReadOnly');
 
 import {descriptor} from 'Types/entity';
-import ViewModel from 'Controls/_input/Money/ViewModel';
+import ViewModel from './Number/ViewModel';
 import {default as INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 
 interface IMoneyOptions extends INumberLengthOptions {
@@ -10,20 +10,93 @@ interface IMoneyOptions extends INumberLengthOptions {
 }
 
 /**
- * Поле ввода денег.
- * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+ * Поле ввода числовых значений. Отличается от {@link Controls/input:Number} отображением введенного значения, согласно стандарту денежных полей ввода.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/input/money/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
  *
  * @class Controls/_input/Money
- * @extends Controls/_input/Base
+ * @extends Controls/input:Base
  *
- * @mixes Controls/interface/IOnlyPositive
- * @mixes Controls/_input/interface/INumberLength
+ * @mixes Controls/interface:IOnlyPositive
+ * @mixes Controls/input:INumberLength
  *
  * @public
  * @demo Controls-demo/Input/Money/Base/Index
  *
  * @author Красильников А.С.
  */
+
+class Money extends Base implements INumberLength {
+    _options: IMoneyOptions;
+    protected _inputMode = 'decimal';
+
+    readonly '[Controls/_input/interface/INumberLength]' = true;
+
+    protected _initProperties(options: IMoneyOptions): void {
+        super._initProperties(options);
+
+        this._readOnlyField.template = readOnlyFieldTemplate;
+        this._readOnlyField.scope.integerPart = Money.integerPart;
+        this._readOnlyField.scope.fractionPart = Money.fractionPart;
+    }
+
+    protected _getViewModelOptions(options: IMoneyOptions) {
+        return {
+            useGrouping: true,
+            showEmptyDecimals: true,
+            precision: options.precision,
+            integersLength: options.integersLength,
+            useAdditionToMaxPrecision: true,
+            onlyPositive: options.onlyPositive
+        };
+    }
+
+    protected _getViewModelConstructor() {
+        return ViewModel;
+    }
+
+    private static calcStartFractionPart(value: string, precision: number): number {
+        if (precision < 1) {
+            return value.length;
+        }
+
+        const splitterLength = 1;
+
+        return value.length - precision - splitterLength;
+    }
+
+    private static integerPart(value: string, precision: number): string {
+        return value.substring(0, Money.calcStartFractionPart(value, precision));
+    }
+
+    private static fractionPart(value: string, precision: number): string {
+        return value.substring(Money.calcStartFractionPart(value, precision));
+    }
+
+    static getDefaultOptions() {
+        const defaultOptions = Base.getDefaultOptions();
+
+        defaultOptions.precision = 2;
+        defaultOptions.onlyPositive = false;
+
+        return defaultOptions;
+    }
+
+    static getOptionTypes() {
+        const optionTypes = Base.getOptionTypes();
+
+        optionTypes.value = descriptor(String, Number, null);
+        optionTypes.onlyPositive = descriptor(Boolean);
+        optionTypes.precision = descriptor(Number);
+        optionTypes.integersLength = descriptor(Number);
+
+        return optionTypes;
+    }
+}
 
 // TODO: generics https://online.sbis.ru/opendoc.html?guid=ef345c4d-0aee-4ba6-b380-a8ca7e3a557f
 /**
@@ -162,67 +235,4 @@ interface IMoneyOptions extends INumberLengthOptions {
  * </pre>
  * @see value
  */
-
-class Money extends Base implements INumberLength {
-    _options: IMoneyOptions;
-    readonly '[Controls/_input/interface/INumberLength]' = true;
-
-    protected _initProperties(): void {
-        super._initProperties();
-
-        this._readOnlyField.template = readOnlyFieldTemplate;
-        this._readOnlyField.scope.integerPart = Money.integerPart;
-        this._readOnlyField.scope.fractionPart = Money.fractionPart;
-    }
-
-    protected _getViewModelOptions(options: IMoneyOptions) {
-        return {
-            useGrouping: true,
-            showEmptyDecimals: true,
-            precision: options.precision,
-            integersLength: options.integersLength,
-            useAdditionToMaxPrecision: true,
-            onlyPositive: options.onlyPositive
-        };
-    }
-
-    protected _getViewModelConstructor() {
-        return ViewModel;
-    }
-
-    private static calcStartFractionPart(value: string, precision: number): number {
-        const splitterLength = 1;
-
-        return value.length - precision - splitterLength;
-    }
-
-    private static integerPart(value: string, precision: number): string {
-        return value.substring(0, Money.calcStartFractionPart(value, precision));
-    }
-
-    private static fractionPart(value: string, precision: number): string {
-        return value.substring(Money.calcStartFractionPart(value, precision));
-    }
-
-    static getDefaultOptions() {
-        const defaultOptions = Base.getDefaultOptions();
-
-        defaultOptions.precision = 2;
-        defaultOptions.onlyPositive = false;
-
-        return defaultOptions;
-    }
-
-    static getOptionTypes() {
-        const optionTypes = Base.getOptionTypes();
-
-        optionTypes.value = descriptor(String, Number, null);
-        optionTypes.onlyPositive = descriptor(Boolean);
-        optionTypes.precision = descriptor(Number);
-        optionTypes.integersLength = descriptor(Number);
-
-        return optionTypes;
-    }
-}
-
 export default Money;

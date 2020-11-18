@@ -1,0 +1,40 @@
+<Controls.lookupPopup:Controller
+    attr:class="demo-Selector__companiesLayout"
+    name="SelectorController"
+    selectedItems="{{_options.selectedItems}}">
+    <Controls.list:DataContainer source="{{_source}}" keyProperty="{{_keyProperty}}" filter="{{_filter}}">
+        <Controls.lookupPopup:Container keyProperty="{{_keyProperty}}" multiSelect="{{_options.multiSelect}}">
+            <Controls.browser:Browser searchParam="title" minSearchLength="{{3}}">
+                <div class="ws-fragment">
+                    <div class="controlsDemo__wrapper">
+                        <Controls.search:InputContainer>
+                            <Controls.search:Input/>
+                        </Controls.search:InputContainer>
+                    </div>
+                    <Controls.list:Container>
+                        <Controls.lookupPopup:ListContainer>
+                            <Controls.list:View
+                                attr:class="ControlsDemo-Selector__flatListCompanies"
+                                displayProperty="title"
+                                idProperty="{{_keyProperty}}"
+                                multiSelectVisibility="{{_options.multiSelect ? 'visible'}}">
+                                <ws:itemTemplate>
+                                    <ws:partial template="Controls/list:ItemTemplate">
+                                        <ws:contentTemplate>
+                                            <div>
+                                                <span class="{{ !itemTemplate.itemData.item.get('city') ? 'ControlsDemo-Lookup__item_bold' }}">{{itemTemplate.itemData.item.get('title')}}</span>
+                                                <ws:if data="{{itemTemplate.itemData.item.get('city')}}">
+                                                    <span class="controlsDemo-Selector__title"> ({{itemTemplate.itemData.item.get('city')}})</span>
+                                                </ws:if>
+                                            </div>
+                                        </ws:contentTemplate>
+                                    </ws:partial>
+                                </ws:itemTemplate>
+                            </Controls.list:View>
+                        </Controls.lookupPopup:ListContainer>
+                    </Controls.list:Container>
+                </div>
+            </Controls.browser:Browser>
+        </Controls.lookupPopup:Container>
+    </Controls.list:DataContainer>
+</Controls.lookupPopup:Controller>

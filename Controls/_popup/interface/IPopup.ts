@@ -22,7 +22,6 @@ export interface IPopupItem {
    activeControlAfterDestroy: Control;
    activeNodeAfterDestroy: HTMLElement;
    popupState: string;
-   hasMaximizePopup: boolean;
    childs: IPopupItem[];
    parentId?: string;
    position?: IPopupPosition;
@@ -43,10 +42,11 @@ export interface IPopupPosition {
    bottom?: number;
    width?: number;
    height?: number;
-   maxWidth: number;
+   maxWidth?: number;
    minWidth?: number;
    maxHeight?: number;
    minHeight?: number;
+   invisible?: boolean;
    hidden?: boolean;
 }
 
@@ -70,22 +70,36 @@ export interface IPopupOptions extends IBasePopupOptions {
 }
 
 export interface IPopupController {
+   TYPE: string;
    POPUP_STATE_INITIALIZING: string;
-   POPUP_STATE_CREATING: string;
    POPUP_STATE_CREATED: string;
    POPUP_STATE_UPDATING: string;
    POPUP_STATE_UPDATED: string;
+   POPUP_STATE_START_DESTROYING: string;
    POPUP_STATE_DESTROYING: string;
    POPUP_STATE_DESTROYED: string;
    _elementCreated(item: IPopupItem, container: HTMLElement): boolean;
    _elementUpdated(item: IPopupItem, container: HTMLElement): boolean;
    _elementAfterUpdated(item: IPopupItem, container: HTMLElement): boolean;
+   _beforeElementDestroyed(item: IPopupItem, container: HTMLElement): Promise<undefined>;
    _elementDestroyed(item: IPopupItem, container: HTMLElement): Promise<undefined>;
    getDefaultConfig(item: IPopupItem): null|Promise<void>;
    _popupDragEnd(item: IPopupItem): boolean;
    _popupResizingLine(item: IPopupItem, offset: IDragOffset): boolean;
    _elementAnimated(item: IPopupItem): boolean;
    _elementMaximized(item: IPopupItem, container: HTMLElement, state: boolean): boolean;
+   workspaceResize(): boolean;
+}
+
+export interface IPopupItemInfo {
+   id: string;
+   type: string;
+   parentId: string;
+   parentZIndex: null|number;
+   popupOptions: {
+      maximize: boolean,
+      modal: boolean
+   };
 }
 
 export default interface IPopup {

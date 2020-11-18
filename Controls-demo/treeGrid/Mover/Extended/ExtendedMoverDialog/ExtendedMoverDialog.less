@@ -1,13 +1,14 @@
+@import "Controls-default-theme/_theme";
 .ControlsDemo-ExtendedMoveDialog__content {
   display: flex;
   flex-direction: column;
 }
 
 .ControlsDemo-ExtendedMoveDialog__search {
-  width: @width_MoveDialog-search;
-  margin-bottom: @spacing_MoveDialog-between-search-table;
-  margin-top: @spacing_MoveDialog-between-search-header;
-  margin-left: @spacing_MoveDialog-between-search-leftSide;
+  width: @search_width_MoveDialog;
+  margin-bottom: @header_padding-vertical_MoveDialog;
+  margin-top: @header_padding-vertical_MoveDialog;
+  margin-left: @search_offset_MoveDialog;
   flex-shrink: 0;
 }
 
@@ -15,9 +16,9 @@
   height: 100%;
 }
 .ControlsDemo-ExtendedMoveDialog__root {
-  margin-left: @spacing_MoveDialog-between-leftBorder-and-root;
-  margin-top: @spacing_MoveDialog-between-title-and-root;
-  margin-bottom: @spacing_MoveDialog-between-table-and-root;
+  margin-left: @root_offset_MoveDialog;
+  margin-top: @root_padding-vertical_MoveDialog;
+  margin-bottom: @root_padding-vertical_MoveDialog;
 }
 
 .ControlsDemo-ExtendedMoveDialog__createFolder {

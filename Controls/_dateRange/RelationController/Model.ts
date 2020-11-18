@@ -1,13 +1,19 @@
-import dateUtils = require('Controls/Utils/Date');
 import getPeriodType = require('Core/helpers/Date/getPeriodType');
 import getPeriodLengthInMonthByType = require('Core/helpers/Date/getPeriodLengthInMonthByType');
 import periodTypes = require('Core/helpers/Date/periodTypes');
-import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
+import {Range, Base as dateUtils} from 'Controls/dateUtils';
+
+const enum SLIDE_DATE_TYPE {
+    days,
+    months,
+    years
+}
 
 class ModuleClass {
     public ranges: Array<Array<Date>>;
     private _steps: Array<number>;
     private _relationMode: String;
+    private _dateConstructor: Function;
 
     constructor(options) {
         this.update(options);
@@ -21,6 +27,7 @@ class ModuleClass {
         this.ranges = this._getRangesFromOptions(options);
         this._updateSteps(this.ranges);
         this._relationMode = options.bindType;
+        this._dateConstructor = options.dateConstructor;
     }
 
     updateRanges(start, end, changedRangeIndex, relationMode) {
@@ -73,7 +80,7 @@ class ModuleClass {
 
     private _shift(delta) {
         this.ranges = this.ranges.map(function (range) {
-            return dateRangeUtil.shiftPeriod(range[0], range[1], delta);
+            return Range.shiftPeriod(range[0], range[1], delta);
         });
     }
 
@@ -145,7 +152,7 @@ class ModuleClass {
         return end.getFullYear() * 12 + end.getMonth() - start.getFullYear() * 12 - start.getMonth();
     }
 
-    private _getChangedIndex(ranges: Array<Date>): number {
+    protected _getChangedIndex(ranges: Array<Date>): number {
         for (var i in this.ranges) {
             if (!dateUtils.isDatesEqual(this.ranges[i][0], ranges[i][0]) || !dateUtils.isDatesEqual(this.ranges[i][1], ranges[i][1])) {
                 return parseInt(i, 10);
@@ -180,8 +187,12 @@ class ModuleClass {
         return (periodType === periodTypes.day || periodType === periodTypes.days);
     }
 
+    private _periodTypeIsYears(periodType) {
+        return (periodType === periodTypes.year || periodType === periodTypes.years);
+    }
+
     private _getUpdatedRanges(ranges, rangeIndex, newRange, relationMode, steps) {
-        let selectionType = 'months',
+        let selectionType:SLIDE_DATE_TYPE = SLIDE_DATE_TYPE.months,
             start = newRange[0],
             end = newRange[1],
             oldStart = ranges[rangeIndex][0],
@@ -190,16 +201,17 @@ class ModuleClass {
             periodType, periodLength, oldPeriodType, oldPeriodLength,
             step, capacityChanged, control, lastDate, i;
 
-        let getStep = function (number) {
+        let getStep = (number) => {
             let s;
-            if (selectionType === 'days') {
+            if (selectionType === SLIDE_DATE_TYPE.days) {
                 return periodLength;
             }
             // In the capacity mode we move the periods as adjacent.
             // In the normal mode, if the capacity has changed and the step is not a multiple of the year
             // and the month of the periods differ or step is not aligned to the new capacity,
             // then we also set adjacent periods.
-            if (relationMode === 'byCapacity' ||
+            if (!(this._periodTypeIsDay(periodType) && this._periodTypeIsYears(oldPeriodType)) &&
+                relationMode === 'byCapacity' ||
                     (capacityChanged && steps[number] % 12 !== 0 && periodLength > oldPeriodLength &&
                         (start.getMonth() !== oldStart.getMonth() || steps[number] % periodLength !== 0))) {
                 s = periodLength;
@@ -221,25 +233,30 @@ class ModuleClass {
         oldPeriodType = (oldStart && oldEnd) ? getPeriodType(oldStart, oldEnd) : null;
 
         if (this._periodTypeIsDay(oldPeriodType)) {
-            oldPeriodLength = dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+            oldPeriodLength = Range.getPeriodLengthInDays(oldStart, oldEnd);
         } else {
-            oldPeriodLength = oldPeriodType ? dateRangeUtil.getPeriodLengthInMonths(oldStart, oldEnd) : null;
+            oldPeriodLength = oldPeriodType ? Range.getPeriodLengthInMonths(oldStart, oldEnd) : null;
         }
 
         if (this._periodTypeIsDay(periodType)) {
-            selectionType = 'days';
-            periodLength = dateRangeUtil.gePeriodLengthInDays(start, end);
+            if (this._periodTypeIsYears(oldPeriodType)) {
+                selectionType = SLIDE_DATE_TYPE.years;
+            } else {
+                selectionType = SLIDE_DATE_TYPE.days;
+            }
+            periodLength = Range.getPeriodLengthInDays(start, end);
         } else {
-            periodLength = periodType ? dateRangeUtil.getPeriodLengthInMonths(start, end) : null;
+            periodLength = periodType ? Range.getPeriodLengthInMonths(start, end) : null;
         }
 
         if (this._periodTypeIsDay(periodType) && this._periodTypeIsDay(oldPeriodType)) {
-            capacityChanged = periodLength !== dateRangeUtil.gePeriodLengthInDays(oldStart, oldEnd);
+            capacityChanged = periodLength !== Range.getPeriodLengthInDays(oldStart, oldEnd);
         } else {
             capacityChanged = periodType !== oldPeriodType;
         }
 
         // iterate dates in the controls from the current to the first.
+        let endDateStep: number;
         lastDate = start;
         step = 0;
         for (i = 1; i <= rangeIndex; i++) {
@@ -248,11 +265,10 @@ class ModuleClass {
             if (relationMode === 'byCapacity' && !capacityChanged && lastDate > control[1]) {
                 respRanges[rangeIndex - i] = ranges[rangeIndex - i];
             } else {
+                endDateStep = selectionType === SLIDE_DATE_TYPE.years ? -step : -step + periodLength - 1;
                 respRanges[rangeIndex - i] = [
-                    //In variable control there is old start and end values,
-                    // we send them to check if year has been changed
-                    this._slideStartDate(control[0], start, -step, selectionType),
-                    this._slideEndDate(control[1], start, -step + periodLength - 1, selectionType, periodLength)
+                    this._slideStartDate(start, -step, selectionType),
+                    this._slideEndDate(start, endDateStep, selectionType, periodLength)
                 ];
             }
             lastDate = control[0];
@@ -269,11 +285,10 @@ class ModuleClass {
             if (relationMode === 'byCapacity' && !capacityChanged && lastDate < control[0]) {
                 respRanges[rangeIndex + i] = ranges[rangeIndex + i];
             } else {
+                endDateStep = selectionType === SLIDE_DATE_TYPE.years ? step : step + periodLength - 1;
                 respRanges[rangeIndex + i] = [
-                    //In variable control there is old start and end values,
-                    // we send them to check if year has been changed
-                    this._slideStartDate(control[0], start, step, selectionType),
-                    this._slideEndDate(control[1], start, step + periodLength - 1, selectionType, periodLength)
+                    this._slideStartDate(start, step, selectionType),
+                    this._slideEndDate(start, endDateStep, selectionType, periodLength)
                 ];
             }
             lastDate = control[1];
@@ -281,30 +296,25 @@ class ModuleClass {
         return respRanges;
     }
 
-    private _slideStartDate(lastDate, date, delta, selectionType) {
-        if (selectionType === 'days') {
-            //if year has been changed, returns equal dates with different years
-            //example: (13.11.2018 - 15.11.2018) - (13.11.2019 - 15.11.2019)
-            //else, returns same closest period
-            //example: (10.11.2019 - 12.11.2019) - (13.11.2019 - 15.11.2019)
-            if (lastDate.getFullYear() !== date.getFullYear()) {
-                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate());
-            } else {
-                return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
-            }
+    private _slideStartDate(date, delta, selectionType) {
+        if (selectionType === SLIDE_DATE_TYPE.days) {
+            // При проходе днями, смещаемся на нужное количество дней.
+            return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+        } else if (selectionType === SLIDE_DATE_TYPE.years) {
+            // При проходе годами смещаемся шагами кратными месяцам, но оставлем такую же дату.
+            return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, date.getDate());
         }
-        return new Date(date.getFullYear(), date.getMonth() + delta, 1);
+        // По умолчанию проходим целыми месяцами с первого по послежний день месяца.
+        return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, 1);
     }
 
-    private _slideEndDate(lastDate, date, delta, selectionType, periodLength) {
-        if (selectionType === 'days') {
-            if (lastDate.getFullYear() !== date.getFullYear()) {
-                return new Date(lastDate.getFullYear(), date.getMonth(), date.getDate() + periodLength - 1);
-            } else {
-                return new Date(date.getFullYear(), date.getMonth(), date.getDate() + delta);
-            }
+    private _slideEndDate(date, delta, selectionType, periodLength) {
+        if (selectionType === SLIDE_DATE_TYPE.days) {
+            return new this._dateConstructor(date.getFullYear(), date.getMonth(), date.getDate() + delta);
+        } else if (selectionType === SLIDE_DATE_TYPE.years) {
+            return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta, date.getDate() + periodLength - 1);
         }
-        return new Date(date.getFullYear(), date.getMonth() + delta + 1, 0);
+        return new this._dateConstructor(date.getFullYear(), date.getMonth() + delta + 1, 0);
     }
 }
 

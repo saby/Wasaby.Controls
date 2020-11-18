@@ -21,41 +21,20 @@ const MINIMIZED_STEP_FOR_MAXIMIZED_BUTTON = 100;
 
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/stack/ стекового окна}.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/stack/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
  * @class Controls/_popupTemplate/Stack
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
  * @implements Controls/_popupTemplate/interface/IPopupTemplateBase
- * @demo Controls-demo/Popup/Templates/StackTemplatePG
  * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
- */
-
-/**
- * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
- * @cfg {Boolean} Определяет, будет ли отображаться кнопка изменения размера.
- * @default false
- */
-
-/**
- * @name Controls/_popupTemplate/Stack#headerBorderVisible
- * @cfg {Boolean} Определяет, будет ли отображаться граница шапки панели.
- * @default true
- * @remark
- * Позволяет скрыть отображение нижней границы headerContentTemplate. Используется для построения двухуровневых шапок.
- * Необходимо поместить свой контейнер с шапкой в bodeContentTemplate и навесить класс,
- * добавляющий фон для шапки: controls-StackTemplate__top-area-background_theme_{{_options.theme}},
- * и класс, добавляющий нижнюю границу для шапки: controls-StackTemplate__top-area-border_theme_{{_options.theme}}
- * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
- */
-
-/**
- * @name Controls/_popupTemplate/Stack#workspaceWidth
- * @cfg {Number} Текущая ширина шаблона стековой панели
- * @remark
- * Опция только для чтения, значение устанавливается контролом Controls/popup исходя из заданной конфигурации окна
  */
 
 class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemplate {
@@ -119,14 +98,45 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
 
     static getDefaultOptions(): IStackTemplateOptions {
         return {
-            headingStyle: 'secondary',
+            headingFontSize: '3xl',
+            headingFontColorStyle: 'secondary',
             closeButtonVisibility: true,
-            headingSize: 'l',
-            closeButtonViewMode: 'popup',
+            closeButtonViewMode: 'toolButton',
             closeButtonTransparent: true,
-            headerBorderVisible: true,
+            headerBorderVisible: true
         };
     }
 }
+/**
+ * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
+ * @cfg {Boolean} Определяет, будет ли отображаться кнопка изменения размера.
+ * @default false
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#headerBorderVisible
+ * @cfg {Boolean} Определяет, будет ли отображаться граница шапки панели.
+ * @default true
+ * @remark
+ * Позволяет скрыть отображение нижней границы {@link Controls/popupTemplate:IPopupTemplateBaseOptions#headerContentTemplate headerContentTemplate}. Используется для построения двухуровневых шапок.
+ * Необходимо поместить свой контейнер с шапкой в {@link Controls/popupTemplate:IPopupTemplateBaseOptions#bodyContentTemplate bodyContentTemplate} и навесить:
+ * 
+ * 1. класс, добавляющий фон для шапки:
+ * <pre class="brush: css">
+ * controls-StackTemplate__top-area-background_theme_{{_options.theme}}
+ * </pre>
+ * 2. класс, добавляющий нижнюю границу для шапки:
+ * <pre class="brush: css">
+ * controls-StackTemplate__top-area-border_theme_{{_options.theme}}
+ * </pre>
+ * @demo Controls-demo/PopupTemplate/Stack/HeaderBorderVisible/Index
+ */
+
+/**
+ * @name Controls/_popupTemplate/Stack#workspaceWidth
+ * @cfg {Number} Текущая ширина шаблона стековой панели
+ * @remark
+ * Опция только для чтения, значение устанавливается контролом Controls/popup исходя из заданной конфигурации окна
+ */
 
 export default StackTemplate;

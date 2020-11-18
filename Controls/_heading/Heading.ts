@@ -1,100 +1,116 @@
-import{Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import headingTemplate = require('wml!Controls/_heading/Heading/Heading');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IFontColorStyle, IFontColorStyleOptions, IFontSize, IFontSizeOptions} from 'Controls/interface';
+import {
+    ITooltip,
+    ITooltipOptions,
+    ICaption,
+    ICaptionOptions,
+    IFontColorStyle,
+    IFontColorStyleOptions,
+    IFontSize,
+    IFontSizeOptions
+} from 'Controls/interface';
 
-export interface IHeadingOptions extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
-
+export interface IHeadingOptions
+    extends IControlOptions, ICaptionOptions, ITooltipOptions, IFontColorStyleOptions, IFontSizeOptions {
+    textTransform: 'none' | 'uppercase';
 }
 
-   /**
-    * Простой заголовок с поддержкой различных стилей отображения и размеров.
-    * @remark
-    * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator} и {@link Controls/heading:Counter}.
-    *
-    * <a href="/materials/demo-ws4-header-separator">Демо-пример</a>.
-    *
-    *
-    * @class Controls/_heading/Heading
-    * @extends Core/Control
-    * @control
-    * @public
-    * @author Красильников А.С.
-    * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
-    *
-    * @mixes Controls/_interface/ITooltip
-    * @mixes Controls/_interface/ICaption
-    * @mixes Controls/_interface/IFontColorStyle
-    * @mixes Controls/_interface/IFontSize
-    */
-
-   /*
-    * Heading with support different display styles and sizes. Can be used independently or as part of complex headings(you can see it in <a href="/materials/demo-ws4-header-separator">Demo-example</a>) consisting of a <a href="/docs/js/Controls/_heading/Counter/?v=3.18.500">counter</a>, a <a href="/docs/js/Controls/_heading/Separator/?v=3.18.500">header-separator</a> and a <a href="/docs/js/Controls/Button/Separator/?v=3.18.500">button-separator</a>.
-    *
-    * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
-    *
-    *
-    * @class Controls/_heading/Heading
-    * @extends Core/Control
-    * @control
-    * @public
-    * @author Красильников А.С.
-    * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
-    *
-    * @mixes Controls/_interface/ITooltip
-    * @mixes Controls/_interface/ICaption
-    * @mixes Controls/_interface/IFontColorStyle
-    * @mixes Controls/_interface/IFontSize
-    * @mixes Controls/_heading/Heading/HeadingStyles
-    */
-
-const mapFontSize = {s: 'm', m: 'l', l: '3xl', xl: '4xl'};
-const mapFontColorStyle = {info: 'label', primary: 'primary', secondary: 'secondary'};
+/**
+ * Простой заголовок с поддержкой различных стилей отображения и размеров.
+ *
+ * @remark
+ * Может использоваться самостоятельно или в составе сложных заголовков, состоящих из {@link Controls/heading:Separator}, {@link Controls/heading:Counter} и {@link Controls/heading:Title}.
+ * Для одновременной подсветки всех частей сложного заголовка при наведении используйте класс controls-Header_all__clickable на контейнере.
+ * Кликабельность заголовка зависит от {@link readOnly режима отображения}.
+ *
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/content-managment/heading/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_heading.less">переменные тем оформления</a>
+ *
+ * @class Controls/_heading/Heading
+ * @extends Core/Control
+ * @implements Controls/_interface/ITooltip
+ * @implements Controls/_interface/ICaption
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_interface/IFontSize
+ * @public
+ * @author Красильников А.С.
+ * 
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ *
+ */
 class Header extends Control<IHeadingOptions> implements ICaption, ITooltip, IFontColorStyle, IFontSize {
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = headingTemplate;
-   protected _fontSize: string;
-   protected _fontColorStyle: string;
+    protected _template: TemplateFunction = headingTemplate;
 
-   private _prepareOptions(options: IHeadingOptions): void {
-      if (options.size) {
-         this._fontSize = mapFontSize[options.size];
-      } else {
-         this._fontSize = options.fontSize;
-      }
-      if (options.style) {
-         this._fontColorStyle = mapFontColorStyle[options.style];
-      } else {
-         this._fontColorStyle = options.fontColorStyle;
-      }
-   }
+    readonly '[Controls/_interface/ICaption]': boolean = true;
+    readonly '[Controls/_interface/ITooltip]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
 
-   protected _beforeMount(options: IHeadingOptions): void {
-      this._prepareOptions(options);
-   }
+    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
 
-   protected _beforeUpdate(options: IHeadingOptions): void {
-      this._prepareOptions(options);
-   }
+    static getDefaultOptions(): object {
+        return {
+            fontSize: 'l',
+            fontColorStyle: 'secondary',
+            textTransform: 'none'
+        };
+    }
 
-   static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
-
-   static getDefaultOptions(): object {
-      return {
-         fontColorStyle: 'secondary',
-         fontSize: 'l',
-         theme: 'default'
-      };
-   }
-
-   static getOptionTypes(): object {
-      return {
-         caption: EntityDescriptor(String),
-      };
-   }
-
-   '[Controls/_interface/ITooltip]': true;
-   '[Controls/_interface/ICaption]': true;
+    static getOptionTypes(): object {
+        return {
+            caption: EntityDescriptor(String)
+        };
+    }
 }
+
+/**
+ * @typedef {String} TTextTransform
+ * @variant none Без изменения регистра символов.
+ * @variant uppercase Все символы текста становятся прописными (верхний регистр).
+ */
+
+/**
+ * @name Controls/_heading/Heading#textTransform
+ * @cfg {TTextTransform} Управляет преобразованием текста элемента в заглавные или прописные символы
+ * @default none
+ * @demo Controls-demo/Heading/Title/TextTransform/Index
+ * @remark
+ * Вместе с установкой преобразования текста, меняется так же расстояние между буквами.
+ */
+
+/**
+ * @name Controls/_heading/Heading#fontSize
+ * @cfg
+ * @default l
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#fontColorStyle
+ * @cfg
+ * @default secondary
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
+
+/**
+ * @name Controls/_heading/Heading#caption
+ * @cfg
+ * @demo Controls-demo/Heading/Title/SizesAndStyles/Index
+ * @example
+ * <pre class="brush: html">
+ * <Controls.heading:Title caption="Heading" fontColorStyle="primary" fontSize="xs"/>
+ * </pre>
+ */
 
 export default Header;

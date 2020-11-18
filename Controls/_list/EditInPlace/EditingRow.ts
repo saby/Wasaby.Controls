@@ -1,23 +1,28 @@
-import Control = require('Core/Control');
-import scrollToElement = require('Controls/Utils/scrollToElement');
-import template = require('wml!Controls/_list/EditInPlace/EditingRow');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base.js';
+import * as template from 'wml!Controls/_list/EditInPlace/EditingRow';
+import {scrollToElement} from 'Controls/scroll';
 import { constants } from 'Env/Env';
 
-var EditingRow = Control.extend({
-    _template: template,
+export interface IEditingRowOptions extends IControlOptions {
+    columnScroll?: boolean;
+    isScrollToElement?: boolean;
+}
 
-    _afterMount: function () {
-        this.activate();
+export default class EditingRow extends Control<IEditingRowOptions> {
+    protected _template: TemplateFunction = template;
 
-        // TODO: this._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-        var container = this._container.get ? this._container.get(0) : this._container;
+    protected _afterMount(options: IEditingRowOptions): void {
+        if (options.isScrollToElement ?? true) {
+            // TODO: this._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            const container = this._container.get ? this._container.get(0) : this._container;
 
-        setTimeout(function () {
-            scrollToElement(container);
-        }, 0);
-    },
+            setTimeout(function() {
+                scrollToElement(container);
+            }, 0);
+        }
+    }
 
-    _onKeyDown: function (event) {
+    protected _onKeyDown(event): void {
         this._notify('editingRowKeyDown', [event.nativeEvent], {bubbling: true});
 
         // Так как наша система событий ловит события на стадии capture,
@@ -33,9 +38,9 @@ var EditingRow = Control.extend({
         ) {
             event.stopPropagation();
         }
-    },
+    }
 
-    _onClickHandler: function (e) {
+    protected _stopMouseEvent(e): void {
         /*
          Останавливаем всплытие любых кликов, если строка редактируется. Если клики будут всплывать, то их будет ловить список
          и генерировать событие itemClick, которое не должно стрелять на редактируемой строке.
@@ -54,6 +59,4 @@ var EditingRow = Control.extend({
         */
         e.stopped = true;
     }
-});
-
-export = EditingRow;
+}

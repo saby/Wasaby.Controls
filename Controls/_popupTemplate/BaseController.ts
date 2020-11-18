@@ -1,7 +1,10 @@
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
-import collection = require('Types/collection');
-import {Controller as ManagerController, IPopupItem, IPopupSizes} from 'Controls/popup';
+import oldWindowManager from 'Controls/_popupTemplate/_oldWindowManager';
+import {Controller as ManagerController, IPopupItem, IPopupPosition, IPopupSizes} from 'Controls/popup';
+import * as TargetCoords from 'Controls/_popupTemplate/TargetCoords';
+import {Control} from 'UI/Base';
+import {goUpByControlTree} from 'UI/Focus';
 
 export interface IDragOffset {
     x: number;
@@ -10,20 +13,19 @@ export interface IDragOffset {
 
 /**
  * Base Popup Controller
- * @category Popup
  * @class Controls/_popupTemplate/BaseController
  * @author Красильников А.С.
  * @private
  */
 abstract class BaseController {
 
-    POPUP_STATE_INITIALIZING: string = 'initializing';
-    POPUP_STATE_CREATING: string = 'creating';
-    POPUP_STATE_CREATED: string = 'created';
-    POPUP_STATE_UPDATING: string = 'updating';
-    POPUP_STATE_UPDATED: string = 'updated';
-    POPUP_STATE_DESTROYING: string = 'destroying';
-    POPUP_STATE_DESTROYED: string = 'destroyed';
+    POPUP_STATE_INITIALIZING: string = 'initializing'; // До того как окно замаунтилось
+    POPUP_STATE_CREATED: string = 'created'; // Окно замаунтилось
+    POPUP_STATE_UPDATING: string = 'updating'; // Перед обновлением опций окна
+    POPUP_STATE_UPDATED: string = 'updated'; // После обновления опций окна
+    POPUP_STATE_START_DESTROYING: string = 'startDestroying'; // Окно начало удаление, перед всеми операциями по закрытию детей и пендингов
+    POPUP_STATE_DESTROYING: string = 'destroying'; // Окно в процессе удаления (используется где есть операции перед удалением, например анимация)
+    POPUP_STATE_DESTROYED: string = 'destroyed'; // Окно удалено из верстки
 
     abstract elementCreated(item: IPopupItem, container: HTMLDivElement): boolean;
 
@@ -48,6 +50,7 @@ abstract class BaseController {
     _elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         if (this._checkContainer(item, container, 'elementCreated')) {
             item.popupState = this.POPUP_STATE_CREATED;
+            oldWindowManager.addZIndex(item.currentZIndex);
             return this.elementCreated && this.elementCreated.apply(this, arguments);
         }
     }
@@ -78,6 +81,10 @@ abstract class BaseController {
         return false;
     }
 
+    _beforeElementDestroyed(item: IPopupItem, container: HTMLDivElement): void {
+        item.popupState = this.POPUP_STATE_START_DESTROYING;
+    }
+
     _elementDestroyed(item: IPopupItem, container: HTMLDivElement): Promise<undefined> {
         if (item.popupState === this.POPUP_STATE_INITIALIZING) {
             return (new Deferred()).callback();
@@ -90,6 +97,7 @@ abstract class BaseController {
             item.popupState = this.POPUP_STATE_DESTROYING;
             item._destroyDeferred = this.elementDestroyed && this.elementDestroyed.apply(this, arguments);
             return item._destroyDeferred.addCallback(() => {
+                oldWindowManager.removeZIndex(item.currentZIndex);
                 item.popupState = this.POPUP_STATE_DESTROYED;
             });
         }
@@ -145,16 +153,16 @@ abstract class BaseController {
         return this._elementUpdated(item, container);
     }
 
+    protected workspaceResize(): boolean {
+        return false;
+    }
+
     protected needRecalcOnKeyboardShow(): boolean {
         return false;
     }
 
     protected needRestoreFocus(): boolean {
         return true;
-    }
-
-    protected getCustomZIndex(popupItems: collection.List<IPopupItem>, item: IPopupItem): number | null {
-        return null;
     }
 
     protected _getPopupSizes(item: IPopupItem, container: HTMLDivElement): IPopupSizes {
@@ -190,11 +198,89 @@ abstract class BaseController {
         return true;
     }
 
-    private getContentSizes(container: HTMLDivElement): IPopupSizes {
+    private getContentSizes(container?: HTMLDivElement = null): IPopupSizes {
+        // Чтобы размер контейнера не искажался при масштабировании использую getBoundingClientRect
+        const sizes = container?.getBoundingClientRect();
         return {
-            width: container.offsetWidth,
-            height: container.offsetHeight
+            width: Math.round(sizes?.width),
+            height: Math.round(sizes?.height)
         };
+    }
+
+    protected _isAboveMaximizePopup(item: IPopupItem): boolean {
+        const openerContainer: HTMLElement = item.popupOptions?.opener?._container;
+        const parents: Control[] = this._goUpByControlTree(openerContainer);
+        const popupModuleName: string = 'Controls/_popup/Manager/Popup';
+        const oldPopupModuleName: string = 'Lib/Control/Dialog/Dialog'; // Compatible
+
+        for (let i = 0; i < parents.length; i++) {
+            if (parents[i]._moduleName ===  popupModuleName || parents[i]._moduleName === oldPopupModuleName) {
+                if (parents[i]._options.maximize) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private _goUpByControlTree(container: HTMLElement): Control[] {
+        return goUpByControlTree(container);
+    }
+
+    private static rootContainers = {};
+
+    static getRootContainerCoords(item: IPopupItem, baseRootSelector: string): IPopupPosition | void {
+        const getRestrictiveContainer = (popupItem: IPopupItem) => {
+            if (popupItem.popupOptions.restrictiveContainer) {
+                return popupItem.popupOptions.restrictiveContainer;
+            }
+            // Проверяем, есть ли у родителя ограничивающий контейнер
+            if (popupItem.parentId) {
+                const parentItem = require('Controls/popup').Controller.find(popupItem.parentId);
+                return getRestrictiveContainer(parentItem);
+            }
+        };
+        const itemRestrictiveContainer = getRestrictiveContainer(item);
+        const bodySelector = 'body';
+
+        const restrictiveContainers = [itemRestrictiveContainer, baseRootSelector, bodySelector];
+        for (const restrictiveContainer of restrictiveContainers) {
+            if (restrictiveContainer) {
+                const coordsByContainer = BaseController.getCoordsByContainer(restrictiveContainer);
+                if (coordsByContainer) {
+                    return coordsByContainer;
+                }
+            }
+        }
+    }
+
+    static resetRootContainerCoords(): void {
+        BaseController.rootContainers = {};
+    }
+
+    static getCoordsByContainer(restrictiveContainer: any): IPopupPosition | void {
+        if (BaseController.rootContainers[restrictiveContainer]) {
+            return BaseController.rootContainers[restrictiveContainer];
+        }
+        const restrictiveContainerNode = document.querySelector(restrictiveContainer);
+
+        if (restrictiveContainerNode) {
+            // TODO: В рамках оптимизации нижний попап скрывается через ws-hidden
+            // Нужно это учитывать при расчете размеров https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+            const popup = restrictiveContainerNode.closest('.controls-Popup');
+            const hiddenClass = 'ws-hidden';
+            const isPopupHidden = popup && popup.classList.contains(hiddenClass);
+            if (isPopupHidden) {
+                popup.classList.remove(hiddenClass);
+            }
+
+            const targetCoords = TargetCoords.get(restrictiveContainerNode);
+
+            if (isPopupHidden) {
+                popup.classList.add(hiddenClass);
+            }
+            return BaseController.rootContainers[restrictiveContainer] = targetCoords;
+        }
     }
 }
 

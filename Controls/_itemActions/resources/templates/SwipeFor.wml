@@ -1,0 +1,17 @@
+<ws:for data="actionIndex, action in showedActions">
+   <ws:partial
+      template="wml!Controls/_itemActions/resources/templates/SwipeAction"
+      action="{{ action }}"
+      needIcon="{{ swipeConfig.needIcon }}"
+      needTitle="{{ swipeConfig.needTitle }}"
+      actionAlignment="{{ actionAlignment }}"
+      itemActionsSize="{{ swipeConfig.itemActionsSize }}"
+      paddingSize="{{ swipeConfig.paddingSize }}"
+      actionCaptionPosition="{{ actionCaptionPosition }}"
+      hasActionWithIcon="{{ itemData.hasActionWithIcon() }}"
+      on:click="_onItemActionsClick(action, itemData)"/>
+   <ws:if data="{{actionIndex !== showedActions.length - 1}}">
+       <div class="controls-Swipe__separator_theme-{{ theme }}
+       controls-Swipe__separator_{{actionAlignment}}_theme-{{ theme }}"></div>
+   </ws:if>
+</ws:for>

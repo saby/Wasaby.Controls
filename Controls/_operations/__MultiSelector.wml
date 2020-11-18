@@ -2,15 +2,18 @@
     <Controls.dropdown:Button name="myMenuButton2"
                               keyProperty="id"
                               viewMode="link"
-                              style="secondary"
+                              buttonStyle="secondary"
+                              fontColorStyle="link"
                               caption="{{_menuCaption}}"
-                              size="{{_options.size}}"
                               fontSize="{{_options.fontSize}}"
                               on:onMenuItemActivate="_onMenuItemActivate()"
                               source="{{_menuSource}}"/>
-    <ws:if data="{{_countLoading}}">
-        <div class="controls-operationsPanelV__loadingIndicatorImg-wrapper" name="LoadingIndicator">
-            <div class="controls-operationsPanelV__loadingIndicatorImg"></div>
-        </div>
-    </ws:if>
+    <Controls.LoadingIndicator
+            name="countIndicator"
+            isGlobal="{{false}}"
+            small="{{true}}"
+            overlay="none"
+            attr:class="{{'controls-operationsPanelV__loadingIndicatorImg-wrapper'}}">
+        <div></div>
+    </Controls.LoadingIndicator>
 </div>

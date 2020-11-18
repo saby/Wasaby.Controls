@@ -4,7 +4,7 @@ import {ICrud, Query, DataSet, QueryNavigationType} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
-import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
+import {Range} from 'Controls/dateUtils';
 import monthListUtils from './Utils';
 import {IDateConstructorOptions} from 'Controls/interface';
 
@@ -40,9 +40,9 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    enrichItems(dates: number[]): Promise<TItems> | void {
+    enrichItems(dates: number[]): Promise<TItems> {
         if (!this._source) {
-            return;
+            return Promise.resolve(null);
         }
 
         let
@@ -56,6 +56,8 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
             start = new this._dateConstructor(Math.min.apply(null, newDatesIds));
             end = new this._dateConstructor(Math.max.apply(null, newDatesIds));
             return this._source.query(this._getQuery(start, end)).then(this._updateData.bind(this));
+        } else {
+            return Promise.resolve(null);
         }
     }
 
@@ -65,12 +67,12 @@ export default class ExtDataModel extends mixin<VersionableMixin>(VersionableMix
 
     private _getQuery(start: Date, end: Date): Query {
         let
-            length: number = dateRangeUtil.getPeriodLengthInMonths(start, end),
+            length: number = Range.getPeriodLengthInMonths(start, end),
             query: Query = new Query();
 
         if (this._viewMode === 'year') {
-            end.setMonth(end.getMonth() + 11);
-            length = dateRangeUtil.getPeriodLengthInMonths(start, end);
+            end.setMonth(11);
+            length = Range.getPeriodLengthInMonths(start, end);
         }
         start.setMonth(start.getMonth() - 1);
 

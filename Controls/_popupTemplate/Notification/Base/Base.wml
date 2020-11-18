@@ -1,7 +1,7 @@
 <div class="controls-Notification controls-Notification_theme-{{_options.theme}} controls-Notification__{{_borderStyle}}_theme-{{_options.theme}} controls-Popup__isolatedFocusingContext">
    <div class="controls-Notification__content controls-Notification__content_theme-{{_options.theme}} {{_options.closeButtonVisibility ? 'controls-Notification__content-spacing_theme-' + _options.theme}}">
       <ws:if data="{{_options.bodyContentTemplate}}">
-         <ws:partial template="{{_options.contentTemplate||_options.bodyContentTemplate}}"></ws:partial>
+         <ws:partial template="{{_options.bodyContentTemplate}}"></ws:partial>
       </ws:if>
    </div>
    <ws:if data="{{_options.closeButtonVisibility}}">

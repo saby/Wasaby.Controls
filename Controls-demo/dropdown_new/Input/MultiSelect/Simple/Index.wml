@@ -1,0 +1,12 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo_m">
+        <div class="controls-text-label_theme-{{_options.theme}}">Simple</div>
+        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 multiSelect="{{true}}"
+                                 emptyText="All operations"
+                                 source="{{_source}}">
+        </Controls.dropdown:Input>
+    </div>
+</div>

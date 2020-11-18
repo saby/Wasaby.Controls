@@ -1,5 +1,6 @@
 <!-- virtualPageSize="{{3}}" - 1 item is displayed and one at a time from the top and bottom in stock  -->
 <Controls.calendar:MonthList
+   attachLoadTopTriggerToNull="{{ false }}"
    attr:class="controls-PeriodDialog-MonthsRange"
    virtualPageSize="{{3}}"
    position="{{_options.position}}"
@@ -7,7 +8,7 @@
    on:itemClick="_onItemClick()"
 >
    <ws:yearHeaderTemplate>
-      <div class="controls-PeriodDialog-MonthsRange__header">
+      <div class="controls-PeriodDialog-MonthsRange__header controls-PeriodDialog-MonthsRange__header_theme-{{_options.theme}}">
          {{ _formatDate(yearHeaderTemplate.date, 'YYYY') }}
       </div>
    </ws:yearHeaderTemplate>

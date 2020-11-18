@@ -1,0 +1,30 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Пример тулбара из разных кнопок (links, buttons)</div>
+        <Controls.toolbars:View
+                source="{{_buttonsSource}}"
+                keyProperty="id"
+                on:itemClick="_itemClick()"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Пример тулбара из кнопок toolButton</div>
+        <Controls.toolbars:View
+                source="{{_toolButtonsSource}}"
+                keyProperty="id"
+                on:itemClick="_itemClick()"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Пример тулбара из кнопок readOnly</div>
+        <Controls.toolbars:View
+                source="{{_buttonsSource}}"
+                keyProperty="id"
+                readOnly="{{true}}"
+                on:itemClick="_itemClick()"
+        />
+    </div>
+    <div class="controlsDemo__cell">
+        {{_currentClick}}
+    </div>
+</div>

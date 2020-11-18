@@ -1,130 +1,191 @@
 <ws:template name="itemActionsTemplateChooser">
-    <ws:if data="{{itemData.isSwiped}}">
+    <ws:if data="{{itemData.isSwiped()}}">
         <ws:partial template="{{swipeTemplate}}"
                     itemData="{{itemData}}"
                     itemActionsTemplate="{{itemActionsTemplate}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    highlightOnHover="{{highlightOnHover}}"/>
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
+                    highlightOnHover="{{highlightOnHover}}"
+                    theme="{{itemData.theme}}"/>
     </ws:if>
     <ws:else data="{{itemData.itemActionsPosition !== 'custom'}}">
         <ws:partial template="{{itemActionsTemplate}}"
                     itemActionsClass="{{itemActionsClass}}"
                     itemData="{{itemData}}"
                     itemActionsContainerStyles="{{itemActionsContainerStyles}}"
-                    attr:class="controls-Grid__itemAction"
-                    highlightOnHover="{{highlightOnHover}}"/>
+                    attr:class="controls-Grid__itemAction js-controls-ColumnScroll__notDraggable"
+                    highlightOnHover="{{highlightOnHover}}"
+                    theme="{{itemData.theme}}"/>
     </ws:else>
 </ws:template>
 
-<ws:template name="cellPartialTemplate">
-   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 1 || !itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
-       <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
-           <ws:for data="i in itemData.level - 1">
-               <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(expanderSize, levelIndentSize)}}"></div>
-           </ws:for>
-       </ws:if>
-       <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
-           <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}"
-                       expanderSize="{{expanderSize}}"/>
-       </ws:if>
-       <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
-           <div class="{{itemData.getExpanderPaddingClasses(expanderSize, _options.theme)}} js-controls-ListView__notEditable"></div>
-       </ws:else>
-   </ws:if>
-   <ws:if data="{{colspan}}">
-       <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}"/>
-   </ws:if>
-   <ws:else>
-       <ws:partial template="{{currentColumn.template}}"
-                   editArrowTemplate="{{editArrowTemplate}}"
-                   attr:class=" {{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                                {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
-                                {{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
-                   ladderWrapper="{{currentColumn.ladderWrapper}}"
-                   expanderTemplate="{{itemData.expanderTemplate}}"
-                   itemData="{{currentColumn}}"/>
-   </ws:else>
-    <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
-   <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode)}}">
-       <ws:partial template="itemActionsTemplateChooser"/>
-   </ws:if>
+<ws:template name="multiSelectTemplate">
+    <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
+        <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
+                            checkboxReadOnly="{{itemData.isAdd || checkboxReadOnly}}"
+                            multiSelectStatus="{{itemData.isSelected()}}"
+                            key="{{itemData.key}}"/>
+    </ws:partial>
 </ws:template>
 
-<ws:template name="columnContent">
-   <ws:if data="{{itemData.hasMultiSelect && currentColumn.columnIndex === 0}}">
-       <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-           <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
-                               checkboxReadOnly="{{checkboxReadOnly}}"
-                               multiSelectStatus="{{itemData.multiSelectStatus}}"
-                               key="{{itemData.key}}"/>
-       </ws:partial>
-   </ws:if>
-   <ws:else>
-       <ws:partial template="cellPartialTemplate"/>
-   </ws:else>
+<ws:template name="COLUMN_COLSPAN_CONTENT">
+    <div class="controls-Grid__row-cell__content_colspaned {{ cellClassName || '' }}
+       {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
+       {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
+       {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
+        <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}">
+            <ws:multiSelectTemplate>
+                <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+            </ws:multiSelectTemplate>
+        </ws:partial>
+    </div>
 </ws:template>
 
-<ws:template name="columnContentWrapper">
-   <ws:if data="{{itemData.shouldDrawMarker(marker, currentColumn.columnIndex)}}">
-       <div attr:class="{{itemData.getMarkerClasses(itemData.rowSeparatorVisibility)}}"></div>
-   </ws:if>
-   <div if="{{!!itemData.dragTargetNode}}"
-        class="controls-TreeGridView__dragTargetNode_theme-{{_options.theme}} {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
-               {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
-   <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+<ws:template name="COLUMN_CONTENT">
+    <!-- При горизонтальном скролле хлебные крошки выводятся без колспанов (крошка в первой ячейке, остальные пустые, разделитель колонок скрыт). -->
+    <!-- Этот механизм вызывает шаблон колонок, как при обычном рендере. -->
+    <!-- Не нужно ренднрить контент ячейки, если это не ячейка с colspanTemplate-->
+    <ws:partial template="{{ renderSeparatedColumnContent !== false ? currentColumn.template : 'Controls/grid:ColumnTemplate' }}"
+                editArrowTemplate="{{editArrowTemplate}}"
+                itemActionsTemplate="{{itemActionsTemplate}}"
+                attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
+                            {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
+                            {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}} {{ cellClassName || '' }}"
+                ladderWrapper="{{currentColumn.ladderWrapper}}"
+                expanderTemplate="{{itemData.expanderTemplate}}"
+                itemData="{{currentColumn}}"
+                tagTemplate="{{tagTemplate}}">
+        <ws:afterItemTemplate>
+            <ws:partial if="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'right')}}"
+                        template="{{itemData.expanderTemplate}}"
+                        itemData="{{itemData}}"
+                        expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                        expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
+        </ws:afterItemTemplate>
+        <ws:multiSelectTemplate>
+            <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+        </ws:multiSelectTemplate>
+    </ws:partial>
 </ws:template>
 
-<ws:template name="colTpl">
-   <td class="{{currentColumn.cellClasses}}
-              {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-              {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+<ws:template name="COLUMN">
+
+    <!-- Первая ячейка может быть заколспанена на N колонок. Выводим Первую, следующие N-1 колонок не выводим. -->
+    <ws:if data="{{
+            colspan === false && !!colspanLength ? ( (currentColumn.columnIndex <= (itemData.hasMultiSelectColumn ? 1 : 0)) || (currentColumn.columnIndex >= ((itemData.hasMultiSelectColumn ? 1 : 0) + colspanLength))) : true
+        }}">
+        <td class="{{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+              {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
+              {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-       style="{{ currentColumn.tableCellStyles }}"
-       colspan="{{itemData.getColspanFor((itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
-       <div class="controls-TreeGridView__row-cell_innerWrapper">
-           <ws:partial template="columnContentWrapper"
-                       attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-           <div if="{{!!itemData.dragTargetNode}}"
-                class="controls-TreeGridView__dragTargetNode_theme-{{_options.theme}} {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + _options.theme}}
-                       {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + _options.theme}}"></div>
-       </div>
-   </td>
+              {{ marker !== false ? currentColumn.classList.marked }}
+              controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
+            style="{{ currentColumn.tableCellStyles }}"
+            colspan="{{(colspan === false && !!colspanLength) ? (currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0) ? colspanLength : 1) : itemData.getColspanFor((itemData.hasMultiSelectColumn && currentColumn.columnIndex == 0) ? 'multiSelectColumn' : (colspan || colspanCurrentNode ? 'node'))}}">
+            <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, true) }}
+                        {{itemData.columnIndex === 0 && !itemData.hasMultiSelectColumn ? currentColumn.classList.padding.left }}">
+                <!-- Маркер активной записи -->
+                <ws:if data="{{ marker !== false && itemData.shouldDisplayMarker(currentColumn.columnIndex) }}">
+                    <div class="{{itemData.getMarkerClasses()}}"></div>
+                </ws:if>
+
+                <!-- Какая то запись перемещается в данную папку. Обводка -->
+                <ws:if data="{{ !!itemData.dragTargetNode }}">
+                    <div class="controls-TreeGridView__dragTargetNode_theme-{{itemData.theme}}
+                                {{currentColumn.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first_theme-' + itemData.theme}}
+                                {{currentColumn.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last_theme-' + itemData.theme}}"></div>
+                </ws:if>
+
+                <!-- Контент колонки с чекбоксом -->
+                <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+                    <ws:if data="{{!itemData.isAdd && !isSearchSeparator}}">
+                        <div class="{{ currentColumn.classList.padding.getAll() }} {{ cellClassName || '' }}">
+                            <ws:partial template="multiSelectTemplate"/>
+                        </div>
+                    </ws:if>
+                    <ws:else>
+                        <div class="{{'controls-Grid__cell_spacingFirstCol_' + itemData.itemPadding.left + '_theme-' + itemData.theme + ' controls-TreeGrid__nodeFooterContent_spacingLeft-' + itemData.itemPadding.left + '_theme-' +itemData.theme}}"></div>
+                    </ws:else>
+                </ws:if>
+                <!-- Контент колонки с данными -->
+                <ws:else>
+
+                    <!-- Иерархические отступы -->
+                    <ws:if data="{{itemData.hasMultiSelectColumn && currentColumn.columnIndex === 1 || !itemData.hasMultiSelectColumn && currentColumn.columnIndex === 0}}">
+                        <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
+                            <ws:for data="i in itemData.level - 1">
+                                <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
+                            </ws:for>
+                        </ws:if>
+                        <ws:if data="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
+                            <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                                        expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
+                        </ws:if>
+                        <ws:else
+                                data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
+                            <div class="{{itemData.getExpanderPaddingClasses(itemData, expanderSize)}} js-controls-ListView__notEditable"></div>
+                        </ws:else>
+                    </ws:if>
+
+                    <!-- Контент, в зависимости от colspan -->
+                    <ws:if data="{{ itemData.getColspanType(_options) === 'none' }}">
+                        <ws:partial template="COLUMN_CONTENT"/>
+                    </ws:if>
+                    <ws:else data="{{ itemData.getColspanType(_options) === 'full' }}">
+                        <ws:partial template="COLUMN_COLSPAN_CONTENT"/>
+                    </ws:else>
+                    <ws:else>
+                        <ws:if data="{{ currentColumn.columnIndex === (itemData.hasMultiSelectColumn ? 1 : 0) }}">
+                            <!-- Растянутая колонка -->
+                            <ws:partial template="COLUMN_COLSPAN_CONTENT"/>
+                        </ws:if>
+                        <ws:else data="{{ currentColumn.columnIndex >= (colspanLength + (itemData.hasMultiSelectColumn ? 1 : 0)) }}">
+                            <!-- Оставшиеся колонки -->
+                            <ws:partial template="COLUMN_CONTENT"/>
+                        </ws:else>
+                    </ws:else>
+
+                    <!-- Без скролла колонок операции выводятся в последней ячейке таблицы. -->
+                    <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode)}}">
+                        <ws:partial template="itemActionsTemplateChooser"/>
+                    </ws:if>
+                </ws:else>
+
+            </div>
+        </td>
+    </ws:if>
 
     <!-- При скролле колонок операции над записью выводятся в отдельной ячейке после всех ячеек строки. -->
     <!-- Позиционируются прижатыми к правому краю с помощью отрицательного translateX на максимально возможную величину -->
     <!-- скролла(как если бы колонки были полностью проскролены). -->
     <!-- Стиль смещения задается в ColumnScroll. Ячейка не должна иметь ширины, чтобы быть идеально прижатой справа. -->
     <ws:if data="{{itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode)}}">
-        <td class="controls-Grid-table-layout__itemActions__container {{currentColumn.cellClasses}}
-              {{!!itemData.isActive && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + _options.theme}}
-              {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+        <td class="controls-Grid-table-layout__itemActions__container {{currentColumn.classList.base}} {{currentColumn.classList.columnScroll}}
+              {{!!itemData.isActive() && highlightOnHover !== false ? ' controls-GridView__item_active_theme-' + itemData.theme}}
+              {{!!itemData.isDragging ? ' controls-ListView__item_dragging_theme-' + itemData.theme}}
               {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-              {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0) ? ' controls-Grid__row-cell_selected__first_theme-' + _options.theme}}
-              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+              controls-TreeGrid__row js-controls-ItemActions__swipeMeasurementContainer"
             colspan="1"
             style="width: 0; min-width: 0; max-width: 0; padding: 0px; overflow: visible; z-index: 3;">
-            <div class="controls-TreeGridView__row-cell_innerWrapper">
+            <div class="{{ itemData.getRelativeCellWrapperClasses(colspan, false) }}">
                 <ws:partial template="itemActionsTemplateChooser"/>
             </div>
         </td>
     </ws:if>
 </ws:template>
 
-<tr class="controls-Grid__row {{itemData.calcCursorClasses(clickable)}} controls-Grid__row_{{itemData.style || 'default'}}_theme-{{_options.theme}}
-            {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default') + '_theme-' + _options.theme}}">
+<tr class="{{ itemData.getRowClasses(_options) }}">
    <ws:if data="{{colspanNodes && itemData.dispItem.isNode()}}">
        {{itemData.resetColumnIndex();}}
-       <ws:if data="{{itemData.hasMultiSelect}}">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+       <ws:if data="{{itemData.hasMultiSelectColumn}}">
+           <ws:partial template="COLUMN" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
            {{itemData.goToNextColumn();}}
        </ws:if>
-       <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}" colspanCurrentNode="{{true}}"/>
+       <ws:partial template="COLUMN" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}" colspanCurrentNode="{{true}}"/>
    </ws:if>
    <ws:else>
        <ws:for data="itemData.resetColumnIndex(); itemData.isLastColumn(itemData, colspan); itemData.goToNextColumn();">
-           <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+           <ws:partial template="COLUMN" currentColumn="{{itemData.getCurrentColumn(backgroundColorStyle)}}"/>
        </ws:for>
    </ws:else>
 </tr>

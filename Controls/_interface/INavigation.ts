@@ -1,34 +1,18 @@
 /**
- * Интерфейс для поддержки навигации по спискам.
- *
- * @interface Controls/_interface/INavigation
- * @public
- * @author Крайнов Д.О.
- */
-
-/*
- * Interface for list navigation.
- *
- * @interface Controls/_interface/INavigation
- * @public
- * @author Крайнов Д.О.
- */
-
-/**
- * @typedef {String} NavigationSource
+ * @typedef {String} TNavigationSource
  * @description Алгоритм, с которым работает источник данных.
  * @variant position Навигация по курсору. Подробнее читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  * @variant page Постраничная навигация.
  */
 /*
- * @typedef {String} NavigationSource
+ * @typedef {String} TNavigationSource
  * @variant position Position-based navigation (cursor).
  * @variant page Page-based navigation.
  */
 export type TNavigationSource = 'position' | 'page';
 
 /**
- * @typedef {String} NavigationView
+ * @typedef {String} TNavigationView
  * @description Режим визуального отображения навигации.
  * @variant infinity Бесконечный скролл.
  * В этом режиме загрузка данных происходит при достижении специального триггера, который расположен в конце скроллируемого контента списка.
@@ -36,35 +20,54 @@ export type TNavigationSource = 'position' | 'page';
  * В этом режиме загрузка данных происходит при переходе на другую страницу.
  * Навигация осуществляется с помощью кнопок, которые расположены на панели навигации.
  * @variant demand В этом режиме загрузка данных происходит при нажатии кнопки "Ещё", которая расположена под последней загруженной записью.
- * @variant maxCount Подгружать данные пока не будет достигнут порог, который задан в {@link Controls/_interface/INavigation/NavigationViewConfig.typedef maxCountValue}.
+ * @variant maxCount Подгружать данные пока не будет достигнут порог, который задан в {@link Controls/_interface/INavigation/INavigationViewConfig.typedef maxCountValue}.
  */
 
 /*
- * @typedef {String} NavigationView
+ * @typedef {String} TNavigationView
  * @variant infinity Infinite scroll.
  * @variant pages Pages with paging control.
  * @variant demand Load next when requested (for example, hasMore button clicked).
+ * @variant maxCount Load data until threshold value set in {@link Controls/_interface/INavigation/INavigationViewConfig.typedef maxCountValue}.
  */
 export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 
 /**
- * @typedef {String} Direction
+ * @typedef {String} TNavigationDirection
  * @description Направление выборки при навигации по курсору.
- * @variant after Вверх.
- * @variant before Вниз.
- * @variant both В обоих направлениях.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
  */
 
 /*
- * @typedef {String} Direction
- * @variant after loading data after positional record.
- * @variant before loading data before positional record.
- * @variant both loading data in both directions relative to the positional record.
+ * @typedef {String} TNavigationDirection
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
  */
-export type TNavigationDirection = 'before' | 'after' | 'both';
+export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
 
 /**
- * @typedef {Object} PositionSourceConfig
+ * @typedef {Object} IBasePositionSourceConfig
+ * @description Конфигурация источника данных для перезагрузки при навигации по курсору.
+ * Подробнее о данном типе навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
+ * @property {String|Array.<String>} position Начальная позиция для курсора.
+ * Относительно этой позиции будет создаваться выборка при навигации.
+ * Позиция определяется по значению поля или по массиву значений полей, имена которых заданы в опции field.
+ * @property {TNavigationDirection} direction Направление выборки. Варианты значений: 'backward' | 'forward' | 'bothways'
+ * @property {Number} limit Количество записей, которые запрашиваются при выборке.
+ */
+
+export interface IBasePositionSourceConfig {
+    position?: unknown[] | unknown;
+    direction?: TNavigationDirection;
+    limit?: number;
+    multiNavigation?: boolean;
+}
+
+/**
+ * @typedef {Object} INavigationPositionSourceConfig
  * @description Конфигурация для навигации по курсору.
  * Подробнее о данном типе навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  * @property {String|Array.<String>} field Имя поля или массив с именами полей, для которых в целевой таблице БД создан индекс.
@@ -73,112 +76,173 @@ export type TNavigationDirection = 'before' | 'after' | 'both';
  * @property {String|Array.<String>} position Начальная позиция для курсора.
  * Относительно этой позиции будет создаваться выборка при навигации.
  * Позиция определяется по значению поля или по массиву значений полей, имена которых заданы в опции field.
- * @property {Direction} direction Направление выборки.
+ * @property {TNavigationDirection} direction Направление выборки. Варианты значений: 'backward' | 'forward' | 'bothways'
  * @property {Number} limit Количество записей, которые запрашиваются при выборке.
  */
 /*
- * @typedef {Object} PositionSourceConfig
+ * @typedef {Object} INavigationPositionSourceConfig
  * @description Source configuration for position-based (cursor) navigation.
  * @property {String|Array} field Field (fields array) used for position-based navigation.
  * @property {String|Array} position Value of field (fields array) used for position-based navigation.
- * @property {String} direction Loading direction.
+ * @property {TNavigationDirection} direction Loading direction. Variants: 'backward' | 'forward' | 'bothways'
  * @property {Number} limit Limit of records requested for a single load.
  */
 
-export interface INavigationPositionSourceConfig {
-   field: string[] | string;
-   position?: unknown[] | unknown;
-   direction?: TNavigationDirection;
-   limit?: number;
+export interface INavigationPositionSourceConfig extends IBasePositionSourceConfig {
+    field: string[] | string;
 }
 
 /**
- * @typedef {Object} PageSourceConfig
+ * @typedef {Object} IBasePageSourceConfig
  * @description Конфигурация для постраничной навигации.
- * @property {Number} page Загружать номер страницы.
- * @property {Number} pageSize Загружать размер страницы.
+ * @property {Number} page Номер загружаемой страницы.
+ * @property {Number} pageSize Размер загружаемой страницы.
+ */
+
+export interface IBasePageSourceConfig {
+    page?: number;
+    pageSize: number;
+    multiNavigation?: boolean;
+}
+
+/**
+ * @typedef {Object} INavigationPageSourceConfig
+ * @description Конфигурация источника данных для перезагрузки при постраничной навигации.
+ * @property {Number} page Номер загружаемой страницы.
+ * @property {Number} pageSize Размер загружаемой страницы.
  * @property {Boolean} hasMore Если поле hasMore имеет значение false, аналогичный параметр добавляется в запрос. В ответ, вместо получения флага наличия записей (логическое значение), ожидается общее количество записей (числовое значение).
  */
 
 /*
- * @typedef {Object} PageSourceConfig
+ * @typedef {Object} INavigationPageSourceConfig
  * @description Source configuration for page-based navigation.
  * @property {Number} page Loading page number.
  * @property {Number} pageSize Loading page size.
  * @property {Boolean} hasMore If hasMore field has false value, similar parameter is added to request. In response instead of receiving a flag for the presence of records (boolean value), the total count of records is expected (number value).
  */
-export interface INavigationPageSourceConfig {
-    page?: number;
-    pageSize: number;
+export interface INavigationPageSourceConfig extends IBasePageSourceConfig{
     hasMore?: boolean;
 }
 
 /**
- * @typedef {String} TotalInfo
+ * @typedef {Object} INavigationSourceConfig
+ * @description Конфигурация навигации ({@link Controls/_interface/INavigation/INavigationPositionSourceConfig.typedef по курсору} или {@link Controls/_interface/INavigation/INavigationPageSourceConfig.typedef постраничная}).
+ */
+/*
+ * @typedef {Object} INavigationSourceConfig
+ * @description Source configuration for both page-based and position-based (cursor) navigation.
+ */
+export type INavigationSourceConfig = INavigationPositionSourceConfig | INavigationPageSourceConfig;
+export type IBaseSourceConfig = IBasePositionSourceConfig | IBasePageSourceConfig;
+
+/**
+ * @typedef {String} TNavigationTotalInfo
  * @description Режим отображения информационной подписи.
  * @variant basic Отображается только общее число записей.
  * @variant extended Отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.
  */
-export type TNavigationTotalIngo = 'basic' | 'extended';
+export type TNavigationTotalInfo = 'basic' | 'extended';
 
 /**
- * @typedef {Object} NavigationViewConfig
- * @property {String} [pagingMode=direct] Режим отображения постраничной навигации.
- * В настоящий момент поддерживается навигация только в прямом направлении: от первой страницы до последней.
- * @property {TotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
+ * @typedef {String} TNavigationPagingMode
+ * @variant hidden Предназначен для отключения отображения пейджинга в реестре.
+ * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
+ * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
+ * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
+ * @variant numbers Предназначен для пейджинга с подсчетом записей и страниц.
+ */
+export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbers' | 'direct';
+
+/**
+ * @typeof {String} TNavigationPagingPadding
+ * @variant default Предназначен для отображения отступа под пэйджинг.
+ * @variant null Предназначен для отключения отображения отступа под пэйджинг.
+ */
+type TNavigationPagingPadding = 'default' | 'null';
+
+/**
+ * @typedef {Object} INavigationViewConfig
+ * @property {TNavigationPagingMode} [pagingMode=hidden] Опция управляет внешним видом пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
+ * @property {TNavigationTotalInfo} [totalInfo=basic] Режим отображения информационной подписи.
  * @property {Number} maxCountValue Количество записей, когда необходимо прекратить загрузку в режиме навигации maxCount.
- * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/Navigation.typedef здесь}.
+ * О режиме навигации maxCount вы можете посмотреть {@link Controls/_interface/INavigation/INavigationOptionValue.typedef здесь}.
+ * @property {Boolean} [showEndButton=false] Видимость кнопки перехода в конец списка.
+ * Когда параметр принимает значение true, кнопка отображается.
+ * @property {TNavigationPagingPadding} [pagingPadding=default] Опция управляет отображением отступа под пэйджинг.
  */
 export interface INavigationViewConfig {
-    pagingMode?: string;
-    totalInfo?: TNavigationTotalIngo;
+    pagingMode?: TNavigationPagingMode;
+    totalInfo?: TNavigationTotalInfo;
+    maxCountValue?: number;
+    showEndButton?: boolean;
+    pagingPadding?: TNavigationPagingPadding;
 }
 
 /**
- * @typedef {Object} Navigation
+ * @typedef {Object} INavigationOptionValue
  * @description Конфигурация навигации в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
- * Подробнее о настройке навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ здесь}.
+ * Подробнее о настройке навигации читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/navigation/ здесь}.
  * Подробнее о настройке навигации по курсору читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  * Подробнее об источниках данных читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/data-sources/ здесь}.
- * @property {NavigationSource} source Алгоритм, с которым работает источник данных.
- * @property {NavigationView} view Режим визуального отображения навигации.
- * @property {PositionSourceConfig|PageSourceConfig} sourceConfig Конфигурация алгоритма (см. свойство source), с которым работает источник данных.
- * @property {NavigationViewConfig} viewConfig Конфигурация визуального отображения навигации.
+ * @property {TNavigationSource} source Алгоритм, с которым работает источник данных. Варианты значений: 'position' | 'page'
+ * @property {TNavigationView} view Режим визуального отображения навигации. Варианты значений: 'infinity' | 'pages' | 'demand' | 'maxCount'
+ * @property {INavigationSourceConfig} sourceConfig Конфигурация алгоритма, с которым работает источник данных ( см. {@link Controls/_interface/INavigation/INavigationSourceConfig.typedef INavigationSourceConfig}).
+ * @property {INavigationViewConfig} viewConfig Конфигурация визуального отображения навигации ( см. {@link Controls/_interface/INavigation/INavigationViewConfig.typedef INavigationViewConfig}).
  */
 
 /*
- * @typedef {Object} Navigation
- * @property {NavigationSource} source Algorithm with which the data source works.
- * @property {NavigationView} view Visual interface for navigation (paging buttons, etc.).
- * @property {PositionSourceConfig|PageSourceConfig} sourceConfig Configuration for data source.
- * @property {NavigationViewConfig} viewConfig Configuration for navigation view.
+ * @typedef {Object} INavigationOptionValue
+ * @property {TNavigationSource} source Algorithm with which the data source works. Variants: 'position' | 'page'
+ * @property {TNavigationView} view Visual interface for navigation (paging buttons, etc.). Variants: 'infinity' | 'pages' | 'demand' | 'maxCount'
+ * @property {INavigationSourceConfig} sourceConfig Configuration for data source. See. ({@link Controls/_interface/INavigation/INavigationSourceConfig.typedef INavigationSourceConfig}
+ * @property {INavigationViewConfig} viewConfig Configuration for navigation view. See. ({@link Controls/_interface/INavigation/INavigationViewConfig.typedef INavigationViewConfig}
  */
-export interface INavigationOptionValue {
-   source?: TNavigationSource;
-   view?: TNavigationView;
-   sourceConfig?: INavigationPageSourceConfig | INavigationPositionSourceConfig;
-   viewConfig?: INavigationViewConfig;
+export interface INavigationOptionValue<U> {
+    source?: TNavigationSource;
+    view?: TNavigationView;
+    sourceConfig?: U;
+    viewConfig?: INavigationViewConfig;
 }
 
-export interface INavigationOptions {
-   navigation?: INavigationOptionValue;
+export interface INavigationOptions<U> {
+    navigation?: INavigationOptionValue<U>;
+}
+
+/**
+ * Интерфейс для контролов, поддерживающих навигацию.
+ *
+ * @interface Controls/_interface/INavigation
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+ /*
+ * Interface for list navigation.
+ *
+ * @interface Controls/_interface/INavigation
+ * @public
+ * @author Крайнов Д.О.
+ */
+
+export default interface INavigation {
+    readonly '[Controls/_interface/INavigation]': boolean;
 }
 
 /**
  * @name Controls/_interface/INavigation#navigation
- * @cfg {Navigation} Конфигурация навигации по списку. Настройка навигации источника данных (страниц, смещения, положения) и визуального отображения навигации (страниц, бесконечного скролла и т.д.).
+ * @cfg {INavigationOptionValue} Конфигурация навигации по списку. Настройка навигации источника данных (страниц, смещения, положения) и визуального отображения навигации (страниц, бесконечного скролла и т.д.).
  * @remark
- * Подробнее о конфигурации навигации по списку читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/navigation/ руководстве разработчика}.
+ * Подробнее о конфигурации навигации по списку читайте в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/navigation/ руководстве разработчика}.
  * @example
  * В этом примере в списке будут отображаться 2 элемента.
- * <pre>
+ * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.list:View
  *    keyProperty="id"
  *    source="{{_source}}"
  *    navigation="{{_navigation}}" />
  * </pre>
- * <pre>
+ * <pre class="brush: js">
  * // JavaScript
  * _beforeMount: function(options) {
  *    this._source = new Memory({
@@ -198,7 +262,7 @@ export interface INavigationOptions {
  *         }
  *      ]
  *    });
- *    this._navigation = {
+ *    this._navigation: INavigationOptionValue<INavigationPageSourceConfig> = {
  *       source: 'page',
  *       view: 'pages',
  *       sourceConfig: {
@@ -210,7 +274,7 @@ export interface INavigationOptions {
  * </pre>
  */
 
-/*
+ /*
  * @name Controls/_interface/INavigation#navigation
  * @cfg {Navigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
  * @example
@@ -240,7 +304,7 @@ export interface INavigationOptions {
  *         }
  *      ]
  *    });
- *    this._navigation = {
+ *    this._navigation: INavigationOptionValue<INavigationPageSourceConfig> = {
  *       source: 'page',
  *       view: 'pages',
  *       sourceConfig: {
@@ -251,6 +315,3 @@ export interface INavigationOptions {
  * }
  * </pre>
  */
-export default interface INavigation {
-    readonly '[Controls/_interface/INavigation]': boolean;
-}

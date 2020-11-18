@@ -130,9 +130,9 @@
             />
             <div class="demo_slider_input-wrapper">
                <Controls.input:Label class="demo_slider_input-label_first" caption="from"></Controls.input:Label>
-               <Controls.input:Number class="demo_slider_input_field" name="inputStartValue" precision="{{0}}" bind:value="_inputStartValue" on:inputCompleted="_startInputCompleted()" on:keyDown="_inputKeyDown()"></Controls.input:Number>
+               <Controls.input:Number class="demo_slider_input_field demo_slider_input_field_first" name="inputStartValue" precision="{{0}}" bind:value="_inputStartValue" on:inputCompleted="_startInputCompleted()" on:keyDown="_inputKeyDown()"></Controls.input:Number>
                <Controls.input:Label class="demo_slider_input-label" caption="to"></Controls.input:Label>
-               <Controls.input:Number class="demo_slider_input_field" name="inputEndValue" precision="{{0}}" bind:value="_inputEndValue" on:inputCompleted="_endInputCompleted()"></Controls.input:Number>
+               <Controls.input:Number class="demo_slider_input_field demo_slider_input_field_last" name="inputEndValue" precision="{{0}}" bind:value="_inputEndValue" on:inputCompleted="_endInputCompleted()"></Controls.input:Number>
                <Controls.input:Label class="demo_slider_input-label demo_slider_input-label_last" caption="$"></Controls.input:Label>
             </div>
          </div>

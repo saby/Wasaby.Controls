@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import Template = require('wml!Controls/_popupTemplate/Stack/Opener/StackContent');
-import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {tmplNotify} from 'Controls/eventUtils';
 
 interface IStackContentOptions extends IControlOptions {
     stackMaxWidth?: number;
@@ -22,7 +22,7 @@ class StackContent extends Control<IStackContentOptions> {
         this._updateOffset(options);
     }
 
-    private _canResize(propStorageId: string, width: number, minWidth: number, maxWidth: number): boolean {
+    protected _canResize(propStorageId: string, width: number, minWidth: number, maxWidth: number): boolean {
         const canResize = propStorageId && width && minWidth && maxWidth && maxWidth !== minWidth;
         return !!canResize;
     }

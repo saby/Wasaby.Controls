@@ -3,7 +3,7 @@
             style="{{_options.style}}"
             autoClose="{{_options.autoClose}}">
     <ws:bodyContentTemplate>
-        <div class="controls-Notification__simpleTemplate">
+        <div class="controls-Notification__simpleTemplate controls-Notification__simpleTemplate_theme-{{_options.theme}}">
             <ws:if data="{{_options.icon}}">
                 <div class="controls-Notification__simpleTemplate-icon_theme-{{_options.theme}}
                             controls-Notification__simpleTemplate-icon-size_theme-{{_options.theme}}
@@ -11,7 +11,7 @@
                             icon-{{_options.icon}}">
                 </div>
             </ws:if>
-            <div class="controls-Notification__simpleTemplate-message controls-Notification__simpleTemplate-message_theme-{{_options.theme}}">{{_options.text}}</div>
+            <div class="controls-Notification__simpleTemplate-message">{{_options.text}}</div>
         </div>
     </ws:bodyContentTemplate>
 </ws:partial>

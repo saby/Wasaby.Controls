@@ -1,19 +1,5 @@
 @import "_contentEnvironmentZIndex";
 
-.controls-Scroll {
-   position: relative;
-   // Таким образом мы скрываем нативный скролл.
-   overflow: hidden;
-   display: flex;
-   flex-direction: column;
-
-   &:hover {
-      > .controls-Scroll__scrollbar {
-         visibility: visible;
-      }
-   }
-}
-
 // Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
 .controls-Scroll_webkitOverflowScrollingAuto .controls-Scroll__content-overflowScrolling {
    -webkit-overflow-scrolling: auto;
@@ -31,7 +17,7 @@
    -webkit-overflow-scrolling: touch;
 }
 
-.controls-Scroll__scrollbar {
+.controls-VScrollbar_vertical {
    position: absolute;
    top: 0;
    right: 0;
@@ -39,19 +25,16 @@
    z-index: @z-index_Scroll-contentEnvironment;
 }
 
-.controls-Scroll__scrollbar_hidden {
-   visibility: hidden;
+.controls-ScrollContainer__scrollbar_horizontal {
+   position: absolute;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   z-index: @z-index_Scroll-contentEnvironment;
 }
 
-.controls-Scroll__content {
-   height: 100%;
-   flex-grow: 1;
-   display: flex;
-   max-height: inherit;
-   flex-direction: column;
-
-   //We enable the contents of the scrollContainer to be displayed on top of the scrollbar and shadows by specifying a z-index greater than them.
-   z-index: auto;
+.controls-Scroll__scrollbar_hidden {
+   visibility: hidden;
 }
 
 .controls-Scroll__userContent {
@@ -64,31 +47,42 @@
  * В противном случае это вызовет тормоза вместо оптимизации.
  * Подробнее https://developer.mozilla.org/ru/docs/Web/CSS/will-change.
  */
+
 .controls-Scroll__content_possibleScroll:hover {
    will-change: scroll-position;
 }
 
 .controls-Scroll__shadow {
-   left: 0;
-   right: 0;
    z-index: @z-index_Scroll-contentEnvironment;
    position: absolute;
    pointer-events: none;
-   height: @height-gradient_Scroll-shadow;
 }
 
-.controls-Scroll__shadow-safari13 {
-   left: 0;
-   z-index: @z-index_Scroll-contentEnvironment;
-   position: absolute;
-   pointer-events: none;
-   height: @height-gradient_Scroll-shadow;
+.ws-is-desktop-safari {
+   // На MacOS Safari если при подгрузке новых элементов списка поменяется ширина колонок в таблице, то появятся пробелы
+   // в тенях. Применяем аппаратное ускорение.
+   .controls-Scroll__shadow {
+      transform: translate3d(0, 0, 0);
+   }
 }
+
+.controls-Scroll__shadow_horizontal {
+   left: 0;
+   right: 0;
+   height: @shadow_thickness_scroll;
+}
+
+.controls-Scroll__shadow_vertical {
+   top: 0;
+   bottom: 0;
+   width: @shadow_thickness_scroll;
+}
+
 .controls-Scroll__shadow_top {
    top: 0;
    background: linear-gradient(
       to bottom,
-      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+      @shadow_start-color_scroll, @shadow_end-color_scroll
    );
 }
 
@@ -96,7 +90,23 @@
    bottom: 0;
    background: linear-gradient(
       to top,
-      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+      @shadow_start-color_scroll, @shadow_end-color_scroll
+   );
+}
+
+.controls-Scroll__shadow_left {
+   left: 0;
+   background: linear-gradient(
+           to right,
+           @shadow_start-color_scroll, @shadow_end-color_scroll
+   );
+}
+
+.controls-Scroll__shadow_right {
+   right: 0;
+   background: linear-gradient(
+           to left,
+           @shadow_start-color_scroll, @shadow_end-color_scroll
    );
 }
 
@@ -107,17 +117,22 @@
    display: none;
 }
 
-.controls-Scroll__content_scroll {
+.controls-Scroll__scroll_vertical {
    overflow-y: scroll;
    overflow-x: hidden;
 }
 
-.controls-Scroll__content_auto {
-   overflow-y: auto;
-   // If the width of the container lying in the scroll container is equal to the width of the scroll of the container,
-   // but one of its children climbs beyond this width, then on some platforms(iPad) this is taken into account when
-   // calculating the scrollWidth. Turn off scrolling horizontally.
-   overflow-x: hidden;
+// Chrome после обновления с 83 до 84 версии по умолчанию стал overflow-anchor: visible, из-за этого происходит
+// браузерный подскролл к низу вновь добавляемого контента.
+// https://online.sbis.ru/opendoc.html?guid=8673c14b-da6e-444b-86d1-d1a997555bfe
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1105785
+.ws-is-chrome .controls-Scroll__scroll_vertical {
+   overflow-anchor: none;
+}
+
+.controls-Scroll__scroll_verticalHorizontal {
+   overflow-y: scroll;
+   overflow-x: scroll;
 }
 
 .controls-Scroll__content_hidden {
@@ -126,12 +141,13 @@
 
 .controls-Scroll__paging {
    position: absolute;
-   bottom: 0;
-   right: 0;
    z-index: @z-index_Scroll-contentEnvironment;
-   border-top: @border-width_BaseControl-scrollPaging-top solid @border-color_BaseControl-scrollPaging;
+   bottom: @scrollpaging_offset-vertical_list;
+   right: @scrollpaging_offset-horizontal_list;
 }
 
-.controls-Scroll__content_paging {
-   padding-bottom: @height_Paging-button;
+.controls-Scroll__content_paging::after {
+   padding-bottom: @item_height_paging + @padding-vertical_paging * 2;
+   content: '';
+   display: block;
 }

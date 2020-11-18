@@ -1,9 +1,8 @@
-import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {Control} from 'UI/Base';
 import * as template from 'wml!Controls-demo/operations/SelectionViewMode/SelectionViewMode';
 import Memory from 'Controls-demo/operations/SelectionViewMode/Memory';
-import Data = require('Controls-demo/OperationsPanel/Demo/Data');
-import 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo';
-import 'css!Controls-demo/OperationsPanel/Demo/Demo';
+import {getListData} from 'Controls-demo/OperationsPanelNew/DemoHelpers/DataCatalog';
+import 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo';
 
 export default class extends Control {
    _template = template;
@@ -13,11 +12,13 @@ export default class extends Control {
 
    _beforeMount() {
       this._gridColumns = [{
-         template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
+         template: 'wml!Controls-demo/operations/SelectionViewMode/resources/PersonInfo'
       }];
       this._viewSource = new Memory({
          keyProperty: 'id',
-         data: Data.employees
+         data: getListData()
       });
    }
+
+   static _styles: string[] = ['Controls-demo/operations/Index'];
 }

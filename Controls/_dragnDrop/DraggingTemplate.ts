@@ -17,14 +17,17 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
 
    /**
     * Стандартный шаблон перемещения для списка.
-    * Подробнее читайте <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">здесь</a>.
+    *
+    * @remark
+    * Полезные ссылки:
+    * * <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">руководство разработчика</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dragnDrop.less">переменные тем оформления</a>
+    *
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
-    * @mixes Controls/_dragnDrop/DraggingTemplate/Styles
-    * @control
-    * @private
+    * 
+    * @public
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
    /*
@@ -32,13 +35,20 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
     * @class Controls/_dragnDrop/DraggingTemplate
     * @extends Core/Control
-    * @mixes Controls/_dragnDrop/DraggingTemplate/Styles
-    * @control
+    * 
     * @private
     * @author Авраменко А.С.
-    * @category DragNDrop
     */
 
+   var DraggingTemplate = Control.extend({
+      _template: template,
+
+      _beforeMount: function(options) {
+         this._itemsCount = _private.getCounterText(options.entity.getItems().length);
+      }
+   });
+
+   DraggingTemplate._theme = ['Controls/dragnDrop'];
    /**
     * @name Controls/_dragnDrop/DraggingTemplate#mainText
     * @cfg {String} Основная информация о перемещаемой сущности.
@@ -482,14 +492,4 @@ import template = require('wml!Controls/_dragnDrop/DraggingTemplate/DraggingTemp
     *   });
     * </pre>
     */
-
-   var DraggingTemplate = Control.extend({
-      _theme: ['Controls/dragnDrop'],
-      _template: template,
-
-      _beforeMount: function(options) {
-         this._itemsCount = _private.getCounterText(options.entity.getItems().length);
-      }
-   });
-
    export = DraggingTemplate;

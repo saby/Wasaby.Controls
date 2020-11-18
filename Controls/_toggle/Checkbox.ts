@@ -11,10 +11,17 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
    value?: boolean | null;
 }
 
+const mapTriState = {false: true, true: null, null: false};
+const mapBoolState = {true: false, false: true, null: true};
+
 /**
  * Контрол, позволяющий пользователю управлять параметром с двумя состояниями — включено и отключено.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2Ftoggle%2FCheckbox%2FIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
- * <a href="/materials/demo-ws4-checkbox">Демо-пример</a>.
  *
  * @class Controls/_toggle/Checkbox
  * @extends Core/Control
@@ -22,17 +29,16 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @implements Controls/_interface/IIcon
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IValidationStatus
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Checkbox/CheckBoxDemoPG
+ * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
 
 /*
  * Represents a control that a user can select and clear.
  *
- * <a href="/materials/demo-ws4-checkbox">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FCheckbox%2FstandartDemoCheckbox">Demo-example</a>.
  *
  * @class Controls/_toggle/Checkbox
  * @extends Core/Control
@@ -41,13 +47,53 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IIconStyle
  * @implements Controls/_interface/IIconSize
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Checkbox/CheckBoxDemoPG
+ * @demo Controls-demo/toggle/Checkbox/Base/Index
  */
+class Checkbox extends Control<ICheckboxOptions> implements ICaption,
+                                                            IIcon, ITooltip, IIconSize, IIconStyle, IValidationStatus {
+   '[Controls/_interface/ITooltip]': boolean = true;
+   '[Controls/_interface/ICaption]': boolean = true;
+   '[Controls/_interface/IIcon]': boolean = true;
+   '[Controls/_interface/IIconSize]': boolean = true;
+   '[Controls/_interface/IIconStyle]': boolean = true;
+   '[Controls/_interface/IValidationStatus]': boolean = true;
 
+   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+   protected _template: TemplateFunction = checkBoxTemplate;
+
+   private _notifyChangeValue(value: boolean | null): void {
+      this._notify('valueChanged', [value]);
+   }
+
+   protected _clickHandler(): void {
+      if (!this._options.readOnly) {
+         const map = this._options.triState ? mapTriState : mapBoolState;
+         this._notifyChangeValue(map[this._options.value + '']);
+      }
+   }
+
+   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
+
+   static getDefaultOptions(): object {
+      return {
+         value: false,
+         triState: false,
+         iconSize: 'default',
+         iconStyle: 'secondary',
+         validationStatus: 'valid'
+      };
+   }
+
+   static getOptionTypes(): object {
+      return {
+         triState: EntityDescriptor(Boolean),
+         tooltip: EntityDescriptor(String)
+      };
+   }
+}
 /**
  * @name Controls/_toggle/Checkbox#triState
  * @cfg {Boolean} Определяет, разрешено ли устанавливать чекбоксу третье состояние — "не определен" (null).
@@ -56,6 +102,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * True - Разрешено устанавливать третье состояние.
  * False - Не разрешено устанавливать третье состояние.
  * Если установлен режим triState, то значение может быть "null".
+ * @demo Controls-demo/toggle/Checkbox/Tristate/Index
  * @example
  * Чекбокс с включенным triState.
  * <pre>
@@ -81,6 +128,7 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * True - Enable triState.
  * False - Disable triState.
  * If the triState mode is set, then the value can be null.
+ * @demo Controls-demo/toggle/Checkbox/Tristate/Index
  * @example
  * Checkbox with enabled triState.
  * <pre>
@@ -181,7 +229,8 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  */
 
 /**
- * @event Controls/_toggle/Checkbox#valueChanged Происходит при изменении состояния контрола.
+ * @event Происходит при изменении состояния контрола.
+ * @name Controls/_toggle/Checkbox#valueChanged
  * @param {Boolean|null} New value.
  * @remark Событие необходимо для реагирования на изменения, внесенные пользователем в чекбокс. Значение, возвращаемое в событии, не вставляется в контрол, если не передать его обратно в поле в качестве опции. Значение может быть null только тогда, когда включена опция tristate.
  * @example
@@ -203,7 +252,8 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  */
 
 /*
- * @event Controls/_toggle/Checkbox#valueChanged Occurs when state changes.
+ * @event Occurs when state changes.
+ * @name Controls/_toggle/Checkbox#valueChanged
  * @param {Boolean|null} New value.
  * @remark This event should be used to react to changes user makes in the checkbox. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Value may be null only when checkbox tristate option is true.
  * @example
@@ -223,61 +273,4 @@ export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIco
  * @see value
  * @see triState
  */
-
-const mapTriState = {false: true, true: null, null: false};
-const mapBoolState = {true: false, false: true};
-
-class Checkbox extends Control<ICheckboxOptions> implements ICaption,
-                                                            IIcon, ITooltip, IIconSize, IIconStyle, IValidationStatus {
-   '[Controls/_interface/ITooltip]': boolean = true;
-   '[Controls/_interface/ICaption]': boolean = true;
-   '[Controls/_interface/IIcon]': boolean = true;
-   '[Controls/_interface/IIconSize]': boolean = true;
-   '[Controls/_interface/IIconStyle]': boolean = true;
-   '[Controls/_interface/IValidationStatus]': boolean = true;
-
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-   protected _template: TemplateFunction = checkBoxTemplate;
-
-   private _notifyChangeValue(value: boolean | null): void {
-      this._notify('valueChanged', [value]);
-   }
-
-   private _clickHandler(): void {
-      if (!this._options.readOnly) {
-         const map = this._options.triState ? mapTriState : mapBoolState;
-         this._notifyChangeValue(map[this._options.value + '']);
-      }
-   }
-
-   // Удалено в 20.1100
-   private _isTemplate(icon: TemplateFunction | string): boolean {
-      if (typeof icon === 'function') {
-         Logger.error('Controls.toggle:Checkbox: Опция icon должна иметь тип string.', this);
-         return true;
-      }
-
-      return false;
-   }
-
-   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
-
-   static getDefaultOptions(): object {
-      return {
-         value: false,
-         triState: false,
-         iconSize: 'default',
-         iconStyle: 'secondary',
-         validationStatus: 'valid'
-      };
-   }
-
-   static getOptionTypes(): object {
-      return {
-         triState: EntityDescriptor(Boolean),
-         tooltip: EntityDescriptor(String)
-      };
-   }
-}
-
 export default Checkbox;

@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Utils/RegExp'
+      'Controls/decorator'
    ],
    function(RegExpUtil) {
 
       'use strict';
-      describe('Controls.Utils.RegExp', function() {
+      describe('Controls/_decorator/inputUtils/RegExp', function() {
          var result;
 
          describe('escapeSpecialChars', function() {

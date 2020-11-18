@@ -1,40 +1,49 @@
-define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], function(showSelector, BaseController) {
-   'use strict';
+define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/popup', 'Types/collection'], function(showSelector, Lookup, popup, { RecordSet }) {
 
    describe('Controls/_lookup/showSelector', function() {
-      let
-         lastPopupOptions,
-         isShowSelector = false,
-         baseController = new BaseController();
+      let lastPopupOptions;
+      let isShowSelector = false;
 
-      baseController._options.selectorTemplate = {
-         templateOptions: {
-            selectedTab: 'defaultTab'
-         },
-         popupOptions: {
-            width: 100
-         }
-      };
-      baseController._children.selectorOpener = {
-         open: function(popupOptions) {
-            isShowSelector = true;
-            lastPopupOptions = popupOptions;
-            return Promise.resolve();
-         }
+      const getBaseController = function() {
+         const baseController = new Lookup.default();
+
+         baseController._lookupController = {
+            getItems: () => new RecordSet()
+         };
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               selectedTab: 'defaultTab'
+            },
+            popupOptions: {
+               width: 100
+            }
+         };
+
+         baseController._stack = {
+            open: (popupOptions) => {
+               isShowSelector = true;
+               lastPopupOptions = popupOptions;
+               return Promise.resolve();
+            },
+            close: () => {}
+         };
+
+         return baseController;
       };
 
       it('showSelector without params', function() {
-         let items = baseController._getItems();
+         const baseController = getBaseController();
          showSelector.default(baseController);
          assert.isTrue(isShowSelector);
          assert.equal(lastPopupOptions.templateOptions.selectedTab, 'defaultTab');
-         assert.notEqual(lastPopupOptions.templateOptions.selectedItems, items);
          assert.equal(lastPopupOptions.width, 100);
          assert.equal(lastPopupOptions.opener, baseController);
          assert.equal(lastPopupOptions.multiSelect, undefined);
       });
 
       it('showSelector with templateOptions', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate.templateOptions = {};
          isShowSelector = false;
          showSelector.default(baseController, {
             templateOptions: {
@@ -48,6 +57,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
       });
 
       it('showSelector with popupOptions', function() {
+         const baseController = getBaseController();
          isShowSelector = false;
          showSelector.default(baseController, {
             width: 50,
@@ -59,9 +69,110 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/BaseController'], fun
          assert.equal(lastPopupOptions.opener, baseController);
       });
 
+      it('showSelector with handlers on templateOptions', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = {
+            templateOptions: {
+               handlers: {
+                  onTestAction: () => {}
+               }
+            }
+         };
+         showSelector.default(baseController, {});
+
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onSelectComplete);
+         assert.isFunction(lastPopupOptions.templateOptions.handlers.onTestAction);
+      });
+
       it('showSelector with multiSelect', function() {
+         const baseController = getBaseController();
+         let selectCompleted = false;
+         let selectorClosed = false;
+
+         baseController._selectCallback = () => {
+            selectCompleted = true;
+         };
+         popup.Stack.closePopup = () => {
+            selectorClosed = true;
+            assert.isFalse(selectCompleted);
+         };
+         baseController._options.isCompoundTemplate = true;
+
          showSelector.default(baseController, undefined, true);
-         assert.isTrue(lastPopupOptions.templateOptions.multiSelect);
+         lastPopupOptions.templateOptions.handlers.onSelectComplete();
+      });
+
+      it('showSelector notify selector close', function() {
+         const baseController = getBaseController();
+         let selectorCloseNotified = false;
+         baseController._closeHandler = () => {};
+         baseController.notify = (eventName) => {
+            if (eventName === 'selectorClose') {
+               selectorCloseNotified = true;
+            }
+         };
+         showSelector.default(baseController, undefined, true);
+         lastPopupOptions.eventHandlers.onClose();
+         assert.isFalse(selectorCloseNotified);
+      });
+
+      it('showSelector with isCompoundTemplate:false', function() {
+         const baseController = getBaseController();
+         const sandbox = sinon.createSandbox();
+         const stub = sandbox.stub(baseController, '_selectCallback');
+         popup.Stack.closePopup = () => {};
+         baseController._options.isCompoundTemplate = false;
+         showSelector.default(baseController, undefined, true);
+         lastPopupOptions.templateOptions.handlers.onSelectComplete();
+
+         assert.isTrue(stub.notCalled);
+         sandbox.restore();
+      });
+
+      it('opening showSelector', function() {
+         const baseController = getBaseController();
+         isShowSelector = false;
+         showSelector.default(baseController, {});
+         assert.isTrue(isShowSelector);
+      });
+
+      it('showSelector without selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+
+         assert.isFalse(showSelector.default(baseController, {}));
+      });
+
+      it('showSelector without selectorTemplate and popupOptions template', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+         showSelector.default(baseController, {});
+      });
+
+      it('showSelector without selectorTemplate and with popupOptions template', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = null;
+         showSelector.default(baseController, {
+            template: 'testTemplate'
+         });
+         assert.equal(lastPopupOptions.template, 'testTemplate');
+      });
+
+      it('showSelector with selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._options.selectorTemplate = {
+            templateName: 'selectorTemplate',
+            templateOptions: {
+               searchValue: 'testValue'
+            }
+         };
+         showSelector.default(baseController, {
+            templateOptions: {
+               searchValue: ''
+            }
+         });
+         assert.equal(lastPopupOptions.template, 'selectorTemplate');
+         assert.equal(lastPopupOptions.templateOptions.searchValue, 'testValue');
       });
    });
 });

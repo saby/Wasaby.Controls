@@ -1,17 +1,22 @@
-import Control = require('Core/Control');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
-import 'css!theme?Controls/filterPopup';
 
 /**
  * Кнопка-ссылка на панели фильтров.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
+ * 
  * @class Controls/_filterPopup/Panel/Link
  * @extends Core/Control
- * @control
  * @public
+ * @author Золотова Э.Е.
+ * 
  * @example
  * Пример использования контрола на панели фильтра в блоке "Еще можно отобрать"
  * AdditionalItemTemplate.wml
- * <pre>
+ * <pre class="brush: html">
  *    <ws:template name="FIO">
  *       <Controls.filterPopup:Link caption="Author"/>
  *    </ws:template>
@@ -20,51 +25,38 @@ import 'css!theme?Controls/filterPopup';
  * </pre>
  */
 
-/*
- * Control filter link
- * @class Controls/_filterPopup/Panel/Link
- * @extends Core/Control
- * @control
- * @public
- */
+class FilterLink extends Control<IControlOptions> {
+   protected _template: TemplateFunction = template;
+   protected  _clickHandler(): void {
+      this._notify('visibilityChanged', [true]);
+   }
+
+   static _theme: string[] = ['Controls/filterPopup'];
+}
 
 /**
  * @name Controls/_filterPopup/Panel/Link#caption
- * @cfg {Object} Caption Текст кнопки-ссылки.
- */
-
-/*
- * @name Controls/_filterPopup/Panel/Link#caption
- * @cfg {Object} Caption
+ * @cfg {Object} Текст кнопки-ссылки.
  */
 
 /**
- * @event Controls/_filterPopup/Panel/Link#visibilityChanged Происходит при клике на элемент.
+ * @event Происходит при клике на элемент.
+ * @name Controls/_filterPopup/Panel/Link#visibilityChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @remark
  * Событие уведомляет панель, что необходимо переместить контрол в основной блок.
  * @example
  * Пример использования контрола на панели фильтра
- * <pre>
- *    <Controls.filterPopup:Link caption="Author" on:visibilityChanged="_visibilityChangedHandler()"/>
+ * <pre class="brush: html">
+ * <Controls.filterPopup:Link caption="Author" on:visibilityChanged="_visibilityChangedHandler()"/>
  * </pre>
  *
- * <pre>
- *     private _visibilityChangedHandler(event, value) {
- *          if (options.isVisibleUpdate) {
- *              this._notify('visibilityChanged', [value]);
- *          }
- *     }
+ * <pre class="brush: js">
+ * private _visibilityChangedHandler(event, value) {
+ *      if (options.isVisibleUpdate) {
+ *          this._notify('visibilityChanged', [value]);
+ *      }
+ * }
  * </pre>
  */
-
-var FilterLink = Control.extend({
-   _template: template,
-
-   _clickHandler: function() {
-      this._notify('visibilityChanged', [true]);
-   }
-
-});
-
-export = FilterLink;
+export default FilterLink;

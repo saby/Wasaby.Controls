@@ -1,67 +1,498 @@
-import Control = require('Core/Control');
-import Deferred = require('Core/Deferred');
-import Env = require('Env/Env');
-import ScrollData = require('Controls/_scroll/Scroll/Context');
-import StickyHeaderContext = require('Controls/_scroll/StickyHeader/Context');
-import {isStickySupport} from 'Controls/_scroll/StickyHeader/Utils';
-import ScrollWidthUtil = require('Controls/_scroll/Scroll/ScrollWidthUtil');
-import ScrollHeightFixUtil = require('Controls/_scroll/Scroll/ScrollHeightFixUtil');
-import template = require('wml!Controls/_scroll/Scroll/Scroll');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import {Bus} from 'Env/Event';
-import {isEqual} from 'Types/object';
-import 'Controls/_scroll/Scroll/Watcher';
-import 'Controls/event';
-import 'Controls/_scroll/Scroll/Scrollbar';
-import 'css!theme?Controls/scroll';
-import * as newEnv from 'Core/helpers/isNewEnvironment';
+import {constants, detection, compatibility} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {Logger} from "UI/Utils";
+import {TemplateFunction} from 'UI/Base';
+import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
+import * as ScrollData from 'Controls/_scroll/Scroll/Context';
+import Observer from './IntersectionObserver/Observer';
+import template = require('wml!Controls/_scroll/Container/Container');
+import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
+import ShadowsModel from './Container/ShadowsModel';
+import ScrollbarsModel from './Container/ScrollbarsModel';
+import PagingModel from './Container/PagingModel';
+import {
+    IScrollbars,
+    IScrollbarsOptions,
+    getDefaultOptions as getScrollbarsDefaultOptions
+} from './Container/Interface/IScrollbars';
+import {
+    IShadows,
+    IShadowsOptions,
+    IShadowsVisibilityByInnerComponents,
+    SHADOW_MODE,
+    SHADOW_VISIBILITY,
+    getDefaultOptions as getShadowsDefaultOptions
+} from './Container/Interface/IShadows';
+import {IIntersectionObserverObject} from './IntersectionObserver/Types';
+import StickyHeaderController from './StickyHeader/Controller';
+import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
+import {POSITION} from './Container/Type';
+import {SCROLL_DIRECTION} from './Utils/Scroll';
+import {IScrollState} from './Utils/ScrollState';
 
+interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
+    backgroundStyle: string;
+}
+
+const SCROLL_BY_ARROWS = 40;
+const DEFAULT_BACKGROUND_STYLE = 'default';
 /**
  * Контейнер с тонким скроллом.
- * Для контрола требуется {@link Controls/_scroll/Scroll/Context context}.
  *
- * @class Controls/_scroll/Container
- * @extends Core/Control
- * @control
- * @public
- * @author Красильников А.С.
- * @category Container
  * @remark
  * Контрол работает как нативный скролл: скроллбар появляется, когда высота контента больше высоты контрола. Для корректной работы контрола необходимо ограничить его высоту.
  * Для корректной работы внутри WS3 необходимо поместить контрол в контроллер Controls/dragnDrop:Compound, который обеспечит работу функционала Drag-n-Drop.
- * @demo Controls-demo/Container/Scroll
+ *
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
+ *
+ * @class Controls/_scroll/Container
+ * @extends Controls/_scroll/ContainerBase
+ * @mixes Controls/_scroll/Interface/IScrollbars
+ * @mixes Controls/_scroll/Interface/IShadows
+ *
+ * @public
+ * @author Миронов А.Ю.
+ * @demo Controls-demo/Scroll/Container/Default/Index
  *
  */
 
 /*
  * Container with thin scrollbar.
- * For the component, a {@link Controls/_scroll/Scroll/Context context} is required.
  *
  * @class Controls/_scroll/Container
- * @extends Core/Control
- * @control
+ * @extends Controls/_scroll/ContainerBase
+ *
  * @public
  * @author Красильников А.С.
- * @category Container
- * @demo Controls-demo/Container/Scroll
+ * @demo Controls-demo/Scroll/Container/Default/Index
  *
  */
+export default class Container extends ContainerBase<IContainerOptions> implements IScrollbars {
+    readonly '[Controls/_scroll/Container/Interface/IScrollbars]': boolean = true;
+    readonly '[Controls/_scroll/Container/Interface/IShadows]': boolean = true;
 
-/**
- * @event Происходит при скроллировании области.
- * @name Controls/_scroll/Container#scroll
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Number} scrollTop Смещение контента сверху относительно контейнера.
- */
+    protected _template: TemplateFunction = template;
+    protected _baseTemplate: TemplateFunction = baseTemplate;
 
-/*
- * @event scroll Scrolling content.
- * @param {Vdom/Vdom:SyntheticEvent} eventObject.
- * @param {Number} scrollTop Top position of content relative to container.
- */
+    protected _shadows: ShadowsModel;
+    protected _scrollbars: ScrollbarsModel;
+    protected _paging: PagingModel;
+    protected _dragging: boolean = false;
 
+    protected _intersectionObserverController: Observer;
+    protected _stickyHeaderController: StickyHeaderController;
+
+    protected _isOptimizeShadowEnabled: boolean;
+    protected _optimizeShadowClass: string;
+    protected _needUpdateContentSize: boolean = false;
+    protected _isScrollbarsInitialized: boolean = false;
+    private _isControllerInitialized: boolean;
+    private _wasMouseEnter: boolean = false;
+
+    _beforeMount(options: IContainerOptions, context, receivedState) {
+        this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
+        this._scrollbars = new ScrollbarsModel(options, receivedState);
+        this._stickyHeaderController = new StickyHeaderController();
+        // При инициализации оптимизированные тени включаем только если они явно включены, или включен режим auto.
+        // В режиме mixed используем тени на css что бы не вызывать лишние синхронизации. Когда пользователь наведет
+        // мышкой на скролл контейнер или по другим обнавлениям тени начнут работать через js.
+        this._isOptimizeShadowEnabled = Container._isCssShadowsSupported() &&
+            (options.shadowMode === SHADOW_MODE.CSS ||
+                (options.shadowMode === SHADOW_MODE.MIXED &&
+                    (options.topShadowVisibility === SHADOW_VISIBILITY.AUTO || options.bottomShadowVisibility === SHADOW_VISIBILITY.AUTO)));
+        this._optimizeShadowClass = this._getOptimizeShadowClass(options);
+
+        super._beforeMount(...arguments);
+
+        if (!receivedState) {
+            return Promise.resolve(this._scrollbars.serializeState());
+        }
+    }
+
+    _afterMount(options: IContainerOptions, context) {
+
+        if (context.ScrollData?.pagingVisible) {
+            this._paging = new PagingModel();
+            this._scrollCssClass = this._getScrollContainerCssClass(options);
+        }
+
+        super._afterMount();
+
+        const hasBottomHeaders = (): boolean => {
+            const headers = Object.values(this._stickyHeaderController._headers);
+            for (let i = 0; i < headers.length; i++) {
+                if (headers[i].position === POSITION.BOTTOM) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        // Если есть заголовки, фиксирующиеся снизу, то при построении нужно обновить им позицию,
+        // т.к. они будут зафиксированы.
+        if (compatibility.touch || hasBottomHeaders()) {
+            this._initHeaderController();
+        }
+    }
+
+    protected _beforeUpdate(options: IContainerOptions, context) {
+        super._beforeUpdate(...arguments);
+        if (context.ScrollData?.pagingVisible) {
+            if (!this._paging) {
+                this._paging = new PagingModel();
+            }
+            this._paging.isVisible = this._state.canVerticalScroll;
+        } else if (this._paging) {
+            this._paging = null;
+        }
+
+        this._updateShadows(this._state, options);
+        this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
+        this._optimizeShadowClass = this._getOptimizeShadowClass();
+        // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
+        //  из старого скроллконейнера, нужно отрефакторить. Очень запутанно
+        this._updateScrollContainerPaigingSccClass(options);
+        this._scrollbars.updateOptions(options);
+        this._shadows.updateOptions(this._getShadowsModelOptions(options));
+    }
+
+    protected _afterUpdate() {
+        super._afterUpdate(...arguments);
+        this._stickyHeaderController.updateContainer(this._container);
+        if (this._needUpdateContentSize) {
+            this._needUpdateContentSize = false;
+            this._updateStateAndGenerateEvents({ scrollHeight: this._children.content.scrollHeight });
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        if (this._intersectionObserverController) {
+            this._intersectionObserverController.destroy();
+            this._intersectionObserverController = null;
+        }
+        this._stickyHeaderController.destroy();
+        super._beforeUnmount();
+    }
+
+    private _initHeaderController(): void {
+        if (!this._isControllerInitialized) {
+            this._stickyHeaderController.init(this._container);
+            this._isControllerInitialized = true;
+        }
+    }
+
+    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+        const isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options || this._options);
+        if (this._isOptimizeShadowEnabled !== isOptimizeShadowEnabled) {
+            this._isOptimizeShadowEnabled = isOptimizeShadowEnabled;
+            this._optimizeShadowClass = this._getOptimizeShadowClass();
+            this._shadows.updateScrollState(sate || this._state);
+        }
+    }
+
+    private _getShadowsModelOptions(options: IContainerBaseOptions): any {
+        const shadowsModel = {...options};
+        // gridauto нужно для таблицы
+        if (options.topShadowVisibility === 'gridauto') {
+            shadowsModel.topShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+        }
+        if (options.bottomShadowVisibility === 'gridauto') {
+            shadowsModel.bottomShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+        }
+        return shadowsModel;
+    }
+
+    protected _scrollHandler(e: SyntheticEvent): void {
+        super._scrollHandler(e);
+        this._initHeaderController();
+    }
+
+    _controlResizeHandler(): void {
+        super._controlResizeHandler();
+        this._stickyHeaderController.controlResizeHandler();
+    }
+
+    _updateState(...args) {
+        const isUpdated: boolean = super._updateState(...args);
+        if (isUpdated) {
+
+            // Если включены тени через стили, то нам все равно надо посчитать состояние теней
+            // для фиксированных заголовков если они есть.
+            if (!this._isOptimizeShadowEnabled ||
+                    this._stickyHeaderController.hasFixed(POSITION.TOP) ||
+                    this._stickyHeaderController.hasFixed(POSITION.BOTTOM)) {
+                this._shadows.updateScrollState(this._state);
+            }
+
+            // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
+            if (this._isStateInitialized && this._isScrollbarsInitialized) {
+                this._scrollbars.updateScrollState(this._state, this._container);
+            }
+
+            this._paging?.update(this._state);
+
+            this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
+            this._stickyHeaderController.setShadowVisibility(
+                this._shadows.top.isStickyHeadersShadowsEnabled(),
+                this._shadows.bottom.isStickyHeadersShadowsEnabled());
+
+            this._updateScrollContainerPaigingSccClass(this._options);
+        }
+        return isUpdated;
+    }
+
+    protected _updateScrollContainerPaigingSccClass(options: IContainerOptions) {
+        const scrollCssClass = this._getScrollContainerCssClass(this._options);
+        if (this._scrollCssClass !== scrollCssClass) {
+            this._scrollCssClass = scrollCssClass;
+            this._needUpdateContentSize = true;
+        }
+    }
+
+    protected _getScrollContainerCssClass(options: IContainerBaseOptions): string {
+        let cssClass: string = this._scrollbars.getScrollContainerClasses();
+        if (this._paging?.isVisible) {
+            cssClass += ' controls-Scroll__content_paging';
+        }
+        return cssClass;
+    }
+
+    protected _draggingChangedHandler(event: SyntheticEvent, scrollbarOrientation: string, dragging: boolean): void {
+        this._dragging = dragging;
+
+        // if (!dragging && typeof this._scrollTopAfterDragEnd !== 'undefined') {
+        //    // В случае если запомненная позиция скролла для восстановления не совпадает с
+        //    // текущей, установим ее при окончании перетаскивания
+        //    if (this._scrollTopAfterDragEnd !== this._scrollTop) {
+        //       this._scrollTop = this._scrollTopAfterDragEnd;
+        //       _private.notifyScrollEvents(this, this._scrollTop);
+        //    }
+        //    this._scrollTopAfterDragEnd = undefined;
+        // }
+    }
+
+    protected _positionChangedHandler(event, direction, scrollPosition): void {
+        // В вертикальном направлении скролим с учетом виртуального скрола.
+        if (direction === SCROLL_DIRECTION.VERTICAL) {
+            this._setScrollTop(scrollPosition);
+        } else {
+            this.scrollTo(scrollPosition, direction);
+        }
+    }
+
+    protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+        this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
+        this._stickyHeaderController.setShadowVisibility(
+                this._shadows.top.isStickyHeadersShadowsEnabled(),
+                this._shadows.bottom.isStickyHeadersShadowsEnabled());
+    }
+
+    protected _keydownHandler(event: SyntheticEvent): void {
+        // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
+        if (!event.nativeEvent.isTrusted) {
+            let offset: number;
+            const scrollTop: number = this._state.scrollTop;
+            const scrollContainerHeight: number = this._state.scrollHeight - this._state.clientHeight;
+
+            if (event.nativeEvent.which === constants.key.pageDown) {
+                offset = scrollTop + this._state.clientHeight;
+            }
+            if (event.nativeEvent.which === constants.key.down) {
+                offset = scrollTop + SCROLL_BY_ARROWS;
+            }
+            if (event.nativeEvent.which === constants.key.pageUp) {
+                offset = scrollTop - this._state.clientHeight;
+            }
+            if (event.nativeEvent.which === constants.key.up) {
+                offset = scrollTop - SCROLL_BY_ARROWS;
+            }
+
+            if (offset > scrollContainerHeight) {
+                offset = scrollContainerHeight;
+            }
+            if (offset < 0 ) {
+                offset = 0;
+            }
+            if (offset !== undefined && offset !== scrollTop) {
+                this.scrollTo(offset);
+                event.preventDefault();
+            }
+
+            if (event.nativeEvent.which === constants.key.home && scrollTop !== 0) {
+                this.scrollToTop();
+                event.preventDefault();
+            }
+            if (event.nativeEvent.which === constants.key.end && scrollTop !== scrollContainerHeight) {
+                this.scrollToBottom();
+                event.preventDefault();
+            }
+        }
+    }
+
+    protected _arrowClickHandler(event, btnName) {
+        var scrollParam;
+
+        switch (btnName) {
+            case 'Begin':
+                scrollParam = 'top';
+                break;
+            case 'End':
+                scrollParam = 'bottom';
+                break;
+            case 'Prev':
+                scrollParam = 'pageUp';
+                break;
+            case 'Next':
+                scrollParam = 'pageDown';
+                break;
+        }
+        this._doScroll(scrollParam);
+    }
+
+    protected _mouseenterHandler(event) {
+        this._wasMouseEnter = true;
+
+        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
+        if (!this._isScrollbarsInitialized) {
+            this._isScrollbarsInitialized = true;
+            // При открытии плавающих панелей, когда курсор находится над скрлл контейнером,
+            // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
+            // В этом случае не обновляем скролбары, а просто делаем _isScrollbarsInitialized = true выше.
+            // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
+            if (this._isStateInitialized) {
+                this._scrollbars.updateScrollState(this._state, this._container);
+            }
+            this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+            this._updateShadows();
+            if (!compatibility.touch) {
+                this._initHeaderController();
+            }
+        }
+
+        if (this._scrollbars.take()) {
+            this._notify('scrollbarTaken', [], {bubbling: true});
+        }
+    }
+
+    protected _mouseleaveHandler(event) {
+        if (this._scrollbars.release()) {
+            this._notify('scrollbarReleased', [], {bubbling: true});
+        }
+    }
+
+    protected _scrollbarTakenHandler() {
+        this._scrollbars.taken();
+    }
+
+    protected _scrollbarReleasedHandler(event) {
+        if (this._scrollbars.released()) {
+            event.preventDefault();
+        }
+    }
+
+    _updatePlaceholdersSize(e: SyntheticEvent<Event>, placeholdersSizes): void {
+        super._updatePlaceholdersSize(...arguments);
+        this._scrollbars.updatePlaceholdersSize(placeholdersSizes);
+    }
+
+    // Intersection observer
+
+    private _initIntersectionObserverController(): void {
+        if (!this._intersectionObserverController) {
+            this._intersectionObserverController = new Observer(this._intersectHandler.bind(this));
+        }
+    }
+
+    protected _intersectionObserverRegisterHandler(event: SyntheticEvent, intersectionObserverObject: IIntersectionObserverObject): void {
+        this._initIntersectionObserverController();
+        this._intersectionObserverController.register(this._container, intersectionObserverObject);
+        if (!intersectionObserverObject.observerName) {
+            event.stopImmediatePropagation();
+        }
+    }
+
+    protected _intersectionObserverUnregisterHandler(event: SyntheticEvent, instId: string, observerName: string): void {
+        if (this._intersectionObserverController) {
+            this._intersectionObserverController.unregister(instId, observerName);
+        }
+        if (!observerName) {
+            event.stopImmediatePropagation();
+        }
+    }
+
+    protected _intersectHandler(items): void {
+        this._notify('intersect', [items]);
+    }
+
+    protected _getOptimizeShadowClass(options?: IContainerOptions): string {
+        const opts:IContainerOptions = options || this._options;
+        let style: string = '';
+        if (this._isOptimizeShadowEnabled) {
+            style += `controls-Scroll__backgroundShadow ` +
+                `controls-Scroll__background-Shadow_style-${opts.backgroundStyle}_theme-${opts.theme} ` +
+                `controls-Scroll__background-Shadow_top-${this._shadows.top.isVisibleShadowOnCSS}_bottom-${this._shadows.bottom.isVisibleShadowOnCSS}_style-${opts.shadowStyle}_theme-${opts.theme}`;
+        }
+        return style;
+    }
+
+    protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
+        return options.shadowMode === SHADOW_MODE.CSS && Container._isCssShadowsSupported();
+    }
+
+    // StickyHeaderController
+
+    _stickyFixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
+        this._stickyHeaderController.fixedHandler(event, fixedHeaderData);
+        const top = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
+        const bottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
+        this._scrollbars.setOffsets({ top: top, bottom: bottom }, this._isScrollbarsInitialized);
+        // Если включены оптимизированные тени, то мы не обновляем состояние теней при изменении состояния скрола
+        // если нет зафиксированных заголовков. Что бы тени на заголовках отображались правильно, рассчитаем состояние
+        // теней в скролл контейнере.
+        if (this._isOptimizeShadowEnabled) {
+            this._shadows.updateScrollState(this._state);
+        }
+        this._stickyHeaderController.setShadowVisibility(
+            this._shadows.top.isStickyHeadersShadowsEnabled(),
+            this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        this._shadows.setStickyFixed(
+            this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
+            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM));
+        this._notify('fixed', [top, bottom]);
+    }
+
+    _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
+        this._stickyHeaderController.registerHandler(event, data, register);
+    }
+
+    getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
+        return this._stickyHeaderController.getHeadersHeight(position, type);
+    }
+
+    static _isCssShadowsSupported(): boolean {
+        // Ie и Edge неправильно позиционируют фон со стилями
+        // background-position: bottom и background-attachment: local
+        return !detection.isMobileIOS && !detection.isIE;
+    }
+
+    static contextTypes() {
+       return {
+          ScrollData
+       };
+    }
+
+    static _theme: string[] = ['Controls/scroll'];
+
+    static getDefaultOptions() {
+        return {
+            ...getScrollbarsDefaultOptions(),
+            ...getShadowsDefaultOptions(),
+            shadowStyle: 'default',
+            backgroundStyle: DEFAULT_BACKGROUND_STYLE,
+            scrollMode: 'vertical'
+        };
+    }
+}
 /**
  * @name Controls/_scroll/Container#content
  * @cfg {Content} Содержимое контейнера.
@@ -72,47 +503,6 @@ import {Logger} from "UI/Utils";
  * @cfg {Content} Container contents.
  */
 
-/**
- * @name Controls/_scroll/Container#shadowVisible
- * @cfg {Boolean} Следует ли показывать тень (когда содержимое не подходит).
- * @deprecated Используйте {@link topShadowVisibility} и {@link bottomShadowVisibility}
- */
-
-/*
- * @name Controls/_scroll/Container#shadowVisible
- * @cfg {Boolean} Whether shadow should be shown (when content doesn't fit).
- * @deprecated Use {@link topShadowVisibility} and {@link bottomShadowVisibility} instead.
- */
-
-/**
- * @typedef {String} shadowVisibility
- * @variant auto Видимость зависит от состояния скролируемой области. Тень отображается только с той стороны
- * в которую можно скролить.
- * контент, то на этой границе отображается тень.
- * @variant visible Тень всегда видима.
- * @variant hidden Тень всегда скрыта.
- */
-
-/**
- * @name Controls/_scroll/Container#topShadowVisibility
- * @cfg {shadowVisibility} Устанавливает режим отображения тени сверху.
- * @default auto
- */
-
-/**
- * @name Controls/_scroll/Container#bottomShadowVisibility
- * @cfg {shadowVisibility} Устанавливает режим отображения тени снизу.
- */
-
-/**
- * @name Controls/_scroll/Container#scrollbarVisible
- * @cfg {Boolean} Следует ли отображать скролл.
- */
-
-/*
- * @name Controls/_scroll/Container#scrollbarVisible
- * @cfg {Boolean} Whether scrollbar should be shown.
- */
 
 /**
  * @name Controls/_scroll/Container#style
@@ -128,906 +518,24 @@ import {Logger} from "UI/Utils";
  * @variant inverted Inverted theme (for dark backgrounds).
  */
 
-const enum SHADOW_VISIBILITY {
-   HIDDEN = 'hidden',
-   VISIBLE = 'visible',
-   AUTO = 'auto'
-}
-
-const enum POSITION {
-   TOP = 'top',
-   BOTTOM = 'bottom'
-}
-
-const
-   SHADOW_ENABLE_MAP = {
-      hidden: false,
-      visible: true,
-      auto: true
-   },
-   INITIAL_SHADOW_VISIBILITY_MAP = {
-      hidden: false,
-      visible: true,
-      auto: false
-   };
-
-var
-   _private = {
-      SHADOW_HEIGHT: 8,
-      KEYBOARD_SHOWING_DURATION: 500,
-
-      /**
-       * Получить расположение тени внутри контейнера в зависимости от прокрутки контента.
-       * @return {String}
-       */
-      calcShadowPosition: function(scrollTop, containerHeight, scrollHeight) {
-         var shadowPosition = '';
-
-         if (scrollTop > 0) {
-            shadowPosition += 'top';
-         }
-
-         // The scrollHeight returned by the browser is more, because of the invisible elements
-         // that climbs outside of the fixed headers (shadow and observation targets).
-         // We take this into account when calculating. 8 pixels is the height of the shadow.
-         if ((Env.detection.firefox || Env.detection.isIE) && isStickySupport()) {
-            scrollHeight -= _private.SHADOW_HEIGHT;
-         }
-
-         // Compare with 1 to prevent rounding errors in the scale do not equal 100%
-         if (scrollHeight - containerHeight - scrollTop >= 1) {
-            shadowPosition += 'bottom';
-         }
-
-         return shadowPosition;
-      },
-      /**
-       * Возвращает включено ли отображение тени.
-       * Если отключено, то не рендерим контейнер тени и не рассчитываем его состояние.
-       * @param options Опции компонента.
-       * @param position Позиция тени.
-       */
-      isShadowEnable: function(options, position: POSITION): boolean {
-         if (options.shadowVisible === false) {
-            return false;
-         }
-         return SHADOW_ENABLE_MAP[options[`${position}ShadowVisibility`]];
-      },
-      /**
-       * Возвращает отображается ли тень в текущем состоянии контрола.
-       * @param self Экземпляр контрола.
-       * @param position Позиция тени.
-       * @param shadowsPosition Рассчитанное состояние теней
-       */
-      isShadowVisible: function(self, position: POSITION, shadowsPosition: string): boolean {
-         const
-             visibleFromInnerComponents = self._shadowVisibilityByInnerComponents[position],
-             visibleOptionValue = self._options[`${position}ShadowVisibility`];
-
-         if (self._options.shadowVisible === false) {
-            return false;
-         }
-
-         if (visibleFromInnerComponents !== SHADOW_VISIBILITY.AUTO) {
-            return SHADOW_ENABLE_MAP[visibleFromInnerComponents];
-         }
-
-         if (visibleOptionValue !== SHADOW_VISIBILITY.AUTO) {
-            return SHADOW_ENABLE_MAP[visibleOptionValue];
-         }
-
-         return shadowsPosition.indexOf(position) !== -1;
-      },
-
-      getInitialShadowVisibleState: function (options, position: POSITION): boolean {
-         return INITIAL_SHADOW_VISIBILITY_MAP[options[`${position}ShadowVisibility`]];
-      },
-
-      getScrollHeight: function(container) {
-         return container.scrollHeight;
-      },
-
-      getContainerHeight: function(container) {
-         return container.offsetHeight;
-      },
-
-      getScrollTop: function(self, container) {
-         return container.scrollTop + self._topPlaceholderSize;
-      },
-
-      setScrollTop: function(self, scrollTop) {
-         self._children.scrollWatcher.setScrollTop(scrollTop);
-         self._scrollTop = _private.getScrollTop(self, self._children.content);
-         _private.notifyScrollEvents(self, scrollTop);
-      },
-
-      notifyScrollEvents: function(self, scrollTop) {
-         self._notify('scroll', [scrollTop]);
-         const eventCfg = {
-             type: 'scroll',
-             target: self._children.content,
-             currentTarget: self._children.content,
-             _bubbling: false
-         };
-         self._children.scrollDetect.start(new SyntheticEvent(null, eventCfg), scrollTop);
-      },
-
-      calcCanScroll: function(self) {
-         var
-            scrollHeight = _private.getScrollHeight(self._children.content),
-            containerHeight = _private.getContainerHeight(self._children.content);
-
-         /**
-          * In IE, if the content has a rational height, the height is rounded to the smaller side,
-          * and the scrollable height to the larger side. Reduce the scrollable height to the real.
-          */
-         if (Env.detection.isIE) {
-            scrollHeight--;
-         }
-
-         return scrollHeight > containerHeight;
-      },
-
-      getContentHeight: function(self) {
-         return _private.getScrollHeight(self._children.content) - self._headersHeight.top -
-            self._headersHeight.bottom + self._topPlaceholderSize + self._bottomPlaceholderSize;
-      },
-
-      getShadowPosition: function(self) {
-         var
-            scrollTop = _private.getScrollTop(self, self._children.content),
-            scrollHeight = _private.getScrollHeight(self._children.content),
-            containerHeight = _private.getContainerHeight(self._children.content);
-
-         return _private.calcShadowPosition(scrollTop, containerHeight, scrollHeight + self._topPlaceholderSize + self._bottomPlaceholderSize);
-      },
-
-      calcHeightFix: function(self) {
-         return ScrollHeightFixUtil.calcHeightFix(self._children.content);
-      },
-
-      calcDisplayState: function(self) {
-         const
-             canScroll = _private.calcCanScroll(self),
-             topShadowEnable = self._options.topShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.TOP) && canScroll),
-             bottomShadowEnable = self._options.bottomShadowVisibility === SHADOW_VISIBILITY.VISIBLE ||
-                 (_private.isShadowEnable(self._options, POSITION.BOTTOM) && canScroll),
-             shadowPosition = topShadowEnable || bottomShadowEnable ? _private.getShadowPosition(self) : '';
-         return {
-            heightFix: _private.calcHeightFix(self),
-            canScroll: canScroll,
-            contentHeight: _private.getContentHeight(self),
-            shadowPosition,
-            shadowEnable: {
-               top: topShadowEnable,
-               bottom: bottomShadowEnable
-            },
-            shadowVisible: {
-               top: topShadowEnable ? _private.isShadowVisible(self, POSITION.TOP, shadowPosition) : false,
-               bottom: bottomShadowEnable ? _private.isShadowVisible(self, POSITION.BOTTOM, shadowPosition) : false
-            }
-         };
-      },
-
-      calcPagingStateBtn: function (self) {
-         const {scrollTop, clientHeight, scrollHeight} = self._children.content;
-
-         if (scrollTop <= 0) {
-            self._pagingState.stateUp = 'disabled';
-            self._pagingState.stateDown = 'normal';
-         } else if (scrollTop + clientHeight >= scrollHeight) {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'disabled';
-         } else {
-            self._pagingState.stateUp = 'normal';
-            self._pagingState.stateDown = 'normal';
-         }
-      },
-
-      updateDisplayState: function(self, displayState) {
-         self._displayState.canScroll = displayState.canScroll;
-         self._displayState.heightFix = displayState.heightFix;
-         self._displayState.contentHeight = displayState.contentHeight;
-         self._displayState.shadowPosition = displayState.shadowPosition;
-         self._displayState.shadowEnable = displayState.shadowEnable;
-         self._displayState.shadowVisible = displayState.shadowVisible;
-      },
-
-      proxyEvent: function(self, event, eventName, args) {
-         // Forwarding bubbling events makes no sense.
-         if (!event.propagating()) {
-            return self._notify(eventName, args) || event.result;
-         }
-      }
-   },
-   Scroll = Control.extend({
-      _template: template,
-
-      // Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
-      // Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
-      // прокидываем руками
-      // EVENTSPROXY
-      _tmplNotify: tmplNotify,
-
-      /**
-       * Смещение контента сверху относительно контейнера.
-       * @type {number}
-       */
-      _scrollTop: 0,
-
-      /**
-       * Нужно ли показывать скролл при наведении.
-       * @type {boolean}
-       */
-      _showScrollbarOnHover: true,
-
-      /**
-       * Наведен ли курсор на контейнер.
-       * @type {boolean}
-       */
-      _hasHover: false,
-
-      /**
-       * Используется ли нативный скролл.
-       * @type {boolean}
-       */
-      _useNativeScrollbar: null,
-
-      _displayState: null,
-
-      _pagingState: null,
-
-      _shadowVisibilityByInnerComponents: null,
-
-      /**
-             * @type {Controls/_scroll/Context|null}
-       * @private
-       */
-      _stickyHeaderContext: null,
-
-      _headersHeight: null,
-      _scrollbarStyles: '',
-
-      _topPlaceholderSize: 0,
-      _bottomPlaceholderSize: 0,
-
-      _scrollTopAfterDragEnd: undefined,
-      _scrollLockedPosition: null,
-
-      _isMounted: false,
-
-      constructor: function(cfg) {
-         Scroll.superclass.constructor.call(this, cfg);
-      },
-
-      _beforeMount: function(options, context, receivedState) {
-         var
-            self = this,
-            def;
-
-         if ('shadowVisible' in options) {
-            Logger.warn('Controls/scroll:Container: Опция shadowVisible устарела, используйте topShadowVisibility и bottomShadowVisibility.', self);
-         }
-
-         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-         this._resizeHandler = this._resizeHandler.bind(this);
-         this._shadowVisibilityByInnerComponents = {
-            top: SHADOW_VISIBILITY.AUTO,
-            bottom: SHADOW_VISIBILITY.AUTO
-         };
-         this._displayState = {};
-         this._stickyHeaderContext = new StickyHeaderContext({
-            shadowPosition: options.topShadowVisibility !== SHADOW_VISIBILITY.HIDDEN ? 'bottom' : ''
-         });
-         this._headersHeight = {
-            top: 0,
-            bottom: 0
-         };
-
-         if (context.ScrollData && context.ScrollData.pagingVisible) {
-            //paging buttons are invisible. Control calculates height and shows buttons after mounting.
-            this._pagingState = {
-               visible: false,
-               stateUp: 'disabled',
-               stateDown: 'normal'
-            };
-         } else {
-            this._pagingState = {};
-         }
-
-         if (receivedState) {
-            _private.updateDisplayState(this, receivedState.displayState);
-            this._styleHideScrollbar = receivedState.styleHideScrollbar || ScrollWidthUtil.calcStyleHideScrollbar();
-            this._useNativeScrollbar = receivedState.useNativeScrollbar;
-            this._contentStyles = receivedState.contentStyles;
-         } else {
-            def = new Deferred();
-
-            def.addCallback(function() {
-               var
-                  topShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.TOP),
-                  bottomShadowVisible = _private.getInitialShadowVisibleState(options, POSITION.BOTTOM),
-                  displayState = {
-                     heightFix: ScrollHeightFixUtil.calcHeightFix(),
-                     shadowPosition: '',
-                     canScroll: false,
-                     shadowEnable: {
-                        top: topShadowVisible,
-                        bottom: bottomShadowVisible
-                     },
-                     shadowVisible: {
-                        top: topShadowVisible,
-                        bottom: bottomShadowVisible
-                     }
-                  },
-                  styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
-
-                  // На мобильных устройствах используется нативный скролл, на других платформенный.
-                  useNativeScrollbar = Env.detection.isMobileIOS || Env.detection.isMobileAndroid;
-
-               _private.updateDisplayState(self, displayState);
-               self._styleHideScrollbar = styleHideScrollbar;
-               self._useNativeScrollbar = useNativeScrollbar;
-
-               //  Сразу же устанавливаем contentStyles как '' на платформах, в которых скрол бар прячется нативными
-               //  средсвами а не маргинами(_styleHideScrollbar === '').
-               //  Иначе по умолчаниюе он равен undefined, а после инициализации
-               //  устанавливается в ''. Это приводит к forceUpdate. Код этой логики грязный, нужен рефакторинг.
-               //  https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
-               //  TODO: Нельзя делать проверку if(!_styleHideScrollbar){...}. Свойство _styleHideScrollbar может быть равным undefined.
-               //  Например, в firefox на сервере нельзя определить ширину скролла. Потому что из-за зума она меняется.
-               if (self._styleHideScrollbar === '') {
-                  self._contentStyles = '';
-               }
-
-               return {
-                  displayState: displayState,
-                  styleHideScrollbar: styleHideScrollbar,
-                  useNativeScrollbar: useNativeScrollbar,
-                  contentStyles: self._contentStyles
-               };
-            });
-
-            def.callback();
-
-            // При построении на клиенте не возвращаем def, т.к. используется в старых компонентах
-            // и там ассинхронного построения
-            if (typeof window === 'undefined') {
-               return def;
-            }
-         }
-      },
-
-      _afterMount: function() {
-         /**
-          * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
-          * смогли ли мы в beforeMount их определить.
-          */
-         var needUpdate = false, calculatedOptionValue;
-
-         if (typeof this._displayState.heightFix === 'undefined') {
-            this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
-            needUpdate = true;
-         }
-
-         /**
-          * The following states cannot be defined in _beforeMount because the DOM is needed.
-          */
-
-         calculatedOptionValue = _private.calcCanScroll(this);
-         if (calculatedOptionValue) {
-            this._displayState.canScroll = calculatedOptionValue;
-            needUpdate = true;
-         }
-
-         this._displayState.contentHeight = _private.getContentHeight(this);
-
-         calculatedOptionValue = _private.getShadowPosition(this);
-         if (calculatedOptionValue) {
-            this._displayState.shadowPosition = calculatedOptionValue;
-            needUpdate = true;
-         }
-
-         calculatedOptionValue = _private.isShadowVisible(this, POSITION.TOP, this._displayState.shadowPosition);
-         if (calculatedOptionValue) {
-            this._displayState.shadowVisible.top = calculatedOptionValue;
-            needUpdate = true;
-         }
-
-         calculatedOptionValue = _private.isShadowVisible(this, POSITION.BOTTOM, this._displayState.shadowPosition);
-         if (calculatedOptionValue) {
-            this._displayState.shadowVisible.bottom = calculatedOptionValue;
-            needUpdate = true;
-         }
-
-         this._updateStickyHeaderContext();
-         this._adjustContentMarginsForBlockRender();
-
-         // Create a scroll container with a "overflow-scrolling: auto" style and then set
-         // "overflow-scrolling: touch" style. Otherwise, after switching on the overflow-scrolling: auto,
-         // the page will scroll entirely. This solution fixes the problem, but in the old controls the container
-         // was created with "overflow-scrolling: touch" style style.
-         // A task has been created to investigate the problem more.
-         // https://online.sbis.ru/opendoc.html?guid=1c9b807c-41ab-4fbf-9f22-bf8b9fcbdc8d
-         if (Env.detection.isMobileIOS) {
-            this._overflowScrolling = true;
-            needUpdate = true;
-
-            this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
-            Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
-         }
-
-         if (needUpdate) {
-            this._forceUpdate();
-         }
-
-         if (!newEnv() && window) {
-            window.addEventListener('resize', this._resizeHandler);
-         }
-
-          this._isMounted = true;
-      },
-
-      _beforeUpdate: function(options, context) {
-         this._pagingState.visible = context.ScrollData && context.ScrollData.pagingVisible && this._displayState.canScroll;
-         this._updateStickyHeaderContext();
-      },
-
-      _afterUpdate: function() {
-         // Нельзя рассчитать состояние для скрытого скрол контейнера
-         if (this._isHidden()) {
-            return;
-         }
-
-         var displayState = _private.calcDisplayState(this);
-
-         if (!isEqual(this._displayState, displayState)) {
-            this._displayState = displayState;
-            this._updateStickyHeaderContext();
-
-            this._forceUpdate();
-         }
-      },
-
-      _beforeUnmount(): void {
-         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
-         if (!newEnv() && window) {
-            window.removeEventListener('resize', this._resizeHandler);
-         }
-
-         Bus.globalChannel().unsubscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
-         this._lockScrollPositionUntilKeyboardShown = null;
-      },
-
-      _shadowVisible: function(position: POSITION) {
-
-         // Do not show shadows on the scroll container if there are fixed headers. They display their own shadows.
-         if (this._children.stickyController && this._children.stickyController.hasFixed(position)) {
-            return false;
-         }
-
-         // On ipad with inertial scrolling due to the asynchronous triggering of scrolling and caption fixing  events,
-         // sometimes it turns out that when the first event is triggered, the shadow must be displayed,
-         // and immediately after the second event it is not necessary.
-         // These conditions appear during scrollTop < 0. Just do not display the shadow when scrollTop < 0.
-         // Turn off this check on the first build when there is no dom tree yet.
-         if (Env.detection.isMobileIOS && position === POSITION.TOP && this._children.content &&
-               _private.getScrollTop(this, this._children.content) < 0) {
-            return false;
-         }
-
-         return this._displayState.shadowVisible[position];
-      },
-
-      _updateShadowMode(event, shadowVisibleObject): void {
-         // _shadowVisibilityByInnerComponents не используется в шаблоне,
-         // поэтому св-во не является реактивным и для обновления надо позвать _forceUpdate
-         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-         // Не запускаем перерисовку, если контрол скрыт
-         if (!this._isHidden()) {
-            this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-            this._forceUpdate();
-         }
-      },
-
-      setShadowMode: function(shadowVisibleObject) {
-         // Спилить после того как удалят использование в engine
-         this._shadowVisibilityByInnerComponents = shadowVisibleObject;
-      },
-
-      setOverflowScrolling: function(value: string) {
-          this._children.content.style.webkitOverflowScrolling = value;
-      },
-
-      /**
-       * Если используем верстку блоков, то на content появится margin-right.
-       * Его нужно добавить к margin-right для скрытия нативного скролла.
-       * TODO: метод нужно порефакторить. Делаем для сдачи в план, в 600 будет переработано.
-       * https://online.sbis.ru/opendoc.html?guid=0cb8e81e-ba7f-4f98-8384-aa52d200f8c8
-       */
-      _adjustContentMarginsForBlockRender: function() {
-         var computedStyle = getComputedStyle(this._children.content);
-         var marginTop = parseInt(computedStyle.marginTop, 10);
-         var marginRight = parseInt(computedStyle.marginRight, 10);
-
-         this._contentStyles = this._styleHideScrollbar.replace(/-?\d+/g, function(found) {
-            return parseInt(found, 10) + marginRight;
-         });
-
-         if (this._stickyHeaderContext.top !== -marginTop) {
-            this._stickyHeaderContext.top = -marginTop;
-            this._stickyHeaderContext.updateConsumers();
-         }
-      },
-
-      _resizeHandler: function() {
-
-         // Событие ресайза может прилететь из _afterMount внутренних контролов
-         // до вызова _afterMount на скрол контейнере.
-         if (!this._isMounted) {
-            return;
-         }
-         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-         // Не реагируем на ресайз, если контрол скрыт
-         if (this._isHidden()) {
-            return;
-         }
-         const displayState = _private.calcDisplayState(this);
-
-         if (!isEqual(this._displayState, displayState)) {
-            this._displayState = displayState;
-         }
-
-         _private.calcPagingStateBtn(this);
-      },
-
-      _scrollHandler: function(ev) {
-         const scrollTop = _private.getScrollTop(this, this._children.content);
-
-         if (this._scrollLockedPosition !== null) {
-            this._children.content.scrollTop = this._scrollLockedPosition;
-
-            // Проверяем, изменился ли scrollTop, чтобы предотвратить ложные срабатывания события.
-            // Например, при пересчете размеров перед увеличением, плитка может растянуть контейнер между перерисовок,
-            // и вернуться к исходному размеру.
-            // После этого  scrollTop остается прежним, но срабатывает незапланированный нативный scroll
-         } else if (this._scrollTop !== scrollTop) {
-            if (!this._dragging) {
-               this._scrollTop = scrollTop;
-               this._notify('scroll', [this._scrollTop]);
-            } else {
-               // scrollTop нам во время перетаскивания могут проставить извне (например
-               // восстановив скролл после подгрузки новых данных). Во время перетаскивания,
-               // мы не меняем наш scrollTop, чтобы сам скролл и позиция ползунка не
-               // перепрыгнули из под мышки пользователя, но запомним эту позицию,
-               // возможно нужно будет установить ее после завершения перетаскивания
-               this._scrollTopAfterDragEnd = scrollTop;
-            }
-            this._children.scrollDetect.start(ev, this._scrollTop);
-         }
-      },
-
-      _keydownHandler: function(ev) {
-         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
-         if (!ev.nativeEvent.isTrusted) {
-            let offset: number;
-            const scrollTop: number = _private.getScrollTop(this, this._children.content);
-            if (ev.nativeEvent.which === Env.constants.key.pageDown) {
-               offset = scrollTop + this._children.content.clientHeight;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.down) {
-               offset = scrollTop + 40;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.pageUp) {
-               offset = scrollTop - this._children.content.clientHeight;
-            }
-            if (ev.nativeEvent.which === Env.constants.key.up) {
-               offset = scrollTop - 40;
-            }
-            if (offset !== undefined) {
-               this.scrollTo(offset);
-               ev.preventDefault();
-            }
-
-            if (ev.nativeEvent.which === Env.constants.key.home) {
-               this.scrollToTop();
-               ev.preventDefault();
-            }
-            if (ev.nativeEvent.which === Env.constants.key.end) {
-               this.scrollToBottom();
-               ev.preventDefault();
-            }
-         }
-      },
-
-      _scrollbarTaken: function() {
-         if (this._showScrollbarOnHover && this._displayState.canScroll) {
-            this._notify('scrollbarTaken', [], { bubbling: true });
-         }
-      },
-
-      _arrowClickHandler: function(event, btnName) {
-         var scrollParam;
-
-         switch (btnName) {
-            case 'Begin':
-               scrollParam = 'top';
-               break;
-            case 'End':
-               scrollParam = 'bottom';
-               break;
-            case 'Prev':
-               scrollParam = 'pageUp';
-               break;
-            case 'Next':
-               scrollParam = 'pageDown';
-               break;
-         }
-
-         this._children.scrollWatcher.doScroll(scrollParam);
-      },
-
-      _scrollMoveHandler: function(e, scrollData) {
-         if (this._pagingState.visible) {
-            if (scrollData.position === 'up') {
-               this._pagingState.stateUp = 'disabled';
-               this._pagingState.stateDown = 'normal';
-            } else if (scrollData.position === 'down') {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'disabled';
-            } else {
-               this._pagingState.stateUp = 'normal';
-               this._pagingState.stateDown = 'normal';
-            }
-            this._forceUpdate();
-         }
-      },
-
-      _mouseenterHandler: function(event) {
-         this._scrollbarTaken(true);
-      },
-
-      _mouseleaveHandler: function(event) {
-         if (this._showScrollbarOnHover) {
-            this._notify('scrollbarReleased', [], { bubbling: true });
-         }
-      },
-
-      _scrollbarTakenHandler: function() {
-         this._showScrollbarOnHover = false;
-
-         // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
-         // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
-         this._forceUpdate();
-      },
-
-      _scrollbarReleasedHandler: function(event) {
-         if (!this._showScrollbarOnHover) {
-            this._showScrollbarOnHover = true;
-
-            // todo _forceUpdate тут нужен, потому что _showScrollbarOnHover не используется в шаблоне, так что изменение
-            // этого свойства не запускает перерисовку. нужно явно передавать это свойство в методы в шаблоне, в которых это свойство используется
-            this._forceUpdate();
-            event.preventDefault();
-         }
-      },
-
-      _scrollbarVisibility: function() {
-         return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.canScroll && this._showScrollbarOnHover);
-      },
-
-      /**
-       * TODO: убрать после выполнения https://online.sbis.ru/opendoc.html?guid=93779c1a-8d18-42fe-8dc8-1bab779d0943.
-       * Переделать на bind в шаблоне и избавится от прокидывания опций.
-       */
-      _positionChangedHandler: function(event, position) {
-         _private.setScrollTop(this, position);
-      },
-
-      _draggingChangedHandler: function(event, dragging) {
-         this._dragging = dragging;
-         if (!dragging && typeof this._scrollTopAfterDragEnd !== 'undefined') {
-            // В случае если запомненная позиция скролла для восстановления не совпадает с
-            // текущей, установим ее при окончании перетаскивания
-            if (this._scrollTopAfterDragEnd !== this._scrollTop) {
-               this._scrollTop = this._scrollTopAfterDragEnd;
-               _private.notifyScrollEvents(this, this._scrollTop);
-            }
-            this._scrollTopAfterDragEnd = undefined;
-         }
-      },
-
-      /**
-       * Update the context value of sticky header.
-       * TODO: Плохой метод. Дублирование tmpl и вызов должен только в методе изменения видимости тени. Будет поправлено по https://online.sbis.ru/opendoc.html?guid=01c0fb63-9121-4ee4-a652-fe9c329eec8f
-       * @param shadowVisible
-       * @private
-       */
-      _updateStickyHeaderContext: function() {
-         var
-            shadowPosition: string = '',
-            topShadowVisible: boolean = false,
-            bottomShadowVisible: boolean = false;
-
-         if (this._displayState.canScroll) {
-            topShadowVisible = this._displayState.shadowVisible.top;
-            bottomShadowVisible = this._displayState.shadowVisible.bottom;
-         }
-
-         if (topShadowVisible) {
-            shadowPosition += 'top';
-         }
-         if (bottomShadowVisible) {
-            shadowPosition += 'bottom';
-         }
-
-         if (this._stickyHeaderContext.shadowPosition !== shadowPosition) {
-            this._stickyHeaderContext.shadowPosition = shadowPosition;
-            this._stickyHeaderContext.updateConsumers();
-         }
-      },
-
-      _getChildContext: function() {
-         return {
-            stickyHeader: this._stickyHeaderContext
-         };
-      },
-
-      getDataId: function() {
-               return 'Controls/_scroll/Container';
-      },
-
-      /**
-       * Скроллит к выбранной позиции. Позиция определяется в пикселях от верха контейнера.
-       * @function Controls/_scroll/Container#scrollTo
-       * @param {Number} Позиция в пикселях
-       */
-
-      /*
-       * Scrolls to the given position from the top of the container.
-       * @function Controls/_scroll/Container#scrollTo
-       * @param {Number} Offset
-       */
-      scrollTo: function(offset) {
-         _private.setScrollTop(this, offset);
-      },
-
-      /**
-       * Возвращает true если есть возможность вроскролить к позиции offset.
-       * @function Controls/_scroll/Container#canScrollTo
-       * @param offset Позиция в пикселях
-       * @noshow
-       */
-      canScrollTo: function(offset: number): boolean {
-         return offset < this._children.content.scrollHeight - this._children.content.clientHeight;
-      },
-
-      /**
-       * Скроллит к верху контейнера
-       * @function Controls/_scroll/Container#scrollToTop
-       */
-
-      /*
-       * Scrolls to the top of the container.
-       * @function Controls/_scroll/Container#scrollToTop
-       */
-      scrollToTop: function() {
-         _private.setScrollTop(this, 0);
-      },
-
-      /**
-       * Скроллит к низу контейнера
-       * @function Controls/_scroll/Container#scrollToBottom
-       */
-
-      /*
-       * Scrolls to the bottom of the container.
-       * @function Controls/_scroll/Container#scrollToBottom
-       */
-      scrollToBottom: function() {
-         _private.setScrollTop(this, _private.getScrollHeight(this._children.content)  - this._children.content.clientHeight + this._topPlaceholderSize);
-      },
-
-      // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
-      // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
-      selectedKeysChanged: function(event) {
-         _private.proxyEvent(this, event, 'selectedKeysChanged', Array.prototype.slice.call(arguments, 1));
-      },
-
-      excludedKeysChanged: function(event) {
-         _private.proxyEvent(this, event, 'excludedKeysChanged', Array.prototype.slice.call(arguments, 1));
-      },
-
-      itemClick: function(event) {
-         return _private.proxyEvent(this, event, 'itemClick', Array.prototype.slice.call(arguments, 1));
-      },
-
-      _updatePlaceholdersSize: function(e, placeholdersSizes) {
-         if (this._topPlaceholderSize !== placeholdersSizes.top ||
-            this._bottomPlaceholderSize !== placeholdersSizes.bottom) {
-            this._topPlaceholderSize = placeholdersSizes.top;
-            this._bottomPlaceholderSize = placeholdersSizes.bottom;
-            this._children.scrollWatcher.updatePlaceholdersSize(placeholdersSizes);
-         }
-      },
-
-      _saveScrollPosition(event: SyntheticEvent<Event>): void {
-         // На это событие должен реагировать только ближайший скролл контейнер.
-         // В противном случае произойдет подскролл в ненужном контейнере
-         event.stopPropagation();
-
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         // https://popmotion.io/blog/20170704-manually-set-scroll-while-ios-momentum-scroll-bounces/
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('auto');
-         }
-
-         this._savedScrollTop = this._children.content.scrollTop;
-         this._savedScrollPosition = this._children.content.scrollHeight - this._savedScrollTop;
-      },
-
-      _restoreScrollPosition(event: SyntheticEvent<Event>, heightDifference: number, direction: string): void {
-         // На это событие должен реагировать только ближайший скролл контейнер.
-         // В противном случае произойдет подскролл в ненужном контейнере
-         event.stopPropagation();
-
-         const newPosition = direction === 'up' ?
-             this._children.content.scrollHeight - this._savedScrollPosition + heightDifference :
-             this._savedScrollTop - heightDifference;
-
-         this._children.scrollWatcher.setScrollTop(newPosition, true);
-
-         // Инерционный скролл приводит к дерганью: мы уже
-         // восстановили скролл, но инерционный скролл продолжает работать и после восстановления, как итог - прыжки,
-         // дерганья и лишняя загрузка данных.
-         // Поэтому перед восстановлением позиции скрола отключаем инерционный скролл, а затем включаем его обратно.
-         if (Env.detection.isMobileIOS) {
-            this.setOverflowScrolling('');
-         }
-      },
-
-      _fixedHandler: function(event, topHeight, bottomHeight) {
-         this._headersHeight.top = topHeight;
-         this._headersHeight.bottom = bottomHeight;
-         this._displayState.contentHeight = _private.getContentHeight(this);
-         this._scrollbarStyles =  'top:' + topHeight + 'px; bottom:' + bottomHeight + 'px;';
-      },
-
-      /* При получении фокуса input'ами на IOS13, может вызывается подскролл у ближайшего контейнера со скролом,
-         IPAD пытается переместить input к верху страницы. Проблема не повторяется,
-         если input будет выше клавиатуры после открытия. */
-      _lockScrollPositionUntilKeyboardShown(): void {
-         this._scrollLockedPosition = this._scrollTop;
-         setTimeout(() => {
-            this._scrollLockedPosition = null;
-         }, _private.KEYBOARD_SHOWING_DURATION);
-      },
-
-      _isHidden: function(): boolean {
-         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-         // Не запускаем перерисовку, если контрол скрыт
-         return !!this._container.closest('.ws-hidden');
-      }
-   });
-
-Scroll.getDefaultOptions = function() {
-   return {
-      topShadowVisibility: SHADOW_VISIBILITY.AUTO,
-      bottomShadowVisibility: SHADOW_VISIBILITY.AUTO,
-      scrollbarVisible: true
-   };
-};
-
-Scroll.contextTypes = function() {
-   return {
-      ScrollData: ScrollData
-   };
-};
-
-Scroll._private = _private;
-
-export = Scroll;
+/**
+ * @name Controls/_scroll/Container#optimizeShadow
+ * @cfg {Boolean} Включает режим быстрой отрисовки тени.
+ * @default true
+ * @variant true Оптимизированные тени.
+ * @variant false Не оптимизированные тени.
+ * @remark
+ * Отключите оптимизированные тени, если:
+ * <ul>
+ *     <li> У скролл контейнера непрозрачный фон </li>
+ *     <li> Скролл контейнер находится в элементе с непрозрачным фоном </li>
+ *     <li> В скролл конейтенере присутствуют изображения. </li>
+ * </ul>
+ */
+
+/**
+ * @name Controls/_scroll/Container#backgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
+ * @default default
+ * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
+ */

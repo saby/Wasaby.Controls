@@ -3,7 +3,6 @@ import template = require('wml!Controls/_compatiblePopup/CompoundAreaForOldTpl/C
 import LikeWindowMixin = require('Lib/Mixins/LikeWindowMixin');
 import arrayFindIndex = require('Core/helpers/Array/findIndex');
 import cDeferred = require('Core/Deferred');
-import makeInstanceCompatible = require('Core/helpers/Hcontrol/makeInstanceCompatible');
 import {delay as runDelayed} from 'Types/function';
 import trackElement = require('Core/helpers/Hcontrol/trackElement');
 import doAutofocus = require('Core/helpers/Hcontrol/doAutofocus');
@@ -15,7 +14,7 @@ import callNext = require('Core/helpers/Function/callNext');
 import cInstance = require('Core/core-instance');
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/compatiblePopup';
+import {Bus as EventBus} from 'Env/Event';
 
 function removeOperation(operation, array) {
    var idx = arrayFindIndex(array, function(op) {
@@ -83,18 +82,23 @@ var CompoundArea = CompoundContainer.extend([
       /**
        * Поведение если вызвали через ENGINE/MiniCard.
        */
-      var _this = this;
-
+      this._hoverTargetMouseEnterHandler = () => {
+         clearTimeout(this._hoverTimer);
+         if (!this._destroyed) {
+            this._hoverTimer = null;
+         }
+      };
+      this._hoverTargetMouseOutHandler = () => {
+         const timerDelay: number = 1000;
+         this._hoverTimer = setTimeout(() => {
+            if (!this._destroyed) {
+               this.hide();
+            }
+         }, timerDelay);
+      };
       if (_options.hoverTarget) {
-         $(_options.hoverTarget).on('mouseenter', function() {
-            clearTimeout(_this._hoverTimer);
-            _this._hoverTimer = null;
-         });
-         $(_options.hoverTarget).on('mouseleave', function() {
-            _this._hoverTimer = setTimeout(function() {
-               _this.hide();
-            }, 1000);
-         });
+         $(_options.hoverTarget).on('mouseenter', this._hoverTargetMouseEnterHandler);
+         $(_options.hoverTarget).on('mouseleave', this._hoverTargetMouseOutHandler);
       }
       if (_options.popupComponent === 'recordFloatArea') {
          if (typeof _options.readOnly !== 'undefined') {
@@ -125,6 +129,12 @@ var CompoundArea = CompoundContainer.extend([
          var maximized = this.getContainer().hasClass('ws-float-area-maximized-mode');
          var templateComponent = this._getTemplateComponent();
          this.getContainer().toggleClass('ws-float-area-has-maximized-button', popupOptions.showMaximizedButton || false);
+         const maximizedButtonClass = ' ws-float-area-has-maximized-button';
+         if (popupOptions.showMaximizedButton) {
+            this._className += maximizedButtonClass;
+         } else if (this._className.indexOf(maximizedButtonClass) >= 0) {
+            this._className = this._className.replace(maximizedButtonClass, '');
+         }
          this.getContainer().toggleClass('ws-float-area-maximized-mode', popupOptions.maximized || false);
          if (templateComponent && maximized !== popupOptions.maximized) {
             templateComponent._notifyOnSizeChanged();
@@ -207,7 +217,16 @@ var CompoundArea = CompoundContainer.extend([
       const item = this._getManagerConfig();
       const popupItems = Controller.getContainer()._popupItems;
       // Нотифай события делаю в следующий цикл синхронизации после выставления позиции окну.
-      this._notifyVDOM('managerPopupCreated', [item, popupItems], {bubbling: true});
+      EventBus.channel('popupManager').notify('managerPopupCreated', item, popupItems);
+   },
+
+   _notifyManagerPopupDestroyed(): void {
+      const item = this._getManagerConfig();
+      const options = item?.popupOptions;
+      const event = 'onClose';
+      if (options?._events[event]) {
+         options._events[event](event, []);
+      }
    },
 
    _getDialogClasses: function() {
@@ -315,22 +334,19 @@ var CompoundArea = CompoundContainer.extend([
       this._options = cfg;
       this._enabled = cfg.hasOwnProperty('enabled') ? cfg.enabled : true;
 
-      // Нам нужно пометить контрол замаунченым для слоя совместимости,
-      // чтобы не создавался еще один enviroment для той же ноды
-
-      if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
-         makeInstanceCompatible(this);
-      } else {
-         this.VDOMReady = true;
-         this.deprecatedContr(this._options);
-      }
-
       var self = this;
 
       // wsControl нужно установить до того, как запустим автофокусировку.
       // Потому что она завязана в том числе и на этом свойстве
       var container = self.getContainer()[0];
       container.wsControl = self;
+
+      // Заполнять нужно раньше чем позовется doAutofocus ниже.
+      // doAutofocus спровоцирует уход фокуса, старый менеджер будет проверять связи и звать метод getOpener,
+      // который в совместимости возвращает данные с состояния. если они не заполнены, будут проблемы с проверкой связи.
+      self.__openerFromCfg = self._options.__openerFromCfg;
+      self._parent = self._options._logicParent;
+      self._logicParent = self._options._logicParent;
 
       // Переведем фокус сразу на окно, после построения шаблона уже сфокусируем внутренности
       // Если этого не сделать, то во время построения окна, при уничтожении контролов в других областях запустится восстановление фокуса,
@@ -359,14 +375,7 @@ var CompoundArea = CompoundContainer.extend([
       if (self.__parentFromCfg && self._registerToParent) {
          self._registerToParent(self.__parentFromCfg);
       }
-      self.__openerFromCfg = self._options.__openerFromCfg;
-      self._parent = self._options.parent;
-      self._logicParent = self._options.parent;
 
-      // Чтобы после применения makeInstanceCompatible BaseCompatible не стирал self._logicParent,
-      // нужно в оставить его в опциях в поле _logicParent, logicParent или parent.
-      // https://git.sbis.ru/sbis/ws/blob/rc-19.610/WS.Core/lib/Control/BaseCompatible/BaseCompatible.js#L956
-      self._options._logicParent = self._options.parent;
       self._options.parent = null;
 
       self._notifyVDOM = self._notify;
@@ -392,16 +401,28 @@ var CompoundArea = CompoundContainer.extend([
    },
 
    _beforeUnmount: function() {
+      if(this.__parentFromCfg && this.__parentFromCfg.unregisterChildControl){
+         this.__parentFromCfg.unregisterChildControl(this);
+      }
       this.__parentFromCfg = null;
       this.__openerFromCfg = null;
-      this._parent = null;
       this._logicParent = null;
       if (this._options.popupComponent === 'recordFloatArea') {
          this.unsubscribeOnBeforeUnload();
       }
+      if (this._options.hoverTarget) {
+         $(this._options.hoverTarget).off('mouseenter', this._hoverTargetMouseEnterHandler);
+         $(this._options.hoverTarget).off('mouseleave', this._hoverTargetMouseOutHandler);
+      }
    },
 
-   isOpened: function() {
+   isOpened(): boolean {
+      if (!this._options.autoShow) {
+         const popupContainer = this._container.closest('.controls-Popup');
+         if (popupContainer) {
+            return !popupContainer.classList.contains('ws-hidden');
+         }
+      }
       return true;
    },
 
@@ -449,7 +470,8 @@ var CompoundArea = CompoundContainer.extend([
             .subscribe('onVisible',
                function(event, visibility) {
                   if (!self.isDestroyed() && !visibility) {
-                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup__template');
+                     // После правок на шаблон совместимости перестал вешаться класс. Вешается на окно.
+                     const parentVdomPopup = $(self._options.target).closest('.controls-Popup');
                      // Вдомные стековые окна, если перекрыты другими окнами из стека, скрываются через ws-hidden.
                      // PopupMixin реагирует на скритие таргета и закрывается.
                      // Делаю фикс, чтобы в этом случае попап миксин не закрывался
@@ -471,6 +493,7 @@ var CompoundArea = CompoundContainer.extend([
 
    _setCustomHeader: function() {
       var hasHeader = !!this._options.caption;
+      const headerPaddingClass = ' controls-CompoundArea-headerPadding';
       var customHeaderContainer = this._getCustomHeaderContainer();
       if (hasHeader || (this._options.popupComponent === 'dialog' && !customHeaderContainer.length && !this._options.hideCross)) {
          if (customHeaderContainer.length) {
@@ -482,11 +505,15 @@ var CompoundArea = CompoundContainer.extend([
             customHeaderContainer = $('<div class="ws-window-titlebar"><div class="ws-float-area-title ws-float-area-title-generated">' + (this._options.caption || '') + '</div></div>');
             this.getContainer().prepend(customHeaderContainer);
             this.getContainer().addClass('controls-CompoundArea-headerPadding');
+            this._className += headerPaddingClass;
          }
       } else if (customHeaderContainer.length && this._options.type === 'dialog') {
          this._prependCustomHeader(customHeaderContainer);
       } else {
          this.getContainer().removeClass('controls-CompoundArea-headerPadding');
+         if (this._className.indexOf(headerPaddingClass) >= 0) {
+            this._className = this._className.replace(headerPaddingClass, '');
+         }
       }
       this._titleBar = customHeaderContainer;
       if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
@@ -604,7 +631,7 @@ var CompoundArea = CompoundContainer.extend([
          return this.save(arg);
       } if (commandName === 'rebuildTitleBar') {
          return this._rebuildTitleBar(arg);
-      } if (commandName === 'delete') {
+      } if (this._options._mode === 'recordFloatArea' && commandName === 'delete') {
          return this.delRecord(arg);
       } if (commandName === 'print') {
          return this.print(arg);
@@ -716,8 +743,17 @@ var CompoundArea = CompoundContainer.extend([
       }
       return opener === this;
    },
-   _keyDown: function(event) {
-      if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
+   _keyDown: function(event: SyntheticEvent<KeyboardEvent>) {
+      const nativeEvent = event.nativeEvent;
+      const closingByKeys = !nativeEvent.shiftKey && nativeEvent.keyCode === Env.constants.key.esc;
+      const targetInEditInPlace = Boolean(event.target.closest('.controls-editInPlace'));
+
+      /**
+       * Если нажали на esc в старом редактировании по месту, то закрываться не нужно.
+       * Событие сработает на окне раньше (связано с механизмом распостранения событияй в ядре), поэтому редактирование не может прекратить всплытие.
+       * Ставим защиту на такой случай.
+       */
+      if (closingByKeys && !targetInEditInPlace) {
          this.close();
          if (Env.detection.safari) {
             // Need to prevent default behaviour if popup is opened
@@ -901,7 +937,11 @@ var CompoundArea = CompoundContainer.extend([
       DialogRecord.prototype.setSaveDiffOnly.apply(this, arguments);
    },
    ok: function() {
-      DialogRecord.prototype.ok.apply(this, arguments);
+      if (this._options.popupComponent === 'recordFloatArea') {
+         DialogRecord.prototype.ok.apply(this, arguments);
+      } else {
+         this.close(true);
+      }
    },
    _setEnabledForChildControls: function() {
       DialogRecord.prototype._setEnabledForChildControls.apply(this, arguments);
@@ -977,7 +1017,9 @@ var CompoundArea = CompoundContainer.extend([
 
    isVisible: function() {
       if (this._options.autoShow === false) {
-         return this._isVisible;
+         const popupContainer = this._container.parentElement;
+         const isHidden = popupContainer?.classList.contains('ws-hidden');
+         return !isHidden && this._isVisible;
       }
       return true;
    },
@@ -1007,10 +1049,10 @@ var CompoundArea = CompoundContainer.extend([
       }], { bubbling: true });
    },
    close: function(arg) {
-      // Если из обработчика на onBeforeClose вызвали повторное закрытие с новыми аргументами,
-      // То защита не даст повторно запустить закрытие окна, но актуальные аргументы обработать нужно.
-      this._closeArgs = arg;
       if (!this.isDestroyed()) {
+         // Если из обработчика на onBeforeClose вызвали повторное закрытие с новыми аргументами,
+         // То защита не даст повторно запустить закрытие окна, но актуальные аргументы обработать нужно.
+         this._closeArgs = arg;
          if (this._logicParent.waitForPopupCreated) {
             this._waitClose = true;
             return;
@@ -1073,9 +1115,22 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.modal = visible;
 
             // Изменили конфигурацию попапа, нужно, чтобы менеджер увидел эти изменения
-            Controller.reindex();
+            Controller.getManager()._popupItems._nextVersion();
             Controller.update(id, popupConfig.popupOptions);
          }
+
+         const changeVisible = () => {
+            self._isVisible = visible;
+
+            if (visible !== prevVisible) {
+               // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
+               // стреляя событием onAfterVisibilityChange
+               self._notifyCompound('onAfterVisibilityChange', visible, prevVisible);
+               // обновляю в замыкании, чтобы повторные вызова не приводили к
+               // прохождению проверки visible !== prevVisible
+               prevVisible = visible;
+            }
+         };
 
          if (visible && !prevVisible) {
             // После изменения видимости, изменятся размеры CompoundArea, из-за чего будет пересчитана позиция
@@ -1088,6 +1143,7 @@ var CompoundArea = CompoundContainer.extend([
             popupConfig.isHiddenForRecalc = true;
 
             var popupAfterUpdated = function popupAfterUpdated(item, container) {
+               changeVisible();
                if (item.isHiddenForRecalc) {
                   // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                   item.isHiddenForRecalc = false;
@@ -1122,14 +1178,8 @@ var CompoundArea = CompoundContainer.extend([
 
             // если не попадаем в elementAfterUpdated потому что он случился раньше, то попадаем хотя бы по таймауту
             setTimeout(popupAfterUpdated.bind(self, popupConfig, popupContainer), 2000);
-         }
-
-         this._isVisible = visible;
-
-         if (visible !== prevVisible) {
-            // Совместимость с FloatArea. После реального изменении видимости, нужно сообщать об этом,
-            // стреляя событием onAfterVisibilityChange
-            this._notifyCompound('onAfterVisibilityChange', visible);
+         } else {
+            changeVisible();
          }
       }
    },
@@ -1160,6 +1210,13 @@ var CompoundArea = CompoundContainer.extend([
       if (this.isDestroyed()) {
          return;
       }
+
+      // Пока попап не создан, ему на событие onInit могли позвать destroy напрямую.
+      // Хоть у попапов и нельзя destroy звать напрямую, ставлю защиту
+      if (!this._isPopupCreated) {
+         this._notifyManagerPopupDestroyed();
+      }
+
       this._trackTarget(false);
 
       // Unregister CompoundArea's inner Event/Listener, before its
@@ -1482,4 +1539,5 @@ var CompoundArea = CompoundContainer.extend([
       return res;
    }
 });
+CompoundArea._theme = ['Controls/compatiblePopup'];
 export default CompoundArea;

@@ -59,11 +59,20 @@ define(
             var panel2 = getFilterPanel(config2);
             filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID', false).addCallback(function(items) {
                assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
-               assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._favorite);
+               assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._$favorite);
                assert.equal(items.getCount(), 2);
                Env.constants.isServerSide = isServerSide;
                done();
             });
+         });
+
+         it('historySaveMode', () => {
+            const cfg = Clone(config);
+            cfg.orientation = 'vertical';
+            cfg.historySaveMode = 'favorite';
+            let filterPanel = getFilterPanel(cfg);
+            filterPanel._beforeMount(cfg);
+            assert.isTrue(filterPanel._historySaveMode === 'favorite');
          });
 
          it('Init::historyItems isReportPanel', function() {
@@ -73,7 +82,7 @@ define(
                pinned: false
             };
             let hSource = filter.HistoryUtils.getHistorySource(historyConfig);
-            assert.strictEqual(hSource.historySource._recent, history.Constants.MAX_HISTORY_REPORTS + 1);
+            assert.strictEqual(hSource.historySource._$recent, history.Constants.MAX_HISTORY_REPORTS + 1);
          });
 
          it('Init::historyItems fail loading', function(done) {
@@ -98,6 +107,24 @@ define(
             panel._beforeUpdate(config);
             assert.isTrue(panel._isChanged);
             assert.isTrue(panel._hasAdditionalParams);
+         });
+
+         it('getKeyProperty', () => {
+            const id = filterPopup.DetailPanel._private.getKeyProperty(items);
+            const newItems = [{
+               name: 'test',
+               value: 1,
+               resetValue: null
+            },
+            {
+               name: 'test1',
+               value: 2,
+               resetValue: 3
+            }
+            ];
+            const name = filterPopup.DetailPanel._private.getKeyProperty(newItems);
+            assert.isTrue(id === 'id');
+            assert.isTrue(name === 'name');
          });
 
          it('before update new items', function() {
@@ -459,6 +486,40 @@ define(
 
             it('filterHistoryItems', function() {
                assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
+            });
+
+            it('getFilter', () => {
+               const items = [
+                  {
+                     id: 'list',
+                     value: 5,
+                     resetValue: 1,
+                     textValue: 'listValue'
+                  },
+                  {
+                     name: 'text',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true,
+                     textValue: null
+                  },
+                  {
+                     name: 'bool',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'object',
+                     value: {},
+                     resetValue: null
+                  }
+               ];
+               assert.deepEqual(filterPopup.DetailPanel._private.getFilter(items), {
+                  list: 5,
+                  text: '123',
+                  object: {}
+               });
             });
 
             it('_private:reloadHistoryItems', function() {

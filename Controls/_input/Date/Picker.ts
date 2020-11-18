@@ -1,59 +1,55 @@
-import {detection} from 'Env/Env';
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
 import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import template = require('wml!Controls/_input/Date/Picker/Picker');
-import 'css!theme?Controls/input';
-import getOptions from 'Controls/Utils/datePopupUtils';
+import {Popup as PopupUtil} from 'Controls/dateUtils';
 
    /**
     * Поле ввода даты. Поддерживает как ввод с клавиатуры, так и выбор даты из всплывающего календаря с помощью мыши. Не поддерживает ввод времени.
     * @remark
-    * <a href="/materials/demo-ws4-input-datepicker">Демо-пример</a>.
+    * Полезные ссылки:
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления input</a>
+    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_datePicker.less">переменные тем оформления dateRange</a>
     *
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
     * @mixes Controls/interface/IInputDateTime
-    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/_interface/IDateMask
     * @mixes Controls/interface/IInputTag
+    * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
-    *
-    * @css @spacing_DatePicker-between-input-button Расстояние между полем ввода и кнопкой календаря.
-    *
-    * @control
+    * @mixes Controls/_input/interface/IValueValidators
+    * @mixes Controls/_interface/IOpenPopup
+    * 
     * @public
-    * @demo Controls-demo/Input/Date/PickerPG
-    * @category Input
+    * @demo Controls-demo/Input/Date/Picker
     * @author Красильников А.С.
     */
 
    /*
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
-    * <a href="/materials/demo-ws4-input-datepicker">Demo examples.</a>.
     *
     * @class Controls/_input/Date/Picker
     * @extends Core/Control
     * @mixes Controls/interface/IInputDateTime
-    * @mixes Controls/interface/IDateMask
+    * @mixes Controls/_interface/IDateMask
     * @mixes Controls/interface/IInputTag
     * @mixes Controls/_input/interface/IBase
     * @mixes Controls/interface/IInputPlaceholder
-    *
-    * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
-    *
-    * @control
+    * @mixes Controls/_input/interface/IValueValidators
+    * 
     * @public
-    * @demo Controls-demo/Input/Date/PickerPG
-    * @category Input
+    * @demo Controls-demo/Input/Date/Picker
     * @author Красильников А.С.
     */
 
    var Component = Control.extend([], {
       _template: template,
       _proxyEvent: tmplNotify,
+      _shouldValidate: false,
 
       // _beforeMount: function(options) {
       // },
@@ -64,21 +60,31 @@ import getOptions from 'Controls/Utils/datePopupUtils';
       // _beforeUnmount: function() {
       // },
 
-      _openDialog: function(event) {
+      openPopup: function(event) {
           var cfg = {
-            ...getOptions.getCommonOptions(this),
+            ...PopupUtil.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker',
+            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
             templateOptions: {
-               ...getOptions.getTemplateOptions(this),
+               ...PopupUtil.getTemplateOptions(this),
                selectionType: 'single',
+                calendarSource: this._options.calendarSource,
+                dayTemplate: this._options.dayTemplate,
                headerType: 'input',
                closeButtonEnabled: true,
-               range: this._options.range
+               range: this._options.range,
+               startValueValidators: this._options.valueValidators
             }
          };
          this._children.opener.open(cfg);
+      },
+
+      _afterUpdate(): void {
+          if (this._shouldValidate) {
+              this._shouldValidate = false;
+              this._children.input.validate();
+          }
       },
 
       _onResultWS3: function(event, startValue) {
@@ -96,18 +102,26 @@ import getOptions from 'Controls/Utils/datePopupUtils';
          this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
          this._notify('inputCompleted', [startValue, textValue]);
-      },
+          /**
+           * Вызываем валидацию, т.к. при выборе периода из календаря не вызывается событие valueChanged
+           * Валидация срабатывает раньше, чем значение меняется, поэтому откладываем ее до _afterUpdate
+           */
+         this._shouldValidate = true;
+      }
    });
 
    Component.getDefaultOptions = function() {
-      return IDateTimeMask.getDefaultOptions();
+      return {
+          ...IDateTimeMask.getDefaultOptions(),
+          valueValidators: []
+      };
    };
 
    Component.getOptionTypes = function() {
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
 
-   Component._theme = ['Controls/Classes'];
+   Component._theme = ['Controls/Classes', 'Controls/input'];
 
    export = Component;
 

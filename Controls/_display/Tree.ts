@@ -16,7 +16,6 @@ import AdjacencyListStrategy from './itemsStrategy/AdjacencyList';
 import MaterializedPathStrategy from './itemsStrategy/MaterializedPath';
 import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
-import {register} from 'Types/di';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 
@@ -99,10 +98,6 @@ function invertPropertyLogic(name: string): string {
 }
 
 function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
-    // FIXME: must process options before superclass constructor because it's immediately used in _composer
-    if (options && !options.hasChildrenProperty && options.loadedProperty) {
-        options.hasChildrenProperty = invertPropertyLogic(options.loadedProperty);
-    }
     return options;
 }
 
@@ -160,7 +155,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      * @cfg {Controls/_display/TreeItem|*} Корневой узел или его содержимое
      * @name Controls/_display/Tree#root
      */
-    protected _$root: T | any;
+    protected _$root: T | S;
 
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов
@@ -382,6 +377,13 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     /**
+     * Возвращает уровень вложенности корня дерева
+     */
+    getRootLevel(): number {
+        return this.isRootEnumerable() ? 1 : 0;
+    }
+
+    /**
      * Возвращает коллекцию потомков элемента коллекции
      * @param parent Родительский узел
      * @param [withFilter=true] Учитывать {@link setFilter фильтр}
@@ -441,21 +443,10 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         const parent = super._getItemsFactory();
 
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
-            let hasChildrenProperty = this._$hasChildrenProperty;
-            let invertLogic = false;
-
-            if (typeof hasChildrenProperty === 'string' && hasChildrenProperty[0] === '!') {
-                hasChildrenProperty = hasChildrenProperty.substr(1);
-                invertLogic = !invertLogic;
-            }
-
-            const hasChildren = object.getPropertyValue<boolean>(options.contents, hasChildrenProperty);
-            options.hasChildren = invertLogic ? !hasChildren : hasChildren;
-
+            options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
-
             return parent.call(this, options);
         };
     }
@@ -630,7 +621,8 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
             hasItem = enumerator[method]();
             nearbyItem = enumerator.getCurrent();
 
-            if (skipGroups && nearbyItem instanceof GroupItem) {
+            // если мы пришли сюда, когда в enumerator ещё ничего нет, то nearbyItem будет undefined
+            if (skipGroups && !!nearbyItem && nearbyItem['[Controls/_display/GroupItem]']) {
                 nearbyItem = undefined;
                 continue;
             }
@@ -688,5 +680,3 @@ Object.assign(Tree.prototype, {
     _$rootEnumerable: false,
     _root: null
 });
-
-register('Controls/display:Tree', Tree, {instantiate: false});

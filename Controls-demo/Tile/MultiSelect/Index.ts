@@ -4,13 +4,12 @@ import {Gadgets} from '../DataHelpers/DataCatalog';
 import {HierarchicalMemory} from "Types/source"
 
 
-import 'css!Controls-demo/Controls-demo';
 
 export default class extends Control {
    protected _template: TemplateFunction = Template;
-   private _viewSource;
-   private _selectedKeys: [];
-   private _excludedKeys: [];
+   protected _viewSource;
+   protected _selectedKeys: [];
+   protected _excludedKeys: [];
 
    protected _beforeMount() {
       this._viewSource = new HierarchicalMemory({
@@ -19,4 +18,6 @@ export default class extends Control {
          data: Gadgets.getData()
       });
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

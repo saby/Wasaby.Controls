@@ -2,14 +2,23 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
    'use strict';
 
    describe('Controls/_tile/TreeTileView/TreeTileViewModel', function() {
+      const urlResolver = () => {};
       var
          treeTileViewModel = new TreeTileViewModel({
             tileMode: 'static',
             itemsHeight: 300,
             imageProperty: 'image',
+            folderWidth: 250,
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
+            displayProperty: 'title',
+            tileWidth: 250,
+            theme: 'default',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver,
             groupingKeyCallback: function(item) {
                return item.get('group');
             },
@@ -50,6 +59,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          parentProperty: 'parent',
          nodeProperty: 'parent@',
          groupProperty: 'group',
+         theme: 'default',
          items: new collection.RecordSet({
             rawData: [{
                'id': 1,
@@ -149,22 +159,21 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
 
 
-      it('getMultiSelectClassList onhover selected', function() {
-         treeTileViewModel.setMultiSelectVisibility('onhover');
-         treeTileViewModel._selectedKeys = {2: true, 3: true};
-         var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
-         item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
-         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
-         treeTileViewModel._selectedKeys = {};
-      });
-
       it('getMultiSelectClassList onhover unselected', function() {
          treeTileViewModel.setMultiSelectVisibility('onhover');
          var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox js-controls-TileView__withoutZoom');
          item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
          assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
+      });
+
+      it('getMultiSelectClassList onhover selected', function() {
+         treeTileViewModel.setMultiSelectVisibility('onhover');
+         treeTileViewModel.setSelectedItems([treeTileViewModel.getItemById(2, 'id'), treeTileViewModel.getItemById(3, 'id')], true);
+         var item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(2, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom');
+         item = treeTileViewModel.getItemDataByItem(treeTileViewModel.getItemById(3, 'id'));
+         assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-TileView__checkbox js-controls-TileView__withoutZoom controls-TreeTileView__checkbox');
       });
 
       it('setTileMode', function() {
@@ -193,7 +202,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
          treeTileViewModel.setActiveItem(null);
          assert.equal(treeTileViewModel.getHoveredItem(), null);
          treeTileViewModel.setHoveredItem({key: 2});
-         treeTileViewModel.setActiveItem({key: 3});
+         treeTileViewModel.setActiveItem({key: 3, setActive: function() {return null;}});
          assert.equal(treeTileViewModel.getHoveredItem().key, 2);
       });
 
@@ -204,16 +213,31 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
       });
 
       it('getTileItemData', function() {
-         var tileItemData = treeTileViewModel.getTileItemData();
+         let tileItemData = treeTileViewModel.getTileItemData({
+            isNode: () => true,
+            getContents: () => null
+         });
          assert.deepEqual(tileItemData, {
             defaultFolderWidth: 250,
             defaultItemWidth: 250,
             imageProperty: 'image',
             itemCompressionCoefficient: 0.7,
+            itemClasses: 'controls-TileView__item_spacingLeft_default_theme-default controls-TileView__item_spacingRight_default_theme-default controls-TileView__item_spacingTop_default_theme-default controls-TileView__item_spacingBottom_default_theme-default',
             itemsHeight: 200,
+            itemWidth: 250,
             defaultShadowVisibility: 'visible',
-            tileMode: 'dynamic'
+            tileMode: 'dynamic',
+            displayProperty: 'title',
+            imageWidthProperty: 'imageWidth',
+            imageHeightProperty: 'imageHeight',
+            imageFit: 'cover',
+            imageUrlResolver: urlResolver
          });
+         tileItemData = treeTileViewModel.getTileItemData({
+            isNode: () => false,
+            getContents: () => null
+         });
+         assert.isTrue(tileItemData.itemWidth === 250);
       });
       it('isScaled', function() {
          let itemData = {
@@ -225,6 +249,8 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
                }
             },
             isHovered: true,
+            isActive: () => false,
+            isSwiped: () => false
          };
          assert.isTrue(treeTileViewModel.isScaled(itemData));
          itemData = {
@@ -235,6 +261,8 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
                   return this.prop;
                }
             },
+            isActive: () => false,
+            isSwiped: () => false
          };
          assert.isFalse(treeTileViewModel.isScaled(itemData));
          itemData = {
@@ -245,6 +273,8 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             },
             scalingMode: 'none',
             isHovered: true,
+            isActive: () => false,
+            isSwiped: () => false
          };
          assert.isFalse(treeTileViewModel.isScaled(itemData));
          itemData = {
@@ -255,8 +285,32 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             },
             scalingMode: 'inside',
             isHovered: true,
+            isActive: () => false,
+            isSwiped: () => false
          };
          assert.isTrue(treeTileViewModel.isScaled(itemData));
+      });
+
+      it('setDragItemData', () => {
+         const itemData = {
+            isFixed: true,
+            isHovered: true,
+            position: { },
+            canShowActions: true,
+            isAnimated: true,
+            zoomCoefficient: 1
+         };
+
+         treeTileViewModel.setDragItemData(itemData);
+         assert.isFalse(itemData.isFixed);
+         assert.isFalse(itemData.isHovered);
+         assert.isNull(itemData.position);
+         assert.isFalse(itemData.canShowActions);
+         assert.isFalse(itemData.isAnimated);
+         assert.isNull(itemData.zoomCoefficient);
+
+         treeTileViewModel.setDragItemData(null);
+         assert.isNull(treeTileViewModel.getDragItemData());
       });
    });
 });

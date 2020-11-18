@@ -1,74 +1,111 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import pagingTemplate = require('wml!Controls/_paging/Paging/Paging');
 import {SyntheticEvent} from 'Vdom/Vdom';
-
-// TODO перевести на честную тему мешает наличие опции theme на scroll/Container
-import 'css!theme?Controls/paging';
+import {TNavigationPagingMode} from '../_interface/INavigation';
 
 type TButtonState = 'normal' | 'disabled';
+type TArrowStateVisibility = 'visible' | 'hidden' | 'readonly';
+
+interface IArrowState {
+    begin: TArrowStateVisibility;
+    prev: TArrowStateVisibility;
+    next: TArrowStateVisibility;
+    end: TArrowStateVisibility;
+}
 
 export interface IPagingOptions extends IControlOptions {
-    /**
-     * @cfg {Boolean} Отображать кнопки с номерами страницы.
-     */
     showDigits: boolean;
-    
-    /**
-     * @cfg {Number} Размер страницы.
-     */
     pagesCount: number;
-
-    /**
-     * @cfg {Number} Номер выбранной страницы.
-     */
     selectedPage?: number;
-    stateBegin: TButtonState;
-    stateEnd: TButtonState;
-    stateNext: TButtonState;
-    statePrev: TButtonState;
+    backwardEnabled: boolean;
+    forwardEnabled: boolean;
+    contrastBackground: boolean;
+    contentTemplate?: TemplateFunction;
+    elementsCount?: number;
+    arrowState: IArrowState;
+    pagingMode: TNavigationPagingMode;
 }
 
 /**
  * Контрол для отображения кнопок постраничной навигации.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_paging.less">переменные тем оформления</a>
+ *
  * @class Controls/_paging/Paging
  * @extends UI/Base:Control
  * @public
  * @author Авраменко А.С.
- * 
+ *
  * @mixes Controls/_paging/Paging/Styles
  * @mixes Controls/_paging/Paging/DigitButtons/Styles
  *
  */
 class Paging extends Control<IPagingOptions> {
     protected _template: TemplateFunction = pagingTemplate;
-    private _stateBegin: TButtonState = 'normal';
-    private _stateEnd: TButtonState = 'normal';
-    private _stateNext: TButtonState = 'normal';
-    private _statePrev: TButtonState = 'normal';
+    protected _stateBackward: TButtonState = 'normal';
+    protected _stateForward: TButtonState = 'normal';
+
+    protected _stateTop: TButtonState = 'normal';
+    protected _stateBottom: TButtonState = 'normal';
 
     private _initArrowDefaultStates(config: IPagingOptions): void {
-        this._stateBegin = config.stateBegin || 'disabled';
-        this._stateEnd = config.stateEnd || 'disabled';
-        this._stateNext = config.stateNext || 'disabled';
-        this._statePrev = config.statePrev || 'disabled';
+        if (config.arrowState) {
+            if (config.pagingMode === 'numbers') {
+                if (config.selectedPage <= 1) {
+                    this._stateTop = this._getState('hidden');
+                } else {
+                    this._stateTop = this._getState('visible');
+                }
+
+                if (config.selectedPage >= config.pagesCount) {
+                    this._stateBottom = this._getState('hidden');
+                } else {
+                    this._stateBottom = this._getState('visible');
+                }
+            } else {
+                this._stateTop = this._getState(config.arrowState.begin || 'readonly');
+                this._stateBackward = this._getState(config.arrowState.prev || 'readonly');
+                this._stateForward = this._getState(config.arrowState.next || 'readonly');
+                this._stateBottom = this._getState(config.arrowState.end || 'readonly');
+            }
+        } else {
+            this._stateTop = this._stateBackward = config.backwardEnabled ? 'normal' : 'disabled';
+            this._stateForward = this._stateBottom = config.forwardEnabled ? 'normal' : 'disabled';
+        }
+    }
+
+    private _isDigit(): boolean {
+        return (this._options.showDigits || this._options.pagingMode === 'numbers');
+    }
+
+    private _getState(state: TArrowStateVisibility): TButtonState {
+        return (state === 'visible') ? 'normal' : 'disabled';
+    }
+
+    private _getArrowStateVisibility(state: string): string {
+        if (this._options.arrowState) {
+            return this._options.arrowState[state] || 'visible';
+        }
+        if (this._isDigit()) {
+            return 'visible';
+        }
+        return 'hidden';
     }
 
     private _initArrowStateBySelectedPage(config: IPagingOptions): void {
         const page = config.selectedPage;
         if (page <= 1) {
-            this._stateBegin = 'disabled';
-            this._statePrev = 'disabled';
+            this._stateBackward = this._stateTop = this._getState('hidden');
         } else {
-            this._stateBegin = 'normal';
-            this._statePrev = 'normal';
+            this._stateBackward = this._stateTop = this._getState('visible');
         }
 
         if (page >= config.pagesCount) {
-            this._stateEnd = 'disabled';
-            this._stateNext = 'disabled';
+            this._stateForward = this._stateBottom = this._getState('hidden');
         } else {
-            this._stateEnd = 'normal';
-            this._stateNext = 'normal';
+            this._stateForward = this._stateBottom = this._getState('visible');
         }
     }
 
@@ -79,6 +116,13 @@ class Paging extends Control<IPagingOptions> {
         } else {
             this._initArrowDefaultStates(newOptions);
         }
+    }
+
+    private _isShowContentTemplate(): boolean {
+        return !(this._getArrowStateVisibility('begin') === 'hidden' &&
+            this._getArrowStateVisibility('prev') === 'hidden' &&
+            this._getArrowStateVisibility('next') === 'hidden' &&
+            this._getArrowStateVisibility('end') === 'hidden');
     }
 
     private _changePage(page: number): void {
@@ -95,13 +139,13 @@ class Paging extends Control<IPagingOptions> {
         this._initArrowState(newOptions);
     }
 
-    private _digitClick(e: SyntheticEvent<Event>, digit: number): void {
+    protected _digitClick(e: SyntheticEvent<Event>, digit: number): void {
         this._changePage(digit);
     }
 
-    private _arrowClick(e: SyntheticEvent<Event>, btnName: string): void {
+    protected _arrowClick(e: SyntheticEvent<Event>, btnName: string, direction: string): void {
         let targetPage: number;
-        if (this['_state' + btnName] !== 'normal') {
+        if (this['_state' + direction] !== 'normal') {
             return;
         }
         if (this._options.showDigits) {
@@ -123,9 +167,25 @@ class Paging extends Control<IPagingOptions> {
         }
         this._notify('onArrowClick', [btnName]);
     }
+
+    static _theme: string[] = ['Controls/paging'];
 }
 
 export default Paging;
+
+/**
+ * @name Controls/_paging/Paging#pagesCount
+ * @cfg {Number} Размер страницы
+ */
+
+/**
+ * @name Controls/_paging/Paging#showDigits
+ * @cfg {Boolean} Отображать кнопки с номерами страницы.
+ */
+/**
+ * @name Controls/_paging/Paging#selectedPage
+ * @cfg {Number} Номер выбранной страницы.
+ */
 
 /**
  * @event Происходит при клике по кнопкам перехода к первой, последней, следующей или предыдущей странице.
@@ -136,10 +196,21 @@ export default Paging;
  * @param {ButtonName} btnName Имя нажатой кнопки.
  */
 
- /**
+/**
  * @typedef {String} ButtonName
  * @variant Begin Кнопка "В начало".
  * @variant End Кнопка "В конец".
  * @variant Prev Кнопка "Назад".
  * @variant Next Кнопка "Вперёд".
+ */
+/**
+ * @typedef {Object} ArrowState
+ * @property {TArrowStateVisibility} [begin] Управялет показом/скрытием кнопки "Переход в начало".
+ * @property {TArrowStateVisibility} [prev] Управялет показом/скрытием кнопки "Переход к предыдущей странице".
+ * @property {TArrowStateVisibility} [next] Управялет показом/скрытием кнопки "Переход к следующей странице".
+ * @property {TArrowStateVisibility} [end] Управялет показом/скрытием кнопки "Переход в конец".
+ */
+/**
+ * @name Controls/_paging/Paging#arrowsState
+ * @cfg {IArrowState} Опция управляет возможностью показа/скрытия кнопок в пэйджинге.
  */

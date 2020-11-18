@@ -1,1 +1,7 @@
-<Controls.Container.Async templateName="Controls/operationsPanel:OperationsPanel" templateOptions="{{_options}}"/>
+<ws:if data="{{!_hidePanel}}">
+    <Controls.Container.Async templateName="Controls/operationsPanel:OperationsPanel" templateOptions="{{_options}}" errorCallback="{{_errorCallback}}"/>
+</ws:if>
+<ws:else>
+    <invisible-node/>
+</ws:else>
+

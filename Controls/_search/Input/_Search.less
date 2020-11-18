@@ -1,130 +1,288 @@
+.controls-Render_search_borderRadius-default_theme-@{themeName},
+.controls-Render_searchContrast_borderRadius-default_theme-@{themeName} {
+   border-radius: @border-radius_default_searchInput;
+}
+
+//добавляю пока только один размер для высоты l (используется на tensor.ru)
+.controls-Render_search_borderRadius-l_theme-@{themeName},
+.controls-Render_searchContrast_borderRadius-l_theme-@{themeName} {
+  border-radius: @border-radius_l_searchInput;
+}
+
 .controls-Render_state-search-valid_theme-@{themeName},
 .controls-Render_state-search-invalid_theme-@{themeName},
 .controls-Render_state-search-invalidAccent_theme-@{themeName} {
-   border-color: @border-color_Search;
-   background: @background-color_Search;
-
-   &:focus-within {
-      border-color: @border-color_Search_active;
-   }
+   border-color: @border-color_searchInput;
+   background: @background-color_searchInput;
 }
 
 .controls-Render_state-search-valid-active_theme-@{themeName},
 .controls-Render_state-search-invalid-active_theme-@{themeName},
 .controls-Render_state-search-invalidAccent-active_theme-@{themeName} {
-   border-color: @border-color_Search_active;
-   background: @background-color_Search;
+   border-color: @border-color_searchInput;
+   background: @background-color_searchInput;
+}
+
+.controls-Search_state-search__input_border_theme-@{themeName} {
+   border-color: @border-color_focus_searchInput;
+   background: @background-color_focus_searchInput;
+}
+.controls-Search_state-searchContrast__input_border_theme-@{themeName} {
+   border-color: @border-color_contrast_focus_searchInput;
+   background: @background-color_contrast_focus_searchInput;
+}
+
+.controls-Render_state-search-valid_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalid_caretFilled_theme-@{themeName},
+.controls-Render_state-search-invalidAccent_caretFilled_theme-@{themeName} {
+
+   &:focus-within {
+      border-color: @border-color_focus_searchInput;
+      background: @background-color_focus_searchInput;
+   }
+
 }
 
 .controls-Render_state-searchContrast-valid_theme-@{themeName},
 .controls-Render_state-searchContrast-invalid_theme-@{themeName},
 .controls-Render_state-searchContrast-invalidAccent_theme-@{themeName} {
-   border-color: @border-color_Search;
-   background: @background-color_Search_contrast_background;
-
-   &:focus-within {
-      border-color: @border-color_Search_active;
-   }
+   border-color: @border-color_contrast_searchInput;
+   background: @background-color_contrast_searchInput;
 }
 
 .controls-Render_state-searchContrast-valid-active_theme-@{themeName},
 .controls-Render_state-searchContrast-invalid-active_theme-@{themeName},
 .controls-Render_state-searchContrast-invalidAccent-active_theme-@{themeName} {
-   border-color: @border-color_Search_active;
-   background: @background-color_Search_contrast_background;
+   border-color: @border-color_contrast_focus_searchInput;
+   background: @background-color_contrast_focus_searchInput;
 }
 
 .ws-is-hover {
    .controls-Render_state-search-valid_theme-@{themeName}:hover,
    .controls-Render_state-search-invalid_theme-@{themeName}:hover,
    .controls-Render_state-search-invalidAccent_theme-@{themeName}:hover {
-      border-color: @border-color_Search_active;
+      border-color: @border-color_hover_searchInput;
    }
 
    .controls-Render_state-searchContrast-valid_theme-@{themeName}:hover,
    .controls-Render_state-searchContrast-invalid_theme-@{themeName}:hover,
    .controls-Render_state-searchContrast-invalidAccent_theme-@{themeName}:hover {
-      border-color: @border-color_Search_active;
+      border-color: @border-color_contrast_hover_searchInput;
    }
 }
 
 .controls-Render_state-search-readonly_theme-@{themeName} {
-   border-color: @border-color_Search_readOnly;
-   background: @background-color_Search;
+   border-color: @readonly_border-color_searchInput;
+   background: @readonly_background-color_searchInput;
 }
 
 .controls-Render_state-searchContrast-readonly_theme-@{themeName} {
-   border-color: @border-color_Search_readOnly;
-   background: @background-color_Search_contrast_background;
+   border-color: @readonly_border-color_searchInput;
+   background: @readonly_contrast_background-color_searchInput;
 }
 
-.controls-Search__field_theme_@{themeName}_margin {
-   margin: 0 @iconReset-iconSearch_spacing 0 @border-left_content_spacing_Search;
+.controls-Search__field_theme_@{themeName}_margin-xs {
+   margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
+}
+
+.controls-Search__field_theme_@{themeName}_margin-null {
+   margin: 0 @reset-button_offset-left_searchInput 0 (@padding-left_searchInput - @border-thickness_inputText);
 }
 
 .controls-Search__buttons {
    display: flex;
    align-self: center;
+   align-items: center;
 }
 
-.controls-Search__button_theme-@{themeName} {
-   .icon-size(@icon-size_Search);
-}
-
-.controls-Search__button_enabled_theme-@{themeName} {
+.controls-Search__button_enabled {
    cursor: pointer;
 }
 
-.controls-Search__button_readOnly_theme-@{themeName} {
+.controls-Search__button_readOnly {
    cursor: default;
 }
 
-.controls-Search__searchButton_theme_@{themeName}_position {
-   margin-right: @border-right_content_spacing_Search;
+.controls-Search__searchButton_inlineheight-s_theme-@{themeName} {
+   .icon-size(@trigger_s_icon-size_searchInput);
 }
 
-.controls-Search__resetButton_theme_@{themeName}_position {
-   margin-right: @iconReset-iconSearch_spacing;
+.controls-Search__searchButton_inlineheight-xs_theme-@{themeName} {
+   .icon-size(@trigger_xs_icon-size_searchInput);
+}
+
+.controls-Search__searchButton_inlineheight-m_theme-@{themeName},
+.controls-Search__searchButton_inlineheight-default_theme-@{themeName} {
+   .icon-size(@trigger_m_icon-size_searchInput);
+}
+
+.controls-Search__searchButton_inlineheight-l_theme-@{themeName} {
+   .icon-size(@trigger_l_icon-size_searchInput);
+}
+
+.controls-Search__searchButton_inlineheight-xl_theme-@{themeName} {
+   .icon-size(@trigger_xl_icon-size_searchInput);
+}
+
+.controls-Search__searchButton_inlineheight-2xl_theme-@{themeName} {
+   .icon-size(@trigger_2xl_icon-size_searchInput);
 }
 
 .controls-Search__searchButton_theme_@{themeName}_color {
-   color: @color_Search_iconSearch;
-}
-
-.controls-Search__searchButton_theme_@{themeName}_color:active {
-   color: @color_Search_iconSearch_active;
-}
-
-.ws-is-hover {
-   .controls-Render_theme_@{themeName}_style_search:hover {
-      border-color: @border-color_Search_active;
-      background: @background-color_Search;
-   }
-   .controls-Search__searchButton_theme_@{themeName}_color:hover {
-      color: @color_Search_iconSearch_hovered;
-   }
+   color: @trigger_icon-color_searchInput;
 }
 
 .controls-Search__searchButton_theme_@{themeName}_color_readOnly {
-   color: @color_Search_iconSearch_readOnly;
+   color: @readonly_trigger_icon-color_searchInput;
+}
+
+.controls-Search__resetButton_theme-@{themeName} {
+   .icon-size(@reset-button_icon-size_searchInput);
 }
 
 .controls-Search__resetButton_theme_@{themeName}_color {
-   color: @color_Search_iconReset;
+   color: @reset-button_icon-color_searchInput;
 }
 
-.controls-Search__nativeField_theme_@{themeName}_caretEmpty {
-   caret-color: @color_Search-caret_empty;
+.controls-Search__searchButton_theme_@{themeName}_color:active {
+   color: @trigger_icon-color_active_searchInput;
 }
 
-.controls-Search__nativeField_theme_@{themeName}_caretFilled {
-   caret-color: @caret-color_fill_inputText;
+.controls-Search__resetButton_theme_@{themeName}_color:active {
+   color: @reset-button_active_icon-color_searchInput;
+}
+
+.ws-is-hover {
+   .controls-Search__searchButton_theme_@{themeName}_color:hover {
+      color: @trigger_icon-color_hover_searchInput;
+   }
+
+   .controls-Search__resetButton_theme_@{themeName}_color:hover {
+      color: @reset-button_hover_icon-color_searchInput;
+   }
+}
+
+.controls-Search__searchButton_theme_@{themeName}_position {
+   margin-right: @padding-right_searchInput - @border-thickness_inputText;
+}
+
+.controls-Search__resetButton_theme_@{themeName}_position {
+   margin-right: @trigger_offset_searchInput;
+}
+
+.controls-Search__nativeField_caretEmpty_theme_@{themeName} {
+   caret-color: @caret-color_empty_searchInput;
+}
+
+.controls-Search__nativeField_caretFilled_theme_@{themeName} {
+   caret-color: @caret-color_fill_searchInput;
+}
+
+.controls-Search__expandable-search_theme-@{themeName} {
+   height: @icon-size-expandableSearch;
+   width: @icon-size-expandableSearch;
+}
+
+.controls-Search__expandable-container_theme-@{themeName} {
+   height: @icon-size-expandableSearch;
+   overflow: hidden;
+   position: relative;
+}
+
+.controls-Search__expandable-container-inlineWidth-m_theme-@{themeName} {
+   width: @input_container_m-width-expandableSearch;
+}
+
+.controls-Search__expandable-container-inlineWidth-l_theme-@{themeName} {
+   width: @input_container_l-width-expandableSearch;
+}
+
+.controls-Search__expandable-input_theme-@{themeName} {
+   position: absolute;
+   display: flex;
+   flex-direction: row;
+   left: 0;
+}
+
+.controls-Search__expandable-input-inlineWidth-m_theme-@{themeName} {
+   animation: inputRightMoveSearch 0.3s;
+}
+
+.controls-Search__expandable-input-inlineWidth-l_theme-@{themeName} {
+   animation: inputRightMoveWideSearch 0.3s;
+}
+
+.controls-Search__input-inlineWidth-l_theme-@{themeName} {
+   width: @input_l-width-expandableSearch;
+}
+
+.controls-Search__input-inlineWidth-m_theme-@{themeName} {
+   width: @input_m-width-expandableSearch;
+}
+
+.controls-Search__expandable-reset-button_theme-@{themeName} {
+   .icon-size(@icon-size-expandableSearch);
+   color: @reset-button_icon-color_searchInput;
+   cursor: pointer;
+   background: @close-button_icon-background-expandableSearch;
+   &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: @close-button_shadow-width-expandableSearch;
+      background: linear-gradient(to right, @close-button_shadow-start-color-expandableSearch, @close-button_shadow-end-color-expandableSearch);
+   }
+}
+
+.controls-Search__expandable-button-container_theme-@{themeName} {
+   overflow: hidden;
+   width: @icon-size-expandableSearch;
+}
+
+.controls-Search__expandable-button_theme-@{themeName} {
+   .icon-size(@icon-size-expandableSearch);
+   animation: iconLeftMove 0.3s;
+}
+
+.controls-Search__expandable-input-base_theme-@{themeName} {
+   display: inline-block;
+}
+
+@keyframes inputRightMoveWideSearch {
+   0% {
+      transform: translateX(-@input_container_l-width-expandableSearch);
+   }
+
+   100% {
+      transform: translateX(0);
+   }
+}
+
+@keyframes inputRightMoveSearch {
+   0% {
+      transform: translateX(-@input_container_m-width-expandableSearch);
+   }
+
+   100% {
+      transform: translateX(0);
+   }
+}
+
+@keyframes iconLeftMove {
+   0% {
+      transform: translateX(@icon-size-expandableSearch);
+   }
+
+   100% {
+      transform: translateX(0);
+   }
 }
 
 //ios doesn't support dynamic color change of caret
 //demo https://jsfiddle.net/gersasha/ew03jha4/2/
 .ws-is-mobile-safari {
-   .controls-Search__nativeField_theme_@{themeName}_caretEmpty {
-      caret-color: @caret-color_fill_inputText;
+   .controls-Search__nativeField_caretEmpty_theme_@{themeName} {
+      caret-color: @caret-color_fill_searchInput;
    }
 }

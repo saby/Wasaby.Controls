@@ -3,6 +3,6 @@
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
-                                delimiters="{{true}}"/>
+                                useGrouping="{{true}}"/>
    </ws:contentTemplate>
 </ws:partial>

@@ -36,7 +36,9 @@ define([
                start: 10,
                end: 10
             };
-            component._focusInHandler();
+            component._focusInHandler({
+                  target: {}
+               });
             assert.deepEqual(
                component._viewModel.selection,
                {
@@ -53,7 +55,9 @@ define([
                end: 1
             };
             component._mouseDownHandler();
-            component._focusInHandler();
+            component._focusInHandler({
+                  target: {}
+               });
             assert.deepEqual(component._viewModel.selection, { start: 1, end: 1 });
          });
       });
@@ -66,7 +70,7 @@ define([
                delete: '7',
                insert: '',
             }, 'deleteBackward');
-            assert.equal(component._viewModel.displayValue, '+9721161');
+            assert.equal(component._viewModel.displayValue, '+972 116 1');
          });
       });
    });

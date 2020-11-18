@@ -8,10 +8,18 @@
    position: relative;
    overflow: hidden;
 }
+
 .controls-DialogTemplate_theme_@{themeName} {
-   background-color: @background-color_dialog;
    box-shadow: @box-shadow_dialog;
    border: @border-thickness_dialog solid @border-color_dialog;
+}
+
+.controls-DialogTemplate_backgroundStyle-default_theme_@{themeName} {
+   background-color: @background-color_dialog;
+}
+
+.controls-DialogTemplate_backgroundStyle-unaccented_theme_@{themeName} {
+   background-color: @unaccented_background-color_dialog;
 }
 
 .controls-DialogTemplate__top-area {
@@ -20,8 +28,15 @@
 }
 
 .controls-DialogTemplate__top-area_theme_@{themeName} {
-   background-color: @header_background-color_dialog;
    min-height: @header-min-height_dialog;
+}
+
+.controls-DialogTemplate__top-area_default_theme_@{themeName} {
+   background-color: @header_background-color_dialog;
+}
+
+.controls-DialogTemplate__top-area_unaccented_theme_@{themeName} {
+   background-color: @unaccented_header_background-color_dialog;
 }
 
 .controls-DialogTemplate__content-area {
@@ -34,6 +49,7 @@
    overflow: hidden;
    z-index: 1;
 }
+
 .controls-DialogTemplate__headerContentTemplate {
    position: relative;
    display: flex;
@@ -42,6 +58,7 @@
    flex-shrink: 1;
    min-width: 0;
    height: 100%;
+   align-self: center;
    align-items: center;
 }
 
@@ -64,7 +81,7 @@
    flex-shrink: 0;
 }
 .controls-DialogTemplate__close_button_theme_@{themeName} {
-   margin-top: @close-button_padding-top_dialog;
+   margin-top: @close-button_offset-top_dialog;
 }
 
 .controls-DialogTemplate__close-button_without_head {
@@ -85,7 +102,7 @@
    min-width: @header_min-width_dialog;
    height: @header-min-height_dialog;
    margin-left: @header_padding-left_dialog;
-   margin-right: @header-content_padding-right_dialog;
+   margin-right: @header_caption_offset-right_dialog;
    line-height: @line-height_dialogTemplate_caption; // the baseline is not centered
 }
 

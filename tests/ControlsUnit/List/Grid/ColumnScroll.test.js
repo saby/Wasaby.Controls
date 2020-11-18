@@ -1,3 +1,5 @@
+/**
+ * Переписать для нового контроллера, некоторые тесты можно брать отсюда
 define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], function(ColumnScroll, Entity, Clone) {
 
    'use strict';
@@ -22,16 +24,26 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                getItems: () => ({
                   getCount: () => 3
                }),
-               getEditingItemData: () => true,
+               isEditing: () => true,
             }
          },
          columnScroll = new ColumnScroll(cfg);
+
+      const _innerHTMLTemplateStr = '.controls-ColumnScroll__transform-1234567890>.controls-Grid_columnScroll { transform: translateX(-{value}); }' +
+         '.controls-ColumnScroll__transform-1234567890 .controls-Grid__cell_fixed { transform: translateX({value}); }' +
+         '.controls-ColumnScroll__transform-1234567890 .js-controls-Grid_columnScroll_thumb-wrapper { transform: translateX({value}); }' +
+         '.controls-ColumnScroll__transform-1234567890 .controls-Grid__itemAction { transform: translateX({value}); }';
+
+      const _innerHTMLReplaceValueRegExp = new RegExp('{value}', 'g');
+
+      const getInnerHTMLWithValue = (value) => _innerHTMLTemplateStr.replace(_innerHTMLReplaceValueRegExp, value);
 
       columnScroll._children = {
          contentStyle: {
             innerHTML: ''
          },
          content: {
+            querySelectorAll: () => [],
             getClientRects: () => [{x: 200}],
             getElementsByClassName: () => {
                return [{
@@ -91,6 +103,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -170,6 +183,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -221,6 +235,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -261,6 +276,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual(clearColumnScroll._fixedColumnsWidth, 100);
 
          clearColumnScroll._children.content = {
+            querySelectorAll: () => [],
             getClientRects: () => [{x: 200}],
             getElementsByClassName: () => {
                return [{
@@ -297,6 +313,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
          clearColumnScroll._children.content = {
             offsetTop: 0,
+            querySelectorAll: () => [],
             getClientRects: () => [{x: 200}],
             getElementsByClassName: (className) => {
                if (className === 'controls-Grid__header') {
@@ -377,6 +394,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -431,6 +449,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
 
             },
             content: {
+               querySelectorAll: () => [],
                getBoundingClientRect: () => ({
                   right: 929,
                }),
@@ -489,6 +508,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
                innerHTML: ''
             },
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -527,6 +547,9 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
             getCount: () => 0
          });
          assert.isFalse(columnScroll._isDisplayColumnScroll());
+         columnScroll._options.editingItemData = {key: 1};
+         assert.isTrue(columnScroll._isDisplayColumnScroll());
+         columnScroll._options.editingItemData = undefined;
       });
       it('_calculateShadowStyles', function() {
          let cont = columnScroll._container;
@@ -553,22 +576,30 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
       });
       it('_calculateShadowClasses', function() {
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-ColumnScroll__shadow_invisible');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
       });
       it('_resizeHandler', function() {
+         let isStickyElementsToggled = false;
          var
             innerHTML,
             changesInnerHTML = [],
             resultChangesInnerHTML = [
-               '.controls-ColumnScroll__transform-1234567890 .controls-Grid__cell_transform { transform: translateX(-50px); }',
-               '.controls-ColumnScroll__transform-1234567890 .controls-Grid__cell_transform { transform: translateX(-0px); }',
-               '.controls-ColumnScroll__transform-1234567890 .controls-Grid__cell_transform { transform: translateX(-50px); }'
+               getInnerHTMLWithValue('50px'),
+               getInnerHTMLWithValue('0px'),
+               getInnerHTMLWithValue('50px')
             ];
          columnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [{
+                  style: {
+                     removeProperty: () => {
+                        isStickyElementsToggled = true;
+                     }
+                  }
+               }],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -612,10 +643,12 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.deepEqual('startend', columnScroll._shadowState);
          assert.deepEqual(100, columnScroll._fixedColumnsWidth);
          assert.deepEqual(resultChangesInnerHTML, changesInnerHTML);
+         assert.isTrue(isStickyElementsToggled);
 
          columnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                offsetWidth: 0,
                getClientRects: () => [],
                getElementsByClassName: () => {
@@ -672,6 +705,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -710,6 +744,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -747,6 +782,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -782,6 +818,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 650}],
                getElementsByClassName: () => {
                   return [{
@@ -837,6 +874,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -875,6 +913,7 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          newColumnScroll._children = {
             contentStyle: {},
             content: {
+               querySelectorAll: () => [],
                getClientRects: () => [{x: 200}],
                getElementsByClassName: () => {
                   return [{
@@ -923,11 +962,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default');
-         assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
-            ' .controls-Grid__cell_transform { transform: translateX(-100px); }');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default');
+         assert.equal(columnScroll._children.contentStyle.innerHTML, getInnerHTMLWithValue('100px'));
 
          // Scroll to 200px (to the end of content)
          columnScroll._positionChangedHandler({}, 250);
@@ -936,11 +974,10 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(columnScroll._calculateShadowStyles('start'), 'left: 100px;');
          assert.equal(columnScroll._calculateShadowStyles('end'), '');
          assert.equal(columnScroll._calculateShadowClasses('start'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default');
          assert.equal(columnScroll._calculateShadowClasses('end'),
-            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-ColumnScroll__shadow_invisible');
-         assert.equal(columnScroll._children.contentStyle.innerHTML, '.controls-ColumnScroll__transform-1234567890' +
-            ' .controls-Grid__cell_transform { transform: translateX(-250px); }');
+            'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible');
+         assert.equal(columnScroll._children.contentStyle.innerHTML, getInnerHTMLWithValue('250px'));
       });
 
       it('_calcPositionByWheel', function() {
@@ -974,5 +1011,26 @@ define(['Controls/_grid/ColumnScroll', 'Types/entity', 'Core/core-clone'], funct
          assert.equal(450, columnScroll._contentSize); // previous value
          assert.equal(200, columnScroll._contentContainerSize); //previous value
       })
+
+      it('_isDragScrollingEnabled', function() {
+         columnScroll._options.listModel.getItems = () => ({
+            getCount: () => 21
+         });
+         columnScroll._contentSize = 100;
+         columnScroll._contentContainerSize = 200;
+
+         // Column scroll is not visible now
+         assert.isFalse(columnScroll._isDragScrollingEnabled());
+
+         // Column scroll is visible
+         columnScroll._contentSize = 200;
+         columnScroll._contentContainerSize = 100;
+         assert.isTrue(columnScroll._isDragScrollingEnabled());
+
+         // No content, not mounted
+         columnScroll._children.content = null;
+         assert.isFalse(columnScroll._isDragScrollingEnabled());
+      });
    });
 });
+*/

@@ -1,3 +1,5 @@
+@import "../../_scroll/Scroll/_contentEnvironmentZIndex";
+
 .controls-BaseControl__fakeFocusElem {
    position: fixed;
    top: 50%;
@@ -17,15 +19,31 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    }
 }
 
-.controls-BaseControl__loadMore {
-   height: @height_BaseControl-button-loadMore;
+.controls-BaseControl__loadMore_theme-@{themeName} {
+   height: @more_height_list;
 }
+
+.controls-text-listMore_theme-@{themeName} {
+   color: @more_text-color_list;
+}
+
+.controls-BaseButton:active .controls-text-listMore_theme-@{themeName} {
+   color: @more_active_text-color_list;
+}
+
+.ws-is-hover {
+   .controls-BaseButton:hover .controls-text-listMore_theme-@{themeName} {
+      color: @more_hover_text-color_list;
+   }
+}
+
 .controls-BaseControl__pagingContainer {
    pointer-events: none;
    position: absolute;
-   bottom: 0;
-   right: 0;
-   z-index: 6;
+   bottom: @scrollpaging_offset-vertical_list;
+   right: @scrollpaging_offset-horizontal_list;
+   // Должен отображаться выше элементов скрол контейнера
+   z-index: @z-index_Scroll-contentEnvironment + 1;
    display: flex;
    justify-content: flex-end;
 }
@@ -36,20 +54,35 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    .controls-BaseControl__pagingContainer {
       position: sticky;
       top: auto;
+      margin-right: @scrollpaging_offset-horizontal_list;
+      padding: @scrollpaging_offset-vertical_list 0;
+      bottom: 0;
+   }
+
+   .controls-BaseControl-hide-paging {
+      display: none;
+   }
+
+   // При отключении отступа под пэйджинг, отсуп все равно остается для ios из-за position: sticky.
+   .controls-BaseControl-hide-paging-padding {
+      padding: 0;
+      > .controls-PagingV {
+         position: absolute;
+         bottom: @scrollpaging_offset-vertical_list;
+      }
    }
 }
 
-.controls-BaseControl_paging-Padding {
-   height: @height_Paging-button;
-}
-.ws-is-mobile-safari .controls-BaseControl_paging-Padding {
-   height: 0;
+.controls-BaseControl_paging-Padding_theme-@{themeName} {
+   height: @item_height_paging + 2 * @scrollpaging_offset-vertical_list;
 }
 
-.controls-BaseControl__scrollPaging {
+.ws-is-mobile-safari .controls-BaseControl_paging-Padding_theme-@{themeName} {
+   margin-bottom: 0;
+}
+
+.controls-BaseControl__scrollPaging_theme-@{themeName} {
    pointer-events: auto;
-   border: 0 solid @border-color_BaseControl-scrollPaging;
-   border-top-width: @border-width_BaseControl-scrollPaging-top;
 }
 .controls-BaseControl__loadingIndicator {
    background-color: transparent;
@@ -58,36 +91,58 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    cursor: auto;
 
    // TODO: KINGO
-   // Локальный индикатор загрузки на весь экран должен блокировать список, перевкрывая кнопки навигации и скроллбар.
-   z-index: 7;
+   // Локальный индикатор загрузки на весь экран должен блокировать список, перекрывая кнопки навигации и скроллбар.
+   z-index: 17;
 }
 
 .controls-BaseControl__loadingIndicator__state-up {
    position: relative;
+   pointer-events: none;
 }
+
+// По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка
 .controls-BaseControl__loadingIndicator__state-down {
-   position: relative;
-}
-
-.controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper {
-   position: absolute;
-   top: 0
-}
-
-.controls-BaseControl__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
-   position: absolute;
+   position: sticky;
    bottom: 0;
-}
-.controls-BaseControl_empty__loadingIndicator__state-down {
-   min-height: @spacing_BaseControl-loadingIndicator-between-top-border-content + @spacing_BaseControl-loadingIndicator-between-bottom-border-content + @height_BaseControl-loadingIndicator-img;
+   pointer-events: none;
 }
 
-.controls-BaseControl_empty__loadingIndicator__state-down .controls-BaseControl__loadingIndicatorImg-wrapper {
+// Поднимаем индикатор на высоту контейнера с пэйджингом
+.controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
+   margin-bottom: -(@item_height_paging + @scrollpaging_offset-vertical_list);
+   bottom: @scrollpaging_offset-vertical_list;
+}
+
+// По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка.
+// IE не поддерживает position: sticky, поэтому прижимаем индикатор загрузки к низу последней записи, тем самым урезая функционал в IE
+.ws-is-ie .controls-BaseControl__loadingIndicator__state-down {
+   position: absolute;
+   left: 0;
+   right: 0;
+}
+
+// IE не поддерживает position: sticky, положение sticky контейнера не нужно компенсировать на контейнер с пагинацией.
+.ws-is-ie .controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
+   margin-bottom: 0;
+}
+
+.controls-BaseControl__loadingIndicator__state-down_theme-@{themeName} {
+   padding-top: @continueSearch_padding-top_list;
+}
+
+.controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
+   position: absolute;
    top: 0;
 }
-.controls-BaseControl_withPaging__loadingIndicator__state-down {
-   top: @height_Paging-button;
+
+.controls-BaseControl_empty__loadingIndicator__state-down_theme-@{themeName} {
+   min-height: @content_l_padding_loadingIndicator * 2 + @spinner_l_size_loadingIndicator;
 }
+
+.controls-BaseControl_empty__loadingIndicator__state-down_theme-@{themeName} .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
+   top: 0;
+}
+
 .controls-BaseControl__loadingIndicator__state-all {
    position: absolute;
    top: 0;
@@ -96,100 +151,136 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    align-items: center;
 }
 
-.controls-BaseControl__loadingIndicatorImg-wrapper {
-   padding: @spacing_BaseControl-loadingIndicator-between-top-border-content @spacing_BaseControl-loadingIndicator-between-right-border-content @spacing_BaseControl-loadingIndicator-between-bottom-border-content @spacing_BaseControl-loadingIndicator-between-left-border-content;
-   background-color: @background-color_BaseControl-loadingIndicator;
-   border-radius: @border-radius_BaseControl-loadingIndicator;
+.controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
+   padding: @content_l_border_radius_loadingIndicator;
+   background-color: @content_background-color_loadingIndicator;
+   border-radius: @content_l_border_radius_loadingIndicator;
    z-index: 1;
    display: inline-flex;
    align-items: center;
+   pointer-events: auto;
 }
-.controls-BaseControl__loadingIndicatorImg {
-   background: @background-image_BaseControl-loadingIndicator 0 0 no-repeat;/**/
-   width: @width_BaseControl-loadingIndicator-img;
-   height: @height_BaseControl-loadingIndicator-img;
-   background-size: @width_BaseControl-loadingIndicator-img;
+
+.controls-BaseControl__loadingIndicatorImg-wrapper_style-portionedSearch_theme-@{themeName} {
+   box-shadow: @loadingIndicator_iterativeSearch_box-shadow_list;
 }
-.controls-BaseControl__trigger  {
+
+.controls-BaseControl__loadingIndicatorImg_theme-@{themeName} {
+   background: @spinner_l_background-image_loadingIndicator 0 0 no-repeat;/**/
+   width: @spinner_l_size_loadingIndicator;
+   height: @spinner_l_size_loadingIndicator;
+   background-size: @spinner_l_size_loadingIndicator;
+}
+
+.controls-BaseControl__trigger {
    position: relative;
 }
-.controls-BaseControl__footer-content {
-   min-height: @min-height_BaseControl-footer-content;
+
+.controls-BaseControl__footer-content_theme-@{themeName} {
+   min-height: @footer_min-height_list;
    display: flex;
+   flex-grow: 1;
    align-items: baseline;
 }
 
-.controls-BaseControl__footer-content::before {
+.controls-BaseControl__footer-content_theme-@{themeName}::before {
    content: '\200b';
-   font-size: @font-size_BaseControl-footer-content-baseline;
+   font-size: @footer_font-size_list;
 }
 
-.controls-BaseControl__footerPaging {
-   background: @background-color_BaseControl-footer-paging;
+.controls-BaseControl__footerPaging_theme-@{themeName} {
+   background: @background-color_paging;
 }
+
 .controls-BaseControl__footerPaging_wrapper {
    display: flex;
    justify-content: flex-end;
-}
-.controls-BaseControl_paging-label {
-   display: flex;
+   position: relative;
    align-items: center;
-   color: @color_BaseControl-paging_label;
-   font-size: @font-size_BaseControl-paging_label;
-}
-.controls-BaseControl_paging-pageSizeChooser {
-   margin-left: @spacing_BaseControl-paging_label_right;
+   width: 100%;
 }
 
-.controls-BaseControl__abortSearch {
+.controls-BaseControl_paging-wrapper_theme-@{themeName} {
+   position: sticky;
+   right: 0;
+   display: flex;
+   flex-direction: row;
+}
+
+.controls-BaseControl_paging-label_theme-@{themeName} {
+   display: flex;
+   align-items: baseline;
+   color: @pagesCounter_text-color_list;
+   font-size: @pagesCounter_font-size_list;
+}
+
+.controls-BaseControl_paging-pageSizeChooser_theme-@{themeName} {
+   margin-left: @pagesSelector_offset-left_list;
+}
+
+.controls-BaseControl__abortSearch_theme-@{themeName} {
    display: inline-block;
-   color: @color_BaseControl-abortSearch;
-   margin-left: @spacing_BaseControl-between-indicator-abortSearch;
+   color: @abortSearch_text-color_list;
+   margin-left: @content_l_padding_loadingIndicator;
+   font-size: @abortSearch_font-size_list;
 }
 
-.ws-is-no-touch .controls-BaseControl__abortSearch:hover {
+.controls-BaseControl__loadingIndicator-footerTemplate_theme-@{themeName} {
+   margin-left: @content_l_padding_loadingIndicator;
+   color: @text-color_loadingIndicator;
+   font-size: @font-size_xs;
+}
+
+.ws-is-no-touch .controls-BaseControl__abortSearch_theme-@{themeName}:hover {
    text-decoration: underline;
-   color: @color_BaseControl-abortSearch_hover;
+   color: @abortSearch_hover_text-color_list;
    cursor: pointer;
 }
 
-.controls-BaseControl__abortSearch:active {
+.controls-BaseControl__abortSearch_theme-@{themeName}:active {
    text-decoration: underline;
-   color: @color_BaseControl-abortSearch_hover;
+   color: @abortSearch_active_text-color_list;
 }
 
-.controls-BaseControl__continueSearch_wrapper {
-   color: @color_BaseControl-abortSearch;
+.controls-BaseControl__continueSearch_theme-@{themeName} {
    padding-top: @continueSearch_padding-top_list;
+}
+
+.controls-BaseControl__continueSearch_wrapper_theme-@{themeName} {
+   color: @continueSearch_text-color_list;
    cursor: pointer;
 }
 
-.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper:hover {
-   color: @color_BaseControl-abortSearch_hover;
+.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper_theme-@{themeName}:hover {
+   color: @continueSearch_hover_text-color_list;
    cursor: pointer;
 }
 
-.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper:hover .controls-BaseControl__continueSearch_caption {
+.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper_theme-@{themeName}:hover .controls-BaseControl__continueSearch_caption {
    text-decoration: underline;
 }
 
-.controls-BaseControl__continueSearch_wrapper:active {
-   color: @color_BaseControl-abortSearch_hover;
+.controls-BaseControl__continueSearch_wrapper_theme-@{themeName}:active {
+   color: @continueSearch_active_text-color_list;
 }
 
-.controls-BaseControl__continueSearch_wrapper:active .controls-BaseControl__continueSearch_caption {
+.controls-BaseControl__continueSearch_wrapper_theme-@{themeName}:active .controls-BaseControl__continueSearch_caption {
    text-decoration: underline;
 }
 
 .controls-BaseControl__continueSearch_icon {
-   margin-right: @spacing_BaseControl-between-searchIcon-continueSearch;
+   margin-right: @continueSearch_icon-offset_list;
    color: @continueSearch_icon-color_list;
 }
 
-.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper:hover .controls-BaseControl__continueSearch_icon {
-   color: @color_BaseControl-abortSearch_hover;
+.ws-is-no-touch .controls-BaseControl__continueSearch_wrapper_theme-@{themeName}:hover .controls-BaseControl__continueSearch_icon {
+   color: @continueSearch_hover_icon-color_list;
 }
 
 .controls-BaseControl__continueSearch_wrapper:active .controls-BaseControl__continueSearch_icon {
-   color: @color_BaseControl-abortSearch_hover;
+   color: @continueSearch_hover_icon-color_list;
+}
+
+.controls-BaseControl__continueSearch_footerTemplate_theme-@{themeName} {
+   font-size: @font-size_xs;
 }

@@ -2,7 +2,7 @@
     <Controls.heading:Title  caption="Not Async" readOnly="{{true}}" fontColorStyle="secondary" fontSize="l"/>
     <div class="asyncDemo__column">
         <ws:for data="i in 3">
-            <Controls.input:Number value="{{i}}"/>
+            <Controls.input:Number attr:class="demo-NotAsync__input_{{i}}" value="{{i}}"/>
         </ws:for>
     </div>
 </div>

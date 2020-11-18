@@ -2,6 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/tile:ItemTemplate
  * @mixes Controls/list:BaseItemTemplate
+ * @mixes Controls/list:IContentTemplate
  * @author Авраменко А.С.
  * @see Controls/tile:View
  * @example
@@ -22,7 +23,7 @@
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/templates/item/ здесь}.
  * @public
- * @demo Controls-demo/Tile/CustomTemplate/Index
+ * @demo Controls-demo/Tile/DifferentItemTemplates/CustomTemplate/Index
  */
 
 export default interface IItemTemplateOptions {
@@ -31,7 +32,7 @@ export default interface IItemTemplateOptions {
     * @cfg {Boolean} Подпись к плитке.
     * @see titleStyle
     */
-   hasTitle?: string; 
+   hasTitle?: string;
    /**
     * @typedef {String} TitleStyle
     * @variant onhover Заголовок отображается только при наведении мыши на плитку.
@@ -66,8 +67,15 @@ export default interface IItemTemplateOptions {
     */
    folderWidth?: number;
    /**
-    * @name Controls/tile:ItemTemplate#shadowVisibility
-    * @cfg {Boolean} Нужно ли отображать тень для плитки.
+    * @typedef {String} ShadowVisibility
+    * @variant visible Отображается.
+    * @variant hidden Не отображается.
+    * @variant onhover Отображается только при наведении на плитку.
     */
-   shadowVisibility?: boolean;
+   /**
+    * @name Controls/tile:ItemTemplate#shadowVisibility
+    * @cfg {ShadowVisibility} Нужно ли отображать тень для плитки.
+    * @default visible
+    */
+   shadowVisibility?: string;
 }

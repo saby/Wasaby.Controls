@@ -2,7 +2,7 @@ define([
    'Controls/_explorer/PathController',
    'Controls/_breadcrumbs/HeadingPath/Back',
    'Types/entity',
-   'wml!Controls/_explorer/PathController/HeadingPathBack'
+   'Controls/_explorer/HeadingPathBack'
 ], function(
    PathController,
    PathBack,
@@ -27,7 +27,11 @@ define([
       describe('_beforeMount', function() {
          it('without header', function() {
             var instance = new PathController();
-            instance._beforeMount({});
+            instance._beforeMount({
+               itemsPromise: new Promise((res) => {
+                  res(null);
+               })
+            });
             assert.isNotOk(instance._header);
          });
          it('with header, first item has title', function() {
@@ -37,9 +41,12 @@ define([
                   title: '123'
                }];
             instance._beforeMount({
-               header: header
+               header: header,
+               itemsPromise: new Promise((res) => {
+                  res(null);
+               })
             });
-            assert.isNotOk(instance._header);
+            assert.isOk(instance._header);
          });
          it('with header, first item has template', function() {
             var
@@ -50,9 +57,12 @@ define([
                   }
                }];
             instance._beforeMount({
-               header: header
+               header: header,
+               itemsPromise: new Promise((res) => {
+                  res(null);
+               })
             });
-            assert.isNotOk(instance._header);
+            assert.isOk(instance._header);
          });
          it('with header, first item doesn\'t have neither title nor template', function() {
             var
@@ -66,17 +76,22 @@ define([
             instance._beforeMount({
                header: header,
                items: items,
+               itemsPromise: new Promise((res) => {
+                  res(items);
+               }),
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
                template: HeadingPathBack,
                templateOptions: {
-                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
+                  items: items,
+                  displayProperty: 'title',
+                  itemsAndHeaderPromise: instance._itemsAndHeaderPromise,
                   backButtonStyle: undefined,
+                  backButtonIconStyle: undefined,
+                  backButtonFontColorStyle: undefined,
                   showArrowOutsideOfBackButton: false,
-                  showActionButton: false,
-                  backButtonCaption: 'second',
-                  counterCaption: 2
+                  showActionButton: false
                },
                align: 'right',
                width: '100px',
@@ -104,15 +119,24 @@ define([
             var
                cfg = {
                   items: items,
-                  header: [{}]
+                  header: [{}],
+                  itemsPromise: new Promise((res) => {
+                     res(items);
+                  })
                },
                newCfg = {
                   items: items,
-                  header: [{}, {}]
+                  header: [{}, {}],
+                  itemsPromise: new Promise((res) => {
+                     res(items);
+                  })
                },
                newCfg2 = {
                   items: items,
-                  header: []
+                  header: [],
+                  itemsPromise: new Promise((res) => {
+                     res(items);
+                  })
                },
                instance = new PathController(cfg);
             instance.saveOptions(cfg);
@@ -121,7 +145,7 @@ define([
             instance._beforeUpdate(newCfg);
             assert.equal(2, instance._header.length);
             instance._beforeUpdate(newCfg2);
-            assert.equal(instance._header, undefined);
+            assert.deepEqual(instance._header, []);
          });
          it('new same items', async function() {
             var
@@ -137,6 +161,9 @@ define([
             cfg = {
                items: items,
                header: header,
+               itemsPromise: new Promise((res) => {
+                  res(items);
+               }),
                displayProperty: 'title'
             };
             instance._header = [];
@@ -148,7 +175,7 @@ define([
                items: items.slice(),
                displayProperty: 'title'
             });
-            assert.strictEqual(instance._header, headerInst);
+            assert.notEqual(instance._header, headerInst);
          });
 
          it('new different items', function() {
@@ -173,12 +200,14 @@ define([
             assert.deepEqual(instance._header, [{
                template: HeadingPathBack,
                templateOptions: {
+                  displayProperty: 'title',
+                  items: items.slice(0,1),
                   backButtonStyle: undefined,
+                  backButtonIconStyle: undefined,
+                  backButtonFontColorStyle: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false,
-                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
-                  backButtonCaption: 'first',
-                  counterCaption: 1
+                  itemsAndHeaderPromise: instance._itemsAndHeaderPromise
                },
                align: 'right',
                width: '100px',
@@ -227,13 +256,19 @@ define([
                cfg = {
                   items: items,
                   header: header,
-                  displayProperty: 'title'
+                  displayProperty: 'title',
+                  itemsPromise: new Promise((res) => {
+                     res(items);
+                  })
                },
                instance = new PathController();
             await instance._beforeMount(cfg);
             var headerInst = instance._header;
             instance.saveOptions({
-               items: items
+               items: items,
+               itemsPromise: new Promise((res) => {
+                  res(items);
+               })
             });
             instance._beforeUpdate({
                header: header,
@@ -245,11 +280,13 @@ define([
                template: HeadingPathBack,
                templateOptions: {
                   backButtonStyle: undefined,
+                  backButtonIconStyle: undefined,
+                  backButtonFontColorStyle: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false,
-                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
-                  backButtonCaption: 'first',
-                  counterCaption: 2
+                  displayProperty: 'title',
+                  items: itemsNew,
+                  itemsAndHeaderPromise: instance._itemsAndHeaderPromise
                },
                align: 'right',
                width: '100px',
@@ -283,7 +320,10 @@ define([
                cfg = {
                   items: items,
                   header: header,
-                  displayProperty: 'title'
+                  displayProperty: 'title',
+                  itemsPromise: new Promise((res) => {
+                     res(items);
+                  })
                },
                instance = new PathController();
             await instance._beforeMount(cfg);
@@ -301,11 +341,13 @@ define([
                template: HeadingPathBack,
                templateOptions: {
                   backButtonStyle: undefined,
+                  backButtonIconStyle: undefined,
+                  backButtonFontColorStyle: undefined,
                   showArrowOutsideOfBackButton: false,
                   showActionButton: false,
-                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
-                  backButtonCaption: 'first',
-                  counterCaption: 1
+                  items: items.slice(0, 1),
+                  displayProperty: 'title',
+                  itemsAndHeaderPromise: instance._itemsAndHeaderPromise
                },
                align: 'right',
                width: '100px',

@@ -9,63 +9,8 @@ import Deferred = require('Core/Deferred');
 import libHelper = require('Core/library');
 import {isEqual} from 'Types/object';
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
-/**
- * Контрол "Кнопка фильтров". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде. Состоит из кнопки-иконки и строкового представления выбранного фильтра.
- * @remark
- * См. <a href="/materials/demo-ws4-filter-button">демо-пример</a>
- * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
- * @class Controls/_filter/Button
- * @extends Core/Control
- * @mixes Controls/interface/IFilterButton
- * @demo Controls-demo/Filter/Button/ButtonPG
- * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
- * @control
- * @public
- * @author Герасимов А.М.
- *
- */
-
-/*
- * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
- * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup:DetailPanel}
- * Supports the insertion of a custom template between the button and the filter string.
- * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
- * Here you can see <a href="/materials/demo-ws4-filter-button">demo-example</a>.
- *
- * Information on filtering settings in the list using the "Filter Button" control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
- *
- * @class Controls/_filter/Button
- * @extends Core/Control
- * @mixes Controls/interface/IFilterButton
- * @demo Controls-demo/Filter/Button/ButtonPG
- * @control
- * @public
- * @author Герасимов А.М.
- *
- */
 
 var _private = {
-   getFilterButtonCompatible: function(self) {
-      var result = new Deferred();
-      requirejs(['Lib/Control/LayerCompatible/LayerCompatible'], (function(Layer) {
-         Layer.load().addCallback(function(res) {
-            requirejs(['Controls/filterCompatible'], function(filterCompatible) {
-               if (!self._filterCompatible) {
-                  self._filterCompatible = new filterCompatible._FilterCompatible({
-                     filterButton: self,
-                     filterButtonOptions: self._options,
-                     tabindex: 0
-                  });
-               }
-               result.callback(self._filterCompatible);
-            });
-            return res;
-         });
-      }));
-      return result;
-   },
-
    getText: function(items) {
       var textArr = [];
 
@@ -104,9 +49,6 @@ var _private = {
       self._items = items;
       self._text = _private.getText(items);
       self._isItemsChanged = _private.isItemsChanged(items);
-      if (self._options.filterTemplate && self._filterCompatible) {
-         self._filterCompatible.updateFilterStructure(items);
-      }
    },
    setPopupOptions: function(self, alignment) {
       self._popupOptions = {
@@ -169,13 +111,51 @@ var _private = {
             items: self._options.items,
             historyId: self._options.historyId
          },
-         fittingMode: 'fixed',
+         fittingMode: {
+            horizontal: 'overflow',
+            vertical: 'adaptive'
+         },
          template: 'Controls/filterPopup:_FilterPanelWrapper',
          target: self._children.panelTarget
       };
    }
 };
+/**
+ * Контрол "Кнопка фильтров". Предоставляет возможность отображать и редактировать фильтр в удобном для пользователя виде. Состоит из кнопки-иконки и строкового представления выбранного фильтра.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
+ *
+ * @class Controls/_filter/Button
+ * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterButton
+ * @demo Controls-demo/Filter/Button/PanelVDom
+ * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
+ * 
+ * @public
+ * @author Герасимов А.М.
+ *
+ */
 
+/*
+ * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
+ * Clicking on a icon-button or a string opens the panel. {@link Controls/filterPopup:DetailPanel}
+ * Supports the insertion of a custom template between the button and the filter string.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filterbutton-and-fastfilters/'>here</a>.
+ *
+ * Information on filtering settings in the list using the "Filter Button" control you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
+ *
+ * @class Controls/_filter/Button
+ * @extends Core/Control
+ * @mixes Controls/_filter/interface/IFilterButton
+ * @demo Controls-demo/Filter/Button/PanelVDom
+ * @public
+ * @author Герасимов А.М.
+ *
+ */
 var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype */{
 
    _template: template,
@@ -214,32 +194,19 @@ var FilterButton = Control.extend(/** @lends Controls/_filter/Button.prototype *
    },
 
    _clearClick: function() {
-      if (this._options.filterTemplate) {
-         _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-            panelOpener.clearFilter();
-         });
-      } else {
-         _private.resetItems(this, this._items);
-         this._notify('filterChanged', [{}]);
-         this._notify('itemsChanged', [this._items]);
-      }
+      _private.resetItems(this, this._items);
+      this._notify('filterChanged', [{}]);
+      this._notify('itemsChanged', [this._items]);
       this._text = '';
    },
 
    openDetailPanel: function() {
       var self = this;
       if (!this._options.readOnly) {
-         /* if template - show old component */
-         if (this._options.filterTemplate) {
-            _private.getFilterButtonCompatible(this).addCallback(function(panelOpener) {
-               panelOpener.showFilterPanel();
-            });
-         } else {
-            _private.requireDeps(this).addCallback(function(res) {
-               self._children.filterStickyOpener.open(_private.getPopupConfig(self));
-               return res;
-            });
-         }
+         _private.requireDeps(this).addCallback(function(res) {
+            self._children.filterStickyOpener.open(_private.getPopupConfig(self));
+            return res;
+         });
       }
    },
 

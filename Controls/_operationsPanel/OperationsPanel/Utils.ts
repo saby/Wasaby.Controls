@@ -1,14 +1,15 @@
 import toolbars = require('Controls/toolbars');
 import {showType} from 'Controls/Utils/Toolbar';
-import getWidthUtil = require('Controls/Utils/getWidth');
-
+import { Logger } from 'UI/Utils';
+import {Record} from 'Types/entity';
+import {DOMUtil, getWidth} from 'Controls/sizeUtils';
 
    var MENU_WIDTH = 0;
 
    var _private = {
       initializeConstants: function() {
          if (!MENU_WIDTH) {
-            MENU_WIDTH = window && getWidthUtil.getWidth('<span class="controls-Toolbar__menuOpen"><i class="icon-medium icon-ExpandDown"/></span>');
+            MENU_WIDTH = window && getWidth('<span class="controls-Toolbar__menuOpen"><i class="icon-medium icon-ExpandDown"/></span>');
          }
       },
 
@@ -24,37 +25,41 @@ import getWidthUtil = require('Controls/Utils/getWidth');
       },
 
       getItemsSizes: function(items, visibleKeys, theme, itemTemplate, itemTemplateProperty) {
-         var
-            measurer = document.createElement('div'),
-            itemsSizes = [],
-            itemsMark = '';
+         const itemsMark = [];
+         let item;
+         let buttonTemplateOptions;
 
-         visibleKeys.forEach(function(key) {
-            const item = items.getRecordById(key);
-            itemsMark += toolbars.ItemTemplate({
+         visibleKeys.forEach((key) => {
+            item = items.getRecordById(key);
+            buttonTemplateOptions = _private.getButtonTemplateOptionsForItem(item, itemTemplateProperty);
+
+            itemsMark.push(toolbars.ItemTemplate({
                item,
                size: 'm',
                itemsSpacing: 'medium',
                theme,
                buttonTemplate: toolbars.getButtonTemplate(),
-               buttonTemplateOptions: toolbars.getButtonTemplateOptionsByItem(item),
+               buttonTemplateOptions,
                contentTemplate: _private.getContentTemplate(item, itemTemplate, itemTemplateProperty)
-            });
+            }));
          });
 
-         measurer.innerHTML = itemsMark;
+         return DOMUtil.getElementsWidth(itemsMark, 'controls-Toolbar__item', true);
+      },
 
-         measurer.classList.add('controls-UtilsOperationsPanel__measurer');
-         document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-Toolbar__item'), function(item) {
-            var
-               styles = window.getComputedStyle(item),
-               padding = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);
-            itemsSizes.push(item.clientWidth + padding);
-         });
-         document.body.removeChild(measurer);
+      getButtonTemplateOptionsForItem(item: Record, itemTemplateProperty?: string): object {
+         const buttonOptions = toolbars.getButtonTemplateOptionsByItem(item);
 
-         return itemsSizes;
+         if (itemTemplateProperty &&
+             item.get(itemTemplateProperty) &&
+             !buttonOptions._caption &&
+             !buttonOptions._icon) {
+            Logger.error(
+                'OperationsPanel: при использовании своего шаблона отображения операции (itemTemplateProperty) ' +
+                'необходимо задать caption и/или icon на каждой операции для корректных расчётов размеров');
+         }
+
+         return buttonOptions;
       },
 
       setShowType: function(items, type) {

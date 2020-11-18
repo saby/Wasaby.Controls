@@ -8,7 +8,7 @@
  * @author Герасимов А.М.
  * @example
  * <pre class="brush: html">
- * <Controls.dropdown:Button source="{{_source)}}">
+ * <Controls.dropdown:Button source="{{_source}}">
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/dropdown:ItemTemplate" multiLine="{{true}}">
  *          <ws:contentTemplate>
@@ -49,7 +49,7 @@
 
 /**
  * @name Controls/dropdown:ItemTemplate#marker
- * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/select/marker/ маркером}.
+ * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
  * @default true
  */
 
@@ -142,7 +142,7 @@
  * @default undefined
  * @example
  * <pre class="brush: html; highlight: [9,10,11]">
- * <Controls.dropdown:Button source="{{_source)}}">
+ * <Controls.dropdown:Button source="{{_source}}">
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/dropdown:ItemTemplate"
  *                  multiLine="{{true}}"

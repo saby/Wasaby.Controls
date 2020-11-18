@@ -1,14 +1,12 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls-demo/LoadingIndicator/isGlobal/IsGlobal');
-import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/LoadingIndicator/IndicatorContainer';
 
 class IsGlobal extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     static _theme: string[] = ['Controls/Classes'];
     private _firstId = null;
 
-    private _firstOpen(): void {
+    protected _firstOpen(): void {
         const cfg = {
             id: this._firstId,
             message: 'first indicator text',
@@ -25,5 +23,7 @@ class IsGlobal extends Control<IControlOptions> {
             this._children.loadingIndicator.hide();
         }.bind(this), time);
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/LoadingIndicator/IndicatorContainer'];
 }
 export default IsGlobal;

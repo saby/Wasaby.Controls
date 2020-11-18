@@ -13,20 +13,24 @@
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       placeholder="{{_options.placeholder}}"
-      validationErrors="{{_options.validationErrors}}"
+      validationStatus="{{_options.validationStatus}}"
       tooltip="{{_options.tooltip}}"
       dateConstructor="{{_options.dateConstructor}}"
+      valueValidators="{{_options.valueValidators}}"
+      validateByFocusOut="{{_options.validateByFocusOut}}"
       on:valueChanged="_proxyEvent('valueChanged')"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls._input.DateTime>
-   <span class="controls-Input-DatePicker__buttonWrapper" attr:tabindex="-1">
+   <span class="controls-Input-DatePicker__buttonWrapper_theme-{{_options.theme}}" attr:tabindex="-1">
       <span class="ws-flexbox ws-align-items-center controls-Input-DatePicker__buttonBaseLine">
          <span
-                 attr:class="controls-Input-DatePicker__button controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
+                 attr:class="controls-Input-DatePicker__button
+                              controls-Input-DatePicker__button_theme-{{_options.theme}}
+                              controls-icon icon-Calendar2 controls-icon_style-secondary_theme-{{_options.theme}}"
                  iconStyle="secondary"
-                 on:click="_openDialog()">
+                 on:click="openPopup()">
          </span>
       </span>
    </span>

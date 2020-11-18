@@ -1,7 +1,6 @@
 <div>
     <h2>Много крошек</h2>
-    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id"
-                                    on:itemClick="_onItemClick()" />
+    <Controls.breadcrumbs:Path attr:id="aLotOfCrumbs" items="{{items}}" keyProperty="id" on:itemClick="_onItemClick()" />
     <h2>Одна крошка</h2>
     <Controls.breadcrumbs:Path attr:id="oneCrumb" items="{{items1}}" on:itemClick="_onItemClick()" keyProperty="id" />
     <h2>Две крошки</h2>
@@ -14,7 +13,7 @@
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
     <h2>Path with content back button</h2>
-    <Controls.breadcrumbs:HeadingPath attr:id="path"
+    <Controls.breadcrumbs:HeadingPath attr:id="pathContent"
                                       items="{{items}}"
                                       parentProperty="parent"
                                       keyProperty="id"
@@ -23,6 +22,14 @@
             <h3 class="controls-demo-backButtonContent">Custom content</h3>
         </ws:afterBackButtonTemplate>
     </Controls.breadcrumbs:HeadingPath>
+    <h2>HeadingPath with heading only</h2>
+    <Controls.breadcrumbs:HeadingPath attr:id="pathHeadingOnly"
+                                      items="{{items4}}"
+                                      parentProperty="parent"
+                                      keyProperty="id"
+                                      on:arrowActivated="_onArrowActivated()"
+                                      on:itemClick="_onItemClick()" />
+
     <div id="reset" class="ws-link" on:click="_resetCrumbs()">Сбросить крошки</div>
     <div id="info">Нажали на элемент с id: {{info}}</div>
     <ws:if data="{{_arrowActivated}}">

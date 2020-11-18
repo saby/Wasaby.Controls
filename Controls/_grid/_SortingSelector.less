@@ -3,26 +3,34 @@
    align-items: center;
 }
 
-.controls-SortingSelector_itemWrapper {
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   width: 100%;
+.controls-SortingSelector_arrowWrapper {
+   height: 100%;
 }
 
 .controls-SortingSelector_arrow-outside_theme-@{themeName},
 .controls-SortingSelector_arrow_theme-@{themeName} {
-   width: @size_SortingSelector-arrow;
-   height: @height_SortingSelector-icon;
+   width: @icon-width_gridSortingSelector;
+   height: @icon-height_gridSortingSelector;
 }
 
-.controls-SortingSelector_arrow-outside_theme-@{themeName} {
-   margin-left: @spacing-left_SortingSelector-arrow-outside;
+.controls-SortingSelector_arrow_caption_theme-@{themeName} {
+   margin-left: @icon_offset_gridSortingSelector;
+   cursor: pointer;
+}
+
+.controls-SortingSelector_arrow_nocaption_theme-@{themeName} {
+   margin-left: @icon_offset_nocaption_gridSortingSelector;
    cursor: pointer;
 }
 
 .controls-SortingSelector_arrow_spacing_theme-@{themeName} {
-   margin-left: @spacing-left_SortingSelector-arrow;
+   margin-left: @item_icon_offset_gridSortingSelector;
+}
+
+.controls-SortingSelector_arrow_separator_theme-@{themeName} {
+   width: @item_separator_thickness_gridSortingSelector;
+   background-color: @item_separator_color_gridSortingSelector;
+   height: inherit;
 }
 
 .controls-SortingArrow_desc {
@@ -31,19 +39,23 @@
 
 .controls-SortingSelector_arrowsContainer {
    display: flex;
+   height: 100%;
+   align-items: center;
+   margin-left: @item_icon_offset_gridSortingSelector;
 }
 
 .controls-SortingSelector_arrow_unselected_theme-@{themeName} {
-   fill: @unselected_icon-color_SortingSelector;
+   fill: @item_icon-color_gridSortingSelector;
    cursor: pointer;
 }
 
 .controls-SortingSelector_arrow-outside_theme-@{themeName},
 .controls-SortingSelector_arrow_selected_theme-@{themeName} {
-   fill: @selected_icon-color_SortingSelector;
+   fill: @item_icon-color_gridSortingSelector;
 }
 
 .controls-SortingSelector_arrow-outside_theme-@{themeName}:hover,
 .controls-SortingSelector_arrow_unselected_theme-@{themeName}:hover {
-   fill: @icon-color_hover_SortingSelector;
+   fill: @item_hover_icon-color_unselected_gridSortingSelector;
 }
+
