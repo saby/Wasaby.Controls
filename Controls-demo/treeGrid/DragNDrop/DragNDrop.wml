@@ -16,7 +16,8 @@
                             displayProperty="title"
                             itemsDragNDrop="{{true}}"
                             itemsReadyCallback="{{_itemsReadyCallback}}"
-                            columns="{{_columns}}">
+                            columns="{{_columns}}"
+                            markItemByExpanderClick="{{false}}">
                         <ws:draggingTemplate>
                             <ws:partial template="Controls/dragnDrop:DraggingTemplate"
                                         mainText="{{draggingTemplate.entity._options.mainText}}"

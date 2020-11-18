@@ -192,7 +192,8 @@ define([
                },
                setHasMoreStorage: function() {},
                appendItems: function() {},
-               mergeItems: function() {}
+               mergeItems: function() {},
+               getItemBySourceKey: () => undefined
             };
          };
 
@@ -649,7 +650,8 @@ define([
                   return {
                      at: function () {}
                   };
-               }
+               },
+               getItemBySourceKey: () => undefined
             };
          };
 
