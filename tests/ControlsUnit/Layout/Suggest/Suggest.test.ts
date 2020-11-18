@@ -1032,23 +1032,6 @@ describe('Controls/suggest', () => {
 
          assert.isTrue(resolveLoadStub.calledOnce);
 
-         suggestComponent._options.filter = {param: 'old_filter'};
-         const sourceControllerSpy = sandbox.spy(suggestComponent._getSourceController(), 'updateOptions');
-         const searchControllerSpy = sandbox.spy(await suggestComponent._getSearchController(), 'update');
-
-         suggestComponent._beforeUpdate({
-            searchParam: 'testSearchParam',
-            suggestState: true,
-            minSearchLength: 1,
-            source: getMemorySource(),
-            filter: {param: 'new_filter'}
-         });
-
-         assert.isTrue(sourceControllerSpy.calledOnce);
-         assert.isTrue(searchControllerSpy.withArgs({
-            sourceController: suggestComponent._sourceController
-         }).calledOnce);
-
          sandbox.restore();
       });
 

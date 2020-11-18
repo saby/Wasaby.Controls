@@ -174,6 +174,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
+      if (this._searchController) {
+         this._searchController = null;
+      }
       this._searchResult = null;
 
       // when closing popup we reset the cache with recent keys
@@ -651,11 +654,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (needSearchOnValueChanged || valueCleared || filterChanged) {
          this._setFilter(newOptions.filter, newOptions);
-         if (this._searchController && this._sourceController) {
-            this._searchController.update({
-               sourceController: this._sourceController
-            });
-         }
       }
       if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
          this._resolveLoad();
