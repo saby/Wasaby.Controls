@@ -651,6 +651,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
       if (needSearchOnValueChanged || valueCleared || filterChanged) {
          this._setFilter(newOptions.filter, newOptions);
+         if (this._searchController && this._sourceController) {
+            this._searchController.update({
+               sourceController: this._sourceController
+            });
+         }
       }
       if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
          this._resolveLoad();
