@@ -2101,10 +2101,10 @@ const _private = {
      * @private
      */
     processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
-        if (config.dataLoadErrback instanceof Function) {
-            config.dataLoadErrback(config.error);
-        }
-        if (!config.error.canceled) {
+        if (!config.error.canceled && !config.error.isCanceled) {
+            if (config.dataLoadErrback instanceof Function) {
+                config.dataLoadErrback(config.error);
+            }
             _private.hideIndicator(self);
         }
         return self.__errorController.process({
