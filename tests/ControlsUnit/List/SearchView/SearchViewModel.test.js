@@ -47,7 +47,8 @@ define(['Controls/_treeGrid/SearchView/SearchViewModel', 'Types/collection', 'Co
                item: {},
                resolvers: {
                   baseItemTemplate: treeView._resolveBaseItemTemplate.bind(treeView)
-               }
+               },
+               dispItem: {}
             };
 
             if (breadCrumbs) {

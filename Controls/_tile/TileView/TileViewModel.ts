@@ -3,7 +3,7 @@ import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
 import {Model} from 'Types/entity';
-import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT} from './resources/imageUtil';
+import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT, getImageRestrictions} from './resources/imageUtil';
 import {ZOOM_DELAY, ZOOM_COEFFICIENT, TILE_SCALING_MODE} from './resources/Constants';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -124,6 +124,7 @@ var TileViewModel = ListViewModel.extend({
             imageUrlResolver,
             imageProperty,
             imageFit} = itemData;
+        let restrictions;
         const imageHeight = item.get(imageHeightProperty) && Number(item.get(imageHeightProperty));
         const imageWidth = item.get(imageWidthProperty) && Number(item.get(imageWidthProperty));
         let baseUrl = item.get(imageProperty);
@@ -136,10 +137,13 @@ var TileViewModel = ListViewModel.extend({
                 imageWidth,
                 imageFit);
             baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, item, imageUrlResolver);
+            if (imageHeight && imageWidth) {
+                restrictions = getImageRestrictions(imageHeight, imageWidth, Number(itemsHeight), Number(itemWidth));
+            }
         }
         return {
             url: baseUrl,
-            class: getImageClasses(imageFit)
+            class: getImageClasses(imageFit, restrictions)
         };
     },
 
@@ -360,6 +364,7 @@ var TileViewModel = ListViewModel.extend({
             menuOptions.image = itemData.imageData.url;
             menuOptions.title = itemData.item.get(itemData.displayProperty);
             menuOptions.additionalText = itemData.item.get(templateOptions.headerAdditionalTextProperty);
+            menuOptions.imageClasses = itemData.imageData?.class;
             if (this._options.tileScalingMode === TILE_SCALING_MODE.NONE) {
                 previewHeight = previewHeight * ZOOM_COEFFICIENT;
                 previewWidth = previewWidth * ZOOM_COEFFICIENT;

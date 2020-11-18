@@ -1666,6 +1666,8 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
+                    self._shouldDrawFooter = false;
                 }
             }
 
@@ -1972,7 +1974,11 @@ const _private = {
         }
     },
 
-    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+    openContextMenu(self: typeof BaseControl, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
+        if (itemData['[Controls/_display/GroupItem]']) {
+            return;
+        }
+
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
@@ -4266,6 +4272,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeBeforePaint();
             this._updateShadowModeBeforePaint = null;
         }
+
+        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+            _private.activateEditingRow(this);
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4378,6 +4388,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
+        // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
+        // применения всех обновлений реактивных состояний.
+        if (this._isPendingDeferSubmit) {
+            this._validateController.resolveSubmit();
+            this._isPendingDeferSubmit = false;
+        }
+
         // After update the reloaded items have been redrawn, clear
         // the marks in the model
         if (this._itemReloaded) {
@@ -4392,9 +4409,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-        }
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
-            _private.activateEditingRow(this);
         }
     },
 
@@ -4689,7 +4703,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
         return Promise.resolve().then(() => {
             if (willSave) {
-                return this._validateController.submit().then((validationResult) => {
+                // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
+                // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться и позвали валидацию.
+                // В таком случае, первый цикл применит все состояния и только после него произойдет валидация.
+                // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то реактивное состояние.
+                const submitPromise = this._validateController.deferSubmit();
+                this._isPendingDeferSubmit = true;
+                this._forceUpdate();
+                return submitPromise.then((validationResult) => {
                     for (const key in validationResult) {
                         if (validationResult.hasOwnProperty(key) && validationResult[key]) {
                             return CONSTANTS.CANCEL;

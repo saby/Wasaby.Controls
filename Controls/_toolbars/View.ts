@@ -5,6 +5,7 @@ import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {StickyOpener} from 'Controls/popup';
+import {Controller as SourceController} from 'Controls/source';
 import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
@@ -148,7 +149,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _needShowMenu: boolean = null;
     protected _fullItemsList: TItems = null;
     protected _items: TItems = null;
-    protected _menuItems: TItems = null;
     protected _source: ICrudPlus = null;
     protected _sourceByItems: Memory = null;
     protected _menuSource: ICrudPlus = null;
@@ -158,6 +158,9 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _firstItem: TItem = null;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
     protected _actualItems: TItems = null;
+    private _menuItems: {
+        [key: number]: TItems
+    } = {};
 
     protected _template: TemplateFunction = template;
 
@@ -206,24 +209,34 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _getSourceForMenu(): Promise<unknown> {
+    private _getSourceForMenu(item: TItem): Promise<unknown> {
         if (this._options.menuSource) {
-            return this._getMenuItems().then((items) => {
-                this._setSourceByItems(items);
-                return this._sourceByItems;
+            return this._getMenuSource(item).then((source) => {
+                return source;
             });
         }
         const source = this._getSynchronousSourceForMenu();
         return Promise.resolve(source);
     }
 
-    private _getMenuItems(): Promise<unknown> {
-        if (this._menuItems) {
-            return Promise.resolve(this._menuItems);
+    private _getMenuSource(item: TItem): Promise<ICrudPlus> {
+        const itemKey = item.get(this._options.keyProperty);
+        if (!this._menuItems[itemKey]) {
+            const filter = this._options.filter || {};
+            filter[this._options.parentProperty] = itemKey;
+            const sourceController = new SourceController({
+                source: this._options.menuSource,
+                keyProperty: this._options.keyProperty
+            });
+            return sourceController.load(filter).then((items) => {
+                this._menuItems[itemKey] = items;
+                const menuSource = this._createPrefetchProxy(this._options.menuSource, items);
+                return menuSource;
+            });
+        } else {
+            const source = this._createPrefetchProxy(this._options.menuSource, this._menuItems[itemKey]);
+            return Promise.resolve(source);
         }
-        return this._loadMenuItems().then(() => {
-            return this._menuItems;
-        });
     }
 
     private _getMenuConfig(): IStickyPopupOptions {
@@ -327,32 +340,22 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         });
     }
 
-    private _setMenuSource(): Promise<void> {
+    private _setMenuSource(): void {
+        const menuItems = Toolbar._calcMenuItems(this._actualItems);
+
         if (this._options.menuSource) {
-            return this._getMenuItems().then((items) => {
-                this._menuSource = this._createPrefetchProxy(this._options.menuSource,items);
-            });
+            this._menuSource = this._options.menuSource;
         } else {
-            const menuItems = Toolbar._calcMenuItems(this._actualItems);
             const source = this._options.source || this._getSynchronousSourceForMenu();
             this._menuSource = this._createPrefetchProxy(source, menuItems);
-            return Promise.resolve();
         }
-    }
-
-    private _loadMenuItems(): Promise<unknown> {
-        return loadItems(this._options.menuSource).then((items) => {
-            this._menuItems = items;
-        });
     }
 
     private _setStateByItems(items: TItems, source?: ICrudPlus): void {
         this._fullItemsList = items;
         this._firstItem = null;
-        /**
-         * https://online.sbis.ru/opendoc.html?guid=6b6e9774-afb3-4379-8578-95ad0f0035a9
-         */
-        this._actualItems = ActualAPI.items(items.clone());
+        // TODO: Удалить ActualAPI https://online.sbis.ru/opendoc.html?guid=d6fb9444-66f5-481d-8fd3-636b4d4ab676
+        this._actualItems = this._options.isNewOptions ? items : ActualAPI.items(items.clone());
         this._items = this._actualItems;
         if (source) {
             this._source = this._createPrefetchProxy(source, this._actualItems);
@@ -416,7 +419,8 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._setStateByItems(newOptions.items);
         }
         if (this._options.menuSource !== newOptions.menuSource) {
-            this._sourceByItems = null;
+            this._menuItems = {};
+            this._isLoadMenuItems = false;
             this._setMenuSource();
         }
     }
@@ -462,17 +466,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
 
         if (item.get(this._nodeProperty)) {
-            this._getSourceForMenu().then((source) => {
+            this._getSourceForMenu(item).then((source) => {
                 const root = item.get(this._options.keyProperty);
                 let menuSource = source;
 
-                /**
-                 * Если запись для выпадающего списка еще не были загружены,
-                 * то отдаем оригинальный источник вместо prefetchProxy
-                 */
-                if (this._items.getIndexByValue(this._options.parentProperty, root) === -1 && !this._menuItems) {
-                    menuSource = this._options.source;
-                }
                 const config = this._getMenuConfigByItem(item, menuSource, root);
                 this._openMenu({
                     ...config,
@@ -505,14 +502,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (!this._options.readOnly) {
             const menuConfig = this._getMenuConfig();
             if (!this._isLoadMenuItems) {
-                this._setMenuSource().then(() => {
-                    this._isLoadMenuItems = true;
-                    menuConfig.templateOptions.source = this._menuSource;
-                    this._openMenu(menuConfig);
-                });
-            } else {
-                this._openMenu(menuConfig);
+                this._setMenuSource();
+                this._isLoadMenuItems = true;
             }
+            this._openMenu(this._getMenuConfig());
         }
     }
     protected _onClickHandler(event: SyntheticEvent): void {
