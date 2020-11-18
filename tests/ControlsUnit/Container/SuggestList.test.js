@@ -206,8 +206,14 @@ define(
                assert.isFalse(suggestList._isSuggestListEmpty);
 
                suggestItems.clear();
+               suggestItems.setMetaData({
+                  results: new entity.Model({
+                     rawData: {tabsSelectedKey: 'test'}
+                  })
+               });
                suggestList._collectionChange();
                assert.isTrue(suggestList._isSuggestListEmpty);
+               assert.isTrue(suggestList._suggestListOptions.tabsSelectedKey === 'test');
             });
 
          });
