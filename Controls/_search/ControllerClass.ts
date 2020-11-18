@@ -146,6 +146,9 @@ export default class SearchControllerClass {
             if (!needUpdateRoot || isNewSourceController) {
                 updateResult = this._startSearch(searchValue);
             }
+            if (needUpdateRoot && searchValue !== undefined) {
+                this._setSearchValue(searchValue);
+            }
             if (this._isInputSearchValueChanged(searchValue)) {
                 this._setInputSearchValue(searchValue);
             }
