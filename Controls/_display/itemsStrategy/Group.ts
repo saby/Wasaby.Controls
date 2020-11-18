@@ -92,7 +92,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     }
 
     get groups(): Array<GroupItem<IGroup>> {
-        return this._groups;
+        return this.items.filter((item) => item['[Controls/_display/GroupItem]']) as Array<GroupItem<IGroup>>;
     }
 
     // region IItemsStrategy

@@ -54,14 +54,15 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
     }
 
     setStickyFixed(topFixed: boolean, bottomFixed: boolean): void {
-        let isStateChanged = false;
+        let isTopStateChanged = false;
+        let isBottomStateChanged = false;
         if (this._models.top) {
-            isStateChanged = this._models.top.setStickyFixed(topFixed);
+            isTopStateChanged = this._models.top.setStickyFixed(topFixed);
         }
         if (this._models.bottom) {
-            isStateChanged = this._models.bottom.setStickyFixed(bottomFixed);
+            isBottomStateChanged = this._models.bottom.setStickyFixed(bottomFixed);
         }
-        if (isStateChanged) {
+        if (isTopStateChanged || isBottomStateChanged) {
             this._nextVersion();
         }
     }
