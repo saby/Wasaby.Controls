@@ -627,6 +627,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$markerVisibility: string;
 
+    protected _$style: string;
+
     protected _$navigation: INavigationOptionValue;
 
     /**
@@ -2352,6 +2354,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$theme;
     }
 
+    getStyle(): string {
+        return this._$style;
+    }
+
     getHoverBackgroundStyle(): string {
         return this._$hoverBackgroundStyle;
     }
@@ -3878,6 +3884,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
