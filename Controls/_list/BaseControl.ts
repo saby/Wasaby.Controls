@@ -1131,9 +1131,16 @@ const _private = {
                 const pageSize = self._options.navigation.sourceConfig.pageSize;
                 const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
                 const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                let neededPage = direction === 'up' ? 0 : 1;
+                let neededPageSize = direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount);
+                if (page - neededPagesCount <= neededPagesCount && direction === 'down') {
+                        neededPage = 0;
+                        neededPageSize = (page + 1) * pageSize;
+                }
                 navigationQueryConfig = {
-                    page: direction === 'up' ? 0 : 1,
-                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                    ...navigationQueryConfig,
+                    page: neededPage,
+                    pageSize: neededPageSize
                 };
             }
 
