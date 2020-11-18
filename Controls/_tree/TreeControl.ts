@@ -124,16 +124,16 @@ const _private = {
     },
     getCollapsedItemsByOptions(
         self: typeof TreeControl,
-        oldExpandedItems: [],
-        newExpandedItems: [],
-        oldCollapsedItems: [],
-        newCollapsedItems: []
+        oldExpandedItems: [] = [],
+        newExpandedItems: [] = [],
+        oldCollapsedItems: [] = [],
+        newCollapsedItems: [] = []
     ): Array<TreeItem<Model>> {
         // TODO исправить когда будет наследование TreeControl <- BaseControl
         const model = self._children.baseControl.getViewModel();
         const collapsedItems = [];
 
-        if (!isEqual(oldExpandedItems, newExpandedItems) && oldExpandedItems instanceof Array && newExpandedItems instanceof Array) {
+        if (!isEqual(oldExpandedItems, newExpandedItems)) {
             const expandedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldExpandedItems, newExpandedItems);
             if (expandedItemsDiff.removed) {
                 const removedExpandedItems = expandedItemsDiff.removed.map((key) => model.getItemBySourceKey(key));
@@ -141,7 +141,7 @@ const _private = {
             }
         }
 
-        if (!isEqual(oldCollapsedItems, newCollapsedItems) && oldCollapsedItems instanceof Array && newCollapsedItems instanceof Array) {
+        if (!isEqual(oldCollapsedItems, newCollapsedItems)) {
             const collapsedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldCollapsedItems, newCollapsedItems);
             if (collapsedItemsDiff.added) {
                 const addedCollapsedItems = collapsedItemsDiff.added.map((key) => model.getItemBySourceKey(key));
