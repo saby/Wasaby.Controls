@@ -36,7 +36,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import SearchSeparator from "./SearchSeparator";
-import {INavigationOptionValue} from '../_interface/INavigation;
+import {INavigationOptionValue} from '../_interface/INavigation';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
