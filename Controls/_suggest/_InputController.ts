@@ -267,7 +267,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
          if (!this._options.suggestState &&
             this._options.source &&
-            !this._getSourceController().isLoading() && !this._historyLoad) {
+            !this._getSourceController().isLoading() && (!this._historyLoad || this._historyLoad.isReady())) {
 
             if (this._options.historyId) {
 
