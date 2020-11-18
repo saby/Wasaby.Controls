@@ -49,6 +49,17 @@ describe('Controls/scroll:Container', () => {
         });
     });
 
+    describe('_beforeUnmount', () => {
+        it('should call beforeUnmount in ContainerBase', () => {
+            const component = createComponent(Container);
+            const state = component._state;
+            component._beforeUnmount();
+
+            assert.notEqual(state, component._state);
+            assert.isNull(component._state);
+        });
+    });
+
     describe('_afterMount', () => {
         let component: Container;
         beforeEach(() => {
