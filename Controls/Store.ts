@@ -5,7 +5,7 @@ interface IStore {
     get: (propertyName: string) => unknown;
     onPropertyChanged: (propertyName: string, callback: (data: unknown) => void, isGlobal?: boolean) => string;
     unsubscribe: (id: string) => void;
-    dispatch: (propertyName: string, data: unknown) => void;
+    dispatch: (propertyName: string, data: unknown, isGlobal?: boolean) => void;
 }
 
 interface IStateCallback {
