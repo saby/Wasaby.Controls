@@ -11,7 +11,7 @@
     </ws:if>
 
     <!-- Скроллбар горизонтального скролла. При табличной верстке находится вне таблицы. -->
-    <ws:if data="{{ _isColumnScrollVisible }}">
+    <ws:if data="{{ _isColumnScrollVisible && _listModel.isDrawHeaderWithEmptyList() }}">
         <Controls._grid.ScrollWrapper
                 name="horizontalScrollWrapper"
                 contentSize="{{ _contentSizeForHScroll }}"
