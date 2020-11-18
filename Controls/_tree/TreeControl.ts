@@ -107,19 +107,21 @@ const _private = {
         const model = baseControl.getViewModel();
         const markedItem = model.getItemBySourceKey(markedKey);
 
-        // проверяем был ли внутри этого узла маркированный элемент
-        let parent = markedItem.getParent(),
-            nodeContainsMarkedItem = false;
-        while (parent) {
-            if (parent === dispItem) {
-                nodeContainsMarkedItem = true;
-                break;
+        if (markedItem) {
+            // проверяем был ли внутри этого узла маркированный элемент
+            let parent = markedItem.getParent(),
+                nodeContainsMarkedItem = false;
+            while (parent) {
+                if (parent === dispItem) {
+                    nodeContainsMarkedItem = true;
+                    break;
+                }
+                parent = parent.getParent();
             }
-            parent = parent.getParent();
-        }
 
-        if (nodeContainsMarkedItem) {
-            baseControl.setMarkedKey(dispItem.getContents().getKey());
+            if (nodeContainsMarkedItem) {
+                baseControl.setMarkedKey(dispItem.getContents().getKey());
+            }
         }
     },
     getCollapsedItemsByOptions(
