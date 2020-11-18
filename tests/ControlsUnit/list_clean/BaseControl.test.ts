@@ -806,6 +806,26 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl = undefined;
         });
 
+        it('should cancel edit on changes that leads to reload', async () => {
+            await baseControl._beforeMount(baseControlCfg);
+            baseControl.saveOptions(baseControlCfg);
+            let isEditingCancelled = false;
+            baseControl._editInPlaceController = {
+                cancel() {
+                    isEditingCancelled = true;
+                    return Promise.resolve();
+                },
+                isEditing() {
+                    return true;
+                },
+                updateOptions() {}
+            };
+
+            return baseControl._beforeUpdate({...baseControlCfg, filter: {field: 'ASC'}, useNewModel: true}).then(() => {
+                assert.isTrue(isEditingCancelled);
+            });
+        });
+
         it('should immediately resolve promise if cancel edit called without eipController', () => {
             let isCancelCalled = false;
             baseControl.getEditInPlaceController = () => ({
@@ -815,6 +835,18 @@ describe('Controls/list_clean/BaseControl', () => {
             });
             return baseControl.cancelEdit().then(() => {
                 assert.isFalse(isCancelCalled);
+            });
+        });
+
+        it('should immediately resolve promise if commit edit called without eipController', () => {
+            let isCommitCalled = false;
+            baseControl.getEditInPlaceController = () => ({
+                commit() {
+                    isCommitCalled = true;
+                }
+            });
+            return baseControl.commitEdit().then(() => {
+                assert.isFalse(isCommitCalled);
             });
         });
 
@@ -867,6 +899,37 @@ describe('Controls/list_clean/BaseControl', () => {
                     assert.isFalse(editingConfig.autoAdd);
                     assert.isTrue(editingConfig.autoAddByApplyButton);
                 });
+            });
+
+        });
+
+        describe('_beforeUpdate sourceController', () => {
+
+            it('_beforeUpdate while source controller is loading', async () => {
+                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                let loadStarted = false;
+
+                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
+                baseControlOptions.sourceController.reload = () => {
+                    loadStarted = true;
+                    return Promise.reject();
+                };
+
+                const baseControl = new BaseControl(baseControlOptions);
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl._sourceController = baseControlOptions.sourceController;
+                baseControl.saveOptions(baseControlOptions);
+
+                const newSourceControllerOptions = {...baseControlOptions};
+                newSourceControllerOptions.source = new Memory();
+                baseControlOptions.sourceController.updateOptions(newSourceControllerOptions);
+                baseControlOptions.sourceController.load();
+
+                loadStarted = false;
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.filter = 'testFilter';
+                baseControl._beforeUpdate(baseControlOptions);
+                assert.isFalse(loadStarted);
             });
 
         });

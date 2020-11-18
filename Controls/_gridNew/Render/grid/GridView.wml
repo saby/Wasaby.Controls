@@ -24,6 +24,7 @@
                 style="{{ _options.style }}"
                 theme="{{ _options.theme }}"
                 itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+                groupTemplate="{{ _groupTemplate }}"
                 itemActionsPosition="{{ _options.itemActionsPosition }}"
                 itemActionsTemplate="{{ _options.itemActionsTemplate }}"
                 itemActionsClass="{{ _options.itemActionsClass }}"

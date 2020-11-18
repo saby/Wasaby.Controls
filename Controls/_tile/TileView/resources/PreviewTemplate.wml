@@ -35,6 +35,7 @@
                   <ws:partial template="Controls/_tile/ItemActions/Control"
                               item="{{itemData.dispItem}}">
                      <ws:partial template="{{itemActionsTemplate}}"
+                                 actionPadding="{{itemData.dispItem.isNode() ? '' : 'null'}}"
                                  actionStyle="{{!titleStyle || titleStyle === 'light' ? 'tileLight' : 'tileDark'}}"
                                  iconStyle="{{!titleStyle || titleStyle === 'light' ? 'contrast' : 'tileDark'}}"
                                  actionMode="{{itemData.dispItem.isNode() ? 'strict' : 'adaptive'}}"

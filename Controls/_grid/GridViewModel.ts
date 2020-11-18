@@ -581,15 +581,19 @@ var
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
+        getStickyColumn(self): GridLadderUtil.IStickyColumn {
+            return GridLadderUtil.getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._columns
+            });
+        },
+
         /**
          * Проверяет, присутствует ли "прилипающая" колонка
          * @param self
          */
         hasStickyColumn(self): boolean {
-            return !!GridLadderUtil.getStickyColumn({
-                stickyColumn: self._options.stickyColumn,
-                columns: self._columns
-            });
+            return !!_private.getStickyColumn(self);
         },
 
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
@@ -1486,6 +1490,9 @@ var
         getLastItem: function() {
             return this._model.getLastItem.apply(this._model, arguments);
         },
+        getLast() {
+            return this._model.getLast();
+        },
         getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
@@ -2004,10 +2011,10 @@ var
 
                 column.getWrapperStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
-                    if (isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `${styles} width: ${containerSize}px;`;
                     }
-                    return styles
+                    return styles;
                 };
 
                 column.getContentClasses = (containerSize: number) => {
@@ -2019,7 +2026,7 @@ var
                 column.getContentStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
                     // При табличной верстке выводится td который игнорирует width. Ограничивать необходимо контент
-                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `width: ${containerSize}px;`;
                     }
                     return '';
@@ -2349,7 +2356,8 @@ var
                 // активирована колонка для множественного выбора?
                 const offsetForMultiSelect: number = +(this._hasMultiSelectColumn());
                 // к колонкам была добавлена "прилипающая" колонка?
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const ladderStickyColumn = _private.getStickyColumn(this);
+                const offsetForStickyColumn: number = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
                 // к колонкам была добавлена колонка "Действий"?
                 const offsetForActionCell: number = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,

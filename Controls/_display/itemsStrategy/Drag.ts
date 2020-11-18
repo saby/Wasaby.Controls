@@ -1,5 +1,4 @@
 import CollectionItem from '../CollectionItem';
-import GroupItem from '../GroupItem';
 import Collection from '../Collection';
 import { mixin } from 'Types/util';
 import { DestroyableMixin, Model } from 'Types/entity';
@@ -49,17 +48,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         return this._options;
     }
 
-    setAvatarPosition(avatarIndex: number, position: string): void {
-        // TODO dnd нужно переписать сортировку, чтобы она работала аналогично Mover::move
-        if (this._options.avatarIndex === avatarIndex) {
-            const offset = position === 'before' ? -1 : 1;
-            if (avatarIndex > 0) {
-                avatarIndex += offset;
-            } else {
-                avatarIndex++;
-            }
-        }
-
+    setAvatarPosition(avatarIndex: number): void {
         this._options.avatarIndex = avatarIndex;
         this.invalidate();
     }
@@ -150,7 +139,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
 
     protected _createItems(): T[] {
         const filteredItems = this.source.items.filter((item) => {
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 return true;
             }
             const key = item.getContents().getKey();

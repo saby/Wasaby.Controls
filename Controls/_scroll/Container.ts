@@ -16,8 +16,10 @@ import {
 } from './Container/Interface/IScrollbars';
 import {
     IShadows,
+    IShadowsOptions,
     IShadowsVisibilityByInnerComponents,
     SHADOW_MODE,
+    SHADOW_VISIBILITY,
     getDefaultOptions as getShadowsDefaultOptions
 } from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
@@ -27,7 +29,7 @@ import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 
-interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadows {
+interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
 }
 
@@ -45,8 +47,8 @@ const DEFAULT_BACKGROUND_STYLE = 'default';
  *
  * @class Controls/_scroll/Container
  * @extends Controls/_scroll/ContainerBase
- * @mixes Controls/_scroll/Interface/IScrollbars
- * @mixes Controls/_scroll/Interface/IShadows
+ * @mixes Controls/_scroll/Container/Interface/IScrollbars
+ * @mixes Controls/_scroll/Container/Interface/IShadows
  *
  * @public
  * @author Миронов А.Ю.
@@ -91,10 +93,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
         this._scrollbars = new ScrollbarsModel(options, receivedState);
         this._stickyHeaderController = new StickyHeaderController();
-        // При инициализации оптимизированные тени не включаем только если явно включены тени на js.
+        // При инициализации оптимизированные тени включаем только если они явно включены, или включен режим auto.
         // В режиме mixed используем тени на css что бы не вызывать лишние синхронизации. Когда пользователь наведет
         // мышкой на скролл контейнер или по другим обнавлениям тени начнут работать через js.
-        this._isOptimizeShadowEnabled = options.shadowMode !== SHADOW_MODE.JS && !detection.isMobileIOS;
+        this._isOptimizeShadowEnabled = Container._isCssShadowsSupported() &&
+            (options.shadowMode === SHADOW_MODE.CSS ||
+                (options.shadowMode === SHADOW_MODE.MIXED &&
+                    (options.topShadowVisibility === SHADOW_VISIBILITY.AUTO || options.bottomShadowVisibility === SHADOW_VISIBILITY.AUTO)));
         this._optimizeShadowClass = this._getOptimizeShadowClass(options);
 
         super._beforeMount(...arguments);
@@ -133,8 +138,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _beforeUpdate(options: IContainerOptions, context) {
         super._beforeUpdate(...arguments);
         if (context.ScrollData?.pagingVisible) {
+            if (!this._paging) {
+                this._paging = new PagingModel();
+            }
             this._paging.isVisible = this._state.canVerticalScroll;
+        } else if (this._paging) {
+            this._paging = null;
         }
+
         this._updateShadows(this._state, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
@@ -160,6 +171,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._intersectionObserverController = null;
         }
         this._stickyHeaderController.destroy();
+        super._beforeUnmount();
     }
 
     private _initHeaderController(): void {
@@ -424,7 +436,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _getIsOptimizeShadowEnabled(options: IContainerOptions): boolean {
-        return options.shadowMode === SHADOW_MODE.CSS && !detection.isMobileIOS;
+        return options.shadowMode === SHADOW_MODE.CSS && Container._isCssShadowsSupported();
     }
 
     // StickyHeaderController
@@ -455,6 +467,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
         return this._stickyHeaderController.getHeadersHeight(position, type);
+    }
+
+    static _isCssShadowsSupported(): boolean {
+        // Ie и Edge неправильно позиционируют фон со стилями
+        // background-position: bottom и background-attachment: local
+        return !detection.isMobileIOS && !detection.isIE;
     }
 
     static contextTypes() {
@@ -498,21 +516,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {String} Color scheme (colors of the shadow and scrollbar).
  * @variant normal Default theme (for bright backgrounds).
  * @variant inverted Inverted theme (for dark backgrounds).
- */
-
-/**
- * @name Controls/_scroll/Container#optimizeShadow
- * @cfg {Boolean} Включает режим быстрой отрисовки тени.
- * @default true
- * @variant true Оптимизированные тени.
- * @variant false Не оптимизированные тени.
- * @remark
- * Отключите оптимизированные тени, если:
- * <ul>
- *     <li> У скролл контейнера непрозрачный фон </li>
- *     <li> Скролл контейнер находится в элементе с непрозрачным фоном </li>
- *     <li> В скролл конейтенере присутствуют изображения. </li>
- * </ul>
  */
 
 /**

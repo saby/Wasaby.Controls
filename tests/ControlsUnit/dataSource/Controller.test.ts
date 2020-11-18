@@ -3,6 +3,8 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
+import {createSandbox} from 'sinon';
+import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
 const filterByEntries = (item, filter): boolean => {
     return filter.entries ? filter.entries.get('marked').includes(String(item.get('key'))) : true;
@@ -59,11 +61,12 @@ const hierarchyItems = [
     }
 ];
 
-function getMemory(): Memory {
-    return new Memory({
+function getMemory(additionalOptions: object = {}): Memory {
+    const options = {
         data: items,
         keyProperty: 'key'
-    });
+    };
+    return new Memory({...options, ...additionalOptions});
 }
 
 function getPrefetchProxy(): PrefetchProxy {
@@ -205,6 +208,27 @@ describe('Controls/dataSource:SourceController', () => {
             loadedItems = await controller.load('down');
             ok((loadedItems as RecordSet).getCount() === 2);
             ok((loadedItems as RecordSet).at(0).get('title') === 'Aleksey');
+        });
+
+        it('load with collapsedGroups',  async () => {
+            const controller = getController({
+                source: getMemory({
+                    filter: (item, filter) => filter.myFilterField
+                }),
+                filter: {
+                    myFilterField: 'myFilterFieldValue'
+                },
+                groupProperty: 'groupProperty',
+                groupHistoryId: 'groupHistoryId'
+            });
+            const sinonSandbox = createSandbox();
+            sinonSandbox.replace(groupUtil, 'restoreCollapsedGroups', () => {
+                return Promise.resolve([]);
+            });
+
+            const loadedItems = await controller.reload();
+            ok(loadedItems.getCount() === 4);
+            sinonSandbox.restore();
         });
     });
 

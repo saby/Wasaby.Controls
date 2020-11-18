@@ -92,7 +92,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
     }
 
     get groups(): Array<GroupItem<IGroup>> {
-        return this._groups;
+        return this.items.filter((item) => item['[Controls/_display/GroupItem]']) as Array<GroupItem<IGroup>>;
     }
 
     // region IItemsStrategy
@@ -285,7 +285,8 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
                 const group = new options.groupConstructor({
                     owner: display as any,
                     contents: groupId,
-                    expanded: !isCollapsed
+                    expanded: !isCollapsed,
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
                 }) as GroupItem<IGroup>;
 
                 groupIndex = groups.length;

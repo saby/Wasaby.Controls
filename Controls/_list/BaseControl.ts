@@ -41,7 +41,8 @@ import {
     Collection,
     CollectionItem,
     GroupItem, IEditableCollectionItem,
-    TItemKey
+    TItemKey,
+    TreeItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -660,12 +661,15 @@ const _private = {
                 }], {bubbling: true});
             }
         };
-        return self._scrollController ?
-            self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                if (result) {
-                    _private.handleScrollControllerResult(self, result);
-                }
-            }) : Promise.resolve();
+        return new Promise((resolve) => {
+            self._scrollController ?
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
+                    if (result) {
+                        _private.handleScrollControllerResult(self, result);
+                    }
+                    resolve();
+                }) : resolve();
+        });
     },
 
     // region key handlers
@@ -1130,7 +1134,25 @@ const _private = {
                 pagingMode = self._options.navigation.viewConfig.pagingMode;
             }
 
-            const navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+            let navigationQueryConfig = self._sourceController.shiftToEdge(direction, self._options.root, pagingMode);
+
+            // Решение проблемы загрузки достаточного количества данных для перехода в конец/начало списка
+            // в зависимости от размеров экрана.
+            // Из размера вьюпорта и записи мы знаем, сколько данных нам хватит.
+            // Не совсем понятно, где должен быть этот код. SourceController не должен знать про
+            // размеры окна, записей, и т.д. Но и список не должен сам вычислять параметры для загрузки.
+            // https://online.sbis.ru/opendoc.html?guid=608aa44e-8aa5-4b79-ac90-d06ed77183a3
+            const itemsOnPage = self._scrollPagingCtr?.getItemsCountOnPage();
+            const metaMore = self._items.getMetaData().more;
+            if (typeof metaMore === 'number' && itemsOnPage && self._options.navigation.source === 'page') {
+                const pageSize = self._options.navigation.sourceConfig.pageSize;
+                const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
+                const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                navigationQueryConfig = {
+                    page: direction === 'up' ? 0 : 1,
+                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                };
+            }
 
             // Если пейджинг уже показан, не нужно сбрасывать его при прыжке
             // к началу или концу, от этого прыжка его состояние не может
@@ -1661,6 +1683,8 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
+                    self._shouldDrawFooter = false;
                 }
             }
 
@@ -1690,7 +1714,7 @@ const _private = {
                     if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                         // When move items call removeHandler with "forceShift" param.
                         // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
-                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
+                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, true);
                     }
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
@@ -1967,7 +1991,11 @@ const _private = {
         }
     },
 
-    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+    openContextMenu(self: typeof BaseControl, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
+        if (itemData['[Controls/_display/GroupItem]']) {
+            return;
+        }
+
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
@@ -2116,6 +2144,7 @@ const _private = {
             self._scrollController = null;
             self._observerRegistered = false;
         }
+        self._viewReady = false;
     },
 
     hideError(self: BaseControl): void {
@@ -2322,7 +2351,7 @@ const _private = {
         const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
 
         self._wasScrollToEnd = true;
-        
+
         const hasMoreData = {
             up: _private.hasMoreData(this, this._sourceController, 'up'),
             down: _private.hasMoreData(this, this._sourceController, 'down')
@@ -3124,6 +3153,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemReloaded: false,
     _modelRecreated: false,
+    _viewReady: false,
 
     _portionedSearch: null,
     _portionedSearchInProgress: null,
@@ -3137,6 +3167,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemActionsController: null,
     _sourceController: null,
     _prevRootId: null,
+    _loadedBySourceController: false,
 
     _notifyHandler: tmplNotify,
 
@@ -3660,9 +3691,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
-        const loadedBySourceController = newOptions.sourceController &&
+
+        this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
+
+        const isSourceControllerLoadingNow = newOptions.sourceController &&
+            newOptions.sourceController.isLoading() &&
+            newOptions.sourceController.getState().source !== this._options.source;
+
+        const needReload =
+            !this._loadedBySourceController &&
+            !isSourceControllerLoadingNow &&
+            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
+            (sourceChanged || filterChanged || sortingChanged || recreateSource);
+
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
@@ -3691,11 +3734,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(_private.prepareMoverControllerOptions(this, newOptions));
         }
 
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
+        const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
+
+        if ((oldViewModelConstructorChanged || needReload) && this.isEditing()) {
+            // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+            // без возможности отменить закрытие из вне.
+            this._cancelEdit(true);
+        }
+
+        if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            if (_private.isEditing(this)) {
-                this._cancelEdit();
-            }
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
@@ -3768,10 +3816,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
 
-                if (loadedBySourceController) {
-                    _private.executeAfterReloadCallbacks(self, items, newOptions);
-                }
-
                 // TODO удалить когда полностью откажемся от старой модели
                 if (!_private.hasSelectionController(this) && newOptions.multiSelectVisibility !== 'hidden'
                     && newOptions.selectedKeys && newOptions.selectedKeys.length) {
@@ -3782,6 +3826,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
+            }
+
+            if (this._loadedBySourceController) {
+                _private.executeAfterReloadCallbacks(self, items, newOptions);
             }
         }
 
@@ -3832,11 +3880,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader = null;
         }
 
-        const needReload =
-            !loadedBySourceController &&
-            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            (sourceChanged || filterChanged || sortingChanged || recreateSource);
-
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
 
@@ -3854,7 +3897,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._markerController = null;
         }
 
-        if (this._items && this._items.getCount()) {
+        // Когда удаляют все записи, мы сбрасываем selection, поэтому мы его должны применить даже когда список пуст
+        if (this._items) {
             const selectionChanged = (!isEqual(self._options.selectedKeys, newOptions.selectedKeys)
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
@@ -3890,7 +3934,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged || loadedBySourceController && _private.isPortionedLoad(this)) {
+        if (searchValueChanged || this._loadedBySourceController && _private.isPortionedLoad(this)) {
             _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
         }
 
@@ -4081,7 +4125,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
         }
-        if (this._sourceController) {
+
+        // Если sourceController есть в опциях, значит его создали наверху
+        // например list:DataContainer, и разрушать его тоже должен создатель.
+        if (this._sourceController && !this._options.sourceController) {
             this._sourceController.destroy();
         }
 
@@ -4207,7 +4254,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._syncLoadingIndicatorState = null;
             }
             let itemsUpdated = false;
-            if (this._listViewModel && !this._modelRecreated && !this.__error) {
+            if (this._listViewModel && !this._modelRecreated && this._viewReady) {
                 itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
@@ -4225,7 +4272,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
-            if (needCheckTriggers || itemsUpdated || positionRestored) {
+            if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
 
@@ -4240,6 +4287,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._updateShadowModeBeforePaint) {
             this._updateShadowModeBeforePaint();
             this._updateShadowModeBeforePaint = null;
+        }
+
+        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+            _private.activateEditingRow(this);
         }
     },
 
@@ -4338,6 +4389,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._updateInProgress = false;
+        this._loadedBySourceController = false;
         this._notifyOnDrawItems();
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
@@ -4350,6 +4402,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else if (!this._sourceController.isLoading() && this._loadingState === 'all') {
                 _private.hideIndicator(this);
             }
+        }
+
+        // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
+        // применения всех обновлений реактивных состояний.
+        if (this._isPendingDeferSubmit) {
+            this._validateController.resolveSubmit();
+            this._isPendingDeferSubmit = false;
         }
 
         // After update the reloaded items have been redrawn, clear
@@ -4366,9 +4425,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-        }
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
-            _private.activateEditingRow(this);
         }
     },
 
@@ -4663,7 +4719,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
         return Promise.resolve().then(() => {
             if (willSave) {
-                return this._validateController.submit().then((validationResult) => {
+                // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
+                // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться и позвали валидацию.
+                // В таком случае, первый цикл применит все состояния и только после него произойдет валидация.
+                // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то реактивное состояние.
+                const submitPromise = this._validateController.deferSubmit();
+                this._isPendingDeferSubmit = true;
+                this._forceUpdate();
+                return submitPromise.then((validationResult) => {
                     for (const key in validationResult) {
                         if (validationResult.hasOwnProperty(key) && validationResult[key]) {
                             return CONSTANTS.CANCEL;
@@ -4802,12 +4865,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _cancelEdit() {
+    _cancelEdit(force: boolean = false) {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
         this.showIndicator();
-        return this._getEditInPlaceController().cancel().finally(() => {
+        return this._getEditInPlaceController().cancel(force).finally(() => {
             if (_private.hasSelectionController(this)) {
                 const controller = _private.getSelectionController(this);
                 controller.setSelection(controller.getSelection());
@@ -5275,8 +5338,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dragEnter(this._getDragObject());
         }
 
-        // нельзя делать это в процессе обновления
-        if (!this._updateInProgress && !this._scrollController?.getScrollTop()) {
+        // нельзя делать это в процессе обновления или загрузки
+        if (!this._loadingState && !this._updateInProgress && !this._scrollController?.getScrollTop()) {
             _private.attachLoadTopTriggerToNullIfNeed(this, this._options);
         }
         if (this._hideTopTrigger && !this._needScrollToFirstItem) {
@@ -5425,7 +5488,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemSwipe(e: SyntheticEvent<Event>, item: CollectionItem<Model>, swipeEvent: SyntheticEvent<ISwipeEvent>): void {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return;
         }
         swipeEvent.stopPropagation();
@@ -5512,7 +5575,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (typeof modelName !== 'string') {
             throw new TypeError('BaseControl: model name has to be a string when useNewModel is enabled');
         }
-        return diCreate(modelName, {...modelConfig, collection: items});
+        return diCreate(modelName, {...modelConfig, collection: items, unique: true});
     },
 
     _stopBubblingEvent(event: SyntheticEvent<Event>): void {
@@ -5538,6 +5601,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
+        this._viewReady = true;
         if (this._isScrollShown) {
             this._viewSize = _private.getViewSize(this, true);
             this._updateItemsHeights();
@@ -5780,8 +5844,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                const lastItem = this._listViewModel.getLast();
+                const startPosition = {
+                    index: this._listViewModel.getIndex(lastItem),
+                    dispItem: lastItem,
+                    position: 'after'
+                };
+
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+
+                // задаем изначальную позицию в другом списке
+                this._dndListController.setDragPosition(startPosition);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }
@@ -5818,12 +5892,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const endDrag = () => {
             const targetPosition = this._dndListController.getDragPosition();
+            const draggableItem = this._dndListController.getDraggableItem();
             this._dndListController.endDrag();
 
-            if (this._options.markerVisibility !== 'hidden' && targetPosition) {
-                const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
+            // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+                const moveToCollapsedNode = targetPosition.position === 'on'
+                    && targetPosition.dispItem instanceof TreeItem
+                    && !targetPosition.dispItem.isExpanded();
+                // Ставим маркер на перетаксиваемый элемент всегда, за исключением ситуации
+                // когда перетаскиваем запись в свернутый узел
                 if (!moveToCollapsedNode) {
-                    _private.changeMarkedKey(this, this._draggedKey);
+                    const draggedKey = draggableItem.getContents().getKey();
+                    _private.changeMarkedKey(this, draggedKey);
                 }
             }
 

@@ -814,7 +814,7 @@ export class Controller {
     ): boolean {
         const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
         const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
-        return actionMode === 'adaptive' ? isMatchedAll : (isMatchedAll && isMatchedShowed);
+        return isMatchedAll && isMatchedShowed;
     }
 
     private static _calculateSwipeConfig(

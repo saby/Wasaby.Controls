@@ -32,9 +32,10 @@ export function getActions(
 ): IItemActionsContainer {
     let showedActions = [];
     const allActions = MeasurerUtils.getActualActions(actions.all);
+    const rootActions = allActions.filter((action) => !action['parent@']);
     const availableActionsCount = getAvailableActionsCount(iconSize, containerSize);
-    if (allActions.length > availableActionsCount) {
-        showedActions = allActions.slice(0, availableActionsCount - 1);
+    if (rootActions.length > availableActionsCount || rootActions.length < allActions.length) {
+        showedActions = rootActions.slice(0, availableActionsCount - 1);
         showedActions.push({
             id: null,
             icon: 'icon-SettingsNew',
@@ -43,7 +44,7 @@ export function getActions(
             isMenu: true
         });
     } else {
-        showedActions = allActions;
+        showedActions = rootActions;
     }
     return {
         all: actions.all,

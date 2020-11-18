@@ -163,11 +163,14 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._notify('stickyRegister', [{
             id: this._index,
             inst: this,
-            container: this._container,
             position: this._options.position,
             mode: this._options.mode,
             shadowVisibility: this._options.shadowVisibility
         }, true], {bubbling: true});
+    }
+
+    getHeaderContainer(): HTMLElement {
+        return this._container;
     }
 
     protected _beforeUpdate(options: IStickyHeaderOptions, context): void {

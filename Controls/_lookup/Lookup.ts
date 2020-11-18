@@ -52,7 +52,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
@@ -89,7 +89,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * 
  * @public
  * @author Герасимов А.М.
@@ -333,17 +333,28 @@ export default class Lookup extends BaseLookupInput {
       // we get the height of a single-line Lookup control, which would then calculate the minimum width of the input
       const fieldWrapperMinHeight = this._getFieldWrapperMinHeight();
       const fieldWrapperWidth = this._getFieldWrapperWidth();
+      const fieldWrapperStyles = this._getFieldWrapperComputedStyle();
+      const fieldWrapperWidthWithPaddings =
+          fieldWrapperWidth +
+          parseInt(fieldWrapperStyles.paddingLeft, 10) +
+          parseInt(fieldWrapperStyles.paddingRight, 10) +
+          parseInt(fieldWrapperStyles.borderLeftWidth, 10) +
+          parseInt(fieldWrapperStyles.borderRightWidth, 10);
       let additionalWidth = rightFieldWrapperWidth;
 
       if (!readOnly && (multiSelect || comment)) {
          additionalWidth += this._getInputMinWidth(
-             this._getFieldWrapper().offsetWidth,
+             fieldWrapperWidthWithPaddings,
              rightFieldWrapperWidth,
              fieldWrapperMinHeight
          );
       }
 
       return fieldWrapperWidth - additionalWidth;
+   }
+
+   private _getFieldWrapperComputedStyle(): CSSStyleDeclaration {
+      return getComputedStyle(this._getFieldWrapper());
    }
 
    private _getInputMinWidth(

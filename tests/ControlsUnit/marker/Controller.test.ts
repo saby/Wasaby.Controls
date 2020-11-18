@@ -296,7 +296,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getVersion(), 4);
       });
 
-      it('not exists marked item', () => {
+      it('not exists marked item, visible', () => {
          controller.setMarkedKey(1);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
 
@@ -316,7 +316,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getVersion(), 3);
       });
 
-      it('not exists marked item', () => {
+      it('not exists marked item, onactivated and was set marker before reset', () => {
          const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: undefined });
          ctrl.setMarkedKey(1);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
@@ -331,6 +331,22 @@ describe('Controls/marker/Controller', () => {
 
          const newMarkedKey = ctrl.onCollectionReset();
          assert.equal(newMarkedKey, 2);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
+
+      it('not exists marked item, onactivated and was not set marker before reset', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: null });
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.isNull(newMarkedKey);
          assert.isFalse(model.getItemBySourceKey(2).isMarked());
          assert.isFalse(model.getItemBySourceKey(3).isMarked());
       });
@@ -387,7 +403,7 @@ describe('Controls/marker/Controller', () => {
       assert.equal(controller.getMarkedKey(), 2);
 
       result = controller.getNextMarkedKey();
-      assert.equal(result, 3);
+      assert.equal(result, 4);
 
       result = controller.getPrevMarkedKey();
       assert.equal(result, 1);

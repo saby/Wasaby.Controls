@@ -15,6 +15,51 @@ function createComponent(Component, cfg) {
 }
 
 describe('Controls/scroll:Container', () => {
+    describe('constructor', () => {
+        it('should initialize by default', () => {
+            const component = createComponent(Container, {});
+
+            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
+        });
+    });
+
+    describe('_beforeMount', () => {
+        [{
+            shadowMode: SHADOW_MODE.CSS,
+        }, {
+            shadowMode: SHADOW_MODE.MIXED,
+        }].forEach((options) => {
+            it(`should initialize with css shadows. Options ${JSON.stringify(options)}`, () => {
+                const component = createComponent(Container, options);
+                assert.isTrue(component._isOptimizeShadowEnabled);
+            });
+        });
+
+        [{
+            shadowMode: SHADOW_MODE.JS,
+        }, {
+            shadowMode: SHADOW_MODE.MIXED,
+            bottomShadowVisibility: SHADOW_VISIBILITY.VISIBLE,
+            topShadowVisibility: SHADOW_VISIBILITY.VISIBLE
+        }].forEach((options) => {
+            it(`should initialize with js shadows. Options ${JSON.stringify(options)}`, () => {
+                const component = createComponent(Container, options);
+                assert.isFalse(component._isOptimizeShadowEnabled);
+            });
+        });
+    });
+
+    describe('_beforeUnmount', () => {
+        it('should call beforeUnmount in ContainerBase', () => {
+            const component = createComponent(Container);
+            const state = component._state;
+            component._beforeUnmount();
+
+            assert.notEqual(state, component._state);
+            assert.isNull(component._state);
+        });
+    });
+
     describe('_afterMount', () => {
         let component: Container;
         beforeEach(() => {
@@ -40,14 +85,6 @@ describe('Controls/scroll:Container', () => {
             component._afterMount({}, {});
             sinon.assert.called(component._stickyHeaderController.init);
             compatibility.touch = touch
-        });
-    });
-
-    describe('constructor', () => {
-        it('should initialize by default', () => {
-            const component = createComponent(Container, {});
-
-            assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
         });
     });
 

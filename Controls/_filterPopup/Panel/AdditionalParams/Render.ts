@@ -51,7 +51,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
         columnProperty: string,
         currentColumn: string): boolean {
         let column;
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             column = collection.getNext(item).getContents().get(columnProperty);
         } else {
             column = item.getContents().get(columnProperty);
@@ -60,7 +60,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
     }
 
     protected _isGroup(collectionItem: CollectionItem<IFilterItem> | GroupItem<IFilterItem>): boolean {
-        return collectionItem instanceof GroupItem;
+        return collectionItem['[Controls/_display/GroupItem]'];
     }
 
     protected _beforeUpdate(options: IAdditionalRenderOptions): void {
@@ -81,7 +81,7 @@ export default class AdditionalParamsRender extends Control<IAdditionalRenderOpt
 }
 /**
  * @name Controls/_filterPopup/Panel/AdditionalParams/Render#source
- * @cfg {Array<Controls/_filter/View/interface/IFilterView/FilterItem.typedef>} Коллекция элементов для отображения.
+ * @cfg {Array<Controls/_filter/View/interface/IFilterItem/FilterItem.typedef>} Коллекция элементов для отображения.
  */
 
 /**

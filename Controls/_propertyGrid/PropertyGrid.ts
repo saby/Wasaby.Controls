@@ -14,19 +14,19 @@ import PropertyGridItem from './PropertyGridItem';
 
 /**
  * Контрол, который позволяет пользователям просматривать и редактировать свойства объекта.
- * 
+ *
  * @remark
  * Вы можете использовать стандартные редакторы PropertyGrid или специальные редакторы.
  * По умолчанию propertyGrid будет автоматически генерировать все свойства для данного объекта.
- * 
+ *
  * Полезные ссылки:
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
- * 
+ *
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -38,7 +38,7 @@ import PropertyGridItem from './PropertyGridItem';
  * @class Controls/_propertyGrid/PropertyGrid
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -161,7 +161,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         displayItem: GroupItem<PropertyGridItem> | TreeItem<PropertyGridItem>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        if (displayItem instanceof GroupItem) {
+        if (displayItem['[Controls/_display/GroupItem]']) {
             const isExpandClick = clickEvent?.target.closest('.controls-PropertyGrid__groupExpander');
             if (isExpandClick) {
                 const groupName = displayItem.getContents();

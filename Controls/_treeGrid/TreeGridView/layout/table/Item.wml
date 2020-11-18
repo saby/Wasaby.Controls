@@ -56,7 +56,7 @@
                 itemData="{{currentColumn}}"
                 tagTemplate="{{tagTemplate}}">
         <ws:afterItemTemplate>
-            <ws:partial if="{{itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'right')}}"
+            <ws:partial if="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'right')}}"
                         template="{{itemData.expanderTemplate}}"
                         itemData="{{itemData}}"
                         expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
@@ -117,7 +117,7 @@
                                 <div class="controls-TreeGrid__row-levelPadding {{itemData.getLevelIndentClasses(itemData, expanderSize, levelIndentSize)}}"></div>
                             </ws:for>
                         </ws:if>
-                        <ws:if data="{{itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
+                        <ws:if data="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
                             <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
                                         expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
                         </ws:if>

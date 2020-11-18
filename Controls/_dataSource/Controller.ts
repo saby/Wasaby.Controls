@@ -514,11 +514,15 @@ export default class Controller {
         const historyId = hasGrouping ? (options.groupHistoryId || options.historyIdCollapsedGroups) : undefined;
         const collapsedGroups = options.collapsedGroups;
         const getFilterWithCollapsedGroups = (collapsedGroupsIds: TArrayGroupId) => {
-            let modifiedFilter: Record<string, unknown> = {};
+            let modifiedFilter;
+
             if (collapsedGroupsIds && collapsedGroupsIds.length) {
                 modifiedFilter = { ...initialFilter };
                 modifiedFilter.collapsedGroups = collapsedGroupsIds;
+            } else {
+                modifiedFilter = initialFilter;
             }
+
             return modifiedFilter;
         };
         let resultFilterPromise;

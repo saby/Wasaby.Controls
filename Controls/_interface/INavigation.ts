@@ -155,8 +155,8 @@ export interface INavigationPageSourceConfig extends IBasePageSourceConfig{
 /**
  * @typedef {Object} INavigationSourceConfig
  * @description Параметры режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/">работы с источником данных</a>.
- * Параметры для режима {@link Controls/interface:INavigation.INavigationPositionSourceConfig Навигация по курсору}.
- * Параметры для режима {@link Controls/interface:INavigation.INavigationPageSourceConfig Навигация с фиксированным количеством загружаемых записей}.
+ * Параметры для режима {@link Controls/interface:INavigation/INavigationPositionSourceConfig.typedef Навигация по курсору}.
+ * Параметры для режима {@link Controls/interface:INavigation/INavigationPageSourceConfig.typedef Навигация с фиксированным количеством загружаемых записей}.
  */
 /*
  * @typedef {Object} INavigationSourceConfig
@@ -167,7 +167,7 @@ export type IBaseSourceConfig = IBasePositionSourceConfig | IBasePageSourceConfi
 
 /**
  * @typedef {String} TNavigationTotalInfo
- * @description Допустимые значения для параметра {@link Controls/interface:INavigation.TNavigationTotalInfo totalInfo}.
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigation/TNavigationTotalInfo.typedef totalInfo}.
  * @variant basic Отображается только общее число записей.
  * @variant extended Отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.
  */

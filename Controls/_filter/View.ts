@@ -649,13 +649,13 @@ var _private = {
  *
  * @class Controls/_filter/View
  * @extends Core/Control
- * @mixes Controls/_filter/View/interface/IFilterView
+ * @mixes Controls/_filter/View/interface/IFilterItem
  * @public
  * @author Золотова Э.Е.
- * 
+ *
  * @demo Controls-demo/FilterView/ItemTemplates/Index
  * @demo Controls-demo/FilterView/FilterView
- * 
+ *
  * @see Controls/filterPopup:SimplePanel
  * @see Controls/filterPopup:DetailPanel
  * @see Controls/filter:ViewContainer
@@ -902,9 +902,9 @@ var Filter = Control.extend({
     _onSelectorTemplateResult: function(items) {
         const config = this._configs[this._idOpenSelector];
         if (!config.items && items.getCount()) {
-            config.items = new RecordSet({
+            config.items = factory(items).value(CollectionFactory.recordSet, {
                 keyProperty: items.at(0).getKeyProperty(),
-                rawData: [],
+                adapter: items.at(0).getAdapter(),
                 format: items.at(0).getFormat()
             });
         }

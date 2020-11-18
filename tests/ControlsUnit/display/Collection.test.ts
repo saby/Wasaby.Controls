@@ -1389,7 +1389,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1421,7 +1421,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1475,7 +1475,7 @@ describe('Controls/_display/Collection', () => {
             let index = 0;
             display.setGroup((item) => item.group);
             display.each((item) => {
-                if (item instanceof GroupItem) {
+                if (item['[Controls/_display/GroupItem]']) {
                     assert.strictEqual(item.getContents(), items[index + 1].group);
                 } else {
                     assert.strictEqual(item.getContents(), items[index]);
@@ -4532,6 +4532,30 @@ describe('Controls/_display/Collection', () => {
             const testingItem = display.getItemBySourceKey(2);
             display.setActiveItem(display.getItemBySourceKey(2));
             assert.equal(display.getActiveItem(), testingItem);
+        });
+    });
+
+    describe('drag', () => {
+        let display: CollectionDisplay<unknown>;
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            const rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('setDraggedItems', () => {
+            const draggedItem = display.createItem({contents: {getKey: () => '123'}});
+            display.setDraggedItems(draggedItem, ['123']);
+            assert.equal(display.getItems()[2].getContents().getKey(), '123');
         });
     });
 });

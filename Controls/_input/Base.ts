@@ -221,7 +221,7 @@ var _private = {
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/input:IBase
  * @implements Controls/input:ITag
- * @implements Controls/input:IValue
+ * @implements Controls/_input/interface/IValueOptions
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection
@@ -398,7 +398,6 @@ var Base = Control.extend({
         this._isMobileIOS = Env.detection.isMobileIOS;
         this._isEdge = Env.detection.isIE12;
         this._isBrowserPlatform = Env.constants.isBrowserPlatform;
-        this._inputKey = '_inputKey_' + Date.now();
 
         /**
          * Hide in chrome because it supports auto-completion of the field when hovering over an item

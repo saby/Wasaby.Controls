@@ -41,7 +41,7 @@ let OUTER_INDENT_INPUT = 0;
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * 
  * @public
  * @author Герасимов А.М.
@@ -71,7 +71,7 @@ let OUTER_INDENT_INPUT = 0;
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/input:IValue
+ * @mixes Controls/_input/interface/IValueOptions
  * 
  * @public
  * @author Герасимов А.М.
@@ -82,8 +82,8 @@ export default class MultipleInput extends BaseLookupInput {
     protected _listOfDependentOptions: string[] = ['displayProperty', 'readOnly', 'placeholder', 'isInputVisible'];
     protected _availableWidthCollection: number;
 
-    showSelector(popupOptions: IStackPopupOptions): void {
-        showSelector(this, popupOptions, false);
+    showSelector(popupOptions?: IStackPopupOptions): boolean {
+        return showSelector(this, popupOptions, false);
     }
 
     _calculateSizes(options: ILookupInputOptions): void {

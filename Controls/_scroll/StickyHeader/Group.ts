@@ -195,6 +195,9 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         }
     }
 
+    getHeaderContainer(): HTMLElement {
+        return this._container;
+    }
 
     protected _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
         event.stopImmediatePropagation();
@@ -221,7 +224,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
                 this._notify('stickyRegister', [{
                     id: this._index,
                     inst: this,
-                    container: this._container,position: data.position,
+                    position: data.position,
                     mode: data.mode,
                 }, true], {bubbling: true});
                 this._isRegistry = true;

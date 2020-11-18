@@ -7526,11 +7526,12 @@ define([
             assert.isOk(secondBaseControl._dndListController);
             assert.isOk(secondBaseControl._dndListController.getDragEntity());
             assert.isOk(secondBaseControl._dndListController.getDraggableItem());
+            assert.isOk(secondBaseControl._dndListController.getDragPosition());
             assert.equal(secondBaseControl._dndListController.getDraggableItem().getContents(), newRecord);
          });
 
          it('drag end', () => {
-            baseControl._dndListController = {
+            const dndController = {
                endDrag: () => undefined,
                getDragPosition: () => {
                   return {
@@ -7545,14 +7546,24 @@ define([
                   })
                })
             };
+            baseControl._dndListController = dndController;
 
-            baseControl._insideDragging = true;
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
             assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            baseControl._insideDragging = true;
+            baseControl._dndListController = dndController;
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+
+            assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
       });
 
@@ -8073,7 +8084,7 @@ define([
                return baseControl._beforeMount(newCfg).then(() => {
                   assert.isNotOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
-                  assert.isNotOk(baseControl._selectionController);
+                  assert.isOk(baseControl._selectionController);
                });
             });
          });
