@@ -77,7 +77,8 @@ define([
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption'
+                  testOptions: 'testValueOfOption',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
@@ -88,7 +89,7 @@ define([
          mover._beforeMount(options, contextOptions);
 
          assert.equal(mover._controller._popupOptions.template, 'testTemplateName');
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption', keyProperty: cfg.keyProperty });
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
          assert.equal(mover._source, 'testSource');
 
          stubLogger = sinon.stub(ui.Logger, 'warn');
@@ -98,33 +99,37 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         mover._beforeUpdate({
+         let options = {
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption1'
+                  testOptions: 'testValueOfOption1',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
-         }, {
+         };
+         mover._beforeUpdate(options, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption1', keyProperty: cfg.keyProperty});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
 
-         mover._beforeUpdate({
+         options = {
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption2'
+                  testOptions: 'testValueOfOption2',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
-         }, {
+         };
+         mover._beforeUpdate(options, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, {testOptions: 'testValueOfOption2', keyProperty: cfg.keyProperty});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
       });
 
       describe('mover methods', () => {
