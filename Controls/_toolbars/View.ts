@@ -470,13 +470,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
                 const root = item.get(this._options.keyProperty);
                 let menuSource = source;
 
-                /**
-                 * Если запись для выпадающего списка еще не были загружены,
-                 * то отдаем оригинальный источник вместо prefetchProxy
-                 */
-                if (this._items.getIndexByValue(this._options.parentProperty, root) === -1) {
-                    menuSource = this._options.source;
-                }
                 const config = this._getMenuConfigByItem(item, menuSource, root);
                 this._openMenu({
                     ...config,
