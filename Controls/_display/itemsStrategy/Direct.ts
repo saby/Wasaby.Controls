@@ -53,6 +53,13 @@ export default class Direct<S, T extends CollectionItem<S> = CollectionItem<S>> 
         this._options.unique = value;
     }
 
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор
+     */
+    set keyProperty(value: string): void {
+        this._options.keyProperty = value;
+    }
+
     // region IItemsStrategy
 
     get count(): number {

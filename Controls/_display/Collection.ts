@@ -2058,6 +2058,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setKeyProperty(keyProperty: string): void {
         this._$keyProperty = keyProperty;
+        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
         this.nextVersion();
     }
 
