@@ -4,7 +4,7 @@
  * <h2>Аргументы функции</h2>
  *
  * Функция на вход приниает объект с полями:
- * 
+ *
  * * source: SbisService - источник данных;
  * * filterButtonSource: Array - элементы {@link Controls/filter:Controller#filterButtonSource FilterButton};
  * * fastFilterSource: Array - элементы {@link Controls/filter:Controller#fastFilterSource FastFilter};
@@ -63,6 +63,7 @@ export interface ISourceConfig {
    sorting?: SortingObject;
    historyItems?: IHistoryItems;
    propStorageId?: string;
+   error?: Error;
 }
 
 const HISTORY_FILTER_TIMEOUT = 1000;
