@@ -125,6 +125,14 @@ export default class GridCollection<
         this._updateItemsColumns();
     }
 
+    protected _handleCollectionChange(action: string): void {
+        super._handleCollectionChange(action);
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+            this._updateItemsLadder();
+        }
+    }
+
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
         this._$ladder = GridLadderUtil.prepareLadder({
             columns: columns,
