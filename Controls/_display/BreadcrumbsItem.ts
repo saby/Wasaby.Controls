@@ -18,6 +18,7 @@ export interface IOptions<T> extends ICollectionItemOptions<T> {
  */
 export default class BreadcrumbsItem<T> extends CollectionItem<T> {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
+    readonly MarkableItem: boolean = false;
 
     protected _instancePrefix: 'breadcrumbs-item-';
     protected _$owner: Tree<T>;
