@@ -4272,6 +4272,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeBeforePaint();
             this._updateShadowModeBeforePaint = null;
         }
+
+        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+            _private.activateEditingRow(this);
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4405,9 +4409,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-        }
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
-            _private.activateEditingRow(this);
         }
     },
 
