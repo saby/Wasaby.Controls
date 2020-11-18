@@ -11,7 +11,7 @@
                             <ws:contentTemplate>
                                 <div class="demo-FilterSearch__listItem-wrapper">
                                     <span class="demo-FilterSearch__department"> {{itemTemplate.itemData.item.get('department')}} </span>
-                                    <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="demo-FilterSearch__iconDep icon-16 icon-Company icon-disabled"></span> (78)</span>
+                                    <span class="demo-FilterSearch__title">{{itemTemplate.itemData.item.get('owner')}}<span class="icon-16 icon-Company icon-disabled"></span> ({{itemTemplate.itemData.item.get('amount')}})</span>
                                 </div>
                             </ws:contentTemplate>
                         </ws:partial>

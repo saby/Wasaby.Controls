@@ -93,7 +93,11 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     private _updateGroupItems(): void {
         this._source.forEach((item) => {
-            this._groupItems[item.group] = item.value;
+            if (Array.isArray(item.value)) {
+                this._groupItems[item.group] = item.value[0] + ' - ' + item.value[1];
+            } else {
+                this._groupItems[item.group] = item.value;
+            }
         });
     }
 
