@@ -1715,6 +1715,19 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
+            
+            current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
+                if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
+                    const index = current.stickyProperties.indexOf(stickyProperty);
+                    const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
+                    if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                        index === 1 && !hasMainCell ||
+                        index === 0 && hasMainCell) || stickyProperty === undefined) {
+                        return false;
+                    }
+                }
+                return true;
+            }
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
@@ -1802,6 +1815,7 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
+                        shouldDrawLadderContent: current.shouldDrawLadderContent,
                         getLadderContentClasses: current.getLadderContentClasses,
                         hoverBackgroundStyle: self._options.hoverBackgroundStyle || 'default',
                         getVersion: function () {
