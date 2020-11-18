@@ -4,7 +4,7 @@
       <div class="controls-FilterViewPanel__group-content_theme-{{theme}}">
          {{item}}
       </div>
-      <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
+      <div title="{{collectionItem.isExpanded() ? 'Свернуть' : 'Развернуть'}}"
            class="controls-FilterViewPanel__groupExpander
               controls-icon
               controls-icon_size-s_theme-{{theme}}
