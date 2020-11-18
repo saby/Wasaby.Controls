@@ -165,6 +165,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._intersectionObserverController = null;
         }
         this._stickyHeaderController.destroy();
+        super._beforeUnmount();
     }
 
     private _initHeaderController(): void {
