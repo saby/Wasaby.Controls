@@ -2011,10 +2011,10 @@ var
 
                 column.getWrapperStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
-                    if (isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `${styles} width: ${containerSize}px;`;
                     }
-                    return styles
+                    return styles;
                 };
 
                 column.getContentClasses = (containerSize: number) => {
@@ -2026,7 +2026,7 @@ var
                 column.getContentStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
                     // При табличной верстке выводится td который игнорирует width. Ограничивать необходимо контент
-                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `width: ${containerSize}px;`;
                     }
                     return '';
