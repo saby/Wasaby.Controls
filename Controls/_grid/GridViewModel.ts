@@ -1704,7 +1704,7 @@ var
             };
             
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
-                if (!self.getDragItemData() && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
+                if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
                     const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (

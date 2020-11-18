@@ -108,7 +108,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         const index = stickyProperties.indexOf(stickyProperty);
         const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
 
-        if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+        if (!this.getOwner().getItemsDragNDrop() && stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
             index === 1 && !hasMainCell || index === 0 && hasMainCell) || stickyProperty === undefined) {
             return false;
         }

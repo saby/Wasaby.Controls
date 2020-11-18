@@ -581,6 +581,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemTemplateProperty: string;
 
+    protected _$itemsDragNDrop: boolean;
+
     protected _$multiSelectVisibility: string;
 
     protected _$multiSelectPosition: 'default' | 'custom';
@@ -2204,6 +2206,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
+    getItemsDragNDrop(): boolean {
+        return this._$itemsDragNDrop;
+    }
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
@@ -3809,6 +3814,7 @@ Object.assign(Collection.prototype, {
     _$keyProperty: '',
     _$displayProperty: '',
     _$itemTemplateProperty: '',
+    _$itemsDragNDrop: false,
     _$multiSelectVisibility: 'hidden',
     _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
