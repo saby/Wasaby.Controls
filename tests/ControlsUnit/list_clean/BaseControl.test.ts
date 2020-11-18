@@ -781,7 +781,18 @@ describe('Controls/list_clean/BaseControl', () => {
             const baseControl = new BaseControl(baseControlOptions);
             const mountResult = await baseControl._beforeMount(baseControlOptions);
             assert.isTrue(!mountResult);
-        })
+        });
+        it('_beforeMount keyProperty', async () => {
+            const baseControlOptions = {
+                source: new Memory({
+                    keyProperty: 'keyProperty',
+                    data: []
+                })
+            };
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyProperty');
+        });
     });
 
     describe('Edit in place', () => {
@@ -818,10 +829,15 @@ describe('Controls/list_clean/BaseControl', () => {
                 isEditing() {
                     return true;
                 },
-                updateOptions() {}
+                updateOptions() {
+                }
             };
 
-            return baseControl._beforeUpdate({...baseControlCfg, filter: {field: 'ASC'}, useNewModel: true}).then(() => {
+            return baseControl._beforeUpdate({
+                ...baseControlCfg,
+                filter: {field: 'ASC'},
+                useNewModel: true
+            }).then(() => {
                 assert.isTrue(isEditingCancelled);
             });
         });

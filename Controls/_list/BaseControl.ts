@@ -2188,9 +2188,9 @@ const _private = {
     },
 
     checkRequiredOptions(options) {
-        if (options.keyProperty === undefined) {
+        /*if (options.keyProperty === undefined) {
             Logger.warn('BaseControl: Option "keyProperty" is required.');
-        }
+        }*/
     },
 
     needBottomPadding(options, listViewModel) {
@@ -2348,7 +2348,7 @@ const _private = {
             ? self._listViewModel.getLast()?.getContents()
             : self._listViewModel.getLastItem();
 
-        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
+        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._keyProperty);
 
         self._wasScrollToEnd = true;
 
@@ -2981,7 +2981,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._options.keyProperty
+                        keyProperty: self._keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
@@ -3202,6 +3202,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Контроллер для удаления элементов из источника
     _removeController: null,
     _removedItems: [],
+    _keyProperty: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3228,7 +3229,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-
+        this._initKeyProperty(newOptions);
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
@@ -3383,7 +3384,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
                 const data = result.data || (new RecordSet<Model>({
-                    keyProperty: self._options.keyProperty,
+                    keyProperty: self._keyProperty,
                     rawData: []
                 }));
 
@@ -3436,6 +3437,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return result.addCallback(callback);
         } else {
             return callback(undefined);
+        }
+    },
+
+    _initKeyProperty(options) {
+        let keyProperty = options.keyProperty;
+        if (keyProperty === undefined) {
+            if (options.source && options.source.getKeyProperty) {
+                keyProperty = options.source.getKeyProperty();
+            }
+        }
+        if (keyProperty !== undefined) {
+            this._keyProperty = keyProperty;
+        } else {
+            Logger.warn('BaseControl: Option "keyProperty" is required.');
         }
     },
 
@@ -3788,8 +3803,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
-        if (newOptions.keyProperty !== this._options.keyProperty) {
-            this._listViewModel.setKeyProperty(newOptions.keyProperty);
+        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
+            this._initKeyProperty(newOptions);
+            this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -4036,7 +4052,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
-        const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        const currentItemIndex = items.getIndexByValue(this._keyProperty, key);
         const sourceController = _private.getSourceController(this, this._options);
 
         let reloadItemDeferred;
@@ -4066,7 +4082,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
-            filter[this._options.keyProperty] = [key];
+            filter[this._keyProperty] = [key];
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
                 if (items instanceof RecordSet) {
