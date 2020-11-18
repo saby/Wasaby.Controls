@@ -134,6 +134,9 @@ define(['Controls/_suggestPopup/Layer/__PopupContent', 'wml!Controls/_suggestPop
          var container = {};
 
          assert.equal(PopupContent.default._private.getSuggestWidth(target, container), 48);
+
+         container = null;
+         assert.equal(PopupContent.default._private.getSuggestWidth(target, container), 50);
          PopupContent.default._private.getBorderWidth = originGetBorderWidth;
       });
 
