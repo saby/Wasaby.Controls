@@ -106,7 +106,7 @@ describe('Controls/suggest', () => {
          assert.isTrue(stateNotifyed);
       });
 
-      it('Suggest::_close', () => {
+      it('Suggest::close', () => {
          let state;
          let isReady = true;
          let isCallCancel = false;
@@ -130,7 +130,7 @@ describe('Controls/suggest', () => {
             isReady: () => isReady,
             cancel: () => { isCallCancel = true; }
          };
-         inputContainer._close();
+         inputContainer.closeSuggest();
          assert.isFalse(state);
          assert.isFalse(isCallCancel);
 
@@ -140,7 +140,7 @@ describe('Controls/suggest', () => {
          assert.isNull(inputContainer._searchResult);
 
          isReady = false;
-         inputContainer._close();
+         inputContainer.closeSuggest();
          assert.isTrue(isCallCancel);
          assert.equal(inputContainer._dependenciesDeferred, null);
       });
