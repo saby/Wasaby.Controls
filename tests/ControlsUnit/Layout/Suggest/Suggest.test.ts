@@ -879,7 +879,7 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('Suggest::_beforeUpdate', () => {
+      it('Suggest::_beforeUpdate', async () => {
          const suggestComponent = getComponentObject({
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',

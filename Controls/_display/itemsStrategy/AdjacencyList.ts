@@ -268,6 +268,13 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
 
     readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор
+     */
+    set keyProperty(value: string): void {
+        this._options.keyProperty = value;
+    }
+
     get options(): ISourceOptions<S, T> {
         return this.source.options as ISourceOptions<S, T>;
     }
