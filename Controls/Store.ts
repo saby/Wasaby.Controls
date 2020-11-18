@@ -80,13 +80,13 @@ class Store implements IStore {
     }
 
     // обновляем название актуального контекста в зависимости от урла (сейчас это делает OnlineSbisRu/_router/Router)
-    updateStoreContext(contextName: string): void {
-        if ((Store._getState()[Store._getActiveContext()] || {}).searchValue) {
-            this._setValue('searchValue', '');
+    updateStoreContext(contextName: string, isSabyPage?: boolean): void {
+        if (isSabyPage && (Store._getState()[Store._getActiveContext()])) {
+            delete Store._getState()[Store._getActiveContext()];
         }
         Store._setActiveContext(contextName);
 
-        Store._notifySubscribers('_contextName', true);
+        this._notifySubscribers('_contextName', true);
     }
 
     private _setValue(propertyName: string, value: unknown, isGlobal?: boolean): void {
@@ -144,24 +144,31 @@ class Store implements IStore {
         const state = Store._getState();
         const [ctxName, propertyName]: string[] = id.split(ID_SEPARATOR);
 
-        state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce((acc, callbackObj) => {
-            if (callbackObj.id !== id) {
-                acc.push(callbackObj);
-            }
-            return acc;
-        }, []);
+        if (state[ctxName][propertyName]?.callbacks) {
+            state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce(
+                (acc, callbackObj) => {
+                    if (callbackObj.id !== id) {
+                        acc.push(callbackObj);
+                    }
+                    return acc;
+                },
+                []
+            );
 
-        Store._setState(state[ctxName], ctxName);
+            Store._setState(state[ctxName], ctxName);
+        }
     }
 
     private _notifySubscribers(propertyName: string, isGlobal?: boolean): void {
         const state = Store._getState()[Store._getContextName(isGlobal)] || {};
 
-        state['_' + propertyName].callbacks.forEach(
-            (callbackObject: IStateCallback) => {
-                return callbackObject.callbackFn(state[propertyName]);
-            }
-        );
+        if (state['_' + propertyName]?.callbacks) {
+            state['_' + propertyName].callbacks.forEach(
+                (callbackObject: IStateCallback) => {
+                    return callbackObject.callbackFn(state[propertyName]);
+                }
+            );
+        }
     }
 
     static _getState(): IState {
