@@ -79,6 +79,7 @@ class ComboBox extends BaseDropdown {
    protected _borderStyle: string = '';
    protected _countItems: number;
    protected _readOnly: boolean;
+   protected _selectedItem: Model;
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
@@ -95,6 +96,12 @@ class ComboBox extends BaseDropdown {
       this._controller = new Controller(this._getControllerOptions(options));
       this._borderStyle = this._getBorderStyle(options.borderStyle, options.validationStatus);
       return loadItems(this._controller, receivedState, options.source);
+   }
+
+   protected _afterMount(options: IComboboxOptions): void {
+      if (this._countItems === 1) {
+         this._selectedItemsChangedHandler([this._selectedItem]);
+      }
    }
 
    protected _beforeUpdate(newOptions: IComboboxOptions): void {
@@ -145,6 +152,9 @@ class ComboBox extends BaseDropdown {
 
    _dataLoadCallback(items: RecordSet<Model>): void {
       this._countItems = items.getCount();
+      if (this._countItems === 1) {
+         this._selectedItem = items.at(0);
+      }
       if (this._options.emptyText) {
          this._countItems += 1;
       }
