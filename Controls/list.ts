@@ -94,7 +94,6 @@ export {IMovableList} from 'Controls/_list/interface/IMovableList';
 
 export {RemoveController, IRemoveControllerOptions} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
-export {IMarkerListOptions} from 'Controls/_list/interface/IMarkerListOptions';
 export {IClickableView} from 'Controls/_list/interface/IClickableView';
 export {ISorting} from 'Controls/_interface/ISorting';
 export {IHierarchy} from 'Controls/_interface/IHierarchy';

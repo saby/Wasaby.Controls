@@ -14,6 +14,10 @@
  * @author Герасимов А.М.
  */
 
+export default interface IFilterPanel {
+    readonly '[Controls/_filterPopup/interface/IFilterPanel]': boolean;
+}
+
 /**
  * @typedef {Object} itemTpl
  * @property {String} templateName
