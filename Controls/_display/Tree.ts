@@ -244,6 +244,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return this._moveTo(true);
     }
 
+    setKeyProperty(keyProperty: string): void {
+        super.setKeyProperty(keyProperty);
+        const adjacencyList = this._composer.getInstance<AdjacencyListStrategy<S,T>>(AdjacencyListStrategy);
+        if (adjacencyList) {
+            adjacencyList.keyProperty = keyProperty;
+        }
+    }
+
     /**
      * Устанавливает текущим предыдущий элемент родительского узла
      * @return Есть ли предыдущий элемент в родительском узле
