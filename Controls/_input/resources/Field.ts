@@ -71,6 +71,7 @@ class Field<Value, ModelOptions>
     protected _model: BaseViewModel<Value, ModelOptions>;
     protected _template: TemplateFunction = template;
     protected _isBrowserPlatform: boolean = constants.isBrowserPlatform;
+    protected _inputKey: string;
 
     readonly '[Controls/input:IField]': boolean = true;
 
@@ -250,6 +251,9 @@ class Field<Value, ModelOptions>
             }
         }, this);
         this._fixBugs.beforeMount();
+        if (this._isBrowserPlatform) {
+            this._inputKey = '_inputKey_' + Date.now();
+        }
     }
 
     protected _afterMount(options: IFieldOptions<Value, ModelOptions>): void {
