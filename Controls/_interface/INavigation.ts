@@ -44,6 +44,26 @@ export type TNavigationSource = 'position' | 'page';
 export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 
 /**
+ * @typedef {Enum} CursorDirection
+ * @description Направление выборки при навигации по курсору.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
+ */
+
+/*
+ * @typedef {Enum} CursorDirection
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
+ */
+export enum CursorDirection {
+    backward = 'backward',
+    forward = 'forward',
+    bothways = 'bothways'
+}
+
+/**
  * @typedef {String} TNavigationDirection
  * @description Направление выборки для режима работы с источником данных <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor">Навигация по курсору</a>.
  * @variant forward Вниз.

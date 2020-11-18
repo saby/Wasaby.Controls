@@ -212,26 +212,7 @@ const editing = {
     CANCEL: 'Cancel'
 };
 
-/**
- * @typedef {Enum} CursorDirection
- * @description Направление выборки при навигации по курсору.
- * @variant forward Вниз.
- * @variant backward Вверх.
- * @variant bothways В обоих направлениях.
- */
-
-/*
- * @typedef {Enum} CursorDirection
- * @variant forward loading data after positional record.
- * @variant backward loading data before positional record.
- * @variant bothways loading data in both directions relative to the positional record.
- */
-export enum CursorDirection {
-    backward = 'backward',
-    forward = 'forward',
-    bothways = 'bothways'
-}
-
 import {groupConstants} from './_list/Controllers/Grouping';
+import {CursorDirection} from './_interface/INavigation';
 
-export {groupConstants, editing};
+export {CursorDirection, groupConstants, editing};
