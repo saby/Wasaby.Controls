@@ -127,7 +127,7 @@ export {
     ItemActionsTemplate,
     _swipeActionTemplate,
     SwipeTemplate
-}
+};
 
 // endregion @deprecated
 
@@ -180,3 +180,39 @@ export {
     ScrollController,
     IListNavigation
 };
+
+/**
+ * Константы:
+ * - groupConstants.hiddenGroup — константа для определения элемента hiddenGroup в {@link Controls/interface/IGroupedList#groupProperty groupProperty};
+ * - editing.CANCEL — константа, которую можно вернуть в {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} для отмены редактирования.
+ * - CursorDirection - enum, направление выборки при навигации по курсору.
+ *
+ * @public
+ */
+
+/*
+ * Constants
+ * <ul>
+ *    <li>
+ *       groupConstants.hiddenGroup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGroupedList#groupProperty groupProperty}
+ *    </li>
+ *    <li>
+ *       editing.CANCEL - Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel editing
+ *    </li>
+ *    <li>
+ *       CursorDirection - enum, navigation direction variants for cursor navigation
+ *    </li>
+ * </ul>
+ *
+ * @class Controls/list
+ * @public
+ */
+
+const editing = {
+    CANCEL: 'Cancel'
+};
+
+import {groupConstants} from './_list/Controllers/Grouping';
+import {CursorDirection} from './_interface/INavigation';
+
+export {CursorDirection, groupConstants, editing};
