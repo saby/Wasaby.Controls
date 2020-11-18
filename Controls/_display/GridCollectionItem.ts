@@ -30,10 +30,6 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
                    style: string = 'default',
                    cursor: string = 'pointer',
                    clickable: boolean = true): string {
-        const navigation = this.getOwner().getNavigation();
-        const isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getOwner().getHasMoreData()) &&
-            (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
-
         let itemClasses = `controls-ListView__itemV ${this._getCursorClasses(cursor, clickable)}`;
 
         itemClasses += ` controls-Grid__row controls-Grid__row_${style}_theme-${theme}`;
@@ -42,11 +38,17 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             itemClasses += ` controls-Grid__row_highlightOnHover_${style}_theme-${theme}`;
         }
 
-        if (isLastItem) {
+        if (this.isLastItem()) {
             itemClasses += ' controls-Grid__row_last';
         }
 
         return itemClasses;
+    }
+
+    isLastItem(): boolean {
+        const navigation = this.getOwner().getNavigation();
+        return (!navigation || navigation.view !== 'infinity' || !this.getOwner().getHasMoreData()) &&
+            (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
     }
 
     getColumns(): Array<GridColumn<T>> {
