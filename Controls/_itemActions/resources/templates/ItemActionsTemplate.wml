@@ -15,6 +15,7 @@
                     template="wml!Controls/_itemActions/resources/templates/ItemActionsFor"
                     itemData="{{itemData}}"
                     getTooltip="{{getTooltip}}"
+                    actionPadding="{{actionPadding}}"
                     actionStyle="{{actionStyle}}"
                     actionMode="{{actionMode}}"
                     iconStyle="{{iconStyle}}"
