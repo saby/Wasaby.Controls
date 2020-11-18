@@ -16,7 +16,7 @@
    3. После монтирования в DOM, контрол берёт на себя работу со значением в поле, используя свойство value на node.
 -->
 <ws:if data="{{isBrowserPlatform}}">
-   <ws:partial template="{{content}}" attr:defaultValue="{{value ? value : undefined}}"/>
+   <ws:partial attr:key="{{ inputKey }}" template="{{content}}" attr:defaultValue="{{value ? value : undefined}}"/>
 </ws:if>
 <ws:else>
    <ws:partial template="{{content}}" attr:value="{{value ? value : undefined}}"/>
