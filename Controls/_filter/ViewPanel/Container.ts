@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/ViewPanel/Container';
+
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filter:ViewPanel}. Обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:ViewPanel}.
  * @class Controls/_filter/ViewPanel/Container
@@ -18,7 +19,7 @@ export default class Container extends Control<IControlOptions> {
      * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
      * @param {Object} items Новые элементы.
      */
-    protected _itemsChanged(event: Event, items): void {
+    protected _itemsChanged(event: Event, items: object[]): void {
        event.stopPropagation();
        this._notify('filterItemsChanged', [items], {bubbling: true});
     }

@@ -1,8 +1,8 @@
-<Controls.filter:Controller bind:filter="_filterSearch" filterButtonSource="{{_filterButtonData}}">
+<Controls.filter:Controller filterButtonSource="{{_filterButtonData}}">
     <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
         <div class="controlsDemo__flexRow">
             <Controls.filter:ViewPanelContainer>
-                <Controls.filter:ViewPanel attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
+                <Controls.filter:ViewPanel attr:class="controls-demo__filterButton"/>
             </Controls.filter:ViewPanelContainer>
             <Controls.list:Container>
                 <Controls.list:View emptyTemplate="Не найдено">
