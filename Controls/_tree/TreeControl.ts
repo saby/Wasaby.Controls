@@ -133,7 +133,7 @@ const _private = {
         const model = self._children.baseControl.getViewModel();
         const collapsedItems = [];
 
-        if (!isEqual(oldExpandedItems, newExpandedItems)) {
+        if (!isEqual(oldExpandedItems, newExpandedItems) && oldExpandedItems instanceof Array && newExpandedItems instanceof Array) {
             const expandedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldExpandedItems, newExpandedItems);
             if (expandedItemsDiff.removed) {
                 const removedExpandedItems = expandedItemsDiff.removed.map((key) => model.getItemBySourceKey(key));
@@ -141,7 +141,7 @@ const _private = {
             }
         }
 
-        if (!isEqual(oldCollapsedItems, newCollapsedItems)) {
+        if (!isEqual(oldCollapsedItems, newCollapsedItems) && oldCollapsedItems instanceof Array && newCollapsedItems instanceof Array) {
             const collapsedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldCollapsedItems, newCollapsedItems);
             if (collapsedItemsDiff.added) {
                 const addedCollapsedItems = collapsedItemsDiff.added.map((key) => model.getItemBySourceKey(key));
