@@ -2,17 +2,17 @@ import GridColumn from './GridColumn';
 import { TemplateFunction } from 'UI/Base';
 
 export default class GridCheckboxColumn<T> extends GridColumn<T> {
-    getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
+    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         let wrapperClasses = '';
 
         const topPadding = this._$owner.getTopPadding();
 
-        wrapperClasses += this._getWrapperBaseClasses(theme, style);
+        wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
         wrapperClasses += ' js-controls-ListView__notEditable' +
             ' js-controls-ColumnScroll__notDraggable' +
-            ' controls-GridView__checkbox_theme-default' +
-            ' controls-GridView__checkbox_position-default_theme-default' +
+            ` controls-GridView__checkbox_theme-${theme}` +
+            ` controls-GridView__checkbox_position-default_theme-${theme}` +
             ` controls-Grid__row-cell-background-hover-default_theme-${theme}` +
             ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}_theme-${theme}`;
         return wrapperClasses;

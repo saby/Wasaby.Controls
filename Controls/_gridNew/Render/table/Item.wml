@@ -1,6 +1,6 @@
 <tr attr:class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
    <ws:for data="gridColumn in item.getColumns()">
-      <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style) }}"
+      <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
            attr:style="{{ gridColumn.getWrapperStyles() }}">
          <div if="{{ gridColumn.shouldDisplayMarker(marker, markerPosition) }}" attr:class="{{ gridColumn.getMarkerClasses(theme, style, markerPosition) }}"></div>
          <div attr:class="{{ gridColumn.getContentClasses(theme, cursor, highlightOnHover) }}"
