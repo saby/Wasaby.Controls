@@ -63,7 +63,7 @@ export default class extends Control {
                 group: 'Ответственный',
                 name: 'owner',
                 resetValue: 'По ответственному',
-                value: '0',
+                value: 'По ответственному',
                 editorTemplateName: 'Controls/filter:ListEditor',
                 textValue: '',
                 editorOptions: {

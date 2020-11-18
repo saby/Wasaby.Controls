@@ -5,7 +5,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {object} from 'Types/util';
 import {GroupItem} from 'Controls/display';
-import {Model} from 'Types/entity';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами ".
@@ -19,19 +18,23 @@ import {Model} from 'Types/entity';
  *
  */
 
+interface IViewPanelOptions {
+    source: object[];
+}
+
 export default class ViewPanel extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _source: object[] = null;
     protected _editingObject: object = {};
     protected _groupItems: object = {};
 
-    protected _beforeMount(options): void {
+    protected _beforeMount(options: IViewPanelOptions): void {
         this._source = this._getSource(options.source);
         this._updateGroupItems();
         this._updateEditingObject();
     }
 
-    protected _beforeUpdate(newOptions): void {
+    protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         this._source = this._getSource(newOptions.source);
         this._updateGroupItems();
         this._updateEditingObject();
