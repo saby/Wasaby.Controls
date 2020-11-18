@@ -945,7 +945,9 @@ TreeControl.getDefaultOptions = () => {
         columns: DEFAULT_COLUMNS_VALUE,
         selectDescendants: true,
         selectAncestors: true,
-        expanderPosition: 'default'
+        expanderPosition: 'default',
+        expandedItems: [],
+        collapsedItems: []
     };
 };
 
