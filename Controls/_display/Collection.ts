@@ -36,6 +36,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import SearchSeparator from "./SearchSeparator";
+import {INavigationOptionValue} from '../_interface/INavigation;
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -105,6 +106,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
+    navigation: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -623,6 +625,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$markerVisibility: string;
 
+    protected _$navigation: INavigationOptionValue;
+
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
@@ -739,6 +743,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
 
+        this._$navigation = options.navigation;
         this._$filter = this._$filter || [];
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
@@ -913,6 +918,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId);
     }
 
+    /**
+     * Возвращает парамметры для навигации
+     * @return {INavigationOptionValue}
+     */
+    getNavigation(): INavigationOptionValue {
+        return this._$navigation;
+    }
     /**
      * Возвращает энумератор для перебора элементов проекции
      * @return {Controls/_display/CollectionEnumerator}

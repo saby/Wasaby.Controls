@@ -29,8 +29,8 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
                    theme: string = 'default',
                    style: string = 'default',
                    cursor: string = 'pointer',
-                   clickable: boolean = true,
-                   navigation: INavigationOptionValue = null): string {
+                   clickable: boolean = true): string {
+        const navigation = this.getOwner().getNavigation();
         const isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getOwner().getHasMoreData()) &&
             (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
 
