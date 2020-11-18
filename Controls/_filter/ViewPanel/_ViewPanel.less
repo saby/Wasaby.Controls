@@ -22,6 +22,12 @@
    cursor: pointer;
 }
 
+.controls-FilterViewPanel__applyButton_theme-@{themeName}:hover,
+.controls-FilterViewPanel__resetButton_theme-@{themeName}:hover {
+   text-decoration: underline;
+   color: @button_color-hover_filterViewPanel;
+}
+
 .controls-FilterEditors__numberRange_theme-@{themeName} {
    display: flex;
    flex-direction: row;
@@ -34,8 +40,13 @@
 }
 
 .controls-FilterViewPanel__group-content_theme-@{themeName} {
+   cursor: pointer;
    color: @group_color_filterViewPanel;
    font-size: @group_font-size_filterViewPanel;
+}
+
+.controls-FilterViewPanel__group-content_theme-@{themeName}:hover {
+   color: @button_color-hover_filterViewPanel;
 }
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName} {
