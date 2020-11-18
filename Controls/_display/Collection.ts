@@ -583,6 +583,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemTemplateProperty: string;
 
+    protected _$itemsDragNDrop: boolean;
+
     protected _$multiSelectVisibility: string;
 
     protected _$multiSelectPosition: 'default' | 'custom';
@@ -624,6 +626,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$itemActionsProperty: string;
 
     protected _$markerVisibility: string;
+
+    protected _$style: string;
 
     protected _$navigation: INavigationOptionValue;
 
@@ -2070,6 +2074,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setKeyProperty(keyProperty: string): void {
         this._$keyProperty = keyProperty;
+        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
         this.nextVersion();
     }
 
@@ -2216,6 +2221,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
+    getItemsDragNDrop(): boolean {
+        return this._$itemsDragNDrop;
+    }
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
@@ -2347,6 +2355,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getTheme(): string {
         return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
     }
 
     getHoverBackgroundStyle(): string {
@@ -3821,6 +3833,7 @@ Object.assign(Collection.prototype, {
     _$keyProperty: '',
     _$displayProperty: '',
     _$itemTemplateProperty: '',
+    _$itemsDragNDrop: false,
     _$multiSelectVisibility: 'hidden',
     _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
@@ -3837,6 +3850,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

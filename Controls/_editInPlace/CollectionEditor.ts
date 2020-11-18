@@ -137,13 +137,15 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         // У каждого элемента дерева есть родитель. Если его нет, значит конфигурация добавляемого элемента
         // ошибочна. Добавление записи не сможет начаться, если родительская запись отсутствует в дереве.
         // Родительский элемент может быть корнем, как null, так и реальной записью.
+        // Таким образом, нужно проверить, что ключ корня задан в допустимом формате, а запись с таким ключом
+        // либо присутствует в коллекции, либо является ее корнем.
         if (this._editingItem instanceof TreeItem) {
             const parentKey = item.get(this._options.collection.getParentProperty());
+            const collectionRootKey = this._options.collection.getRoot().getContents();
             if (
-                parentKey !== null &&
-                (
-                    this._options.collection.getRoot().getContents() !== parentKey &&
-                    !this._options.collection.getItemBySourceKey(parentKey)
+                !this._isValidRootType(parentKey) || !(
+                    this._options.collection.getItemBySourceKey(parentKey) ||
+                    collectionRootKey === parentKey
                 )
             ) {
                 throw Error(
@@ -233,6 +235,10 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
         }
 
         return next;
+    }
+
+    private _isValidRootType(root: unknown): boolean {
+        return root === null || typeof root !== 'undefined';
     }
 
     private _throwEditingItemMissingError(item: Model): never {
