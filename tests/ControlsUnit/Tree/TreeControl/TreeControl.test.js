@@ -1627,7 +1627,7 @@ define([
          treeControl.saveOptions(cfg);
          treeControl._children = {
             baseControl: {
-               _options: {},
+               _options: {markerVisibility: 'hidden'},
                getViewModel: function() {
                   return treeGridViewModel;
                },
