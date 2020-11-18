@@ -21,7 +21,6 @@ export interface IVirtualScrollCollection extends IBaseCollection<unknown> {
     getViewIterator(): IVirtualScrollViewIterator;
     getCount(): number;
     getEnumerator(): IVirtualScrollEnumerator;
-    isStickyMarkedItem(): boolean;
 }
 
 export function setup(collection: IVirtualScrollCollection): void {
