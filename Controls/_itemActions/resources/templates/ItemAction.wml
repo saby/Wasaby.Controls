@@ -7,7 +7,8 @@
             {{((action.showIcon && !action.showTitle) ? ('controls-itemActionsV__action-area_size') : '')}}
             {{actionMode === 'adaptive' ? 'controls-itemActionsV_action_adaptive'}}"
           attr:title="{{action.tooltip}}"
-      on:mousedown="_onItemActionMouseDown(action, itemData)"
+          on:mousedown="_onItemActionMouseDown(action, itemData)"
+          on:click="_onItemActionClick()"
           attr:ws-no-focus="true">
         <ws:if data="{{action.showIcon}}">
             <div attr:class="{{action.icon}} controls-itemActionsV__action_icon_size_{{size}}_theme-{{theme}} {{action.showTitle ? ' controls-itemActionsV__icon-with-title_theme-' + theme}}"></div>
