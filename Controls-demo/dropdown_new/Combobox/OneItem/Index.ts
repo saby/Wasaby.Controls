@@ -14,7 +14,6 @@ export default class extends Control {
                 {key: 1, title: 'Ярославль'}
             ]
         });
-        this._selectedKey = 1;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

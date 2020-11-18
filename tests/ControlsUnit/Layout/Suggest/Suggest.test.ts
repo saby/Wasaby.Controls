@@ -459,7 +459,7 @@ describe('Controls/suggest', () => {
             return Promise.resolve(null);
          };
          const loadSpy = sandbox.stub(inputContainer, '_loadHistoryKeys').callsFake(() => {
-            inputContainer._historyLoad = 'notNull';
+            inputContainer._historyLoad = new Deferred();
             return Promise.resolve();
          });
 
@@ -467,6 +467,12 @@ describe('Controls/suggest', () => {
          await inputContainer._inputActivated();
 
          assert.isTrue(loadSpy.calledOnce);
+
+         inputContainer._sourceController.cancelLoading();
+         inputContainer._historyLoad = Deferred.success('testResult');
+         await inputContainer._inputActivated();
+
+         assert.isTrue(loadSpy.calledThrice);
 
          sandbox.restore();
       });
@@ -873,7 +879,7 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('Suggest::_beforeUpdate', () => {
+      it('Suggest::_beforeUpdate', async () => {
          const suggestComponent = getComponentObject({
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',
