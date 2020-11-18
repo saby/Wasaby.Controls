@@ -75,6 +75,14 @@ export class InputActivationHelper {
             }
         } else if (this._paramsForFastEdit) {
             const input = this._paramsForFastEdit.container.querySelector(this._paramsForFastEdit.selector);
+            if (!input) {
+                /*
+                Если не удалось найти input, на который нужно навести фокус, то пытаемся найти 1 найденый input
+                 */
+                const selectors = this._paramsForFastEdit.selector.split(' ');
+                const selector = `${selectors[0]} ${selectors[selectors.length - 1]}`;
+                input = this._paramsForFastEdit.container.querySelector(selector);
+            }
             if (input) {
                 input.focus();
                 reset();
