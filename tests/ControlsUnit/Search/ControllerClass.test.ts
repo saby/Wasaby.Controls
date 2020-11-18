@@ -179,6 +179,29 @@ describe('Controls/search:ControllerClass', () => {
         });
     });
 
+    it('update with new root', () => {
+        const searchOptions = {...getDefaultOptions(), ...{ root: 'startRoot', searchValue: 'search'}};
+        let searchStarted = false;
+        const options = {
+            searchValue: '',
+            root: 'newRoot'
+        };
+        const searchController = new ControllerClass(searchOptions, {});
+        searchController._dataOptions = {};
+        const context = {
+            dataOptions: {
+                source: getMemorySource()
+            }
+        };
+        searchController._startSearch = () => {
+            searchStarted = true;
+        };
+
+        searchController.update(options, context);
+        assert.equal(searchController._searchValue, '');
+        assert.isFalse(searchStarted);
+    });
+
     it('update with new viewMode', () => {
         const searchController = new ControllerClass(getDefaultOptions(), {});
         const options = {
