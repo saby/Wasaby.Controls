@@ -353,13 +353,13 @@ var _private = {
         });
     },
 
-    reload: function(self, onlyChangedItems: boolean = false, hasSimplePanel = true) {
+    reload: function(self, onlyChangedItems: boolean = false, hasSimplePanel = true, force?: boolean) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 if (!onlyChangedItems || _private.isItemChanged(item)) {
                     if (hasSimplePanel) {
-                        if (!item.textValue) {
+                        if (!item.textValue || force) {
                             const result = _private.loadItems(self, item);
                             pDef.push(result);
                         } else {
@@ -723,11 +723,11 @@ var Filter = Control.extend({
             _private.resolveItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
-                resultDef = _private.reload(this, null, newOptions.panelTemplateName).addCallback(() => {
+                resultDef = _private.reload(this, null, newOptions.panelTemplateName, true).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._source);
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
-                resultDef = _private.reload(this,null, newOptions.panelTemplateName);
+                resultDef = _private.reload(this,null, newOptions.panelTemplateName, true);
             } else if (this._loadDeferred && !this._loadDeferred.isReady()) {
                 resultDef = this._loadDeferred.addCallback((): void => {
                     _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
