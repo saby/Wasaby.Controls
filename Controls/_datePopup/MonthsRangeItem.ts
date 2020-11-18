@@ -21,7 +21,7 @@ const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
  *
  * @class Controls/_datePopup/MonthsRangeItem
  * @extends Core/Control
- * 
+ *
  * @author Красильников А.С.
  * @private
  */
@@ -104,7 +104,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (this._quarterSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfQuarter(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfMonth(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 
@@ -120,11 +121,21 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
+    _calculateRangeSelectedCallback: function(startValue, endValue) {
+        if (this._options.rangeSelectedCallback) {
+            const ranges = this._options.rangeSelectedCallback(startValue, endValue);
+            startValue = ranges[0];
+            endValue = ranges[1];
+        }
+        return [startValue, endValue];
+    },
+
     _onHalfYearClick: function (e, date) {
         if (this._halfyearSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfHalfyear(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfMonth(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 
