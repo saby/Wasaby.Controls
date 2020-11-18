@@ -86,18 +86,7 @@ class Store implements IStore {
         }
         Store._setActiveContext(contextName);
 
-        // todo: переписать после создания API глобальных подписок
-        this._notifyGlobal('_contextName', contextName);
-    }
-
-    private _notifyGlobal(propertyName: string, contextName: string): void{
-        //  нотифай о смене contextName подписчиков глобальных
-        const globalState = Store._getState()['global'];
-        if (globalState && globalState['_' + propertyName]) {
-            globalState['_' + propertyName].callbacks.forEach(function(callbackObject) {
-                return callbackObject.callbackFn(contextName);
-            });
-        }
+        Store._notifySubscribers('_contextName', true);
     }
 
     private _setValue(propertyName: string, value: unknown, isGlobal?: boolean): void {
