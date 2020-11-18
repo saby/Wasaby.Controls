@@ -14,14 +14,6 @@
  * @author Герасимов А.М.
  */
 
-/*
- * Interface for filter panel
- *
- * @interface Controls/_filterPopup/interface/IFilterPanel
- * @public
- * @author Герасимов А.М.
- */
-
 /**
  * @typedef {Object} itemTpl
  * @property {String} templateName
