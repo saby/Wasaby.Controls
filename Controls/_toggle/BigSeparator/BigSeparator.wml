@@ -1,4 +1,4 @@
-<div class="ws-flexbox ws-flex-column ws-align-items-center controls-BigSeparator-container-size-{{_options.iconSize}}">
+<div class="ws-flexbox ws-flex-column controls-BigSeparator-container-size-{{_options.iconSize}}">
     <div on:click="_clickHandler()" class="controls-BigSeparator controls-BigSeparator-size-{{_options.iconSize}}">
         <ws:if data="{{_options.readOnly}}">
             <ws:if data="{{_options.value}}">
