@@ -384,12 +384,16 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                     ], [
                         this._state.scrollTop,
                         this._state.scrollLeft,
-                        this._hasUnrenderedContent || !!this._getVirtualScrollTop()
+                        this._canVirtualScrollTop()
                     ]);
             }
 
             this._generateCompatibleEvents();
         }
+    }
+
+    private _canVirtualScrollTop(): boolean {
+        return this._hasUnrenderedContent.top || !!this._getVirtualScrollTop();
     }
 
     _generateEvent(eventType: string, params: object[], notifyParams: any[] = params): void {
