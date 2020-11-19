@@ -56,6 +56,7 @@
             <Controls._datePopup.MonthsRange
                attr:class="controls-DateRangeBigChoose__months-month-wrapper"
                monthClickable="{{_monthStateEnabled}}"
+               rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
                bind:position="_displayedDate"
                dateConstructor="{{_options.dateConstructor}}"
                quantum="{{_options.quantum}}"
@@ -87,6 +88,7 @@
                            controls-PeriodDialog__body controls-PeriodDialog__body_theme-{{_options.theme}}"
                on:fixedPeriodClick="_dateRangeFixedPeriodClick()"
                bind:position="_displayedDate"
+               rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
                selectionType="{{_options.selectionType}}"
                quantum="{{_options.quantum}}"
                calendarSource="{{_options.calendarSource}}"
