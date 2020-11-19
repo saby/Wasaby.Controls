@@ -116,7 +116,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _canScroll: boolean = false;
     private _scrollState: IScrollState = {
         canVerticalScroll: false,
-        verticalPosition: detection.isMobileIOS ? SCROLL_POSITION.START : null
+        verticalPosition: detection.isMobileIOS ? SCROLL_POSITION.START : null,
+        hasUnrenderedContent: {
+            top: false,
+            bottom: false
+        }
     };
     private _negativeScrollTop: boolean = false;
 
@@ -328,7 +332,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._canScroll = scrollState.canVerticalScroll;
         this._negativeScrollTop = scrollState.scrollTop < 0;
 
-        if (this._scrollState.verticalPosition !== scrollState.verticalPosition) {
+        if (this._scrollState.verticalPosition !== scrollState.verticalPosition ||
+            this._scrollState.hasUnrenderedContent.top !== scrollState.hasUnrenderedContent.top ||
+            this._scrollState.hasUnrenderedContent.bottom !== scrollState.hasUnrenderedContent.bottom) {
             changed = true;
         }
 
@@ -647,6 +653,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+
+        if (this._scrollState.hasUnrenderedContent[fixedPosition]) {
+            return true;
+        }
 
         const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
