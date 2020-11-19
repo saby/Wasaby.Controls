@@ -384,8 +384,9 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
 
             // Forget unused breadcrumbs
             const breadcrumbsToDelete = [];
+            const root = display && display.getRoot();
             treeItemToBreadcrumbs.forEach((value, key) => {
-                if (items.indexOf(key) === -1) {
+                if (items.indexOf(key) === -1 && !(value instanceof SearchSeparator && value.getSource() === root)) {
                     breadcrumbsToDelete.push(key);
                 }
             });
