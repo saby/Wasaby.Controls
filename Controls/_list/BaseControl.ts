@@ -156,7 +156,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
-const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
+const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
@@ -1690,7 +1690,7 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
-                } else {
+                } else if (typeof moreMetaCount === 'number') {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -2667,9 +2667,9 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
+    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, afterMount: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        if (newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) {
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !afterMount) {
             return newMarkedKey;
         }
 
@@ -3468,9 +3468,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
+    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
+        if (scrollTop !== undefined) {
+            this._scrollTop = scrollTop;
+        }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
@@ -3656,7 +3659,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
             if (newMarkedKey !== this._options.markedKey) {
-                _private.changeMarkedKey(this, newMarkedKey);
+                _private.changeMarkedKey(this, newMarkedKey, true);
             }
         }
 
@@ -4319,7 +4322,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
                 });
-            }, CHECK_TRIGGERS_DELAY_IF_IE);
+            }, CHECK_TRIGGERS_DELAY_IF_NEED);
         });
     },
 
@@ -4593,8 +4596,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
                 const collapsedGroups = collection.getCollapsedGroups() || [];
-                if (collapsedGroups.indexOf(groupId) === -1) {
-                    collapsedGroups.push(groupId);
+                const groupIndex = collapsedGroups.indexOf(groupId);
+                if (groupIndex === -1) {
+                    if (!needExpandGroup) {
+                        collapsedGroups.push(groupId);
+                    }
+                } else if (needExpandGroup) {
+                    collapsedGroups.splice(groupIndex, 1);
                 }
                 const changes = {
                     changeType: needExpandGroup ? 'expand' : 'collapse',
@@ -5730,7 +5738,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.scrollMoveSyncHandler(params);
                 break;
             case 'viewportResize':
-                this.viewportResizeHandler(params.clientHeight, params.rect);
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
                 break;
             case 'virtualScrollMove':
                 _private.throttledVirtualScrollPositionChanged(this, params);

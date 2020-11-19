@@ -115,6 +115,10 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
         return isChanged;
     }
 
+    getVisibilityByInnerComponents(): SHADOW_VISIBILITY {
+        return this._visibilityByInnerComponents;
+    }
+
     _updateEnabled(): boolean {
         const isEnabled: boolean = this._getShadowEnable();
         let isChanged = false;
