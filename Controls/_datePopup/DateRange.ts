@@ -50,7 +50,7 @@ const _private = {
  *
  * @class Controls/_datePopup/DateRange
  * @extends Core/Control
- * 
+ *
  * @author Красильников А.С.
  * @private
  */
@@ -93,7 +93,14 @@ var Component = BaseControl.extend([EventProxy], {
         let date;
         if (this._monthSelectionEnabled) {
             date = new this._options.dateConstructor(yearDate.getFullYear(), month);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfMonth(date)]);
+            let startValue = date;
+            let endValue = dateUtils.getEndOfMonth(date);
+            if (this._options.rangeSelectedCallback) {
+                const ranges = this._options.rangeSelectedCallback(startValue, endValue);
+                startValue = ranges[0];
+                endValue = ranges[1];
+            }
+            this._notify('fixedPeriodClick', [startValue, endValue]);
         }
     },
 

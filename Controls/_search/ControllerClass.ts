@@ -53,6 +53,7 @@ export default class SearchControllerClass {
     private _viewMode: string = '';
     private _previousViewMode: string = '';
     private _storeCallbackId: string = null;
+    private _storeCtxCallbackId: string = null;
     private _root: Key;
     private _searchValue: string = '';
     private _inputSearchValue: string = '';
@@ -166,6 +167,7 @@ export default class SearchControllerClass {
         this._path = null;
         if (this._storeCallbackId) {
             Store.unsubscribe(this._storeCallbackId);
+            Store.unsubscribe(this._storeCtxCallbackId);
             Store.dispatch('searchValue', undefined);
         }
     }
@@ -223,7 +225,7 @@ export default class SearchControllerClass {
         this._setMisspellValue('');
     }
 
-    search(value: string, force: boolean): Promise<ISearchCallbackResult>|void {
+    search(value: string, force?: boolean): Promise<ISearchCallbackResult>|void {
         const searchPromise = this._startSearch(value, force);
         this._setInputSearchValue(value);
         return searchPromise;
@@ -251,7 +253,19 @@ export default class SearchControllerClass {
     }
 
     private _observeStore(): void {
-        this._storeCallbackId = Store.onPropertyChanged('searchValue', (searchValue) => {
+        this._storeCallbackId = this._createNewStoreObserver();
+        this._storeCtxCallbackId = Store.onPropertyChanged(
+            '_contextName',
+            () => {
+                Store.unsubscribe(this._storeCallbackId);
+                this._storeCallbackId = this._createNewStoreObserver();
+            },
+            true
+        );
+    }
+
+    private _createNewStoreObserver(): string {
+        return Store.onPropertyChanged('searchValue', (searchValue: string) => {
             this.search(searchValue);
         });
     }
