@@ -7727,6 +7727,26 @@ define([
             return baseControl._beforeMount(cfg);
          });
 
+         describe('mount', () => {
+            let newBaseControl;
+            it('beforeMount', () => {
+               const newCfg = { ...cfg };
+               newBaseControl = new lists.BaseControl();
+               newBaseControl.saveOptions(newCfg);
+               return newBaseControl._beforeMount(newCfg).then(() => {
+                  const viewModel = newBaseControl.getViewModel();
+                  assert.isTrue(viewModel.getItemBySourceKey(1).isMarked());
+               });
+            });
+
+            it('afterMount', () => {
+               const notifySpy = sinon.spy(newBaseControl, '_notify');
+               newBaseControl._afterMount();
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            });
+         });
+
          describe('_private.changeMarkedKey', () => {
             it('notify return promise', () => {
                baseControl._notify = (eventName, params) => {
