@@ -9,7 +9,7 @@ import {default as Store} from 'Controls/Store';
  * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * 
+ *
  * @public
  * @remark
  * Полезные ссылки:
@@ -30,7 +30,7 @@ import {default as Store} from 'Controls/Store';
  * @class Controls/_search/Input/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * 
+ *
  * @public
  */
 
@@ -38,6 +38,7 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
 
    _template: template,
    _value: '',
+   _contextCallbackId: '',
 
    _beforeMount: function (newOptions) {
       this._value = newOptions.inputSearchValue;
@@ -46,6 +47,24 @@ var SearchContainer = Control.extend(/** @lends Controls/_search/Input/Container
    _beforeUpdate: function (newOptions) {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._value = newOptions.inputSearchValue;
+      }
+   },
+
+   _afterMount: function () {
+      if (this._options.useStore) {
+         this._contextCallbackId = Store.onPropertyChanged(
+             '_contextName',
+             () => {
+                this._value = this._options.inputSearchValue;
+             },
+             true
+         );
+      }
+   },
+
+   _beforeUnmount: function () {
+      if (this._contextCallbackId) {
+         Store.unsubscribe(this._contextCallbackId);
       }
    },
 
