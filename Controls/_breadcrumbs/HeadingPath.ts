@@ -152,7 +152,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
     }
     private _calculateBreadCrumbsToDraw(items: Record[], options: IBreadCrumbsOptions, getTextWidth: Function = this._getTextWidth): void {
         if (items && items.length > 0) {
-            const width = options.containerWidth - this._getTextWidth(this._backButtonCaption, '3xl') - SIZES.ARROW_WIDTH - SIZES.HOME_BUTTON_WIDTH;
+            const width = options.containerWidth - getTextWidth(this._backButtonCaption, '3xl') - SIZES.ARROW_WIDTH - SIZES.HOME_BUTTON_WIDTH;
             this._visibleItems = this.calculateBreadcrumbsUtil.calculateItemsWithDots(items, options, 0, width, this._dotsWidth, getTextWidth);
             this._visibleItems[0].hasArrow = false;
             this._indexEdge = 0;
