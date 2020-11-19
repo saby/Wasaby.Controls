@@ -2239,15 +2239,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-        this._notifyBeforeCollectionChange();
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [strategy.avatarItem],
-            avatarStartIndex,
-            [],
-            0
-        );
-        this._notifyAfterCollectionChange();
+
+        // если элемент перетащили в другой список, то он в него добавится и нужно пересчитать start/stop индексы
+        if (!this.getItemBySourceItem(draggableItem.getContents())) {
+            this._notifyBeforeCollectionChange();
+            this._notifyCollectionChange(
+                IObservable.ACTION_ADD,
+                [strategy.avatarItem],
+                avatarStartIndex,
+                [],
+                0
+            );
+            this._notifyAfterCollectionChange();
+        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
