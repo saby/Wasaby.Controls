@@ -168,6 +168,14 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         return this._collectionEditor.isEditing();
     }
 
+    isBeginEditProcessing(): boolean {
+        return !!this._operationsPromises.begin;
+    }
+
+    isEndEditProcessing(): boolean {
+        return !!this._operationsPromises.end;
+    }
+
     /**
      * Получить редактируемый элемент
      * @method

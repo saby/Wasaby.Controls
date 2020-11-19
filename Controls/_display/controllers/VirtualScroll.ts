@@ -100,7 +100,7 @@ export function each(
             enumerator.getCurrentIndex()
         );
     }
-    
+
     if (styckyItemAfter) {
         callback.call(
             context,
@@ -115,5 +115,9 @@ export function getStartIndex(collection: IVirtualScrollCollection): number {
 }
 
 export function getStopIndex(collection: IVirtualScrollCollection): number {
-    return collection.getViewIterator()?.data?.stopIndex ?? collection.getCount();
+    // todo временный фикс, убрать по подзадаче к
+    // https://online.sbis.ru/opendoc.html?guid=a78388f1-9a73-46e6-aaff-9eb1c9554579
+    const collectionCount = collection.getCount();
+    const iteratorCount = collection.getViewIterator()?.data?.stopIndex;
+    return iteratorCount && iteratorCount <= collectionCount ? iteratorCount : collectionCount;
 }

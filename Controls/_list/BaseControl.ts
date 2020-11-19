@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection} from 'Env/Env';
+import {constants, detection, compatibility} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -2821,7 +2821,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
+            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!compatibility.touch)
         ) {
             const key = item.getContents().getKey();
 
@@ -3733,7 +3733,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            const items = this._listViewModel.getItems();
+            const items = this._loadedBySourceController ? newOptions.sourceController.getItems() : this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
@@ -4535,7 +4535,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).then(getData);
+
+        // Вызов перезагрузки из публичного API должен завершать имеющееся редактирование по месту.
+        // Во время редактирования перезагрузка допустима только в момент завершения редактирования,
+        // точка - beforeEndEdit. При этом возвращение промиса перезагрузки обязательно.
+        const cancelEditPromise = this.isEditing() && !this._getEditInPlaceController().isEndEditProcessing() ?
+            this._cancelEdit(true).catch(() => {
+                // Перезагрузку не остановит даже ошибка во время завершения редактирования.
+                // При отмене редактирования с флагом force ошибка может упасть только в прикладном коде.
+                // Уведомлением об упавших ошибках занимается контроллер редактирования.
+            }) : Promise.resolve();
+
+        return cancelEditPromise.then(() => {
+            return _private.reload(this, this._options, sourceConfig).then(getData);
+        });
     },
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
@@ -5885,7 +5898,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dndListController.endDrag();
 
             // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
-            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && draggableItem && this._insideDragging) {
                 const moveToCollapsedNode = targetPosition.position === 'on'
                     && targetPosition.dispItem instanceof TreeItem
                     && !targetPosition.dispItem.isExpanded();

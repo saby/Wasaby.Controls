@@ -144,7 +144,9 @@ export default class Browser extends Control {
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        this?._notify('historySave', [historyData, items]);
+        if (this._mounted) {
+            this?._notify('historySave', [historyData, items]);
+        }
     }
 
     protected _beforeUpdate(newOptions, context): void|Promise<RecordSet> {

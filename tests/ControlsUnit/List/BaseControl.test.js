@@ -3907,51 +3907,57 @@ define([
 
       it('startDragNDrop', () => {
          const self = {
-               _options: {
-                  readOnly: false,
-                  itemsDragNDrop: true,
-                  source,
-                  filter: {},
-                  selectedKeys: [],
-                  excludedKeys: [],
-               },
-               _listViewModel: new lists.ListViewModel({
-                  items: new collection.RecordSet({
-                     rawData: data,
-                     keyProperty: 'id'
-                  }),
-                  keyProperty: 'key'
+            _options: {
+               readOnly: false,
+               itemsDragNDrop: true,
+               source,
+               filter: {},
+               selectedKeys: [],
+               excludedKeys: [],
+            },
+            _listViewModel: new lists.ListViewModel({
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
                }),
-               _registerMouseMove: () => null,
-               _registerMouseUp: () => null
-            },
-            domEvent = {
-               nativeEvent: {},
-               target: {
-                  closest: function() {
-                     return false;
+               keyProperty: 'key'
+            }),
+            _registerMouseMove: () => null,
+            _registerMouseUp: () => null
+         },
+         domEvent = {
+            nativeEvent: {},
+            target: {
+               closest: function() {
+                  return false;
+               }
+            }
+         },
+         itemData = {
+            getContents() {
+               return {
+                  getKey() {
+                     return 2;
                   }
-               }
-            },
-            itemData = {
-               getContents() {
-                  return {
-                     getKey() {
-                        return 2;
-                     }
-                  };
-               }
-            };
-
-         // self._listViewModel.setItems(data);
+               };
+            }
+         };
 
          let notifyCalled = false;
+
          self._notify = function(eventName, args) {
             notifyCalled = true;
             assert.equal(eventName, 'dragStart');
             assert.deepEqual(args[0], [2]);
             assert.equal(args[1], 2);
          };
+
+         Env.compatibility.touch = 1;
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isFalse(notifyCalled, 'On touch device can\'t drag');
+
+         Env.compatibility.touch = 0;
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
@@ -7519,17 +7525,24 @@ define([
                      }
                   };
                },
-               getDraggableItem: () => ({
-                  getContents: () => ({
-                     getKey: () => 1
-                  })
-               })
+               getDraggableItem: () => undefined
             };
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            baseControl._dndListController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            });
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
