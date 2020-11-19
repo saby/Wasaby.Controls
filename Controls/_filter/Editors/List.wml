@@ -1,5 +1,6 @@
 <div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
-   <Controls.list:View source="{{_options.source}}"
+   <Controls.grid:View source="{{_options.source}}"
+                       columns="{{_columns}}"
                        markedKey="{{_options.propertyValue}}"
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"

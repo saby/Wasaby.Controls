@@ -68,6 +68,7 @@ export default class extends Control {
                 textValue: '',
                 editorOptions: {
                     keyProperty: 'owner',
+                    columns: [{displayProperty: 'title', width: 'auto'}, {align: 'right', displayProperty: 'id'}],
                     displayProperty: 'title',
                     source: new Memory({
                         data: [

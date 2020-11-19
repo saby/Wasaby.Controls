@@ -11,6 +11,15 @@ import DateRangeTemplate = require('wml!Controls/_filter/Editors/List');
  */
 class ListEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
+    protected _columns: object[] = null;
+
+    protected _beforeMount(options?: IControlOptions): void {
+        this._columns = options.columns ? options.columns : [{displayProperty: options.displayProperty}];
+    }
+
+    protected _beforeUpdate(options?: IControlOptions): void {
+        this._columns = options.columns ? options.columns : [{displayProperty: options.displayProperty}];
+    }
 
     protected _handleMarkedKeyChanged(event: SyntheticEvent, value: number): void {
         this._notify('propertyValueChanged', [value], {bubbling: true});
