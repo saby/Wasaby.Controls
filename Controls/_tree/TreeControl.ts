@@ -15,6 +15,7 @@ import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
 import { TreeItem } from 'Controls/display';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 import {ISelectionObject} from 'Controls/interface';
@@ -116,6 +117,47 @@ const _private = {
             self.toggleExpanded(markedItemKey);
         }
     },
+    changeMarkedKeyOnCollapseItemIfNeed(self: typeof TreeControl, collapsedItems: Array<TreeItem<Model>>, newExpandedState: boolean): void {
+        // TODO исправить когда будет наследование TreeControl <- BaseControl
+        const baseControl = self._children.baseControl;
+        // не нужно устанаваливать маркер, если узел развернули, или маркер не нужно отображать, или нет свернутых узлов
+        if (collapsedItems.length === 0 || newExpandedState === true || baseControl._options.markerVisibility === 'hidden' || !baseControl._markerController) {
+            return;
+        }
+
+        const markerController = baseControl._markerController;
+        const newMarkedKey = markerController.getMarkedKeyAfterCollapseItems(collapsedItems);
+        baseControl.setMarkedKey(newMarkedKey);
+    },
+    getCollapsedItemsByOptions(
+        self: typeof TreeControl,
+        oldExpandedItems: [] = [],
+        newExpandedItems: [] = [],
+        oldCollapsedItems: [] = [],
+        newCollapsedItems: [] = []
+    ): Array<TreeItem<Model>> {
+        // TODO исправить когда будет наследование TreeControl <- BaseControl
+        const model = self._children.baseControl.getViewModel();
+        const collapsedItems = [];
+
+        if (!isEqual(oldExpandedItems, newExpandedItems)) {
+            const expandedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldExpandedItems, newExpandedItems);
+            if (expandedItemsDiff.removed) {
+                const removedExpandedItems = expandedItemsDiff.removed.map((key) => model.getItemBySourceKey(key));
+                collapsedItems.push(...removedExpandedItems);
+            }
+        }
+
+        if (!isEqual(oldCollapsedItems, newCollapsedItems)) {
+            const collapsedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldCollapsedItems, newCollapsedItems);
+            if (collapsedItemsDiff.added) {
+                const addedCollapsedItems = collapsedItemsDiff.added.map((key) => model.getItemBySourceKey(key));
+                collapsedItems.push(...addedCollapsedItems);
+            }
+        }
+
+        return collapsedItems;
+    },
     toggleExpanded: function(self, dispItem) {
         const filter = cClone(self._options.filter);
         const listViewModel = self._children.baseControl.getViewModel();
@@ -147,6 +189,8 @@ const _private = {
                     } else {
                         listViewModel.appendItems(list);
                     }
+                    // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
+                    _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     if (options.nodeLoadCallback) {
                         options.nodeLoadCallback(list, nodeKey);
@@ -162,6 +206,8 @@ const _private = {
                     self._children.baseControl.hideIndicator();
                 });
         } else {
+            // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
+            _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
         }
     },
@@ -352,6 +398,9 @@ const _private = {
 
     resetExpandedItems(self): void {
         const viewModel = self._children.baseControl.getViewModel();
+
+        const collapsedItems = _private.getCollapsedItemsByOptions(self, viewModel.getExpandedItems(), [], [], []);
+        _private.changeMarkedKeyOnCollapseItemIfNeed(self, collapsedItems, false);
 
         viewModel.resetExpandedItems();
         viewModel.setHasMoreStorage({});
@@ -571,6 +620,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
             _private.resetExpandedItems(this);
+        } else {
+            const collapsedItems = _private.getCollapsedItemsByOptions(this, this._options.expandedItems, newOptions.expandedItems, this._options.collapsedItems, newOptions.collapsedItems);
+            _private.changeMarkedKeyOnCollapseItemIfNeed(this, collapsedItems, false);
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
@@ -643,7 +695,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return afterUpdateResult;
     },
     resetExpandedItems(): void {
-        this._children.baseControl.getViewModel().resetExpandedItems();
+        _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
         const item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
