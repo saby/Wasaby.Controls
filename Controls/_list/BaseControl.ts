@@ -3451,7 +3451,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
-        this._scrollTop = scrollTop;
+        if (scrollTop !== undefined) {
+            this._scrollTop = scrollTop;
+        }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
