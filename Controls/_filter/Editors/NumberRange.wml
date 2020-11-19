@@ -5,7 +5,7 @@
                           value="{{_options.propertyValue[0]}}"
                           on:valueChanged="_handleMinValueChanged()"/>
    <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
-   <Controls.input:Number scope="{{_options.editorOptions}}"
+   <Controls.input:Number scope="{{_options}}"
                           borderVisibility='partial'
                           contrastBackground="{{false}}"
                           value="{{_options.propertyValue[1]}}"

@@ -4,5 +4,7 @@
                        markedKey="{{_options.propertyValue}}"
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
-                       on:markedKeyChanged="_handleMarkedKeyChanged()"/>
+                       on:markedKeyChanged="_handleMarkedKeyChanged()">
+      <ws:itemPadding left="xxl" right="m"/>
+   </Controls.grid:View>
 </div>

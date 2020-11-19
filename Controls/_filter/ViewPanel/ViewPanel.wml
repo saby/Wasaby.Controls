@@ -14,7 +14,8 @@
               bind:editingObject="_editingObject"
               source="{{_source}}"
               on:editingObjectChanged="_editingObjectChanged()"
-              on:itemClick="_itemClick()">
+              on:itemClick="_itemClick()"
+              attr:class="controls-FilterViewPanel__propertyGrid">
          <ws:groupTemplate>
             <ws:partial template="wml!Controls/_filter/ViewPanel/groupTemplate" groupItems="{{_groupItems}}"/>
          </ws:groupTemplate>

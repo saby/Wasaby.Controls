@@ -2,7 +2,6 @@
    width: @width_filterViewPanel;
    height: 100%;
    background-color: @background-color_filterViewPanel;
-   border-right: @border-right_width_filterViewPanel solid @border-right_color_filterViewPanel;
 }
 
 .controls-FilterViewPanel__header_theme-@{themeName} {
@@ -32,6 +31,7 @@
    display: flex;
    flex-direction: row;
    align-items: center;
+   padding: 0 @padding-left_filterViewPanel;
 }
 
 .controls-FilterEditors__numberRange_separator_theme-@{themeName} {
@@ -63,14 +63,24 @@
 
 .controls-FilterViewPanel__groupReset {
    position: absolute;
-   top: 0;
-   right: 0;
+   top: @group-close-button_padding-top_filterViewPanel;
+   right: @padding-right_filterViewPanel;
 }
 
-.controls-FilterViewPanel__group-wrapper {
+.controls-FilterViewPanel__group-wrapper_theme-@{themeName} {
    position: relative;
+   padding-left: @padding-left_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-result_theme-@{themeName} {
    font-size: @group_font-size_filterViewPanel;
+}
+
+.controls-FilterViewPanel__propertyGrid.controls-PropertyGrid_theme-@{themeName} {
+   padding: @content_padding_propertyGrid 0;
+}
+
+.controls-FilterEditors__list-item_theme-@{themeName} {
+   padding-left: @padding-left_filterViewPanel;
+   padding-right: @padding-right_filterViewPanel;
 }
