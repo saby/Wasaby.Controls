@@ -435,7 +435,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        this?._notify('historySave', [historyData, items]);
+        if (this._mounted) {
+            this?._notify('historySave', [historyData, items]);
+        }
     }
 
     protected _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
