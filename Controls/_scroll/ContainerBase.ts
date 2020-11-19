@@ -673,7 +673,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         return !!this._topPlaceholderSize || !!this._bottomPlaceholderSize;
     }
 
-    updateHasUnrenderedContent(hasUnrenderedContent: IUnrenderedContent): void {
+    protected _updateHasUnrenderedContent(hasUnrenderedContent: IUnrenderedContent): void {
         this._hasUnrenderedContent = hasUnrenderedContent;
     }
 

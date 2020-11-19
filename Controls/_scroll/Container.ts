@@ -281,7 +281,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _updateHasUnrenderedContent(event: SyntheticEvent, hasUnrenderedContent: IUnrenderedContent): void {
-        super.updateHasUnrenderedContent(hasUnrenderedContent);
+        super._updateHasUnrenderedContent(hasUnrenderedContent);
         const shadowsVisibility = {
             top: hasUnrenderedContent.top ? 'visible' : 'auto',
             bottom: hasUnrenderedContent.bottom ? 'visible' : 'auto'
