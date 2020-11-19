@@ -17,6 +17,7 @@
                         templateHighlightOnHover="{{ templateHighlightOnHover }}">
                <ws:ladderWrapper>
                   <ws:partial template="{{ladderWrapper.content}}"
+                              if="{{ (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
                               attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
                </ws:ladderWrapper>
                <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"

@@ -2504,6 +2504,7 @@ define([
       });
 
       it('_processError', function() {
+         let dataLoadErrbackCalled = false;
          var self = {
             _options: {},
             _loadingState: 'all',
@@ -2518,8 +2519,23 @@ define([
             _isMounted: true
          };
 
-         lists.BaseControl._private.processError(self, { error: {} });
+         lists.BaseControl._private.processError(self, {
+            error: {},
+            dataLoadErrback: () => {
+               dataLoadErrbackCalled = true;
+            }
+         });
          assert.equal(self._loadingState, null);
+         assert.isTrue(dataLoadErrbackCalled);
+
+         dataLoadErrbackCalled = false;
+         lists.BaseControl._private.processError(self, {
+            error: {isCanceled: true},
+            dataLoadErrback: () => {
+               dataLoadErrbackCalled = true;
+            }
+         });
+         assert.isFalse(dataLoadErrbackCalled);
       });
 
       it('__needShowEmptyTemplate', async function() {

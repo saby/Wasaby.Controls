@@ -40,8 +40,18 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
         this._initState(options);
     },
 
-    _beforeUpdate(options): void {
-        this._initState(options);
+    _afterMount(options): void {
+        if (options.useStore) {
+            this._sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._source = filterSource;
+            });
+        }
+    },
+
+    _beforeUnmount(): void {
+        if (this._sourceCallbackId) {
+            Store.unsubscribe(this._sourceCallbackId);
+        }
     },
 
     _initState(options): void {
@@ -89,7 +99,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
        if (this._options.useStore) {
-           Store.dispatch('filterSource', items);
+           Store.dispatch('filterSource', items ? [...items] : []);
        } else {
            this._notify('filterItemsChanged', [items], {bubbling: true});
        }

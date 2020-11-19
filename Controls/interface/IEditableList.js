@@ -189,7 +189,7 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * <pre class="brush: js; highlight: [4,5,6,7,8]">
     * // JavaScript
-    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    * define('ModuleName', ['Controls/list'], function(constants) {
     *    ...
     *    beforeBeginEditHandler: function(e, options) {
     *       if (options.item.getId() === 1) {
@@ -256,7 +256,7 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * JS:
     * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    define('ModuleName', ['Controls/list'], function(constants) {
     *       ...
     *       beforeBeginEditHandler: function(e, options) {
     *          if (options.item.getId() === 1) {
@@ -401,7 +401,7 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * <pre class="brush: js; highlight: [4,5,6,7,8]">
     * // JavaScript
-    * define('ModuleName', ['Controls/Constants'], function(constants) {
+    * define('ModuleName', ['Controls/list'], function(constants) {
     *    ...
     *    beforeEndEditHandler: function(e, item, commit, isAdd) {
     *       if (!item.get('text').length) {
@@ -434,7 +434,7 @@ define('Controls/interface/IEditableList', [
     * </pre>
     * JS:
     * <pre>
-    *    define('ModuleName', ['Controls/Constants'], function(constants) {
+    *    define('ModuleName', ['Controls/list'], function(constants) {
     *       ...
     *       beforeEndEditHandler: function(e, item, commit, isAdd) {
     *          if (!item.get('text').length) {
