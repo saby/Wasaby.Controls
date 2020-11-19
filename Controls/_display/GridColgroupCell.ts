@@ -50,6 +50,18 @@ export default class GridColgroupCell<T> extends mixin<OptionsToPropertyMixin>(O
         }
     }
 
+    getKey(): string {
+        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+            if (this.isMultiSelectColumn()) {
+                return '-1';
+            } else {
+                return `${this._$owner.getCellIndex(this) - 1}_${this._getColumnWidth()}`;
+            }
+        } else {
+            return `${this._$owner.getCellIndex(this)}_${this._getColumnWidth()}`;
+        }
+    }
+
     private static _isCompatibleWidthValue(value: string): boolean {
         return !!value.match(REG_EXP_PERCENT_WIDTH_VALUE) || !!value.match(REG_EXP_PIXEL_WIDTH_VALUE);
     }
