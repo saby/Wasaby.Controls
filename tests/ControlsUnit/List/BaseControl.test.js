@@ -2504,6 +2504,7 @@ define([
       });
 
       it('_processError', function() {
+         let dataLoadErrbackCalled = false;
          var self = {
             _options: {},
             _loadingState: 'all',
@@ -2518,8 +2519,23 @@ define([
             _isMounted: true
          };
 
-         lists.BaseControl._private.processError(self, { error: {} });
+         lists.BaseControl._private.processError(self, {
+            error: {},
+            dataLoadErrback: () => {
+               dataLoadErrbackCalled = true;
+            }
+         });
          assert.equal(self._loadingState, null);
+         assert.isTrue(dataLoadErrbackCalled);
+
+         dataLoadErrbackCalled = false;
+         lists.BaseControl._private.processError(self, {
+            error: {isCanceled: true},
+            dataLoadErrback: () => {
+               dataLoadErrbackCalled = true;
+            }
+         });
+         assert.isFalse(dataLoadErrbackCalled);
       });
 
       it('__needShowEmptyTemplate', async function() {
@@ -7526,11 +7542,12 @@ define([
             assert.isOk(secondBaseControl._dndListController);
             assert.isOk(secondBaseControl._dndListController.getDragEntity());
             assert.isOk(secondBaseControl._dndListController.getDraggableItem());
+            assert.isOk(secondBaseControl._dndListController.getDragPosition());
             assert.equal(secondBaseControl._dndListController.getDraggableItem().getContents(), newRecord);
          });
 
          it('drag end', () => {
-            baseControl._dndListController = {
+            const dndController = {
                endDrag: () => undefined,
                getDragPosition: () => {
                   return {
@@ -7545,14 +7562,24 @@ define([
                   })
                })
             };
+            baseControl._dndListController = dndController;
 
-            baseControl._insideDragging = true;
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
             assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            baseControl._insideDragging = true;
+            baseControl._dndListController = dndController;
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+
+            assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
+            assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
       });
 

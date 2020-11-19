@@ -203,18 +203,12 @@ var _private = {
 
             if (newOptions.moveDialogTemplate.templateName) {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
-                self._moveDialogOptions = {
-                    ...newOptions.moveDialogTemplate.templateOptions,
-                    keyProperty: self._keyProperty
-                } as IMoverDialogTemplateOptions;
+                self._moveDialogOptions = newOptions.moveDialogTemplate.templateOptions;
                 controllerOptions.popupOptions.template = self._moveDialogTemplate;
                 controllerOptions.popupOptions.templateOptions = self._moveDialogOptions;
             } else {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate;
                 controllerOptions.popupOptions.template = self._moveDialogTemplate;
-                self._moveDialogOptions = {
-                    keyProperty: self._keyProperty
-                } as IMoverDialogTemplateOptions;
                 Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
@@ -331,6 +325,7 @@ var _private = {
         const templateOptions: IMoverDialogTemplateOptions = {
             movedItems: _private.useController(selection) ? selection.selectedKeys : selection,
             source: self._source,
+            keyProperty: self._keyProperty, // keyProperty может быть заменён в moveDialogOptions
             ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
         return new Promise((resolve) => {

@@ -41,7 +41,8 @@ import {
     Collection,
     CollectionItem,
     GroupItem, IEditableCollectionItem,
-    TItemKey
+    TItemKey,
+    TreeItem
 } from 'Controls/display';
 import {
     Controller as ItemActionsController,
@@ -1147,9 +1148,16 @@ const _private = {
                 const pageSize = self._options.navigation.sourceConfig.pageSize;
                 const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
                 const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                let neededPage = direction === 'up' ? 0 : 1;
+                let neededPageSize = direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount);
+                if (page - neededPagesCount <= neededPagesCount && direction === 'down') {
+                        neededPage = 0;
+                        neededPageSize = (page + 1) * pageSize;
+                }
                 navigationQueryConfig = {
-                    page: direction === 'up' ? 0 : 1,
-                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                    ...navigationQueryConfig,
+                    page: neededPage,
+                    pageSize: neededPageSize
                 };
             }
 
@@ -1682,6 +1690,8 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
+                    self._shouldDrawFooter = false;
                 }
             }
 
@@ -1711,7 +1721,7 @@ const _private = {
                     if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
                         // When move items call removeHandler with "forceShift" param.
                         // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
-                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, action === IObservable.ACTION_MOVE);
+                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, true);
                     }
                     if (action === IObservable.ACTION_RESET) {
                         result = self._scrollController.handleResetItems();
@@ -1869,9 +1879,11 @@ const _private = {
             model.subscribe('onAfterCollectionChange', _private.onAfterCollectionChanged.bind(null, self));
         }
 
-        model.subscribe('onGroupsExpandChange', function(event, changes) {
-            _private.groupsExpandChangeHandler(self, changes);
-        });
+        if (!useNewModel) {
+            model.subscribe('onGroupsExpandChange', function(event, changes) {
+                _private.groupsExpandChangeHandler(self, changes);
+            });
+        }
     },
 
     /**
@@ -1988,7 +2000,11 @@ const _private = {
         }
     },
 
-    openContextMenu(self, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>) {
+    openContextMenu(self: typeof BaseControl, event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
+        if (itemData['[Controls/_display/GroupItem]']) {
+            return;
+        }
+
         event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
@@ -2102,10 +2118,10 @@ const _private = {
      * @private
      */
     processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
-        if (config.dataLoadErrback instanceof Function) {
-            config.dataLoadErrback(config.error);
-        }
-        if (!config.error.canceled) {
+        if (!config.error.canceled && !config.error.isCanceled) {
+            if (config.dataLoadErrback instanceof Function) {
+                config.dataLoadErrback(config.error);
+            }
             _private.hideIndicator(self);
         }
         return self.__errorController.process({
@@ -3684,9 +3700,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
+
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (sourceChanged || searchValueChanged && newOptions.searchValue);
+
+        const isSourceControllerLoadingNow = newOptions.sourceController &&
+            newOptions.sourceController.isLoading() &&
+            newOptions.sourceController.getState().source !== this._options.source;
+
+        const needReload =
+            !this._loadedBySourceController &&
+            !isSourceControllerLoadingNow &&
+            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
+            (sourceChanged || filterChanged || sortingChanged || recreateSource);
+
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
@@ -3715,11 +3743,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._moveController.updateOptions(_private.prepareMoverControllerOptions(this, newOptions));
         }
 
-        if (!newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor) {
+        const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
+
+        if ((oldViewModelConstructorChanged || needReload) && this.isEditing()) {
+            // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+            // без возможности отменить закрытие из вне.
+            this._cancelEdit(true);
+        }
+
+        if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            if (_private.isEditing(this)) {
-                this._cancelEdit();
-            }
             const items = this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
@@ -3855,11 +3888,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._groupingLoader.destroy();
             this._groupingLoader = null;
         }
-
-        const needReload =
-            !this._loadedBySourceController &&
-            // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
-            (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
@@ -4269,6 +4297,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeBeforePaint();
             this._updateShadowModeBeforePaint = null;
         }
+
+        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+            _private.activateEditingRow(this);
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4381,6 +4413,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
+        // Запустить валидацию, которая была заказана методом commit у редактирования по месту, после
+        // применения всех обновлений реактивных состояний.
+        if (this._isPendingDeferSubmit) {
+            this._validateController.resolveSubmit();
+            this._isPendingDeferSubmit = false;
+        }
+
         // After update the reloaded items have been redrawn, clear
         // the marks in the model
         if (this._itemReloaded) {
@@ -4395,9 +4434,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-        }
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
-            _private.activateEditingRow(this);
         }
     },
 
@@ -4541,6 +4577,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 } else {
                     dispItem.setExpanded(needExpandGroup);
                 }
+
+                // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
+                const collapsedGroups = collection.getCollapsedGroups() || [];
+                if (collapsedGroups.indexOf(groupId) === -1) {
+                    collapsedGroups.push(groupId);
+                }
+                const changes = {
+                    changeType: needExpandGroup ? 'expand' : 'collapse',
+                    group: groupId,
+                    collapsedGroups
+                };
+                _private.groupsExpandChangeHandler(this, changes);
             } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
                 if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {
@@ -4692,7 +4740,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
         return Promise.resolve().then(() => {
             if (willSave) {
-                return this._validateController.submit().then((validationResult) => {
+                // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
+                // Такая логика необходима, если синхронно поменяли реактивное состояние, которое будет валидироваться и позвали валидацию.
+                // В таком случае, первый цикл применит все состояния и только после него произойдет валидация.
+                // _forceUpdate гарантирует, что цикл синхронизации будет, т.к. невозможно понять поменялось ли какое-то реактивное состояние.
+                const submitPromise = this._validateController.deferSubmit();
+                this._isPendingDeferSubmit = true;
+                this._forceUpdate();
+                return submitPromise.then((validationResult) => {
                     for (const key in validationResult) {
                         if (validationResult.hasOwnProperty(key) && validationResult[key]) {
                             return CONSTANTS.CANCEL;
@@ -4831,12 +4886,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _cancelEdit() {
+    _cancelEdit(force: boolean = false) {
         if (!this._editInPlaceController) {
             return Promise.resolve();
         }
         this.showIndicator();
-        return this._getEditInPlaceController().cancel().finally(() => {
+        return this._getEditInPlaceController().cancel(force).finally(() => {
             if (_private.hasSelectionController(this)) {
                 const controller = _private.getSelectionController(this);
                 controller.setSelection(controller.getSelection());
@@ -5050,6 +5105,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else {
             _private.openItemActionsMenu(this, action, event, item, false);
         }
+    },
+
+    /**
+     * Обработчик клика по операции, необходимый для предотвращения срабатывания клика на записи в списке
+     * @param event
+     * @private
+     */
+    _onItemActionClick(event: SyntheticEvent<MouseEvent>) {
+        event.stopPropagation();
     },
 
     /**
@@ -5810,8 +5874,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
+                const lastItem = this._listViewModel.getLast();
+                const startPosition = {
+                    index: this._listViewModel.getIndex(lastItem),
+                    dispItem: lastItem,
+                    position: 'after'
+                };
+
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+
+                // задаем изначальную позицию в другом списке
+                this._dndListController.setDragPosition(startPosition);
             } else if (dragEnterResult === true) {
                 this._dndListController.setDraggedItems(dragObject.entity);
             }
@@ -5848,12 +5922,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const endDrag = () => {
             const targetPosition = this._dndListController.getDragPosition();
+            const draggableItem = this._dndListController.getDraggableItem();
             this._dndListController.endDrag();
 
-            if (this._options.markerVisibility !== 'hidden' && targetPosition) {
-                const moveToCollapsedNode = targetPosition.position === 'on' && !targetPosition.dispItem.isExpanded();
+            // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+                const moveToCollapsedNode = targetPosition.position === 'on'
+                    && targetPosition.dispItem instanceof TreeItem
+                    && !targetPosition.dispItem.isExpanded();
+                // Ставим маркер на перетаксиваемый элемент всегда, за исключением ситуации
+                // когда перетаскиваем запись в свернутый узел
                 if (!moveToCollapsedNode) {
-                    _private.changeMarkedKey(this, this._draggedKey);
+                    const draggedKey = draggableItem.getContents().getKey();
+                    _private.changeMarkedKey(this, draggedKey);
                 }
             }
 

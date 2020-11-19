@@ -106,7 +106,46 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                     assert.strictEqual(component._models.bottom.isVisible, test.isBottomVisible, 'isVisible, bottom');
                 }
             });
-        })
+        });
+    });
+
+    describe('setStickyFixed', () => {
+        [{
+            topFixed: true,
+            bottomFixed: true,
+            shouldCallNextVersion: true
+        }, {
+            topFixed: true,
+            bottomFixed: false,
+            shouldCallNextVersion: true
+        }, {
+            topFixed: false,
+            bottomFixed: true,
+            shouldCallNextVersion: true
+        }, {
+            topFixed: false,
+            bottomFixed: false,
+            shouldCallNextVersion: false
+        }].forEach((test, index) => {
+            it(`should ${!test.shouldCallNextVersion ? 'not' : ''} call next version ${index}`, () => {
+                const component = new ShadowsModel({
+                    ...getShadowsDefaultOptions(),
+                    scrollMode: 'vertical'
+                });
+                let nextVersionCalled = false;
+                component._nextVersion = () => {
+                    nextVersionCalled = true;
+                };
+                component._models.top.setStickyFixed = (arg) => {
+                    return arg;
+                };
+                component._models.bottom.setStickyFixed = (arg) => {
+                    return arg;
+                };
+                component.setStickyFixed(test.topFixed, test.bottomFixed);
+                assert.equal(test.shouldCallNextVersion, nextVersionCalled);
+            });
+        });
     });
 
     describe('updateVisibilityByInnerComponents', () => {
@@ -121,6 +160,21 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                 bottom: SHADOW_VISIBILITY.VISIBLE
             });
             assert.notStrictEqual(shadows.getVersion(), version);
+        });
+        it('should\' change "isEnabled" if there are fixed headers.', () => {
+            const shadows = new ShadowsModel({
+                ...getShadowsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            });
+            shadows.setStickyFixed(true, true);
+            const version = shadows.getVersion();
+            shadows.updateVisibilityByInnerComponents({
+                top: SHADOW_VISIBILITY.VISIBLE,
+                bottom: SHADOW_VISIBILITY.VISIBLE
+            });
+            assert.isFalse(shadows.top.isEnabled);
+            assert.isFalse(shadows.bottom.isEnabled);
+            assert.strictEqual(shadows.getVersion(), version);
         });
     });
 });

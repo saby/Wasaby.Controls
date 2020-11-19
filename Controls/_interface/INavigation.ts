@@ -44,6 +44,26 @@ export type TNavigationSource = 'position' | 'page';
 export type TNavigationView = 'infinity' | 'pages' | 'demand' | 'maxCount';
 
 /**
+ * @typedef {Enum} CursorDirection
+ * @description Направление выборки при навигации по курсору.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
+ */
+
+/*
+ * @typedef {Enum} CursorDirection
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
+ */
+export enum CursorDirection {
+    backward = 'backward',
+    forward = 'forward',
+    bothways = 'bothways'
+}
+
+/**
  * @typedef {String} TNavigationDirection
  * @description Направление выборки для режима работы с источником данных <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor">Навигация по курсору</a>.
  * @variant forward Вниз.
@@ -135,8 +155,8 @@ export interface INavigationPageSourceConfig extends IBasePageSourceConfig{
 /**
  * @typedef {Object} INavigationSourceConfig
  * @description Параметры режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/">работы с источником данных</a>.
- * Параметры для режима {@link Controls/interface:INavigation.INavigationPositionSourceConfig.typedef Навигация по курсору}.
- * Параметры для режима {@link Controls/interface:INavigation.INavigationPageSourceConfig.typedef Навигация с фиксированным количеством загружаемых записей}.
+ * Параметры для режима {@link Controls/interface:INavigation/INavigationPositionSourceConfig.typedef Навигация по курсору}.
+ * Параметры для режима {@link Controls/interface:INavigation/INavigationPageSourceConfig.typedef Навигация с фиксированным количеством загружаемых записей}.
  */
 /*
  * @typedef {Object} INavigationSourceConfig
@@ -147,7 +167,7 @@ export type IBaseSourceConfig = IBasePositionSourceConfig | IBasePageSourceConfi
 
 /**
  * @typedef {String} TNavigationTotalInfo
- * @description Допустимые значения для параметра {@link Controls/interface:INavigation.TNavigationTotalInfo.typedef totalInfo}.
+ * @description Допустимые значения для параметра {@link Controls/interface:INavigation/TNavigationTotalInfo.typedef totalInfo}.
  * @variant basic Отображается только общее число записей.
  * @variant extended Отображается общее число записей, номера первой и последней записей на текущей странице, а также размер страницы.
  */

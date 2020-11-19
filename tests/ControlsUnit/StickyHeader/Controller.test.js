@@ -27,7 +27,7 @@ define([
                getOffset: function() {
                   return 0;
                },
-               getContainer: function() {
+               getHeaderContainer: function() {
                   return container;
                },
                height: 10,
@@ -47,7 +47,7 @@ define([
                getOffset: function() {
                   return 0;
                },
-               getContainer: function(){
+               getHeaderContainer: function(){
                   return {
                      getBoundingClientRect() {
                         return {
@@ -301,7 +301,7 @@ define([
                      getOffset: function() {
                         return offset;
                      },
-                     getContainer: function() {
+                     getHeaderContainer: function() {
                         return container;
                      },
                      resetSticky: sinon.fake(),
@@ -327,13 +327,13 @@ define([
             header.inst.getChildrenHeaders = function() {
                return [{
                   inst: {
-                     getContainer: function () {
+                     getHeaderContainer: function () {
                         return 'container1';
                      }
                   }
                }, {
                   inst: {
-                     getContainer: function () {
+                     getHeaderContainer: function () {
                         return 'container2';
                      }
                   }
@@ -564,7 +564,7 @@ define([
                   getOffset: function() {
                      return 10;
                   },
-                  getContainer: function() {
+                  getHeaderContainer: function() {
                      return {
                         getBoundingClientRect() {
                            return {height: 500};
@@ -801,7 +801,7 @@ define([
                   inst: {
                      height: 20,
                      resetSticky: () => undefined,
-                     getContainer: function() {
+                     getHeaderContainer: function() {
                         return {
                            id: 0,
                            closest: () => false
@@ -818,7 +818,7 @@ define([
                   inst: {
                      height: 30,
                      resetSticky: () => undefined,
-                     getContainer: function() {
+                     getHeaderContainer: function() {
                         return {
                            id: 1,
                            closest: () => false
@@ -835,7 +835,7 @@ define([
                   inst: {
                      height: 40,
                      resetSticky: () => undefined,
-                     getContainer: function() {
+                     getHeaderContainer: function() {
                         return {
                            id: 2,
                            closest: () => false
@@ -849,7 +849,7 @@ define([
             return component._updateTopBottomDelayed().then(() => {
                for (let headerId of ['header0', 'header1']) {
                   const heightItem = component._elementsHeight.find((item) => {
-                     return item.key.id === component._headers[headerId].inst.getContainer().id;
+                     return item.key.id === component._headers[headerId].inst.getHeaderContainer().id;
                   });
                   assert.strictEqual(heightItem.value, component._headers[headerId].inst.height);
                }

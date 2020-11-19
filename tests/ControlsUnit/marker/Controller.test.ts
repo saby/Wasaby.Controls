@@ -403,7 +403,7 @@ describe('Controls/marker/Controller', () => {
       assert.equal(controller.getMarkedKey(), 2);
 
       result = controller.getNextMarkedKey();
-      assert.equal(result, 3);
+      assert.equal(result, 4);
 
       result = controller.getPrevMarkedKey();
       assert.equal(result, 1);

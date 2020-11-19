@@ -57,17 +57,17 @@ export default class GridGroupCell<T> extends GridColumn<T> {
 
         let classes = 'controls-ListView__groupContent-text ' +
                       `controls-ListView__groupContent-text_theme-${theme} ` +
-                      `controls-ListView__groupContent-text_default_theme-${theme} ` +
-                      ` controls-ListView__groupExpander_${expander}_theme-${theme}` +
-                      ` controls-ListView__groupExpander-iconSize_default_theme-${theme}`;
-
-        if (this.isExpanded()) {
-            classes += ' controls-ListView__groupExpander_collapsed';
-            classes += ` controls-ListView__groupExpander_collapsed_${expander}`;
-        }
+                      `controls-ListView__groupContent-text_default_theme-${theme} `;
 
         if (expanderVisible !== false) {
-            classes += ` controls-ListView__groupExpander controls-ListView__groupExpander_theme-${theme}`;
+            if (!this.isExpanded()) {
+                classes += ' controls-ListView__groupExpander_collapsed';
+                classes += ` controls-ListView__groupExpander_collapsed_${expander}`;
+            }
+
+            classes += ` controls-ListView__groupExpander controls-ListView__groupExpander_theme-${theme}` +
+                ` controls-ListView__groupExpander_${expander}_theme-${theme}` +
+                ` controls-ListView__groupExpander-iconSize_default_theme-${theme}`;
         }
 
         return classes;

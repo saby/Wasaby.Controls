@@ -6,6 +6,7 @@ import GridCheckboxColumn from './GridCheckboxColumn';
 import GridHeader from './GridHeader';
 import { TResultsPosition } from './GridResults';
 import GridStickyLadderColumn from './GridStickyLadderColumn';
+import {INavigationOptionValue} from 'Controls/_interface/INavigation';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
@@ -29,10 +30,9 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
                    style: string = 'default',
                    cursor: string = 'pointer',
                    clickable: boolean = true): string {
-        /* todo (!navigation || navigation.view !== 'infinity' || !this.getHasMoreData()) &&
-                (this.getCount() - 1 === current.index)*/
-        const isLastItem = false;
-
+        const navigation = this.getOwner().getNavigation();
+        const isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getOwner().getHasMoreData())
+            && this.isLastItem();
         let itemClasses = `controls-ListView__itemV ${this._getCursorClasses(cursor, clickable)}`;
 
         itemClasses += ` controls-Grid__row controls-Grid__row_${style}_theme-${theme}`;
@@ -46,6 +46,10 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
 
         return itemClasses;
+    }
+
+    isLastItem(): boolean {
+        return (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
     }
 
     getColumns(): Array<GridColumn<T>> {
@@ -102,7 +106,18 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
         return stickyProperties as string[];
     }
+    shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
+        const stickyLadder = this.getStickyLadder();
+        const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const index = stickyProperties.indexOf(stickyProperty);
+        const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
 
+        if (!this.getOwner().getItemsDragNDrop() && stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+            index === 1 && !hasMainCell || index === 0 && hasMainCell) || stickyProperty === undefined) {
+            return false;
+        }
+        return true;
+    }
     getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
         let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
         const ladder = this.getLadder();
@@ -120,7 +135,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_additional-with-main';
         }
 
-        if ((stickyProperty === ladderProperty || !stickyProperty) && !ladder || !ladder[ladderProperty] || ladder[ladderProperty].ladderLength >= 1) {
+        if (!ladder || !ladder[ladderProperty] || (stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1) {
 
         } else {
             ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';

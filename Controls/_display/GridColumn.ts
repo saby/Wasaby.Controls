@@ -48,11 +48,11 @@ export default class GridColumn<T> extends mixin<
         this._$hiddenForLadder = value;
     }
 
-    getWrapperClasses(theme: string, backgroundColorStyle?: string, style: string = 'default'): string {
+    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         let wrapperClasses = '';
         const hasColumnScroll = false;
 
-        wrapperClasses += this._getWrapperBaseClasses(theme, style);
+        wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
 
         if (hasColumnScroll) {
@@ -185,9 +185,6 @@ export default class GridColumn<T> extends mixin<
         } else if (templateHighlightOnHover !== false) {
             contentClasses += ` controls-Grid__row-cell-background-hover-default_theme-${theme}`;
         }
-        if (this._$owner.isActive() && templateHighlightOnHover !== false) {
-            contentClasses += ` controls-GridView__item_active_theme-${theme}`;
-        }
         return contentClasses;
     }
 
@@ -262,7 +259,7 @@ export default class GridColumn<T> extends mixin<
         this._nextVersion();
     }
 
-    protected _getWrapperBaseClasses(theme: string, style: string): string {
+    protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
 
         const topPadding = this._$owner.getTopPadding();
@@ -282,6 +279,10 @@ export default class GridColumn<T> extends mixin<
 
         if (isDragged) {
             classes += ` controls-ListView__item_dragging_theme-${theme}`;
+        }
+
+        if (this._$owner.isActive() && templateHighlightOnHover !== false) {
+            classes += ` controls-GridView__item_active_theme-${theme}`;
         }
 
         if (topPadding === 'null' && bottomPadding === 'null') {

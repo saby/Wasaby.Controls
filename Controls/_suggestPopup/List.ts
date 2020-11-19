@@ -200,6 +200,13 @@ const List = Control.extend({
       if (isMaxCountNavigation) {
          this._isSuggestListEmpty = !this._items.getCount();
       }
+
+      const results = this._items.getMetaData().results;
+      const currentTabMetaKey = results && results.get('tabsSelectedKey');
+
+      if (currentTabMetaKey && currentTabMetaKey !== this._suggestListOptions.tabsSelectedKey) {
+         this._suggestListOptions.tabsSelectedKey = currentTabMetaKey;
+      }
    },
 
    _unsubscribeFromItemsEvents(): void {

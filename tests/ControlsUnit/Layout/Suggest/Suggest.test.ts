@@ -106,7 +106,7 @@ describe('Controls/suggest', () => {
          assert.isTrue(stateNotifyed);
       });
 
-      it('Suggest::_close', () => {
+      it('Suggest::close', () => {
          let state;
          let isReady = true;
          let isCallCancel = false;
@@ -130,7 +130,7 @@ describe('Controls/suggest', () => {
             isReady: () => isReady,
             cancel: () => { isCallCancel = true; }
          };
-         inputContainer._close();
+         inputContainer.closeSuggest();
          assert.isFalse(state);
          assert.isFalse(isCallCancel);
 
@@ -140,7 +140,7 @@ describe('Controls/suggest', () => {
          assert.isNull(inputContainer._searchResult);
 
          isReady = false;
-         inputContainer._close();
+         inputContainer.closeSuggest();
          assert.isTrue(isCallCancel);
          assert.equal(inputContainer._dependenciesDeferred, null);
       });
@@ -455,15 +455,24 @@ describe('Controls/suggest', () => {
                }
             }));
          }
-
-         const sourceController = inputContainer._getSourceController();
-
-         const loadSpy = sandbox.spy(sourceController, 'load');
+         inputContainer._getRecentKeys = () => {
+            return Promise.resolve(null);
+         };
+         const loadSpy = sandbox.stub(inputContainer, '_loadHistoryKeys').callsFake(() => {
+            inputContainer._historyLoad = new Deferred();
+            return Promise.resolve();
+         });
 
          inputContainer._inputActivated();
          await inputContainer._inputActivated();
 
          assert.isTrue(loadSpy.calledOnce);
+
+         inputContainer._sourceController.cancelLoading();
+         inputContainer._historyLoad = Deferred.success('testResult');
+         await inputContainer._inputActivated();
+
+         assert.isTrue(loadSpy.calledThrice);
 
          sandbox.restore();
       });
@@ -870,7 +879,7 @@ describe('Controls/suggest', () => {
          });
       });
 
-      it('Suggest::_beforeUpdate', () => {
+      it('Suggest::_beforeUpdate', async () => {
          const suggestComponent = getComponentObject({
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',
@@ -1109,13 +1118,14 @@ describe('Controls/suggest', () => {
          assert.isTrue(suggestOpened);
 
          inputContainer._getRecentKeys = () => {
-            return Deferred.success(null);
+            return Promise.resolve(null);
          };
 
          suggestOpened = false;
          inputContainer._options.autoDropDown = false;
          inputContainer._historyKeys = null;
          inputContainer._filter = {};
+
          await inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
          assert.isFalse(suggestOpened);
@@ -1128,7 +1138,8 @@ describe('Controls/suggest', () => {
          inputContainer._options.historyId = null;
          inputContainer._filter = {};
          inputContainer._options.emptyTemplate = undefined;
-         await inputContainer._updateSuggestState();
+         inputContainer._updateSuggestState();
+
          assert.deepEqual(inputContainer._filter, {});
          assert.isFalse(suggestOpened);
 

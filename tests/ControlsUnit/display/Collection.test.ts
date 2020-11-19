@@ -4534,4 +4534,28 @@ describe('Controls/_display/Collection', () => {
             assert.equal(display.getActiveItem(), testingItem);
         });
     });
+
+    describe('drag', () => {
+        let display: CollectionDisplay<unknown>;
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            const rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('setDraggedItems', () => {
+            const draggedItem = display.createItem({contents: {getKey: () => '123'}});
+            display.setDraggedItems(draggedItem, ['123']);
+            assert.equal(display.getItems()[2].getContents().getKey(), '123');
+        });
+    });
 });
