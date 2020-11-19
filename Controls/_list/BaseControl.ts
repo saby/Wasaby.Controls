@@ -4580,8 +4580,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
                 const collapsedGroups = collection.getCollapsedGroups() || [];
-                if (collapsedGroups.indexOf(groupId) === -1) {
-                    collapsedGroups.push(groupId);
+                const groupIndex = collapsedGroups.indexOf(groupId);
+                if (groupIndex === -1) {
+                    if (!needExpandGroup) {
+                        collapsedGroups.push(groupId);
+                    }
+                } else if (needExpandGroup) {
+                    collapsedGroups.splice(groupIndex, 1);
                 }
                 const changes = {
                     changeType: needExpandGroup ? 'expand' : 'collapse',
