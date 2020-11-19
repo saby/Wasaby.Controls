@@ -125,8 +125,8 @@ export default class GridCollection<
         this._updateItemsColumns();
     }
 
-    protected _handleCollectionChange(action: string): void {
-        super._handleCollectionChange(action);
+    protected _handleAfterCollectionChange(): void {
+        super._handleAfterCollectionChange();
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
