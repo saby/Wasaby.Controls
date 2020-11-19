@@ -581,9 +581,10 @@ define(
 
             it('_loadSelectedKeys', async () => {
                let loadConfig;
-               dropdownController._loadItems = (params) => {
+               let actualWithHistory;
+               dropdownController._loadItems = (params, withHistory) => {
                   loadConfig = params;
-
+                  actualWithHistory = withHistory;
                   // return new item;
                   return Promise.resolve(new collection.RecordSet({
                      rawData: [{
@@ -599,6 +600,7 @@ define(
                assert.deepEqual(loadConfig.filter, { id: ['8'] });
                assert.equal(dropdownController._items.getCount(), 4);
                assert.equal(dropdownController._items.at(0).getKey(), '8');
+               assert.isFalse(actualWithHistory);
             });
          });
 
