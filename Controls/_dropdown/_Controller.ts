@@ -274,15 +274,10 @@ export default class _Controller implements IDropdownController {
    }
 
    private _createMenuSource(items: RecordSet|Error): void {
-      let menuItems = items;
-      if (this._options.needLoadSelectedItems && this._isHistoryMenu()) {
-         // FIXME https://online.sbis.ru/opendoc.html?guid=300c6a3f-6870-492e-8308-34a457ad7b85
-         menuItems = items.clone();
-      }
       this._menuSource = new PrefetchProxy({
          target: this._source,
          data: {
-            query: menuItems
+            query: items
          }
       });
    }
