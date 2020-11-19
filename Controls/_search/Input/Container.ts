@@ -23,6 +23,9 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
+      if (this._contextCallbackId) {
+         Store.unsubscribe(this._contextCallbackId);
+      }
    }
 
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
@@ -40,12 +43,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
              },
              true
          );
-      }
-   }
-
-   protected _beforeUnmount(): void {
-      if (this._contextCallbackId) {
-         Store.unsubscribe(this._contextCallbackId);
       }
    }
 
