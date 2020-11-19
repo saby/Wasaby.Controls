@@ -329,11 +329,8 @@ var _private = {
             ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
         return new Promise((resolve) => {
-            Dialog.openPopup({
-                opener: self,
+            self._children.dialogOpener.open({
                 templateOptions,
-                closeOnOutsideClick: true,
-                template: self._moveDialogTemplate,
                 eventHandlers: {
                     onResult: (target: Model) => {
                         resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
