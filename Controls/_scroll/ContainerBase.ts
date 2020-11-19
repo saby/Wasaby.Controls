@@ -334,7 +334,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
-    _updateStateAndGenerateEvents(newState: IScrollState): void {
+    protected _updateStateAndGenerateEvents(newState: IScrollState): void {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие

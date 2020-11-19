@@ -285,6 +285,18 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        this._updateStateAndGenerateEvents(this._state);
+    }
+
+    protected _updateStateAndGenerateEvents(newState: IScrollState): void {
+        super._updateStateAndGenerateEvents({
+            ...newState,
+            hasUnrenderedContent: {
+                top: this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE,
+                bottom: this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE
+            }
+        })
+
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {
