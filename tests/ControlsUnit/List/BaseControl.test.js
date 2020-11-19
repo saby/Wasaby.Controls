@@ -7556,11 +7556,7 @@ define([
                      }
                   };
                },
-               getDraggableItem: () => ({
-                  getContents: () => ({
-                     getKey: () => 1
-                  })
-               })
+               getDraggableItem: () => undefined
             };
             baseControl._dndListController = dndController;
 
@@ -7568,6 +7564,17 @@ define([
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            dndController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            });
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);

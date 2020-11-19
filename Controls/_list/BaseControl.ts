@@ -5939,7 +5939,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dndListController.endDrag();
 
             // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
-            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && draggableItem && this._insideDragging) {
                 const moveToCollapsedNode = targetPosition.position === 'on'
                     && targetPosition.dispItem instanceof TreeItem
                     && !targetPosition.dispItem.isExpanded();
