@@ -7519,17 +7519,24 @@ define([
                      }
                   };
                },
-               getDraggableItem: () => ({
-                  getContents: () => ({
-                     getKey: () => 1
-                  })
-               })
+               getDraggableItem: () => undefined
             };
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            baseControl._dndListController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            });
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
