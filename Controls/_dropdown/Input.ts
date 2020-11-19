@@ -456,3 +456,9 @@ export default class Input extends BaseDropdown {
  * }
  * </pre>
  */
+
+ /**
+ * @name Controls/_dropdown/Input#fontSize
+ * @cfg
+ * @demo Controls-demo/dropdown_new/Input/FontSize/Index
+ */
