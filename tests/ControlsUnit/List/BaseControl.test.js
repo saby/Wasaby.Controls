@@ -7568,7 +7568,7 @@ define([
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
 
-            baseControl._dndListController.getDraggableItem = () => ({
+            dndController.getDraggableItem = () => ({
                getContents: () => ({
                   getKey: () => 1
                })
