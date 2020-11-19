@@ -23,7 +23,7 @@
                   <ws:partial
                      template="{{content.resolvedTemplate}}"
                      additionalProperty="{{null}}"
-                     attr:class="controls-TileView__itemActions__menu_theme-{{_options.theme}}"
+                     attr:class="controls-TileView__itemActions__menu controls-TileView__itemActions__menu_theme-{{_options.theme}}"
                      source="{{_options.source}}"
                      parentProperty="{{_options.parentProperty}}"
                      on:itemClick="_sendResult('itemClick')"
