@@ -2476,6 +2476,7 @@ define([
                setIndicesAfterCollectionChange: () => undefined,
                calculateVirtualScrollHeight: () => 0,
                getParamsToRestoreScrollPosition: () => null,
+               setTriggerVisibility: () => undefined,
                getPlaceholders: () => { return { top: 0, bottom: 0 }; }
             };
 
