@@ -54,7 +54,9 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
     },
 
     _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        this?._notify('historySave', [historyData, items]);
+        if (this._mounted) {
+            this?._notify('historySave', [historyData, items]);
+        }
     },
      _beforeUpdate(newOptions): void {
         this._filterController.update({...newOptions,
