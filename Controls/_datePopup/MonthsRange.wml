@@ -19,6 +19,7 @@
          </ws:headerTemplate>
          <ws:bodyTemplate>
             <Controls._datePopup.MonthsRangeItem
+               rangeSelectedCallback="{{_options.rangeSelectedCallback}}"
                monthClickable="{{_options.monthClickable}}"
                quantum="{{_options.quantum}}"
                selectionType="{{_options.selectionType}}"
