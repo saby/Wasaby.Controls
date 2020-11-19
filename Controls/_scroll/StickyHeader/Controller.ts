@@ -115,7 +115,7 @@ class StickyHeaderController {
         for (let headerId of headers[position]) {
             header = this._headers[headerId];
 
-            const ignoreHeight: boolean = (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
+            const ignoreHeight: boolean = (!header || !header.fixedInitially || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
             if (ignoreHeight) {
                 continue;
             }
