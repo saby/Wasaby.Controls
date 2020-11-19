@@ -5,11 +5,12 @@
 
 .ws-is-mobile-chrome-ios,
 .ws-is-mobile-safari {
-  .controls-Scroll-ContainerBase {
-    // Нативный скроллбар находится ниже чем элементы с position: sticky и из-за этого перекрывается.
-    // Свойство perspective создаст новый контекст наложения, что позволит скроллбару быть выше sticky элементов
-    perspective: 1000;
-  }
+   .controls-Scroll-ContainerBase {
+      // Нативный скроллбар на Ipad'е находится ниже чем элементы с position: sticky и из-за этого перекрывается.
+      // Свойство z-index создаст новый контекст наложения, что позволит скроллбару быть выше sticky элементов
+      // В старом скролл контейнере было свойсвто perspective: 1000, но на IOS 14 из-за него полностью пропадает скрообар.
+      z-index: 0;
+   }
 }
 
 .controls-Scroll-containerBase_userContent {
