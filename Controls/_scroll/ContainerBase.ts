@@ -451,9 +451,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // В контроле Hint/Template:ListWrapper на корневую ноду навешивается стиль height: 100% из-за чего
         // неправильно рассчитывается scrollHeight. Будем рассчитывать высоту через дочерние элементы.
         // Должно удалиться, когда перейдем на замеры по div скроллконтейнера
-        if (container.classList.contains('Hint-ListWrapper')) {
+        const classList = container.classList;
+        if (classList.contains('Hint-ListWrapper') || classList.contains('controls-Scroll-containerBase__height-fix')) {
             return container.children;
-        } else if (container.classList.contains('Wizard-Vertical-Container__content')) {
+        } else if (classList.contains('Wizard-Vertical-Container__content')) {
             const wizardContainer = container.querySelector('.Wizard-Vertical-View');
             return wizardContainer?.children;
         }
