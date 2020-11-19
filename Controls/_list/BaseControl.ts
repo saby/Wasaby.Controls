@@ -4304,6 +4304,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
             _private.activateEditingRow(this);
         }
+
+        this._updateInProgress = false;
+        this._notifyOnDrawItems();
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate.forEach((callback) => {
+                callback();
+            });
+            this._callbackAfterUpdate = null;
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4400,9 +4409,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _afterUpdate(oldOptions): void {
-        this._updateInProgress = false;
         this._loadedBySourceController = false;
-        this._notifyOnDrawItems();
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4432,12 +4439,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
-        if (this._callbackAfterUpdate) {
-            this._callbackAfterUpdate.forEach((callback) => {
-                callback();
-            });
-            this._callbackAfterUpdate = null;
-        }
     },
 
     __onPagingArrowClick(e, arrow) {
