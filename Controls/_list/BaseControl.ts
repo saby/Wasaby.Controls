@@ -156,7 +156,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
-const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
+const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
@@ -4319,7 +4319,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
                 });
-            }, CHECK_TRIGGERS_DELAY_IF_IE);
+            }, CHECK_TRIGGERS_DELAY_IF_NEED);
         });
     },
 
