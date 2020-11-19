@@ -15,6 +15,9 @@
  * @public
  * @author Авраменко А.С.
  */
+export default interface IDraggable {
+    readonly '[Controls/_interface/IDraggable]': boolean;
+}
 
 /**
  * @name Controls/_interface/IDraggable#itemsDragNDrop

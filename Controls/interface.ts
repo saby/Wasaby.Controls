@@ -93,3 +93,4 @@ export {default as IBackgroundStyle, IBackgroundStyleOptions} from './_interface
 export {Direction, IQueryParamsMeta, IQueryParams} from './_interface/IQueryParams';
 export {default as IGrouping, IGroupingOptions} from './_interface/IGrouping';
 export {default as IPromiseSelectable, IPromiseSelectableOptions} from './_interface/IPromiseSelectable';
+export {default as IDraggable} from './_interface/IDraggable';
