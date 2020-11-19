@@ -1709,7 +1709,7 @@ var
                     const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
                     if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
                         index === 1 && !hasMainCell ||
-                        index === 0 && hasMainCell) || stickyProperty === undefined) {
+                        index === 0 && hasMainCell)) {
                         return false;
                     }
                 }
