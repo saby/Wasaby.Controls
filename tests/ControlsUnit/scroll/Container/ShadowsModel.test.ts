@@ -161,5 +161,20 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             });
             assert.notStrictEqual(shadows.getVersion(), version);
         });
+        it('should\' change "isEnabled" if there are fixed headers.', () => {
+            const shadows = new ShadowsModel({
+                ...getShadowsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            });
+            shadows.setStickyFixed(true, true);
+            const version = shadows.getVersion();
+            shadows.updateVisibilityByInnerComponents({
+                top: SHADOW_VISIBILITY.VISIBLE,
+                bottom: SHADOW_VISIBILITY.VISIBLE
+            });
+            assert.isFalse(shadows.top.isEnabled);
+            assert.isFalse(shadows.bottom.isEnabled);
+            assert.strictEqual(shadows.getVersion(), version);
+        });
     });
 });
