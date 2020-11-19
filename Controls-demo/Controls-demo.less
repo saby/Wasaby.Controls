@@ -1,16 +1,36 @@
+@import "Controls-default-theme/_theme";
 @spacing_demo_default: 12px;
 @spacing_demo_default_controls: 4px;
 
+.controlsDemo__icon_active {
+  cursor: pointer;
+}
+
 .controlsDemo__wrapper {
-  padding: 12px;
+  padding: @spacing_demo_default;
+}
+
+.controlsDemo__wrapper__padding-top {
+  padding-top: @spacing_demo_default;
+}
+
+.controlsDemo__wrapper__padding-left {
+  padding-left: @spacing_demo_default;
 }
 
 .controlsDemo__wrapper__horizontal {
-  padding-right: 12px;
+  padding-right: @spacing_demo_default;
 }
 
 .controlsDemo__cell {
-  padding-bottom: 12px;
+  padding-bottom: @spacing_demo_default;
+}
+
+.controlDemo__input-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+  align-items: center;
 }
 
 .controlsDemo__button {
@@ -32,6 +52,10 @@
   width: 300px;
 }
 
+.controlsDemo_fixedWidth350 {
+  width: 350px;
+}
+
 .controlsDemo_fixedWidth500 {
   width: 500px;
 }
@@ -40,6 +64,13 @@
 }
 .controlsDemo_fixedWidth800 {
   width: 800px;
+}
+.controlsDemo_fixedWidth1700 {
+  width: 1700px;
+}
+
+.controlsDemo_fixedWidth2000 {
+  width: 2000px;
 }
 
 .controlsDemo_widthFit {
@@ -75,9 +106,17 @@
   justify-content: space-between;
 }
 
+.controlsDemo__flex-jc-sa {
+  justify-content: space-around;
+}
+
 .controlsDemo__flexColumn {
   display: flex;
   flex-direction: column;
+}
+
+.controlsDemo__height200 {
+  height: 200px;
 }
 
 .controlsDemo__height300 {
@@ -94,6 +133,10 @@
 
 .controlsDemo__width100 {
   width: 100%;
+}
+
+.controlsDemo_line-height18 .controls-ListView__itemContent {
+  line-height: 18px;
 }
 
 .controlsDemo__customTileTpl {
@@ -138,16 +181,21 @@
   width: 200px;
 }
 
-.controlsDemo__minWidth600 {
-  min-width: 600px;
+.controlsDemo__maxWidth500,
+.controlsDemo__childMaxWidth500 > * {
+  max-width: 500px;
 }
+
+.controlsDemo__childMaxWidth550 > * {
+  max-width: 550px;
+}
+
 .controlsDemo__maxWidth800 {
   max-width: 800px;
 }
 
-.controlsDemo__maxWidth500,
-.controlsDemo__childMaxWidth500 > * {
-  max-width: 500px;
+.controlsDemo__minWidth600 {
+  min-width: 600px;
 }
 
 .controlsDemo__childMinWidth400 > * {
@@ -189,6 +237,10 @@
   margin-left: @spacing_demo_default* 4;
 }
 
+.controlsDemo__mr1 {
+  margin-right: @spacing_demo_default;
+}
+
 .controlsDemo__mr2 {
   margin-right: @spacing_demo_default * 2;
 }
@@ -199,6 +251,22 @@
 
 .controlsDemo__mr4 {
   margin-right: @spacing_demo_default * 4;
+}
+
+.controlsDemo_m {
+  margin: @spacing_demo_default;
+}
+
+.controlsDemo_m2 {
+  margin: @spacing_demo_default * 2;
+}
+
+.controlsDemo_m3 {
+  margin: @spacing_demo_default * 3;
+}
+
+.controlsDemo_m4 {
+  margin: @spacing_demo_default * 4;
 }
 
 .controlsDemo__wrapper_fixed_width {
@@ -220,6 +288,15 @@
 
 .controlsDemo__margin-top {
   margin-top: 20px;
+}
+
+.controlsDemo__hor-padding__list__footerContent {
+  color: #5d5d5d;
+  font-size: 13px;
+}
+
+.controlsDemo__height18_item {
+  height: 18px;
 }
 
 /*==========[ Controls-demo/grid ]================*/
@@ -310,6 +387,10 @@
   border-top: 1px dashed #f0f;
 }
 
+.controlsDemo__footer__separatedFooter__content {
+  color: darkgrey;
+}
+
 .controlDemo__RowWrapper {
   display: flex;
   flex-direction: row;
@@ -318,4 +399,31 @@
 
 .controlsDemo_bordered {
   border: 1px solid black;
+}
+
+.controlsDemo-toolbar-panel {
+   display: flex;
+   align-items: center;
+   width: 100%;
+   user-select: none;
+   overflow: hidden;
+   white-space: nowrap;
+   position: relative;
+   flex-shrink: 0;
+   background-color: @background-color_operationsPanel;
+   height: @height_operationsPanel;
+}
+
+.controlsDemo__fixedWidth-s_theme-dark,
+.controlsDemo__fixedWidth-s_theme-default {
+  width: 240px;
+}
+
+.controlsDemo__fixedWidth-s_theme-dark-large,
+.controlsDemo__fixedWidth-s_theme-light-large {
+  width: 400px;
+}
+
+.ControlsDemo_dateTime-cell {
+  white-space: nowrap;
 }

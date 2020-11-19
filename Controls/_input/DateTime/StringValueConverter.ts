@@ -1,7 +1,10 @@
 import cExtend = require('Core/core-simpleExtend');
+import {instanceOfModule} from 'Core/core-instance';
+import {constants} from 'Env/Env';
+import {DateTime} from 'Types/entity';
 import formatter = require('Types/formatter');
-import {dateMaskConstants} from 'Controls/interface';
-import dateUtils = require('Controls/Utils/Date');
+import {Range, Base as dateUtils} from 'Controls/dateUtils';
+
 import {getMaskType, DATE_MASK_TYPE, DATE_TIME_MASK_TYPE, TIME_MASK_TYPE} from './Utils';
 
 var _private = {
@@ -35,7 +38,7 @@ var _private = {
       return true;
    },
 
-   getFullYearBy2DigitsYear: function(valueYear) {
+   getFullYearBy2DigitsYear: function(self, valueYear) {
       var
           curYear = (new Date()).getFullYear(),
           shortCurYear = curYear % 100,
@@ -43,12 +46,20 @@ var _private = {
 
       // Если год задаётся двумя числами, то считаем что это текущий век
       // если год меньше или равен текущему году + 10, иначе это прошлый век.
-      return valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      // Если в DateRange в первом поле задана дата и год больше, чем сформированный
+      // год по правилу выше, то значит век возьмем текущий. Например, в первом поле
+      // указан год 20, а во втором 35, то без этой правки во втором поле будет создан
+      // 1935 год.
+      const fullYear = valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      if (self._yearSeparatesCenturies && fullYear < self._yearSeparatesCenturies.getFullYear()) {
+         return valueYear + 2000;
+      }
+      return fullYear;
    },
 
    parseString: function(self, str) {
       var valueModel = {
-            year: { str: null, value: 1900, valid: false },
+            year: { str: null, value: 1904, valid: false },
             month: { str: null, value: 0, valid: false },
             date: { str: null, value: 1, valid: false },
             hours: { str: null, value: 0, valid: false },
@@ -75,7 +86,7 @@ var _private = {
             valueObject.valid = true;
             valueObject.value = parseInt(strItems[i], 10);
             if (maskItems[i] === 'YY') {
-               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+               valueObject.value = _private.getFullYearBy2DigitsYear(self, valueObject.value);
             } else if (maskItems[i] === 'MM') {
                valueObject.value -= 1;
             }
@@ -106,7 +117,7 @@ var _private = {
             valueObject.valid = true;
             valueObject.value = parseInt(valueObject.str, 10);
             if (i=== 'year' && valueObject.value < 100) {
-               valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
+               valueObject.value = _private.getFullYearBy2DigitsYear(self, valueObject.value);
             } else if (i === 'month') {
                valueObject.value -= 1;
             }
@@ -116,7 +127,7 @@ var _private = {
    },
 
    fillFromBaseValue: function(self, valueModel, baseValue) {
-      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1);
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1);
 
       if (valueModel.year.str === null) {
          valueModel.year.value = baseValue.getFullYear();
@@ -124,7 +135,7 @@ var _private = {
       if (valueModel.month.str === null) {
          valueModel.month.value = baseValue.getMonth();
       }
-      if (valueModel.date.str === null && self._mask !== dateMaskConstants.MM_YYYY) {
+      if (valueModel.date.str === null && self._mask !== Range.dateMaskConstants.MM_YYYY) {
          // Для контрола с маской MM/YYYY не имеет смысла сохранять дату между вводом дат т.к. это приводит
          // к неожиданным результатам. Например, была программно установлена дата 31.12.2018.
          // меняем месяц на 11. 31.11 несуществует. Можно скорректировать на 30.11.2018. Теперь пользователь
@@ -183,7 +194,7 @@ var _private = {
          itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
          isZeroAtBeginning = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
          if (!isNaN(itemValue) && itemValue < 100 && isZeroAtBeginning) {
-            setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
+            setValue(valueModel.year, _private.getFullYearBy2DigitsYear(self, itemValue));
          } else {
             return;
          }
@@ -313,6 +324,7 @@ var ModuleClass = cExtend.extend({
    _replacerRegExp: null,
    _replacerBetweenCharsRegExp: null,
    _dateConstructor: null,
+   _yearSeparatesCenturies: null,
 
    constructor: function(options) {
       this.update(options || {});
@@ -323,6 +335,7 @@ var ModuleClass = cExtend.extend({
     * @param options
     */
    update: function(options) {
+      this._yearSeparatesCenturies = options.yearSeparatesCenturies;
       this._mask = options.mask;
       this._dateConstructor = options.dateConstructor || Date;
       if (this._replacer !== options.replacer) {
@@ -337,11 +350,24 @@ var ModuleClass = cExtend.extend({
     * @param value
     * @returns {*}
     */
-   getStringByValue: function(value, mask) {
+   getStringByValue(value: Date, mask: string): string {
+      let dateString: string = '';
       if (dateUtils.isValidDate(value)) {
-         return formatter.date(value, this._mask || mask);
+         const actualMask: string = this._mask || mask;
+         // Если дата имеет тип ДатаВремя, то при передачи на клиент она будет сконвертирована в часовой пояс клиента.
+         // На сервере отрендерим дату в том же часовом поясе.
+         // По факту тут проврка на DateTime.
+         // instanceOfModule(value, 'Types/entity:DateTime') не подходит т.к. Date и Time наследуются от DateTime,
+         // и проверка на 'Types/entity:DateTime' возвращает true для всех этих типов.
+         if (constants.isServerSide &&
+             !(instanceOfModule(value, 'Types/entity:Date') || instanceOfModule(value, 'Types/entity:Time'))) {
+            const tzOffset: number = DateTime.getClientTimezoneOffset();
+            dateString = formatter.date(value, actualMask, tzOffset);
+         } else {
+            dateString = formatter.date(value, actualMask);
+         }
       }
-      return '';
+      return dateString;
    },
 
    /**
@@ -381,7 +407,7 @@ var ModuleClass = cExtend.extend({
       return new this._dateConstructor('Invalid');
    },
    getCurrentDate: function(baseValue, mask) {
-      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1900, 0, 1)
+      baseValue = dateUtils.isValidDate(baseValue) ? baseValue : new Date(1904, 0, 1)
       let
           year = baseValue.getFullYear(),
           month = baseValue.getMonth(),

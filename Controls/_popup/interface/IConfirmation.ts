@@ -44,7 +44,7 @@ export interface IConfirmationOpener {
 /**
  * Метод открытия окна подтверждения.
  * @function Controls/_popup/interface/IConfirmation#open
- * @param {Controls/popup:IConfirmation} IConfirmationOptions Конфигурация диалога подтверждения.
+ * @param {Controls/popup:IConfirmationOptions} IConfirmationOptions Конфигурация диалога подтверждения.
  * @returns {Deferred} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @remark
  * 1. Если требуется открыть окно, без создания popup:Confirmation в верстке, следует использовать статический метод {@link openPopup}
@@ -96,12 +96,11 @@ export interface IConfirmationOpener {
  * Статический метод для открытия окна подтверждения. При использовании метода не требуется создавать popup:Confirmation в верстке.
  * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/#open-popup Подробнее}.
  * @function Controls/_popup/interface/IConfirmation#openPopup
- * @param {Controls/popup:IConfirmation} IConfirmationOptions Конфигурация окна подтверждения
+ * @param {Controls/popup:IConfirmationOptions} IConfirmationOptions Конфигурация окна подтверждения
  * @return {Promise<boolean>} Результат будет возвращен после того, как пользователь закроет всплывающее окно.
  * @static
  * @see open
  * @example
- * js
  * <pre>
  *    import {Confirmation} from 'Controls/popup';
  *    ...

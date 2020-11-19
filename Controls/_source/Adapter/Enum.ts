@@ -22,7 +22,7 @@ interface IRawDataElem {
  * @extends Core/Control
  * @author Герасимов А.М.
  * @demo Controls-demo/Container/Enum
- * @control
+ * 
  * @public
  */
 
@@ -33,16 +33,16 @@ interface IRawDataElem {
  * @extends Core/Control
  * @author Герасимов Александр
  * @demo Controls-demo/Container/Enum
- * @control
+ * 
  * @public
  */ 
 
 class EnumAdapter extends Control {
 
    protected _template: TemplateFunction = EnumTemplate;
-   private _source: Memory = null;
+   protected _source: Memory = null;
    private _enum: Enum<string> = null;
-   private _selectedKey: string;
+   protected _selectedKey: string;
 
    private _getArrayFromEnum(enumInstance: Enum<string>): IRawDataElem[] {
       const arr = [];
@@ -63,13 +63,19 @@ class EnumAdapter extends Control {
    }
 
    private _enumSubscribe(enumInstance: Enum<string>): void {
-      enumInstance.subscribe('onChange', (e, index, value) => {
-         this._selectedKey = value;
-         this._forceUpdate();
-      });
+      enumInstance.subscribe('onChange', this._enumChangeHandler);
+   }
+
+   private _enumUnsubscribe(enumInstance: Enum<string>): void {
+      enumInstance.unsubscribe('onChange', this._enumChangeHandler);
+   }
+
+   private _enumChangeHandler(event: SyntheticEvent<Event>, index: number, value: string): void {
+      this._selectedKey = value;
    }
 
    protected _beforeMount(newOptions: IEnumAdapterOptions): void {
+      this._enumChangeHandler = this._enumChangeHandler.bind(this);
       if (newOptions.enum) {
          this._enum = newOptions.enum;
          this._enumSubscribe(this._enum);
@@ -87,7 +93,14 @@ class EnumAdapter extends Control {
       }
    }
 
-   private _changeKey(e: SyntheticEvent<Event>, key: string | string[]): void {
+   protected _beforeUnmount(): void {
+      if (this._enum) {
+         this._enumUnsubscribe(this._enum);
+         this._enum = null;
+      }
+   }
+
+   protected _changeKey(e: SyntheticEvent<Event>, key: string | string[]): void {
       let resultKey: string;
       // support of multiselection in dropdown
       if (key instanceof Array) {

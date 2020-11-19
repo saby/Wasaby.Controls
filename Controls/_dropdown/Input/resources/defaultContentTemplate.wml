@@ -1,9 +1,9 @@
 <div class="controls-Dropdown__wrapper_theme_{{_options.theme}}
             {{fontSize ? 'controls-fontsize-' + fontSize : 'controls-Dropdown-fontsize' }}_theme-{{_options.theme}}">
-   <!-- https://online.sbis.ru/opendoc.html?guid=29c26db8-bb6e-40f3-8613-183b225adbe8 -->
    <div class="controls-Dropdown__content-wrapper_theme-{{_options.theme}}
-    {{!readOnly && (countItems === undefined || countItems > 1 || footerTemplate) ? 'controls-Dropdown__text_enabled ' +
-     (isEmptyItem && !fontColorStyle ? 'controls-Dropdown__emptyItem' : 'controls-Dropdown__defaultItem controls-text-' + (fontColorStyle || 'link')) + '_theme-' + _options.theme}}"
+      {{!readOnly && (countItems === undefined || countItems > 1 || footerTemplate) ? 'controls-Dropdown__text_enabled ' +
+      (style && !fontColorStyle ? 'controls-Dropdown__item_style-' + style : (isEmptyItem && !fontColorStyle ? 'controls-Dropdown__emptyItem'
+         : 'controls-Dropdown__defaultItem controls-text-' + (fontColorStyle || 'link'))) + '_theme-' + _options.theme}}"
         name="popupTarget">
 
       <ws:if data="{{contentTemplate}}">
@@ -15,11 +15,11 @@
       </ws:if>
       <ws:else>
          <div if="{{icon}}" class="controls-Dropdown__icon_theme_{{_options.theme}} controls-icon_style-{{item.get('iconStyle') || 'secondary'}}_theme-{{_options.theme}}"
-              title="{{tooltip || text}}">
+              title="{{tooltip}}">
             <div class="{{iconSize ? 'controls-icon_size-' + iconSize + '_theme-' + _options.theme}} {{icon}}"></div>
          </div>
          <div class="controls-Dropdown__text-wrapper theme_{{_options.theme}}">
-            <div if="{{!icon}}" class="controls-Dropdown__text theme_{{_options.theme}}" title="{{tooltip || text}}">{{text}}</div>
+            <div if="{{!icon}}" class="controls-Dropdown__text theme_{{_options.theme}}" title="{{tooltip}}">{{text}}</div>
             <span class="controls-Dropdown__hasMoreText theme_{{_options.theme}}">{{hasMoreText}}</span>
          </div>
       </ws:else>

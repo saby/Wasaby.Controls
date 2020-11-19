@@ -52,10 +52,14 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
 
 /**
  * Список хелперов для отображения панели операций над записью.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * 
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 
 /*
@@ -63,7 +67,6 @@ function getSiblingItem(direction, item, items, parentProperty, nodeProperty, ro
  * @class Controls/_list/ItemActions/Helpers
  * @public
  * @author Сухоручкин А.С.
- * @category List
  */
 var helpers = {
 
@@ -80,13 +83,15 @@ var helpers = {
      */
 
     /**
-     * Хелпер для отображения панели операций над записью наверху/внизу.
-     * @function Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
-     * @param {MoveDirection} direction
+     * Хелпер для отображения {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} наверху/внизу.
+     * @function 
+     * @name Controls/_list/ItemActions/Helpers#reorderMoveActionsVisibility
+     * @param {MoveDirection} direction Направление.
      * @param {Types/entity:Record} item Экземпляр элемента, действие которого обрабатывается.
      * @param {Types/collection:RecordSet} items Список всех элементов.
      * @param {Controls/_interface/IHierarchy#parentProperty} parentProperty Имя поля, содержащего сведения о родительском узле.
      * @param {Controls/_interface/IHierarchy#nodeProperty} nodeProperty Имя поля, описывающего тип узла (список, узел, скрытый узел).
+     * @example
      * В следующем примере разрешается перемещать только элементы, находящиеся в одном родительском элементе.
      * JS:
      * <pre>

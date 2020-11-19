@@ -1,0 +1,58 @@
+// Переменные для скроллбара
+//
+// Размеры и отступы
+
+@padding_scrollbar:                                @offset_3xs;
+
+// Размеры ползунка
+
+@thumb_s_thickness_scrollbar:                      3px;
+@thumb_hover_s_thickness_scrollbar:                6px;
+@thumb_l_thickness_scrollbar:                      4px;
+@thumb_hover_l_thickness_scrollbar:                12px;
+
+@thumb_min-length_scrollbar:                       46px;
+
+// Радиус скругления ползунка
+
+@thumb_s_border-radius_scrollbar:                  1.5px;
+@thumb_hover_s_border-radius_scrollbar:            3px;
+@thumb_l_border-radius_scrollbar:                  2px;
+@thumb_hover_l_border-radius_scrollbar:            5px;
+
+// Цвета ползунка
+
+@accented_thumb_background-color_scrollbar:         rgba(0, 0, 0, 0.1);
+@accented_thumb_hover_background-color_scrollbar:   rgba(0, 0, 0, 0.15);
+@unaccented_thumb_background-color_scrollbar:       @secondary_color;
+@unaccented_thumb_hover_background-color_scrollbar: @secondary_color;
+
+// Линия по которой перемещается ползунок
+
+@track_thickness_scrollbar:                          1px;
+@track_color_scrollbar:                              #c1cde1;
+@track_offset_scrollbar:                             @offset_m;
+
+
+
+// Переменные для скролл-контейнера
+
+@shadow_thickness_scroll:                            8px;
+@shadow_start-color_scroll:                          rgba(0, 0, 0, 0.15);
+@shadow_end-color_scroll:                            rgba(0, 0, 0, 0);
+@shadow_thickness-hider_height_scroll:               24px;
+// В Safari на MacOS неправльно работает transparent в linear-gradient.
+// Сделаем так, чтобы градинет переходил  из цвета бэкграунда в прозрачный цвет бэкграунда.
+// Таким образом мы получим планый переход при появлении тени
+@shadow_thickness_background_scroll:                 linear-gradient(@background-color 10%, rgba(@background-color, 0)),
+                                                     linear-gradient(rgba(@background-color, 0), @background-color 90%) 0 100%,
+                                                     linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
+                                                     linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll) 0 100%;
+
+
+
+
+
+//не использовать! удалить после создания темы аккордеона
+@inverted_accented_thumb_background-color_scrollbar:           rgba(255, 255, 255, 0.2);
+@inverted_accented_thumb_hover_background-color_scrollbar:     rgba(255, 255, 255, 0.5);

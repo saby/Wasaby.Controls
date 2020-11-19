@@ -83,6 +83,24 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/Multiselect/Index' }}">
+            <a href="{{content.href}}">Множественный выбор</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.Multiselect.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/CustomPosition/Index' }}">
+            <a href="{{content.href}}">Нестандартное расположение чекбоксов</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.CustomPosition.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/grid/Ladder/Index' }}">
             <a href="{{content.href}}">"Лесенка"</a>
         </Router.router:Reference>
@@ -105,6 +123,15 @@
             <a href="{{content.href}}">Межстрочный разделитель</a>
         </Router.router:Reference>
         <Controls-demo.grid.RowSeparator.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/grid/ColumnSeparator/Index' }}">
+            <a href="{{content.href}}">Разделитель колонок</a>
+        </Router.router:Reference>
+        <Controls-demo.grid.ColumnSeparator.Index/>
     </div>
 
     <div class="controlsDemo__cell">
@@ -143,5 +170,13 @@
         <Controls-demo.grid.ItemActions.Index/>
     </div>
 
+   <div class="controlsDemo__cell">
+      <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                               state="/Controls-demo/app/:app"
+                               app="{{ 'Controls-demo/grid/TagStyle/Index' }}">
+         <a href="{{content.href}}">Применение tagStyle или tagStyleProperty к колонкам</a>
+      </Router.router:Reference>
+      <Controls-demo.grid.TagStyle.Index/>
+   </div>
 
 </div>

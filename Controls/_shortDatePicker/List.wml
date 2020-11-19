@@ -1,0 +1,39 @@
+<Controls.calendar:MonthList
+        attachLoadTopTriggerToNull="{{ false }}"
+        displayedRanges="{{_displayedRanges}}"
+        stubTemplate="{{stubTemplate}}"
+        bind:position="_position"
+        source="{{_options.source}}">
+    <ws:yearHeaderTemplate>
+
+        <div
+                on:mouseenter="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
+                on:touchstart="_onYearMouseEnter(yearHeaderTemplate.date.getFullYear())"
+                on:mouseleave="_onYearMouseLeave()"
+                on:touchmove="_onYearMouseLeave()"
+                on:click="_onYearClick(yearHeaderTemplate.date.getFullYear())"
+                class="controls-PeriodLiteDialog__fullYear-listElement
+                       controls-PeriodLiteDialog__fullYear-listElement_theme-{{_options.theme}}
+                       {{ _options.chooseYears && _yearHovered === yearHeaderTemplate.date.getFullYear() ?  'controls-PeriodLiteDialog__fullYear-listElement-hovered' +
+                       ' controls-PeriodLiteDialog__fullYear-listElement-hovered_theme-' + _options.theme +
+                       ' controls-PeriodLiteDialog__yearHeader-background-hovered_theme-' + _options.theme }}
+                       controls-PeriodLiteDialog__vLayoutItem-caption controls-PeriodLiteDialog__text-align-left
+                       controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}
+                    {{_isFullPicker ? 'controls-PeriodLiteDialog__fullPicker_theme-' + _options.theme}}">
+            {{ yearHeaderTemplate.date.getFullYear() }}
+        </div>
+    </ws:yearHeaderTemplate>
+    <ws:yearTemplate>
+        <Controls._shortDatePicker.bodyItem
+                attr:class="controls-PeriodLiteDialog_calendarBody
+                            controls-PeriodLiteDialog_calendarBody_theme-{{_options.theme}}"
+                attr:data-date="{{_dateToDataString(yearTemplate.date)}}"
+                scope="{{_options}}"
+                monthTemplate="{{monthTemplate}}"
+                _position="{{_position}}"
+                _yearHovered="{{_yearHovered}}"
+                formatDate="{{formatDate}}"
+                currentYear="{{yearTemplate.date.getFullYear()}}"
+        />
+    </ws:yearTemplate>
+</Controls.calendar:MonthList>

@@ -4,7 +4,7 @@ import {IControlOptions} from 'UI/Base';
  * Интерфейс для опций окна предпросмотра.
  *
  * @interface Controls/_popup/interface/IPreviewer
- * @private
+ * @public
  * @author Красильников А.С.
  */
 
@@ -27,18 +27,10 @@ export interface IPreviewer {
  * @name Controls/_popup/interface/IPreviewer#content
  * @cfg {Content} Контент, при взаимодействии с которым открывается окно.
  */
-/*
- * @name Controls/_popup/interface/IPreviewer#content
- * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
- */
 
 /**
  * @name Controls/_popup/interface/IPreviewer#template
  * @cfg {Content} Содержимое окна.
- */
-/*
- * @name Controls/_popup/interface/IPreviewer#template
- * @cfg {Content} Mini card contents.
  */
 
 /**
@@ -50,7 +42,54 @@ export interface IPreviewer {
  * @variant hoverAndClick Открытие по клику или ховеру на контент. Закрытие по клику или или ховеру "мимо" - не по контенту или шаблону.
  * @default hoverAndClick
  */
+
 /**
+ * @typedef {Object} direction
+ * @property {vertical} vertical
+ * @property {horizontal} horizontal
+ */
+
+/**
+ * @typedef {Object} offset
+ * @property {Number} vertical
+ * @property {Number} horizontal
+ */
+
+/**
+ * @typedef {Enum} vertical
+ * @variant top
+ * @variant bottom
+ * @variant center
+ */
+
+/**
+ * @typedef {Enum} horizontal
+ * @variant left
+ * @variant right
+ * @variant center
+ */
+
+/**
+ * @name Controls/_popup/interface/IPreviewer#direction
+ * @cfg {direction} Устанавливает выравнивание всплывающего окна относительно точки позиционнирования.
+ */
+
+/**
+ * @name Controls/_popup/interface/IPreviewer#targetPoint
+ * @cfg {direction} Точка позиционнирования всплывающего окна относительно вызывающего элемента.
+ */
+
+/**
+ * @name Controls/_popup/interface/IPreviewer#offset
+ * @cfg {offset} Устанавливает отступы от точки позиционнирования до всплывающего окна
+ */
+
+/**
+ * @name Controls/_popup/interface/IPreviewer#templateOptions
+ * @cfg {String|Function} Опции для контрола, переданного в {@link template}
+ */
+
+/*
  * @name Controls/_popup/interface/IPreviewer#trigger
  * @cfg {String} Event name trigger the opening or closing of the template.
  * @variant click Opening by click on the content. Closing by click not on the content or template.
@@ -58,4 +97,18 @@ export interface IPreviewer {
  * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
  * @variant hoverAndClick Opening by click or hover on the content. Closing by click or hover not on the content or template.
  * @default hoverAndClick
+ */
+
+/**
+ * @function
+ * @name Controls/_popup/interface/IPreviewer#close
+ * @description Метод для закрытия всплывающего окна.
+ * @remark Используется для закрытия окна, если опция {@link trigger} установлена в значении demand
+ */
+
+/**
+ * @function
+ * @name Controls/_popup/interface/IPreviewer#open
+ * @description Метод для открытия всплывающего окна.
+ * @remark Используется для открытия окна, если опция {@link trigger} установлена в значении demand
  */

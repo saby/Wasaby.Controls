@@ -3,9 +3,8 @@ define('Controls-demo/Buttons/Menu/Menu', [
    'wml!Controls-demo/Buttons/Menu/Menu',
    'Types/source',
    'Controls/Constants',
-   'Controls-demo/Buttons/Menu/historySourceMenu',
+   'Controls-demo/dropdown_new/Button/HistoryId/historySourceMenu',
 
-   'css!Controls-demo/Buttons/Menu/Menu',
    'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
    'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
 ], function(Control, template, source, ControlsConstants, HistorySourceMenu) {
@@ -38,6 +37,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _additionalItems: null,
          _multilevelHierarchyItems: null,
          _bigItems: null,
+         _historySource: null,
 
          _beforeMount: function() {
             this._oneItem = [
@@ -56,8 +56,8 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 4, title: 'Matching' }
             ];
             this._iconsItems = [
-               { id: 1, title: 'Form file', icon: 'icon-medium icon-Attach icon-primary' },
-               { id: 2, title: 'From 1C', icon: 'icon-medium icon-1c icon-primary' }
+               { id: 1, title: 'Form file', icon: ' icon-Attach' },
+               { id: 2, title: 'From 1C', icon: ' icon-1c' }
             ];
 
             this._subParagraphItems = [
@@ -120,35 +120,35 @@ define('Controls-demo/Buttons/Menu/Menu', [
             ];
 
             this._simpleAdd2 = [
-               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 1, title: 'Administrator', icon: 'icon-AdminInfo' },
                { id: 2, title: 'Moderator' },
                { id: 3, title: 'Participant' },
-               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
+               { id: 4, title: 'Subscriber', icon: 'icon-Subscribe' }
             ];
 
             this._simpleAdd3 = [
-               { id: 1, title: 'Administrator', icon: 'icon-small icon-AdminInfo' },
+               { id: 1, title: 'Administrator', icon: 'icon-AdminInfo' },
                { id: 2, title: 'Moderator' },
                { id: 3, title: 'Participant' },
-               { id: 4, title: 'Subscriber', icon: 'icon-small icon-Subscribe' }
+               { id: 4, title: 'Subscriber', icon: 'icon-Subscribe' }
             ];
             this._iconAdd = [
-               { id: 1, title: 'Work phone', icon: 'icon-small icon-PhoneWork' },
-               { id: 2, title: 'Mobile phone', icon: 'icon-small icon-PhoneCell' },
-               { id: 3, title: 'Home phone', icon: 'icon-small icon-Home' },
-               { id: 4, title: 'Telegram', icon: 'icon-small icon-Telegram' },
-               { id: 5, title: 'e-mail', icon: 'icon-small icon-Email' },
-               { id: 6, title: 'Skype', icon: 'icon-small icon-Skype' },
-               { id: 7, title: 'ICQ', icon: 'icon-small icon-Icq' }
+               { id: 1, title: 'Work phone', icon: 'icon-PhoneWork' },
+               { id: 2, title: 'Mobile phone', icon: 'icon-PhoneCell' },
+               { id: 3, title: 'Home phone', icon: 'icon-Home' },
+               { id: 4, title: 'Telegram', icon: 'icon-Telegram' },
+               { id: 5, title: 'e-mail', icon: 'icon-Email' },
+               { id: 6, title: 'Skype', icon: 'icon-Skype' },
+               { id: 7, title: 'ICQ', icon: 'icon-Icq' }
             ];
             this._iconAddMedium = [
-               { id: 1, title: 'Work phone', icon: 'icon-medium icon-PhoneWork' },
-               { id: 2, title: 'Mobile phone', icon: 'icon-medium icon-PhoneCell' },
-               { id: 3, title: 'Home phone', icon: 'icon-medium icon-Home' },
-               { id: 4, title: 'Telegram', icon: 'icon-medium icon-Telegram' },
-               { id: 5, title: 'e-mail', icon: 'icon-medium icon-Email' },
-               { id: 6, title: 'Skype', icon: 'icon-medium icon-Skype' },
-               { id: 7, title: 'ICQ', icon: 'icon-medium icon-Icq' }
+               { id: 1, title: 'Work phone', icon: 'icon-PhoneWork' },
+               { id: 2, title: 'Mobile phone', icon: 'icon-PhoneCell' },
+               { id: 3, title: 'Home phone', icon: 'icon-Home' },
+               { id: 4, title: 'Telegram', icon: 'icon-Telegram' },
+               { id: 5, title: 'e-mail', icon: 'icon-Email' },
+               { id: 6, title: 'Skype', icon: 'icon-Skype' },
+               { id: 7, title: 'ICQ', icon: 'icon-Icq' }
             ];
             this._iconButtonItems = [
                { id: 1, title: 'All documents to disk' },
@@ -167,34 +167,18 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 7, title: 'Finished products', parent: 1 }
             ];
             this._groupItems = [
-               { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary' },
-               {
-                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
-               },
-               {
-                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
-               },
-               {
-                  id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
-               },
-               {
-                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
-               }
+               { id: 1, title: 'Add', icon: 'icon-Bell' },
+               { id: 2, title: 'Vacation', icon: 'icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off', icon: 'icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-statusDeparted', group: '2' }
             ];
             this._oneGroupItems = [
-               { id: 1, title: 'Add', icon: 'icon-small icon-Bell icon-primary', group: '2' },
-               {
-                  id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2'
-               },
-               {
-                  id: 3, title: 'Time off', icon: 'icon-small icon-SelfVacation', group: '2'
-               },
-               {
-                  id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2'
-               },
-               {
-                  id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2'
-               }
+               { id: 1, title: 'Add', icon: 'icon-Bell', group: '2' },
+               { id: 2, title: 'Vacation', icon: 'icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off', icon: 'icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-statusDeparted', group: '2' }
             ];
             this._groupTextItems = [
                { id: 1, title: 'Project', group: 'Select' },
@@ -263,18 +247,18 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 11, title: 'Matching new dish', parent: 4 }
             ];
             this._additionalItems = [
-               { id: 1, title: 'Add', icon: 'icon-small icon-Bell' },
-               { id: 2, title: 'Vacation', icon: 'icon-small icon-Vacation', group: '2' },
-               { id: 3, title: 'Time off',icon: 'icon-small icon-SelfVacation', group: '2' },
-               { id: 4, title: 'Hospital', icon: 'icon-small icon-Sick', group: '2' },
-               { id: 5, title: 'Business trip', icon: 'icon-small icon-statusDeparted', group: '2' },
-               { id: 6, title: 'Task', icon: 'icon-small icon-TFTask', group: '3', additional: true },
-               { id: 7, title: 'Incident', icon: 'icon-small icon-Alert', group: '3', additional: true },
-               { id: 8, title: 'Outfit', icon: 'icon-small icon-PermittedBuyers', group: '3', additional: true },
-               { id: 9, title: 'Project', icon: 'icon-small icon-Document', group: '3', additional: true },
-               { id: 10, title: 'Check', icon: 'icon-small icon-Statistics', group: '3', additional: true },
-               { id: 11, title: 'Meeting', icon: 'icon-small icon-Groups', group: '3', additional: true },
-               { id: 12, title: 'Treaties', icon: 'icon-small icon-Report', group: '3', additional: true }
+               { id: 1, title: 'Add', icon: 'icon-Bell' },
+               { id: 2, title: 'Vacation', icon: 'icon-Vacation', group: '2' },
+               { id: 3, title: 'Time off', icon: 'icon-SelfVacation', group: '2' },
+               { id: 4, title: 'Hospital', icon: 'icon-Sick', group: '2' },
+               { id: 5, title: 'Business trip', icon: 'icon-statusDeparted', group: '2' },
+               { id: 6, title: 'Task', icon: 'icon-TFTask', group: '3', additional: true },
+               { id: 7, title: 'Incident', icon: 'icon-Alert', group: '3', additional: true },
+               { id: 8, title: 'Outfit', icon: 'icon-PermittedBuyers', group: '3', additional: true },
+               { id: 9, title: 'Project', icon: 'icon-Document', group: '3', additional: true },
+               { id: 10, title: 'Check', icon: 'icon-Statistics', group: '3', additional: true },
+               { id: 11, title: 'Meeting', icon: 'icon-Groups', group: '3', additional: true },
+               { id: 12, title: 'Treaties', icon: 'icon-Report', group: '3', additional: true }
             ];
             this._multilevelHierarchyItems = [
                { id: 1, title: 'Task', '@parent': true, parent: null },
@@ -299,6 +283,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 20, title: 'It is last level 3', parent: 16}
             ];
             this._bigItems = this._createBigItems();
+            this._historySource = new HistorySourceMenu.default();
          },
 
          _createBigItems: function() {
@@ -316,9 +301,6 @@ define('Controls-demo/Buttons/Menu/Menu', [
             });
          },
 
-         _createHistoryMemory: function() {
-            return HistorySourceMenu.createMemory();
-         },
          _groupingKeyCallback: function(item) {
             if (item.get('group') === 'hidden' || !item.get('group')) {
                return ControlsConstants.view.hiddenGroup;
@@ -327,5 +309,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          }
       }
    );
+   ModuleClass._styles = ['Controls-demo/Buttons/Menu/Menu'];
+
    return ModuleClass;
 });

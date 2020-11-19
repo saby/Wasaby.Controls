@@ -1,12 +1,17 @@
-import { ViewConfig } from "./Handler";
+import { ViewConfig } from 'Controls/error';
+import { IControlOptions } from 'UI/Base';
 
 /**
- * Объект конфигурации {@link Controls/_dataSource/_error/IContainer IContainer}
+ * Опции компонента {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConfig
- * @private
- * @author Заляев А.В
+ * @author Северьянов А.А.
+ * @pubcli
  */
-export interface IContainerConfig {
+export interface IContainerConfig extends IControlOptions {
+    /**
+     * @name Controls/_dataSource/_error/Container#viewConfig
+     * @cfg {Controls/_dataSource/_error/Container/Config} Данные для отображения сообщения об ошибке.
+     */
     viewConfig?: ViewConfig;
 }
 
@@ -15,7 +20,7 @@ export interface IContainerConfig {
  *
  * @interface Controls/_dataSource/_error/IContainer
  * @public
- * @author Заляев А.В
+ * @author Северьянов А.А.
  */
 export default interface IContainer {
     /**
@@ -37,8 +42,8 @@ export default interface IContainer {
 /**
  * Интерефейс конструктора {@link Controls/_dataSource/_error/IContainer IContainer}
  * @interface Controls/_dataSource/_error/IContainerConstructor
- * @private
- * @author Заляев А.В
+ * @author Северьянов А.А.
+ * @public
  */
 export interface IContainerConstructor {
     new(config: IContainerConfig): IContainer;

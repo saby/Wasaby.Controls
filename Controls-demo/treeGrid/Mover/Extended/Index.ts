@@ -1,19 +1,20 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/treeGrid/Mover/Extended/Extended";
-import {HierarchicalMemory} from "Types/source";
-import {Gadgets} from "../../DemoHelpers/DataCatalog";
-import 'css!Controls-demo/Controls-demo';
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/treeGrid/Mover/Extended/Extended';
+import {HierarchicalMemory} from 'Types/source';
+import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import {TColumns} from 'Controls/grid';
+import {TExpandOrColapsItems} from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: HierarchicalMemory;
+    protected _viewSource: HierarchicalMemory;
     private _selectedKeys: [] = [];
-    private _excludedKeys: [] = [];
+    private _excludedKeys: TExpandOrColapsItems = [];
     private _filter: object = {};
-    private _columns: TColumns;
+    protected _columns: TColumns;
+    protected _beforeItemsMoveText: string = '';
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
             displayProperty: 'title',
             width: '1fr',
@@ -48,7 +49,13 @@ export default class extends Control {
         }
     }
 
+    protected _beforeItemsMove(e, movedItems, target, position) {
+        this._beforeItemsMoveText = `Перемещены элементы с id: ${movedItems.selectedKeys.toString()}`;
+    }
+
     protected _afterItemsMove(): void {
         this._children.treeGrid.reload();
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

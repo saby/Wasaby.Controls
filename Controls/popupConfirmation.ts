@@ -3,8 +3,6 @@
  * Библиотека контролов, которые реализуют содержимое всплывающих окон.
  * @library Controls/popupConfirmation
  * @includes Template Controls/_popupConfirmation/Template
- * @includes DialogTemplate Controls/_popupConfirmation/Opener/Dialog
- * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
  * @includes IConfirmationFooter Controls/_popup/interface/IConfirmationFooter
  * @public
@@ -14,8 +12,6 @@
  * popupConfirmation library
  * @library Controls/popupConfirmation
  * @includes Template Controls/_popupConfirmation/Template
- * @includes DialogTemplate Controls/_popupConfirmation/Opener/Dialog
- * @includes style Controls/_popupConfirmation/style
  * @includes Footer Controls/_popupConfirmation/Footer
  * @includes IConfirmationFooter  Controls/_popup/interface/IConfirmationFooter
  * @public

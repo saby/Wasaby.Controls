@@ -10,58 +10,35 @@ export interface ISwitchOptions extends IControlOptions, ICheckableOptions, IToo
 }
 /**
  * Кнопка-переключатель с одним заголовком. Часто используется для настроек "вкл-выкл".
- *
- * <a href="/materials/demo-ws4-switchers">Демо-пример</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fSwitch%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
  * @class Controls/_toggle/Switch
  * @extends Core/Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Switch/SwitchDemo
+ * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
 /*
  * Switch button with single caption. Frequently used for 'on-off' settings.
  *
- * <a href="/materials/demo-ws4-switchers">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2ftoggle%2fSwitch%2fIndex">Demo-example</a>.
  *
  * @class Controls/_toggle/Switch
  * @extends Core/Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Switch/SwitchDemo
- */
-
-/**
- * @name Controls/_toggle/Switch#caption
- * @cfg {String} Текст заголовка кнопки.
- */
-
-/*
- * @name Controls/_toggle/Switch#caption
- * @cfg {String} Caption text.
- */
-
-/**
- * @name Controls/_toggle/Switch#captionPosition
- * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
- * @variant left Заголовок расположен перед кнопкой.
- * @variant right Заголовок расположен после кнопки. Значение по умолчанию.
- */
-
-/*
- * @name Controls/_toggle/Switch#captionPosition
- * @cfg {String} Determines on which side of the button caption is located.
- * @variant left Caption before toggle.
- * @variant right Toggle before caption. It is default value.
+ * @demo Controls-demo/toggle/Switch/Base/Index
  */
 
 class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IValidationStatus {
@@ -72,7 +49,7 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = SwitchTemplate;
 
-   private _clickHandler(): void {
+   protected _clickHandler(): void {
       if (!this._options.readOnly) {
          this._notify('valueChanged', [!this._options.value]);
       }
@@ -90,7 +67,6 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
    static getOptionTypes(): object {
       return {
          value: EntityDescriptor(Boolean),
-         caption: EntityDescriptor(String),
          captionPosition: EntityDescriptor(String).oneOf([
             'left',
             'right'
@@ -98,5 +74,29 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
       };
    }
 }
+/**
+ * @name Controls/_toggle/Switch#caption
+ * @cfg {String} Текст заголовка кнопки.
+ */
 
+/*
+ * @name Controls/_toggle/Switch#caption
+ * @cfg {String} Caption text.
+ */
+
+/**
+ * @name Controls/_toggle/Switch#captionPosition
+ * @cfg {String} Определяет, с какой стороны расположен заголовок кнопки.
+ * @variant left Заголовок расположен перед кнопкой.
+ * @variant right Заголовок расположен после кнопки.
+ * @default right
+ */
+
+/*
+ * @name Controls/_toggle/Switch#captionPosition
+ * @cfg {String} Determines on which side of the button caption is located.
+ * @variant left Caption before toggle.
+ * @variant right Toggle before caption.
+ * @default right
+ */
 export default Switch;

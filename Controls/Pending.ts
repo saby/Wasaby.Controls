@@ -1,8 +1,7 @@
-import Control = require('Core/Control');
 import tmpl = require('wml!Controls/_Pending/Pending');
-import Deferred = require('Core/Deferred');
-import ParallelDeferred = require('Core/ParallelDeferred');
-
+import PendingClass from 'Controls/_popup/Manager/PendingClass';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
    /**
     * Контрол, отслеживающий выполнение необходимых действий, которые должны быть завершены до начала текущего действия.
@@ -44,7 +43,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     *
     * @class Controls/Pending
     * @extends Core/Control
-    * @control
+    * 
     * @author Красильников А.С.
     * @public
     */
@@ -93,201 +92,93 @@ import ParallelDeferred = require('Core/ParallelDeferred');
     *
     * @class Controls/Pending
     * @extends Core/Control
-    * @control
+    * 
     * @author Красильников А.С.
     * @public
     */
 
+export default class Pending extends Control<IControlOptions> {
+   _template: TemplateFunction = tmpl;
+
+   protected _pendingController: PendingClass = null;
+
+   _beforeMount(): void {
+      const pendingOptions = {
+         notifyHandler: (eventName: string, args?: []) => {
+            return this._notify(eventName, args, {bubbling: true});
+         }
+      };
+      this._pendingController = new PendingClass(pendingOptions);
+   }
+
+   _beforeUnmount(): void {
+      this._pendingController.destroy();
+   }
+
+   _registerPendingHandler(event: SyntheticEvent, def: Promise<void>, config: object = {}): void {
+      this._pendingController.registerPending(def, config);
+   }
+
+   _unregisterPending(root: string, id: number): void {
+      this._pendingController.unregisterPending(root, id);
+   }
+
+   _hasPendings(): void {
+      this._pendingController.hasPendings();
+   }
+
+   _hasRegisteredPendings(root: string = null): boolean {
+      return this._pendingController.hasRegisteredPendings(root);
+   }
+
+   _hideIndicators(root: string): void {
+      this._pendingController.hideIndicators(root);
+   }
+
+   _finishPendingHandler(event: SyntheticEvent, forceFinishValue: boolean, root: string): Promise<unknown> {
+      return this._pendingController.finishPendingOperations(forceFinishValue, root);
+   }
 
    /**
-    * @event pendingsFinished Событие произойдет в момент, когда в Controls/Pending не останется пендингов.
-    * (после того, как последний пендинг завершится).
-    * @param {SyntheticEvent} eventObject.
+    * Метод вернет завершенный Promise, когда все пендинги будут завершены.
+    * Функции обратного вызова Promise с массивом результатов пендингов.
+    * Если один из Promise'ов пендинга будет отклонен (вызовется errback), Promise также будет отклонен с помощью finishPendingOperations.
+    * Если finishPendingOperations будет вызываться несколько раз, будет актуален только последний вызов, а другие возвращенные Promise'ы будут отменены.
+    * Когда finishPendingOperations вызывается, каждый пендинг пытается завершится путем вызова метода onPendingFail.
+    * @param forceFinishValue этот аргумент используется в качестве аргумента onPendingFail.
+    * @returns {Deferred} Завершение Promise'а, когда все пендинги будут завершены.
     */
 
    /*
-    * @event pendingsFinished Event will be notified in moment when no more pendings in Controls/Pending
-    * (after moment of last pending is resolving).
-    * @param {SyntheticEvent} eventObject.
+    * Method returns Promise resolving when all pendings will be resolved.
+    * Promise callbacks with array of results of pendings.
+    * If one of pending's Promise will be rejected (call errback), Promise of finishPendingOperations will be rejected too.
+    * If finishPendingOperations will be called some times, only last call will be actual, but another returned Promises
+    * will be cancelled.
+    * When finishPendingOperations calling, every pending trying to finish by calling it's onPendingFail method.
+    * If onPendingFail is not setted, pending registration notified control is responsible for pending's Promise resolving.
+    * @param forceFinishValue this argument use as argument of onPendingFail.
+    * @returns {Deferred} Promise resolving when all pendings will be resolved
     */
 
-   // pending identificator counter
-   var cnt = 0;
+   finishPendingOperations(forceFinishValue?: boolean, root: string = null): Promise<unknown> {
+      return this._pendingController.finishPendingOperations(forceFinishValue, root);
+   }
 
-   var module = Control.extend(/** @lends Controls/Container/PendingRegistrator.prototype */{
-      _template: tmpl,
-      _pendings: null,
-      _parallelDef: null,
-      _beforeMount: function() {
-         var self = this;
-         if (typeof window !== 'undefined') {
-            self._beforeUnloadHandler = function(event) {
-               // We shouldn't close the tab if there are any pendings
-               if (self._hasRegisteredPendings()) {
-                  event.preventDefault();
-                  event.returnValue = '';
-               } else {
-                  window.removeEventListener('beforeunload', self._beforeUnloadHandler);
-               }
-            };
-            window.addEventListener('beforeunload', self._beforeUnloadHandler);
-         }
-         this._pendings = {};
-      },
-      _registerPendingHandler: function(e, def, config) {
-         config = config || {};
-         this._pendings[cnt] = {
+   _cancelFinishingPendingHandler(event: SyntheticEvent, root: string): void {
+      return this._pendingController.cancelFinishingPending(root);
+   }
+}
+/**
+ * @event Происходит в момент, когда в Controls/Pending не останется пендингов.
+ * (после того, как последний пендинг завершится).
+ * @name Controls/Pending#pendingsFinished
+ * @param {SyntheticEvent} eventObject.
+ */
 
-            // its Promise what signalling about pending finish
-            def: def,
-
-            validate: config.validate,
-
-            validateCompatible: config.validateCompatible,
-
-            // its function what helps pending to finish when query goes from finishPendingOperations
-            onPendingFail: config.onPendingFail,
-
-            // show indicator when pending is registered
-            showLoadingIndicator: config.showLoadingIndicator
-         };
-         if (config.showLoadingIndicator && !def.isReady()) {
-            // show indicator if Promise still not finished on moment of registration
-            this._pendings[cnt].loadingIndicatorId = this._children.loadingIndicator.show({ id: this._pendings[cnt].loadingIndicatorId });
-         }
-
-         def.addBoth(function(cnt, res) {
-            this._unregisterPending(cnt);
-            return res;
-         }.bind(this, cnt));
-
-         cnt++;
-      },
-      _unregisterPending: function(id) {
-         // hide indicator if no more pendings with indicator showing
-         this._hideIndicators();
-         delete this._pendings[id];
-
-         // notify if no more pendings
-         if (!this._hasRegisteredPendings()) {
-            this._notify('pendingsFinished', [], { bubbling: true });
-         }
-      },
-      _hasRegisteredPendings: function() {
-         var self = this;
-         var hasPendings = false;
-         Object.keys(this._pendings).forEach(function(key) {
-            var pending = self._pendings[key];
-            var isValid = true;
-            if (pending.validate) {
-               isValid = pending.validate();
-            } else if (pending.validateCompatible) {
-               // ignore compatible pendings
-               isValid = false;
-            }
-
-            // We have at least 1 active pending
-            if (isValid) {
-               hasPendings = true;
-            }
-         });
-         return hasPendings;
-      },
-      _hideIndicators: function() {
-         var self = this;
-         Object.keys(this._pendings).forEach(function(key) {
-            if (self._pendings[key].loadingIndicatorId) {
-               self._children.loadingIndicator.hide(self._pendings[key].loadingIndicatorId);
-            }
-         });
-      },
-
-      _finishPendingHandler: function(event, forceFinishValue) {
-         return this.finishPendingOperations(forceFinishValue);
-      },
-
-      /**
-       * Метод вернет завершенный Promise, когда все пендинги будут завершены.
-       * Функции обратного вызова Promise с массивом результатов пендингов.
-       * Если один из Promise'ов пендинга будет отклонен (вызовется errback), Promise также будет отклонен с помощью finishPendingOperations.
-       * Если finishPendingOperations будет вызываться несколько раз, будет актуален только последний вызов, а другие возвращенные Promise'ы будут отменены.
-       * Когда finishPendingOperations вызывается, каждый пендинг пытается завершится путем вызова метода onPendingFail.
-       * @param forceFinishValue этот аргумент используется в качестве аргумента onPendingFail.
-       * @returns {Deferred} Завершение Promise'а, когда все пендинги будут завершены.
-       */
-
-      /*
-       * Method returns Promise resolving when all pendings will be resolved.
-       * Promise callbacks with array of results of pendings.
-       * If one of pending's Promise will be rejected (call errback), Promise of finishPendingOperations will be rejected too.
-       * If finishPendingOperations will be called some times, only last call will be actual, but another returned Promises
-       * will be cancelled.
-       * When finishPendingOperations calling, every pending trying to finish by calling it's onPendingFail method.
-       * If onPendingFail is not setted, pending registration notified control is responsible for pending's Promise resolving.
-       * @param forceFinishValue this argument use as argument of onPendingFail.
-       * @returns {Deferred} Promise resolving when all pendings will be resolved
-       */
-      finishPendingOperations: function(forceFinishValue) {
-         var resultDeferred = new Deferred(),
-            parallelDef = new ParallelDeferred(),
-            pendingResults = [];
-
-         var self = this;
-         Object.keys(this._pendings).forEach(function(key) {
-            var pending = self._pendings[key];
-            var isValid = true;
-            if (pending.validate) {
-               isValid = pending.validate();
-            } else if (pending.validateCompatible) { //todo compatible
-               isValid = pending.validateCompatible();
-            }
-            if (isValid) {
-               if (pending.onPendingFail) {
-                  pending.onPendingFail(forceFinishValue, pending.def);
-               }
-
-               // pending is waiting its def finish
-               parallelDef.push(pending.def);
-            }
-         });
-
-         // cancel previous query of pending finish. create new query.
-         this._cancelFinishingPending();
-         this._parallelDef = parallelDef.done().getResult();
-
-         this._parallelDef.addCallback(function(results) {
-            if (typeof results === 'object') {
-               for (var resultIndex in results) {
-                  if (results.hasOwnProperty(resultIndex)) {
-                     var result = results[resultIndex];
-                     pendingResults.push(result);
-                  }
-               }
-            }
-
-            self._parallelDef = null;
-
-            resultDeferred.callback(pendingResults);
-         }).addErrback(function(e) {
-            resultDeferred.errback(e);
-            return e;
-         });
-
-         return resultDeferred;
-      },
-      _cancelFinishingPending: function() {
-         if (this._parallelDef) {
-            // its need to cancel result Promise of parallel defered. reset state of Promise to achieve it.
-            this._parallelDef._fired = -1;
-            this._parallelDef.cancel();
-         }
-      },
-      _beforeUnmount: function() {
-         if (typeof window !== 'undefined') {
-            window.removeEventListener('beforeunload', this._beforeUnloadHandler);
-         }
-      }
-   });
-
-   export = module;
-
+/*
+   * @event Event will be notified in moment when no more pendings in Controls/Pending
+   * (after moment of last pending is resolving).
+   * @name Controls/Pending#pendingsFinished
+   * @param {SyntheticEvent} eventObject.
+   */

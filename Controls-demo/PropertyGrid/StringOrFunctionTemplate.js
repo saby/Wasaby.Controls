@@ -1,14 +1,9 @@
 define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
    [
       'Core/Control',
-      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate',
-      'View/Builder/Tmpl',
-      'View/config',
-      'View/Executor/TClosure',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'i18n!userTemplate',
+      'wml!Controls-demo/PropertyGrid/StringOrFunctionTemplate'
    ],
-   function(Control, template, tmpl, config, tClosure) {
+   function(Control, template) {
       'use strict';
 
       var stringTmpl = Control.extend({
@@ -24,11 +19,7 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
             this._valueChangedNotify();
          },
          _valueChangedNotify: function() {
-            // FIXME: Выполнять компиляцию шаблона руками - запрещено.
-            //  Сейчас для шаблонов выполняется предзагрузка модуля локализации,
-            //  чего не предусмотрено было здесь. Необходимо избавиться от такого вида
-            //  использований функций шаблонизатор.
-            this._notify('valueChanged', [tmpl.getFunction(this._value, config, tClosure)]);
+            this._notify('valueChanged', [this._value]);
          },
          _checkBoxValueChanged: function() {
             this._valueChangedNotify();
@@ -38,6 +29,8 @@ define('Controls-demo/PropertyGrid/StringOrFunctionTemplate',
          }
       });
 
+
+      stringTmpl._styles = ['Controls-demo/Input/resources/VdomInputs'];
 
       return stringTmpl;
    });

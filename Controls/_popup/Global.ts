@@ -1,155 +1,82 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_popup/Global/Global');
-import InfoBox from './Opener/InfoBox';
-import Dialog from './Opener/Dialog';
-import Previewer from './Opener/Previewer';
-import { goUpByControlTree } from 'UI/Focus';
+import GlobalController from './GlobalController';
+import {Bus as EventBus} from 'Env/Event';
 
 /**
  * @class Controls/_popup/Global
  * @private
  */
-
-let _private = {
-    getPopupConfig(config) {
-        // Find opener for Infobox
-        if (!config.opener) {
-            config.opener = goUpByControlTree(config.target)[0];
-        }
-        return config;
-    }
-};
-
 const Global = Control.extend({
-   _template: template,
-   _infoBoxId: null,
-   _afterMount() {
-      // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
-      // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
-      let ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
-      let ManagerWrapperController = requirejs.defined(ManagerWrapperControllerModule) ? requirejs(ManagerWrapperControllerModule).default : null;
+    _template: template,
 
-      // COMPATIBLE: В слое совместимости для каждого окна с vdom шаблоном создается Global.js. Это нужно для работы событий по
-      // открытию глобальный окон (openInfobox, etc). Но глобальные опенеры должны быть одни для всех из созданных Global.js
-      // Код ниже делает создание глобальных опенеров единоразовым, при создании второго и следующего инстанса Global.js
-      // в качестве опенеров ему передаются уже созданные опенеры у первого инстанста
-      // На Vdom странице Global.js всегда один.
-      if (ManagerWrapperController && !ManagerWrapperController.getGlobalPopup()) {
-         ManagerWrapperController.registerGlobalPopup(this);
-      }
-   },
+    _beforeMount() {
+        this._globalController = new GlobalController();
+    },
 
-   _openInfoBoxHandler(event, config) {
-      this._activeInfobox = event.target;
-      _private.getPopupConfig(config);
-      this._infoBoxId = this._openInfoBox(config);
-   },
+    _afterMount() {
+        this._globalController.registerGlobalPopup();
+        const channelPopupManager = EventBus.channel('popupManager');
+        channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+    },
 
-   _openInfoBox(config) {
-      return InfoBox.openPopup(config);
-   },
+    _beforeUnmount(): void {
+        this._globalController.registerGlobalPopupEmpty();
+        const channelPopupManager = EventBus.channel('popupManager');
+        channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+    },
 
-   _closeInfoBox(delay) {
-      InfoBox.closePopup(delay);
-   },
+    _openInfoBoxHandler(event, config) {
+        this._globalController.openInfoBoxHandler(event, config);
+    },
 
-   _closeInfoBoxHandler(event, delay) {
-      // TODO: fixed by https://online.sbis.ru/doc/d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-      let activeInf = this._activeInfobox && this._activeInfobox.get ? this._activeInfobox.get(0) : this._activeInfobox;
-      let eventTarget = event.target && event.target.get ? event.target.get(0) : event.target;
-      if (activeInf === eventTarget) {
-         this._activeInfobox = null;
-         this._closeInfoBox(delay);
-      }
-   },
+    _openInfoBox(config) {
+        return this._globalController.openInfoBox(config);
+    },
 
-   // Needed to immediately hide the infobox after its target or one
-   // of their parent components are hidden
-   // Will be removed:
-   // https://online.sbis.ru/opendoc.html?guid=1b793c4f-848a-4735-b96a-f0c1cf479fab
-   _forceCloseInfoBoxHandler() {
-      if (this._activeInfobox) {
-         this._activeInfobox = null;
-         this._closeInfoBox(0);
-      }
-   },
-   _openPreviewerHandler(event, config, type) {
-      this._activePreviewer = event.target;
-      return Previewer.openPopup(config, type).then((id: string) => {
-         this._previewerId = id;
-      });
-   },
+    _closeInfoBox(delay) {
+        return this._globalController.closeInfoBox(delay);
+    },
 
-   _closePreviewerHandler(event, type) {
-      Previewer.closePopup(this._previewerId, type);
-   },
+    _closeInfoBoxHandler(event, delay) {
+        this._globalController.closeInfoBoxHandler(event, delay);
+    },
 
-   _cancelPreviewerHandler(event, action) {
-      Previewer.cancelPopup(this._previewerId, action);
-   },
-   _isPreviewerOpenedHandler(event) {
-      if (this._activePreviewer === event.target && this._previewerId) {
-         return Previewer.isOpenedPopup(this._previewerId);
-      }
-      return false;
-   },
-   _popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer) {
-      if (this._activeInfobox) {
-         // If infobox is displayed inside the popup, then close infobox.
-         if (this._needCloseInfoBox(this._activeInfobox, popupContainer)) {
-            this._activeInfobox = null;
-            this._closeInfoBox(0);
-         }
-      }
-   },
+    _forceCloseInfoBoxHandler() {
+        this._globalController.forceCloseInfoBoxHandler();
+    },
 
-   _needCloseInfoBox(infobox, popup) {
-      let parent = infobox.parentElement;
-      while (parent) {
-         if (parent === popup) {
-            return true;
-         }
-         parent = parent.parentElement;
-      }
-      return false;
-   },
+    _openPreviewerHandler(event, config, type) {
+        return this._globalController.openPreviewerHandler(event, config, type);
+    },
 
-   /**
-    * open modal dialog
-    * @param event
-    * @param {String | Function} template
-    * @param {Object} templateOptions
-    * @param {Core/Control} [opener=null]
-    * @return {Promise.<void>} result promise
-    * @private
-    */
-   _openDialogHandler(event, template, templateOptions, opener = null) {
-      this._onDialogClosed();
+    _closePreviewerHandler(event, type) {
+        this._globalController.closePreviewerHandler(event, type);
+    },
 
-      Dialog.openPopup({
-         template,
-         templateOptions,
-         opener,
-         eventHandlers: {
-            onClose: () => {
-               this._onDialogClosed();
-            }
-         }
-      });
+    _cancelPreviewerHandler(event, action) {
+        this._globalController.cancelPreviewerHandler(event, action);
+    },
 
-      //
-      return new Promise((resolve, reject) => {
-         this._closedDialodResolve = resolve;
-      });
-   },
-   _onDialogClosed() {
-      if (this._closedDialodResolve) {
-         this._closedDialodResolve();
-         delete this._closedDialodResolve;
-      }
-   },
+    _isPreviewerOpenedHandler(event) {
+        return this._globalController.isPreviewerOpenedHandler(event);
+    },
+    _popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer) {
+        this._globalController.popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer);
+    },
 
-   _private
+    _needCloseInfoBox(infobox, popup) {
+        return this._globalController.needCloseInfoBox(infobox, popup);
+    },
+
+    _openDialogHandler(event, template, templateOptions, opener = null) {
+        return this._globalController.openDialogHandler(event, template, templateOptions, opener);
+    },
+
+    _onDialogClosed() {
+        this._globalController.onDialogClosed();
+    }
+
 });
 
 export default Global;

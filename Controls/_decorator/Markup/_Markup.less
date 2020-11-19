@@ -3,19 +3,22 @@
 @height_Markup_linkWrap_decorator: 48px;
 @LinkDecorator__gradient-startColor: rgba(249, 249, 249, 0);
 @LinkDecorator__gradient-endColor: rgba(249, 249, 249, 1);
+@padding-right_decoratedLink: 2px;
+@padding-bottom_decoratedLink: 4px;
 
 .LinkDecorator__wrap {
-   display: block;
+   display: flex;
    overflow: hidden;
    max-width: 100%;
-   padding-right: @spacing_default_xxs;
+   padding-right: @padding-right_decoratedLink;
+   padding-bottom: @padding-bottom_decoratedLink;
 }
 
 .LinkDecorator__linkWrap {
    display: inline-block;
    line-height: 0;
    position: relative;
-   box-shadow: 0 @spacing_default_xxs @spacing_default_xxs @color_shadow_popup;
+   box-shadow: 0 2px 2px rgba(0,0,0,0.35);
    min-height: @height_Markup_linkWrap_decorator;
    max-width: 100%;
    min-width: @min-width_Markup_img_decorator;

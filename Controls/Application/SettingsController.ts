@@ -1,9 +1,9 @@
 /**
  * Created by as.krasilnikov on 02.04.2018.
  */
-interface IPopupSettingsController {
-    getPanelSettings: Function;
-    setPanelSettings: Function;
+export interface IPopupSettingsController {
+    getSettings: Function;
+    setSettings: Function;
 }
 
 let settingsController;

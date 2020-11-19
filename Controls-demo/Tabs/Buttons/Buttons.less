@@ -1,7 +1,12 @@
+@import "Controls-default-theme/_theme";
 .root {
-  padding: 40px;
+  padding: 10px;
   width: 100%;
   box-sizing: border-box;
+}
+//в других темах делаем темный фон
+.root__dark_background {
+  background-color: #1D2834;
 }
 .for_bg {
   background-color: #f7f4f0;/*#d9e7f0;*/
@@ -10,7 +15,7 @@
   .flexbox();
   .align-items(center);
   color: #313e78;
-  height: 40px;
+  height: 38px;
 }
 .clickmebtn {
   margin: 0 4px;
@@ -57,7 +62,7 @@
 //сделал чтоб не ломать Петины демки.
 .demo-TabButtons {
   display: flex;
-   .controls-Tabs_theme_default {
+   .controls-Tabs {
        width: 100%;
    }
 }
@@ -66,4 +71,8 @@
   position: relative;
   align-items: center;
   padding-right: 12px;
+}
+.mainTemplate__header {
+  font-size: @font-size_3xl;
+  font-weight: bold;
 }

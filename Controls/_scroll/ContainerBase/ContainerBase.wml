@@ -1,0 +1,43 @@
+<!--
+События висят на div а не на partial пототму что, если в шаблоне partial есть несколько корневых нод,
+то обработчики всплывающих событий не срабатывают и атрибуты не навешиваются.
+https://online.sbis.ru/opendoc.html?guid=10a3ac25-9b67-4b76-9706-ba8e73415246
+-->
+<div class="controls-Scroll-ContainerBase {{_scrollCssClass}} controls-Scroll__content"
+    name="content"
+    on:scroll="_scrollHandler()"
+    on:doScroll="_doScrollHandler()"
+    on:register="_registerIt()"
+    on:unregister="_unRegisterIt()"
+    on:scrollToElement="_scrollToElement()"
+    on:saveScrollPosition="_saveScrollPosition()"
+    on:restoreScrollPosition="_restoreScrollPosition()"
+    on:updatePlaceholdersSize="_updatePlaceholdersSize()"
+    on:controlResize="_controlResizeHandler()"
+    on:enableVirtualNavigation="_enableVirtualNavigationHandler()"
+    on:disableVirtualNavigation="_disableVirtualNavigationHandler()"
+    >
+    <ws:partial
+        attr:class="controls-Scroll-containerBase_userContent"
+        template="{{_options.content}}"
+        scope="{{_options}}"
+        _scrollCssClass="{{undefined}}"
+
+        on:selectedKeysChanged="_selectedKeysChanged()"
+        on:excludedKeysChanged="_excludedKeysChanged()"
+        on:beforeSelectionChanged="_tmplNotify('beforeSelectionChanged')"
+        on:itemClick="_itemClick()"
+
+        on:itemMouseDown="_tmplNotify('itemMouseDown')"
+        on:rootChanged="_tmplNotify('rootChanged')"
+        on:expandedItemsChanged="_tmplNotify('expandedItemsChanged')"
+        on:collapsedItemsChanged="_tmplNotify('collapsedItemsChanged')"
+        on:checkboxClick="_tmplNotify('checkboxClick')"
+        on:markedKeyChanged="_tmplNotify('markedKeyChanged')"
+        on:beforeMarkedKeyChanged="_tmplNotify('beforeMarkedKeyChanged')"
+        on:actionClick="_tmplNotify('actionClick')"
+        on:editArrowClick="_tmplNotify('editArrowClick')"
+        on:navigationParamsChanged="_tmplNotify('navigationParamsChanged')"
+
+    />
+</div>

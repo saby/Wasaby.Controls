@@ -22,12 +22,14 @@ define([
             {
                id: 2,
                title: 'Второй',
-               type: 2
+               type: 2,
+               style: 'master'
             },
             {
                id: 3,
                title: 'Третий',
-               type: 2
+               type: 2,
+               style: 'masterClassic'
             }
          ];
       });
@@ -105,31 +107,113 @@ define([
          version = model._calcItemVersion(item, key);
          assert.notInclude(version, 'SWIPE');
 
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'first'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_1');
-
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'second'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_2');
-
-         model.setItemActions(model._items.at(0), [{
-            id: 0,
-            title: 'second'
-         }]);
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'ITEM_ACTION_2');
+         // TODO REMOVE OR IMPLEMENT (Not implemented in new lists)
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'first'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_1');
+         //
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'second'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_2');
+         //
+         // model.setItemActions(model._items.at(0), [{
+         //    id: 0,
+         //    title: 'second'
+         // }]);
+         // version = model._calcItemVersion(item, key);
+         // assert.include(version, 'ITEM_ACTION_2');
 
          assert.include(version, 'WITHOUT_EDITING');
-         model._setEditingItemData({ key: 21, item: {} });
-         version = model._calcItemVersion(item, key);
-         assert.include(version, 'WITH_EDITING');
+      });
+
+      it('isShouldBeDrawnItem', function() {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new lists.ListViewModel(cfg);
+            const itemInRange = {
+               isStickedMasterItem: false,
+               isGroup: false,
+               isStickyHeader: false,
+            }
+            assert.isTrue(model.isShouldBeDrawnItem(itemInRange));
+            const itemGroup = {
+               isStickedMasterItem: false,
+               isGroup: true,
+               isStickyHeader: true,
+            }
+            model._startIndex = 1;
+            assert.isTrue(model.isShouldBeDrawnItem(itemGroup)); // curent index 0, strartIndex 1. item isn't in range but should render as group
+            const itemSticky = {
+               isStickedMasterItem: true,
+               isGroup: false,
+               isStickyHeader: false,
+            }
+            assert.isTrue(model.isShouldBeDrawnItem(itemSticky)); // curent index 0, strartIndex 1. item isn't in range but should render as master sticky
+      });
+
+      describe('_getEndIndexForReset', () => {
+         it('sticky item out of range', () => {
+            const data = [
+               { id: '0', title: '0' },
+               { id: '1', title: '1' },
+               { id: '2', title: '2' },
+               { id: '3', title: '3' },
+               { id: '4', title: '4' }];
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title',
+               style: 'master',
+               supportVirtualScroll: true
+            };
+            const model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(3, true);
+            model._stopIndex = 2;
+            const result = model._getEndIndexForReset();
+            assert.equal(result, 4, 'sticky item must be shown');
+
+         });
+         it('sticky item in range', () => {
+            const data = [
+               { id: '0', title: '0' },
+               { id: '1', title: '1' },
+               { id: '2', title: '2' },
+               { id: '3', title: '3' },
+               { id: '4', title: '4' }];
+            const cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title',
+               style: 'master',
+               supportVirtualScroll: true
+            };
+            const model = new lists.ListViewModel(cfg);
+            model.setMarkedKey(1, true);
+            model._stopIndex = 2;
+            const result = model._getEndIndexForReset();
+            assert.equal(result, 2, 'sticky item is in range, so end index === stop index');
+
+         });
+
       });
 
       it('markItemReloaded', () => {
@@ -169,39 +253,15 @@ define([
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
-            markerVisibility: 'visible',
-            selectedKeys: {1: true}
+            markerVisibility: 'visible'
          };
 
          var iv = new lists.ListViewModel(cfg);
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(cfg.items.at(0), cur.item, 'Incorrect field set on getCurrent()');
-         assert.isTrue(cur.isSelected, 'Incorrect field set on getCurrent()');
-         assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
-      });
-
-      it('isSelected', function () {
-         const
-             cfg = {
-                items: new collection.RecordSet({
-                   rawData: data,
-                   keyProperty: 'id'
-                }),
-                keyProperty: 'id',
-                displayProperty: 'title',
-                markedKey: 1,
-                markerVisibility: 'visible',
-                selectedKeys: {1: true}
-             },
-             iv = new lists.ListViewModel(cfg);
-
-         assert.isTrue(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
-         iv.goToNext();
-         assert.isFalse(lists.ListViewModel._private.isSelected(iv, iv.getCurrent()));
       });
 
       it('getItemByMarkedKey', function () {
@@ -224,93 +284,16 @@ define([
             item: {
                qwe: 123,
                asd: 456
-            }
+            },
+            setEditing: () => {}
          };
 
          assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
-         iv._setEditingItemData(edditingItem);
-         assert.deepEqual(cfg.items.at(0), lists.ListViewModel._private.getItemByMarkedKey(iv, 1).getContents());
+         iv.isEditing = () => true;
          assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
          edditingItem.isAdd = true;
          iv._markedKey = 21;
-         assert.deepEqual(edditingItem.item, lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
-      });
-
-      it('markAddingItem && restoreMarker', function () {
-         const
-             cfg = {
-                items: new collection.RecordSet({
-                   rawData: data,
-                   keyProperty: 'id'
-                }),
-                markedKey: 1,
-                keyProperty: 'id',
-                displayProperty: 'title',
-                markerVisibility: 'onactivated',
-             },
-             iv = new lists.ListViewModel(cfg);
-
-         let modelVersion = 0;
-
-         iv._nextModelVersion = () => {
-            modelVersion++;
-         };
-
-         assert.isUndefined(iv._savedMarkedKey);
-         assert.equal(1, iv._markedKey);
-
-         iv._editingItemData = {key: 123};
-         iv.markAddingItem();
-         assert.equal(1, iv._savedMarkedKey);
-         assert.equal(123, iv._markedKey);
-
-
-         iv.restoreMarker();
-         assert.isUndefined(iv._savedMarkedKey);
-         assert.equal(1, iv._markedKey);
-      });
-
-      describe('needToDrawActions', function () {
-         let needToDrawActions = lists.ListViewModel._private.needToDrawActions;
-         let currentItem = {
-               key: 1
-             },
-             editingItem = {
-               key: 1
-             },
-             editingConfig = {
-               toolbarVisibility: true
-             },
-             drawnActions = [1];
-         it('editing with actions and toolbar', function() {
-            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
-         });
-         it('editing without actions and with toolbar', function() {
-            drawnActions = [];
-            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
-         });
-         it('editing with actions and without toolbar', function() {
-            drawnActions = [1];
-            editingConfig.toolbarVisibility = false;
-            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
-         });
-         it('editing without actions and without toolbar', function() {
-            drawnActions = [];
-            editingConfig.toolbarVisibility = false;
-            assert.isFalse(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-            assert.isFalse(needToDrawActions(editingItem, {key: 2}, editingConfig, drawnActions));
-         });
-         it('without actions', function() {
-            editingItem = null;
-            assert.isFalse(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-         });
-         it('with actions', function() {
-            drawnActions = [1]
-            assert.isTrue(needToDrawActions(editingItem, currentItem, editingConfig, drawnActions));
-         });
+         assert.isUndefined(lists.ListViewModel._private.getItemByMarkedKey(iv, 21));
       });
 
       it('updateIndexes', function() {
@@ -330,7 +313,9 @@ define([
                   rawData: [],
                   keyProperty: 'id'
                }),
-               virtualScrolling: true
+               virtualScrollConfig: {
+                  pageSize: 100
+               }
             });
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after constructor.');
          assert.equal(model._stopIndex, 0, 'Invalid value of "_stopIndex" after constructor.');
@@ -351,323 +336,88 @@ define([
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
 
-      it('set marker after setting items', function() {
-         var
-             items = new collection.RecordSet({
-                rawData: [
-                   { id: 1, title: 'item 1' }
-                ],
-                keyProperty: 'id'
-             }),
-             model = new lists.ListViewModel({
-                keyProperty: 'id',
-                items: new collection.RecordSet({
-                   rawData: [],
-                   keyProperty: 'id'
-                }),
-                markedKey: null
-             }),
-            modelWithoutItems = new lists.ListViewModel({
-               markerVisibility: 'visible',
-               keyProperty: 'id',
-               markedKey: 1
-            });
-
-         // Should not set marker
-         model._options.markerVisibility = 'hidden';
-         model.setItems(items);
-         assert.equal(undefined, model._markedKey);
-
-         model._options.markerVisibility = 'onactivated';
-         model.setItems(items);
-         assert.equal(undefined, model._markedKey);
-
-         // Should set marker
-         model._options.markerVisibility = 'visible';
-         model.setItems(items);
-         assert.equal(1, model._markedKey);
-         model._markedKey = 0;
-
-         model._options.markerVisibility = 'always';
-         model.setItems(items);
-         assert.equal(1, model._markedKey);
-
-         var
-            markedKeyChangedCalled = false,
-            cb = function() {
-               markedKeyChangedCalled = true;
-            };
-         model.subscribe('onMarkedKeyChanged', cb);
-         assert.equal(modelWithoutItems._markedKey, null);
-         modelWithoutItems.setItems(items);
-         assert.equal(modelWithoutItems._markedKey, 1);
-         model.unsubscribe('onMarkedKeyChanged', cb);
-         assert.isFalse(markedKeyChangedCalled);
-      });
-
-      it('should set markerFrom state', function () {
-
-         var
-             items = new collection.RecordSet({
-                rawData: [
-                   { id: 2, title: 'item 2' },
-                   { id: 3, title: 'item 3' }
-                ],
-                keyProperty: 'id'
-             }),
-             model = new lists.ListViewModel({
-                keyProperty: 'id',
-                items: new collection.RecordSet({
-                   rawData: [
-                      { id: 1, title: 'item 1' }
-                   ],
-                   keyProperty: 'id'
-                }),
-                markerVisibility: 'visible',
-                markedKey: 1
-             });
-
-         model._markedKey = 2;
-         model.setItems(items);
-         assert.equal(2, model._markedKey);
-
-      });
-
-      it('set marker on ctor', function() {
-
-         var cfg = {
-                keyProperty: 'id',
-                items: new collection.RecordSet({
-                   rawData: [
-                      {id: 1, title: 'item 1'},
-                      {id: 2, title: 'item 2'},
-                      {id: 3, title: 'item 3'}
-                   ],
-                   keyProperty: 'id'
-                }),
-                markedKey: null
-             },
-             model;
-
-         // Should not set marker
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'onactivated';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-         cfg.markedKey = 1;
-         cfg.markerVisibility = 'hidden';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(undefined, model._markedKey);
-
-
-
-         // Should set marker
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'onactivated';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'always';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(1, model._markedKey);
-
-         cfg.markedKey = null;
-         cfg.markerVisibility = 'visible';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(1, model._markedKey);
-
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'always';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-         cfg.markedKey = 2;
-         cfg.markerVisibility = 'visible';
-         model = new lists.ListViewModel(cfg);
-         assert.equal(2, model._markedKey);
-
-
-      });
-      it('setMarkerOnValidItem', function() {
-         var cfg = {
-            keyProperty: 'id',
-            items: new collection.RecordSet({
-               rawData: [
-                  { id: 1, title: 'item 1', type: 1 },
-                  { id: 2, title: 'item 2', type: 1 },
-                  { id: 3, title: 'item 3', type: 1 },
-                  { id: 4, title: 'item 4', type: 2 },
-                  { id: 5, title: 'item 5', type: 2 },
-                  { id: 6, title: 'item 6', type: 3 },
-                  { id: 7, title: 'item 7', type: 4 },
-               ],
-               keyProperty: 'id'
-            }),
-            groupingKeyCallback: function(item) {
-               return item.get('type');
-            }
-         };
-         var model = new lists.ListViewModel(cfg);
-
-         model.setCollapsedGroups([2,3,4]);
-
-         /*
-            ---------- 1 ----------
-            item 1
-            item 2
-            item 3
-            ---------- 2 ----------
-            ---------- 3 ----------
-            ---------- 4 ----------
-          */
-         model.setMarkerOnValidItem(0);
-         assert.equal(model.getMarkedKey(), 1);
-         model.setMarkerOnValidItem(1);
-         assert.equal(model.getMarkedKey(), 1);
-         model.setMarkerOnValidItem(4);
-         assert.equal(model.getMarkedKey(), 3);
-      });
-
-      it('SetMarkerOnRemove', function() {
-         var cfg = {
-               keyProperty: 'id',
-               items: new collection.RecordSet({
-                  rawData: [
-                     { id: 1, title: 'item 1', type: 1 },
-                     { id: 2, title: 'item 2', type: 2 },
-                     { id: 3, title: 'item 3', type: 1 },
-                     { id: 4, title: 'item 4', type: 2 },
-                     { id: 5, title: 'item 5', type: 1 },
-                     { id: 6, title: 'item 6', type: 3 }
-                  ],
-                  keyProperty: 'id'
-               }),
-            groupingKeyCallback: function(item) {
-               return item.get('type');
-               }
-            };
-            var model;
-
-            /*
-               ---------- 1 ---------
-               item 1
-               item 3
-               item 5
-               ---------- 2 ----------
-               item 2
-               item 4
-
-               item 6
-             */
-
-
-            cfg.markedKey = 3; // item 3, (item.index = 2)
-            model = new lists.ListViewModel(cfg);
-            // remove item 3
-            model.getItems().removeAt(2);
-            assert.equal(5, model.getMarkedKey()); // expect marker on item 1
-
-         /*
-               ---------- 1 ---------
-               item 1
-               item 5
-               ---------- 2 ----------
-               item 2
-               item 4
-
-               item 6
-             */
-
-            cfg.markedKey = 2;
-            model = new lists.ListViewModel(cfg);
-            // remove item 2 (item placed, before group expander)
-            model.getItems().removeAt(1);
-            assert.equal(4, model.getMarkedKey()); // expected marker on item 5
-
-         /*
-              ---------- 1 ---------
-              item 1
-              item 5
-              ---------- 2 ----------
-              item 4
-
-              item 6
-         */
-
-            cfg.markedKey = 1;
-            model = new lists.ListViewModel(cfg);
-            model.getItems().removeAt(3); // remove item 6 (without markedKey)
-            assert.equal(1, model.getMarkedKey());
-
-         //remove last item. marked key must be null
-         cfg = {
-            keyProperty: 'id',
-            items: new collection.RecordSet({
-               rawData: [
-                  { id: 1, title: 'item 1' },
-
-               ],
-               idProperty: 'id'
-            }),
-            markedKey: 1
-         };
-         model = new lists.ListViewModel(cfg);
-         // remove last item
-         model.getItems().removeAt(0);
-         assert.equal(null, model.getMarkedKey()); //marker must be null
-      });
-
+/*
       it('Selection', function() {
          var cfg = {
             items: data,
             keyProperty: 'id',
             displayProperty: 'title',
-            markerVisibility: 'visible',
-            markedKey: 2
+            markerVisibility: 'visible'
          };
 
          var iv = new lists.ListViewModel(cfg);
          var marItem = iv.getMarkedItem();
-         assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
-         assert.equal(iv._markedKey, 2, 'Incorrect _markedKey value');
-
+         assert.equal(undefined, marItem, 'Incorrect selectedItem');
+         assert.equal(iv._markedKey, undefined, 'Incorrect _markedKey value');
 
          iv.setMarkedKey(3);
          marItem = iv.getMarkedItem();
-         assert.equal(2, iv._options.markedKey, 'Incorrect markedKey option value');
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
-         assert.equal(1, iv.getVersion(), 'Incorrect version appendItems');
+         assert.equal(2, iv.getVersion(), 'Incorrect version appendItems');
+      });
+*/
+
+      it('SetItemPadding Silent', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
+
+         var iv = new lists.ListViewModel({...cfg});
+         var result = false;
+         iv._nextModelVersion = function () {
+            result = true;
+         };
+         iv.setItemPadding('xs');
+         assert.isTrue(result, 'Incorrest setItemPadding result');
+
+         result = false;
+         iv.setItemPadding('xs', true);
+
+         assert.isFalse(result, 'Incorrest setItemPadding result');
+
       });
 
-      it('markerVisibility', function() {
-         var
-            cfg = {
-               keyProperty: 'id',
-               markerVisibility: 'visible',
-               markedKey: null
-            },
-            listModel = new lists.ListViewModel(cfg),
-            markedKeyChangedFired = false;
+      it('setMarkedKey', function() {
+         const cfg = {
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markerVisibility: 'visible'
+         };
 
-         listModel.subscribe('onMarkedKeyChanged', function(e, key) {
-            assert.equal(key, 1);
-            markedKeyChangedFired = true;
-         });
-         listModel.setItems(new collection.RecordSet({rawData: data, keyProperty: 'id'}));
-         assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
-         assert.equal(listModel.getMarkedItem(), listModel._display.at(0), 'Incorrect _markedItem after setItems.');
-         assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
+         const model = new lists.ListViewModel(cfg);
+
+         let oldVersion = model.getVersion();
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+
+         oldVersion = model.getVersion();
+
+         model.setMarkedKey(2, false);
+         assert.isNull(model.getMarkedKey());
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
+
+         oldVersion = model.getVersion();
+
+         model.setMarkedKey(2, true);
+         assert.equal(model.getMarkedKey(), 2);
+         assert.isTrue(model.getItemBySourceKey(2).isMarked());
+         assert.notEqual(oldVersion, model.getVersion(), 'Версия не изменилась');
       });
 
-      it('setItemActions should not change actions if an item does not exist in display', function() {
+      // TODO SetItemActions
+      /*it('setItemActions should not change actions if an item does not exist in display', function() {
          var
             cfg = {
                keyProperty: 'id',
@@ -726,46 +476,7 @@ define([
             showed: []
          });
          assert.isTrue(editingItem.drawActions, 'should draw actions on editing item if actions array is empty and toolbarVisibility = true');
-      });
-
-      it('Clear itemActions for removed items', function() {
-         var
-            cfg = {
-               keyProperty: 'id',
-               markerVisibility: 'visible',
-               markedKey: null,
-               items: new collection.RecordSet({
-                  rawData: data,
-                  keyProperty: 'id'
-               })
-            },
-            listModel = new lists.ListViewModel(cfg);
-
-         listModel.setItemActions(cfg.items.at(0), {
-            all: [{ id: 1, icon: 'testIcon' }],
-            showed: []
-         });
-         assert.equal(1, Object.keys(listModel._actions).length);
-         listModel.getItems().removeAt(0);
-         assert.equal(0, Object.keys(listModel._actions).length);
-      });
-
-      it('_updateSelection', function() {
-         var cfg = {
-            items: data,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            selectedKeys: [1],
-            markedKey: null
-         };
-
-         var iv = new lists.ListViewModel(cfg);
-         assert.deepEqual(iv._selectedKeys, [1]);
-         var curPrefixItemVersion = iv._prefixItemVersion;
-         iv.updateSelection([2, 3]);
-         assert.deepEqual(iv._selectedKeys, [2, 3]);
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
-      });
+      });*/
 
       it('setMultiSelectVisibility', function() {
          var cfg = {
@@ -775,7 +486,7 @@ define([
          var iv = new lists.ListViewModel(cfg);
          var curPrefixItemVersion = iv._prefixItemVersion;
          iv.setMultiSelectVisibility('visible');
-         assert.equal(iv._prefixItemVersion, curPrefixItemVersion);
+         assert.equal(iv._prefixItemVersion, curPrefixItemVersion + 1);
       });
 
       it('setSwipeItem', function() {
@@ -824,7 +535,7 @@ define([
          assert.equal(1, lv.getVersion());
       });
 
-      it('getMarkedKey', function() {
+      /*it('getMarkedKey', function() {
          var
             cfg = {
                items: data,
@@ -834,31 +545,9 @@ define([
                markedKey: 1
             };
          var lv = new lists.ListViewModel(cfg);
+         lv.setMarkedKey(1);
          assert.equal(lv.getMarkedKey(), 1);
-      });
-
-      it('setRightSwipedItem', function() {
-         var
-            cfg = {
-               items: data,
-               keyProperty: 'id',
-               displayProperty: 'title',
-               selectedKeys: [1],
-               markedKey: null
-            },
-            itemData = {
-               test: 'test'
-            },
-            nextVersionCalled = false;
-
-         var lv = new lists.ListViewModel(cfg);
-         lv._nextVersion = function() {
-            nextVersionCalled = true;
-         };
-         lv.setRightSwipedItem(itemData);
-         assert.equal(lv._rightSwipedItem, itemData);
-         assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
-      });
+      });*/
 
       it('setActiveItem should not change version of the model if the item is already active', function() {
          var
@@ -903,11 +592,30 @@ define([
          assert.isAbove(lv.getVersion(), originalVersion);
       });
 
+      it('getPreviousItem', () => {
+         const model = new lists.ListViewModel({
+            items: new collection.RecordSet({
+               rawData: data,
+               keyProperty: 'id'
+            }),
+            keyProperty: 'id'
+         });
+
+         let prevItemKey = model.getPreviousItem(1);
+         assert.equal(prevItemKey, 1);
+
+         prevItemKey = model.getPreviousItem(0);
+         assert.equal(prevItemKey, undefined);
+
+         prevItemKey = model.getPreviousItem(5);
+         assert.equal(prevItemKey, 3);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
          beforeEach(function() {
-            dragItemData = {};
+            dragItemData = {key: 2};
             dragEntity = {
                items: [2, 3],
                getItems: function() {
@@ -921,7 +629,7 @@ define([
                   keyProperty: 'id'
                }),
                keyProperty: 'id',
-               markedKey: null
+               style: 'master',
             });
          });
 
@@ -932,23 +640,35 @@ define([
             assert.isUndefined(item.dragTargetPosition);
             assert.isUndefined(item.isDragging);
 
-            lvm.setDragEntity(dragEntity);
+            lvm.setDraggedItems(lvm.getItemBySourceKey(2), dragEntity.items);
+            lvm.setMarkedKey(2, true);
             item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.isTrue(item.isDragging);
             assert.isTrue(item.isVisible);
+            assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.hasMultiSelect);
+
+            lvm.setMarkedKey(3, true);
             item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
             assert.isUndefined(item.isDragging);
+            assert.isTrue(item.isStickedMasterItem);
             assert.isFalse(item.isVisible);
+
             item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.isUndefined(item.isDragging);
             assert.isUndefined(item.isVisible);
-            lvm.setItemActions(lvm.getItemById('2', 'id').getContents(), {
+            item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            item.setActions({
                all: [1, 2],
                showed: [1]
             });
-            item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
-            assert.isTrue(!!item.drawActions);
+            assert.isTrue(!!(item.hasVisibleActions() || item.isEditing()));
+
+            // Проверяем что чекбокс не будет показываться если запись редактируется
+            assert.isFalse(item.hasMultiSelect);
+            lvm.setMultiSelectVisibility('visible');
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isTrue(item.hasMultiSelect);
          });
 
          it('getMultiSelectClassList hidden', function() {
@@ -967,37 +687,65 @@ define([
 
          it('getMultiSelectClassList onhover selected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            lvm._selectedKeys = {'2': true};
+            lvm.setSelectedItems([lvm.getItemById(2, 'id')], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable');
          });
 
          it('getMultiSelectClassList onhover unselected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
-            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            var item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
             assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
          });
 
+
+         it('getMultiSelectClassList', () => {
+            const current = {
+               isSelected: () => false
+            };
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, false),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+
+            current.isSelected = () => true;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.isSelected = () => null;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable');
+
+            current.isSelected = () => undefined;
+            assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true),
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover');
+         });
+
          it('setDragTargetPosition', function() {
-            assert.equal(lvm.getDragTargetPosition(), null);
+            assert.equal(lvm._dragTargetPosition, null);
             lvm.setDragTargetPosition(target);
-            assert.equal(lvm.getDragTargetPosition(), target);
+            assert.equal(lvm._dragTargetPosition, target);
             lvm.setDragTargetPosition(null);
-            assert.equal(lvm.getDragTargetPosition(), null);
+            assert.equal(lvm._dragTargetPosition, null);
          });
 
          it('setDragEntity', function() {
-            assert.equal(lvm.getDragEntity(), null);
+            assert.equal(lvm._dragEntity, null);
             lvm.setDragEntity(dragEntity);
-            assert.equal(lvm.getDragEntity(), dragEntity);
+            assert.equal(lvm._dragEntity, dragEntity);
             lvm.setDragEntity(null);
-            assert.equal(lvm.getDragEntity(), null);
+            assert.equal(lvm._dragEntity, null);
          });
 
          it('setDragItemData', function() {
             assert.equal(lvm.getDragItemData(), null);
             lvm.setDragItemData(dragItemData);
             assert.equal(lvm.getDragItemData(), dragItemData);
+            // Это нужно обязательно проверить, так как если не проставить isDragging,
+            // то на перетаскиваемый элемент не повесится нужный css класс
+            assert.isTrue(dragItemData.isDragging);
             lvm.setDragItemData(null);
             assert.equal(lvm.getDragItemData(), null);
          });
@@ -1023,8 +771,8 @@ define([
             });
 
             it('without dragItemData', function() {
-               lvm.setDragEntity(dragEntity);
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+               lvm.setDraggedItems(dragItemData.dispItem, dragEntity.items);
+               lvm.setDragTargetPosition(null);
 
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.isUndefined(current.dragTargetPosition);
@@ -1046,117 +794,59 @@ define([
 
             it('with dragTarget', function() {
                dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDragItemData(dragItemData);
-               lvm.setDragEntity(dragEntity);
+               lvm.setDraggedItems(dragItemData.dispItem, dragEntity.items);
 
                // move up
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
+               lvm.setDragPosition({
+                  index: 0,
+                  position: 'before'
+               });
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.equal(current.dragTargetPosition, 'before');
                assert.equal(current.draggingItemData, dragItemData);
 
                // move down
-               lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(2))));
+               lvm.setDragTargetPosition({
+                  index: 2,
+                  position: 'after'
+               });
                current = lvm.getItemDataByItem(lvm.at(2));
                assert.equal(current.dragTargetPosition, 'after');
                assert.equal(current.draggingItemData, dragItemData);
             });
             it('getSpacingClassList', function() {
-               assert.equal(lists.ListViewModel._private.getSpacingClassList({
-                  itemPadding: {
+               const theme = 'default';
+               assert.equal(lists.ListViewModel._private.getSpacingClassList(
+                  {
                      left: 'm',
                      right: 'XS'
                   },
-                  multiSelectVisibility: 'hidden'
-               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_default controls-ListView__item-bottomPadding_default' +
-                  ' controls-ListView__item-rightPadding_xs controls-ListView__item-leftPadding_m');
-               assert.equal(lists.ListViewModel._private.getSpacingClassList({
-                  itemPadding: {
+                  '',
+                  theme,
+                  'hidden'
+               ), ` controls-ListView__itemContent controls-ListView__itemContent_default_theme-default controls-ListView__item_default-topPadding_default_theme-default controls-ListView__item_default-bottomPadding_default_theme-default` +
+                  ` controls-ListView__item-rightPadding_xs_theme-default controls-ListView__item-leftPadding_m_theme-default`);
+               assert.equal(lists.ListViewModel._private.getSpacingClassList(
+                  {
                      left: 'XS',
                      right: 'm',
                      top: 'null',
                      bottom: 's'
                   },
-                  multiSelectVisibility: 'visible'
-               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
-                  ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
+                  '',
+                  theme,
+                  'visible'
+               ), ` controls-ListView__itemContent controls-ListView__itemContent_default_theme-default controls-ListView__item_default-topPadding_null_theme-default controls-ListView__item_default-bottomPadding_s_theme-default` +
+                  ` controls-ListView__item-rightPadding_m_theme-default controls-ListView__itemContent_withCheckboxes_theme-default`);
             });
 
             it('check search value', function() {
+               var curVersion = lvm.getVersion();
                lvm.setSearchValue('test');
                assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               assert.equal(lvm.getVersion(), curVersion + 1);
                lvm.setSearchValue(null);
             });
-         });
-
-         describe('calculateDragTargetPosition', function() {
-            var
-               itemData,
-               dragItemData,
-               dragTargetPosition;
-
-            it('without setDragTargetPosition and without setDragItemData', function() {
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-            });
-
-            it('without setDragTargetPosition', function() {
-               dragItemData = lvm.getItemDataByItem(lvm.at(1));
-               lvm.setDragItemData(dragItemData);
-               lvm.setDragEntity(dragEntity);
-
-               // before dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(0));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-
-               // after dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(2));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'after');
-
-               // on dragItemData
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.isNull(dragTargetPosition);
-            });
-
-            it('with setDragTargetPosition', function() {
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               lvm.setDragTargetPosition(dragTargetPosition);
-
-               // move up
-               itemData = lvm.getItemDataByItem(lvm.at(0));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'before');
-
-               // move down
-               itemData = lvm.getItemDataByItem(lvm.at(1));
-               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
-               assert.equal(dragTargetPosition.index, itemData.index);
-               assert.equal(dragTargetPosition.position, 'after');
-            });
-            it('_calcCursorClasses', function() {
-               var
-                  cfg = {
-                     items: new collection.RecordSet({
-                        rawData: data,
-                        keyProperty: 'id'
-                     }),
-                     keyProperty: 'id',
-                     displayProperty: 'title'
-                  },
-                  model = new lists.ListViewModel(cfg);
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-default', model._calcCursorClasses(false));
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses(true));
-               assert.equal(' controls-ListView__itemV controls-ListView__itemV_cursor-pointer', model._calcCursorClasses());
-            })
          });
       });
    });

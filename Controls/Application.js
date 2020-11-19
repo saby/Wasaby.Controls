@@ -7,30 +7,35 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
+      'Env/Event',
       'UI/Base',
       'Controls/scroll',
       'Core/helpers/getResourceUrl',
-      'Controls/decorator',
       'Controls/Application/SettingsController',
-      'Controls/Utils/DOMUtil',
+      'Controls/sizeUtils',
+      'Controls/event',
+      'Controls/popup',
+      'UI/HotKeys',
+      'Controls/Application/TouchDetectorController',
+      'Controls/dragnDrop',
+      'Core/TimeTesterInv',
       'css!theme?Controls/Application/oldCss'
    ],
 
    /**
     * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
-    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+    * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
     *
     * @class Controls/Application
     * @extends Core/Control
     *
-    * @mixes Controls/Application/BlockLayout/Styles
     * @mixes Controls/_interface/IApplication
     * @mixes UI/_base/interface/IHTML
     * @mixes Controls/_interface/IRUM
     *
-    * @control
+    *
     * @public
-    * @author Белотелов Н.В.
+    * @author Санников К.А.
     */
 
    /*
@@ -45,21 +50,27 @@ define('Controls/Application',
     * @mixes UI/_base/interface/IRootTemplate
     * @mixes UI/_base/interface/IHTML
     *
-    * @control
+    *
     * @public
-    * @author Белотелов Н.В.
+    * @author Санников К.А.
     */
 
    function(Base,
       template,
       cBodyClasses,
       Env,
+      EnvEvent,
       UIBase,
       scroll,
       getResourceUrl,
-      decorator,
       SettingsController,
-      DOMUtils) {
+      sizeUtils,
+      ControlsEvent,
+      popup,
+      HotKeys,
+      TouchDetector,
+      dragnDrop,
+      TimeTesterInv) {
       'use strict';
 
       var _private;
@@ -85,59 +96,9 @@ define('Controls/Application',
 
             return bodyClasses;
          },
-
-         // Generates JML from options array of objects
-         translateJML: function JMLTranslator(type, objects) {
-            var result = [];
-            for (var i = 0; i < objects.length; i++) {
-               result[i] = [type, objects[i]];
-            }
-            return result;
-         },
-         generateJML: function(links, styles, meta, scripts) {
-            var jml = [];
-            jml = jml.concat(_private.translateJML('link', links || []));
-            jml = jml.concat(_private.translateJML('style', styles || []));
-            jml = jml.concat(_private.translateJML('meta', meta || []));
-            jml = jml.concat(_private.translateJML('script', scripts || []));
-            return jml;
-         },
          isHover: function(touchClass, dragClass) {
             return touchClass === 'ws-is-no-touch' && dragClass === 'ws-is-no-drag';
          }
-      };
-
-      function generateHeadValidHtml() {
-         // Tag names and attributes allowed in the head.
-         return {
-            validNodes: {
-               link: true,
-               style: true,
-               script: true,
-               meta: true,
-               title: true
-            },
-            validAttributes: {
-               rel: true,
-               as: true,
-               src: true,
-               name: true,
-               sizes: true,
-               crossorigin: true,
-               type: true,
-               href: true,
-               property: true,
-               'http-equiv': true,
-               content: true,
-               id: true,
-               'class': true
-            }
-         };
-      }
-
-      var linkAttributes = {
-         src: true,
-         href: true
       };
 
       var Page = Base.extend({
@@ -148,37 +109,55 @@ define('Controls/Application',
           * @private
           */
          /* eslint-enable */
-         _scrollingClass: 'controls-Scroll_webkitOverflowScrollingTouch',
+         _scrollingClass: Env.detection.isMobileIOS ? 'controls-Scroll_webkitOverflowScrollingTouch' : '',
 
          _dragClass: 'ws-is-no-drag',
 
+         _registers: {},
+
          _getChildContext: function() {
             return {
-               ScrollData: this._scrollData
+               ScrollData: this._scrollData,
+               isTouch: this._touchObjectContext
             };
          },
 
          _scrollPage: function(ev) {
-            this._children.scrollDetect.start(ev);
+            this._registers.scroll.start(ev);
+            this._popupManager.eventHandler('pageScrolled', []);
+         },
+
+         _resizeBody: function(ev) {
+            if (!this._isIOS13()) {
+               this._resizePage(ev);
+            }
+         },
+
+         _isIOS13: function() {
+            return Env.detection.isMobileIOS && Env.detection.IOSVersion > 12;
          },
 
          _resizePage: function(ev) {
-            this._children.resizeDetect.start(ev);
+            this._registers.controlResize.start(ev);
+            this._popupManager.eventHandler('popupResizeOuter', []);
          },
          _mousedownPage: function(ev) {
-            this._children.mousedownDetect.start(ev);
+            this._registers.mousedown.start(ev);
+            this._popupManager.mouseDownHandler(ev);
          },
          _mousemovePage: function(ev) {
-            this._children.mousemoveDetect.start(ev);
+            this._registers.mousemove.start(ev);
+            this._touchDetector.moveHandler();
+            this._updateClasses();
          },
          _mouseupPage: function(ev) {
-            this._children.mouseupDetect.start(ev);
+            this._registers.mouseup.start(ev);
          },
          _touchmovePage: function(ev) {
-            this._children.touchmoveDetect.start(ev);
+            this._registers.touchmove.start(ev);
          },
          _touchendPage: function(ev) {
-            this._children.touchendDetect.start(ev);
+            this._registers.touchend.start(ev);
          },
          _mouseleavePage: function(ev) {
             /* eslint-disable */
@@ -192,18 +171,26 @@ define('Controls/Application',
              * Демо: https://jsfiddle.net/q7rez3v5/
              */
             /* eslint-enable */
-            this._children.mousemoveDetect.start(ev);
+            this._registers.mousemove.start(ev);
+         },
+
+         _touchStartPage: function() {
+            this._touchDetector.touchHandler();
+            this._updateClasses();
          },
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            if (this._children.touchDetector) {
-               this._touchClass = this._children.touchDetector.getClass();
+            if (this._touchDetector) {
+               this._touchClass = this._touchDetector.getClass();
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
 
             this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
+         },
+         _updateThemeClass: function(cfg) {
+            this._themeClass = 'Application-body_theme-' + cfg.theme;
          },
 
          _dragStartHandler: function() {
@@ -216,22 +203,12 @@ define('Controls/Application',
             this._updateClasses();
          },
 
-         _changeTouchStateHandler: function() {
-            this._updateClasses();
-         },
-
          /**
           * Код должен быть вынесен в отдельных контроллер в виде хока в 610.
           * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
           */
          _popupCreatedHandler: function() {
             this._isPopupShow = true;
-
-            // На Ipad необходимо вызывать reflow в момент открытия окон для решения проблем с z-index-ами
-            // https://online.sbis.ru/opendoc.html?guid=3f84a4bc-2973-497c-91ad-0165b5046bbc
-            if (Env.detection.isMobileIOS) {
-               DOMUtils.reflow();
-            }
 
             this._changeOverflowClass();
          },
@@ -275,21 +252,15 @@ define('Controls/Application',
 
          _beforeMount: function(cfg) {
             this._checkDeprecatedOptions(cfg);
-            this.headTagResolver = this._headTagResolver.bind(this);
             this.BodyClasses = _private.calculateBodyClasses;
             this._scrollData = new scroll._scrollContext({ pagingVisible: cfg.pagingVisible });
-
-            // translate arrays of links, styles, meta and scripts from options to JsonML format
-            this.headJson = _private.generateJML(cfg.links, cfg.styles, cfg.meta, cfg.scripts);
-            if (Array.isArray(cfg.headJson)) {
-               this.headJson = this.headJson.concat(cfg.headJson);
-            }
-            this.headValidHtml = generateHeadValidHtml();
 
             var appData = UIBase.AppData.getAppData();
             this.RUMEnabled = cfg.RUMEnabled || appData.RUMEnabled || false;
             this.pageName = cfg.pageName || appData.pageName || '';
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
+
+
 
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
@@ -301,14 +272,53 @@ define('Controls/Application',
                /* eslint-disable */
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
-                  this.headJson = undefined;
-                  this.headValidHtml = undefined;
                }
                /* eslint-enable */
             }
             this._updateClasses();
+            this._updateThemeClass(cfg);
 
             SettingsController.setController(cfg.settingsController);
+
+            this._createDragnDropController();
+            this._createGlobalPopup();
+            this._createPopupManager(cfg);
+            this._createRegisters();
+            this._createTouchDetector();
+         },
+
+         _afterMount: function(cfg) {
+            // Подписка через viewPort дает полную информацию про ресайз страницы, на мобильных устройствах
+            // сообщает так же про изменение экрана после показа клавиатуры и/или зуме страницы.
+            // Подписка на body стреляет не всегда. в 2100 включаю только для 13ios, в перспективе можно включить
+            // везде, где есть visualViewport
+            var timeTester = new TimeTesterInv.default(this.RUMEnabled, this.pageName);
+            timeTester.load();
+            if (this._isIOS13()) {
+               window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
+            }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.subscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.subscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.subscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+
+            this._globalpopup.registerGlobalPopup();
+            this._popupManager.init(cfg, this._getChildContext());
+
+         },
+
+         _beforeUnmount: function () {
+            for (var register in this._registers) {
+               this._registers[register].destroy();
+            }
+            var channelPopupManager = EnvEvent.Bus.channel('popupManager');
+            channelPopupManager.unsubscribe('managerPopupCreated', this._popupCreatedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
+            channelPopupManager.unsubscribe('managerPopupBeforeDestroyed', this._popupBeforeDestroyedHandler, this);
+
+            this._globalpopup.registerGlobalPopupEmpty();
+            this._popupManager.destroy();
+            this._dragnDropController.destroy();
          },
 
          _beforeUpdate: function(cfg) {
@@ -317,6 +327,7 @@ define('Controls/Application',
                this._scrollData.updateConsumers();
             }
             this._updateClasses();
+            this._updateThemeClass(cfg);
          },
 
          _afterUpdate: function(oldOptions) {
@@ -332,27 +343,66 @@ define('Controls/Application',
                }
                elements[0].textContent = this._options.title;
             }
+            this._popupManager.updateOptions(this._options, this._getChildContext());
          },
+
+         _createRegisters: function() {
+            var registers = ['scroll', 'controlResize', 'mousemove', 'mouseup', 'touchmove', 'touchend', 'mousedown'];
+            var _this = this;
+            registers.forEach(function(register) {
+               _this._registers[register] = new ControlsEvent.RegisterClass({ register: register });
+            });
+         },
+
+         _createGlobalPopup: function() {
+            this._globalpopup = new popup.GlobalController();
+         },
+
+         _createPopupManager: function(cfg) {
+            this._popupManager = new popup.ManagerClass(cfg);
+         },
+
+         _registerHandler: function(event, registerType, component, callback, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].register(event, registerType, component, callback, config);
+               return;
+            }
+            this._dragnDropController.registerHandler(event, registerType, component, callback, config);
+         },
+
+         _unregisterHandler: function(event, registerType, component, config) {
+            if (this._registers[registerType]) {
+               this._registers[registerType].unregister(event, registerType, component, config);
+               return;
+            }
+            this._dragnDropController.unregisterHandler(event, registerType, component, config);
+         },
+
+         _createTouchDetector: function() {
+            this._touchDetector = new TouchDetector();
+            this._touchObjectContext = this._touchDetector.createContext();
+         },
+
+         _createDragnDropController: function() {
+            this._dragnDropController = new dragnDrop.ControllerClass();
+         },
+
+         _documentDragStart: function(event, dragObject) {
+            this._dragnDropController.documentDragStart(dragObject);
+            this._dragStartHandler();
+         },
+
+         _documentDragEnd: function(event, dragObject) {
+            this._dragnDropController.documentDragEnd(dragObject);
+            this._dragEndHandler();
+         },
+
+         _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
+            this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
+        },
 
          _getResourceUrl: function(str) {
             return getResourceUrl(str);
-         },
-
-         _headTagResolver: function(value, parent) {
-            var newValue = decorator.noOuterTag(value, parent),
-               attributes = Array.isArray(newValue) && typeof newValue[1] === 'object' &&
-                  !Array.isArray(newValue[1]) && newValue[1];
-            if (attributes) {
-               for (var attributeName in attributes) {
-                  if (attributes.hasOwnProperty(attributeName)) {
-                     var attributeValue = attributes[attributeName];
-                     if (typeof attributeValue === 'string' && linkAttributes[attributeName]) {
-                        attributes[attributeName] = this._getResourceUrl(attributeValue);
-                     }
-                  }
-               }
-            }
-            return newValue;
          },
 
          _keyPressHandler: function(event) {
@@ -366,6 +416,51 @@ define('Controls/Application',
                   }
                }
             }
+         },
+
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
+            this._globalpopup.popupBeforeDestroyedHandler(event, popupCfg, popupList, popupContainer);
+         },
+
+         _openInfoBoxHandler: function(event, config) {
+            this._globalpopup.openInfoBoxHandler(event, config);
+         },
+
+         _openDialogHandler: function(event, templ, templateOptions, opener) {
+            return this._globalpopup.openDialogHandler(event, templ, templateOptions, opener);
+         },
+
+         _closeInfoBoxHandler: function(event, delay) {
+            this._globalpopup.closeInfoBoxHandler(event, delay);
+         },
+
+         _forceCloseInfoBoxHandler: function() {
+            this._globalpopup.forceCloseInfoBoxHandler();
+         },
+
+         _openPreviewerHandler: function(event, config, type) {
+            return this._globalpopup.openPreviewerHandler(event, config, type);
+         },
+
+         _cancelPreviewerHandler: function(event, action) {
+            this._globalpopup.cancelPreviewerHandler(event, action);
+         },
+
+         _isPreviewerOpenedHandler: function(event) {
+            return this._globalpopup.isPreviewerOpenedHandler(event);
+         },
+
+         _closePreviewerHandler: function(event, type) {
+            this._globalpopup.closePreviewerHandler(event, type);
+         },
+
+         _keyDownHandler: function(event) {
+            return HotKeys.dispatcherHandler(event);
+         },
+
+         _popupEventHandler: function(event, action) {
+            var args = Array.prototype.slice.call(arguments, 2);
+            this._popupManager.eventHandler.apply(this._popupManager, [action, args]);
          }
       });
 
@@ -377,6 +472,58 @@ define('Controls/Application',
       };
 
       Page._theme = ['Controls/application'];
+      Page._styles = ['Controls/dragnDrop'];
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPrefetchModules = function(modules, force) {
+         _addHeadLinks(modules, { prefetch: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="preload"/>
+       * По умолчанию ресурсы добавляются только на сервисе представления
+       * @param modules
+       * @param force
+       * @public
+       */
+      Page.addPreloadModules = function(modules, force) {
+         _addHeadLinks(modules, { preload: true, force: !!force });
+      };
+
+      /**
+       * Добавление ресурсов, которые необходимо вставить в head как <link rel="prefetch"/> или <link rel="preload"/>
+       * @param modules
+       * @param cfg настройки для ссылок
+       *             {
+       *                'prefetch': <boolean>,  // добавить prefetch-ссылку в head
+       *                'preload': <boolean>  // добавить preload-ссылку в head
+       *                'force': <boolean>  // по умолчанию ресурсы добавляются только на сервисе представления, но
+       *                                    // с этим параметром можно на это повлиять
+       *             }
+       * @private
+       */
+      function _addHeadLinks(modules, cfg) {
+         cfg = cfg || {};
+         if (!Env.constants.isServerSide && !cfg.force) {
+            return;
+         }
+         if (!modules || !modules.length) {
+            return;
+         }
+
+         var pls = new UIBase.PrefetchLinksStore();
+         if (cfg.prefetch) {
+            pls.addPrefetchModules(modules);
+         } else {
+            pls.addPreloadModules(modules);
+         }
+      }
 
       return Page;
    });

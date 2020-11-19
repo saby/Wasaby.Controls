@@ -1,17 +1,16 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/SourceChanger/WithFull/WithFull"
-import {Memory} from "Types/source"
-import {getCountriesStats, changeSourceData} from "../../DemoHelpers/DataCatalog"
-
-import 'css!Controls-demo/Controls-demo'
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/SourceChanger/WithFull/WithFull';
+import {Memory} from 'Types/source';
+import {getCountriesStats, changeSourceData} from '../../DemoHelpers/DataCatalog';
+import { IColumn } from 'Controls/grid';
+import { INavigation } from 'Controls-demo/types';
 
 const { data, data2 } = changeSourceData();
-
-class demoSource extends Memory {
+// tslint:disable
+class DemoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
-    private query(query) {
-        const self = this;
+    query(): Promise<any> {
         const args = arguments;
         return this.pending.then(() => {
             return super.query.apply(this, args).addCallback((items) => {
@@ -28,12 +27,12 @@ class demoSource extends Memory {
     }
 }
 
-class initialMemory extends Memory {
-    private query(query) {
+class InitialMemory extends Memory {
+    query(): Promise<any> {
         return super.query.apply(this, arguments).addCallback((items) => {
             const rawData = items.getRawData();
             rawData.meta.more = false;
-            items.setRawData(rawData); //dsadsa
+            items.setRawData(rawData);
             return items;
         });
     }
@@ -41,45 +40,46 @@ class initialMemory extends Memory {
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
+    protected _viewSource: Memory;
     private _viewSource2: Memory;
-    private _columns = getCountriesStats().getColumnsForLoad();
-    private _resolve = null;
+    protected _columns: IColumn[] = getCountriesStats().getColumnsForLoad();
+    private _resolve: unknown = null;
+    protected _navigation: INavigation;
 
-    protected _beforeMount() {
-        const self = this;
-        this._viewSource = new initialMemory({
+    protected _beforeMount(): void {
+        this._viewSource = new InitialMemory({
             keyProperty: 'id',
-            data: data
+            data
         });
         this._navigation = {
             source: 'page',
             view: 'maxCount',
             sourceConfig: {
                 pageSize: 10,
-                page: 0,
+                page: 0
             },
             viewConfig: {
                 maxCountValue: 8
             }
         };
-        this._viewSource2 = new demoSource({
+        this._viewSource2 = new DemoSource({
             keyProperty: 'id',
-            data: data2,
+            data: data2
         });
     }
 
-    private _onPen() {
+    protected _onPen(): void {
         const self = this;
         this._resolve();
         this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
     }
 
-    private _onChangeSource() {
+    protected _onChangeSource() {
         const self = this;
         this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }
 
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

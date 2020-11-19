@@ -1,0 +1,17 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">itemTemplate</div>
+        <Controls.toggle:RadioGroup
+                bind:selectedKey="_selectedKey"
+                keyProperty="id"
+                source="{{_source}}"
+        >
+            <ws:itemTemplate>
+                <Controls-demo.toggle.RadioGroup.ItemTemplate.Template  item="{{item}}"
+                                                                        readOnly="{{readOnly}}"
+                                                                        selected="{{selected}}"/>
+            </ws:itemTemplate>
+        </Controls.toggle:RadioGroup>
+    </div>
+</div>
+

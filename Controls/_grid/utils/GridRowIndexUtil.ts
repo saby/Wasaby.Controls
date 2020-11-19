@@ -1,5 +1,5 @@
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil')
-import {Collection, CollectionItem} from 'Types/display'
+import {Collection, CollectionItem} from 'Controls/display'
 import {IHeaderCell} from '../interface/IHeaderCell';
 
 /**
@@ -10,7 +10,7 @@ const SINGLE_HEADER_MAX_ROW = 2;
 
 /**
  * @typedef {Object} IBaseGridRowIndexOptions Конфигурационый объект.
- * @param {'Types/display'} display Проекция элементов списка.
+ * @param {'Controls/display'} display Проекция элементов списка.
  * @param {Boolean} hasHeader Флаг, указывающий на наличие заголовка в таблице.
  * @param {"top" | "bottom" | null} resultsPosition Позиция результатов таблицы. Null, если результаты не выводятся.
  */
@@ -20,7 +20,6 @@ interface IBaseGridRowIndexOptions {
     hasBottomPadding: boolean;
     resultsPosition?: 'top' | 'bottom';
     multiHeaderOffset?: number;
-    editingRowIndex?: number;
     hasColumnScroll?: boolean;
 }
 
@@ -32,7 +31,7 @@ type ItemId = { id: string };
 
 /**
  * @typedef {Object} DisplayItem Объект расширяющий базовую конфигурацию для получения индекса записи по элементу проекции.
- * @param {'Types/display:CollectionItem'} item Элемент проекции таблицы.
+ * @param {'Controls/display:CollectionItem'} item Элемент проекции таблицы.
  */
 type DisplayItem = { item: CollectionItem<unknown> };
 
@@ -54,7 +53,6 @@ type HasEmptyTemplate = { hasEmptyTemplate: boolean };
 type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplate> = IBaseGridRowIndexOptions & T;
 
 
-
 /**
  * Возвращает номер строки в списке для элемента с указанным id.
  *
@@ -62,15 +60,11 @@ type GridRowIndexOptions<T = DisplayItemIndex|DisplayItem|ItemId|HasEmptyTemplat
  * @return {Number} Номер строки в списке для элемента с указанным id.
  */
 function getIndexById(cfg: GridRowIndexOptions<ItemId>): number {
-    let
-        idProperty = cfg.display.getIdProperty() || (<Collection<unknown>>cfg.display.getCollection()).getKeyProperty(),
-        item = ItemsUtil.getDisplayItemById(cfg.display, cfg.id, idProperty),
-        index = cfg.display.getIndex(item);
-
-    return getItemRealIndex(<GridRowIndexOptions<DisplayItemIndex>>{index, ...cfg});
+    return getItemRealIndex({
+        ...cfg,
+        index: cfg.display.getIndexByKey(cfg.id)
+    });
 }
-
-
 
 /**
  * Возвращает номер строки в списке для указанного элемента.
@@ -109,10 +103,8 @@ function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
     let index = cfg.hasHeader ? 1 : 0;
     index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
 
-    if (cfg.resultsPosition === "bottom") {
-        let
-            itemsCount = cfg.display.getCount(),
-            hasEditingItem = typeof cfg.editingRowIndex === "number";
+    if (cfg.resultsPosition === 'bottom') {
+        const itemsCount = cfg.display.getCount();
 
         if (itemsCount) {
             index += itemsCount;
@@ -120,7 +112,6 @@ function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
             index += cfg.hasEmptyTemplate ? 1 : 0;
         }
 
-        index += hasEditingItem ? 1 : 0;
         index += cfg.hasBottomPadding ? 1 : 0;
     }
 
@@ -136,16 +127,13 @@ function getResultsIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
  * @return {Number} Номер строки в списке для строки-отступа.
  */
 function getBottomPaddingRowIndex(cfg: GridRowIndexOptions): number {
-    let
-        index = 0,
-        isResultsInTop = cfg.resultsPosition === "top",
-        itemsCount = cfg.display.getCount(),
-        hasEditingItem = typeof cfg.editingRowIndex === "number";
+    let index = 0;
+    const isResultsInTop = cfg.resultsPosition === 'top';
+    const itemsCount = cfg.display.getCount();
 
     index += cfg.hasHeader ? 1 : 0;
     index += isResultsInTop ? 1 : 0;
     index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
-    index += hasEditingItem ? 1 : 0;
     index += itemsCount;
     index += cfg.hasColumnScroll ? 1 : 0;
 
@@ -161,16 +149,14 @@ function getBottomPaddingRowIndex(cfg: GridRowIndexOptions): number {
  */
 //offset
 function getFooterIndex(cfg: GridRowIndexOptions<HasEmptyTemplate>): number {
-    let
-        hasResults = !!cfg.resultsPosition,
-        itemsCount = cfg.display.getCount(), index = 0,
-        hasEditingItem = typeof cfg.editingRowIndex === "number";
+    const hasResults = !!cfg.resultsPosition;
+    const itemsCount = cfg.display.getCount();
+    let index = 0;
 
     index += cfg.hasHeader ? 1 : 0;
     index += hasResults ? 1 : 0;
     index += cfg.hasBottomPadding ? 1 : 0;
     index += cfg.multiHeaderOffset ? cfg.multiHeaderOffset : 0;
-    index += hasEditingItem ? 1 : 0;
     index += cfg.hasColumnScroll ? 1 : 0;
 
     if (itemsCount) {
@@ -295,15 +281,24 @@ function getHeaderMaxEndCellData(headerRows: IHeaderCell[][]): {maxRow: number, 
 /**
  * Функция создания массива строк хэдера из массива объектов IHeaderCell.
  * @param {Array} cells Массив объектов IHeaderCell.
- * @param {Boolean} hasMultiSelect Отображаются чекбоксы или нет.
- * @param {Boolean} isMultiHeader активированы ли для grid множественные заголовки
- * @param {Boolean} hasActionsCell Необходимо ли добавлять ячейку действий
+ * @param {Boolean} [hasMultiSelect] Отображаются чекбоксы или нет.
+ * @param {Boolean} [isMultiHeader] активированы ли для grid множественные заголовки
+ * @param {Boolean} [hasActionsCell] Необходимо ли добавлять ячейку действий
+ * @param {Number} [stickyLadderCellsCount] Количество ячеек, добавляемых для лесенки
  * @return {Array} массив строк хэдера.
- * @example getHeaderRowsArray(
- *  [{title: 'name', startRow: 1, endRow: 2...}, {title: 'Price', startRow: 2, endRow: 3...}, ...], true
- *  ) -> [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
+ * @example
+ * const headerCells: IHeaderCell[] = [{title: 'name', startRow: 1, endRow: 2...}, {title: 'Price', startRow: 2, endRow: 3...}, ...];
+ * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, false, false);
+ * // [[{}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
+ *
+ * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, false, 2);
+ * // [[{}, {}, {title: 'name', startRow: 1, endRow: 2...}}], {}, [{{title: 'Price', startRow: 2, endRow: 3...}}], ...]
+ *
+ * let headerRowsArray = getHeaderRowsArray(headerCells, true, true, true, 1);
+ * // [[{}, {}, {title: 'name', startRow: 1, endRow: 2...}}], [{{title: 'Price', startRow: 2, endRow: 3...}}], ..., {isActionCell: true, endColumn: ...}]
  */
-function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMultiHeader?: boolean, hasActionsCell?: boolean): IHeaderCell[][] {
+
+function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMultiHeader?: boolean, hasActionsCell?: boolean, stickyLadderCellsCount?: number): IHeaderCell[][] {
     let headerRows = [];
     if (!isMultiHeader) {
         headerRows.push(cells);
@@ -324,6 +319,11 @@ function getHeaderRowsArray(cells: IHeaderCell[], hasMultiSelect: boolean, isMul
             sortedArray = sortedArray.slice(row.length);
         }
         headerRows = sortedColumns(headerRows);
+    }
+    if (stickyLadderCellsCount === 2 ) {
+        headerRows[0] = [{ladderCell: true}, headerRows[0][0], {ladderCell: true}].concat(headerRows[0].slice(1));
+    } else if (stickyLadderCellsCount === 1) {
+        headerRows[0] = [{ladderCell: true}].concat(headerRows[0]);
     }
     if (hasMultiSelect) {
         headerRows[0] = [{}, ...headerRows[0]];
@@ -347,25 +347,35 @@ function getHeaderActionsCellConfig(headerRow: IHeaderCell[], isMultiHeader: boo
     let maxEndRow = 0;
     let maxEndColumn = 0;
 
-    // If not isMultiHeader we only need next endColumn
-    // Note! 2 = (headerRow.length + ActionsCell + 1) to have correct grid right endColumn
-    if (!isMultiHeader) {
-        return {
-            isActionCell: true,
-            endColumn: headerRow.length + 2
-        };
+    // Бывают случаи, когда в не-multiHeader headerRow приходит массив IHeaderCell из трёх, например, записей.
+    // При этом у одной из них указан startRow, endRow и endColumn так, что явно объединяются несколько колонок.
+    // В этих случаях старым методом (если не-multiHeader, то maxEndColumn = headerRow.length + 1;) происходит
+    // некорректный расчёт maxEndColumn. Это влияет в дальнейшем на расчёт в методе getHeaderMaxEndCellData,
+    // и для headerRow, в которых IHeaderCell объединяют несколько колонок последняя колонка считалась не правильно.
+    // Это потенциальная ошибка, и в таких случаях было не понятно, почему у actionCell, которая по факту последняя,
+    // maxEndRow могла посчитаться на несколько колонок раньше реально последней колонки.
+    headerRow.forEach((cell) => {
+        minStartRow = cell.startRow && cell.startRow < minStartRow ? cell.startRow : minStartRow;
+        maxEndRow = cell.endRow && cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
+        maxEndColumn = cell.endColumn && cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
+    });
+
+    // В случае, когда в не-isMultiHeader headerRow приходят ячейки IHeaderCell без endColumn, мы должны исходить из
+    // величины текущего headerRow + 1.
+    // Задаём maxEndColumn явно, как величину headerRow + 1, что соответствует правой границе grid-column.
+    if (!isMultiHeader && maxEndColumn === 0) {
+        maxEndColumn = headerRow.length + 1;
     }
 
-    headerRow.forEach((cell) => {
-        minStartRow = cell.startRow < minStartRow ? cell.startRow : minStartRow;
-        maxEndRow = cell.endRow > maxEndRow ? cell.endRow : maxEndRow;
-        maxEndColumn = cell.endColumn > maxEndColumn ? cell.endColumn : maxEndColumn;
-    });
+    // В случае, если minStartRow не была высчитана, то начинаем с первой строки
+    if (minStartRow === Number.MAX_VALUE) {
+        minStartRow = 1;
+    }
 
     return {
         isActionCell: true,
         startRow: minStartRow,
-        endRow: maxEndRow,
+        endRow: maxEndRow > 0 ? maxEndRow : minStartRow + 1,
         startColumn: maxEndColumn,
         endColumn: maxEndColumn + 1
     };

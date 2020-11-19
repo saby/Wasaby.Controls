@@ -1,11 +1,12 @@
-import { Control, TemplateFunction, IControlOptions } from 'UI/Base';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_listRender/Render/Render');
 
 import defaultItemTemplate = require('wml!Controls/_listRender/Render/resources/ItemTemplateWrapper');
 
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { CollectionItem, Collection } from 'Controls/display';
-import { constants } from 'Env/Env';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {CollectionItem, Collection, EditInPlaceController, GroupItem} from 'Controls/display';
+import {constants} from 'Env/Env';
+import {Opener as DropdownOpener} from 'Controls/dropdown';
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -19,6 +20,10 @@ export interface IRenderChildren {
     itemsContainer?: HTMLDivElement;
 }
 
+export interface ISwipeEvent extends Event {
+    direction: 'left' | 'right' | 'top' | 'bottom';
+}
+
 export default class Render extends Control<IRenderOptions> {
     protected _template: TemplateFunction = template;
     protected _children: IRenderChildren;
@@ -26,6 +31,7 @@ export default class Render extends Control<IRenderOptions> {
     protected _templateKeyPrefix: string;
 
     protected _pendingResize: boolean = false;
+
     protected _onCollectionChange(_e: unknown, action: string): void {
         if (action !== 'ch') {
             // Notify resize when items are added, removed or replaced, or
@@ -35,7 +41,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _beforeMount(options: IRenderOptions): void {
-        this._templateKeyPrefix = `list-render-${this.getInstanceId()}`;
+        this._templateKeyPrefix = 'list-render';
         this._onCollectionChange = this._onCollectionChange.bind(this);
         this._subscribeToModelChanges(options.listModel);
     }
@@ -48,7 +54,7 @@ export default class Render extends Control<IRenderOptions> {
 
     protected _afterRender(): void {
         if (this._pendingResize) {
-            this._notify('controlResize', [], { bubbling: true });
+            this._notify('controlResize', [], {bubbling: true});
             this._pendingResize = false;
         }
     }
@@ -58,7 +64,7 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _afterMount(): void {
-        this._notify('itemsContainerReady', [this.getItemsContainer()]);
+        this._notify('itemsContainerReady', [this.getItemsContainer.bind(this)]);
     }
 
     getItemsContainer(): HTMLDivElement {
@@ -69,24 +75,64 @@ export default class Render extends Control<IRenderOptions> {
         e: SyntheticEvent<MouseEvent> & { preventItemEvent?: boolean },
         item: CollectionItem<unknown>
     ): void {
-        if (!e.preventItemEvent && !item.isEditing()) {
-            this._notify('itemClick', [item.getContents(), e], { bubbling: true });
+        if (item['[Controls/_display/GroupItem]']) {
+            if (e.target?.closest('.controls-ListView__groupExpander')) {
+                item.toggleExpanded();
+            }
+        } else {
+            if (!e.preventItemEvent && !item.isEditing()) {
+                this._notify('itemClick', [item.getContents(), e]);
+            }
         }
     }
 
     protected _onItemContextMenu(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        if (item['[Controls/_display/GroupItem]']) {
+            return;
+        }
         if (
             this._options.contextMenuEnabled !== false &&
             this._options.contextMenuVisibility !== false &&
-            !this._options.listModel.isEditing()
+            !EditInPlaceController.isEditing(this._options.listModel)
         ) {
             this._notify('itemContextMenu', [item, e, false]);
+            e.stopPropagation();
         }
     }
 
-    protected _onItemSwipe(e: SyntheticEvent<null>, item: CollectionItem<unknown>): void {
+    protected _onItemLongTap(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        this._onItemContextMenu(e, item);
+    }
+
+    protected _onItemSwipe(e: SyntheticEvent<ISwipeEvent>, item: CollectionItem<unknown>): void {
+        if (item['[Controls/_display/GroupItem]']) {
+            return;
+        }
+
         e.stopPropagation();
-        this._notify('itemSwipe', [item, e]);
+
+        const itemContainer =
+            (e.target as HTMLElement)
+                .closest('.controls-ListView__itemV');
+
+        const swipeContainer =
+            itemContainer.classList.contains('js-controls-ItemActions__swipeMeasurementContainer')
+                ? itemContainer
+                : itemContainer.querySelector('.js-controls-ItemActions__swipeMeasurementContainer');
+
+        this._notify('itemSwipe', [item, e, swipeContainer?.clientWidth, swipeContainer?.clientHeight]);
+    }
+
+    protected _onActionsSwipeAnimationEnd(e: SyntheticEvent<null>): void {
+        if (e.nativeEvent.animationName === 'itemActionsSwipeClose') {
+            e.stopPropagation();
+            this._notify('closeSwipe', [e]);
+        }
+    }
+
+    protected _onItemActionsClick(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
+        e.stopPropagation();
+        this._notify('itemActionClick', [item, action, e]);
     }
 
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
@@ -94,12 +140,16 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemMouseMove(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
+        if (item['[Controls/_display/GroupItem]']) {
+            return;
+        }
         this._notify('itemMouseMove', [item, e]);
     }
 
     protected _onItemMouseLeave(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         this._notify('itemMouseLeave', [item, e]);
     }
+
     protected _onItemMouseDown(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         this._notify('itemMouseDown', [item, e]);
     }
@@ -109,6 +159,9 @@ export default class Render extends Control<IRenderOptions> {
     }
 
     protected _onItemKeyDown(e: SyntheticEvent<KeyboardEvent>, item: CollectionItem<unknown>): void {
+        if (item['[Controls/_display/GroupItem]']) {
+            return;
+        }
         if (item.isEditing()) {
             // TODO Will probably be moved to EditInPlace container
             // keydown event should not bubble if processed here, but if we stop propagation
@@ -131,6 +184,8 @@ export default class Render extends Control<IRenderOptions> {
             }
             // Compatibility with BaseControl and EditInPlace control
             this._notify('editingRowKeyDown', [e.nativeEvent], {bubbling: true});
+        } else {
+            this._notify('itemKeyDown', [item, e]);
         }
     }
 
@@ -152,7 +207,7 @@ export default class Render extends Control<IRenderOptions> {
         }
     }
 
-    static _theme: string[] = ['Controls/list_multi'];
+    static _theme: string[] = ['Controls/list', 'Controls/itemActions'];
 
     static getDefaultOptions(): Partial<IRenderOptions> {
         return {

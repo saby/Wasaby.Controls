@@ -1,4 +1,4 @@
-import displayLib = require('Types/display');
+import displayLib = require('Controls/display');
 import cInstance = require('Core/core-instance');
 import Utils = require('Types/util');
 
@@ -6,9 +6,6 @@ var ItemsUtil = {
     getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
-        if (cfg.groupMethod) {
-            projCfg.group = cfg.groupMethod;
-        }
         if (cfg.groupingKeyCallback) {
             projCfg.group = cfg.groupingKeyCallback;
         }
@@ -22,6 +19,10 @@ var ItemsUtil = {
         // https://online.sbis.ru/opendoc.html?guid=e070a968-f6dd-486b-bd44-4da47198529e
         projCfg.unique = true;
         projCfg.filter = filter;
+        projCfg.compatibleReset = true;
+        projCfg.collapsedGroups = cfg.collapsedGroups;
+        projCfg.groupProperty = cfg.groupProperty;
+        projCfg.theme = cfg.theme;
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 
@@ -47,10 +48,6 @@ var ItemsUtil = {
             });
             return resItem;
         }
-    },
-
-    getDefaultDisplayItem: function(display, item) {
-        return display.createItem({contents: item});
     },
 
     getFirstItem: function(display) {

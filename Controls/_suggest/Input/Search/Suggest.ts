@@ -1,6 +1,8 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_suggest/Input/Search/Suggest');
+import * as Control from 'Core/Control';
+import * as template from 'wml!Controls/_suggest/Input/Search/Suggest';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
+import {constants} from 'Env/Env';
+import {SyntheticEvent} from "Vdom/Vdom";
 import 'Controls/search';
 
 
@@ -8,47 +10,37 @@ import 'Controls/search';
 
 /**
  * Строка поиска с автодополнением, позволяет пользователю вводить однострочный текст.
- * Подробное описание и инструкцию по настройке смотрите <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>здесь</a>.
- * <a href="/materials/demo/demo-suggest-search-input">Демо-пример</a>
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/directory/lookup/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
+ * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
- * @category Input
+ * @author Герасимов А.М.
  */
 
 /*
  * Search input that suggests options as you are typing.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggest/Input/Search/Suggest
  * @extends Controls/_input/Text
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * @control
+ * @demo Controls-demo/Suggest_new/SearchInput/AutoDropDown/AutoDropDown
  * @public
- * @category Input
- */
-
-/**
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Определяет, показывать ли иконку поиска.
- */
-
-/*
- * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
- * @cfg {Boolean} Determines whether to show the search icon.
  */
 
 var Suggest = Control.extend({
@@ -81,36 +73,26 @@ var Suggest = Control.extend({
    },
 
    _suggestStateChanged: function(event, value) {
-      /**
-       * Всплытие будет удалено по задаче.
-       * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-       */
-      this._notify('suggestStateChanged', [value], {bubbling: true});
+      this._notify('suggestStateChanged', [value]);
    },
 
    _deactivated: function() {
-      /**
-       * Всплытие будет удалено по задаче.
-       * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-       */
       this._suggestState = false;
-      this._notify('suggestStateChanged', [false], {bubbling: true});
+      this._notify('suggestStateChanged', [false]);
    },
 
-   _suggestMarkedKeyChanged: function(event, key) {
+   _suggestMarkedKeyChanged(event, key: string|null) {
       this._markedKeyChanged = key !== null;
    },
 
-   _searchClick: function() {
-      /* the search should not fire an event if marked key in suggstions list was changed,
-         because enter should activate marked item */
-      if (!this._markedKeyChanged) {
+   _searchClick: function(event: SyntheticEvent, nativeEvent: Event) {
+      if (!this._markedKeyChanged || nativeEvent.which !== constants.key.enter) {
          const eventResult = this._notify('searchClick');
 
          if (eventResult !== false) {
             this._suggestState = false;
-            // Всплытие будет удалено по задаче. https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
-            this._notify('suggestStateChanged', [false], {bubbling: true});
+            this._notify('suggestStateChanged', [false]);
+            this._children.suggestController.closeSuggest();
          }
       }
    },
@@ -128,5 +110,13 @@ Suggest.getDefaultOptions = function() {
       suggestState: false
    };
 };
+/**
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Определяет, показывать ли иконку поиска.
+ */
 
+/*
+ * @name Controls/_suggest/Input/Search/Suggest#searchButtonVisible
+ * @cfg {Boolean} Determines whether to show the search icon.
+ */
 export default Suggest;

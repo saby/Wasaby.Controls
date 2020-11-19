@@ -1,5 +1,5 @@
-import * as TreeViewModel from 'Controls/_treeGrid/Tree/TreeViewModel';
 import {SearchItemsUtil} from 'Controls/list';
+import {TreeViewModel} from 'Controls/tree';
 import {Record} from 'Types/entity';
 
 function isBreadCrumbsItem(item: Record|Record[]): item is Record[] {
@@ -20,18 +20,6 @@ var
             filter.push(cfg.itemsFilterMethod);
          }
          return filter;
-      },
-      getActionsItem(item) {
-          if (!!item.forEach) {
-              return item[item.length - 1];
-          }
-          return item;
-      },
-      getItemActions(item) {
-         if (!!item.forEach) {
-            return SearchViewModel.superclass.getItemActions.call(this, item[item.length - 1]);
-         }
-         return SearchViewModel.superclass.getItemActions.call(this, item);
       },
       setHoveredItem(item) {
          let actualItem = item;
@@ -55,16 +43,42 @@ var
          }
 
          // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-         data.breadCrumbs = !!data.item.forEach;
-         data.actionsItem = this.getActionsItem(data.item);
-         data.breadCrumbsItemTemplate = "Controls/breadcrumbs:ItemTemplate";
+         data.breadCrumbs = data.item && !!data.item.forEach;
+         data.breadCrumbsDisplayProperty = this._options.displayProperty;
+         data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
+         data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
+         data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
 
+         data.getColspan = (tmplColspan, isColumnScrollVisible: boolean) => {
+             if (data.columnScroll && isColumnScrollVisible) {
+                 return false;
+             }
+             return typeof tmplColspan === 'undefined' ? true : tmplColspan;
+         };
+         data.getColspanLength = (tmplColspan, isColumnScrollVisible) => {
+             /*
+             * Если в списке с горизонтальным скроллом в режиме поиска весь контент таблицы умещается в родителе и не нужно ничего скроллировать,
+             * то можно растянуть хлебные крошки на всю строку.
+             * Прикладной разработчик может запретить colspan хлебных крошек, передав colspan=false.
+             * */
+             if (data.columnScroll && isColumnScrollVisible) {
+                 return data.stickyColumnsCount;
+             } else {
+                 return tmplColspan !== false ? undefined : 1;
+             }
+         };
+         data.shouldHideColumnSeparator = (tmplColspan, isColumnScrollVisible): boolean => {
+             return isColumnScrollVisible && tmplColspan !== false;
+         };
          data.resolveItemTemplate = function(itemData) {
-            if (!itemData.breadCrumbs && self._options.itemTemplate) {
+            if (!itemData.breadCrumbs && !itemData.dispItem['[Controls/_display/SearchSeparator]'] && self._options.itemTemplate) {
                return self._options.itemTemplate;
             }
-            return data.resolveBaseItemTemplate();
+            return data.resolvers.baseItemTemplate();
          };
+         data.getLevelIndentClasses = (itemData, tmplExpanderSize: string, levelIndentSize: string): string => {
+             return `controls-TreeGrid__row-levelPadding_size_search_theme-${data.theme}`;
+         }
          return data;
       },
        _convertItemKeyToCacheKey(key: number|string): number|string {
@@ -79,6 +93,9 @@ var
            return correctKey;
        },
        _getItemVersion(item: Record|Record[]): string {
+           if (item === null) {
+               return;
+           }
            if (isBreadCrumbsItem(item)) {
                const versions = [];
                item.forEach((rec) => {
@@ -96,14 +113,18 @@ var
           let result;
 
           // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-          if (!!item.forEach) {
+          // For "search separator" item is null and we can't prevent _isGroup() call for it
+          if (!item || !!item.forEach) {
               result = false;
           } else {
               result = SearchViewModel.superclass._isGroup.call(this, item);
           }
 
           return result;
-      }
+      },
+       setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback): void {
+           this._breadcrumbsItemClickCallback = breadcrumbsItemClickCallback;
+       }
    });
 
 export = SearchViewModel;

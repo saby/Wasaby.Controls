@@ -1,5 +1,0 @@
-# Скрипт компилит js-скрипты для ts-скриптов
-
-node -v
-npm install
-npm run compile

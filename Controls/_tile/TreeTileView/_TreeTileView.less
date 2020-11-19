@@ -1,21 +1,3 @@
-.controls-TreeTileView__item {
-   height: @height_TreeTileView-node;
-   box-sizing: border-box;
-   display: flex;
-   align-items: center;
-   //flex bug fix
-   min-width: 0;
-}
-
-.controls-TreeTileView__dragTargetNode {
-   border: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
-   position: absolute;
-   top: 0;
-   left: 0;
-   right: 0;
-   bottom: 0;
-}
-
 .controls-TreeTileView__checkbox {
    left: 0;
 }
@@ -28,30 +10,11 @@
    }
 }
 
-.controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
-   background-color: @background-color_TileView-title;
-   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
-}
-
-.controls-TreeTileView__title {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-   width: 100%;
-   font-size: @font-size_TreeTileView-title;
-   margin: 0 @spacing_TreeTileView-between-title-rightBorder 0 @spacing_TreeTileView-between-nodeIcon-title;
-   flex-shrink: 1;
-}
-
-.controls-TreeTileView__nodeIcon {
-   margin-left: @spacing_TreeTileView-between-nodeIcon-leftBorder;
-   flex-shrink: 0;
-}
-
 //TODO: Можно убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=38c5aa2c-f30c-42e9-a654-5358bc7691fd
 .controls-itemActionsV.controls-TreeTileView__itemActions_center {
    bottom: auto;
    right: 0;
+   overflow: visible;
 }
 //TODO: end
 

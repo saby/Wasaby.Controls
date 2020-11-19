@@ -1,16 +1,15 @@
-import {Control, TemplateFunction} from "UI/Base";
-import * as Template from "wml!Controls-demo/treeGrid/Mover/Extended/ExtendedMoverDialog/ExtendedMoverDialog";
-import "css!Controls-demo/treeGrid/Mover/Extended/ExtendedMoverDialog/ExtendedMoverDialog";
-import {Record} from "Types/entity";
-import {RecordSet} from "Types/collection";
-import {SyntheticEvent} from "sbis3-ws/Vdom/Vdom";
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/treeGrid/Mover/Extended/ExtendedMoverDialog/ExtendedMoverDialog';
+import {Record} from 'Types/entity';
+import {RecordSet} from 'Types/collection';
+import {SyntheticEvent} from 'sbis3-ws/Vdom/Vdom';
 
-export default class extends Control {
+export default class extends Control<IControlOptions> {
     protected _template: TemplateFunction = Template;
     private _moverItemsCount: number;
-    private _filter: object = {};
+    protected _filter: object = {};
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
     }
 
@@ -32,6 +31,7 @@ export default class extends Control {
     }
 
     protected _createFolderButtonClick(): void {
+        // tslint:disable-next-line
         const self = this;
         this._children.dialogOpener.open({
             eventHandlers: {
@@ -51,7 +51,9 @@ export default class extends Control {
         });
     }
 
-    moveItemsWithDialog(params): void {
+    moveItemsWithDialog(params: unknown): void {
         this._children.listMover.moveItemsWithDialog(params);
     }
+
+    static _styles: string[] = ['Controls-demo/treeGrid/Mover/Extended/ExtendedMoverDialog/ExtendedMoverDialog'];
 }

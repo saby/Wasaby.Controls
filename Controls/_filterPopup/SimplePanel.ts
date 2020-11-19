@@ -8,38 +8,7 @@ import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {isHistorySource} from 'Controls/_filter/HistoryUtils';
 
-/**
- * Панель "быстрых фильтров" для {@link Controls/filter:View}.
- * Шаблон окна, в котором для каждого фильтра с viewMode = 'frequent' отображает список элементов в отдельном блоке.
- *
- * @class Controls/_filterPopup/SimplePanel
- * @extends Core/Control
- * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
- * @control
- * @public
- * @author Золотова Э.Е.
- * @example
- * WML:
- * <pre>
- *    <Controls.filterPopup:SimplePanel
- *          attr:class="custom-SimplePanel"
- *          items="{{_options.items}}" />
- * </pre>
- *
- */
-
-/*
- * Control dropdown list for {@link Controls/filter:View}.
- *
- * @class Controls/_filterPopup/SimplePanel
- * @extends Core/Control
- * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
- * @control
- * @public
- * @author Золотова Э.Е.
- *
- */
-
+const DEFAULT_MIN_VISIBLE_ITEMS = 2;
 var _private = {
 
     getItems: function(self, initItems) {
@@ -59,7 +28,12 @@ var _private = {
             items.push(curItem);
         });
         return pDef.done().getResult().addCallback(() => {
-            return items;
+            const displayItems = items.filter((item) => {
+                const minVisibleItems = item.minVisibleItems !== undefined ? item.minVisibleItems :
+                                                                            DEFAULT_MIN_VISIBLE_ITEMS;
+                return item.items?.getCount() >= minVisibleItems || item.hasMoreButton;
+            });
+            return displayItems.length ? displayItems : [items[0]];
         });
     },
 
@@ -105,7 +79,40 @@ var _private = {
         return result;
     }
 };
+/**
+ * Панель "быстрых фильтров" для {@link Controls/filter:View}.
+ * Шаблон окна, в котором для каждого фильтра с viewMode = 'frequent' отображает список элементов в отдельном блоке.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления</a>
+ *
+ * @class Controls/_filterPopup/SimplePanel
+ * @extends Core/Control
+ * @public
+ * @author Золотова Э.Е.
+ * 
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.filterPopup:SimplePanel
+ *     attr:class="custom-SimplePanel"
+ *     items="{{_options.items}}" />
+ * </pre>
+ *
+ */
 
+/*
+ * Control dropdown list for {@link Controls/filter:View}.
+ *
+ * @class Controls/_filterPopup/SimplePanel
+ * @extends Core/Control
+ * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
+ * 
+ * @public
+ * @author Золотова Э.Е.
+ *
+ */
 var Panel = Control.extend({
     _template: template,
     _items: null,
@@ -165,8 +172,17 @@ Panel.getDefaultOptions = (): object => {
     };
 };
 
-Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup'];
+Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
 
 Panel._private = _private;
-
+/**
+ * @name Controls/_filterPopup/SimplePanel#items
+ * @cfg {RecordSet} Список, в котором описана конфигурация для каждого фильтра, отображающегося в SimplePanel.
+ * Формируется контролом {@link Controls/filter:View}. При использовании Controls/_filterPopup/SimplePanel в качестве шаблона для фильтра опцию items необходимо прокинуть в контрол.
+ * @example
+ * WML:
+ * <pre>
+ *    <Controls.filterPopup:SimplePanel items="{{_options.items}}"/>
+ * </pre>
+ */
 export = Panel;

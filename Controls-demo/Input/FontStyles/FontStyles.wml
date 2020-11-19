@@ -40,6 +40,11 @@
                            placeholder="{{_placeholder}}"/>
    </div>
    <div class="controlsDemo__cell">
+      <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=info</div>
+      <Controls.input:Text attr:class="controlsDemo__input" fontColorStyle="info" bind:value="_infoValue"
+                           placeholder="{{_placeholder}}"/>
+   </div>
+   <div class="controlsDemo__cell">
       <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=default</div>
       <Controls.input:Text attr:class="controlsDemo__input" fontColorStyle="default" bind:value="_defaultValue"
                            placeholder="{{_placeholder}}"/>

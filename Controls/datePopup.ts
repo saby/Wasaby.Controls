@@ -3,21 +3,33 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
-import {dateMaskConstants} from 'Controls/interface';
 import {IRangeSelectable} from 'Controls/dateRange';
 import {DateRangeModel, IDateRangeSelectable} from 'Controls/dateRange';
+import {Range, Base as dateUtils} from 'Controls/dateUtils';
 import EventProxyMixin from './_datePopup/Mixin/EventProxy';
-import MonthsRange from './_datePopup/MonthsRange';
 import periodDialogUtils from './_datePopup/Utils';
-import dateUtils = require('Controls/Utils/Date');
-import dateRangeUtil = require('Controls/Utils/DateRangeUtil');
 import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
 import headerTmpl = require('wml!Controls/_datePopup/header');
 import dayTmpl = require('wml!Controls/_datePopup/day');
 import {MonthViewDayTemplate} from 'Controls/calendar';
-import 'css!theme?Controls/datePopup';
 import {Controller as ManagerController} from 'Controls/popup';
-import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "./scroll";
+import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from './scroll';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+import {IFontColorStyle} from './interface';
+import {ILinkViewControlOptions} from './_dateRange/LinkView';
+
+const HEADER_TYPES = {
+        link: 'link',
+        input: 'input'
+};
+
+const STATES = {
+        year: 'year',
+        month: 'month'
+};
+
+const MONTH_STATE_SELECTION_DAYS = 30;
+const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
 
 /**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
@@ -25,81 +37,15 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_datePopup/interfaces/IDatePopup
- * @control
+ * @mixes Controls/_interface/IDateRangeValidators
+ * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
- *
- * @css @background-color_PeriodDialog Background color of dialog.
- * @css @width_PeriodDialog Dialog width.
- * @css @height_PeriodDialog Dialog height.
- * @css @border-width_PeriodDialog Borders width.
- * @css @border-color_PeriodDialog Borders color.
- * @css @background-color__PeriodDialog-header Background color of dialog header.
- * @css @spacing_PeriodDialog-header-between-borderLeft-content Spacing between left border and header content.
- * @css @height_PeriodDialog-header Height of dialog header.
- * @css @spacing_PeriodDialog-header-between-stateButton-date Spacing between state button and date in header.
- * @css @width_PeriodDialog-header-dash Width of the dash between start and end input fields.
- * @css @spacing_PeriodDialog-header-between-dash-date Spacing between dash and input fields.
- * @css @spacing_PeriodDialog-header-between-applyButton-otherElements Spacing between apply button and other header elements.
- * @css @height_PeriodDialog-years Height of the years panel.
- * @css @width_PeriodDialog-years-leftRight Width of the left and right regions in year mode.
- * @css @height_PeriodDialog-years-rangeButton Height of the years range button.
- * @css @color_PeriodDialog-years-rangeButton Color of the years range button.
- * @css @font-size_PeriodDialog-years-rangeButton Font size of the years range button.
- * @css @color_PeriodDialog-years-current-year Color of the text on button with current year.
- * @css @color_PeriodDialog-years-displayed-year Color of the text on button with displayed year.
- * @css @font-size_PeriodDialog-years-displayed-year Font size of the text on button with displayed year.
- * @css @border-width_PeriodDialog-monthRange: Default border width in years mode. For example between months.
- * @css @border-width_PeriodDialog-monthRange-additional: Border width between year end year title, half years or quarters and months in years mode.
- * @css @border-color_PeriodDialog-monthRange Color of borders in month range.
- * @css @height_PeriodDialog-monthRange-header Height of the month range year header.
- * @css @color_PeriodDialog-monthRange-header Color of the month range year header.
- * @css @font-size_PeriodDialog-monthRange-header Font size of the month range year header.
- * @css @color_PeriodDialog-monthRange-halfyearsAndQuarters Color of the text in halfyears and quarters buttons.
- * @css @border-color_PeriodDialog-monthRange-halfyearsAndQuarters_selected Border color of the borders selected halfyears and quarters regions.
- * @css @font-size_PeriodDialog-monthRange-halfYears Font size of the text in halfyears buttons.
- * @css @border-width_PeriodDialog-monthRange-halfYears Border width of the half years block in month range.
- * @css @font-size_PeriodDialog-monthRange-quarters Font size of the text in halfyears buttons.
- * @css @spacing_PeriodDialog-monthRange-monthWrapper-between-content-leftRightBorder Spacing between content and left and right border in month.
- * @css @height_PeriodDialog-monthRange-monthWrapper Height of the months in month range.
- * @css @width_PeriodDialog-monthRange-monthWrapper Width of the months in month range.
- * @css @border-color_PeriodDialog-monthRange-month Color of the border on hovered month in month range.
- * @css @color_PeriodDialog-monthRange-month-title Color of the title in month range.
- * @css @font-size_PeriodDialog-monthRange-month-title Font size of the title in month range.
- * @css @height_PeriodDialog-monthRange-month-title Height of the title in month range.
- * @css @height_PeriodDialog-monthRange-month-date Height of the month body in month range.
- * @css @font-size_PeriodDialog-monthRange-month-date Font size of the month body in month range.
- * @css @width_PeriodDialog-monthRange-month-selectionEdge Width of the edge line in first and end selected month.
- * @css @height_PeriodDialog-dateRange-header Height of date range header.
- * @css @font-size_PeriodDialog-dateRange-header Font size of date range header.
- * @css @width_PeriodDialog-dateRange-monthPanel Width of month panel in date range mode.
- * @css @spacing_PeriodDialog-dateRange-monthPanel-between-content-leftRightBorder Spacing between left border of month button and text in date range mode.
- * @css @color_PeriodDialog-dateRange-header-year Color of year in header in date range mode.
- * @css @font-weight_PeriodDialog-dateRange-header-year Font weight of year in header in date range mode.
- * @css @color_PeriodDialog-dateRange-header-workday Color of the workday in header in date range mode.
- * @css @color_PeriodDialog-dateRange-header-weekend Color of the weekend in header in date range mode.
- * @css @height_PeriodDialog-dateRange-months-button Height of the month button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months Border color of the month button in date range mode.
- * @css @color_PeriodDialog-dateRange-months-button Color of the month button in date range mode.
- * @css @font-size_PeriodDialog-dateRange-months-button Font size of the month button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-button Background color of the month button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months-button_hover Border color of the hovered month button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-button_hover Background color of the hovered month button in date range mode.
- * @css @color_PeriodDialog-dateRange-months-nextYearButton Color of the next year button in date range mode.
- * @css @font-size_PeriodDialog-dateRange-months-nextYearButton Font size of the next year button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months Border color of the next year button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-nextYearButton Background color of the next year button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months-nextYearButton Border color of the next year button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-nextYearButton_hover Background color of the next year hovered button in date range mode.
- * @css @height_PeriodDialog-dateRange-monthsWithDates-title Height of the month title in date range mode.
- * @css @font-size_PeriodDialog-dateRange-monthsWithDates-title Font size of the month title in date range mode.
- * @css @color_PeriodDialog-dateRange-monthsWithDates-title Color of the month title in date range mode.
- * @css @background-color_PeriodDialog-dateRange-monthsWithDates-title Background color of the month title in date range mode.
- * @css @border-color_PeriodDialog-dateRange-monthsWithDates-title_hover Border color of the hovered month title in date range mode.
- * @css @background-color_PeriodDialog-dateRange-monthsWithDates-title_hover Background color of the hovered month title in date range mode.
  *
  */
 
@@ -109,212 +55,81 @@ import {_scrollContext as ScrollData, IntersectionObserverSyntheticEntry} from "
  * @class Controls/datePopup
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * @mixes Controls/interface/IDateMask
+ * @mixes Controls/_interface/IDayTemplate
+ * @mixes Controls/_interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
- * @control
+ * @mixes Controls/_interface/IDateRangeValidators
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
- *
- * @css @background-color_PeriodDialog Background color of dialog.
- * @css @width_PeriodDialog Dialog width.
- * @css @height_PeriodDialog Dialog height.
- * @css @border-width_PeriodDialog Borders width.
- * @css @border-color_PeriodDialog Borders color.
- * @css @background-color__PeriodDialog-header Background color of dialog header.
- * @css @spacing_PeriodDialog-header-between-borderLeft-content Spacing between left border and header content.
- * @css @height_PeriodDialog-header Height of dialog header.
- * @css @spacing_PeriodDialog-header-between-stateButton-date Spacing between state button and date in header.
- * @css @color_PeriodDialog-header-dash Color of dash between start and end input fields.
- * @css @thickness_PeriodDialog-header-dash Thickness of dash between start and end input fields.
- * @css @width_PeriodDialog-header-dash Width of the dash between start and end input fields.
- * @css @spacing_PeriodDialog-header-between-dash-date Spacing between dash and input fields.
- * @css @spacing_PeriodDialog-header-between-applyButton-otherElements Spacing between apply button and other header elements.
- * @css @height_PeriodDialog-years Height of the years panel.
- * @css @width_PeriodDialog-years-leftRight Width of the left and right regions in year mode.
- * @css @height_PeriodDialog-years-rangeButton Height of the years range button.
- * @css @color_PeriodDialog-years-rangeButton Color of the years range button.
- * @css @font-size_PeriodDialog-years-rangeButton Font size of the years range button.
- * @css @color_PeriodDialog-years-current-year Color of the text on button with current year.
- * @css @color_PeriodDialog-years-displayed-year Color of the text on button with displayed year.
- * @css @font-size_PeriodDialog-years-displayed-year Font size of the text on button with displayed year.
- * @css @border-width_PeriodDialog-monthRange: Default border width in years mode. For example between months.
- * @css @border-width_PeriodDialog-monthRange-additional: Border width between year end year title, half years or quarters and months in years mode.
- * @css @border-color_PeriodDialog-monthRange Color of borders in month range.
- * @css @height_PeriodDialog-monthRange-header Height of the month range year header.
- * @css @color_PeriodDialog-monthRange-header Color of the month range year header.
- * @css @font-size_PeriodDialog-monthRange-header Font size of the month range year header.
- * @css @color_PeriodDialog-monthRange-halfyearsAndQuarters Color of the text in halfyears and quarters buttons.
- * @css @border-color_PeriodDialog-monthRange-halfyearsAndQuarters_selected Border color of the borders selected halfyears and quarters regions.
- * @css @font-size_PeriodDialog-monthRange-halfYears Font size of the text in halfyears buttons.
- * @css @border-width_PeriodDialog-monthRange-halfYears Border width of the half years block in month range.
- * @css @font-size_PeriodDialog-monthRange-quarters Font size of the text in halfyears buttons.
- * @css @spacing_PeriodDialog-monthRange-monthWrapper-between-content-leftRightBorder Spacing between content and left and right border in month.
- * @css @height_PeriodDialog-monthRange-monthWrapper Height of the months in month range.
- * @css @width_PeriodDialog-monthRange-monthWrapper Width of the months in month range.
- * @css @border-color_PeriodDialog-monthRange-month Color of the border on hovered month in month range.
- * @css @color_PeriodDialog-monthRange-month-title Color of the title in month range.
- * @css @font-size_PeriodDialog-monthRange-month-title Font size of the title in month range.
- * @css @height_PeriodDialog-monthRange-month-title Height of the title in month range.
- * @css @height_PeriodDialog-monthRange-month-date Height of the month body in month range.
- * @css @font-size_PeriodDialog-monthRange-month-date Font size of the month body in month range.
- * @css @width_PeriodDialog-monthRange-month-selectionEdge Width of the edge line in first and end selected month.
- * @css @height_PeriodDialog-dateRange-header Height of date range header.
- * @css @font-size_PeriodDialog-dateRange-header Font size of date range header.
- * @css @width_PeriodDialog-dateRange-monthPanel Width of month panel in date range mode.
- * @css @spacing_PeriodDialog-dateRange-monthPanel-between-content-leftRightBorder Spacing between left border of month button and text in date range mode.
- * @css @color_PeriodDialog-dateRange-header-year Color of year in header in date range mode.
- * @css @font-weight_PeriodDialog-dateRange-header-year Font weight of year in header in date range mode.
- * @css @color_PeriodDialog-dateRange-header-workday Color of the workday in header in date range mode.
- * @css @color_PeriodDialog-dateRange-header-weekend Color of the weekend in header in date range mode.
- * @css @height_PeriodDialog-dateRange-months-button Height of the month button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months Border color of the month button in date range mode.
- * @css @color_PeriodDialog-dateRange-months-button Color of the month button in date range mode.
- * @css @font-size_PeriodDialog-dateRange-months-button Font size of the month button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-button Background color of the month button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months-button_hover Border color of the hovered month button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-button_hover Background color of the hovered month button in date range mode.
- * @css @color_PeriodDialog-dateRange-months-nextYearButton Color of the next year button in date range mode.
- * @css @font-size_PeriodDialog-dateRange-months-nextYearButton Font size of the next year button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months Border color of the next year button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-nextYearButton Background color of the next year button in date range mode.
- * @css @border-color_PeriodDialog-dateRange-months-nextYearButton Border color of the next year button in date range mode.
- * @css @background-color_PeriodDialog-dateRange-months-nextYearButton_hover Background color of the next year hovered button in date range mode.
- * @css @height_PeriodDialog-dateRange-monthsWithDates-title Height of the month title in date range mode.
- * @css @font-size_PeriodDialog-dateRange-monthsWithDates-title Font size of the month title in date range mode.
- * @css @color_PeriodDialog-dateRange-monthsWithDates-title Color of the month title in date range mode.
- * @css @background-color_PeriodDialog-dateRange-monthsWithDates-title Background color of the month title in date range mode.
- * @css @border-color_PeriodDialog-dateRange-monthsWithDates-title_hover Border color of the hovered month title in date range mode.
- * @css @background-color_PeriodDialog-dateRange-monthsWithDates-title_hover Background color of the hovered month title in date range mode.
- *
  */
+export default class DatePopup extends Control implements EventProxyMixin {
+    _template: TemplateFunction = componentTmpl;
+    _headerTmpl: TemplateFunction = headerTmpl;
+    _dayTmpl: TemplateFunction = dayTmpl;
+    _defaultDayTemplate: TemplateFunction = MonthViewDayTemplate;
 
-var _private = {
-        fixedPeriodClick: function (self, start, end) {
-            _private.rangeChanged(self, start, end);
-            self._monthRangeSelectionProcessing = false;
-            _private.sendResult(self, start, end);
-        },
-        selectionChanged: function (self, start, end) {
-            self._headerRangeModel.startValue = start;
-            self._headerRangeModel.endValue = end;
-        },
-        rangeChanged: function (self, start, end) {
-            self._rangeModel.startValue = start;
-            self._rangeModel.endValue = end;
-            self._headerRangeModel.startValue = start;
-            self._headerRangeModel.endValue = end;
-            _private.updateYearsRangeModel(self, start, end);
-        },
-        updateYearsRangeModel: function(self, start: Date, end: Date): void {
-            if (dateUtils.isStartOfYear(start) && dateUtils.isEndOfYear(end)) {
-                self._yearRangeModel.startValue = start;
-                self._yearRangeModel.endValue = end;
-            } else {
-                self._yearRangeModel.startValue = null;
-                self._yearRangeModel.endValue = null;
-            }
-        },
-        sendResult: function (self, start, end) {
-            self._notify(
-                'sendResult',
-                [start || self._rangeModel.startValue, end || self._rangeModel.endValue],
-                {bubbling: true}
-            );
-        },
-        getViewState: function(options, monthStateEnabled, yearStateEnabled) {
-            if (monthStateEnabled) {
-                if (yearStateEnabled) {
-                    if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
-                        (!dateUtils.isStartOfMonth(options.startValue) || !dateUtils.isEndOfMonth(options.endValue)) &&
-                        dateRangeUtil.gePeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS)) {
-                        return STATES.month;
-                    }
-                } else {
-                    return STATES.month;
-                }
-            }
-            return STATES.year;
-        },
+    _rangeModel: object = null;
+    _headerRangeModel: object = null;
+    _yearRangeModel: object = null;
 
-        toggleState: function(self, date?: Date): void {
-            self._state = self._state === STATES.year ? STATES.month : STATES.year;
+    _displayedDate: Date = null;
 
-            const displayedDate = date || self._options.startValue || self._options.endValue || new Date();
-            self._displayedDate = self._state === STATES.year ?
-                dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
-        },
+    _HEADER_TYPES: object = HEADER_TYPES;
+    _headerType: string = HEADER_TYPES.link;
+    _activateInputField: boolean = false;
 
-        isMaskWithDays: function(mask: string) {
-            return mask.indexOf('D') !== -1;
-        },
+    _homeButtonVisible: boolean = true;
 
-        isInputsValid: function(self): Promise<boolean> {
-            return self._children.formController.submit().then((results: object) => {
-                return !Object.keys(results).find((key) => Array.isArray(results[key]));
-            });
-        }
-    },
-    HEADER_TYPES = {
-        link: 'link',
-        input: 'input'
-    },
-    STATES = {
-        year: 'year',
-        month: 'month'
-    },
-    MONTH_STATE_SELECTION_DAYS = 30,
-    popupMask = coreMerge({auto: 'auto'}, dateMaskConstants);
+    _STATES: object = STATES;
+    _state: string = STATES.year;
 
-var Component = BaseControl.extend([EventProxyMixin], {
-    _template: componentTmpl,
-    _headerTmpl: headerTmpl,
-    _dayTmpl: dayTmpl,
-    _defaultDayTemplate: MonthViewDayTemplate,
+    _monthRangeSelectionProcessing: boolean = false;
+    _yearsRangeSelectionProcessing: boolean = false;
 
-    _rangeModel: null,
-    _headerRangeModel: null,
-    _yearRangeModel: null,
+    _dateRangeSelectionProcessing: boolean = false;
 
-    _displayedDate: null,
+    _yearStateEnabled: boolean = true;
+    _monthStateEnabled: boolean = true;
 
-    _HEADER_TYPES: HEADER_TYPES,
-    _headerType: HEADER_TYPES.link,
-    _activateInputField: false,
+    _yearRangeSelectionType: object = null;
 
-    _homeButtonVisible: true,
+    _mask = null;
 
-    _STATES: STATES,
-    _state: STATES.year,
+    _startValueValidators = null;
+    _endValueValidators = null;
 
-    _monthRangeSelectionProcessing: false,
+    _beforeMount(options: IControlOptions): void {
+        /* Опция _displayDate используется только(!) в тестах, чтобы иметь возможность перемотать
+         календарь в нужный период, если startValue endValue не заданы. */
+        this._displayedDate = dateUtils.getStartOfMonth(options._displayDate ?
+            options._displayDate :
+            (dateUtils.isValidDate(options.startValue) ?
+                options.startValue :
+                new Date()));
 
-    _dateRangeSelectionProcessing: false,
-
-    _yearStateEnabled: true,
-    _monthStateEnabled: true,
-
-    _yearRangeSelectionType: null,
-
-    _mask: null,
-
-    _beforeMount: function (options) {
-        this._displayedDate = dateUtils.getStartOfMonth(
-            dateUtils.isValidDate(options.startValue) ? options.startValue : new Date());
-
-        this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
+        this._rangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._rangeModel.update(options);
+
+        this._startValueValidators = [];
+        this._endValueValidators = [];
+        this.updateValidators(options);
+        this._rangeModel.subscribe('rangeChanged', () => {
+            this.updateValidators();
+        });
+
         this._prepareTheme();
-        this._headerRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
+        this._headerRangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._headerRangeModel.update(options);
 
-        this._yearRangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
-        _private.updateYearsRangeModel(this, options.startValue, options.endValue);
+        this._yearRangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
+        this.updateYearsRangeModel(options.startValue, options.endValue);
 
         this._monthStateEnabled = periodDialogUtils.isMonthStateEnabled(options);
         this._yearStateEnabled = periodDialogUtils.isYearStateEnabled(options);
 
-        this._state = _private.getViewState(options, this._monthStateEnabled, this._yearStateEnabled);
+        this._state = this.getViewState(options, this._monthStateEnabled, this._yearStateEnabled);
         if (this._state === STATES.year) {
             this._displayedDate = dateUtils.getStartOfYear(this._displayedDate);
         }
@@ -354,179 +169,193 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
         }
 
-        this._headerType = options.headerType;
-    },
+        this._updateHomeButtonVisible();
 
-    _afterUpdate: function(): void {
+        this._headerType = options.headerType;
+    }
+
+    _afterUpdate(): void {
         if (this._activateInputField) {
             this.activate();
             this._activateInputField = false;
         }
-    },
+    }
 
-    _beforeUnmount: function () {
+    _beforeUnmount(): void {
         this._rangeModel.destroy();
         this._headerRangeModel.destroy();
         this._yearRangeModel.destroy();
-    },
+    }
+
     _prepareTheme(): void {
         this._headerTheme = ManagerController.getPopupHeaderTheme();
-    },
+    }
 
-    _toggleStateClick: function(): void {
-        _private.toggleState(this);
-    },
+    _toggleStateClick(): void {
+        this.toggleState();
+        this._updateHomeButtonVisible();
+    }
 
-    _homeButtonClick: function () {
+    _homeButtonClick(): void {
         this._displayedDate = dateUtils.getStartOfMonth(new Date());
-    },
+    }
 
-    _currentDayIntersectHandler: function(event: SyntheticEvent, entries: IntersectionObserverSyntheticEntry[]): void {
-        this._homeButtonVisible = !entries[entries.length - 1].nativeEntry.intersectionRatio;
-    },
+    _updateHomeButtonVisible(): void {
+        if ((this._state === STATES.year && this._displayedDate.getFullYear() === new Date().getFullYear()) ||
+            (this._state === STATES.month && this._displayedDate.getMonth() === new Date().getMonth() &&
+                this._displayedDate.getFullYear() === new Date().getFullYear())) {
+            this._homeButtonVisible = false;
+        } else {
+            this._homeButtonVisible = true;
+        }
+    }
 
-    _yearsRangeChanged: function (e, start, end) {
-        _private.rangeChanged(this, start, end ? dateUtils.getEndOfYear(end) : null);
-    },
+    _currentDayIntersectHandler(event: SyntheticEvent, entry: IntersectionObserverSyntheticEntry): void {
+        this._homeButtonVisible = !entry.nativeEntry.isIntersecting;
+    }
 
-    _headerLinkClick: function (e) {
+    _unregisterCurrentDayIntersectHandler(): void {
+        // Если в IntersectionObserverContainer, который сделит за сегодняшним днём, происходит событие unregister -
+        // значит текущий день точно не отображается. Обновляем состояние домика.
+        this._updateHomeButtonVisible();
+    }
+
+    _yearsRangeChanged(e: SyntheticEvent, start: Date, end: Date): void {
+        this.rangeChanged(start, end ? dateUtils.getEndOfYear(end) : null);
+    }
+
+    _headerLinkClick(e: SyntheticEvent): void {
         if (this._headerType === this._HEADER_TYPES.link) {
             this._headerType = this._HEADER_TYPES.input;
             this._activateInputField = true;
         } else {
             this._headerType = this._HEADER_TYPES.link;
         }
-    },
+    }
 
-    _onHeaderLinkRangeChanged: function(e, startValue, endValue) {
-        _private.rangeChanged(this, startValue, endValue);
-    },
+    _onHeaderLinkRangeChanged(e: SyntheticEvent, startValue: Date, endValue: Date): void {
+        this.rangeChanged(startValue, endValue);
+    }
 
-    _startValuePickerChanged: function (e, value) {
-        _private.rangeChanged(
-            this,
+    _startValuePickerChanged(e: SyntheticEvent, value: Date): void {
+        this.rangeChanged(
             value,
             this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single ? value : this._rangeModel.endValue
         );
-    },
+    }
 
-    _endValuePickerChanged: function (e, value) {
+    _endValuePickerChanged(e: SyntheticEvent, value: Date): void {
         let startValue = this._rangeModel.startValue,
             endValue = value;
         if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
             startValue = value;
-        } else if (dateUtils.isValidDate(value) && !_private.isMaskWithDays(this._mask)) {
+        } else if (dateUtils.isValidDate(value) && !this.isMaskWithDays(this._mask)) {
             endValue = dateUtils.getEndOfMonth(value);
         }
-        _private.rangeChanged(this, startValue, endValue);
-    },
+        this.rangeChanged(startValue, endValue);
+    }
 
-    _yearsSelectionChanged: function (e, start, end, selectionDirection) {
+    _yearsSelectionChanged(e: SyntheticEvent, start: Date, end: Date): void {
         const endYear = end ? dateUtils.getEndOfYear(end) : null;
-        _private.selectionChanged(this, start, endYear);
+        this.selectionChanged(start, endYear);
         this._rangeModel.startValue = start;
         this._rangeModel.endValue = endYear;
-    },
+    }
 
-    _onYearsSelectionHoveredValueChanged: function(e, value) {
+    _onYearsSelectionHoveredValueChanged(e: SyntheticEvent, value: Date): void {
         // We update the displayed date only during the selection process.
         if (value) {
             this._displayedDate = value;
         }
-    },
+    }
 
-    _yearsSelectionStarted: function (e, start, end) {
+    _yearsSelectionStarted(e: SyntheticEvent, start: Date, end: Date): void {
         this._monthRangeSelectionProcessing = false;
-    },
+    }
 
-    _yearsRangeSelectionEnded: function (e, start, end) {
-        _private.sendResult(this, start, dateUtils.getEndOfYear(end));
-    },
+    _yearsRangeSelectionEnded(e: SyntheticEvent, start: Date, end: Date): void {
+        this.sendResult(start, dateUtils.getEndOfYear(end));
+    }
 
-    _onYearsItemClick: function(e: SyntheticEvent, item: Date): void {
+    _onYearsItemClick(e: SyntheticEvent, item: Date): void {
         this._displayedDate = item;
-    },
+    }
 
-    _monthsRangeChanged: function (e, start, end) {
-        _private.rangeChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
-    },
+    _monthsRangeChanged(e: SyntheticEvent, start: Date, end: Date): void {
+        this.rangeChanged(start, end ? dateUtils.getEndOfMonth(end) : null);
+    }
 
-    _monthsSelectionChanged: function (e, start, end) {
-        _private.selectionChanged(this, start, end ? dateUtils.getEndOfMonth(end) : null);
-    },
+    _monthsRangeSelectionStarted(e: SyntheticEvent, start: Date, end: Date): void {
+        this._yearsRangeSelectionProcessing = false;
+    }
 
-    _monthsRangeSelectionEnded: function(e: SyntheticEvent<Event>, start: Date, end: Date): void {
+    _monthsSelectionChanged(e: SyntheticEvent, start: Date, end: Date): void {
+        this.selectionChanged(start, end ? dateUtils.getEndOfMonth(end) : null);
+    }
+
+    _monthsRangeSelectionEnded(e: SyntheticEvent<Event>, start: Date, end: Date): void {
         const endOfMonth: Date = dateUtils.getEndOfMonth(end);
-        _private.rangeChanged(this, start, endOfMonth);
-        _private.sendResult(this, start, endOfMonth);
-    },
+        this.rangeChanged(start, endOfMonth);
+        this.sendResult(start, endOfMonth);
+    }
 
-    _monthRangeMonthClick: function (e, date) {
-        _private.toggleState(this, date);
-    },
+    _monthRangeMonthClick(e: SyntheticEvent, date: Date): void {
+        this.toggleState(date);
+    }
 
-    _monthRangeFixedPeriodClick: function (e, start, end) {
-        _private.fixedPeriodClick(this, start, end);
-    },
+    _monthRangeFixedPeriodClick(e: SyntheticEvent, start: Date, end: Date): void {
+        this.fixedPeriodClick(start, end);
+    }
 
-    _dateRangeChanged: function (e, start, end) {
-        _private.rangeChanged(this, start, end);
+    _dateRangeChanged(e: SyntheticEvent, start: Date, end: Date): void {
+        this.rangeChanged(start, end);
         this._monthRangeSelectionProcessing = false;
-    },
+    }
 
-    _dateRangeSelectionChanged: function (e, start, end) {
-        _private.selectionChanged(this, start, end);
-    },
+    _dateRangeSelectionChanged(e: SyntheticEvent, start: Date, end: Date): void {
+        this.selectionChanged(start, end);
+    }
 
-    _dateRangeSelectionEnded: function (e, start, end) {
-        _private.sendResult(this, start, end);
-    },
+    _dateRangeSelectionEnded(e: SyntheticEvent, start: Date, end: Date): void {
+        this.sendResult(start, end);
+    }
 
-    _dateRangeFixedPeriodClick: function (e, start, end) {
-        _private.fixedPeriodClick(this, start, end);
-    },
+    _dateRangeFixedPeriodClick(e: SyntheticEvent, start: Date, end: Date): void {
+        this.fixedPeriodClick(start, end);
+    }
 
-    _applyClick: function (e) {
-        return _private.isInputsValid(this).then((valid: boolean) => {
+    _applyClick(e: SyntheticEvent): Promise<void> {
+        return this.isInputsValid().then((valid: boolean) => {
             if (valid) {
-                _private.sendResult(this);
+                this.sendResult();
             }
         });
-    },
+    }
 
-    _closeClick: function () {
+    _closeClick(): void {
         this._notify('close');
-    },
-    _getChildContext: function() {
+    }
+
+    _getChildContext(): object {
         return {
             ScrollData: new ScrollData({pagingVisible: false})
         };
-    },
+    }
 
-    // TODO Переделать по готовности задачи по доработке InputRender
-    //  https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
-    _startValueFieldKeyUpHandler: function(event) {
-        if (!this._children.endValueField) {
+    _inputControlHandler(event: SyntheticEvent, value: Date, displayValue: Date, selection: any): void {
+        if (selection.end === displayValue.length &&
+            this._options.selectionType !== IRangeSelectable.SELECTION_TYPES.single) {
+            this._children.endValueField.activate({enableScreenKeyboard: true});
+        }
+    }
+
+    _inputFocusOutHandler(event: SyntheticEvent): Promise<boolean> {
+        if (this._headerType === this._options.headerType) {
             return;
         }
-        // Move the focus only if the digit was pressed. Without this check, we see a bug in the following scenario.
-        // The cursor is in a different input field. Click tab. By pressing the focus goes to this input field.
-        // Release tab. Switches the focus in the field at the end of the period.
-        const key = parseInt(event.nativeEvent.key, 10);
-        if (!isNaN(key)) {
-             const startField = this._children.startValueField._container.querySelector('input');
-             const endField = this._children.endValueField._container.querySelector('input');
-             if (startField.selectionStart === this._mask.length) {
-                this._children.endValueField.activate();
-                endField.setSelectionRange(0, 0);
-             }
-        }
-    },
-
-    _inputFocusOutHandler: function(event): Promise<boolean> {
         return new Promise((resolve) => {
             if (!this._children.inputs.contains(event.nativeEvent.relatedTarget)) {
-                return _private.isInputsValid(this).then((valid: boolean) => {
+                return this.isInputsValid().then((valid: boolean) => {
                     if (valid) {
                         this._headerType = this._options.headerType;
                     }
@@ -536,60 +365,140 @@ var Component = BaseControl.extend([EventProxyMixin], {
             resolve(false);
         });
     }
-});
 
-Component._private = _private;
+    fixedPeriodClick(start: Date, end: Date): void {
+        this.rangeChanged(start, end);
+        this._monthRangeSelectionProcessing = false;
+        this.sendResult(start, end);
+    }
 
-Component.SELECTION_TYPES = IRangeSelectable.SELECTION_TYPES;
-Component.HEADER_TYPES = HEADER_TYPES;
-Component._STATES = STATES;
+    selectionChanged(start: Date, end: Date): void {
+        this._headerRangeModel.startValue = start;
+        this._headerRangeModel.endValue = end;
+    }
 
-Component.getDefaultOptions = function () {
-    return coreMerge({
+    rangeChanged(start: Date, end: Date): void {
+        this._rangeModel.startValue = start;
+        this._rangeModel.endValue = end;
+        this._headerRangeModel.startValue = start;
+        this._headerRangeModel.endValue = end;
+        this.updateYearsRangeModel(start, end);
+    }
 
-        /**
-         * @name Controls/datePopup#emptyCaption
-         * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
-         */
+    updateYearsRangeModel(start: Date, end: Date): void {
+        if (dateUtils.isStartOfYear(start) && dateUtils.isEndOfYear(end)) {
+            this._yearRangeModel.startValue = start;
+            this._yearRangeModel.endValue = end;
+        } else {
+            this._yearRangeModel.startValue = null;
+            this._yearRangeModel.endValue = null;
+        }
+    }
 
-        /*
-         * @name Controls/datePopup#emptyCaption
-         * @cfg {String} Text that is used if the period is not selected
-         */
-        emptyCaption: rk('Не указан'),
+    sendResult(start: Date, end: Date): void {
+        this._notify(
+            'sendResult',
+            [start || this._rangeModel.startValue, end || this._rangeModel.endValue],
+            {bubbling: true}
+        );
+    }
 
-        /**
-         * @name Controls/datePopup#headerType
-         * @cfg {String} Тип заголовка.
-         * @variant link Заголовок отображает выбранный период. При клике по заголовку он преобразуется в поле ввода периода.
-         * @variant input Заголовок по умолчанию отображается в виде поля ввода периода.
-         */
+    getViewState(options: IControlOptions, monthStateEnabled: boolean, yearStateEnabled: boolean): string {
+        if (monthStateEnabled) {
+            if (yearStateEnabled) {
+                if (((dateUtils.isValidDate(options.startValue) && dateUtils.isValidDate(options.endValue)) &&
+                    (!dateUtils.isStartOfMonth(options.startValue) || !dateUtils.isEndOfMonth(options.endValue)) &&
+                    Range.getPeriodLengthInDays(options.startValue, options.endValue) <= MONTH_STATE_SELECTION_DAYS)) {
+                    return STATES.month;
+                }
+            } else {
+                return STATES.month;
+            }
+        }
+        return STATES.year;
+    }
 
-        /*
-         * @name Controls/datePopup#headerType
-         * @cfg {String} Type of the header.
-         * @variant link
-         * @variant input
-         */
-        headerType: HEADER_TYPES.link,
+    toggleState(date?: Date): void {
+        this._state = this._state === STATES.year ? STATES.month : STATES.year;
 
-        minRange: IDateRangeSelectable.minRange.day,
-        mask: popupMask.auto,
+        const displayedDate = date || this._options.startValue || this._options.endValue || new Date();
+        this._displayedDate = this._state === STATES.year ?
+            dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
+    }
 
-        dateConstructor: WSDate,
+    isMaskWithDays(mask: string): boolean {
+        return mask.indexOf('D') !== -1;
+    }
 
-        dayTemplate: MonthViewDayTemplate
+    isInputsValid(): Promise<boolean> {
+        return this._children.formController.submit().then((results: object) => {
+            return !Object.keys(results).find((key) => Array.isArray(results[key]));
+        });
+    }
 
-    }, IRangeSelectable.getDefaultOptions());
-};
+    updateValidators(options?: IControlOptions): void {
+        this.updateStartValueValidators(options?.startValueValidators);
+        this.updateEndValueValidators(options?.endValueValidators);
+    }
 
-Component.getOptionTypes = function () {
-    return coreMerge({
-        headerType: descriptor(String).oneOf([
-            HEADER_TYPES.link,
-            HEADER_TYPES.input
-        ]),
-    }, IDateRangeSelectable.getOptionTypes());
-};
+    updateStartValueValidators(validators?: Function[]): void {
+        const startValueValidators: Function[] = validators || this._options.startValueValidators;
+        this._startValueValidators = Range.getRangeValueValidators(startValueValidators, this._rangeModel, this._rangeModel.startValue);
+    }
 
-export = Component;
+    updateEndValueValidators(validators?: Function[]): void {
+        const endValueValidators: Function[] = validators || this._options.endValueValidators;
+        this._endValueValidators = Range.getRangeValueValidators(endValueValidators, this._rangeModel, this._rangeModel.endValue);
+    }
+
+    static _theme: string[] = ['Controls/datePopup'];
+
+    static getDefaultOptions(): object {
+        return coreMerge({
+            /**
+             * @name Controls/datePopup#emptyCaption
+             * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
+             */
+
+            /*
+             * @name Controls/datePopup#emptyCaption
+             * @cfg {String} Text that is used if the period is not selected
+             */
+            emptyCaption: rk('Не указан'),
+
+            /**
+             * @name Controls/datePopup#headerType
+             * @cfg {String} Тип заголовка.
+             * @variant link Заголовок отображает выбранный период. При клике по заголовку он преобразуется в поле ввода периода.
+             * @variant input Заголовок по умолчанию отображается в виде поля ввода периода.
+             */
+
+            /*
+             * @name Controls/datePopup#headerType
+             * @cfg {String} Type of the header.
+             * @variant link
+             * @variant input
+             */
+            headerType: HEADER_TYPES.link,
+
+            minRange: IDateRangeSelectable.minRange.day,
+            mask: popupMask.auto,
+
+            dateConstructor: WSDate,
+
+            dayTemplate: MonthViewDayTemplate,
+
+            startValueValidators: [],
+            endValueValidators: []
+        }, IRangeSelectable.getDefaultOptions());
+    }
+
+    static getOptionTypes(): object {
+        return coreMerge({
+            headerType: descriptor(String).oneOf([
+                HEADER_TYPES.link,
+                HEADER_TYPES.input
+            ])
+        }, IDateRangeSelectable.getOptionTypes());
+    }
+}

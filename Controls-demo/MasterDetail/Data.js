@@ -57,6 +57,7 @@ define('Controls-demo/MasterDetail/Data', [
       master: [{
          id: '0',
          name: 'Входящие',
+         counter: '5',
          'Раздел@': true,
          'Раздел': null,
          sourceType: 'incoming'
@@ -65,10 +66,12 @@ define('Controls-demo/MasterDetail/Data', [
          'Раздел@': false,
          'Раздел': 0,
          name: 'Входящие задачи',
+         counter: '16',
          sourceType: 'incomingTasks'
       }, {
          id: '1',
          name: 'Поручения',
+         counter: '2',
          'Раздел@': false,
          'Раздел': null,
          sourceType: 'instructions'
@@ -77,24 +80,28 @@ define('Controls-demo/MasterDetail/Data', [
          'Раздел@': null,
          'Раздел': null,
          name: 'Планы',
+         counter: '3',
          sourceType: 'plans'
       }, {
          id: '4',
          'Раздел@': null,
          'Раздел': null,
          name: 'Задачи от Андрея Б.',
+         counter: '84',
          sourceType: 'andrewBTasks'
       }, {
          id: '5',
          'Раздел@': null,
          'Раздел': null,
          name: 'Задачи от Андрея С.',
+         counter: '1',
          sourceType: 'andrewSTasks'
       }, {
          id: '6',
          'Раздел@': null,
          'Раздел': null,
          name: 'Задачи от Дмитрия К.',
+         counter: '5',
          sourceType: 'dmitriyKTasks'
       }, {
          id: '7',
@@ -107,48 +114,56 @@ define('Controls-demo/MasterDetail/Data', [
          'Раздел@': null,
          'Раздел': null,
          name: 'Отложенные',
+         counter: '99',
          sourceType: 'postponed'
       }, {
          id: '9',
          'Раздел@': null,
          'Раздел': null,
          name: 'Повышение',
+         counter: '4',
          sourceType: 'levelUp'
       }, {
          id: '10',
          'Раздел@': null,
          'Раздел': null,
          name: 'Критические ошибки',
+         counter: '2',
          sourceType: 'criticalBugs'
       }, {
          id: '11',
          'Раздел@': null,
          'Раздел': null,
          name: 'Задачи вынесенные из вехи',
+         counter: '74',
          sourceType: 'postponedTasks'
       }, {
          id: '12',
          'Раздел@': null,
          'Раздел': null,
          name: '3.18.710',
+         counter: '5',
          sourceType: '3.18.710'
       }, {
          id: '13',
          'Раздел@': null,
          'Раздел': null,
          name: 'TODO',
+         counter: '5',
          sourceType: 'todoTasks'
       }, {
          id: '14',
          'Раздел@': null,
          'Раздел': null,
          name: 'Срочные задачи',
+         counter: '5',
          sourceType: 'hotTasks'
       }, {
          id: '15',
          'Раздел@': null,
          'Раздел': null,
          name: 'Прочие',
+         counter: '5',
          sourceType: 'otherTasks'
       }]
    };

@@ -7,14 +7,30 @@ html, body {
   width: 100%;
 }
 
+// Перебиваю min-height: 0, который весит на .ws-flex-column
+.ControlsDemo-Page.ws-flex-column {
+   min-height: 100%;
+}
+
 #Back {
+  padding: 10px 5px;
+}
+
+#Source {
   padding: 10px 5px;
 }
 
 .demo_controls_list_wrapper {
   display: flex;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .demo_controls_list_section {
-  padding: 40px 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.Controls-demo_router-input {
+  flex-grow: 1;
 }

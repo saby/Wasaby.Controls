@@ -1,0 +1,15 @@
+<div>
+    <Controls.toggle:Checkbox attr:class="controlsDemo-breadcrumbs_clickHandler__readOnly" bind:value="_readOnly" caption="ReadOnly"/>
+
+    <div on:click="_onPathWrapperClick()" style="border: 1px solid #fec63f;" class="demo-BreadcrumbsClickHandler__breadCrumbs">
+        <Controls.breadcrumbs:Path keyProperty="id"
+                                   items="{{_items}}"
+                                   readOnly="{{_readOnly}}"
+                                   on:itemClick="_onItemClick()"
+                                   on:click="_onPathClick()"
+        />
+    </div>
+    <div class="demo-BreadcrumbsClickHandler__itemClickCount">Произошел клик по элементу хлебных крошек {{_itemClickCount}}</div>
+    <div class="demo-BreadcrumbsClickHandler__pathClickCount">Произошел клик по контейнеру с хлебными крошками {{_pathClickCount}}</div>
+    <div class="demo-BreadcrumbsClickHandler__pathWrapperClickCount">Клик доплыл до родителя {{_pathWrapperClickCount}}</div>
+</div>

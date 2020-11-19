@@ -4,6 +4,7 @@
             source="{{_viewSource}}"
             columns="{{_columns}}"
             parentProperty="Раздел"
-            nodeProperty="Раздел@">
+            nodeProperty="Раздел@"
+            expandedItems="{{_expandedItems}}">
     </Controls.treeGrid:View>
 </div>

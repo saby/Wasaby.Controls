@@ -135,7 +135,6 @@ define([
 
          var cur = iv.getCurrent();
          assert.equal('id', cur.keyProperty, 'Incorrect field set on getCurrent()');
-         assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
 
@@ -194,6 +193,26 @@ define([
 
       });
 
+      it('actual theme on itemData', function () {
+         const cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            theme: 'first'
+         };
+         const model = new list.ItemsViewModel(cfg);
+         const dispItem = {
+            getContents: () => ({
+               getId: () => '123'
+            })
+         };
+
+         assert.equal(model.getItemDataByItem(dispItem).theme, 'first');
+         model.setTheme('second');
+         assert.equal(model.getItemDataByItem(dispItem).theme, 'second');
+         assert.equal(model._options.theme, 'first');
+      });
+
       it('setItems', function () {
          var rs1 = new collection.RecordSet({
             rawData: data,
@@ -229,7 +248,7 @@ define([
 
          //первый кейс - были items - массив, а ставим рекордсет. Должен полностью смениться инстанс
          var iv = new list.ItemsViewModel(cfg1);
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg1);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(0, iv._startIndex, 'Incorrect startIndex after setItems');
@@ -238,18 +257,40 @@ define([
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new list.ItemsViewModel(cfg2);
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg2);
          assert.equal(rs1, iv._items, 'Incorrect items after setItems');
          assert.equal(4, iv._items.at(0).get('id'), 'Incorrect items after setItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
 
-         iv.setItems(rs3);
+         iv.setItems(rs3, cfg2);
          assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(iv._items.getIdProperty(), 'id', 'Incorrect keyProperty');
 
-         iv.setItems(rs4);
+         iv.setItems(rs4, cfg2);
          assert.equal(4, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(iv._items.getIdProperty(), 'key', 'Incorrect keyProperty');
+
+      });
+
+      it('Result from options', function () {
+         var metaData = {
+            results: ['results']
+         };
+         var rs1 = new collection.RecordSet({
+            rawData: data,
+            idProperty: 'id'
+         });
+         rs1.setMetaData(metaData);
+
+         var cfg1 = {
+            items: rs1,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         };
+
+         var iv = new list.ItemsViewModel(cfg1);
+
+         assert.deepEqual(['results'], iv.getMetaResults(), 'Incorrect meta results after constructor');
 
       });
 
@@ -356,7 +397,7 @@ define([
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
 
          result = 0;
-         iv.setItems(rs2);
+         iv.setItems(rs2, cfg);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
 
@@ -466,6 +507,20 @@ define([
          let itemData = model.getItemDataByItem({ getContents: () => [] });
 
          assert.isFalse(!!itemData.isGroup);
+      });
+
+      it('_isGroup', function() {
+         const model = new list.ItemsViewModel({
+            items: data,
+            keyProperty: 'id'
+         });
+
+         assert.isFalse(model._isGroup({ get: () => {}}));
+         assert.isTrue(model._isGroup({}));
+         assert.isTrue(model._isGroup(null));
+         assert.isTrue(model._isGroup(undefined));
+         assert.isTrue(model._isGroup(0));
+         assert.isTrue(model._isGroup(""));
       });
 
       it('getItemDataByItem caches results', function() {
@@ -659,5 +714,35 @@ define([
            assert.isTrue(isUpdated);
 
        });
+
+       it('should update prefix on move items', function () {
+         const cfg = {
+             keyProperty: 'id',
+             items: new collection.RecordSet({
+                 rawData: [
+                     {id: 0},
+                     {id: 1}
+                 ],
+                 idProperty: 'id'
+             }),
+         };
+
+         const model = new list.ItemsViewModel(cfg);
+         const orNMV = model._nextModelVersion;
+         let isUpdated = false;
+
+         model._nextModelVersion = (notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) => {
+             assert.equal(changesType, 'collectionChanged');
+             assert.isFalse(notUpdatePrefixItemVersion);
+             assert.equal(action, 'm');
+             isUpdated = true;
+             orNMV.apply(model, arguments);
+         };
+
+         model._onCollectionChangeFnc({}, 'm', [], void 0, [], void 0);
+
+         assert.isTrue(isUpdated);
+
+     });
    })
 });

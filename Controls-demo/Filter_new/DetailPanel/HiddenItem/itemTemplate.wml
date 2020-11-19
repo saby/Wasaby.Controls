@@ -1,0 +1,17 @@
+<ws:template name="hiddenItem">
+    <ws:if data="{{item.visible}}">
+        <Controls.filterPopup:Link caption="Hidden item" />
+    </ws:if>
+</ws:template>
+
+<ws:template name="visibleItem">
+    <ws:if data="{{item.visible}}">
+        <Controls.filterPopup:Link caption="Visible item" />
+    </ws:if>
+</ws:template>
+
+<ws:template name="text">
+        <div>Text</div>
+</ws:template>
+
+<ws:partial template="{{item.name}}" item="{{item}}"/>

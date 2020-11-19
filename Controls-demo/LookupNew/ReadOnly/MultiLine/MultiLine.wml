@@ -1,0 +1,19 @@
+<div class="controlsDemo__wrapper controlsDemo__flexColumn">
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <Controls.scroll:Container attr:class="controls-demo-Lookup__scroll">
+            <Controls.lookup:Input
+                    bind:selectedKeys="_selectedKeys"
+                    searchParam="title"
+                    source="{{_source}}"
+                    keyProperty="id"
+                    multiSelect="{{true}}"
+                    multiLine="{{true}}"
+                    readOnly="{{true}}">
+                <ws:itemTemplate>
+                    <ws:partial template="Controls/lookup:ItemTemplate"
+                                displayProperty="title"/>
+                </ws:itemTemplate>
+            </Controls.lookup:Input>
+        </Controls.scroll:Container>
+    </div>
+</div>

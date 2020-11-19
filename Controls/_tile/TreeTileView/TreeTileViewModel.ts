@@ -1,7 +1,9 @@
 import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
-import {TreeViewModel} from 'Controls/treeGrid';
+import {TreeViewModel} from 'Controls/tree';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
+import {SyntheticEvent} from 'UI/Vdom';
+import {Model} from 'Types/entity';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
@@ -29,7 +31,17 @@ var TreeTileViewModel = TreeViewModel.extend({
             current._treeTileViewModelCached = true;
         }
         hoveredItem = this._tileModel.getHoveredItem();
-
+        // New Model compatibility
+        if (!(current.isHiddenGroup instanceof Function)) {
+            const isHiddenGroup = current.isHiddenGroup;
+            current.isHiddenGroup = () => isHiddenGroup;
+        }
+        current.getGroupPaddingClasses = (theme: string, direction: string) => current.groupPaddingClasses[direction];
+        if (!(current.isExpanded instanceof Function)) {
+            const collapsedGroups = this.getCollapsedGroups() || [];
+            current.isExpanded = () => !collapsedGroups.includes(dispItem.getContents());
+        }
+        current.isStickyHeader = () => this._options.stickyHeader;
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ' controls-TileView__checkbox js-controls-TileView__withoutZoom';
             current.multiSelectClassList += !current.isGroup && dispItem.isNode() ? ' controls-TreeTileView__checkbox' : '';
@@ -63,14 +75,14 @@ var TreeTileViewModel = TreeViewModel.extend({
             current.zoomCoefficient = hoveredItem.zoomCoefficient;
         }
 
-        current = cMerge(current, this.getTileItemData());
+        current = cMerge(current, this.getTileItemData(dispItem));
         if (current.dispItem.isNode && current.dispItem.isNode()) {
             current.itemsHeight = this._options.nodesHeight || current.itemsHeight;
         }
 
         current.isScaled = this.isScaled(current);
         current.isUnscaleable = !current.scalingMode || current.scalingMode === 'none';
-        current.isUnfixed = !current.isScaled && !current.isUnscaleable;
+        current.isUnfixed = current.isSwiped() || !current.isScaled && !current.isUnscaleable;
 
         var
             originalGetVersion = current.getVersion;
@@ -87,20 +99,50 @@ var TreeTileViewModel = TreeViewModel.extend({
             return version;
         };
 
+        // Совместимость с newModel, https://online.sbis.ru/opendoc.html?guid=0bca7ba3-f49f-46da-986a-a1692deb9c47
+        current.isStickyHeader = () => {
+            return this._options.stickyHeader;
+        }
+
         return current;
     },
     isScaled: function(itemData) {
         return (itemData.item.get && itemData.item.get(itemData.displayProperty) || itemData.scalingMode !== 'none')
-            && (!!itemData.isActive || !!itemData.isSwiped || !!itemData.isHovered);
+            && (!!itemData.isActive() || !!itemData.isSwiped() || !!itemData.isHovered);
     },
-    getTileItemData: function () {
-        var opts = this._tileModel.getTileItemData();
+    getTileItemData: function (dispItem) {
+        var opts = this._tileModel.getTileItemData(dispItem);
         opts.defaultFolderWidth = DEFAULT_FOLDER_WIDTH;
+        if (this._options.tileSize) {
+            opts.tileSize = this._options.tileSize;
+        }
+        const itemContents = dispItem?.getContents();
+        if (itemContents instanceof Model) {
+            opts.itemWidth = this.getItemWidth(
+                itemContents,
+                dispItem.isNode(),
+                this._options.imageWidthProperty,
+                this._options.imageHeightProperty
+            );
+            opts.imageData = this.getImageData(
+                opts.itemWidth,
+                opts,
+                itemContents
+            );
+        } else {
+            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.folderWidth :
+            this._options.tileWidth;
+        }
         return opts;
     },
 
     setTileMode: function (tileMode) {
         this._tileModel.setTileMode(tileMode);
+    },
+
+    setTileSize(size: string): void {
+        this._options.tileSize = size;
+        this._nextModelVersion();
     },
 
     getTileMode: function () {
@@ -109,6 +151,14 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     setItemsHeight: function (itemsHeight) {
         this._tileModel.setItemsHeight(itemsHeight);
+    },
+
+    setItemsContainerPadding(padding) {
+        this._tileModel.setItemsContainerPadding(padding);
+    },
+
+    getItemsContainerPadding() {
+        return this._tileModel.getItemsContainerPadding();
     },
 
     getItemsHeight: function () {
@@ -123,9 +173,30 @@ var TreeTileViewModel = TreeViewModel.extend({
         return this._tileModel.getHoveredItem();
     },
 
+    /**
+     * TODO работа с activeItem Должна производиться через item.isActive(),
+     *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+     *  мы не можем снять эти состояния при клике внутри ItemActions
+     * @param itemData
+     */
     setActiveItem: function (itemData) {
         this._tileModel.setActiveItem(itemData);
         TreeTileViewModel.superclass.setActiveItem.apply(this, arguments);
+    },
+
+    setDragItemData(itemData: any): void {
+        // Когда д-н-д начали перетаскивание увеличенной плитки, то все эти свойства сохраняются в draggedItemData.
+        // Из-за этого перетаскиваемая плитка остается увеличенной с position=fixed и не меняет позицию
+        if (itemData) {
+            itemData.isFixed = false;
+            itemData.isHovered = false;
+            itemData.position = null;
+            itemData.canShowActions = false;
+            itemData.isAnimated = false;
+            itemData.zoomCoefficient = null;
+        }
+
+        TreeTileViewModel.superclass.setDragItemData.apply(this, arguments);
     },
 
     setDragEntity: function (entity) {
@@ -161,6 +232,39 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemPaddingClasses(): string {
         return this._tileModel.getItemPaddingClasses();
+    },
+
+    getItemWidth(
+        item: Model,
+        isFolder: boolean,
+        imageWidthProperty: string,
+        imageHeightProperty: string
+    ): number {
+        if (isFolder) {
+            return this._options.folderWidth || DEFAULT_FOLDER_WIDTH;
+        } else {
+            return this._tileModel.getTileWidth(item, imageWidthProperty, imageHeightProperty);
+        }
+    },
+
+    getImageData(itemWidth: number, itemData: Record<string, any>,  item: Model): {url: string, class: string} {
+        return this._tileModel.getImageData(itemWidth, itemData, item);
+    },
+
+    getItemsPaddingContainerClasses(): string {
+        return this._tileModel.getItemsPaddingContainerClasses();
+    },
+    getActionsMenuConfig(
+        item: Model,
+        clickEvent: SyntheticEvent,
+        opener,
+        templateOptions,
+        isActionMenu: boolean,
+        isContextMenu: boolean
+    ): Record<string, any> {
+        const itemData = this.getItemDataByItem(item);
+        return this._tileModel.getActionsMenuConfig(itemData,
+            clickEvent, opener, templateOptions, isActionMenu, isContextMenu);
     }
 });
 

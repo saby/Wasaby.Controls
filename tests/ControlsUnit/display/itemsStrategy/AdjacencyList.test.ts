@@ -95,11 +95,51 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             });
 
             strategy.items.forEach((item, index) => {
-                assert.notEqual(item, source.items[index]);
                 assert.strictEqual(item.getContents(), items[index]);
             });
 
             assert.strictEqual(strategy.items.length, items.length);
+        });
+
+        it('should return unique children instances with the same contents for repeat nodes', () => {
+            const rootNode1 = {id: 1, pid: null};
+            const rootNode2 = {id: 2, pid: null};
+            const innerNode = {id: 3, pid: rootNode1.id};
+            const innerNodeDuplicate = {id: 3, pid: rootNode2.id};
+            const leaf1 = {id: 21, pid: innerNode.id};
+            const leaf2 = {id: 32, pid: innerNode.id};
+            const items = [
+                rootNode1,
+                rootNode2,
+                innerNode,
+                innerNodeDuplicate,
+                leaf1,
+                leaf2
+            ];
+            const source = getSource(items, null);
+            const strategy = new AdjacencyList({
+                source,
+                keyProperty: 'id',
+                parentProperty: 'pid'
+            });
+
+            const treeItems = strategy.items;
+            const expectedContents = [
+                rootNode1,
+                    innerNode,
+                        leaf1,
+                        leaf2,
+                rootNode2,
+                    innerNodeDuplicate,
+                        leaf1,
+                        leaf2
+            ];
+
+            treeItems.forEach((item, index) => {
+                assert.strictEqual(item.getContents(), expectedContents[index], `at ${index}`);
+                assert.strictEqual(treeItems.indexOf(item), index, 'items shouldn\'t repeat');
+            });
+            assert.strictEqual(treeItems.length, expectedContents.length);
         });
 
         it('should keep groups order', () => {
@@ -222,7 +262,7 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             assert.deepEqual(givenA, ['a', items[1], 'aa', items[5], 'b', items[3], 'bb', items[7]]);
 
             const givenB = strategy.items.map((item) => {
-                return item instanceof GroupItem ? item.getContents() : item.getParent().getContents();
+                return item['[Controls/_display/GroupItem]'] ? item.getContents() : item.getParent().getContents();
             });
             assert.deepEqual(givenB, ['a', undefined, 'aa', items[1], 'b', undefined, 'bb', items[3]]);
         });
@@ -456,41 +496,33 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
         it('should return a TreeItem as node', () => {
             const items = [{node: true}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isTrue(strategy.at(0).isNode());
+            assert.isTrue(strategy.at(0).getContents().node);
         });
 
         it('should return a TreeItem as leaf', () => {
             const items = [{node: false}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isFalse(strategy.at(0).isNode());
+            assert.isFalse(strategy.at(0).getContents().node);
         });
 
         it('should return a TreeItem with children', () => {
             const items = [{hasChildren: true}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isTrue(strategy.at(0).isHasChildren());
+            assert.isTrue(strategy.at(0).getContents().hasChildren);
         });
 
         it('should return a TreeItem without children', () => {
             const items = [{hasChildren: false}];
             const source = getSource(items);
-            const strategy = new AdjacencyList({
-                source
-            });
+            const strategy = new AdjacencyList({source});
 
-            assert.isFalse(strategy.at(0).isHasChildren());
+            assert.isFalse(strategy.at(0).getContents().hasChildren);
         });
     });
 

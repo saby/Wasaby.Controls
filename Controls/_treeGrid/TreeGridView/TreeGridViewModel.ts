@@ -1,18 +1,18 @@
-import {GridViewModel} from 'Controls/grid';
-import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
+import {GridViewModel, GridLayoutUtil, COLUMN_SCROLL_JS_SELECTORS, DRAG_SCROLL_JS_SELECTORS} from 'Controls/grid';
 import {
     getBottomPaddingRowIndex,
     getFooterIndex,
     getIndexByDisplayIndex, getIndexById, getIndexByItem,
     getResultsIndex, getTopOffset, IBaseTreeGridRowIndexOptions
 } from 'Controls/_treeGrid/utils/TreeGridRowIndexUtil';
-import TreeViewModel = require('Controls/_treeGrid/Tree/TreeViewModel');
+import { TreeViewModel } from 'Controls/tree';
+
 
 function isLastColumn(
    itemData: object,
    colspan: boolean
 ): boolean {
-   const columnWidth = itemData.multiSelectVisibility === 'hidden' ? 1 : 2;
+   const columnWidth = itemData.hasMultiSelectColumn ? 2 : 1;
    return itemData.getLastColumnIndex() >= itemData.columnIndex && (!colspan || itemData.columnIndex < columnWidth);
 }
 
@@ -52,14 +52,6 @@ var
         },
         toggleExpanded: function (dispItem, expand) {
             this._model.toggleExpanded(dispItem, expand);
-            // remove after https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-            this._resetCacheAndUpdateVersion();
-        },
-        _resetCacheAndUpdateVersion(): void {
-            if (this._options.columnScroll && !this._options.disableColumnScrollCellStyles) {
-                this.resetCachedItemData();
-                this._nextModelVersion();
-            }
         },
         getItemType: function (dispItem) {
             return this._model.getItemType(dispItem);
@@ -72,13 +64,9 @@ var
         },
         setExpandedItems: function (expandedItems: Array<unknown>) {
             this._model.setExpandedItems(expandedItems);
-            // remove after https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-            this._resetCacheAndUpdateVersion();
         },
         setCollapsedItems: function (collapsedItems: Array<unknown>) {
             this._model.setCollapsedItems(collapsedItems);
-            // remove after https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-            this._resetCacheAndUpdateVersion();
         },
         getExpandedItems: function () {
             return this._model.getExpandedItems();
@@ -89,11 +77,23 @@ var
         getRoot: function() {
             return this._model.getRoot();
         },
+        getNextByKey: function() {
+           return this._model.getNextByKey.apply(this._model, arguments);
+        },
+        getPrevByKey: function() {
+           return this._model.getPrevByKey.apply(this._model, arguments);
+        },
+        getNextByIndex: function() {
+           return this._model.getNextByIndex.apply(this._model, arguments);
+        },
+        getPrevByIndex: function() {
+           return this._model.getPrevByIndex.apply(this._model, arguments);
+        },
         setRoot: function (root) {
             this._model.setRoot(root);
         },
         setParentProperty(parentProperty: string): void {
-            this._model.setParentProperty.apply(this, arguments);
+            this._model.setParentProperty(parentProperty);
             this._options.parentProperty = parentProperty;
         },
         setHasChildrenProperty(hasChildrenProperty: string): void {
@@ -107,6 +107,7 @@ var
         setNodeFooterTemplate: function (nodeFooterTemplate) {
             this._model.setNodeFooterTemplate(nodeFooterTemplate);
         },
+        // TODO: Удалить #rea_1179794968
         setExpanderDisplayMode: function (expanderDisplayMode) {
             // Выпилить в 19.200
             this._model.setExpanderDisplayMode(expanderDisplayMode);
@@ -114,19 +115,36 @@ var
         setExpanderVisibility: function (expanderVisibility) {
             this._model.setExpanderVisibility(expanderVisibility);
         },
+        setExpanderSize(expanderSize): void {
+            this._model.setExpanderSize(expanderSize);
+        },
         resetExpandedItems: function () {
             this._model.resetExpandedItems();
-            // remove after https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-            this._resetCacheAndUpdateVersion();
         },
         isDrawResults: function() {
             if (this._options.resultsVisibility === 'visible') {
                 return true;
             }
-            var items = this.getDisplay();
+            const items = this.getDisplay();
             if (items) {
-                var rootItems = this._model.getHierarchyRelation().getChildren(items.getRoot().getContents(), this.getItems());
-                return this.getHasMoreData() || rootItems && rootItems.length > 1;
+                const parentProperty = this._options.parentProperty;
+                const parent = items.getRoot().getContents();
+                if (!parentProperty) {
+                    let count = 0;
+                    if (!parent) {
+                        this.getItems().each(() => {
+                            count++;
+                        });
+                    }
+                    return this.getHasMoreData() || count > 1;
+                } else {
+                    let parentId = parent;
+                    if ((parent && parent['[Types/_entity/Record]'])) {
+                        parentId = parent.get(parentProperty);
+                    }
+                    let item = this.getItems().getIndicesByValue(parentProperty, parentId);
+                    return this.getHasMoreData() || item.length > 1;
+                }
             }
         },
         getItemDataByItem: function(dispItem) {
@@ -141,67 +159,130 @@ var
                 current._treeGridViewModelCached = true;
             }
 
+            current.getColspanType = (tmplOptions) => {
+                if (tmplOptions.colspan === true) {
+                    return 'full';
+                } else if (tmplOptions.colspan === false && !!tmplOptions.colspanLength) {
+                    return 'partial';
+                } else {
+                    return 'none';
+                }
+            };
+            current.getPartialColspanStyles = (columnStart, columnSpan) => GridLayoutUtil.getColumnStyles({ columnStart, columnSpan });
+
             current.isLastColumn = isLastColumn;
 
-            current.getCurrentColumn = function () {
-                let
-                    currentColumn = superGetCurrentColumn();
-                currentColumn.nodeType = current.item.get && current.item.get(current.nodeProperty);
+            if (!GridLayoutUtil.isFullGridSupport()) {
+                const superClassesGetter = current.getRelativeCellWrapperClasses;
+                current.getRelativeCellWrapperClasses = (colspan, fixVerticalAlignment) => {
+                    return `controls-TreeGridView__row-cell_innerWrapper ${superClassesGetter(colspan, fixVerticalAlignment)}`;
+                };
+            }
 
-                currentColumn.prepareExpanderClasses = current.prepareExpanderClasses;
+            if (current.isLastRow) {
+                //Проверяем, что под послдней записью нет nodeFooter'a
+                const itemParent = current.dispItem.getParent && current.dispItem.getParent();
+                const itemParentRecord = itemParent && itemParent.getContents();
+                const parentKey = itemParentRecord && itemParentRecord.getKey && itemParentRecord.getKey();
+                current.isLastRow = current.isLastRow &&
+                    (!current.nodeFooters || !current.nodeFooters.some((element) => {
+                        return element.key === parentKey;
+                    }));
+            }
+
+            current.getCurrentColumn = function (backgroundColorStyle: string) {
+                let
+                    currentColumn = superGetCurrentColumn(backgroundColorStyle);
+                currentColumn.nodeType = current.item && current.item.get && current.item.get(current.nodeProperty);
+
+                currentColumn.getExpanderSize = current.getExpanderSize;
 
                 currentColumn.isExpanded = current.isExpanded;
-                currentColumn.cellClasses += ' controls-TreeGrid__row-cell' + `_theme-${theme}`;
+                currentColumn.classList.base += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${currentColumn.style || 'default'}_theme-${theme}`;
+
+                // Экспандер выводится пользователем в произвольном месте в шаблоне колонки, где недоступна itemData строки
+                currentColumn.getExpanderClasses = (_, expanderIcon, expanderSize) => current.getExpanderClasses(current, expanderIcon, expanderSize);
 
                 if (currentColumn.nodeType) {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node' + `_theme-${theme}`;
+                    currentColumn.classList.base += ` controls-TreeGrid__row-cell__node_theme-${theme}`;
                 } else if (currentColumn.nodeType === false) {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode' + `_theme-${theme}`;
+                    currentColumn.classList.base += ` controls-TreeGrid__row-cell__hiddenNode_theme-${theme}`;
                 } else {
-                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item' + `_theme-${theme}`;
+                    currentColumn.classList.base += ` controls-TreeGrid__row-cell__item_theme-${theme}`;
+                }
+
+                // если текущая колонка первая и для нее не задан мультиселект, то убираем левый отступ
+                if (currentColumn.columnIndex === 0 && !current.hasMultiSelectColumn) {
+                    currentColumn.classList.padding.left += ' controls-TreeGrid__row-cell__firstColumn__contentSpacing_null';
                 }
 
                 return currentColumn;
             };
 
-            current.getLevelIndentClasses = function (expanderSize, levelIndentSize) {
-                let
-                    sizeEnum = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
-                    resultPaddingSize;
-
-                if (expanderSize && levelIndentSize) {
-                    if (sizeEnum.indexOf(expanderSize) >= sizeEnum.indexOf(levelIndentSize)) {
-                        resultPaddingSize = expanderSize;
-                    } else {
-                        resultPaddingSize = levelIndentSize;
-                    }
-                } else if (!expanderSize && !levelIndentSize) {
-                    resultPaddingSize = 'default';
-                } else {
-                    resultPaddingSize = expanderSize || levelIndentSize;
-                }
-
-                return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}_theme-${theme}`;
-            };
-
             const setNodeFooterRowStyles = (footer, index) => {
-                footer.columns = current.columns;
+                const columns = self._options.columns;
+                footer.columns = columns;
                 footer.isFullGridSupport = GridLayoutUtil.isFullGridSupport();
                 footer.colspan = self.getColspanFor('nodeFooter');
-                footer.getLevelIndentClasses = current.getLevelIndentClasses;
+                footer.hasMultiSelectColumn = self._hasMultiSelectColumn();
+
+
+                if (current.useNewNodeFooters) {
+                    footer.template = self._options.nodeFooterTemplate || 'wml!Controls/_treeGrid/TreeGridView/NodeFooterTemplate';
+                }
+
+                footer.getColumnClasses = (index, tmplOptions = {}) => {
+                    let rowSeparatorSize: 's' | 'l' | null;
+
+                    if (self._options.rowSeparatorSize) {
+                        rowSeparatorSize = self._options.rowSeparatorSize.toLowerCase();
+                    } else {
+                        rowSeparatorSize = self._options.rowSeparatorVisibility ? 's' : null;
+                    }
+
+                    let classes =
+                        'controls-TreeGrid__nodeFooterContent ' +
+                        `controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
+                        `controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}_theme-${theme}`;
+
+
+                    if (tmplOptions.colspan === false) {
+                        if (index > 0) {
+                            classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}_theme-${theme}`;
+                        }
+                        if (!current.hasMultiSelectColumn && index === 0) {
+                            classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                        }
+
+                        if (index === self._options.columns.length - 1) {
+                            classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                        }
+
+                        if (self._options.columnScroll && (index < self._options.stickyColumnsCount)) {
+                            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+                        }
+                    } else {
+                        if (!current.hasMultiSelect) {
+                            classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${current.itemPadding.left}_theme-${theme}`;
+                        }
+                        classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${current.itemPadding.right}_theme-${theme}`;
+                        classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+                    }
+
+                    return classes;
+                };
+
+                footer.classes = footer.getColumnClasses(0);
+
                 const colspanCfg = {
-                    columnStart: self._options.multiSelectVisibility !== 'hidden' ? 1 : 0,
-                    // todo Исправить по: https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-                    columnSpan: self._options.columnScroll && self._options.disableColumnScrollCellStyles ?
-                        self._columns.length + 1 : self._columns.length,
+                    columnStart: self._hasMultiSelectColumn() ? 1 : 0,
+                    columnSpan: self._options.columnScroll ? self._columns.length + 1 : self._columns.length,
                 };
                 if (current.columnScroll) {
                     footer.rowIndex = current.rowIndex + index + 1;
 
-                    // TODO: Разобраться, зачем это нужно для columnScroll.
-                    // По задаче https://online.sbis.ru/doc/5d2c482e-2b2f-417b-98d2-8364c454e635
-                    // todo Исправить по: https://online.sbis.ru/opendoc.html?guid=f5d87447-e4b3-4b52-9565-5230998e5583
-                    if (self._options.columnScroll && self._options.disableColumnScrollCellStyles) {
+                    footer.colspanStyles = '';
+                    if (self._options.columnScroll) {
                         footer.colspanStyles = GridLayoutUtil.getColumnStyles(colspanCfg);
                     } else {
                         footer.colspanStyles = GridLayoutUtil.getCellStyles({...colspanCfg, rowStart: footer.rowIndex});
@@ -258,10 +339,6 @@ var
                 },
                 hasEmptyTemplate = !!this._options.emptyTemplate;
 
-            if (this.getEditingItemData()) {
-                cfg.editingRowIndex = this.getEditingItemData().index;
-            }
-
             return {
                 getIndexByItem: (item) => getIndexByItem({item, ...cfg}),
                 getIndexById: (id) => getIndexById({id, ...cfg}),
@@ -276,6 +353,24 @@ var
         getChildren(nodeKey, items) {
             return this._model.getChildren(nodeKey, items);
         },
+
+        getDisplayChildrenCount(nodeKey, items) {
+            return this._model.getDisplayChildrenCount(nodeKey, items);
+        },
+
+        _setFooter(footerColumns) {
+            TreeGridViewModel.superclass._setFooter.apply(this, arguments);
+
+            if (this._options.expanderIcon !== 'none' && this._options.expanderSize) {
+                const expanderColumnIndex = +(this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default');
+                const superGetter = this._footer[expanderColumnIndex].getContentClasses;
+
+                this._footer[expanderColumnIndex].getContentClasses = () => {
+                    return superGetter.apply(this, arguments) +
+                        ` controls-TreeGridView__footer__expanderPadding-${this._options.expanderSize.toLowerCase()}_theme-${this._options.theme}`
+                }
+            }
+        }
     });
 
 TreeGridViewModel._private = _private;

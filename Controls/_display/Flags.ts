@@ -1,9 +1,7 @@
-import Collection, {
-    ISourceCollection as IGeneralSourceCollection
-} from './Collection';
+import Collection from './Collection';
+import {ISourceCollection as IGeneralSourceCollection} from './interface/ICollection';
 import FlagsItem from './FlagsItem';
 import {IFlags, IFlagsValue} from 'Types/collection';
-import {register} from 'Types/di';
 import {Object as EventObject} from 'Env/Event';
 
 interface IFlagsCollection<T> extends IGeneralSourceCollection<T>, IFlags<T> {
@@ -76,4 +74,3 @@ Object.assign(Flags.prototype, {
     _localize: true
 });
 
-register('Controls/display:Flags', Flags, {instantiate: false});

@@ -5,7 +5,8 @@ import { Tile } from 'Controls/listRender';
 describe('Controls/_listRender/Tile', () => {
     const defaultCfg = {
         listModel: {
-            destroyed: true
+            destroyed: true,
+            getActionsMenuConfig: () => null
         }
     };
 
@@ -16,7 +17,7 @@ describe('Controls/_listRender/Tile', () => {
         const anotherTile = new Tile(defaultCfg);
         anotherTile._beforeMount(defaultCfg);
 
-        assert.notStrictEqual(tile._templateKeyPrefix, anotherTile._templateKeyPrefix);
+        assert.strictEqual(tile._templateKeyPrefix, anotherTile._templateKeyPrefix);
     });
 
     it('_afterMount()', () => {
@@ -46,6 +47,10 @@ describe('Controls/_listRender/Tile', () => {
         };
 
         const tile = new Tile(defaultCfg);
+        let hoveredItem;
+        tile._debouncedSetHoveredItem = function(item) {
+            hoveredItem = item;
+        };
         tile.saveOptions(oldCfg);
 
         const animatedItem = { isFixed: () => false };
@@ -61,6 +66,7 @@ describe('Controls/_listRender/Tile', () => {
 
         tile._beforeUpdate(newCfg);
         assert.isNull(tile._animatedItem);
+        assert.isNull(hoveredItem);
     });
 
     describe('_afterUpdate()', () => {
@@ -268,6 +274,7 @@ describe('Controls/_listRender/Tile', () => {
             const cfg = {
                 ...defaultCfg,
                 listModel: {
+                    getActiveItem: () => false,
                     hoveredItem: null,
                     getHoveredItem() { return this.hoveredItem; },
                     setHoveredItem(item) { this.hoveredItem = item; }
@@ -285,6 +292,7 @@ describe('Controls/_listRender/Tile', () => {
             const cfg = {
                 ...defaultCfg,
                 listModel: {
+                    getActiveItem: () => false,
                     hoveredItem: null,
                     getHoveredItem() { return this.hoveredItem; },
                     setHoveredItem(item) { this.hoveredItem = item; }
@@ -304,6 +312,30 @@ describe('Controls/_listRender/Tile', () => {
 
             assert.isFalse(calledModelSetHoveredItem, 'should not call setHoveredItem for the same item again');
         });
+    });
+
+    it('does not set hovered item if has active item', () => {
+        const cfg = {
+            ...defaultCfg,
+            listModel: {
+                getActiveItem: () => true,
+                hoveredItem: null,
+                getHoveredItem() { return this.hoveredItem; },
+                setHoveredItem(item) { this.hoveredItem = item; }
+            }
+        };
+        const tile = new Tile(cfg);
+        tile.saveOptions(cfg);
+
+        const item = {};
+
+        let calledModelSetHoveredItem = false;
+        cfg.listModel.setHoveredItem = () => {
+            calledModelSetHoveredItem = true;
+        };
+        tile._setHoveredItem(item);
+
+        assert.isFalse(calledModelSetHoveredItem, 'should not call setHoveredItem for the same item again');
     });
 
     describe('_setHoveredItemPosition()', () => {

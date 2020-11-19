@@ -1,5 +1,6 @@
 /**
- * Шаблон, который по умолчанию используется для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/ редактирования по месту} в {@link Controls/list:View плоских списках}.
+ * Шаблон, который по умолчанию используется для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту} в {@link Controls/list:View плоских списках}.
+ *  
  * @class Controls/list:EditingTemplate
  * @author Авраменко А.С.
  * @see Controls/list:View
@@ -28,14 +29,14 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/edit/#manual здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/#manual здесь}.
  * @public
  */
 
 export default interface IEditingTemplateOptions {
     /**
      * @name Controls/list:EditingTemplate#editorTemplate
-     * @cfg {String|Function} Устанавливает шаблон, отображаемый поверх элемента в режиме редактирования. 
+     * @cfg {String|Function} Шаблон, отображаемый поверх элемента в режиме редактирования. 
      */
     editorTemplate?: string;
     /**
@@ -47,7 +48,7 @@ export default interface IEditingTemplateOptions {
     enabled?: boolean;
     /**
      * @name Controls/list:EditingTemplate#value
-     * @cfg {String} Устанавливает текст, отображаемый внутри элемента в режиме просмотра.
+     * @cfg {String} Текст, отображаемый внутри элемента в режиме просмотра.
      */
     value?: string;
     /**
@@ -60,7 +61,7 @@ export default interface IEditingTemplateOptions {
 
     /**
      * @name Controls/list:EditingTemplate#size
-     * @cfg {Size} Устанавливает размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается внутри элемента в режиме просмотра. 
+     * @cfg {Size} Размер шрифта для {@link Controls/list:EditingTemplate#value текста}, который отображается внутри элемента в режиме просмотра. 
      * @default default
      * @see Controls/list:EditingTemplate#value
      * @remark

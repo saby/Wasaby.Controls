@@ -1,4 +1,4 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {Logger} from 'UI/Utils';
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ISlider, ISliderOptions} from './interface/ISlider';
@@ -17,87 +17,42 @@ const maxPercentValue = 100;
 /**
  * Слайдер с двумя подвижными ползунками для выбора диапазона.
  *
- * <a href="/materials/demo-ws4-sliderrange">Демо-пример</a>.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fRange%2fIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less">переменные тем оформления</a>
+ *
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ * @demo Controls-demo/Slider/Range/Base/Index
  */
 
 /*
  * Slider with two movable points for choosing range.
  *
- * <a href="/materials/demo-ws4-sliderrange">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fRange%2fIndex">Demo-example</a>.
  * @public
  * @extends Core/Control
  * @class Controls/_slider/Range
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
- * @demo Controls-demo/Slider/Range/SliderRangeDemo
+ * @demo Controls-demo/Slider/Range/Base/Index
  */
-
-/**
- * @name Controls/_slider/Range#startValue
- * @cfg {Number} Устанавливает текущее начальное значение слайдера.
- * @remark Должно находиться в диапазоне [minValue..maxValue]
- * @example
- * Слайдер с первым ползунком, установленном в положение 40:
- * <pre class="brush:html">
- *   <Controls.slider:Base startValue="{{40}}"/>
- * </pre>
- * @see endValue
- */
-
-/*
- * @name Controls/_slider/Range#startValue
- * @cfg {Number} sets the current start value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the first point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base startValue="{{40}}"/>
- * </pre>
- * @see endValue
- */
-
-/**
- * @name Controls/_slider/Range#endValue
- * @cfg {Number} Устанавливает текущее конечное значение слайдера.
- * @remark Должно находится в диапазоне [minValue..maxValue]
- * @example
- * Слайдер со вторым ползунком, установленном в положение 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base endValue="{{40}}"/>
- * </pre>
- * @see startValue
- */
-
-/*
- * @name Controls/_slider/Range#endValue
- * @cfg {Number} sets the current end value of slider
- * @remark Must be in range of [minValue..maxValue]
- * @example
- * Slider with the second point placed at position 40;
- * <pre class="brush:html">
- *   <Controls.slider:Base endValue="{{40}}"/>
- * </pre>
- * @see startValue
- */
-
 
 class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    protected _template: TemplateFunction = SliderTemplate;
    private _value: number = undefined;
    private _lineData: ILineData = undefined;
    private _pointData: IPointDataList = undefined;
-   private _scaleData: IScaleData[] = undefined;
+   protected _scaleData: IScaleData[] = undefined;
    private _startValue: number = undefined;
    private _endValue: number = undefined;
    private _tooltipPosition: number | null = null;
-   private _tooltipValue: string | null = null;
-   private _isDrag: boolean = false;
+   protected _tooltipValue: string | null = null;
+   protected _isDrag: boolean = false;
 
    private _render(minValue: number, maxValue: number, startValue: number, endValue: number): void {
       const rangeLength = maxValue - minValue;
@@ -138,8 +93,10 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeMount(options: ISliderRangeOptions): void {
+      super._beforeMount(options);
       this._checkOptions(options);
-      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+          options.scaleLabelFormatter);
       this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
       this._startValue = options.startValue === undefined ?
                                                 options.minValue : Math.max(options.minValue, options.startValue);
@@ -150,9 +107,11 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
    }
 
    protected _beforeUpdate(options: ISliderRangeOptions): void {
+      super._beforeUpdate(options);
       if (this._needUpdate(this._options, options)) {
          this._checkOptions(options);
-         this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep);
+         this._scaleData = Utils.getScaleData( options.minValue, options.maxValue, options.scaleStep,
+             options.scaleLabelFormatter);
       }
       this._endValue = options.endValue === undefined ? options.maxValue : Math.min(options.maxValue, options.endValue);
       this._startValue = options.startValue === undefined ?
@@ -180,9 +139,8 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
       }
    }
 
-   private _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+   protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._isDrag = true;
          this._value = this._getValue(event);
          const pointName = this._getClosestPoint(this._value, this._startValue, this._endValue);
          if (pointName === 'start') {
@@ -196,7 +154,7 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
       }
    }
 
-   private _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
+   protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject): void {
       if (!this._options.readOnly) {
          const box = this._children.area.getBoundingClientRect();
          const ratio = Utils.getRatio(dragObject.position.x, box.left + window.pageXOffset, box.width);
@@ -228,4 +186,71 @@ class Range extends SliderBase<ISliderRangeOptions> implements ISlider {
 
    }
 }
+
+/**
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} Устанавливает текущее начальное значение слайдера.
+ * @remark Должно находиться в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер с первым ползунком, установленном в положение 40:
+ * <pre class="brush:html">
+ * <!-- WML -->
+ * <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * <pre class="brush:js">
+ * // TypeScript
+ * this._startValue = 40;
+ * </pre>
+ * @see endValue
+ */
+
+/*
+ * @name Controls/_slider/Range#startValue
+ * @cfg {Number} sets the current start value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the first point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:startValue="_startValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._startValue = 40;
+ * </pre>
+ * @see endValue
+ */
+
+/**
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} Устанавливает текущее конечное значение слайдера.
+ * @remark Должно находится в диапазоне [minValue..maxValue]
+ * @example
+ * Слайдер со вторым ползунком, установленном в положение 40;
+ * <pre class="brush:html">
+ * <!-- WML -->
+ * <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * <pre class="brush:js">
+ * // TypeScript
+ * this._endValue = 40;
+ * </pre>
+ * @see startValue
+ */
+
+/*
+ * @name Controls/_slider/Range#endValue
+ * @cfg {Number} sets the current end value of slider
+ * @remark Must be in range of [minValue..maxValue]
+ * @example
+ * Slider with the second point placed at position 40;
+ * <pre class="brush:html">
+ *   <Controls.slider:Base bind:endValue="_endValue"/>
+ * </pre>
+ * ts:
+ * <pre>
+ *    this._endValue = 40;
+ * </pre>
+ * @see startValue
+ */
+
 export default Range;

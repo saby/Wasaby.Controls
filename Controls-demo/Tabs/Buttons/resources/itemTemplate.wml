@@ -1,4 +1,1 @@
-<div>
-    <div class="{{item.get('icon')}} icon-small content_tab_margin controls-icon_style-{{item.get('iconStyle')}}_theme-{{_options.theme}}"></div>
-    <div class="content_tab_margin">{{item.get('text')}}</div>
-</div>
+ <div class="content_tab_margin">{{item.get('text')}}</div>

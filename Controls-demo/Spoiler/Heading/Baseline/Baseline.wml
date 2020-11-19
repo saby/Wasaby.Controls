@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper {{_options.theme.indexOf('default')<0 ? 'controlsDemo_fixedWidth500' : 'controlsDemo_fixedWidth300'}}">
+   <div class="controlsDemo__cell ws-flexbox ws-align-items-baseline">
+      <Controls.spoiler:Heading attr:class="controlsDemo__mr"
+                                captions="{{['Свернуть', 'Развернуть']}}"
+                                bind:expanded="_expanded"/>
+      <div class="controlsDemo__mr">baseline</div>
+      <Controls.heading:Title fontSize="3xl" caption="baseline"/>
+   </div>
+</div>

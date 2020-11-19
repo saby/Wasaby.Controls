@@ -33,7 +33,7 @@ export interface IButton {
  * @example
  * У кнопки контрастный фон.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{true}}" />
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="toolButton" contrastBackground="{{true}}" />
  * </pre>
  * @see style
  */
@@ -48,11 +48,11 @@ export interface IButton {
  * @example
  * Button has transparent background.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" contrastBackground="{{false}}" size="l"/>
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="toolButton" contrastBackground="{{false}}" inlineHeight="xl"/>
  * </pre>
  * Button hasn't transparent background.
  * <pre>
- *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" />
+ *    <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="toolButton" />
  * </pre>
  * @see style
  */
@@ -62,10 +62,13 @@ export interface IButton {
  * @cfg {Enum} Стиль отображения кнопки.
  * @variant primary
  * @variant secondary
+ * @variant success
+ * @variant danger
+ * @variant unaccented
  * @default secondary
  * @remark
  * Стиль может влиять на цвет фона или цвет границы для различных значений режима отображения (viewMode).
- * @demo Controls-demo/Buttons/ViewModes/Index
+ * @demo Controls-demo/Buttons/ButtonStyle/Index
  * @example
  * Кнопка со стилем "Primary" с иконкой по умолчанию.
  * <pre>

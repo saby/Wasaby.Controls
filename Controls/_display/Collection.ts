@@ -1,12 +1,16 @@
+import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
+import { Model as EntityModel } from 'Types/entity';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
 import UserItemsStrategy from './itemsStrategy/User';
 import GroupItemsStrategy from './itemsStrategy/Group';
+import DragStrategy from './itemsStrategy/Drag';
+import AddStrategy from './itemsStrategy/Add';
 import {
     DestroyableMixin,
     ObservableMixin,
@@ -23,34 +27,22 @@ import {
     IEnumerableComparatorSession,
     RecordSet
 } from 'Types/collection';
-import {create, register} from 'Types/di';
+import { isEqual } from 'Types/object';
+import {create} from 'Types/di';
 import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
-
-import MarkerManager from './utils/MarkerManager';
-import EditInPlaceManager from './utils/EditInPlaceManager';
-import ItemActionsManager from './utils/ItemActionsManager';
-import VirtualScrollManager from './utils/VirtualScrollManager';
-import HoverManager from './utils/HoverManager';
-import SwipeManager from './utils/SwipeManager';
-import ExtendedVirtualScrollManager from './utils/ExtendedVirtualScrollManager';
-import {IVirtualScrollConfig} from 'Controls/list';
-import { ISelectionMap, default as SelectionManager } from './utils/SelectionManager';
+import * as VirtualScrollController from './controllers/VirtualScroll';
+import {ICollection, ISourceCollection} from './interface/ICollection';
+import { IDragPosition } from './interface/IDragPosition';
+import SearchSeparator from "./SearchSeparator";
+import {INavigationOptionValue} from '../_interface/INavigation';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
-const VIRTUAL_SCROLL_MODE = {
-    HIDE: 'hide',
-    REMOVE: 'remove'
-};
-
-export interface ISourceCollection<T> extends IEnumerable<T>, DestroyableMixin, ObservableMixin {
-}
-
-export type SourceCollection<T> = T[] | ISourceCollection<T>;
+const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
@@ -61,7 +53,8 @@ type FilterFunction<S> = (
     index: number,
     collectionItem: CollectionItem<S>,
     collectionIndex: number,
-    hasMembers?: boolean
+    hasMembers?: boolean,
+    group?: GroupItem<S>
 ) => boolean;
 
 type GroupId = number | string | null;
@@ -97,21 +90,99 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     sort?: SortFunction<S, T> | Array<SortFunction<S, T>>;
     keyProperty?: string;
     displayProperty?: string;
+    itemTemplateProperty?: string;
     multiSelectVisibility?: string;
-    leftSpacing: string;
-    rightSpacing: string;
-    rowSpacing: string;
-    searchValue: string;
-    editingConfig: any;
+    itemPadding?: IItemPadding;
+    rowSeparatorSize?: string;
+    stickyMarkedItem?: boolean;
+    stickyHeader?: boolean;
+    theme?: string;
+    hoverBackgroundStyle?: string;
+    collapsedGroups?: TArrayGroupKey;
+    groupProperty?: string;
+    groupTemplate?: TemplateFunction;
+    searchValue?: string;
+    editingConfig?: any;
     unique?: boolean;
     importantItemProperties?: string[];
-    virtualScrollConfig?: IVirtualScrollConfig;
     itemActionsProperty?: string;
+    navigation: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
     key: string|number;
     counters: ICollectionItemCounters;
+}
+
+export interface IViewIterator {
+    each: Function;
+    isItemAtIndexHidden: Function;
+    setIndices: Function;
+}
+
+export type TGroupKey = string|number;
+export type TArrayGroupKey = TGroupKey[];
+export interface IItemPadding {
+    top?: string;
+    bottom?: string;
+    left?: string;
+    right?: string;
+}
+
+export interface IItemActionsTemplateConfig {
+    toolbarVisibility?: boolean;
+    style?: string;
+    size?: string;
+    itemActionsPosition?: string;
+    actionAlignment?: string;
+    actionCaptionPosition?: 'right'|'bottom'|'none';
+    itemActionsClass?: string;
+}
+
+export interface ISwipeConfig {
+    itemActionsSize?: 's'|'m'|'l';
+    itemActions?: {
+        all: any[],
+        showed: any[]
+    };
+    paddingSize?: 's'|'m'|'l';
+    twoColumns?: boolean;
+    twoColumnsActions?: [[any, any], [any, any]];
+    needTitle?: Function;
+    needIcon?: Function;
+}
+
+/**
+ * @typedef {Object} IEditingConfig
+ * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
+ * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+ * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+ * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
+ * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
+ * @property {AddPosition} [addPosition] Позиция редактирования по месту.
+ * @property {Types/entity:Record} [item=undefined] Запись, которая будет запущена на редактирование при первой отрисовке списка.
+ */
+/*
+ * @typedef {Object} IEditingConfig
+ * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
+ * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
+ * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
+ * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
+ * @property {AddPosition} [addPosition] Editing in place position.
+ * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
+ */
+export interface IEditingConfig {
+    addPosition?: 'top'|'bottom';
+    toolbarVisibility?: boolean;
+    editOnClick?: boolean;
+    autoAdd?: boolean;
+    sequentialEditing?: boolean;
+    item?: CollectionItem<any>;
+}
+
+interface IUserStrategy<S, T> {
+    strategy: new() => IItemsStrategy<S, T>;
+    options?: object;
 }
 
 /**
@@ -171,7 +242,7 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
-            this._reBuild(this._$compatibleReset);
+            this._reBuild(this._$compatibleReset || newItems.length === 0 || !this.isEditing());
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -181,7 +252,7 @@ function onCollectionChange<T>(
                 projectionOldItems,
                 0
             );
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
             this._nextVersion();
             return;
 
@@ -336,7 +407,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     SerializableMixin,
     VersionableMixin,
     EventRaisingMixin
-) implements IEnumerable<T>, IList<T> {
+) implements ICollection<S, T>, IEnumerable<T>, IList<T> {
     /**
      * Возвращать локализованные значения
      */
@@ -381,10 +452,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$collection: ISourceCollection<S>;
 
     /**
-     * @cfg {
-     * Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>|
-     * Function(*, Number, Controls/_display/CollectionItem, Number): Boolean
-     * } Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
+     * @cfg Пользовательские методы фильтрации элементов проекциию. Аргументы: элемент коллекции, позиция в коллекции,
      * элемент проекции, позиция в проекции. Должен вернуть Boolean - признак, что элемент удовлетворяет условиям
      * фильтрации.
      * @name Controls/_display/Collection#filter
@@ -425,9 +493,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$filter: Array<FilterFunction<S>>;
 
     /**
-     * @cfg {
-     * Function(*, Number, Controls/_display/CollectionItem): String|null
-     * } Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
+     * @cfg Метод группировки элементов проекции. Аргументы: элемент коллекции, позиция в коллекции, элемент проекции.
      * Должен вернуть идентификатор группы.
      * @name Controls/_display/Collection#group
      * @example
@@ -472,10 +538,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$group: GroupFunction<S, T>;
 
     /**
-     * @cfg {
-     * Array.<Function(UserSortItem, UserSortItem): Number>|
-     * Function(UserSortItem, UserSortItem): Number
-     * } Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
+     * @cfg Пользовательские методы сортировки элементов. Аргументы: 2 объекта типа {@link UserSortItem},
      * должен вернуть -1|0|1 (см. Array.prototype.sort())
      * @name Controls/_display/Collection#sort
      * @example
@@ -518,27 +581,55 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$displayProperty: string;
 
+    protected _$itemTemplateProperty: string;
+
+    protected _$itemsDragNDrop: boolean;
+
     protected _$multiSelectVisibility: string;
 
-    protected _$leftSpacing: string;
+    protected _$multiSelectPosition: 'default' | 'custom';
 
-    protected _$rightSpacing: string;
+    protected _$leftPadding: string;
 
-    protected _$rowSpacing: string;
+    protected _$rightPadding: string;
+
+    protected _$topPadding: string;
+
+    protected _$bottomPadding: string;
+
+    protected _$theme: string;
+
+    protected _$hoverBackgroundStyle: string;
 
     protected _$searchValue: string;
 
-    protected _$editingConfig: any;
+    protected _$rowSeparatorSize: string;
+
+    protected _$stickyMarkedItem: boolean;
+
+    protected _$stickyHeader: boolean;
+
+    protected _$editingConfig: IEditingConfig;
 
     protected _$virtualScrolling: boolean;
 
     protected _$hasMoreData: boolean;
+
+    protected _$metaResults: EntityModel;
+
+    protected _$collapsedGroups: TArrayGroupKey;
+
+    protected _$groupProperty: string;
 
     protected _$compatibleReset: boolean;
 
     protected _$itemActionsProperty: string;
 
     protected _$markerVisibility: string;
+
+    protected _$style: string;
+
+    protected _$navigation: INavigationOptionValue;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -631,22 +722,32 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     protected _oEventRaisingChange: Function;
 
-    protected _startIndex: number;
-    protected _stopIndex: number;
+    protected _viewIterator: IViewIterator;
 
-    protected _markerManager: MarkerManager;
-    protected _editInPlaceManager: EditInPlaceManager;
-    protected _itemActionsManager: ItemActionsManager;
-    protected _virtualScrollManager: VirtualScrollManager | ExtendedVirtualScrollManager;
-    protected _$virtualScrollMode: IVirtualScrollMode;
-    protected _hoverManager: HoverManager;
-    protected _swipeManager: SwipeManager;
-    protected _selectionManager: SelectionManager;
+    protected _actionsAssigned: boolean;
+    protected _actionsMenuConfig: any;
+    protected _actionsTemplateConfig: IItemActionsTemplateConfig;
+    protected _swipeConfig: ISwipeConfig;
+
+    protected _hoveredItem: T;
+
+    /**
+     * ссылка на текущий активный Item
+     */
+    protected _$activeItem: T;
+
+    protected _$isEditing: boolean = false;
+
+    protected _userStrategies: Array<IUserStrategy<S, T>>;
+
+    protected _dragStrategy: Function = DragStrategy;
 
     constructor(options: IOptions<S, T>) {
         super(options);
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
+
+        this._$navigation = options.navigation;
         this._$filter = this._$filter || [];
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
@@ -654,6 +755,40 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         // Support of deprecated 'idProperty' option
         if (!this._$keyProperty && (options as any).idProperty) {
              this._$keyProperty = (options as any).idProperty;
+        }
+
+        if (options.groupProperty) {
+            this._$groupProperty = options.groupProperty;
+            this._$group = (item) => {
+                return item.get(this._$groupProperty);
+            };
+        }
+
+        // Support of 'groupingKeyCallback' option
+        if (!this._$group && (options as any).groupingKeyCallback) {
+            this._$group = (options as any).groupingKeyCallback;
+        }
+
+        if (options.itemTemplateProperty) {
+            this._$itemTemplateProperty = options.itemTemplateProperty;
+        }
+
+        this._$theme = options.theme;
+
+        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+
+        this._$collapsedGroups = options.collapsedGroups;
+
+        if (options.rowSeparatorSize) {
+            this._$rowSeparatorSize = options.rowSeparatorSize;
+        }
+
+        if (options.stickyMarkedItem !== undefined) {
+            this._$stickyMarkedItem = options.stickyMarkedItem;
+        }
+
+        if (options.stickyHeader !== undefined) {
+            this._$stickyHeader = options.stickyHeader;
         }
 
         if (!this._$collection) {
@@ -665,6 +800,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (!this._$collection['[Types/_collection/IEnumerable]']) {
             throw new TypeError(`${this._moduleName}: source collection should implement Types/collection:IEnumerable`);
         }
+
+        this.setMetaResults(this.getMetaData().results);
 
         this._$sort = normalizeHandlers(this._$sort);
         this._$filter = normalizeHandlers(this._$filter);
@@ -678,8 +815,32 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._switchImportantPropertiesByUserSort(true);
         this._switchImportantPropertiesByGroup(true);
 
-        this._reBuild();
+        this._userStrategies = [];
+
         this._bindHandlers();
+        this._initializeCollection();
+
+        if (options.itemPadding) {
+            this._setItemPadding(options.itemPadding);
+        }
+
+        this._viewIterator = {
+            each: this.each.bind(this),
+            setIndices: () => false,
+            isItemAtIndexHidden: () => false
+        };
+
+        if (this._isGrouped()) {
+            // TODO What's a better way of doing this?
+            this.addFilter(
+                (item, index, collectionItem, collectionIndex, hasMembers, groupItem) =>
+                    collectionItem['[Controls/_display/GroupItem]'] || !groupItem || groupItem.isExpanded()
+            );
+        }
+    }
+
+    _initializeCollection(): void {
+        this._reBuild(true);
         if (this._$collection['[Types/_collection/IObservable]']) {
             (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
             (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
@@ -687,28 +848,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
         }
-
-        if (options.itemPadding) {
-            this.setItemsSpacings(options.itemPadding);
-        }
-
-        this._stopIndex = this.getCount();
-
-        const virtualScrollConfig = options.virtualScrollConfig || {mode: options.virtualScrollMode};
-        this._$virtualScrollMode = virtualScrollConfig.mode;
-
-        this._markerManager = new MarkerManager(this);
-        this._editInPlaceManager = new EditInPlaceManager(this);
-        this._itemActionsManager = new ItemActionsManager(this);
-        this._hoverManager = new HoverManager(this);
-        this._swipeManager = new SwipeManager(this);
-        this._selectionManager = new SelectionManager(this);
-
-        this._virtualScrollManager = options.virtualScrollMode === VIRTUAL_SCROLL_MODE.REMOVE ?
-            new VirtualScrollManager(this) : new ExtendedVirtualScrollManager(this);
     }
 
-    destroy(): void {
+    _deinitializeCollection(): void {
         if (!(this._$collection as DestroyableMixin).destroyed) {
             if (this._$collection['[Types/_collection/IObservable]']) {
                 (this._$collection as ObservableMixin).unsubscribe(
@@ -722,7 +864,27 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
             }
         }
+    }
 
+    setCollection(newCollection: ISourceCollection<S>): void {
+        const projectionOldItems = toArray(this) as [];
+        this._deinitializeCollection();
+        this._$collection = newCollection;
+        this._initializeCollection();
+        const projectionNewItems = toArray(this) as [];
+        this._notifyBeforeCollectionChange();
+        this._notifyCollectionChange(
+            IObservable.ACTION_RESET,
+            projectionNewItems,
+            0,
+            projectionOldItems,
+            0
+        );
+        this._handleAfterCollectionChange();
+    }
+
+    destroy(): void {
+        this._deinitializeCollection();
         this._unbindHandlers();
         this._composer = null;
         this._filterMap = [];
@@ -731,6 +893,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._itemsUid = null;
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
+        this._userStrategies = null;
 
         super.destroy();
     }
@@ -759,6 +922,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId);
     }
 
+    /**
+     * Возвращает парамметры для навигации
+     * @return {INavigationOptionValue}
+     */
+    getNavigation(): INavigationOptionValue {
+        return this._$navigation;
+    }
     /**
      * Возвращает энумератор для перебора элементов проекции
      * @return {Controls/_display/CollectionEnumerator}
@@ -797,7 +967,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *         });
      *
      *         display.each(function(item, index) {
-     *             if (item instanceof GroupItem) {
+     *             if (item['[Controls/_display/GroupItem]']) {
      *                 console.log('[' + item.getContents() + ']');
      *             } else {
      *                 console.log(item.getContents().name);
@@ -821,6 +991,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 index
             );
         }
+    }
+
+    find(predicate: (item: T) => boolean): T {
+        const enumerator = this.getEnumerator();
+        while (enumerator.moveNext()) {
+            const current = enumerator.getCurrent();
+            if (predicate(current)) {
+                return current;
+            }
+        }
+        return null;
     }
 
     assign(): void {
@@ -870,6 +1051,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this.getIndexByInstanceId(item.getInstanceId());
     }
 
+    getStartIndex(): number {
+        return VirtualScrollController.getStartIndex(this);
+    }
+
+    getStopIndex(): number {
+        return VirtualScrollController.getStopIndex(this);
+    }
+
     /**
      * Возвращает количество элементов проекции.
      * @param {Boolean} [skipGroups=false] Не считать группы
@@ -879,7 +1068,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let count = 0;
         if (skipGroups && this._isGrouped()) {
             this.each((item) => {
-                if (!(item instanceof GroupItem)) {
+                if (!(item['[Controls/_display/GroupItem]'])) {
                     count++;
                 }
             });
@@ -926,7 +1115,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает элементы проекции (без учета сортировки, фильтрации и группировки).
-     * @return {Array.<Controls/_display/CollectionItem>}
+     * @return {Array<Controls/_display/CollectionItem>}
      */
     getItems(): T[] {
         return this._getItems().slice();
@@ -1039,7 +1228,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 item,
@@ -1062,7 +1251,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setPosition(lastIndex);
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 undefined,
@@ -1090,7 +1279,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает предыдущий элемент относительно item
-     * @param {Controls/_display/CollectionItem} index элемент проекции
+     * @param {Controls/_display/CollectionItem} item элемент проекции
      * @return {Controls/_display/CollectionItem}
      */
     getPrevious(item: T): T {
@@ -1100,6 +1289,22 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             false,
             true
         );
+    }
+
+    getNextByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getNext(item);
+    }
+    getPrevByKey(key: string|number): T {
+        const item = this.getItemBySourceKey(key);
+        return this.getPrevious(item);
+    }
+
+    getNextByIndex(index: number): T {
+        return this.at(index + 1);
+    }
+    getPrevByIndex(index: number): T {
+        return this.at(index - 1);
     }
 
     /**
@@ -1209,6 +1414,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         if (collection && collection['[Types/_collection/IList]']) {
             sourceIndex = (collection as any as IList<S>).getIndex(item);
+
+            // Если записи нет в наборе данных, то, возможно запрашивается индекс добавляемой в данный момент записи.
+            // Такой записи еще нет в наборе данных.
+            if (sourceIndex === -1 && this._$isEditing) {
+                this.each((el, index: number) => {
+                    if (el.isEditing() && el.isAdd && el.contents.getKey() === item.contents.getKey()) {
+                        sourceIndex = index;
+                    }
+                });
+                return sourceIndex;
+            }
         } else {
             let index = 0;
             (collection as IEnumerable<S>).each((value) => {
@@ -1247,7 +1463,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает пользовательские методы фильтрации элементов проекции
-     * @return {Array.<Function(*, Number, Controls/_display/CollectionItem, Number): Boolean>}
      * @see filter
      * @see setFilter
      * @see addFilter
@@ -1260,7 +1475,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает пользовательские методы фильтрации элементов проекции. Вызов метода без аргументов приведет к
      * удалению всех пользовательских фильтров.
-     * @param {...Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} [filter] Методы фильтрации
+     * @param [...filter] Методы фильтрации
      * элементов: аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции.
      * Должен вернуть Boolean - признак, что элемент удовлетворяет условиям фильтрации.
      * @see filter
@@ -1330,10 +1545,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Добавляет пользовательский метод фильтрации элементов проекции, если такой еще не был задан.
-     * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+     * @param filter Метод фильтрации элементов:
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
-     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1387,10 +1602,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Удаляет пользовательский метод фильтрации элементов проекции.
-     * @param {Function(*, Number, Controls/_display/CollectionItem, Number): Boolean} filter Метод фильтрации элементов:
+     * @param filter Метод фильтрации элементов:
      * аргументами приходят элемент коллекции, позиция в коллекции, элемент проекции, позиция в проекции. Должен вернуть
      * Boolean - признак, что элемент удовлетворяет условиям фильтрации.
-     * @return {Boolean} Был ли установлен такой метод фильтрации
+     * @return Был ли установлен такой метод фильтрации
      * @see filter
      * @see getFilter
      * @see setFilter
@@ -1449,9 +1664,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return true;
     }
 
+    setGroupProperty(groupProperty: string): void {
+        this._$groupProperty = groupProperty;
+    }
+
+    getGroupProperty(): string {
+        return this._$groupProperty;
+    }
+
+    protected _getGroupItemConstructor(): new() => GroupItem<T> {
+        return GroupItem;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
-     * @return {Function}
      * @see group
      * @see setGroup
      */
@@ -1462,7 +1688,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает метод группировки элементов проекции. Для сброса ранее установленной группировки следует вызвать
      * этот метод без параметров.
-     * @param {Function(*, Number, Controls/_display/CollectionItem): String|null} group Метод группировки элементов:
+     * @param group Метод группировки элементов:
      * аргументами приходят элемент коллекции, его позиция, элемент проекции. Должен вернуть String|Number - группу,
      * в которую входит элемент.
      * @see group
@@ -1535,7 +1761,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const items = [];
         let currentGroupId;
         this.each((item) => {
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
                 return;
             }
@@ -1602,7 +1828,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let itemIndex = 0;
         while (enumerator.moveNext()) {
             item = enumerator.getCurrent();
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
             }
             if (itemIndex === index) {
@@ -1616,7 +1842,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Возвращает пользовательские методы сортировки элементов проекции
-     * @return {Array.<Function>}
      * @see sort
      * @see setSort
      * @see addSort
@@ -1628,7 +1853,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     /**
      * Устанавливает пользовательские методы сортировки элементов проекции. Вызов метода без аргументов приведет к
      * удалению всех пользовательских сортировок.
-     * @param {...Function(UserSortItem, UserSortItem): Number} [sort] Методы сортировки элементов: аргументами
+     * @param [...sort] Методы сортировки элементов: аргументами
      * приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
      * @see sort
      * @see getSort
@@ -1724,9 +1949,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Добавляет пользовательский метод сортировки элементов проекции, если такой еще не был задан.
-     * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+     * @param sort Метод сортировки элементов:
      * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
-     * @param {Number} [at] Порядковый номер метода (если не передан, добавляется в конец)
+     * @param [at] Порядковый номер метода (если не передан, добавляется в конец)
      * @see sort
      * @see getSort
      * @see setSort
@@ -1780,9 +2005,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     /**
      * Удаляет пользовательский метод сортировки элементов проекции.
-     * @param {Function(UserSortItem, UserSortItem): Number} [sort] Метод сортировки элементов:
+     * @param sort Метод сортировки элементов:
      * аргументами приходят 2 объекта типа {@link UserSortItem}, должен вернуть -1|0|1 (см. Array.prototype.sort())
-     * @return {Boolean} Был ли установлен такой метод сортировки
+     * @return Был ли установлен такой метод сортировки
      * @see sort
      * @see getSort
      * @see setSort
@@ -1836,11 +2061,21 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     /**
-     * Возвращает Название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * Возвращает название свойства элемента коллекции, содержащего его уникальный идентификатор.
      * @return {String}
      */
     getKeyProperty(): string {
         return this._$keyProperty;
+    }
+
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор.
+     * @return {String}
+     */
+    setKeyProperty(keyProperty: string): void {
+        this._$keyProperty = keyProperty;
+        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
+        this.nextVersion();
     }
 
     /**
@@ -1907,10 +2142,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             index
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
 
-        // FIXME Make a list of properties that lead to version update
-        if (properties as String === 'editingContents' || properties as String === 'animated' || properties as String === 'canShowActions') {
+        if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
         }
     }
@@ -1939,6 +2173,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * @remark Метод зависит от фильтра проекции.
      * @param {Array} items Массив элементов коллекции
      * @param {Boolean} selected Элемент выбран.
+     * @param {Boolean} [silent=false] Не уведомлять о изменении
      * @example
      * <pre>
      *      var list = new List({...}),
@@ -1948,14 +2183,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
      * </pre>
      */
-    setSelectedItems(items: any[], selected: boolean): void {
-        const sourceItems = [];
-        for (let i = 0, count = items.length; i < count; i++) {
-            sourceItems.push(
-                this.getItemBySourceItem(items[i])
-            );
-        }
-        this._setSelectedItems(sourceItems, selected);
+    setSelectedItems(items: T[], selected: boolean|null, silent: boolean = false): void {
+        this._setSelectedItems(items, selected, silent);
     }
 
     /**
@@ -1966,15 +2195,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setSelectedItemsAll(selected: boolean): void {
         this._setSelectedItems(this._getItems(), selected);
-    }
-
-    setSelection(selection: ISelectionMap): void {
-        this._selectionManager.setSelection(selection);
-    }
-
-    setSelectedItem(item: CollectionItem<S>, selected: boolean): void {
-        this._selectionManager.setSelectedItem(item, selected);
-        this._nextVersion();
     }
 
     /**
@@ -1999,24 +2219,57 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // endregion
 
-    // FIXME Will be removed, managers will be created from the outside of
-    // the model in Stage 2. For now we have to create them here and access
-    // them from the model to stay compatible with BaseControl.
-    getItemActionsManager(): ItemActionsManager {
-        return this._itemActionsManager;
+    // region Drag-N-Drop
+
+    getItemsDragNDrop(): boolean {
+        return this._$itemsDragNDrop;
+    }
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+        const draggableItemIndex = this.getIndex(draggableItem);
+        // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
+        const avatarStartIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
+
+        this.appendStrategy(this._dragStrategy, {
+            draggedItemsKeys,
+            draggableItem,
+            avatarIndex: avatarStartIndex
+        });
+        this._reIndex();
+
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        this._notifyBeforeCollectionChange();
+        this._notifyCollectionChange(
+            IObservable.ACTION_ADD,
+            [strategy.avatarItem],
+            avatarStartIndex,
+            [],
+            0
+        );
+        this._notifyAfterCollectionChange();
+    }
+
+    setDragPosition(position: IDragPosition<T>): void {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        if (strategy && position) {
+            strategy.setAvatarPosition(position.index, position.position);
+            this._reIndex();
+            this.nextVersion();
+        }
+    }
+
+    resetDraggedItems(): void {
+        this.removeStrategy(this._dragStrategy);
+        this._reIndex();
+    }
+
+    // endregion
+
+    getItemTemplateProperty(): string {
+        return this._$itemTemplateProperty;
     }
 
     getDisplayProperty(): string {
         return this._$displayProperty;
-    }
-
-    setMarkedItem(item: CollectionItem<S>): void {
-        this._markerManager.markItem(item);
-        this._nextVersion();
-    }
-
-    getMarkedItem(): CollectionItem<S> {
-        return this._markerManager.getMarkedItem() as CollectionItem<S>;
     }
 
     getItemCounters(): ICollectionCounters[] {
@@ -2031,6 +2284,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return result;
     }
 
+    isStickyMarkedItem(): boolean {
+        return this._$stickyMarkedItem;
+    }
+
+    isStickyHeader(): boolean {
+        return this._$stickyHeader;
+    }
+
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
+
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
+    }
+
     getMultiSelectVisibility(): string {
         return this._$multiSelectVisibility;
     }
@@ -2041,27 +2311,86 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
+        this._updateItemsMultiSelectVisibility(visibility);
     }
 
-    setItemsSpacings(itemPadding: {top: string, left: string, right: string}): void {
-        this._$rowSpacing = itemPadding.top;
-        this._$leftSpacing = itemPadding.left;
-        this._$rightSpacing = itemPadding.right;
+    setMultiSelectPosition(position: 'default' | 'custom'): void {
+        if (this._$multiSelectPosition === position) {
+            return;
+        }
+        this._$multiSelectPosition = position;
+        this._nextVersion();
     }
 
-    getRowSpacing(): string {
-        return this._$rowSpacing;
+    getMultiSelectPosition(): 'default' | 'custom' {
+        return this._$multiSelectPosition;
     }
 
-    getLeftSpacing(): string {
-        return this._$leftSpacing;
+    protected _updateItemsMultiSelectVisibility(visibility: string): void {
+        this.getViewIterator().each((item: CollectionItem<T>) => {
+            if (item.setMultiSelectVisibility) {
+                item.setMultiSelectVisibility(visibility);
+            }
+        });
     }
 
-    getRightSpacing(): string {
-        return this._$rightSpacing;
+    protected _setItemPadding(itemPadding: IItemPadding): void {
+        this._$topPadding = itemPadding.top || 'default';
+        this._$bottomPadding = itemPadding.bottom || 'default';
+        this._$leftPadding = itemPadding.left || 'default';
+        this._$rightPadding = itemPadding.right || 'default';
     }
 
-    setEditingConfig(config: any): void {
+    setItemPadding(itemPadding: IItemPadding): void {
+        this._setItemPadding(itemPadding);
+        this._nextVersion();
+    }
+
+    setMarkedKey(key: string|number, status: boolean): void {
+        const item = this.getItemBySourceKey(key);
+        if (item) {
+            item.setMarked(status);
+        }
+    }
+
+    getTheme(): string {
+        return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
+    }
+
+    getHoverBackgroundStyle(): string {
+        return this._$hoverBackgroundStyle;
+    }
+
+    setTheme(theme: string): boolean {
+        if (this._$theme !== theme) {
+            this._$theme = theme;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
+    getTopPadding(): string {
+        return this._$topPadding;
+    }
+
+    getBottomPadding(): string {
+        return this._$bottomPadding;
+    }
+
+    getLeftPadding(): string {
+        return this._$leftPadding;
+    }
+
+    getRightPadding(): string {
+        return this._$rightPadding;
+    }
+
+    setEditingConfig(config: IEditingConfig): void {
         if (this._$editingConfig === config) {
             return;
         }
@@ -2069,76 +2398,42 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._nextVersion();
     }
 
-    setEditingItem(item: CollectionItem<S>, editingContents?: S): void {
-        this._editInPlaceManager.beginEdit(item, editingContents);
-        this._nextVersion();
-    }
-
-    isEditing(): boolean {
-        return this._editInPlaceManager.isEditing();
-    }
-
-    setItemActions(item: CollectionItem<S>, actions: any): void {
-        this._itemActionsManager.setItemActions(item, actions);
-        this._nextVersion();
-    }
-
-    setActiveItem(item: CollectionItem<S>): void {
-        this._itemActionsManager.setActiveItem(item);
-        this._nextVersion();
-    }
-
-    setSwipeItem(item: CollectionItem<S>): void {
-        this._swipeManager.setSwipeItem(item);
-        this._nextVersion();
-    }
-
-    getSwipeItem(): CollectionItem<S> {
-        return this._swipeManager.getSwipeItem() as CollectionItem<S>;
-    }
-
-    getActiveItem(): CollectionItem<S> {
-        return this._itemActionsManager.getActiveItem() as CollectionItem<S>;
+    getEditingConfig(): IEditingConfig {
+        return this._$editingConfig;
     }
 
     setSearchValue(searchValue: string): void {
-        this._$searchValue = searchValue;
+        if (this._$searchValue !== searchValue) {
+            this._$searchValue = searchValue;
+            this._nextVersion();
+        }
     }
 
     getSearchValue(): string {
         return this._$searchValue;
     }
 
-    getStartIndex(): number {
-        return this._startIndex;
-    }
-
-    getStopIndex(): number {
-        return this._stopIndex;
-    }
-
-    setViewIndices(startIndex: number, stopIndex: number): boolean {
-        this._startIndex = startIndex;
-        this._stopIndex = stopIndex;
-
-        if (this._$virtualScrollMode === VIRTUAL_SCROLL_MODE.HIDE) {
-            this._virtualScrollManager.applyRenderedItems(this._startIndex, this._stopIndex);
-        }
-
-        this._nextVersion();
-        return true;
-    }
-
-    getItemBySourceId(id: string|number): CollectionItem<S> {
+    getItemBySourceKey(key: string|number): T {
         if (this._$collection['[Types/_collection/RecordSet]']) {
-            const record = (this._$collection as unknown as RecordSet).getRecordById(id);
-            return this.getItemBySourceItem(record as unknown as S);
+            if (key !== undefined) {
+                const record = (this._$collection as unknown as RecordSet).getRecordById(key);
+
+                // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
+                // Такой записи еще нет в наборе данных.
+                if (!record && this._$isEditing) {
+                    return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
+                } else {
+                    return this.getItemBySourceItem(record as unknown as S);
+                }
+            } else {
+                return null;
+            }
         }
-        throw new Error('Collection#getItemBySourceId is implemented for RecordSet only');
+        throw new Error('Collection#getItemBySourceKey is implemented for RecordSet only');
     }
 
     getIndexByKey(key: string|number): number {
-        return this.getIndex(this.getItemBySourceId(key) as T);
+        return this.getIndex(this.getItemBySourceKey(key) as T);
     }
 
     getFirstItem(): S {
@@ -2153,21 +2448,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    getViewIterator(): {
-        each: (callback: EnumeratorCallback<unknown>, context?: object) => void;
-        isItemVisible: (index: number) => boolean;
-    } {
-        if (this._$virtualScrolling) {
-            return this._virtualScrollManager;
-        } else {
-            return this;
-        }
-    }
-
-    nextVersion(): void {
-        this._nextVersion();
-    }
-
     getHasMoreData(): boolean {
         return this._$hasMoreData;
     }
@@ -2176,14 +2456,289 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._$hasMoreData = hasMoreData;
     }
 
+    setMetaResults(metaResults: EntityModel): void {
+        this._$metaResults = metaResults;
+    }
+
+    getMetaResults(): EntityModel {
+        return this._$metaResults;
+    }
+
+    getMetaData(): any {
+        return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
+    }
+
+    getCollapsedGroups(): TArrayGroupKey {
+        return this._$collapsedGroups;
+    }
+
+    setCollapsedGroups(collapsedGroups: TArrayGroupKey): void {
+        const groupStrategy = this._composer.getInstance<GroupItemsStrategy<S, T>>(GroupItemsStrategy);
+        this._$collapsedGroups = groupStrategy.collapsedGroups = collapsedGroups;
+        const session = this._startUpdateSession();
+        // Сбрасываем кэш расчётов по всем стратегиям, чтобы спровацировать полный пересчёт с актуальными данными
+        this._getItemsStrategy().invalidate();
+        this._reGroup();
+        this._reSort();
+        this._reFilter();
+        this._finishUpdateSession(session);
+        this._nextVersion();
+    }
+
+    isAllGroupsCollapsed(): boolean {
+        const itemsCount = this.getCount();
+        if (!this.getCollapsedGroups()) {
+            return false;
+        }
+        for (let idx = 0; idx < itemsCount; idx++) {
+            const item = this.at(idx);
+            if (!(item['[Controls/_display/GroupItem]']) || item.isExpanded()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     setCompatibleReset(compatible: boolean): void {
         this._$compatibleReset = compatible;
     }
 
-    isItemVisible = (index: number) => true;
+    setViewIterator(viewIterator: IViewIterator): void {
+        this._viewIterator = viewIterator;
+    }
 
-    isItemHidden(index: number): boolean {
-        return !this.getViewIterator().isItemVisible(index);
+    setIndexes(start: number, stop: number): void {
+        this.getViewIterator().setIndices(start, stop);
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
+    }
+
+    getViewIterator(): IViewIterator {
+        return this._viewIterator;
+    }
+
+    nextVersion(): void {
+        this._nextVersion();
+    }
+
+    setActionsAssigned(assigned: boolean): void {
+        this._actionsAssigned = assigned;
+    }
+
+    isActionsAssigned(): boolean {
+        return this._actionsAssigned;
+    }
+
+    getActionsMenuConfig(): any {
+        return this._actionsMenuConfig;
+    }
+
+    setActionsMenuConfig(config: any): void {
+        this._actionsMenuConfig = config;
+    }
+
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+        return this._actionsTemplateConfig;
+    }
+
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig): void {
+        if (!isEqual(this._actionsTemplateConfig, config)) {
+            this._actionsTemplateConfig = config;
+            this._nextVersion();
+        }
+    }
+
+    setHoveredItem(item: T): void {
+        if (this._hoveredItem === item) {
+            return;
+        }
+        if (this._hoveredItem) {
+            this._hoveredItem.setHovered(false);
+        }
+        if (item) {
+            item.setHovered(true);
+        }
+        this._hoveredItem = item;
+        this._nextVersion();
+    }
+
+    getHoveredItem(): T {
+        return this._hoveredItem;
+    }
+
+    /**
+     * Устанавливает флаг активности переданному элементу коллекции
+     * @param item Элемент коллекции, для которого нужно обновить операции с записью
+     * TODO работа с activeItem Должна производиться через item.isActive(),
+     *  но из-за того, как в TileView организована работа с isHovered, isScaled и isAnimated
+     *  мы не можем снять эти состояния при клике внутри ItemActions
+     */
+    setActiveItem(item: T): void {
+        const oldActiveItem = this.getActiveItem();
+
+        if (oldActiveItem) {
+            oldActiveItem.setActive(false);
+        }
+        if (item) {
+            item.setActive(true);
+        }
+        this._$activeItem = item;
+        this._nextVersion();
+    }
+
+    /**
+     * Получает текущий активный элемент коллекции
+     * this.find((item) => item.isActive())
+     */
+    getActiveItem(): T {
+        return this._$activeItem;
+    }
+
+    /**
+     * Возвращает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции.
+     * Если true, опции ItemActions не дожны быть отрисованы
+     */
+    isEditing(): boolean {
+        return this._$isEditing;
+    }
+
+    /**
+     * Устанавливает состояние "Модель в режиме редактирования".
+     * В случае создания нового Item этот Item отсутствует в коллекции и мы не можем
+     * в контроллере ItemActions определить, надо ли скрывать у остальных элементов его опции
+     * Если true, опции ItemActions не дожны быть отрисованы
+     */
+    setEditing(editing: boolean): void {
+        this._$isEditing = editing;
+    }
+
+    setAddingItem(item: T): void {
+        const groupMethod = this.getGroup();
+        let groupsBefore;
+
+        if (groupMethod) {
+            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+        }
+
+        this._prependStrategy(AddStrategy, {
+            item,
+            addPosition: item.addPosition,
+            groupMethod: this.getGroup()
+        }, GroupItemsStrategy);
+
+        const itemsForNotify = [item];
+        const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
+
+        if (groupMethod) {
+            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+            const itemGroupId = groupMethod(item.contents);
+            if (groupsBefore.length < groupsAfter.length) {
+                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
+            }
+        }
+
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
+    }
+
+    resetAddingItem(): void {
+        const addStrategy = this.getStrategyInstance(AddStrategy);
+
+        if (addStrategy) {
+            const groupMethod = this.getGroup();
+            const item = addStrategy?.getAddingItem();
+            let groupsBefore;
+
+            if (groupMethod) {
+                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
+            }
+
+            this.removeStrategy(AddStrategy);
+
+            const itemsForNotify = [item];
+
+            if (groupMethod) {
+                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+                if (groupsBefore.length > groupsAfter.length) {
+                    const itemGroupId = groupMethod(item.contents);
+                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
+                }
+            }
+
+            this._notifyCollectionChange(
+                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
+            );
+        }
+    }
+
+    getSwipeConfig(): ISwipeConfig {
+        return this._swipeConfig;
+    }
+
+    setSwipeConfig(config: ISwipeConfig): void {
+        if (!isEqual(this._swipeConfig, config)) {
+            this._swipeConfig = config;
+            this._nextVersion();
+        }
+    }
+
+    private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
+        const strategyOptions = { ...options, display: this };
+        let index = 0;
+
+        if (typeof before === 'function') {
+            this._userStrategies.forEach((strObject, strIndex) => {
+                if (strObject.strategy === before) {
+                    index = strIndex;
+                }
+            });
+        }
+
+        this._userStrategies.splice(index, 0, {
+            strategy,
+            options: strategyOptions
+        });
+
+        if (this._composer) {
+            this._composer.prepend(strategy, strategyOptions, before);
+            this._reBuild(true);
+        }
+
+        this.nextVersion();
+    }
+
+    appendStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object): void {
+        const strategyOptions = { ...options, display: this };
+
+        this._userStrategies.push({
+            strategy,
+            options: strategyOptions
+        });
+
+        if (this._composer) {
+            this._composer.append(strategy, strategyOptions);
+            this._reBuild();
+        }
+
+        this.nextVersion();
+    }
+
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
+        return this._composer.getInstance(strategy);
+    }
+
+    removeStrategy(strategy: new() => IItemsStrategy<S, T>): void {
+        const idx = this._userStrategies.findIndex((us) => us.strategy === strategy);
+        if (idx >= 0) {
+            this._userStrategies.splice(idx, 1);
+
+            if (this._composer) {
+                this._composer.remove(strategy);
+                this._reBuild();
+            }
+
+            this.nextVersion();
+        }
     }
 
     getItemActionsProperty(): string {
@@ -2224,6 +2779,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 const groupStrategy = this._composer.getInstance(GroupItemsStrategy);
                 if (groupStrategy) {
                     groupStrategy.handler = this._$group;
+                    groupStrategy.collapsedGroups = this._$collapsedGroups;
                 }
 
                 // Restore items contents before the _$collection will be affected
@@ -2303,7 +2859,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         super._analizeUpdateSession.call(this, session);
 
         if (session) {
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -2354,7 +2910,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         for (let i = 0; i < max; i++) {
             item = isRemove ? oldItems[i] : newItems[i];
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 notify(notifyIndex, i);
                 notifyIndex = i;
             }
@@ -2368,17 +2924,17 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      * Устанавливает признак, переданным, элементам проекции.
      * @param selecItems массив элементов проекции
      * @param selected Элемент выбран.
+     * @param {Boolean} silent Не уведомлять о изменении
      */
-    protected _setSelectedItems(selecItems: T[], selected: boolean): void {
+    protected _setSelectedItems(selecItems: T[], selected: boolean|null, silent: boolean = false): void {
         const items = [];
-        selected = !!selected;
         for (let i = selecItems.length - 1; i >= 0; i--) {
             if (selecItems[i].isSelected() !== selected) {
-                selecItems[i].setSelected(selected, true);
+                selecItems[i].setSelected(selected, silent);
                 items.push(selecItems[i]);
             }
         }
-        if (items.length > 0) {
+        if (items.length > 0 && !silent) {
             const index = this.getIndex(items[0]);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -2477,6 +3033,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemsFactory(): ItemsFactory<T> {
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
+            options.multiSelectVisibility = this._$multiSelectVisibility;
             return create(this._itemModule, options);
         };
     }
@@ -2516,8 +3073,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }).append(UserItemsStrategy, {
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
-            handler: this._$group
+            handler: this._$group,
+            collapsedGroups: this._$collapsedGroups,
+            groupConstructor: this._getGroupItemConstructor()
         });
+
+        this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
 
         return composer;
     }
@@ -2591,7 +3152,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setCurrent(item);
         while (enumerator[method]()) {
             nearbyItem = enumerator.getCurrent();
-            if (skipGroups && nearbyItem instanceof GroupItem) {
+            if (skipGroups && nearbyItem['[Controls/_display/GroupItem]']) {
                 nearbyItem = undefined;
                 continue;
             }
@@ -2742,7 +3303,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index,
                     item,
                     position,
-                    hasMembers
+                    hasMembers,
+                    prevGroup
                 );
                 if (!result) {
                     break;
@@ -2777,7 +3339,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             processedIndices.add(index);
             item = items[index];
             match = true;
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 // A new group begin, check match for previous
                 if (prevGroup) {
                     match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
@@ -2789,7 +3351,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else {
+            } else if (!(item instanceof SearchSeparator)) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;
@@ -3090,7 +3652,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     session
                 );
             });
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3153,7 +3715,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 );
             }
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     /**
@@ -3256,6 +3818,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notify('onAfterCollectionChange');
     }
 
+    protected _handleAfterCollectionChange(): void {
+        this._notifyAfterCollectionChange();
+    }
+
     // endregion
 
     // endregion
@@ -3270,20 +3836,25 @@ Object.assign(Collection.prototype, {
     _$sort: null,
     _$keyProperty: '',
     _$displayProperty: '',
+    _$itemTemplateProperty: '',
+    _$itemsDragNDrop: false,
     _$multiSelectVisibility: 'hidden',
-    _$leftSpacing: 'default',
-    _$rightSpacing: 'default',
-    _$rowSpacing: 'default',
+    _$multiSelectPosition: 'default',
+    _$leftPadding: 'default',
+    _$rightPadding: 'default',
+    _$topPadding: 'default',
+    _$bottomPadding: 'default',
+    _$stickyMarkedItem: true,
     _$searchValue: '',
     _$editingConfig: null,
     _$unique: false,
     _$importantItemProperties: null,
-    _$virtualScrollMode: VIRTUAL_SCROLL_MODE.REMOVE,
-    _$virtualScrolling: false,
     _$hasMoreData: false,
     _$compatibleReset: false,
+    _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
@@ -3295,15 +3866,12 @@ Object.assign(Collection.prototype, {
     _onCollectionChange: null,
     _onCollectionItemChange: null,
     _oEventRaisingChange: null,
-    _markerManager: null,
-    _editInPlaceManager: null,
-    _itemActionsManager: null,
-    _virtualScrollManager: null,
-    _hoverManager: null,
-    _swipeManager: null,
-    _startIndex: 0,
-    _stopIndex: 0,
+    _viewIterator: null,
+    _actionsAssigned: false,
+    _actionsMenuConfig: null,
+    _actionsTemplateConfig: null,
+    _swipeConfig: null,
+    _userStrategies: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
-register('Controls/display:Collection', Collection, {instantiate: false});

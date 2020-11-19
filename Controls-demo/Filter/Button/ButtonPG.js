@@ -5,9 +5,6 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'Types/source',
       'json!Controls-demo/PropertyGrid/pgtext',
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
       'Controls/dropdown',
       'wml!Controls-demo/Filter/Button/buttonPGTemplate',
       'wml!Controls-demo/Filter/Button/mainBlockPG',
@@ -34,7 +31,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
          _beforeMount: function() {
             this._items = [
                {
-                  id: 'kind',
+                  name: 'kind',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: 'All',
@@ -50,7 +47,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   })
                },
                {
-                  id: 'type',
+                  name: 'type',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: '',
@@ -66,7 +63,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
             ];
             this._itemsKaizen = [
                {
-                  id: 'own',
+                  name: 'own',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: 'All',
@@ -79,7 +76,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   })
                },
                {
-                  id: 'used',
+                  name: 'used',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: '',
@@ -93,7 +90,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   })
                },
                {
-                  id: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'
+                  name: 'deleted', value: false, resetValue: false, textValue: 'Show deleted'
                }
             ];
             this._dataObject = {
@@ -138,5 +135,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
+      FilterButtonPG._styles = ['Controls-demo/Filter/Button/PanelVDom', 'Controls-demo/Input/resources/VdomInputs', 'Controls-demo/Wrapper/Wrapper'];
+
       return FilterButtonPG;
    });

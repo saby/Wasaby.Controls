@@ -1,5 +1,6 @@
 /**
  * Шаблон, который по умолчанию используется для отображения горизонтальной линии-разделителя {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/grouping/ группы} в контроле {@link Controls/grid:View Таблица}.
+ * 
  * @class Controls/grid:GroupTemplate
  * @mixes Controls/list:BaseGroupTemplate
  * @author Авраменко А.С.
@@ -19,13 +20,13 @@
  * </Controls.grid:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/templates/grouping/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/grouping/ здесь}.
  * @public
  */
 export default interface IGroupTemplateOptions {
    /**
     * @name Controls/grid:GroupTemplate#columnAlignGroup
-    * @cfg {Number|undefined} Устанавливает номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
+    * @cfg {Number|undefined} Номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
     * @default undefined
     * @remark
     * В значении undefined выравнивание отключено.

@@ -1,4 +1,6 @@
+<div class="controlsDemo__wrapper controlDemo_Tile_scale-with-actions">
 <Controls.tile:View
+        attr:class="demo-ScaleOnHover__actions"
         tileMode="dynamic"
         displayProperty="title"
         imageProperty="image"
@@ -12,3 +14,4 @@
                         hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
         </ws:itemTemplate>
 </Controls.tile:View>
+</div>

@@ -7,9 +7,10 @@ define(
       'use strict';
       var SyntheticEvent = Vdom.SyntheticEvent;
       describe('Controls/_popup/Previewer', () => {
-         it('previewerClickHandler', () => {
+         it('_contentMouseDownHandler', () => {
             let PWInstance = new popup.PreviewerTarget();
             var result;
+            PWInstance.activate = () => {};
             PWInstance._isPopupOpened = function() {
                return false;
             };
@@ -18,14 +19,14 @@ define(
             };
             var event = new SyntheticEvent(null, {});
             PWInstance._options.trigger = 'click';
-            PWInstance._previewerClickHandler(event);
+            PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, true);
             result = false;
             PWInstance._options.trigger = 'hover';
-            PWInstance._previewerClickHandler(event);
+            PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, false);
             PWInstance._options.trigger = 'hoverAndClick';
-            PWInstance._previewerClickHandler(event);
+            PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, true);
             PWInstance.destroy();
          });

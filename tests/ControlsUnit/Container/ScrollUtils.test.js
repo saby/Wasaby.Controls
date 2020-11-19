@@ -34,32 +34,6 @@ define(
                assert.equal(result, false);
                restoreEnv('chrome');
             });
-            it('ie', function() {
-               mockEnv('isIE');
-
-               container = {
-                  scrollHeight: 101,
-                  offsetHeight: 100
-               };
-               result = ScrollHeightFixUtil.calcHeightFix(container);
-               if (window) {
-                  assert.equal(result, true);
-               } else {
-                  assert.equal(result, undefined);
-               }
-
-               container = {
-                  scrollHeight: 200,
-                  offsetHeight: 100
-               };
-               result = ScrollHeightFixUtil.calcHeightFix(container);
-               if (window) {
-                  assert.equal(result, false);
-               } else {
-                  assert.equal(result, undefined);
-               }
-               restoreEnv('isIE');
-            });
             it('firefox', function() {
                mockEnv('firefox');
 
@@ -86,14 +60,29 @@ define(
                }
                restoreEnv('firefox');
             });
-         });
 
-         describe('calcStyleHideScrollbar', function() {
-            result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
-            assert.equal(result, '');
+            it('calcStyleHideScrollbar', () => {
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(0, {}, {});
+               assert.equal(result, '');
 
-            result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, {}, {});
-            assert.equal(result, 'margin-right: -17px;');
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'vertical', {}, {});
+               assert.equal(result, 'margin-right: -17px;');
+
+               result = ScrollWidthUtil._private.calcStyleHideScrollbar(17, 'verticalHorizontal', {}, {});
+               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
+            });
+            it('calcStyleHideScrollbar with cached value', function() {
+               ScrollWidthUtil._private.styleHideScrollbar.vertical = 'margin-right: -17px;';
+               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = 'margin-right: -17px;margin-bottom: -17px;';
+
+               result = ScrollWidthUtil.calcStyleHideScrollbar('vertical');
+               assert.equal(result, 'margin-right: -17px;');
+               result = ScrollWidthUtil.calcStyleHideScrollbar('verticalHorizontal');
+               assert.equal(result, 'margin-right: -17px;margin-bottom: -17px;');
+
+               ScrollWidthUtil._private.styleHideScrollbar.vertical = null;
+               ScrollWidthUtil._private.styleHideScrollbar.verticalHorizontal = null;
+            });
          });
       });
    }

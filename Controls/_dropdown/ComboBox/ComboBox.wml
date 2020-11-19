@@ -1,46 +1,34 @@
-<Controls._dropdown._Controller
-        name="controller"
-        scope="{{_options}}"
-        selectedKeys="{{[_options.selectedKey]}}"
-        targetPoint="{{_targetPoint}}"
-        width="{{_width}}"
-        marker="{{false}}"
-        popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}} controls-ComboBox-popup_theme-{{_options.theme}}"
-        typeShadow="suggestionsContainer"
-        close="{{_onClose}}"
-        open="{{_onOpen}}"
-        selectedItemsChangedCallback="{{_setText}}"
-        theme="{{_options.theme}}"
-        on:deactivated="_deactivated()"
-        on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        attr:class="controls-ComboBox {{_isOpen ? 'controls-ComboBox__opened'}}">
-   <ws:itemPadding right="xs" left="xs"/>
-   <ws:content>
-      <Controls._dropdown.ComboBox.InputRender
-              name="content"
-              size="{{_options.size}}"
-              style="{{_options.style}}"
-              value="{{_value}}"
-              tooltip="{{_options.tooltip}}"
-              tagStyle="{{_options.tagStyle}}"
-              autoComplete="{{_options.autoComplete}}"
-              fontStyle="{{_options.fontStyle}}"
-              textAlign="{{_options.textAlign}}"
-              selectOnClick="{{_options.selectOnClick}}"
-              fontSize="{{_options.fontSize}}"
-              inlineHeight="{{_options.inlineHeight}}"
-              fontColorStyle="{{_options.fontColorStyle}}"
-              borderStyle="{{_options.borderStyle}}"
-              on:tagClick="_notifyHandler('tagClick')"
-              on:tagHover="_notifyHandler('tagHover')"
-              placeholder="{{!_isEmptyItem ? _options.placeholder : _placeholder}}"
-              attr:class="controls-ComboBox-InputRender {{_isOpen ? 'controls-Popup__isolatedFocusingContext'}}">
-         <ws:afterFieldWrapper>
-            <span if="{{!_options.readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
-               <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpen ? 'CollapseLight' : 'ExpandLight'}}"></span>
-            </span>
-         </ws:afterFieldWrapper>
-
-      </Controls._dropdown.ComboBox.InputRender>
-   </ws:content>
-</Controls._dropdown._Controller>
+<div class="controls-ComboBox controls-ComboBox_theme-{{_options.theme}}
+            controls-ComboBox-{{_readOnly ? 'readOnly' : 'borderStyle-' + _borderStyle}}_theme-{{_options.theme}} {{_isOpened ? 'controls-ComboBox__opened'}}
+            {{_isOpened ? 'controls-Popup__isolatedFocusingContext'}}
+            controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
+            controls-inlineheight-{{_inlineHeight}}_theme-{{_options.theme}}
+            controls-Combobox-fontsize-{{_fontSize}}_theme-{{_options.theme}}
+            controls-ComboBox_textAlign-{{_options.textAlign}}"
+     title="{{_options.tooltip || _value}}"
+     on:keydown="_handleKeyDown()"
+     on:click="_handleClick()"
+     on:mousedown="_handleMouseDown()"
+     on:mouseenter="_handleMouseEnter()"
+     on:mouseleave="_handleMouseLeave()"
+     on:focusout="_deactivated()">
+    <div class="controls-ComboBox-wrapper" tabindex="0">
+        <div class="controls-ComboBox__field controls-ComboBox__field_theme_{{_options.theme}}_margin-xs">
+            <ws:if data="{{_placeholder && !_value}}">
+                <div class="controls-ComboBox__placeholder controls-ComboBox__placeholder_theme-{{_options.theme}}">{{_placeholder}}</div>
+            </ws:if>
+            <ws:else>
+                {{_value}}
+            </ws:else>
+        </div>
+        <span if="{{!_readOnly}}" class="controls-ComboBox__arrow-wrapper controls-ComboBox__arrow-wrapper_theme-{{_options.theme}}">
+            <span attr:class="controls-ComboBox__iconArrow controls-ComboBox__iconArrow_theme-{{_options.theme}} icon-{{_isOpened ? 'CollapseLight' : 'ExpandLight'}}"></span>
+        </span>
+    </div>
+    <ws:if data="{{_options.tagStyle}}">
+        <ws:partial template="wml!Controls/Application/TagTemplate/TagTemplate"
+                    tagStyle="{{_options.tagStyle}}"
+                    on:click="_notifyHandler('tagClick')"
+                    on:mouseenter="_notifyHandler('tagHover')"/>
+    </ws:if>
+</div>

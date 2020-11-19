@@ -1,21 +1,26 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupConfirmation/footer');
-import * as tmplNotify from 'Controls/Utils/tmplNotify';
+import {tmplNotify} from 'Controls/eventUtils';
 import {IConfirmationFooterOptions, IConfirmationFooter} from 'Controls/popupConfirmation';
 import rk = require('i18n!Controls');
 
+
+export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {}
 /**
- * Базовый шаблон футера окна диалога</a>.
+ * Базовый шаблон футера окна диалога.
+ *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ *
  * @class Controls/_popupConfirmation/Footer
  * @implements Controls/_popup/interface/IConfirmationFooter
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @author Бондарь А.В.
+ * @author Красильников А.С.
  * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
-
-export interface IFooterOptions extends IControlOptions, IConfirmationFooterOptions {}
 class Footer extends Control<IFooterOptions> implements IConfirmationFooter {
     protected _template: TemplateFunction = template;
     protected _tmplNotify: Function = tmplNotify;

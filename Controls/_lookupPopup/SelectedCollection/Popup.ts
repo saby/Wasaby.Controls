@@ -1,6 +1,5 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/SelectedCollection/Popup');
-import 'css!theme?Controls/popup';
 
 /**
  *
@@ -10,7 +9,7 @@ import 'css!theme?Controls/popup';
  * @class Controls/_lookupPopup/SelectedCollection/Popup
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */
@@ -23,7 +22,7 @@ import 'css!theme?Controls/popup';
  * @class Controls/_lookupPopup/SelectedCollection/Popup
  * @extends Core/Control
  * @mixes Controls/_lookup/SelectedCollection/SelectedCollectionStyles
- * @control
+ * 
  * @public
  * @author Крайнов Д.О.
  */
@@ -46,6 +45,8 @@ import 'css!theme?Controls/popup';
             this._options.clickCallback('crossClick', item);
          }
       });
-      
+
+      itemHiddenTemplate._theme = ['Controls/lookup', 'Controls/popup'];
+
       export = itemHiddenTemplate;
 

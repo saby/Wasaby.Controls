@@ -1,6 +1,5 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/InfoBox/Opener/resources/template');
-import Utils = require('View/Executor/Utils');
 import {load} from 'Core/library';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IInfoboxTemplateOptions} from 'Controls/_popupTemplate/InfoBox';
@@ -15,15 +14,15 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
    }
 
    private _needRequireModule(module: string | Function): boolean {
-      return typeof module === 'string' && !Utils.RequireHelper.defined(module);
+      return typeof module === 'string' && !requirejs.defined(module);
    }
 
-   private _close(): void {
+   protected _close(): void {
       // todo For Compatible. Remove after https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
       this._notify('sendResult', [{ type: 'close' }], { bubbling: true });
       this._notify('close');
    }
-   private _sendResult(event: SyntheticEvent<MouseEvent>): void {
+   protected _sendResult(event: SyntheticEvent<MouseEvent>): void {
       this._notify('sendResult', [event], { bubbling: true });
    }
 

@@ -2,11 +2,6 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
 
    describe('Controls._suggestPopup.Layer.__PopupLayer', function() {
 
-      it('_private.getPopupClassName', function() {
-         assert.equal(PopupLayer.default._private.getPopupClassName('top'), 'controls-Suggest__suggestionsContainer_popup_top');
-         assert.equal(PopupLayer.default._private.getPopupClassName('bottom'), 'controls-Suggest__suggestionsContainer_popup_bottom');
-      });
-
       it('_onResult', function() {
          const layer = new PopupLayer.default();
          const resultPopupOptions = {
@@ -19,7 +14,6 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
                horizontal: 20
             },
             targetPoint: {side: 'test'},
-            className: 'controls-Suggest__suggestionsContainer_popup_test',
             fittingMode: 'fixed'
          };
          const resultOpenConfig = Object.assign({
@@ -38,7 +32,7 @@ define(['Controls/_suggestPopup/Layer/__PopupLayer'], function(PopupLayer) {
             }
          };
 
-         layer._onResult({
+         layer._onResult({},{
             direction: {
                vertical: 'test',
                horizontal: 'test'

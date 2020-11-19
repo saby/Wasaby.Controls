@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {detection} from 'Env/Env';
 import * as ScrollBarTemplate from 'wml!Controls/_scroll/Scroll/Scrollbar/Scrollbar';
 import 'Controls/event';
-import 'css!theme?Controls/scroll';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as newEnv from 'Core/helpers/isNewEnvironment';
 
@@ -18,6 +17,8 @@ export interface IScrollBarOptions extends IControlOptions {
     contentSize: number;
     direction: TDirection;
     trackVisible: boolean;
+    thumbStyle?: string;
+    thumbThickness?: string;
 }
 /**
  * Thin scrollbar.
@@ -25,32 +26,8 @@ export interface IScrollBarOptions extends IControlOptions {
  * @class Controls/_scroll/resources/Scrollbar
  * @extends Core/Control
  *
- * @event scrollbarBeginDrag Начала перемещения ползунка мышью.
- * @param {SyntheticEvent} eventObject Дескриптор события.
- *
- * @event scrollbarEndDrag Конец перемещения ползунка мышью.
- * @param {SyntheticEvent} eventObject Дескриптор события.
- *
- * @name Controls/_scroll/resources/Scrollbar#position
- * @cfg {Number} Позиция ползунка спроецированная на контент.
- *
- * @name Controls/Container/resources/Scrollbar#contentSize
- * @cfg {Number} Размер контента на который проецируется тонкий скролл.
- * @remark Не может быть меньше размера контейнера или 0
- *
- * @name Controls/Container/resources/Scrollbar#direction
- * @cfg {String} Direction of the scroll bar
- * @variant vertical Vertical scroll bar.
- * @variant horizontal Horizontal scroll bar.
- * @default vertical
- *
- * @name Controls/_scroll/resources/Scrollbar#style
- * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
- * @variant normal стандартная схема
- * @variant inverted противоположная схема
- *
  * @public
- * @control
+ * 
  * @author Красильников А.С.
  */
 
@@ -69,16 +46,26 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _position: number = 0;
     private _thumbPosition: number = 0;
     private _thumbSize: number;
+    private _thumbThickness: string;
+    private _thumbStyle: string;
     private _scrollBarSize: number;
     // Запоминаемые на момент перетаскиваеия ползунка координаты самого скроллбара
     private _currentCoords: IScrollBarCoords | null = null;
     // Координата точки на ползунке, за которую начинаем тащить
     private _dragPointOffset: number | null = null;
-    private _trackVisible: boolean = false;
+    protected _trackVisible: boolean = false;
+    private _scrollPosition: number = 0;
 
-    protected _beforeMount(): void {
+    protected _beforeMount(options: IScrollBarOptions): void {
         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
         this._resizeHandler = this._resizeHandler.bind(this);
+        this._thumbStyle = this._getThumbStyle(options);
+        this._thumbThickness = this._getThumbThickness(options);
+
+        // Зачем этот код прописал в скроллконтейнере в самом геттере
+        if (options.getParentScrollPosition) {
+            this._scrollPosition = options.getParentScrollPosition();
+        }
     }
 
     protected _afterMount(): void {
@@ -87,25 +74,32 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
         this._resizeHandler();
         this._forceUpdate();
+        const position = this._scrollPosition || this._options.position || 0;
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, this._options.position);
+            this._thumbSize, position);
 
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
         }
     }
 
-    protected _afterUpdate(oldOptions: IScrollBarOptions): void {
+    protected _beforeUpdate(options: IScrollBarOptions): void {
+        this._thumbStyle = this._getThumbStyle(options);
+        this._thumbThickness = this._getThumbThickness(options);
+    }
 
-        let shouldUpdatePosition = !this._dragging && this._position !== this._options.position;
+    protected _afterUpdate(oldOptions: IScrollBarOptions): void {
+        // TODO: Позиция сейчас принимается и через опции и через сеттер. чтобы не было лишних обновлений нужно оставить только сеттер
+        const position = this._scrollPosition || this._options.position || 0;
+        let shouldUpdatePosition = !this._dragging && this._position !== position;
         if (oldOptions.contentSize !== this._options.contentSize) {
             this._setSizes(this._options.contentSize);
             shouldUpdatePosition = true;
         }
         if (shouldUpdatePosition) {
-            this._setPosition(this._options.position);
+            this._setPosition(position);
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                                this._thumbSize, this._options.position);
+                                                                this._thumbSize, position);
         }
     }
 
@@ -114,6 +108,20 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (!newEnv() && window) {
             window.removeEventListener('resize', this._resizeHandler);
         }
+    }
+
+    private _getThumbStyle(options: IScrollBarOptions): string {
+        if (options.thumbStyle) {
+            return options.thumbStyle;
+        }
+        return (options.direction === 'vertical' ? 'accented' : 'unaccented');
+    }
+
+    private _getThumbThickness(options: IScrollBarOptions): string {
+        if (options.thumbThickness) {
+            return options.thumbThickness;
+        }
+        return (options.direction === 'vertical' ? 'l' : 's');
     }
 
     private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number): number {
@@ -186,6 +194,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
     }
 
+    setScrollPosition(position: number): void {
+        if (this._scrollPosition !== position) {
+            this._scrollPosition = position;
+            this._updatePosition();
+        }
+    }
+
     public recalcSizes(): void {
         this._resizeHandler();
     }
@@ -197,7 +212,6 @@ class Scrollbar extends Control<IScrollBarOptions> {
      */
     private _setSizes(contentSize: number): boolean {
         const verticalDirection = this._options.direction === 'vertical';
-        const horizontalDirection = this._options.direction === 'horizontal';
         const scrollbar = this._children.scrollbar;
         if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
             return false;
@@ -225,7 +239,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
     }
 
-    private _scrollbarMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
+    protected _scrollbarMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
         const currentCoords = this._getCurrentCoords(this._options.direction);
         const mouseCoord = Scrollbar._getMouseCoord(event.nativeEvent, this._options.direction);
 
@@ -239,7 +253,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._setPosition(position, true);
     }
 
-    private _thumbMouseDownHandler(event: Event): void {
+    protected _thumbMouseDownHandler(event: Event): void {
         // to disable selection while dragging
         event.preventDefault();
 
@@ -247,13 +261,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._scrollbarBeginDragHandler(event);
     }
 
-    private _scrollbarTouchStartHandler(event: Event): void {
+    protected _scrollbarTouchStartHandler(event: Event): void {
         if (this._options.direction === 'horizontal') {
             this._scrollbarBeginDragHandler(event);
         }
     }
 
-    private _thumbTouchStartHandler(event: Event): void {
+    protected _thumbTouchStartHandler(event: Event): void {
         event.stopPropagation();
         this._scrollbarBeginDragHandler(event);
     }
@@ -272,7 +286,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
-    private _scrollbarStartDragHandler(): void {
+    protected _scrollbarStartDragHandler(): void {
         this._dragging = true;
         this._notify('draggingChanged', [this._dragging]);
     }
@@ -282,7 +296,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * @param {Event} event дескриптор события Vdom
      * @param {Event} nativeEvent дескриптор события мыши.
      */
-    private _scrollbarOnDragHandler(event: SyntheticEvent<Event>, dragObject): void {
+    protected _scrollbarOnDragHandler(event: SyntheticEvent<Event>, dragObject): void {
         const mouseCoord = Scrollbar._getMouseCoord(dragObject.domEvent, this._options.direction);
 
         this._thumbPosition = Scrollbar._getThumbPosition(
@@ -298,7 +312,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     /**
      * Обработчик конца перемещения ползунка мышью.
      */
-    private _scrollbarEndDragHandler(): void {
+    protected _scrollbarEndDragHandler(): void {
         if (this._dragging) {
             this._dragging = false;
             this._notify('draggingChanged', [this._dragging]);
@@ -309,9 +323,8 @@ class Scrollbar extends Control<IScrollBarOptions> {
      * Обработчик прокрутки колесиком мыши.
      * @param {SyntheticEvent} event дескриптор события.
      */
-    private _wheelHandler(event: SyntheticEvent<Event>): void {
+    protected _wheelHandler(event: SyntheticEvent<Event>): void {
         let newPosition = this._position + Scrollbar._calcWheelDelta(detection.firefox, event.nativeEvent.deltaY);
-        const minPosition = 0;
         const maxPosition = this._options.contentSize - this._scrollBarSize;
         if (newPosition < 0) {
             newPosition = 0;
@@ -329,9 +342,14 @@ class Scrollbar extends Control<IScrollBarOptions> {
      */
     private _resizeHandler(): void {
         this._setSizes(this._options.contentSize);
-        this._setPosition(this._options.position);
+        this._updatePosition();
+    }
+
+    private _updatePosition(): void {
+        const position = this._scrollPosition || this._options.position || 0;
+        this._setPosition(position);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                            this._thumbSize, this._options.position);
+            this._thumbSize, position);
     }
 
     private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
@@ -417,4 +435,42 @@ Scrollbar.getDefaultOptions = function () {
     };
 };
 
+Scrollbar._theme = ['Controls/scroll'];
+/**
+ * @event Начала перемещения ползунка мышью.
+ * @name scrollbarBeginDrag
+ * @param {SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @event Конец перемещения ползунка мышью.
+ * @name scrollbarEndDrag
+ * @param {SyntheticEvent} eventObject Дескриптор события.
+ */
+
+/**
+ * @name Controls/_scroll/resources/Scrollbar#position
+ * @cfg {Number} Позиция ползунка спроецированная на контент.
+ */
+
+/**
+ * @name Controls/Container/resources/Scrollbar#contentSize
+ * @cfg {Number} Размер контента на который проецируется тонкий скролл.
+ * @remark Не может быть меньше размера контейнера или 0
+ */
+
+/**
+ * @name Controls/Container/resources/Scrollbar#direction
+ * @cfg {String} Direction of the scroll bar
+ * @variant vertical Vertical scroll bar.
+ * @variant horizontal Horizontal scroll bar.
+ * @default vertical
+ */
+
+/**
+ * @name Controls/_scroll/resources/Scrollbar#style
+ * @cfg {String} Цветовая схема контейнера. Влияет на цвет тени и полоски скролла. Используется для того чтобы контейнер корректно отображался как на светлом так и на темном фоне.
+ * @variant normal стандартная схема
+ * @variant inverted противоположная схема
+ */
 export default Scrollbar;

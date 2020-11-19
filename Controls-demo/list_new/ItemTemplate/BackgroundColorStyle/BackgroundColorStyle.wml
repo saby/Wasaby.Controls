@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}">
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate"
+                        displayProperty="description"
+                        backgroundColorStyle="{{getBackgroundColorStyle(itemTemplate.itemData.key + 1)}}"/>
+        </ws:itemTemplate>
+    </Controls.list:View>
+</div>

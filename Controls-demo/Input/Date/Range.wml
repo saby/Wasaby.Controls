@@ -1,13 +1,13 @@
 <div class="controlsDemo-Input-DateRange">
    <h1>Controls.dateRange:Input</h1>
    <div class="controlsDemo-Input-DatePicker__content">
-      <ws:for data="mask in _masks">
+      <ws:for data="index, mask in _masks">
          <div class="controlsDemo-Input-DateRange__row">
             <div class="controlsDemo-Input-DateRange__row-item">
                {{mask}}
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">
-               <Controls.dateRange:Input
+               <Controls.dateRange:Input name="input{{index}}" attr:class="hello"
                        mask="{{mask}}"/>
             </div>
             <div class="controlsDemo-Input-DateRange__row-item">

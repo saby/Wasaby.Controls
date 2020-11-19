@@ -7,8 +7,8 @@ import Context = require('Core/Context');
 import Deferred = require('Core/Deferred');
 import randomId = require('Core/helpers/Number/randomId');
 import library = require('Core/library');
-import isVDOMTemplate = require('Controls/Utils/isVDOMTemplate');
-
+import {isVDOMTemplate} from 'Controls/popup';
+import {getDimensions} from 'Controls/sizeUtils';
 function loadTemplate(name: string) {
    const libraryInfo = library.parse(name);
    let template = require(libraryInfo.name);
@@ -19,12 +19,31 @@ function loadTemplate(name: string) {
 
    return template;
 }
-
+// Minimum popup indentation from the right edge
+const MINIMAL_PANEL_DISTANCE = 100;
 /**
  * Слой совместимости для базового опенера для открытия старых шаблонов
  */
 const BaseOpener = {
-   _prepareConfigForOldTemplate(cfg, templateClass) {
+   _getTargetRightCoords(): number {
+      let target: HTMLDivElement = document.querySelector('.controls-Popup__stack-target-container');
+      if (!target) {
+         target = document?.body;
+      }
+      if (target.get) {
+         target = target.get(0);
+      }
+      const box = getDimensions(target);
+      const right: number = box.right;
+      const fullLeftOffset: number =
+          window.pageXOffset || document.documentElement.scrollLeft || document.body.scrollLeft || 0 -
+          document.documentElement.clientLeft || document.body.clientLeft || 0;
+
+      const coords = {leftScroll: fullLeftOffset, right: right + fullLeftOffset};
+      return document?.documentElement.clientWidth - coords.right;
+   },
+   _prepareConfigForOldTemplate(cfg, templateClass): void {
+      const rightOffset = cfg.isStack ? this._getTargetRightCoords() : 0;
       let
          templateOptions = this._getTemplateOptions(templateClass),
          parentContext;
@@ -159,10 +178,13 @@ const BaseOpener = {
       cfg.templateOptions.maxHeight = cfg.maxHeight;
       cfg.templateOptions.width = cfg.width;
       cfg.templateOptions.height = cfg.height;
-
-      if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth !== cfg.minWidth) {
+      // если не хватает места, не показываем кнопку расширения/сужения панели
+      if (cfg.canMaximize && cfg.templateOptions.type === 'stack' && ((cfg.minWidth + MINIMAL_PANEL_DISTANCE + rightOffset) > document?.body.clientWidth)) {
+         cfg.canMaximize = false;
+      }
+      if (cfg.canMaximize && cfg.maxWidth && cfg.minWidth && cfg.maxWidth > cfg.minWidth) {
          cfg.minimizedWidth = cfg.minWidth;
-         cfg.minWidth += 100; // minWidth и minimizedWidth должны различаться.
+         cfg.minWidth += MINIMAL_PANEL_DISTANCE; // minWidth и minimizedWidth должны различаться.
          cfg.templateOptions.canMaximize = true;
          cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
       }
@@ -250,7 +272,7 @@ const BaseOpener = {
 
       // Если вдомное окно открывается из PopupMixin, нужно вычислить zindex вручную
       if (cfg.opener && cfg.opener._container) {
-         let sbis3FloatArea = cfg.opener._container.closest('.controls-FloatArea');
+         let sbis3FloatArea = cfg.opener._container.closest('.controls-FloatArea, .ws-FieldEditAtPlace__editArea');
 
          // get DOM node, cause it can be jQuery
          sbis3FloatArea = sbis3FloatArea && sbis3FloatArea.length !== undefined ? sbis3FloatArea[0] : sbis3FloatArea;

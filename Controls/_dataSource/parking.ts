@@ -1,12 +1,17 @@
 /// <amd-module name="Controls/_dataSource/parking" />
 /**
- * Набор модулей необходимых для обработки и отображения парковочных шаблонов
+ * Базовые типы для обработки ошибок.
  * @library Controls/_dataSource/parking
  * @includes Handler Controls/_dataSource/_parking/Handler
  * @includes ViewConfig Controls/_dataSource/_parking/ViewConfig
  * @includes Controller Controls/_dataSource/_parking/Controller
- * @public
- * @author Санников К.А.
+ * @private
+ * @author Северьянов А.А.
  */
-export { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
-export { default as Controller, loadHandlers, Config } from 'Controls/_dataSource/_parking/Controller';
+export {
+    ParkingHandler as Handler,
+    ParkingViewConfig as ViewConfig,
+    ParkingController as Controller,
+    loadHandlers,
+    IParkingControllerOptions as Config
+} from 'Controls/error';

@@ -2,30 +2,36 @@ import BaseController from 'Controls/_popupTemplate/BaseController';
 import {IPopupItem, IPopupSizes, IPopupOptions, IPopupPosition} from 'Controls/popup';
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
+import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import collection = require('Types/collection');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import Deferred = require('Core/Deferred');
 import {parse as parserLib} from 'Core/library';
 import StackContent = require('Controls/_popupTemplate/Stack/Opener/StackContent');
 import {detection} from 'Env/Env';
+import {Bus} from 'Env/Event';
 
 /**
  * Stack Popup Controller
  * @class Controls/_popupTemplate/Stack/Opener/StackController
- * @control
+ *
  * @private
- * @category Popup
  */
+
+const ACCORDEON_MIN_WIDTH = 50;
 
 class StackController extends BaseController {
     TYPE: string = 'Stack';
     _stack: collection.List<IPopupItem> = new collection.List();
 
+    private _sideBarVisible: boolean = true;
+
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
+        let positionUpdate: boolean = false;
+
         if (isSinglePopup) {
             this._prepareSizeWithoutDOM(item);
-            this._addLastStackClass(item);
         } else {
             this._prepareSizes(item, container);
         }
@@ -36,10 +42,22 @@ class StackController extends BaseController {
         } else if (!isSinglePopup) {
             this._update();
         } else {
-            // Пересчитаем еще раз позицию, на случай, если ресайзили окно браузера
-            item.position = this._getItemPosition(item);
+            positionUpdate = this._updateItemPosition(item);
         }
-        return true;
+
+        if (!isNewEnvironment()) {
+            if (isSinglePopup) {
+                this._updateSideBarVisibility();
+            }
+        }
+
+        if (item.popupOptions.isCompoundTemplate) {
+            return true;
+        }
+
+        // Если стековое окно 1, то перерисовок звать не надо, только если после маунта позиция и размеры изменились
+        // Если окон больше, то перерисовка должна быть, меняются классы, видимость.
+        return !isSinglePopup || positionUpdate;
     }
 
     elementUpdateOptions(item: IPopupItem, container: HTMLDivElement): boolean|Promise<boolean> {
@@ -89,6 +107,11 @@ class StackController extends BaseController {
         return false;
     }
 
+    workspaceResize(): boolean {
+        this._update();
+        return !!this._stack.getCount();
+    }
+
     popupResizingLine(item: IPopupItem, offset: number): void {
         item.popupOptions.stackWidth += offset;
         item.popupOptions.width += offset;
@@ -97,13 +120,26 @@ class StackController extends BaseController {
         this._savePopupWidth(item);
     }
 
+    private _updateItemPosition(item: IPopupItem): boolean {
+        // Пересчитаем еще раз позицию, на случай, если ресайзили окно браузера
+        const position = this._getItemPosition(item);
+        // быстрая проверка на равенство простых объектов
+        if (JSON.stringify(item.position) !== JSON.stringify(position)) {
+            item.position = position;
+            this._updatePopupOptions(item);
+            return true;
+        }
+
+        return false;
+    }
+
     private _update(): void {
         const maxPanelWidth = StackStrategy.getMaxPanelWidth();
         let cache: IPopupItem[] = [];
         this._stack.each((item) => {
             if (item.popupState !== this.POPUP_STATE_DESTROYING) {
-                item.position = this._getItemPosition(item);
-                this._updatePopupWidth(item);
+                this._updateItemPosition(item);
+                this._updatePopupWidth(item, item.position.width);
                 this._removeLastStackClass(item);
                 const currentWidth = this._getPopupHorizontalLength(item);
                 let forRemove;
@@ -142,6 +178,9 @@ class StackController extends BaseController {
         const lastItem = this._stack.at(this._stack.getCount() - 1);
         if (lastItem) {
             this._addLastStackClass(lastItem);
+        }
+        if (!isNewEnvironment()) {
+            this._updateSideBarVisibility();
         }
     }
 
@@ -240,28 +279,28 @@ class StackController extends BaseController {
             }
             item.position = this._getItemPosition(item);
             if (this._stack.getCount() <= 1) {
-                this._showPopup(item);
                 if (StackStrategy.isMaximizedPanel(item)) {
                     this._prepareMaximizedState(StackStrategy.getMaxPanelWidth(), item);
                 }
                 this._updatePopupOptions(item);
+                this._addLastStackClass(item);
             }
         }
     }
 
     private _getItemPosition(item: IPopupItem): IPopupPosition {
-        const targetCoords = this._getStackParentCoords();
-        item.position = StackStrategy.getPosition(targetCoords, item);
-        item.popupOptions.stackWidth = item.position.width;
-        item.popupOptions.workspaceWidth = item.position.width;
-        item.popupOptions.stackMinWidth = item.position.minWidth;
-        item.popupOptions.stackMaxWidth = item.position.maxWidth;
+        const targetCoords = this._getStackParentCoords(item);
+        const isAboveMaximizePopup: boolean = this._isAboveMaximizePopup(item);
+        const position = StackStrategy.getPosition(targetCoords, item, isAboveMaximizePopup);
+        item.popupOptions.stackWidth = position.width;
+        item.popupOptions.workspaceWidth = position.width;
+        item.popupOptions.stackMinWidth = position.minWidth;
+        item.popupOptions.stackMaxWidth = position.maxWidth;
         // todo https://online.sbis.ru/opendoc.html?guid=256679aa-fac2-4d95-8915-d25f5d59b1ca
         item.popupOptions.stackMinimizedWidth = item.popupOptions.minimizedWidth;
 
-        this._updatePopupWidth(item);
-        this._updatePopupOptions(item);
-        return item.position;
+        this._updatePopupWidth(item, position.width);
+        return position;
     }
 
     private _validateConfiguration(item: IPopupItem): void {
@@ -300,8 +339,8 @@ class StackController extends BaseController {
         return templateWidth;
     }
 
-    private _updatePopupWidth(item: IPopupItem): void {
-        if (!item.containerWidth && !item.position.width && item.popupState !== this.POPUP_STATE_INITIALIZING) {
+    private _updatePopupWidth(item: IPopupItem, width: number): void {
+        if (!item.containerWidth && !width && item.popupState !== this.POPUP_STATE_INITIALIZING) {
             item.containerWidth = this._getContainerWidth(this._getPopupContainer(item.id));
         }
     }
@@ -310,23 +349,16 @@ class StackController extends BaseController {
         return stackContainer.querySelector('.controls-Stack__content-wrapper');
     }
 
-    private _getStackParentCoords(): IPopupPosition {
-        const elements = document.getElementsByClassName('controls-Popup__stack-target-container');
-        const targetCoords = TargetCoords.get(elements && elements.length ? elements[0] : document.body);
-        // calc with scroll, because stack popup has fixed position only on desktop and can scroll with page
-        const leftPageScroll = detection.isMobilePlatform ? 0 : targetCoords.leftScroll;
-        return {
-            top: Math.max(targetCoords.top, 0),
-            right: document.documentElement.clientWidth - targetCoords.right + leftPageScroll
-        };
+    private _getStackParentCoords(item: IPopupItem): IPopupPosition {
+        return StackController.calcStackParentCoords(item);
     }
 
     private _showPopup(item: IPopupItem): void {
-        item.popupOptions.hidden = false;
+        item.position.hidden = false;
     }
 
     private _hidePopup(item: IPopupItem): void {
-        item.popupOptions.hidden = true;
+        item.position.hidden = true;
     }
 
     private _updatePopupOptions(item: IPopupItem): void {
@@ -431,6 +463,54 @@ class StackController extends BaseController {
     private _removeLastStackClass(item: IPopupItem): void {
         const className = (item.popupOptions.className || '').replace(/controls-Stack__last-item/ig, '');
         item.popupOptions.className = className.trim();
+    }
+
+    // TODO COMPATIBLE
+    private _getSideBarWidth(): number {
+        const sideBar = document.querySelector('.ws-float-area-stack-sidebar, .navSidebar__sideLeft, .online-Sidebar');
+        return sideBar && sideBar.clientWidth || 0;
+    }
+
+    private _updateSideBarVisibility(): void {
+        let maxStackWidth = 0;
+        this._stack.each((item) => {
+            if (item.popupOptions.width > maxStackWidth) {
+                maxStackWidth = item.popupOptions.width;
+            }
+        });
+
+        const isVisible = this._getWindowSize().width - maxStackWidth >= this._getSideBarWidth() + ACCORDEON_MIN_WIDTH;
+
+        if (isVisible !== this._sideBarVisible) {
+            this._sideBarVisible = isVisible;
+            Bus.channel('navigation').notify('accordeonVisibilityStateChange', this._sideBarVisible);
+        }
+    }
+
+    static calcStackParentCoords(item: IPopupItem): IPopupPosition {
+        let rootCoords;
+        // TODO: Ветка для старой страницы
+        if (!isNewEnvironment()) {
+            let stackRoot = document.querySelector('.ws-float-area-stack-root');
+            const isNewPageTemplate = document.body.classList.contains('ws-new-page-template');
+            const contentIsBody = stackRoot === document.body;
+            if (!contentIsBody && !isNewPageTemplate && stackRoot) {
+                stackRoot = stackRoot.parentElement as HTMLDivElement;
+            }
+            rootCoords = TargetCoords.get(stackRoot || document.body);
+        } else {
+            rootCoords = BaseController.getRootContainerCoords(item, '.controls-Popup__stack-target-container');
+        }
+
+        // calc with scroll only on desktop devices, because stack popup has fixed position and can scroll with page
+        // except for safari, because windowSizes doesn't change at zoom, but there is information about leftScroll.
+
+        const leftPageScroll = detection.isMobilePlatform || detection.safari ? 0 : rootCoords.leftScroll;
+        return {
+            top: Math.max(rootCoords.top, 0),
+            height: rootCoords.height,
+            right: document.documentElement.clientWidth - rootCoords.right + leftPageScroll
+        };
     }
 }
 

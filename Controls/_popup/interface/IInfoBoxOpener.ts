@@ -1,20 +1,22 @@
-import {Control, TemplateFunction} from 'UI/Base';
-import {IEventHandlers} from './IPopup';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {IEventHandlers, IPopupItemInfo} from './IPopup';
+import {IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import {List} from 'Types/collection';
 
 /**
  * Интерфейс для опций всплывающих подсказок.
  *
  * @interface Controls/_popup/interface/IInfoBoxOpener
+ * @mixes Controls/_interface/IValidationStatus
  * @private
  * @author Красильников А.С.
  */
 
-export interface IInfoBoxPopupOptions {
+export interface IInfoBoxPopupOptions extends IValidationStatusOptions {
     target?: HTMLElement | EventTarget | Control;
-    opener?: Control | any; // TODO: https://online.sbis.ru/opendoc.html?guid=875d74bf-5b84-4a5b-802c-e7f47f1f98d1
+    opener?: Control<IControlOptions, unknown>;
     maxWidth?: number;
     style?: string;
-    styleType?: string;
     targetSide?: string;
     alignment?: string;
     floatCloseButton?: boolean;
@@ -22,9 +24,10 @@ export interface IInfoBoxPopupOptions {
     hideDelay?: number;
     showDelay?: number;
     eventHandlers?: IEventHandlers;
-    template?: Control | TemplateFunction | string | any;
+    template?: Control<IControlOptions, unknown> | TemplateFunction | string;
     templateOptions?: any;
     message?: string;
+    zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     zIndex?: number; //TODO Compatible
     position?: string; //TODO старое, надо удалить
 }

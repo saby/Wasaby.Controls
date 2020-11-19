@@ -1,10 +1,6 @@
-/**
- * Created by rn.kondakov on 18.10.2018.
- */
-import thelpers = require('View/Executor/TClosure');
+import { TClosure as thelpers } from 'UI/Executor';
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
-import 'css!theme?Controls/decorator';
 
    var markupGenerator,
       defCollection,
@@ -29,12 +25,16 @@ import 'css!theme?Controls/decorator';
          'usemap': true
       },
       startOfGoodLinks = [
+         'data:image(//|\/)[^;]+;base64[^"]+',
          'http:(//|\\\\)',
          'https:(//|\\\\)',
          'ftp:(//|\\\\)',
          'file:(//|\\\\)',
          'smb:(//|\\\\)',
          'mailto:',
+         'tel:',
+         'viber:(//|\\\\)',
+         'sbisplugin:(//|\\\\)',
          '#',
          './',
          '/'
@@ -42,8 +42,10 @@ import 'css!theme?Controls/decorator';
       goodLinkAttributeRegExp = new RegExp(`^(${startOfGoodLinks.join('|')})`
          .replace(/[a-z]/g, (m) => `[${m + m.toUpperCase()}]`)),
       dataAttributeRegExp = /^data-(?!component$|bind$)([\w-]*[\w])+$/,
-      escapeVdomRegExp = /&([a-zA-Z0-9#]+;)/g,
+      escapeVdomRegExp = /&([a-zA-Z0-9#]+)/g,
       additionalNotVdomEscapeRegExp = /(\u00a0)|(&#)/g;
+
+   const attributesWhiteListForEscaping = ['style'];
 
    function isString(value) {
       return typeof value === 'string' || value instanceof String;
@@ -57,7 +59,7 @@ import 'css!theme?Controls/decorator';
            strNode = '"Невалидный Json узел"';
        }
 
-       Logger.error('View/Executor/TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
+       Logger.error('UI/Executor:TClosure' + `Ошибка разбора JsonML: ${text}. Ошибочный узел: ${strNode}`, control);
    }
 
    function generateEventSubscribeObject(handlerName) {
@@ -112,7 +114,12 @@ import 'css!theme?Controls/decorator';
          if (isBadLinkAttribute(attributeName, sourceAttributeValue)) {
             continue;
          }
-         targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);
+
+         if (attributesWhiteListForEscaping.includes(attributeName)) {
+            targetAttributes[attributeName] = sourceAttributeValue;
+         } else {
+            targetAttributes[attributeName] = markupGenerator.escape(sourceAttributeValue);
+         }
       }
    }
 
@@ -171,7 +178,7 @@ import 'css!theme?Controls/decorator';
    }
 
    var template = function(data, attr, context, isVdom, sets?) {
-      markupGenerator = thelpers.getMarkupGenerator(isVdom);
+      markupGenerator = thelpers.createGenerator(isVdom);
       defCollection = {
          id: [],
          def: undefined
@@ -229,7 +236,7 @@ import 'css!theme?Controls/decorator';
       try {
          elements = recursiveMarkup(value, attrsToDecorate, key + '0_');
       } catch (e) {
-          Logger.error('View/Executor/TClosure: ' + e.message, undefined, e);
+          Logger.error('UI/Executor:TClosure: ' + e.message, undefined, e);
       } finally {
          markupGenerator.escape = oldEscape;
       }

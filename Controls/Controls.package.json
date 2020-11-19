@@ -4,10 +4,10 @@
     "Controls/Application/*"
   ],
   "exclude": [
+    "Controls/Application/Compatible",
     "wml!Controls/Application/CompatibleScripts",
     "Controls/Application/HeadDataContext",
-    "Controls/Application/AppData",
-    "css!Controls/Application/oldCss"
+    "Controls/Application/AppData"
   ],
   "output": "controls-application.package.js"
 }, {
@@ -18,21 +18,32 @@
   "output": "controls-container-async.package.js"
 }, {
   "include": [
-    "Controls/Container/Input/Search",
-    "wml!Controls/Container/Input/Search/Search"
-  ],
-  "output": "controls-container.package.js"
-}, {
-  "include": [
     "Controls/Utils/*"
   ],
   "exclude": [
-    "Controls/Utils/isVDOMTemplate"
+    "Controls/Utils/isVDOMTemplate",
+    "Controls/Utils/FontWidthConstants/*"
   ],
   "output": "controls-utils.package.js"
 }, {
+  "include": [
+    "Controls/context",
+    "Controls/dragnDrop",
+    "Controls/popup",
+    "Controls/event",
+    "Controls/error",
+    "Controls/LoadingIndicator",
+    "Controls/scroll",
+    "Controls/buttons",
+    "Controls/eventUtils",
+    "Controls/sizeUtils",
+    "Controls/Store",
+    "Controls/dataSource"
+  ],
   "includePackages": [
+    "Controls/controls-application.package.js",
+    "Controls/controls-container-async.package.js",
     "Controls/controls-utils.package.js"
   ],
-  "extendsTo": "vdom-superbundle.package.js"
+  "extendsTo": "controls-superbundle.package.js"
 }]

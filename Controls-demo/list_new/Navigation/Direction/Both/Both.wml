@@ -4,7 +4,7 @@
                 keyProperty="id"
                 source="{{_viewSource}}">
             <ws:navigation source="page" view="infinity">
-                <ws:sourceConfig direction="both" pageSize="{{10}}" page="{{5}}" hasMore="{{false}}"/>
+                <ws:sourceConfig pageSize="{{20}}" page="{{3}}" hasMore="{{false}}"/>
                 <ws:viewConfig pagingMode="direct"/>
             </ws:navigation>
         </Controls.list:View>

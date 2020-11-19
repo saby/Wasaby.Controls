@@ -1,0 +1,3 @@
+<div class="controlsDemo__flexColumn">
+    <Controls.dateRange:RangeShortSelector/>
+</div>

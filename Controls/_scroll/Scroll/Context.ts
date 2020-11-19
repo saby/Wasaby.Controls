@@ -1,34 +1,34 @@
 import DataContext = require('Core/DataContext');
 
 /**
- * Контекст для {@link Controls/_scroll/Container}.
+ * Контекст для {@link Controls/scroll:Container}.
  * Используется для управления видимостью кнопок постраничной навигации.
  *
  * @example
- * Пример настройки постраничной навигации, когда кнопки не отображаются для внутреннего скролл-контейнера. 
+ * Пример настройки постраничной навигации, когда кнопки не отображаются для внутреннего скролл-контейнера.
  *
- * <pre>
- *    Component = Control.extend({
- *       _stickyHeaderContext: null,
- *       _beforeMount: function(options, context, receivedState) {
- *          this._scrollDataContext = new DataContext({
- *              pagingVisible: false
- *          });
- *       },
- *       _getChildContext: function() {
- *          return {
- *             stickyHeader: this._scrollDataContext
- *          };
- *       }
- *    });
+ * <pre class="brush: html">
+ * Component = Control.extend({
+ *    _stickyHeaderContext: null,
+ *    _beforeMount: function(options, context, receivedState) {
+ *       this._scrollDataContext = new DataContext({
+ *          pagingVisible: false
+ *       });
+ *    },
+ *    _getChildContext: function() {
+ *       return {
+ *          stickyHeader: this._scrollDataContext
+ *       };
+ *    }
+ * });
  * </pre>
  *
- * @class Controls/_scroll/Scroll/Context
+ * @class Controls/_scroll/Context
  * @extends Core/DataContext
- * @control
- * @public
+ * @demo Controls-demo/Scroll/Context/Index
+ * 
+ * @private
  * @author Красильников А.С.
- * @category Container
  *
  */
 
@@ -57,10 +57,9 @@ import DataContext = require('Core/DataContext');
  *
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
- * @control
- * @public
+ * 
+ * @private
  * @author Красильников А.С.
- * @category Container
  *
  */
 const ScrollContext = DataContext.extend({

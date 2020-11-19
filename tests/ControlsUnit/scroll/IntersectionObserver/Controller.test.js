@@ -14,7 +14,9 @@ define([
    };
 
    describe('Controls/scroll:IntersectionObserverController', function() {
-
+      const event = {
+         stopImmediatePropagation: function() {}
+      }
       describe('_registerHandler', function() {
          it('should create _observer, and observe container', function() {
             const
@@ -24,12 +26,15 @@ define([
                element = 'element',
                data = {};
 
-            sandbox.stub(component, '_createObserver').returns({
+            component._initObserver();
+
+            sandbox.stub(component._observer, '_createObserver').returns({
                observe: sinon.fake()
             });
-            component._registerHandler(null, instId, options.observerName, element, data);
-            assert.deepEqual(component._items, { id: { instId: instId, element: element, data: data } });
-            sinon.assert.calledWith(component._observer.observe, element);
+            component._registerHandler(event,
+                {instId: instId, observerName: options.observerName, element: element, data: data});
+            assert.hasAllDeepKeys(component._observer._items, { id: { instId: instId, element: element, data: data } });
+            sinon.assert.called(component._observer._createObserver);
             sandbox.restore();
          });
       });
@@ -38,19 +43,28 @@ define([
             const
                component = calendarTestUtils.createComponent(scroll.IntersectionObserverController, options),
                instId = 'instId',
-               element = 'element';
-            component._observer = {
-               unobserve: sinon.fake()
-            };
-            component._items = {
-               instId: {
-                  instId: instId,
-                  element: element
+               element = 'element',
+               observer = {
+                  unobserve: sinon.fake()
+               };
+            component._initObserver();
+            component._observer._observers = {
+               "t1_rm0px_0px_0px_0px": {
+                  count: 1,
+                  observer
                }
             };
-            component._unregisterHandler(null, instId);
-            assert.isUndefined(component._items[instId]);
-            sinon.assert.calledWith(component._observer.unobserve, element);
+            component._observer._items = {
+               instId: {
+                  instId: instId,
+                  element: element,
+                  threshold: [1],
+                  rootMargin: '0px 0px 0px 0px'
+               }
+            };
+            component._unregisterHandler(event, instId, options.observerName);
+            assert.isUndefined(component._observer._items[instId]);
+            sinon.assert.calledWith(observer.unobserve, element);
          });
       });
 
@@ -62,18 +76,22 @@ define([
                instId = 'id',
                element = 'element',
                data = { someField: 'fieldValue' },
-               entry = { target: element, entryData: 'data' };
+               entry = { target: element, entryData: 'data' },
+               handler = sinon.fake();
 
-            sandbox.stub(component, '_createObserver').returns({
+            component._initObserver();
+            sandbox.stub(component._observer, '_createObserver').returns({
                observe: sinon.fake()
             });
             sandbox.stub(component, '_notify');
-            component._registerHandler(null, instId, options.observerName, element, data);
-            component._intersectionObserverHandler([entry]);
+            component._registerHandler(event,
+                {instId: instId, observerName: options.observerName, element: element, data: data, handler: handler});
+            component._observer._intersectionObserverHandler([entry]);
             sinon.assert.calledWith(
                component._notify,
                'intersect'
             );
+            sinon.assert.called(handler);
             sandbox.restore();
          });
 
@@ -84,11 +102,12 @@ define([
                element = 'element',
                entry = { target: element, entryData: 'data' };
 
-            sandbox.stub(component, '_createObserver').returns({
+            component._initObserver();
+            sandbox.stub(component._observer, '_createObserver').returns({
                observe: sinon.fake()
             });
             sandbox.stub(component, '_notify');
-            component._intersectionObserverHandler([entry]);
+            component._observer._intersectionObserverHandler([entry]);
             sinon.assert.notCalled(component._notify);
             sandbox.restore();
          });

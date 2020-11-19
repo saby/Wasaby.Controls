@@ -29,7 +29,7 @@
                                      displayProperty="title"
                                      parentProperty="parent"
                                      nodeProperty="@parent"
-                                     attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth"
+                                     attr:class="ControlsDemo-InputDropdown__item-limitMaxWidth ws-flexbox"
                                      source="{{_hierarchyItems}}"/>
          </div>
       </div>
@@ -39,7 +39,6 @@
             <Controls.dropdown:Input bind:selectedKeys="_selectedKeysIcon"
                                      keyProperty="id"
                                      displayProperty="title"
-                                     iconSize="s"
                                      attr:class="ControlsDemo-iconLeft ControlsDemo-InputDropdown__item"
                                      source="{{_iconItems}}"/>
          </div>
@@ -62,11 +61,10 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      source="{{_titleItems}}"
-                                     iconSize="s"
                                      attr:class="demo-InputDropdown__withTitle ControlsDemo-InputDropdown__item"
                                      contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
                <ws:headerTemplate>
-                  <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
+                  <Controls.Container.Async templateName="Controls/dropdown:HeaderTemplate">
                      <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}" caption="Sort"/>
                   </Controls.Container.Async>
                </ws:headerTemplate>
@@ -138,9 +136,6 @@
                <ws:selectorTemplate templateName="Controls-demo/Dropdown/StackTemplate">
                   <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectStackItems}}"/>
                </ws:selectorTemplate>
-               <ws:footerTemplate>
-                  <invisible-node />
-               </ws:footerTemplate>
             </Controls.dropdown:Input>
          </div>
       </div>
@@ -150,7 +145,6 @@
             <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
                                      keyProperty="id"
                                      displayProperty="title"
-                                     iconSize="s"
                                      attr:class="demo-InputDropdown__withComment ControlsDemo-InputDropdown__item"
                                      popupClassName="ControlsDemo-InputDropdownn-width"
                                      contentTemplate="wml!Controls-demo/Input/Dropdown/contentTemplateDropdownIcon"
@@ -210,11 +204,12 @@
             <Controls.dropdown:Input bind:selectedKeys="_selectedKeysDuplicate"
                                      keyProperty="id"
                                      displayProperty="title"
+                                     on:selectedKeysChanged="_selectedKeysHandler()"
                                      attr:class="demo-InputDropdown__withDuplicate ControlsDemo-InputDropdown__item"
                                      source="{{_duplicateItems}}">
                <ws:headerTemplate>
-                  <Controls.Container.Async templateName="Controls/dropdownPopup:Template">
-                     <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}"/>
+                  <Controls.Container.Async templateName="Controls/dropdown:HeaderTemplate">
+                     <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}" caption="{{_duplicateCaption}}"/>
                   </Controls.Container.Async>
                </ws:headerTemplate>
             </Controls.dropdown:Input>
@@ -289,7 +284,7 @@
                                      keyProperty="id"
                                      displayProperty="title"
                                      groupingKeyCallback="{{_groupingKeyCallback}}"
-                                     groupTemplate="Controls/dropdownPopup:GroupTemplate"
+                                     groupTemplate="Controls/dropdown:GroupTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroup"
                                      source="{{_groupItems}}">
             </Controls.dropdown:Input>
@@ -302,7 +297,7 @@
                                      groupingKeyCallback="{{_groupingKeyCallback}}"
                                      source="{{_groupTextItems}}">
                <ws:groupTemplate>
-                  <ws:partial template="Controls/dropdownPopup:GroupTemplate" showText="{{true}}"/>
+                  <ws:partial template="Controls/dropdown:GroupTemplate" showText="{{true}}"/>
                </ws:groupTemplate>
             </Controls.dropdown:Input>
          </div>
@@ -314,8 +309,51 @@
                                      nodeProperty="@parent"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroupHierarchy"
                                      groupingKeyCallback="{{_groupingKeyCallback}}"
-                                     groupTemplate="Controls/dropdownPopup:GroupTemplate"
+                                     groupTemplate="Controls/dropdown:GroupTemplate"
                                      source="{{_groupHierarchyItems}}">
+            </Controls.dropdown:Input>
+         </div>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
+         <h4>With itemActions</h4>
+         <div>
+            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysItemActions"
+                                     keyProperty="id"
+                                     itemActions="{{_itemActions}}"
+                                     displayProperty="title"
+                                     footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown"
+                                     attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__itemActions"
+                                     dropdownClassName="ControlsDemo-InputDropdown__item-MinWidth"
+                                     source="{{_itemActionsSource}}">
+            </Controls.dropdown:Input>
+         </div>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
+         <h4>With search</h4>
+         <div>
+            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSearch"
+                                     emptyText="Not selected"
+                                     keyProperty="id"
+                                     displayProperty="title"
+                                     searchParam="title"
+                                     emptyTemplate="Controls/menu:EmptyTemplate"
+                                     attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__search"
+                                     source="{{_searchItems}}">
+            </Controls.dropdown:Input>
+         </div>
+      </div>
+      <div class="ControlsDemo-InputDropdown__wrapper">
+         <h4>With search and hierarchy</h4>
+         <div>
+            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSearchHierarchy"
+                                     keyProperty="id"
+                                     displayProperty="title"
+                                     searchParam="title"
+                                     parentProperty="parent"
+                                     nodeProperty="@parent"
+                                     emptyTemplate="Controls/menu:EmptyTemplate"
+                                     attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__searchHierarchy"
+                                     source="{{_hierarchySearchItems}}">
             </Controls.dropdown:Input>
          </div>
       </div>
@@ -328,6 +366,15 @@
                                      readOnly="{{true}}"
                                      attr:class="demo-InputDropdown__readOnly ControlsDemo-InputDropdown__item"
                                      source="{{_defaultMemory}}"/>
+         </div>
+         <div>
+            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiReadOnly"
+                                     keyProperty="id"
+                                     displayProperty="title"
+                                     readOnly="{{true}}"
+                                     multiSelect="{{true}}"
+                                     attr:class="demo-InputDropdown__readOnly ControlsDemo-InputDropdown__item"
+                                     source="{{_readOnlyItems}}"/>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">

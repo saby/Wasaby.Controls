@@ -5,138 +5,29 @@ import chain = require('Types/chain');
 import Utils = require('Types/util');
 import cInstance = require('Core/core-instance');
 import {ContextOptions} from 'Controls/context';
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {selectionToRecord} from 'Controls/operations';
 import {adapter as adapterLib} from 'Types/entity';
 import {IData, IDecorator} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
-import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/interface';
+import {ISelectionObject,
+        TSelectionRecord,
+        TSelectionType,
+        IHierarchyOptions,
+        IFilterOptions} from 'Controls/interface';
+import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
+import {error as dataSourceError} from 'Controls/dataSource';
 
-/**
- * Контейнер принимает опцию selectedItems от Controls/lookupPopup:Controller и устанавливает опцию selectedKeys для дочернего списка.
- * Загружает список записей по списку первичных ключей из опции selectedKeys при завершении выбора
- * Должен использоваться внутри Controls/lookupPopup:Controller.
- * В одном Controls/lookupPopup:Controller можно использовать несколько контейнеров.
- *
- * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
- *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Пример</a> использования контрола.
- *
- * @class Controls/_lookupPopup/Container
- * @extends Core/Control
- * @control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/ISelectionType
- * @public
- * @author Герасимов Александр Максимович
- */
-
-/*
- * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
- * Loading data by selectedKeys on selection complete.
- * Must used inside Controls/lookupPopup:Controller.
- * In one Controls/lookupPopup:Controller can be used some Containers.
- *
- * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
- *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Here</a> you can see a demo.
- *
- * @class Controls/_lookupPopup/Container
- * @extends Core/Control
- * @control
- * @mixes Controls/_interface/ISource
- * @public
- * @author Герасимов Александр Максимович
- */
-
-
-/**
- * @name Controls/_lookupPopup/Container#selectionFilter
- * @cfg {Function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка.
- * Функция должна вернуть true если запись относится к данному списку или false, если не относится.
- * @remark По умолчанию опция selectionFilter установлена как функция, которая всегда возвращает true.
- * @example
- *
- * WML:
- * <pre>
- *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
- *        ...
- *    </Controls.lookupPopup:Container>
- * </pre>
- *
- * JS:
- * <pre>
- *     _selectionFilter: function(item, index) {
- *        let filterResult = false;
- *
- *        if (item.get('Компания')) {
- *            filterResult = true;
- *        }
- *
- *        return filterResult;
- *     }
- * </pre>
- */
-
-/*
- * @name Controls/_lookupPopup/Container#selectionFilter
- * @cfg {Function} Function that filters selectedItems from Controls/lookupPopup:Controller for a specific list.
- * @remark By default selectionFilter option is setted as function that always returns true.
- * @example
- *
- * WML:
- * <pre>
- *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
- *        ...
- *    </Controls.lookupPopup:Container>
- * </pre>
- *
- * JS:
- * <pre>
- *     _selectionFilter: function(item, index) {
- *        let filterResult = false;
- *
- *        if (item.get('Компания')) {
- *            filterResult = true;
- *        }
- *
- *        return filterResult;
- *     }
- * </pre>
- */
-
-
-/**
- * @name Controls/_lookupPopup/Container#selectionType
- * @cfg {String} Тип записей, которые можно выбрать.
- * @variant node только узлы доступны для выбора
- * @variant leaf только листья доступны для выбора
- * @variant all все типы записей доступны для выбора
- * @example
- * В данном примере для выбора доступны только листья.
- * <pre>
- *    <Controls.lookupPopup:ListContainer selectionType="leaf">
- *        ...
- *    </Controls.lookupPopup:ListContainer>
- * </pre>
- */
-
-/*
- * @name Controls/_lookupPopup/Container#selectionType
- * @cfg {String} Type of records that can be selected.
- * @variant node only nodes are available for selection
- * @variant leaf only leafs are available for selection
- * @variant all all types of records are available for selection
- * @example
- * In this example only leafs are available for selection.
- * <pre>
- *    <Controls.lookupPopup:ListContainer selectionType="leaf">
- *        ...
- *    </Controls.lookupPopup:ListContainer>
- * </pre>
- */
-
-
+interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
+   selection: TSelectionRecord;
+   root?: string|number|null;
+   searchParam?: string;
+   items: RecordSet;
+   parentProperty?: string;
+   nodeProperty?: string;
+   selectionType: TSelectionType;
+}
 
       var SELECTION_TYPES = ['all', 'leaf', 'node'];
 
@@ -168,8 +59,8 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return options.selectedItems || context.selectorControllerContext.selectedItems || new List();
          },
 
-         getSourceController: function(source) {
-            return new SourceController({
+         getCrudWrapper: function(source) {
+            return new CrudWrapper({
                source: source
             });
          },
@@ -205,28 +96,65 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             return adapter;
          },
 
-         prepareFilter(filter: object, selection: TSelectionRecord, searchParam: string|undefined, parentProperty: string): object {
-            filter = Utils.object.clone(filter);
+         prepareFilter({
+           filter,
+           selection,
+           searchParam,
+           parentProperty,
+           nodeProperty,
+           root,
+           items,
+           selectionType
+        }: IFilterConfig): object {
+            const selectedKeys = selection.get('marked');
+            const currentRoot = root !== undefined ? root : null;
+            const resultFilter = Utils.object.clone(filter);
+            const hasSearchParamInFilter = searchParam && resultFilter[searchParam];
+            let hasSelectedNodes = false;
 
-             // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
-             // TODO KINDO
-             // При отметке всех записей в фильтре проставляется selection в виде:
-             // marked: [null]
-             // excluded: [null]
-             // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
-             // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
-             // даже которые не попали под фильтрацию при поиске.
-             // Если просто отмечают записи чекбоксами (не через панель массовых операций),
-             // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
+            if (nodeProperty && items) {
+               let selectedItem;
+               selectedKeys.forEach((key) => {
+                  selectedItem = items.getRecordById(key);
+
+                  if (selectedItem && !hasSelectedNodes) {
+                     hasSelectedNodes = selectedItem.get(nodeProperty);
+                  }
+               });
+            }
+
+            // FIXME https://online.sbis.ru/opendoc.html?guid=e8bcc060-586f-4ca1-a1f9-1021749f99c2
+            // TODO KINDO
+            // При отметке всех записей в фильтре проставляется selection в виде:
+            // marked: [null]
+            // excluded: [null]
+            // Если что-то поискать, отметить всё через панель массовых операций, и нажать "Выбрать"
+            // то в фильтр необходимо посылать searchParam и selection, иначе выборка будет включать все записи,
+            // даже которые не попали под фильтрацию при поиске.
+            // Если просто отмечают записи чекбоксами (не через панель массовых операций),
+            // то searchParam из фильтра надо удалять, т.к. записи могут отметить например в разных разделах,
              // и запрос с searchParam в фильтре вернёт не все записи, которые есть в selection'e.
-            if (searchParam && selection.get('marked')[0] !== null) {
-               delete filter[searchParam];
+            if (hasSearchParamInFilter &&
+                ArrayUtil.invertTypeIndexOf(selectedKeys, currentRoot) === -1 &&
+                (!hasSelectedNodes || selectionType === 'node')) {
+               delete resultFilter[searchParam];
             }
             if (parentProperty) {
-               delete filter[parentProperty];
+               delete resultFilter[parentProperty];
             }
-            filter.selection = selection;
-            return filter;
+            /*
+               FIXME: https://online.sbis.ru/opendoc.html?guid=239a4b17-5429-4179-9b72-d28a707bee0b
+               Конфликт полей selection и selectionWithPath/entries, которые подмешиваются в фильтр
+               для получения метаданных, которые при завершении выбора не нужны.
+            */
+            if (resultFilter.entries) {
+                delete resultFilter.entries;
+            }
+            if (resultFilter.selectionWithPath) {
+                delete resultFilter.selectionWithPath;
+            }
+            resultFilter.selection = selection;
+            return resultFilter;
          },
 
          prepareResult: function(result, initialSelection, keyProperty, selectCompleteInitiator) {
@@ -326,7 +254,6 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
             const dataOptions = self.context.get('dataOptions');
             const items = dataOptions.items;
-            let indicatorId;
             let loadItemsPromise;
 
             if (_private.needLoadItemsOnSelectComplete(self)) {
@@ -336,23 +263,74 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
                   selectedItems.add(items.getRecordById(self._selectedKeys[0]));
                   loadItemsPromise = Promise.resolve(selectedItems);
                } else {
-                  const sourceController = _private.getSourceController(dataOptions.source);
-                  const loadItemsCallback = (loadedItems) => {
-                     self._notify('hideIndicator', [indicatorId], {bubbling: true});
-                     return loadedItems;
+                  const crudWrapper = _private.getCrudWrapper(dataOptions.source);
+                  const loadItemsCallback = (result) => {
+                     _private.hideIndicator(self);
+
+                     if (result instanceof Error) {
+                         dataSourceError.process({error: result});
+                     }
+
+                     return result;
                   };
 
-                  indicatorId = self._notify('showIndicator', [], {bubbling: true});
-                  loadItemsPromise = sourceController.load(filter).then(loadItemsCallback, loadItemsCallback);
+                  _private.showIndicator(self);
+                  loadItemsPromise = crudWrapper.query({filter}).then(loadItemsCallback, loadItemsCallback);
                }
             } else {
                loadItemsPromise = Promise.resolve(_private.getEmptyItems(items));
             }
 
             return loadItemsPromise;
+         },
+
+         showIndicator(self): void {
+            self._loadingIndicatorId = self._notify('showIndicator', [], {bubbling: true});
+         },
+
+         hideIndicator(self): void {
+            if (self._loadingIndicatorId) {
+               self._notify('hideIndicator', [self._loadingIndicatorId], {bubbling: true});
+               self._loadingIndicatorId = null;
+            }
          }
       };
+      /**
+       * Контейнер принимает опцию selectedItems от {@link Controls/lookupPopup:Controller} и устанавливает опцию selectedKeys для дочернего списка.
+       * Загружает список записей по списку первичных ключей из опции selectedKeys при завершении выбора
+       * Должен использоваться внутри Controls/lookupPopup:Controller.
+       * В одном Controls/lookupPopup:Controller можно использовать несколько контейнеров.
+       *
+       * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
+       *
+       * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
+       *
+       * @class Controls/_lookupPopup/Container
+       * @extends Core/Control
+       * 
+       * @mixes Controls/_interface/ISource
+       * @mixes Controls/_interface/ISelectionType
+       * @public
+       * @author Герасимов Александр Максимович
+       */
 
+      /*
+      * Container transfers selected items fromControls/lookupPopup:Controller to a specific list.
+      * Loading data by selectedKeys on selection complete.
+      * Must used inside Controls/lookupPopup:Controller.
+      * In one Controls/lookupPopup:Controller can be used some Containers.
+      *
+      * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
+      *
+      * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
+      *
+      * @class Controls/_lookupPopup/Container
+      * @extends Core/Control
+      * 
+      * @mixes Controls/_interface/ISource
+      * @public
+      * @author Герасимов Александр Максимович
+      */
       var Container = Control.extend({
 
          _template: template,
@@ -360,11 +338,16 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
          _selection: null,
          _excludedKeys: null,
          _selectCompleteInitiator: false,
+         _loadingIndicatorId: null,
 
          _beforeMount(options, context): void {
             this._selectedKeys = _private.getSelectedKeys(options, context);
             this._excludedKeys = [];
             this._initialSelection = _private.getInitialSelectedItems(this, options, context);
+         },
+
+         _afterMount(): void {
+            RegisterUtil(this, 'selectComplete', this._selectComplete.bind(this));
          },
 
          _beforeUpdate(newOptions, context): void {
@@ -374,6 +357,11 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             if (currentSelectedItems !== newSelectedItems) {
                this._selectedKeys = _private.getSelectedKeys(newOptions, context);
             }
+         },
+
+         _beforeUnmount(): void {
+            UnregisterUtil(this, 'selectComplete');
+            _private.hideIndicator(this);
          },
 
          _selectComplete(): void {
@@ -400,29 +388,40 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
             }
             const adapter = _private.getSourceAdapter(dataOptions.source);
             const selection = _private.getSelection(selectionObject, adapter, options.selectionType, isRecursive);
-            const filter = _private.prepareFilter(dataOptions.filter, selection, options.searchParam, options.parentProperty);
+            const filter = _private.prepareFilter({
+               filter: dataOptions.filter,
+               selection,
+               searchParam: options.searchParam,
+               parentProperty: options.parentProperty,
+               nodeProperty: options.nodeProperty,
+               selectionType: options.selectionType,
+               root: options.root,
+               items
+            });
 
-            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f 
+            // FIXME https://online.sbis.ru/opendoc.html?guid=7ff270b7-c815-4633-aac5-92d14032db6f
             // необходимо уйти от опции selectionLoadMode и вынести загрузку
             // выбранный записей в отдельный слой.
             // здесь будет только формирование фильтра
             if (this._options.selectionLoadMode) {
                loadPromise = new Promise((resolve) => {
-                  _private.loadSelectedItems(this, filter).then((loadedItems) => {
-                     resolve(_private.prepareResult(
-                            loadedItems,
-                            this._initialSelection,
-                            keyProperty,
-                            this._selectCompleteInitiator
-                         )
-                     );
-                  });
+                   _private.loadSelectedItems(this, filter)
+                       .then((loadedItems) => {
+                           resolve(_private.prepareResult(
+                               loadedItems,
+                               this._initialSelection,
+                               keyProperty,
+                               this._selectCompleteInitiator
+                               )
+                           );
+                       });
                });
             } else {
                loadPromise = Promise.resolve(filter);
             }
 
             this._notify('selectionLoad', [loadPromise], {bubbling: true});
+            return loadPromise;
          },
 
          _selectedKeysChanged: function(event, selectedKeys, added, removed) {
@@ -453,6 +452,90 @@ import {ISelectionObject, TSelectionRecord, TSelectionType} from 'Controls/inter
       };
 
       Container._private = _private;
+      /**
+       * @name Controls/_lookupPopup/Container#selectionFilter
+       * @cfg {Function} Функция обратного вызова, с помощью которой происходит фильтрация выбранных записей для конкретного списка.
+       * Функция должна вернуть true если запись относится к данному списку или false, если не относится.
+       * @remark По умолчанию опция selectionFilter установлена как функция, которая всегда возвращает true.
+       * @example
+       *
+       * WML:
+       * <pre>
+       *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
+       *        ...
+       *    </Controls.lookupPopup:Container>
+       * </pre>
+       *
+       * JS:
+       * <pre>
+       *     _selectionFilter: function(item, index) {
+       *        let filterResult = false;
+       *
+       *        if (item.get('Компания')) {
+       *            filterResult = true;
+       *        }
+       *
+       *        return filterResult;
+       *     }
+       * </pre>
+       */
 
+      /*
+      * @name Controls/_lookupPopup/Container#selectionFilter
+      * @cfg {Function} Function that filters selectedItems from Controls/lookupPopup:Controller for a specific list.
+      * @remark By default selectionFilter option is setted as function that always returns true.
+      * @example
+      *
+      * WML:
+      * <pre>
+      *    <Controls.lookupPopup:Container selectionFilter="{{_selectionFilter}}">
+      *        ...
+      *    </Controls.lookupPopup:Container>
+      * </pre>
+      *
+      * JS:
+      * <pre>
+      *     _selectionFilter: function(item, index) {
+      *        let filterResult = false;
+      *
+      *        if (item.get('Компания')) {
+      *            filterResult = true;
+      *        }
+      *
+      *        return filterResult;
+      *     }
+      * </pre>
+      */
+
+
+      /**
+       * @name Controls/_lookupPopup/Container#selectionType
+       * @cfg {String} Тип записей, которые можно выбрать.
+       * @variant node только узлы доступны для выбора
+       * @variant leaf только листья доступны для выбора
+       * @variant all все типы записей доступны для выбора
+       * @example
+       * В данном примере для выбора доступны только листья.
+       * <pre>
+       *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+       *        ...
+       *    </Controls.lookupPopup:ListContainer>
+       * </pre>
+       */
+
+      /*
+      * @name Controls/_lookupPopup/Container#selectionType
+      * @cfg {String} Type of records that can be selected.
+      * @variant node only nodes are available for selection
+      * @variant leaf only leafs are available for selection
+      * @variant all all types of records are available for selection
+      * @example
+      * In this example only leafs are available for selection.
+      * <pre>
+      *    <Controls.lookupPopup:ListContainer selectionType="leaf">
+      *        ...
+      *    </Controls.lookupPopup:ListContainer>
+      * </pre>
+      */
       export = Container;
 

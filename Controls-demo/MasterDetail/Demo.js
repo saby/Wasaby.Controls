@@ -7,10 +7,13 @@ define('Controls-demo/MasterDetail/Demo', [
    'wml!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
    'Controls-demo/MasterDetail/DemoSource',
    'Env/Env',
-   'css!Controls-demo/MasterDetail/Demo'
 ], function(Control, template, data, cClone, source, itemTemplate, DemoSource, Env) {
-   return Control.extend({
+   var ModuleClass = Control.extend({
       _template: template,
+      _markedKey: 0,
+      _markedKey2: 0,
+      _markedKey3: 0,
+
 
 
       _beforeMount: function() {
@@ -35,6 +38,21 @@ define('Controls-demo/MasterDetail/Demo', [
          });
       },
 
+      _firstHandler: function() {
+         this._firstBaseWidth = '1000px';
+         this._children.resizeDetect.start();
+      },
+
+      _secondHandlerIncrease: function() {
+         this._secondBaseWidth = '1920px';
+         this._children.resizeDetect1.start();
+      },
+
+      _secondHandlerDecrease: function() {
+         this._secondBaseWidth = '1000px';
+         this._children.resizeDetect1.start();
+      },
+
       gridColumns: [
          {
             displayProperty: 'name',
@@ -43,4 +61,8 @@ define('Controls-demo/MasterDetail/Demo', [
          }
       ]
    });
+
+   ModuleClass._styles = ['Controls-demo/MasterDetail/Demo', 'Controls-demo/Controls-demo'];
+
+   return ModuleClass;
 });

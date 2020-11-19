@@ -22,11 +22,11 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
 
             var current = model.getCurrent();
             current.resetColumnIndex();
-            assert.isFalse(!!current.getCurrentColumn().column.needSearchHighlight);
+            assert.isTrue(!!current.getCurrentColumn().needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
 
             current.goToNextColumn();
-            assert.isTrue(!!current.getCurrentColumn().column.needSearchHighlight);
+            assert.isTrue(!!current.getCurrentColumn().needSearchHighlight);
             assert.equal(current.getCurrentColumn().searchValue, 'tes');
          });
 
@@ -48,25 +48,6 @@ define(['Controls/treeGrid', 'Types/collection', 'Types/entity'], function(treeG
             model._curIndex = 0;
             assert.isTrue(model.getCurrent().breadCrumbs);
             assert.deepEqual(model._ladder, {});
-         });
-
-         it('isFirstInGroup with breadCrumb', function() {
-            var items = new collection.RecordSet({
-               rawData: [{id: 1, title: 'test', node: null, parent: null}],
-               keyProperty: 'id'
-            });
-            var model = new treeGrid.SearchGridViewModel({
-               items: items,
-               searchValue: 'tes',
-               keyProperty: 'id',
-               parentProperty: 'parent',
-               nodeProperty: 'node',
-               columns: [{displayProperty: 'id'}, {displayProperty: 'title'}],
-               multiSelectVisibility: 'visible'
-            });
-            model._curIndex = 0;
-
-            assert.isFalse(model._isFirstInGroup(model.getCurrent().item));
          });
 
          it('should not add spacing to first column because multiSelectVisibility is "visible"', function() {

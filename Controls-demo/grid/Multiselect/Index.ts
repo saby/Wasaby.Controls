@@ -1,23 +1,26 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/grid/Multiselect/Multiselect"
-import {Memory} from "Types/source"
-import {getCountriesStats} from "../DemoHelpers/DataCatalog"
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/grid/Multiselect/Multiselect';
+import {Memory} from 'Types/source';
+import {getCountriesStats} from '../DemoHelpers/DataCatalog';
+import { IColumn } from 'Controls/grid';
 
-import 'css!Controls-demo/Controls-demo'
+interface IColumn {
+    displayProperty: string;
+}
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
-    private _columns = getCountriesStats().getColumnsWithoutWidths();
+    protected _viewSource: Memory;
+    protected _columns: IColumn[] = getCountriesStats().getColumnsWithoutWidths();
     private _multiselect: 'visible'|'hidden'|'onhover' = 'visible';
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getCountriesStats().getData()
         });
     }
-    private _onToggle() {
+    protected _onToggle(): void {
         switch (this._multiselect) {
             case 'visible':
                this._multiselect = 'hidden';
@@ -31,4 +34,6 @@ export default class extends Control {
         }
         this._forceUpdate();
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

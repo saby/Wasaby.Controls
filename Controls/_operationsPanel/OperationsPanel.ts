@@ -4,10 +4,11 @@ import toolbars = require('Controls/toolbars');
 import sourceLib = require('Types/source');
 import WidthUtils = require('Controls/_operationsPanel/OperationsPanel/Utils');
 import buttons = require('Controls/buttons');
-import notifyHandler = require('Controls/Utils/tmplNotify');
+import {tmplNotify as notifyHandler} from 'Controls/eventUtils';
 import {RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Record} from 'Types/entity';
+import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
 
 var _private = {
@@ -72,45 +73,105 @@ var _private = {
 /*
  * Контрол, предназначенный для операций над множеством записей списка.
  * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>здесь</a>.
- * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Демо-пример</a>.
  *
  * @class Controls/_operationsPanel/OperationsPanel
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
  *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
  */
 
 /*
  * Control for grouping operations.
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
- * <a href="/materials/demo-ws4-operations-panel">Demo</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo</a>.
  *
  * @class Controls/_operations/OperationsPanel
  * @extends Core/Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @private
  * @author Авраменко А.С.
  * @demo Controls-demo/OperationsPanel/Panel
  *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
  */
 
+var OperationsPanel = Control.extend({
+   _template: template,
+   _oldToolbarWidth: 0,
+   _initialized: false,
+   _notifyHandler: notifyHandler,
+
+   _beforeMount(options: object): Promise<RecordSet>|void {
+      const loadDataCallback = (data?: RecordSet): RecordSet|void => {
+         if (!data) {
+            _private.initialized(this, options);
+         }
+         return data;
+      };
+      let result;
+
+      if (options.source) {
+         result = _private.loadData(this, options.source).then(loadDataCallback);
+      } else {
+         loadDataCallback();
+      }
+
+      return result;
+   },
+
+   _afterMount(): void {
+      _private.checkToolbarWidth(this);
+      _private.initialized(this, this._options);
+      scheduleCallbackAfterRedraw(this, () => {
+         this._notify('controlResize', [], {bubbling: true});
+      });
+      this._notify('operationsPanelOpened');
+   },
+
+   _afterUpdate(oldOptions: object): void {
+      if (this._options.source !== oldOptions.source) {
+         // We should recalculate the size of the toolbar only when all the children have updated,
+         // otherwise available width may be incorrect.
+         _private.loadData(this, this._options.source).addCallback(() => {
+            _private.recalculateToolbarItems(this, this._items, this._children.toolbarBlock.clientWidth);
+         });
+      } else {
+         // TODO: размеры пересчитываются после каждого обновления, т.к. иначе нельзя понять что изменился rightTemplate (там каждый раз новая функция)
+         // TODO: будет исправляться по этой задаче: https://online.sbis.ru/opendoc.html?guid=b4ed11ba-1e4f-4076-986e-378d2ffce013
+         _private.checkToolbarWidth(this);
+      }
+   },
+
+   _onResize: function() {
+      _private.checkToolbarWidth(this);
+
+      // todo зову _forceUpdate потому что нужно отрисовать пересчет, произошедший в checkToolbarWidth. добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
+      this._forceUpdate();
+   },
+
+   _itemClickHandler: function(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent) {
+      this._notify('itemClick', [item, nativeEvent, {
+         selected: this._options.selectedKeys,
+         excluded: this._options.excludedKeys
+      }]);
+   }
+});
+
+OperationsPanel.getDefaultOptions = function() {
+   return {
+      itemTemplate: toolbars.ItemTemplate
+   };
+};
+OperationsPanel._theme = ['Controls/operationsPanel', 'Controls/toolbars'];
 /**
  * @name Controls/_operationsPanel/OperationsPanel#rightTemplate
  * @cfg {Function} Шаблон, отображаемый в правой части панели массового выбора.
@@ -130,7 +191,8 @@ var _private = {
  */
 
 /**
- * @event Controls/_operationsPanel/OperationsPanel#itemClick Происходит при клике на элемент.
+ * @event Происходит при клике на элемент.
+ * @name Controls/_operationsPanel/OperationsPanel#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
  * @param {Object} originalEvent Дескриптор исходного события.
@@ -142,20 +204,21 @@ var _private = {
  * JS:
  * <pre>
  *    onPanelItemClick: function(e, selection) {
-    *       var itemId = item.get('id');
-    *       switch (itemId) {
-    *          case 'remove':
-    *             this._removeItems();
-    *             break;
-    *          case 'move':
-    *             this._moveItems();
-    *             break;
-    *    }
-    * </pre>
-    */
+*       var itemId = item.get('id');
+*       switch (itemId) {
+*          case 'remove':
+*             this._removeItems();
+*             break;
+*          case 'move':
+*             this._moveItems();
+*             break;
+*    }
+* </pre>
+*/
 
 /*
- * @event Controls/_operationsPanel/OperationsPanel#itemClick Occurs when an item was clicked.
+ * @event Occurs when an item was clicked.
+ * @name Controls/_operationsPanel/OperationsPanel#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
  * @param {Event} originalEvent Descriptor of the original event.
@@ -197,71 +260,4 @@ var _private = {
  *    <Controls.operations:Panel bind:selectionViewMode="_selectionViewMode"/>
  * </pre>
  */
-
-var OperationsPanel = Control.extend({
-   _template: template,
-   _oldToolbarWidth: 0,
-   _initialized: false,
-   _notifyHandler: notifyHandler,
-
-   _beforeMount(options: object): Promise<RecordSet>|void {
-      const loadDataCallback = (data?: RecordSet): RecordSet|void => {
-         if (!data) {
-            _private.initialized(this, options);
-         }
-         return data;
-      };
-      let result;
-
-      if (options.source) {
-         result = _private.loadData(this, options.source).then(loadDataCallback);
-      } else {
-         loadDataCallback();
-      }
-
-      return result;
-   },
-
-   _afterMount(): void {
-      _private.checkToolbarWidth(this);
-      _private.initialized(this, this._options);
-      this._notify('operationsPanelOpened');
-   },
-
-   _afterUpdate(oldOptions: object): void {
-      if (this._options.source !== oldOptions.source) {
-         // We should recalculate the size of the toolbar only when all the children have updated,
-         // otherwise available width may be incorrect.
-         _private.loadData(this, this._options.source).addCallback(() => {
-            _private.recalculateToolbarItems(this, this._items, this._children.toolbarBlock.clientWidth);
-         });
-      } else {
-         // TODO: размеры пересчитываются после каждого обновления, т.к. иначе нельзя понять что изменился rightTemplate (там каждый раз новая функция)
-         // TODO: будет исправляться по этой задаче: https://online.sbis.ru/opendoc.html?guid=b4ed11ba-1e4f-4076-986e-378d2ffce013
-         _private.checkToolbarWidth(this);
-      }
-   },
-
-   _onResize: function() {
-      _private.checkToolbarWidth(this);
-
-      // todo зову _forceUpdate потому что нужно отрисовать пересчет, произошедший в checkToolbarWidth. добавляю на всякий случай, возможно это лишний вызов. раньше тут _forceUpdate звался из-за события
-      this._forceUpdate();
-   },
-
-   _itemClickHandler: function(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent) {
-      this._notify('itemClick', [item, nativeEvent, {
-         selected: this._options.selectedKeys,
-         excluded: this._options.excludedKeys
-      }]);
-   }
-});
-
-OperationsPanel.getDefaultOptions = function() {
-   return {
-      itemTemplate: toolbars.ItemTemplate
-   };
-};
-OperationsPanel._theme = ['Controls/operationsPanel', 'Controls/toolbars'];
-
 export = OperationsPanel;

@@ -1,9 +1,12 @@
 /**
  * Модуль, который экспортирует набор функций-хэлперов для работы с кэшированием данных на {@link https://wi.sbis.ru/doc/platform/application-optimization/reports-caching/ сервисе кэширования}.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления</a>
+ * 
  * @class Controls/_filter/Prefetch
- * @control
- * @public
+ * 
  * @author Герасимов А.М.
  */
 
@@ -96,7 +99,7 @@ function applyPrefetchFromItems(filter: object, items: RecordSet): object {
     return  filter;
 }
 
-function prepareFilter(filter: Object, prefetchParams: IPrefetchParams): object {
+function prepareFilter(filter: Object, prefetchParams: IPrefetchHistoryParams): object {
     const clonedFiled = {...filter};
     return {...clonedFiled, ...prefetchParams || {}};
 }

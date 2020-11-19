@@ -1,7 +1,6 @@
 import BaseViewModel = require('Controls/_input/Base/ViewModel');
-import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
 import InputProcessor = require('Controls/_input/Mask/InputProcessor');
-import Formatter = require('Controls/_input/Mask/Formatter');
+import {FormatBuilder, Formatter} from 'Controls/decorator';
 
 import {TimeInterval} from 'Types/entity';
 import {Spaces} from 'Controls/_input/Mask/Space';
@@ -51,6 +50,9 @@ export class ViewModel extends BaseViewModel {
     }
 
     protected _convertToValue(displayValue: string) {
+        if (this._displayValue === displayValue) {
+            return this._value;
+        }
         return this._valueToTimeIntervalConverter(displayValue);
     }
 
@@ -71,10 +73,10 @@ export class ViewModel extends BaseViewModel {
 
         this._format = FormatBuilder.getFormat(this._options.mask, ViewModel._formatMaskChars, ViewModel._replacer);
 
-        const clearResult = Formatter.getClearData(this._format, preResult);
-        const result = Formatter.getFormatterData(this._format, {
+        const clearResult = Formatter.clearData(this._format, preResult);
+        const result = Formatter.formatData(this._format, {
             value: clearResult.value,
-            position: 0
+            carriagePosition: 0
         }).value;
 
         return result;
@@ -142,7 +144,7 @@ export class ViewModel extends BaseViewModel {
     private _displayValueParser(value: string): Array<number | string> {
         this._format = FormatBuilder.getFormat(this._options.mask, ViewModel._formatMaskChars, ViewModel._replacer);
 
-        const clearValue = Formatter.getClearData(this._format, value);
+        const clearValue = Formatter.clearData(this._format, value);
 
         const clearArray: Array<number | string> = [];
 

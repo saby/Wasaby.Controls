@@ -2,11 +2,11 @@ define('Controls-demo/Explorer/Explorer', [
    'Env/Env',
    'Core/Control',
    'wml!Controls-demo/Explorer/Explorer',
+   'Controls/Utils/Toolbar',
    'Controls-demo/Explorer/ExplorerMemory',
    'Controls-demo/Explorer/ExplorerImages',
-   'css!Controls-demo/Explorer/Explorer',
    'Controls/explorer'
-], function(Env, BaseControl, template, MemorySource, explorerImages) {
+], function(Env, BaseControl, template, Toolbar, MemorySource, explorerImages) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -38,7 +38,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 1,
                   icon: 'icon-PhoneNull',
                   title: 'phone',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function(item) {
                      Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
@@ -47,7 +47,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 2,
                   icon: 'icon-EmptyMessage',
                   title: 'message',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      alert('Message Click');
                   }
@@ -56,7 +56,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 3,
                   icon: 'icon-Profile',
                   title: 'profile',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action profile Click');
                   }
@@ -66,7 +66,7 @@ define('Controls-demo/Explorer/Explorer', [
                   icon: 'icon-Erase',
                   iconStyle: 'danger',
                   title: 'delete pls',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action delete Click');
                   }
@@ -75,7 +75,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 5,
                   icon: 'icon-PhoneNull',
                   title: 'phone',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function(item) {
                      Env.IoC.resolve('ILogger').info('action phone Click ', item);
                   }
@@ -84,7 +84,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 6,
                   icon: 'icon-EmptyMessage',
                   title: 'message',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      alert('Message Click');
                   }
@@ -93,7 +93,7 @@ define('Controls-demo/Explorer/Explorer', [
                   id: 7,
                   icon: 'icon-Profile',
                   title: 'profile',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action profile Click');
                   }
@@ -103,7 +103,7 @@ define('Controls-demo/Explorer/Explorer', [
                   icon: 'icon-Erase',
                   iconStyle: 'danger',
                   title: 'delete pls',
-                  showType: 0,
+                  showType: Toolbar.showType.MENU,
                   handler: function() {
                      Env.IoC.resolve('ILogger').info('action delete Click');
                   }
@@ -389,6 +389,8 @@ define('Controls-demo/Explorer/Explorer', [
             this._changeViewIcon = this._viewMode === 'tile' ? 'icon-ArrangeList' : 'icon-ArrangePreview';
          }
       });
+
+   ModuleClass._styles = ['Controls-demo/Explorer/Explorer'];
 
    return ModuleClass;
 });

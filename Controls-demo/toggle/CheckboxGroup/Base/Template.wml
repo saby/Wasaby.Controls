@@ -1,0 +1,8 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.toggle:CheckboxGroup source="{{_source}}"
+                                       direction="vertical"
+                                       bind:selectedKeys="_selectedKeys"
+                                       keyProperty="key"/>
+    </div>
+</div>

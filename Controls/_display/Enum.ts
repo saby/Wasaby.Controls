@@ -1,10 +1,9 @@
 import CollectionItem from './CollectionItem';
 import Collection, {
-    ISourceCollection as IGeneralSourceCollection,
     IOptions as ICollectionOptions
 } from './Collection';
+import {ISourceCollection as IGeneralSourceCollection} from './interface/ICollection';
 import {IEnum} from 'Types/collection';
-import {register} from 'Types/di';
 import {DestroyableMixin, ObservableMixin} from 'Types/entity';
 import {Object as EventObject} from 'Env/Event';
 
@@ -119,4 +118,3 @@ Object.assign(Enum.prototype, {
     _onSourceChange: null
 });
 
-register('Controls/display:Enum', Enum, {instantiate: false});

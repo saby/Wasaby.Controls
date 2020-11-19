@@ -1,6 +1,6 @@
 define('Controls-demo/List/DocWI/EmptyList', [
    'Core/Control',
-   'wml!Controls-demo/List/DocWI/resources/Default',
+   'wml!Controls-demo/List/DocWI/resources/EmptyList',
    'Types/source'
 ], function (Control, template, sourceLib) {
    'use strict';

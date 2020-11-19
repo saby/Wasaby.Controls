@@ -1,0 +1,36 @@
+<div class="controlsDemo__wrapper">
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" caption="Enter your name">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input" value="{{_name}}"
+                                            caption="Enter your name">
+         <Controls.input:Text bind:value="_name"/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:InputContainer attr:class="controlsDemo__input"
+                                            caption="Long long long long long long long long long long long">
+         <Controls.input:Text/>
+      </Controls.jumpingLabel:InputContainer>
+   </div>
+   <div class="controlsDemo__cell">
+      <Controls.jumpingLabel:SelectionContainer attr:class="controlsDemo__input" caption="Enter company name">
+         <Controls.lookup:Input
+            source="{{_source}}"
+            keyProperty="id"
+            searchParam="title"
+            multiSelect="{{false}}">
+            <ws:suggestTemplate templateName="wml!Controls-demo/Lookup/resources/SuggestTemplate"/>
+            <ws:itemTemplate>
+               <ws:partial template="Controls/lookup:ItemTemplate" displayProperty="title"/>
+            </ws:itemTemplate>
+            <ws:navigation source="page" view="page">
+               <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
+            </ws:navigation>
+         </Controls.lookup:Input>
+      </Controls.jumpingLabel:SelectionContainer>
+   </div>
+</div>

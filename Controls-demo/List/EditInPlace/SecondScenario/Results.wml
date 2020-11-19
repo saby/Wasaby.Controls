@@ -1,5 +1,9 @@
 <ws:if data="{{ column.result }}">
-   <Controls.decorator:Money value="{{column.result}}" style="{{column.displayProperty === 'NDS' ? 'noAccentResults' : 'accentResults'}}"/>
+   <Controls.decorator:Money value="{{column.result}}"
+                             fontColorStyle="{{column.displayProperty === 'NDS' ? 'unaccented' : 'results'}}"
+                             fontSize="l"
+                             fontWeight="bold"
+   />
 </ws:if>
 <ws:else>
    <invisible-node />

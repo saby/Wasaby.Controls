@@ -1,7 +1,9 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/list:View плоском списке}.
+ * 
  * @class Controls/list:ItemTemplate
  * @mixes Controls/list:BaseItemTemplate
+ * @mixes Controls/list:IContentTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/IItemTemplate#itemTemplate
  * @see Controls/interface/IItemTemplate#itemTemplateProperty
@@ -20,15 +22,15 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/templates/item/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/item-template/ здесь}.
  * @public
  */
 export default interface IItemTemplateOptions {
    /**
     * @name Controls/list:ItemTemplate#displayProperty
-    * @cfg {String} Устанавливает имя поля элемента, данные которого будут отображены в шаблоне.
+    * @cfg {String} Имя поля элемента, данные которого будут отображены в шаблоне.
     * @remark
-    * Опцию не используют, если задан пользовательский шаблон в опции {@link Controls/list:BaseItemTemplate#contentTemplate contentTemplate}.
+    * Опцию не используют, если задан пользовательский шаблон в опции {@link Controls/list:ItemTemplate#contentTemplate contentTemplate}.
     * @default title
     */
    displayProperty?: string;

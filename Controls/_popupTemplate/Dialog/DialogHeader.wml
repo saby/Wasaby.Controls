@@ -1,11 +1,13 @@
-<div class="controls-DialogTemplate__top-area controls-DialogTemplate__top-area_theme_{{_options.theme}} {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
+<div class="controls-DialogTemplate__top-area controls-DialogTemplate__top-area_theme_{{_options.theme}}
+            controls-DialogTemplate__top-area_{{_options.headerBackgroundStyle}}_theme_{{_options.theme}}
+            {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
    <div class="controls-DialogTemplate__top-area-content">
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-DialogTemplate__caption controls-DialogTemplate__caption_theme_{{_options.theme}}">
             <Controls.heading:Title attr:class="controls-DialogTemplate__caption_text"
                                     caption="{{_options.headingCaption}}"
-                                    fontColorStyle="{{_options.headingStyle}}"
-                                    fontSize="{{_options.headingSize}}"
+                                    fontColorStyle="{{_options.headingFontColorStyle}}"
+                                    fontSize="{{_options.headingFontSize}}"
                                     readOnly="{{true}}"
                                     tooltip="{{_options.headingCaption}}"/>
          </div>
@@ -13,6 +15,9 @@
       <ws:if data="{{_options.headerContentTemplate}}" >
          <div class="controls-DialogTemplate__headerContentTemplate controls-DialogTemplate__headerContentTemplate_theme_{{_options.theme}}">
             <ws:partial template="{{_options.headerContentTemplate}}"
+                        bodyContentTemplate="{{null}}"
+                        headerContentTemplate="{{null}}"
+                        footerContentTemplate="{{null}}"
                         scope="{{_options.topAreaOptions}}">
             </ws:partial>
          </div>

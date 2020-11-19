@@ -1,19 +1,7 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/treeGrid/ItemPadding/Custom/Custom"
-import {Memory} from "Types/source"
-import {Gadgets} from "../../DemoHelpers/DataCatalog"
+import {TemplateFunction} from 'UI/Base';
+import Baseindex from '../BaseIndex';
+import * as Template from 'wml!Controls-demo/treeGrid/ItemPadding/Custom/Custom';
 
-import 'css!Controls-demo/Controls-demo'
-
-export default class extends Control {
+export default class extends Baseindex {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
-    private _columns = Gadgets.getColumnsForFlat();
-
-    protected _beforeMount() {
-        this._viewSource = new Memory({
-            keyProperty: 'id',
-            data: Gadgets.getFlatData()
-        });
-    }
 }

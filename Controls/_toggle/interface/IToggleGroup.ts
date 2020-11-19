@@ -28,6 +28,7 @@ export interface IToggleGroup {
      * @variant horizontal Элементы расположены один за другим (горизонтально).
      * @variant vertical Элементы расположены один под другим (вертикально).
      * @default vertical
+     * @demo Controls-demo/toggle/CheckboxGroup/Direction/Index
      * @example
      * Вертикальная ориентация.
      * <pre>
@@ -51,6 +52,7 @@ export interface IToggleGroup {
     /**
      * @name Controls/_toggle/interface/IToggleGroup#itemTemplate
      * @cfg {Function} Шаблон для рендеринга элемента.
+     * @demo Controls-demo/toggle/RadioGroup/ItemTemplate/Index
      * @default Base template
      * @remark
      * Чтобы определить шаблон, вы должны вызвать базовый шаблон.

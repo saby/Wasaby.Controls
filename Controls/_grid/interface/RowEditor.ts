@@ -1,5 +1,6 @@
 /**
  * Шаблон, который используют для настройки отображения элемента контрола {@link Controls/grid:View Таблица} в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
+ * 
  * @class Controls/grid:RowEditor
  * @author Авраменко А.С.
  * @see Controls/grid:View#itemTemplate
@@ -22,7 +23,7 @@
 export default interface IRowEditorOptions {
    /**
     * @name Controls/grid:RowEditor#content
-    * @cfg {String|Function} Устанавливает пользовательский шаблон, описывающий содержимое элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
+    * @cfg {String|Function} Пользовательский шаблон, описывающий содержимое элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
     * @default undefined
     */
    content?: string;

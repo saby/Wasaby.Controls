@@ -1,6 +1,7 @@
 import { assert } from 'chai';
-
-import { CollectionItem } from 'Controls/display';
+import {RecordSet} from 'Types/collection';
+import {Collection, CollectionItem} from 'Controls/display';
+import {ICollection} from "../../../Controls/_display/interface/ICollection";
 
 interface IChangedData<T> {
     item?: CollectionItem<T>;
@@ -385,26 +386,55 @@ describe('Controls/_display/CollectionItem', () => {
         });
     });
 
-    it('.setSwiped()', () => {
-        const given: IChangedData<string> = {};
-        const owner = {
-            notifyItemChange(item: CollectionItem<string>, property: string): void {
-                given.item = item;
-                given.property = property;
-            }
-        };
+    describe('isSwiped variants', () => {
+        let given: IChangedData<string>;
+        let owner: ICollection<any, CollectionItem<any>>;
+        let item: CollectionItem<any>;
+        beforeEach(() => {
+            given = {};
+            owner = {
+                _swipeAnimation: null,
+                notifyItemChange(item: CollectionItem<string>, property: string): void {
+                    given.item = item;
+                    given.property = property;
+                },
+                getSwipeAnimation() {
+                    return this._swipeAnimation;
+                },
+                setSwipeAnimation(animation) {
+                    this._swipeAnimation = animation;
+                }
+            };
+            item = new CollectionItem({ owner });
+        });
 
-        const item = new CollectionItem({ owner });
-        assert.isFalse(item.isSwiped());
+        // Версия должна измениться после setSwiped()
+        it('should update item\'s version on setSwiped()', () => {
+            const prevVersion = item.getVersion();
+            item.setSwiped(true);
+            assert.isAbove(item.getVersion(), prevVersion);
+        });
 
-        const prevVersion = item.getVersion();
+        // Модельдолжна сообщить корректное событие после setSwiped()
+        it('should fire change event on setSwiped()', () => {
+            item.setSwiped(true);
+            assert.strictEqual(given.item, item);
+            assert.strictEqual(given.property, 'swiped');
+        });
 
-        item.setSwiped(true);
-        assert.isTrue(item.isSwiped());
-        assert.isAbove(item.getVersion(), prevVersion);
+        // isSwiped() должен вернуть true, тогда и только тогда когда анимация выставлена в close/open
+        it('isSwiped() should only be true when item is swiped', () => {
+            item.setSwiped(true);
+            assert.isFalse(!!item.isAnimatedForSelection(), 'Item cannot be right-swiped when animation was set to open/close');
+            assert.isTrue(!!item.isSwiped(), 'Item should be left-swiped when animation was set to open/close');
+        });
 
-        assert.strictEqual(given.item, item);
-        assert.strictEqual(given.property, 'swiped');
+        // isAnimatedForSelection() должен вернуть true, тогда и только тогда когда анимация выставлена в right-swipe
+        it('isAnimatedForSelection() should only be true when item is right-swiped', () => {
+            item.setAnimatedForSelection(true);
+            assert.isTrue(!!item.isAnimatedForSelection(), 'Item should be right-swiped when animation was set to right-swipe');
+            assert.isFalse(!!item.isSwiped(), 'Item cannot be left-swiped when animation was set to right-swipe');
+        });
     });
 
     it('.setActive()', () => {
@@ -413,7 +443,8 @@ describe('Controls/_display/CollectionItem', () => {
             notifyItemChange(item: CollectionItem<string>, property: string): void {
                 given.item = item;
                 given.property = property;
-            }
+            },
+            getHoverBackgroundStyle: function() {}
         };
 
         const item = new CollectionItem({ owner });
@@ -430,18 +461,22 @@ describe('Controls/_display/CollectionItem', () => {
     });
 
     it('.getWrapperClasses()', () => {
+        const owner = {
+            notifyItemChange(): void {},
+            getHoverBackgroundStyle: function() {}
+        };
+
         const defaultClasses = [
             'controls-ListView__itemV',
-            'controls-ListView__item_highlightOnHover_default_theme_default',
             'controls-ListView__item_default',
             'controls-ListView__item_showActions',
-            'js-controls-SwipeControl__actionsContainer'
+            'js-controls-ItemActions__swipeMeasurementContainer'
         ];
         const editingClasses = [
             'controls-ListView__item_editing'
         ];
 
-        const item = new CollectionItem();
+        const item = new CollectionItem({ owner });
         const wrapperClasses = item.getWrapperClasses();
 
         defaultClasses.forEach((className) => assert.include(wrapperClasses, className));
@@ -456,29 +491,30 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getContentClasses()', () => {
         let multiSelectVisibility: string;
         const owner = {
-            getRowSpacing(): string { return '#rowSpacing#'; },
-            getLeftSpacing(): string { return '#leftSpacing#'; },
-            getRightSpacing(): string { return '#rightSpacing#'; },
-            getMultiSelectVisibility(): string { return multiSelectVisibility; }
+            getTopPadding(): string { return '#topSpacing#'; },
+            getBottomPadding(): string { return '#bottomSpacing#'; },
+            getLeftPadding(): string { return '#leftSpacing#'; },
+            getRightPadding(): string { return '#rightSpacing#'; },
+            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getRowSeparatorSize: function () { return ''; }
         };
         const defaultClasses = [
             'controls-ListView__itemContent',
-            'controls-ListView__item-topPadding_#rowspacing#',
-            'controls-ListView__item-bottomPadding_#rowspacing#',
+            'controls-ListView__item_default-topPadding_#topspacing#',
+            'controls-ListView__item_default-bottomPadding_#bottomspacing#',
             'controls-ListView__item-rightPadding_#rightspacing#'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'visible' });
 
         // multiselect visible
-        multiSelectVisibility = 'visible';
         const visibleContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__itemContent_withCheckboxes'
         ]).forEach((className) => assert.include(visibleContentClasses, className));
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
+        item.setMultiSelectVisibility('hidden');
         const hiddenContentClasses = item.getContentClasses();
         defaultClasses.concat([
             'controls-ListView__item-leftPadding_#leftspacing#'
@@ -488,22 +524,22 @@ describe('Controls/_display/CollectionItem', () => {
     it('.getMultiSelectClasses()', () => {
         let multiSelectVisibility;
         const owner = {
-            getMultiSelectVisibility(): string { return multiSelectVisibility; }
+            getMultiSelectVisibility(): string { return multiSelectVisibility; },
+            getMultiSelectPosition(): string { return 'default';}
         };
         const defaultClasses = [
             'controls-ListView__checkbox',
             'controls-ListView__notEditable'
         ];
 
-        const item = new CollectionItem({ owner });
+        const item = new CollectionItem({ owner, multiSelectVisibility: 'hidden' });
 
         // multiselect hidden
-        multiSelectVisibility = 'hidden';
         const hiddenMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.forEach((className) => assert.include(hiddenMultiSelectClasses, className));
 
         // multiselect onhover + not selected
-        multiSelectVisibility = 'onhover';
+        item.setMultiSelectVisibility('onhover');
         const onhoverMultiSelectClasses = item.getMultiSelectClasses();
         defaultClasses.concat([
             'controls-ListView__checkbox-onhover'
@@ -633,4 +669,58 @@ describe('Controls/_display/CollectionItem', () => {
             assert.isAbove(item.getVersion(), prevVersion);
         });
     });
+
+    describe('testing of ICollectionItemStyled styling methods', () => {
+        let item: CollectionItem<any>;
+
+        beforeEach(() => {
+            item = new CollectionItem();
+            item.setOwner(new Collection({
+                keyProperty: 'id',
+                collection: new RecordSet({
+                    rawData: [item],
+                    keyProperty: 'id'
+                }) as any
+            }))
+        });
+
+        // CSS класс для позиционирования опций записи.
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (старая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 'null'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
+
+        // Если itemPadding.top === null и itemPadding.bottom === null, то возвращает пустую строку (новая модель)
+        it('getItemActionPositionClasses() should return empty string when itemPadding = {top: null, bottom: null}', () => {
+            item.getOwner().setItemPadding({top: 'null', bottom: 'null'});
+            const result = item.getItemActionPositionClasses('inside', null, undefined, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight ');
+        });
+
+        // Если опции внутри строки и itemActionsClass не задан, возвращает класс, добавляющий выравнивание bottomRight
+        it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is not set', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 'null', bottom: 's'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default_theme-default ');
+        });
+
+        // Если опции внутри строки и itemActionsClass задан, возвращает класс, добавляющий выравнивание согласно itemActionsClass и itemPadding
+        it('getItemActionPositionClasses() should return classes for bottom-right positioning when itemActionClass is set', () => {
+            const result = item.getItemActionPositionClasses('inside', 'controls-itemActionsV_position_topRight', {top: 'null', bottom: 's'}, 'default');
+            assert.equal(result, ' controls-itemActionsV_position_topRight controls-itemActionsV_padding-top_null_theme-default ');
+        });
+
+        // Всегда, кроме новой модели происходит попытка рассчитать класс, добавляющий padding
+        it('getItemActionPositionClasses() should try to add padding class for any case except of useNewModel', () => {
+            const result = item.getItemActionPositionClasses('inside', 'controls-itemActionsV_position_topRight', {top: 's', bottom: 's'}, 'default', false);
+            assert.equal(result, ' controls-itemActionsV_position_topRight controls-itemActionsV_padding-top_default_theme-default ');
+        });
+
+        // Если новая модель, то в любом случае не считается класс, добавляющий padding
+        it('getItemActionPositionClasses() should not add padding class in case of useNewModel', () => {
+            const result = item.getItemActionPositionClasses('inside', null, {top: 's', bottom: 's'}, 'default', true);
+            assert.equal(result, ' controls-itemActionsV_position_bottomRight controls-itemActionsV_padding-bottom_default_theme-default ');
+        });
+    })
 });

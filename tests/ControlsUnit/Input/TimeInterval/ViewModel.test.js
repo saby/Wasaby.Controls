@@ -28,6 +28,11 @@ define([
             value = new entity.TimeInterval({seconds: 20});
             assert.strictEqual(model._convertToValue('00:00:20')._normIntervalStr, value._normIntervalStr);
          });
+         it('Recalculate value', function() {
+            let value = new entity.TimeInterval({days: 1, hours: 20, minutes: 10, seconds: 20});
+            let model = new ViewModel(_options, value);
+            assert.equal(model._convertToValue('44:10:20'), value);
+         });
       });
 
       describe('._convertToDisplayValue', function() {

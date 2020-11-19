@@ -9,45 +9,12 @@ import pDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
 import Merge = require('Core/core-merge');
+import {PrefetchProxy} from 'Types/source';
 import {Controller as SourceController} from 'Controls/source';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
-
-      /**
-       * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
-       * 
-       * @remark
-       * См. <a href="/materials/demo-ws4-filter-search-new">демо-пример</a>
-       * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
-       * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
-       *
-       * @class Controls/_filter/Fast
-       * @extends Core/Control
-       * @mixes Controls/interface/IFastFilter
-       * @mixes Controls/_filter/Fast/FastStyles
-       * @demo Controls-demo/FastFilter/fastPG
-       * @control
-       * @public
-       * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
-       * @author Герасимов А.М.
-       */
-
-      /*
-       * Control "Fast Filter".
-       * Use dropDown lists for filter data.
-       *
-       * Here you can see a <a href="/materials/demo-ws4-filter-search-new">demo</a>.
-       *
-       * @class Controls/_filter/Fast
-       * @extends Core/Control
-       * @mixes Controls/interface/IFastFilter
-       * @mixes Controls/_filter/Fast/FastStyles
-       * @demo Controls-demo/FastFilter/fastPG
-       * @control
-       * @public
-       * @author Герасимов А.М.
-       */
+import {Model} from 'Types/entity';
 
 
       var getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -77,6 +44,20 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             return self._sourceController;
          },
 
+         deleteUnserializablePropertiesFromState(collection: unknown[]): unknown[] {
+            const properties = ['dataLoadCallback', 'itemTemplate'];
+            chain.factory(collection).each((item: Record<string, any>) => {
+               if (item.properties) {
+                  Object.keys(item.properties).forEach((key: string): void => {
+                     if (properties.includes(key) && (item.properties[key] instanceof Function)) {
+                        delete item.properties[key];
+                     }
+                  });
+               }
+            });
+            return collection;
+         },
+
           getSourceController: function(self, options) {
              return historyUtils.getSource(options.source, options.historyId, {pinned: true}).addCallback((source) => {
                  self._source = source;
@@ -91,7 +72,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             itemConfig.itemTemplate = properties.itemTemplate;
             itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
             itemConfig.headerTemplate = properties.headerTemplate;
-            itemConfig.footerTemplate = properties.footerTemplate;
+            itemConfig.footerContentTemplate = properties.footerTemplate || properties.footerContentTemplate;
             itemConfig.multiSelect = properties.multiSelect;
             itemConfig.emptyText = properties.emptyText;
             itemConfig.selectorTemplate = properties.selectorTemplate;
@@ -130,7 +111,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             }
          },
 
-         reload: function(self) {
+         reload: function(self, needDeleteProperties: boolean = false) {
             if (self._loadDeferred && !self._loadDeferred.isReady()) {
                self._loadDeferred.cancel();
                self._loadDeferred = null;
@@ -149,7 +130,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                   // history.Source не умеет сериализоваться - удаляем его из receivedState
                   return {
                      configs: deleteHistorySourceFromConfig(self._configs, '_source'),
-                     items: self._items
+                     items: needDeleteProperties && _private.deleteUnserializablePropertiesFromState(self._items)
                   };
                });
             });
@@ -217,7 +198,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
              if (historyUtils.isHistorySource(currentFilter._source)) {
                  currentFilter._source.update(items, historyUtils.getMetaHistory());
 
-                 if (currentFilter._sourceController && currentFilter._source.getItems) {
+                 if (currentFilter._sourceController && currentFilter._source.getItems()) {
                      currentFilter._items = currentFilter._source.getItems();
                  }
              }
@@ -234,18 +215,25 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             }
          },
 
-         onResult: function(event, result) {
-            if (result.data) {
-               if (result.action === 'selectorResult') {
-                  this.lastOpenIndex = this._indexOpenedFilter;
-                  _private.onSelectorResult(this._configs[this._indexOpenedFilter], result.data);
-               } else {
-                  _private.updateHistory(this._configs[this.lastOpenIndex], result.data);
-               }
-               _private.selectItems.call(this, result.data);
-               _private.notifyChanges(this, this._items);
-            }
-            this._children.DropdownOpener.close();
+         onResult: function(event, action, data) {
+             if (action === 'footerClick') {
+                 this._children.DropdownOpener.close();
+             } else if (data && action !== 'menuOpened') {
+                 const items = action === 'itemClick' ? [data] : data;
+                 if (action === 'selectorResult') {
+                     this.lastOpenIndex = this._indexOpenedFilter;
+                     _private.onSelectorResult(this._configs[this._indexOpenedFilter], items);
+                 } else if (action === 'selectorDialogOpened') {
+                     this._afterSelectorOpenCallback(items);
+                     this._children.DropdownOpener.close();
+                     return;
+                 } else {
+                     _private.updateHistory(this._configs[this.lastOpenIndex], items);
+                 }
+                 _private.selectItems.call(this, items);
+                 _private.notifyChanges(this, this._items);
+                 this._children.DropdownOpener.close();
+             }
          },
 
          setTextValue: function(item, textValue) {
@@ -361,7 +349,40 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             return needReload;
          }
       };
+/**
+       * Контрол "Быстрый фильтр". Использует выпадающие списки для выбора параметров фильтрации.
+       *
+       * @remark
+       * Полезные ссылки:
+       * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+       * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
+       *
+       * @class Controls/_filter/Fast
+       * @extends Core/Control
+       * @mixes Controls/_filter/interface/IFastFilter
+       * @demo Controls-demo/FastFilter/fastPG
+       * 
+       * @public
+       * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
+       * @author Герасимов А.М.
+       */
 
+      /*
+       * Control "Fast Filter".
+       * Use dropDown lists for filter data.
+       *
+       *
+       * @class Controls/_filter/Fast
+       * @extends Core/Control
+       * @mixes Controls/_filter/interface/IFastFilter
+       * @mixes Controls/_filter/Fast/FastStyles
+       * @demo Controls-demo/FastFilter/fastPG
+       * 
+       * @public
+       * @author Герасимов А.М.
+       */
       var Fast = Control.extend(/** @lends Controls/_filter/Fast.prototype */{
          _template: template,
          _configs: null,
@@ -370,6 +391,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
          _beforeMount: function(options, context, receivedState) {
             this._configs = [];
             this._onResult = _private.onResult.bind(this);
+            this._selectorOpenCallback = this._selectorOpenCallback.bind(this);
 
             var resultDef;
 
@@ -382,12 +404,24 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
                _private.calculateStateSourceControllers(this._configs, this._items);
             } else if (options.items) {
                _private.prepareItems(this, options.items);
-               resultDef = _private.reload(this);
+               resultDef = _private.reload(this, options.task11801809936);
             } else if (options.source) {
                resultDef = _private.loadConfigFromSource(this, options);
             }
             this._hasSelectorTemplate = _private.hasSelectorTemplate(this._configs);
             return resultDef;
+         },
+          // TODO: убрать по задаче: https://online.sbis.ru/opendoc.html?guid=637922a8-7d23-4d18-a7f2-b58c7cfb3cb0
+         _selectorOpenCallback() {
+            const value = getPropValue(this._items.at(this.lastOpenIndex), 'value');
+            const selectedKeys = value instanceof Array ? value : [value];
+            let selectedItems = chain.factory(this._configs[this.lastOpenIndex]._items).filter((item: Model): boolean => {
+               const itemId = item.getKey();
+               return itemId !== null && selectedKeys.includes(itemId);
+            }).value();
+            return new collection.List({
+                items: selectedItems
+            });
          },
 
          _beforeUpdate: function(newOptions) {
@@ -422,14 +456,21 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
 
             var selectedKeys = getPropValue(this._items.at(index), 'value');
             var templateOptions = {
-               items: this._configs[index].popupItems || this._configs[index]._items,
+               source: new PrefetchProxy({
+                  target: this._configs[index]._source,
+                  data: {
+                     query: (this._configs[index].popupItems || this._configs[index]._items).clone()
+                  }
+               }),
+               selectorOpener: this,
                selectorItems: this._configs[index]._items,
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
-               selectorOpener: this._children.selectorOpener,
+               navigation: this._configs[index]._sourceController.getNavigation(),
                selectorDialogResult: this._onSelectorTemplateResult.bind(this),
-               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this)
+               afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this),
+               dropdownClassName: `controls-FastFilter_width-popup_theme-${this._options.theme}`
             };
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
@@ -449,7 +490,9 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
             if (this._configs[index]._needQuery) {
                this._configs[index]._needQuery = false;
                _private.loadItemsFromSource(this._configs[index], getPropValue(this._items.at(index), 'properties')).addCallback(() => {
-                  open(config);
+                   _private.loadNewItems(this, this._items, this._configs).addCallback(() => {
+                       open(config);
+                   });
                });
             } else {
                open(config);
@@ -458,7 +501,7 @@ import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from '
 
          _onSelectorTemplateResult: function(event, items) {
             let resultSelectedItems = this._notify('selectorCallback', [this._configs[this._indexOpenedFilter].initSelectorItems, items, this._indexOpenedFilter]) || items;
-            this._onResult(event, {action: 'selectorResult', data: resultSelectedItems});
+            this._onResult(event, 'selectorResult', resultSelectedItems);
          },
 
          _afterSelectorOpenCallback: function(selectedItems) {

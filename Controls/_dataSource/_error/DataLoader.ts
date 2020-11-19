@@ -1,10 +1,8 @@
 import {Control, TemplateFunction, IControlOptions } from 'UI/Base';
-import Controller from 'Controls/_dataSource/_error/Controller';
-import Mode from 'Controls/_dataSource/_error/Mode';
+import { Controller, Mode, ViewConfig as ErrorViewConfig } from 'Controls/error';
 import * as template from 'wml!Controls/_dataSource/_error/DataLoader';
 import requestDataUtil, {ISourceConfig, IRequestDataResult} from 'Controls/_dataSource/requestDataUtil';
 import {PrefetchProxy} from 'Types/source';
-import {ViewConfig as ErrorViewConfig} from 'Controls/_dataSource/_error/Handler';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {fetch, HTTPStatus } from 'Browser/Transport';
 
@@ -26,9 +24,9 @@ interface IErrorContainerOptions extends IControlOptions {
  * @class Controls/_dataSource/_error/DataLoader
  * @extends UI/Base:Control
  * @implements Controls/_interface/IErrorController
- * @control
+ * 
  * @public
- * @author Сухоручкин А.С
+ * @author Сухоручкин А.С.
  */
 
 export default class DataLoader extends Control<IErrorContainerOptions, IErrorContainerReceivedState> {
@@ -43,7 +41,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
       if (receivedState) {
          this._sources = sources;
          this._errorViewConfig = receivedState.errorViewConfig;
-      } else {
+      } else if (sources) {
          return DataLoader.load(sources, requestTimeout).then(({sources, errors}) => {
             const errorsCount = errors.length;
 
@@ -65,6 +63,7 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
    private _getErrorViewConfig(error: Error): Promise<ErrorViewConfig | void> {
       return this._getErrorController().process({
          error,
+         theme: this._options.theme,
          mode: Mode.include
       });
    }
@@ -93,12 +92,14 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
                url: undefined
             });
 
-            errorsResult.push(err);
-
             return {
                data
             };
          }).then((loadDataResult: IRequestDataResult) => {
+            if (loadDataResult.data instanceof Error) {
+               errorsResult.push(loadDataResult.data);
+            }
+
             sourcesResult[sourceIndex] = DataLoader._createSourceConfig(sourceConfig, loadDataResult);
          });
       });

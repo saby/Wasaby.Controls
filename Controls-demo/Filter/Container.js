@@ -6,8 +6,6 @@ define('Controls-demo/Filter/Container', [
    'wml!Controls-demo/Filter/Container',
    'Types/source',
    'Controls-demo/Utils/MemorySourceData',
-   'css!Controls-demo/Filter/Container',
-   'Controls/deprecatedList',
    'Controls/search',
    'Controls/filter'
 ], function(Control, template, sourceLib, memorySourceData) {
@@ -34,7 +32,7 @@ define('Controls-demo/Filter/Container', [
          this._filterTabs = {};
          this._filterData = [
             {
-               id: 'department',
+               name: 'department',
                resetValue: 'По департаменту',
                value: 'По департаменту',
                properties: {
@@ -55,7 +53,7 @@ define('Controls-demo/Filter/Container', [
                }
             },
             {
-               id: 'owner',
+               name: 'owner',
                resetValue: '0',
                value: '0',
                properties: {
@@ -74,7 +72,7 @@ define('Controls-demo/Filter/Container', [
             }
          ];
          this._filterButtonData = [{
-            id: 'owner',
+            name: 'owner',
             resetValue: '0',
             value: '0',
             source: new sourceLib.Memory({
@@ -94,6 +92,8 @@ define('Controls-demo/Filter/Container', [
          });
       }
    });
+
+   SearchContainer._styles = ['Controls-demo/Filter/Container'];
 
    return SearchContainer;
 });

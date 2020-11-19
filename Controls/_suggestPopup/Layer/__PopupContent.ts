@@ -6,8 +6,8 @@ var _private = {
    getBorderWidth: function(container) {
       return +getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2;
    },
-   getSuggestWidth: function(target, container) {
-      return target.offsetWidth - _private.getBorderWidth(container);
+   getSuggestWidth(target: HTMLElement, container?: HTMLElement): number {
+      return target.offsetWidth - (container ? _private.getBorderWidth(container) : 0);
    }
 };
 
@@ -18,6 +18,8 @@ var __PopupContent = BaseLayer.extend({
    _popupOptions: null,
    _suggestWidth: null,
    _reverseList: false,
+   _pendingShowContent: null,
+   _showContent: false,
    _shouldScrollToBottom: false,
 
    _beforeUpdate(newOptions): void {
@@ -25,12 +27,16 @@ var __PopupContent = BaseLayer.extend({
 
       const isPopupOpenedToTop = newOptions.stickyPosition && newOptions.stickyPosition.direction.vertical === 'top';
 
-      if (!this._reverseList && isPopupOpenedToTop) {
+      if (!this._reverseList && isPopupOpenedToTop && !this._showContent) {
           // scroll after list render in  _beforePaint hook
          this._shouldScrollToBottom = true;
       }
+      this._pendingShowContent = newOptions.showContent;
 
-      this._reverseList = isPopupOpenedToTop;
+      if (isPopupOpenedToTop !== this._reverseList) {
+         this._showContent = false;
+         this._reverseList = isPopupOpenedToTop;
+      }
    },
 
    _afterUpdate(oldOptions): void {
@@ -39,18 +45,35 @@ var __PopupContent = BaseLayer.extend({
          this._notify('controlResize', [], {bubbling: true});
       }
 
-      // Для Ipad'а фиксируем автодополнение, только если оно отобразилось вверх, если оно отобразилось вниз,
+      // Для Ipad'а фиксируем автодополнение, только если клавиатура уже отображается или
+      // автодополнение отобразилось вверх, если оно отобразилось вниз,
       // то при появлении клавиатуры автодополнению может не хватить места тогда оно должно будет отобразиться сверху
-      if (this._options.showContent && !this._positionFixed && (!detection.isMobileIOS || this._reverseList)) {
+      const allowFixPositionOnIpad = this._reverseList ||
+                                     (document && document.activeElement && document.activeElement.tagName === 'INPUT');
+
+      if (this._showContent && !this._positionFixed && (!detection.isMobileIOS || allowFixPositionOnIpad)) {
          this._positionFixed = true;
          this._notify('sendResult', [this._options.stickyPosition], {bubbling: true});
+      }
+
+      if (this._pendingShowContent) {
+         this._showContent = this._pendingShowContent;
+         this._pendingShowContent = null;
       }
    },
 
    _beforePaint(): void {
       if (this._shouldScrollToBottom) {
          this._children.scrollContainer.scrollToBottom();
+         this._shouldScrollToBottom = false;
       }
+   },
+
+   _beforeMount(options): void {
+      if (options.target) {
+         this._suggestWidth = _private.getSuggestWidth(options.target[0] || options.target);
+      }
+      __PopupContent.superclass._beforeMount.apply(this, arguments);
    },
 
    _afterMount(): void {
@@ -59,7 +82,7 @@ var __PopupContent = BaseLayer.extend({
       const target: HTMLElement = this._options.target[0] || this._options.target;
       const container: HTMLElement = this._container[0] || this._container;
 
-      /* Width of the suggestion popup should setted for template from suggestTemplate option,
+      /* Width of the suggestion popup should set for template from suggestTemplate option,
          this is needed to make it possible to set own width for suggestions popup by user of control.
          Than user can set own width:
          <Controls.suggest:Input>

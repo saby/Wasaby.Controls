@@ -1,15 +1,16 @@
 <Controls.popupTemplate:Stack headingCaption="Диалог редактирования" attr:style="width:{{_options.width || _options.stackWidth || 900}}px">
    <ws:headerContentTemplate>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-         <Controls.buttons:Button iconSize="m" iconStyle="danger" icon="icon-Erase" on:click="_delete()" viewMode="link" fontColorStyle="link"
+         <Controls.buttons:Button iconSize="m" iconStyle="danger" icon="icon-Erase" on:click="_delete()" viewMode="linkButton" fontColorStyle="link"
                           attr:style="margin-right: 15px;" attr:class="demo-MyFormController__delete"/>
          <Controls.buttons:Button caption="Сохранить" on:click="_update()" attr:class="demo-MyFormController__save"/>
       </div>
    </ws:headerContentTemplate>
    <ws:bodyContentTemplate>
       <div>
-         <Controls.form:Controller name="formControllerInst" dataSource="{{ _dataSource }}"
+         <Controls.form:Controller name="formControllerInst" source="{{ _dataSource }}"
                                         record="{{ _record }}" key="{{ _options.key }}"
+                                        initializingWay="{{_options.initializingWay}}"
                                         on:updateFailed="_errorHandler()"
                                         on:createFailed="_errorHandler()"
                                         on:readFailed="_errorHandler()"
@@ -22,28 +23,28 @@
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Название:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Text bind:value="_record.name" class="demo-MyFormController__name"/>
+                        <Controls.input:Text bind:value="content.record.name" class="demo-MyFormController__name"/>
                     </div>
                 </div>
 
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Цена:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Number bind:value="_record.price" class="demo-MyFormController__price"/>
+                        <Controls.input:Number bind:value="content.record.price" class="demo-MyFormController__price"/>
                     </div>
                 </div>
 
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Остаток:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Number bind:value="_record.balance" class="demo-MyFormController__balance"/>
+                        <Controls.input:Number bind:value="content.record.balance" class="demo-MyFormController__balance"/>
                     </div>
                 </div>
 
                 <div class="controls-MyFormController__block">
                     <div class="controls-MyFormController__row controls-MyFormController__title">Себестоимость:</div>
                     <div class="controls-MyFormController__row">
-                        <Controls.input:Number bind:value="_record.costPrice" class="demo-MyFormController__costPrice"/>
+                        <Controls.input:Number bind:value="content.record.costPrice" class="demo-MyFormController__costPrice"/>
                     </div>
                 </div>
             </div>

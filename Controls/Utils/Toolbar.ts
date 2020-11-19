@@ -1,9 +1,64 @@
 /**
  * Утилита для Toolbar
- *  - содержит константы
+ * @remark
+ *  - содержит константы showType
  *  - фильтр для элементов меню
+ *
+ * <h3>Пример использования утилиты</h3>
+ * <pre>
+ * import {showType} from 'Controls/Utils/Toolbar';
+ *  .....
+ * this._defaultItems = [
+ *     {
+ *         id: '1',
+ *         showType: showType.TOOLBAR,
+ *         icon: 'icon-Time icon-medium',
+ *         '@parent': false,
+ *         parent: null
+ *     },
+ *     {
+ *         id: '3',
+ *         icon: 'icon-Print icon-medium',
+ *         title: 'Распечатать',
+ *         '@parent': false,
+ *         parent: null
+ *      }
+ *  ];
+ * </pre>
+ * @class Controls/Utils/Toolbar
+ * @public
  */
-import {factory, Abstract as ChainAbstract} from 'Types/chain';
+/**
+ * Utils for toolbar
+ *  - contains constants showType
+ *  - filter for menu items
+ *
+ * <h3>Usage example</h3>
+ * <pre>
+ * import {showType} from 'Controls/Utils/Toolbar';
+ *  .....
+ * this._defaultItems = [
+ *     {
+ *         id: '1',
+ *         showType: showType.TOOLBAR,
+ *         icon: 'icon-Time icon-medium',
+ *         '@parent': false,
+ *         parent: null
+ *     },
+ *     {
+ *         id: '3',
+ *         icon: 'icon-Print icon-medium',
+ *         title: 'Распечатать',
+ *         '@parent': false,
+ *         parent: null
+ *      }
+ *  ];
+ * </pre>
+ * @class Controls/Utils/Toolbar
+ * @public
+ */
+
+import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 
@@ -22,14 +77,25 @@ export interface IShowType {
    TOOLBAR: number;
 }
 
-export const showType: IShowType = {
-   MENU: 0,
-   MENU_TOOLBAR: 1,
-   TOOLBAR: 2
-};
+export enum showType {
+   MENU,
+   MENU_TOOLBAR,
+   TOOLBAR
+}
 
 export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): ChainAbstract<T> {
    return factory(items).filter((item) => {
       return item.get('showType') !== this.showType.TOOLBAR;
    });
+}
+
+export function needShowMenu(items: RecordSet): boolean {
+    const enumerator = items.getEnumerator();
+    while (enumerator.moveNext()) {
+        if (enumerator.getCurrent().get('showType') !== this.showType.TOOLBAR) {
+            return true;
+        }
+    }
+
+    return false;
 }

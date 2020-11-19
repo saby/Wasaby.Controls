@@ -101,7 +101,7 @@ define(
 
             let self = {
                historySource: {
-                  _recent: 11
+                  _$recent: 11
                }
             };
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
@@ -131,7 +131,7 @@ define(
             assert.equal(itemsRecent.getCount(), 10);
 
             itemsRecent.clear();
-            self.historySource._recent = 5;
+            self.historySource._$recent = 5;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
 
@@ -141,7 +141,7 @@ define(
             assert.equal(itemsRecent.getCount(), 3);
 
             itemsRecent.clear();
-            self.historySource._pinned = false;
+            self.historySource._$pinned = false;
             historyMod.FilterSource._private.fillRecent(self, historyInstance, itemsRecent);
             assert.equal(itemsRecent.getCount(), 4);
          });
@@ -183,7 +183,7 @@ define(
             assert.isOk(result);
          });
 
-         it('query', function() {
+         it('query', function(done) {
             const query = new sourceLib.Query();
             const sandbox = sinon.createSandbox();
             const filterSource = new historyMod.FilterSource({ historySource: {} });
@@ -193,13 +193,18 @@ define(
             });
 
             sandbox.replace(filterSource, 'historySource', {
-               query: () => Promise.reject()
+               query: () => Promise.reject(),
+               getHistoryId: () => 'test',
+               saveHistory: () => {}
             });
-
             const query1 = filterSource.query(query);
             const query2 = filterSource.query(query);
-
             assert.isTrue(query1 === query2);
+            filterSource.query(query).addCallback((result) => {
+               const isEmptyResultOnError = !result.getAll().getCount();
+               assert.isTrue(isEmptyResultOnError);
+               done();
+            });
          });
 
          it('_private::destroy', () => {

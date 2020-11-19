@@ -5,40 +5,45 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_event/Register');
-import Registrar = require('Controls/_event/Registrar');
 import entity = require('Types/entity');
+import {IRegistrarConfig} from './Registrar';
+import RegisterClass from './RegisterClass';
 
-
-
-var EventRegistrator = Control.extend({
+/**
+ * Контрол, регистрирующий все вложенные {@link Controls/event:Listener} и генерирующий событие, заданное в опции {@link register}.
+ * @class Controls/_event/Register
+ * @extends UI/Base:Control
+ * 
+ * @public
+ * @remark
+ * Подробнее о работе с контролом читайте <a href="/doc/platform/developmentapl/interface-development/controls/tools/autoresize/">здесь</a>.
+ * @author Красильников А.С.
+ */
+const EventRegistrator = Control.extend({
    _template: template,
-   _registrar: null,
-   _beforeMount: function(newOptions) {
+   _register: null,
+   _beforeMount(newOptions): void {
       if (typeof window !== 'undefined') {
          this._forceUpdate = function() {
             // Do nothing
             // This method will be called because of handling event.
          };
-         this._registrar = new Registrar({ register: newOptions.register });
+         this._register = new RegisterClass({ register: newOptions.register });
       }
    },
-   _registerIt: function(event, registerType, component, callback, config = {}) {
-      if (registerType === this._options.register) {
-         this._registrar.register(event, component, callback, config);
-      }
+   _registerIt(event, registerType, component, callback, config: IRegistrarConfig = {}): void {
+      this._register.register(event, registerType, component, callback, config);
    },
-   _unRegisterIt: function(event, registerType, component) {
-      if (registerType === this._options.register) {
-         this._registrar.unregister(event, component);
-      }
+   _unRegisterIt(event, registerType, component, config: IRegistrarConfig = {}): void {
+      this._register.unregister(event, registerType, component, config);
    },
-   start: function() {
-      this._registrar.start.apply(this._registrar, arguments);
+   start(): void {
+      this._register.start.apply(this._register, arguments);
    },
-   _beforeUnmount: function() {
-      if (this._registrar) {
-         this._registrar.destroy();
-         this._registrar = null;
+   _beforeUnmount(): void {
+      if (this._register) {
+         this._register.destroy();
+         this._register = null;
       }
    }
 });
@@ -49,5 +54,15 @@ EventRegistrator.getOptionTypes = function() {
    };
 };
 
+/**
+ * @name Controls/_event/Register#register
+ * @cfg {String} Имя события, которое генерируется на зарегистрированных {@link Controls/event:Listener} при вызове метода {@link start}.
+ */
+
+/**
+ * Оповещает зарегистрированные {@link Controls/event:Listener}.
+ * @name Controls/_event/Register#start
+ * @function 
+ */
 export = EventRegistrator;
 

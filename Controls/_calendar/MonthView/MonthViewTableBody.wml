@@ -1,15 +1,39 @@
-<div for="index, week in monthViewModel.getMonthArray()" class="controls-MonthViewVDOM__tableRow {{_themeCssClass}}">
-   <div for="indexOfDay, value in week"
-        on:click="_dayClickHandler(value.date, mode, value.isCurrentMonth)"
-        on:mouseenter="_mouseEnterHandler(value.date, mode, value.isCurrentMonth)"
-        attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }} {{_themeCssClass}}"
-        data-date="{{value.id}}"
-   >
-      <ws:partial
-         template="{{dayTemplate}}"
-         value="{{value}}"
-         _themeCssClass="{{_themeCssClass}}"
-         mode="{{mode}}"
-      />
-   </div>
+<div for="index, week in monthViewModel.getMonthArray()" class="controls-MonthViewVDOM__tableRow
+                    controls-MonthViewVDOM__tableRow_theme-{{theme}}
+                    {{ newMode !== true? ' controls-MonthViewVDOM__tableRow-old_theme-' + _options.theme }} {{_themeCssClass}}">
+    <ws:if data="{{newMode !== true}}">
+        <div for="indexOfDay, value in week"
+             on:click="_dayClickHandler(value.date, value.isCurrentMonth)"
+             on:mouseenter="_mouseEnterHandler(value.date, value.isCurrentMonth)"
+             on:mouseleave="_mouseLeaveHandler(value.date, value.isCurrentMonth)"
+             attr:class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item-old controls-MonthViewVDOM__item-old_theme-{{theme}}
+                        {{ monthViewModel._prepareClass(value, theme, fontColorStyle, backgroundStyle, sizeStyle) }} {{_themeCssClass}}"
+             data-date="{{value.id}}"
+        >
+            <ws:partial
+                    template="{{dayTemplate}}"
+                    value="{{value}}"
+                    newMode="{{newMode}}"
+                    _themeCssClass="{{_themeCssClass}}"
+                    mode="{{mode}}"
+            />
+        </div>
+    </ws:if>
+    <ws:else>
+        <ws:for data="indexOfDay, value in week">
+            <ws:partial
+                    on:click="_dayClickHandler(value.date, value.isCurrentMonth)"
+                    on:mouseenter="_mouseEnterHandler(value.date, value.isCurrentMonth)"
+                    on:mouseleave="_mouseLeaveHandler(value.date, value.isCurrentMonth)"
+                    attr:data-date="{{value.id}}"
+                    monthViewModel="{{monthViewModel}}"
+                    template="{{dayTemplate}}"
+                    newMode="{{newMode}}"
+                    theme="{{theme}}"
+                    value="{{value}}"
+                    _themeCssClass="{{_themeCssClass}}"
+                    mode="{{mode}}"
+            />
+        </ws:for>
+    </ws:else>
 </div>

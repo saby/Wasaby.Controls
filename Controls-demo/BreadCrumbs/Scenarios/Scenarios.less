@@ -1,5 +1,6 @@
+@import "Controls-default-theme/_theme";
 .demo-BreadCrumbs__wrapper {
-   width: 890px;
+   width: 1700px;
 }
 .demo-PersonInfo__name {
    font-weight: bold;
@@ -23,7 +24,7 @@
 }
 
 .demo-Overdue {
-   color: @color_danger;
+   color: @danger_color;
 }
 
 .demo-PersonInfo__head {
@@ -43,8 +44,10 @@
    align-self: center;
    margin-right: 6px;
    border-radius: 6px;
-   width: 40px;
-   height: 40px;
+   max-width: 40px;
+   min-width: 40px;
+   max-height: 40px;
+   min-height: 40px;
 }
 
 .demo-PersonInfo__row {
@@ -58,19 +61,15 @@
    width: 100%;
 }
 
-.demo-FourthExample {
-   width: 890px;
-}
-
 .demo-SeventhExample__headerWrapper {
    margin-left: @header_padding-left_stack;
-   margin-top: @close-button_padding-top_stack;
+   margin-top: @close-button_offset-top_stack;
    width: 100%;
 }
 
 .demo-SeventhExample__header {
-   font-size: @font-size_text_s;
-   color: @color_additional;
+   font-size: @font-size_xs;
+   color: @label_text-color;
 }
 
 .demo-SeventhExample__firstRow {
@@ -91,4 +90,8 @@
    width: 250px;
    outline: 1px dotted #000;
    padding: 5px 0;
+}
+
+.controlsDemo-BreadCrumbs__withoutHeaders {
+   width: 800px;
 }

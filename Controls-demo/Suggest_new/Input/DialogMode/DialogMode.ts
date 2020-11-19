@@ -1,19 +1,17 @@
-import {Control, TemplateFunction} from "UI/Base";
+import {Control, TemplateFunction} from 'UI/Base';
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import * as SearchMemory from 'Controls-demo/Search/SearchMemory';
 import {Memory} from 'Types/source';
 import {_departmentsWithImges} from 'Controls-demo/Suggest_new/DemoHelpers/DataCatalog';
 import controlTemplate = require('wml!Controls-demo/Suggest_new/Input/DialogMode/DialogMode');
 import suggestTemplate = require('wml!Controls-demo/Suggest_new/Input/DialogMode/resources/SuggestTemplatePopup');
-import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/Suggest_new/Index';
 
-export default class extends Control{
+export default class extends Control {
    protected _template: TemplateFunction = controlTemplate;
-   private _suggestTemplate: TemplateFunction = suggestTemplate;
-   private _source: Memory;
-   private _navigation: object;
-   protected _beforeMount() {
+   protected _suggestTemplate: TemplateFunction = suggestTemplate;
+   protected _source: Memory;
+   protected _navigation: object;
+   protected _beforeMount(): void {
       this._source = new SearchMemory({
          keyProperty: 'id',
          data: _departmentsWithImges,
@@ -28,6 +26,8 @@ export default class extends Control{
             page: 0,
             hasMore: false
          }
-      };;
+      };
    }
+
+   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Suggest_new/Index'];
 }

@@ -10,7 +10,6 @@ define('Controls-demo/FilterView/FilterView',
       'Controls/history',
       'Core/core-clone',
       'Controls-demo/FilterView/resources/historySourceFast',
-      'css!Controls-demo/FilterView/FilterView',
 
       'wml!Controls-demo/FilterView/resources/itemTemplatePhoto'
 
@@ -57,7 +56,6 @@ define('Controls-demo/FilterView/FilterView',
        * Template for dropdown of union fast filter.
        * @control
        * @public
-       * @category Popup
        */
 
       var FilterView = Control.extend({
@@ -207,7 +205,7 @@ define('Controls-demo/FilterView/FilterView',
                viewMode: 'frequent'
             }, {
                name: 'lists',
-               value: {'Список1': ['Список1'], 'Список2': ['21', '22']},
+               value: {'Список1': ['Список1'], 'Список2': ['21']},
                resetValue: null,
                emptyText: 'All',
                editorOptions: {
@@ -219,8 +217,7 @@ define('Controls-demo/FilterView/FilterView',
                      idProperty: 'id',
                      data: this._hierarchyDataSource2
                   }),
-                  navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}},
-                  multiSelect: true
+                  navigation: {source: 'page', view: 'page', sourceConfig: {pageSize: 8, page: 0}}
                },
                viewMode: 'frequent'
             }];
@@ -642,10 +639,12 @@ define('Controls-demo/FilterView/FilterView',
             return items;
          },
 
-         _itemsChanged: function(event, items) {
-            this._hierarchyItems = Clone(items);
+         _itemsChanged: function(event, field, items) {
+            this[field] = items;
          }
       });
+
+      FilterView._styles = ['Controls-demo/FilterView/FilterView'];
 
       return FilterView;
    });

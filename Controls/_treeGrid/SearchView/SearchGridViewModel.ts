@@ -12,18 +12,9 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         }
         return SearchGridViewModel.superclass._calcRowIndex.apply(this, arguments);
     },
-    getActionsItem(item) {
-        if (!!item.forEach) {
-            return item[item.length - 1];
-        }
-        return item;
-    },
-    _isSupportLadder: function() {
+
+    isSupportLadder: function() {
         return false;
-    },
-    _isFirstInGroup: function(item:Record|[Record]):boolean {
-        item = item[0] || item;
-        return SearchGridViewModel.superclass._isFirstInGroup.call(this, item);
     },
 
     isDrawResults() {
@@ -32,6 +23,9 @@ var SearchGridViewModel = TreeGridViewModel.extend({
         }
         const items = this.getItems();
         return this.getHasMoreData() || items && items.getCount() > 1;
+    },
+    setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback) {
+        this._model.setBreadcrumbsItemClickCallback(breadcrumbsItemClickCallback);
     }
 });
 export = SearchGridViewModel;

@@ -1,5 +1,5 @@
 /**
- * Интерфейс для шаблона отображения заголовка {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ группы} в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}. 
+ * Интерфейс для шаблона отображения заголовка {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
  * @interface Controls/list:BaseGroupTemplate
  * @author Авраменко А.С.
  * @public
@@ -41,14 +41,13 @@ export default interface IBaseGroupTemplateOptions {
     * @description Горизонтальное выравнивание названия группы.
     * @variant right По правому краю.
     * @variant left По левому краю.
+    * @variant center По центру.
     */
 
    /**
     * @name Controls/list:BaseGroupTemplate#textAlign
-    * @cfg {TextAlign|undefined} Горизонтальное выравнивание названия группы. 
-    * @default undefined 
-    * @remark
-    * В значении undefined заголовок выравнивается по центру.
+    * @cfg {TextAlign} Горизонтальное выравнивание названия группы.
+    * @default center
     */
    textAlign?: string;
    /**
@@ -57,14 +56,14 @@ export default interface IBaseGroupTemplateOptions {
     * @default undefined
     * @remark
     * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
-    * 
-    * * {@link String|Number item} — идентификатор отрисовываемой группы, полученный из {@link Controls/interface/IGroupedGrid#groupProperty groupProperty}.
+    *
+    * * item — идентификатор отрисовываемой группы, полученный из {@link Controls/interface/IGroupedGrid#groupProperty groupProperty}.
     * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для таблицы.
-    * 
+    *
     * @example
     * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/list:View}, однако то же самое справедливо и для других {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочных контролов}.
-    * 
-    * 
+    *
+    *
     * **Пример 1.** Контрол и шаблон groupTemplate настроены в одном WML-файле.
     * <pre class="brush: html">
     * <!-- file1.wml -->
@@ -78,7 +77,7 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * **Пример 2.** Контрол и шаблон groupTemplate настроены в отдельных WML-файлах.
     * <pre class="brush: html">
     * <!-- file1.wml -->
@@ -88,7 +87,7 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <ws:partial template="Controls/list:GroupTemplate">
@@ -97,9 +96,9 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:rightTemplate>
     * </ws:partial>
     * </pre>
-    * 
+    *
     * **Пример 3.** Контрол и шаблон rightTemplate настроены в отдельных WML-файлах.
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file1.wml -->
     * <Controls.list:View>
@@ -112,7 +111,7 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * {{ rightTemplate.itemData.metaData.groupResults[rightTemplate.itemData.item] }}
@@ -125,16 +124,16 @@ export default interface IBaseGroupTemplateOptions {
     * @remark
     * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
     *
-    * * {@link String|Number item} — идентификатор отрисовываемой группы, полученный из {@link Controls/interface/IGroupedGrid#groupProperty groupProperty}.
+    * * item — идентификатор отрисовываемой группы, полученный из {@link Controls/interface/IGroupedGrid#groupProperty groupProperty}.
     * * {@link Types/collection:RecordSet#metaData metaData} — метаданные рекордсета, который загружен для списка.
-    * 
+    *
     * @example
     * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/list:View}, однако то же самое справедливо и для других списочных контролов.
-    * 
+    *
     * В примерах №№ 1, 2 и 3 показано, как получить доступ к переменной itemData из области видимости шаблона.
-    * 
+    *
     * **Пример 1.** Контрол и шаблон groupTemplate настроены в одном WML-файле.
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file1.wml -->
     * <Controls.list:View>
@@ -148,7 +147,7 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * **Пример 2.** Контрол и шаблон groupTemplate настроены в отдельных WML-файлах.
     * <pre class="brush: html">
     * <!-- file1.wml -->
@@ -158,7 +157,7 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <ws:partial template="Controls/list:GroupTemplate">
@@ -168,9 +167,9 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:contentTemplate>
     * <ws:partial>
     * </pre>
-    * 
+    *
     * **Пример 3.** Контрол и шаблон contentTemplate настроены в отдельных WML-файлах.
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file1.wml -->
     * <Controls.list:View>
@@ -183,13 +182,25 @@ export default interface IBaseGroupTemplateOptions {
     *    </ws:groupTemplate>
     * </Controls.list:View>
     * </pre>
-    * 
+    *
     * <pre class="brush: html">
     * <!-- file2.wml -->
     * <ws:if data="{{itemData.item === 'nonexclusive'}}">Неисключительные права</ws:if>
     * <ws:if data="{{itemData.item === 'works'}}">Работы</ws:if>
     * </pre>
-    * 
+    *
     */
    contentTemplate?: string;
+   /**
+    * @name Controls/list:BaseGroupTemplate#fontSize
+    * @cfg {string} Размер текста в названии группы/шаблоне
+    * @default 'xs'
+    */
+   fontSize?: boolean;
+   /**
+    * @name Controls/list:BaseGroupTemplate#iconSize
+    * @cfg {string} Размер экспандера в названии группы/шаблоне
+    * @default 's'
+    */
+   iconSize?: boolean;
 }

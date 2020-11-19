@@ -29,34 +29,35 @@ interface ISplicedArray {
 }
 
 /**
- * Свойство, хранящее признак, что список элементов проинициализирован
+ * A symbol to maintain elements lisy inintialization flag
  * @const {Symbol}
  */
 const $initialized = protect('initialized');
 
 /**
- * Выводит предупреждения не чаще, чем раз в 300мс
+ * Shows warings with limited frequency
  */
-const warning = throttle(logger.info, 300);
+const WARNING_DELAY = 300;
+const warning = throttle(logger.info, WARNING_DELAY);
 
 /**
- * Нормализует значение идентификатора
+ * Normalizes identifier value type
  */
 function normalizeId(id: number | string): string {
     if (typeof id === 'number') {
-        id = String(id);
+        return String(id);
     }
     return id;
 }
 
 /**
- * Создает список "родитель - дети".
- * @param sourceItems Массив элементов декорируемой стратегии
- * @param parentProperty Имя свойства, в котором хранится идентификатор родительского узла
- * @return Идентификатор узла -> Индексы детей в исходной коллекции
+ * Creates a map which defines "parent -> children" relationship.
+ * @param sourceItems Strategy elements to analyze
+ * @param parentProperty Property name with reference to the parent element id
+ * @return A map with "parent id -> children inidces" scheme
  */
-function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<number, number> {
-    const parentToChildren = new Map(); // Map<Array<Number>>: parentId => [childIndex, childIndex, ...]
+function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<number, number[]> {
+    const parentToChildren = new Map();
     const count = sourceItems.length;
     let item;
     let itemContents;
@@ -68,11 +69,11 @@ function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<numb
         itemContents = item.getContents();
 
         // Skip groups
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             continue;
         }
 
-        // TODO: work with parentId === Object|Array
+        // TODO: work with parentId with type Object or Array
         parentId = normalizeId(object.getPropertyValue(itemContents, parentProperty));
 
         if (parentToChildren.has(parentId)) {
@@ -89,16 +90,16 @@ function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<numb
 }
 
 /**
- * Создает список "элемент - индекс группы".
- * @param sourceItems Массив элементов декорируемой стратегии
- * @return Элемент -> индекс группы в sourceItems
+ * Creates a map which defines "element -> group" relationship.
+ * @param sourceItems Strategy elements to analyze
+ * @return A map with "element -> group index" scheme
  */
 function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
     const itemToGroup = new Map();
     let currentGroup;
 
     sourceItems.forEach((item, index) => {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             currentGroup = index;
         } else {
             itemToGroup.set(item, currentGroup);
@@ -108,19 +109,29 @@ function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
     return itemToGroup;
 }
 
+interface ITreeIndexOptions<T> {
+    keyProperty: string;
+    sourceItems: T[];
+    childrenMap: Map<number | string, number[]>;
+    groupsMap: Map<T, number>;
+    parentsMap: number[];
+    path: Array<number | string>;
+    lastGroup?: number;
+}
+
 /**
- * Создает индекс следования элементов исходной коллекции в древовидной структуре.
- * @param options Опции
- * @param {Array.<Controls/_display/CollectionItem>} options.sourceItems Массив элементов декорируемой стратегии
- * @param {Map.<Number>} options.childrenMap Cписок "родитель - дети".
- * @param {Array.<Controls/_display/CollectionItem, Number>} options.groupsMap Cписок "элемент - индекс группы"
- * @param {Array.<Number>} options.parentsMap Cписок "ребенок - родитель" (заполняется динамически).
- * @param {Array.<String>} options.path Путь до текущиего узла в дереве (заполняется динамически).
- * @param {String} options.keyProperty Имя свойства, в котором хранится идентификатор элемента.
- * @param [parentIndex] Индекс текущего родителя
- * @return Индекс в дереве -> индекс в исходной коллекции
+ * Creates an index which shows the order of elements according to the tree structure.
+ * @param options Options
+ * @param options.sourceItems Source strategy elements to analyze
+ * @param options.childrenMap A map with "parent id -> children inidces" scheme
+ * @param options.groupsMap A map with "element -> group index" scheme
+ * @param options.parentsMap Anindex with "Child -> parent" scheme (fills on the fly)
+ * @param options.path Path to the current node from the top of the tree (fills on the fly)
+ * @param options.keyProperty Property name with element id
+ * @param [parentIndex] Current parent element index
+ * @return An array with "tree index -> source element index" scheme
  */
-function buildTreeIndex(options: any, parentIndex?: number): number[] {
+function buildTreeIndex<T>(options: ITreeIndexOptions<T>, parentIndex?: number): number[] {
     const result = [];
     const sourceItems = options.sourceItems;
     const childrenMap = options.childrenMap;
@@ -131,12 +142,12 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
     const keyProperty = options.keyProperty;
     const parentId = path[path.length - 1];
 
-    // Check if that parentId is already behind
+    // Check if that parentId is not behind
     if (path.indexOf(parentId) > -1 && path.indexOf(parentId) < path.length - 1) {
         logger.error(
             'Controls/display:itemsStrategy.AdjacencyList',
-            `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" is already in ` +
-            `progress. Path: ${path.join(' -> ')}.`
+            `Wrong data hierarchy relation: recursive traversal detected: parent with id "${parentId}" ` +
+            `is already in progress. Path: ${path.join(' -> ')}.`
         );
         return result;
     }
@@ -179,9 +190,13 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
             const childId = normalizeId(object.getPropertyValue(childContents, keyProperty));
             path.push(childId);
 
-            // Lookup for children
-            const itemsToPush = buildTreeIndex(options, parentsMap.length - 1);
-            result.push(...itemsToPush);
+            // Lookup for children. Adding item can't have children.
+            // TODO: Try to remove knoledge about adding from this strategy
+            //  https://online.sbis.ru/opendoc.html?guid=f7235d5b-011b-467e-a36b-2c4f713366e3
+            if (!child.isAdd) {
+                const itemsToPush = buildTreeIndex(options, parentsMap.length - 1);
+                result.push(...itemsToPush);
+            }
 
             // Revert parent's group if any child joins another group if there is not the last member in the root
             if (childGroup !== options.lastGroup && (parentIndex !== undefined || i < childrenCount - 1)) {
@@ -199,7 +214,7 @@ function buildTreeIndex(options: any, parentIndex?: number): number[] {
 }
 
 /**
- * Стратегия-декоратор получения элементов проекции по списку смежных вершин
+ * A decorating strategy which orders elements by adjacency list algorithm.
  * @class Controls/_display/ItemsStrategy/AdjacencyList
  * @mixes Types/_entity/DestroyableMixin
  * @mixes Types/_entity/SerializableMixin
@@ -215,34 +230,27 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     SerializableMixin
 ) implements IItemsStrategy<S, T> {
     /**
-     * @typedef {Object} Options
-     * @property {Controls/_display/ItemsStrategy/Abstract} source Декорирумая стратегия
-     * @property {String} keyProperty Имя свойства, хранящего первичный ключ
-     * @property {String} parentProperty Имя свойства, хранящего первичный ключ родителя
-     */
-
-    /**
-     * Опции конструктора
+     * Constructor options
      */
     protected _options: IOptions<S, T>;
 
     /**
-     * Элементы стратегии
+     * Result elements
      */
     protected _items: T[];
 
     /**
-     * Элементы декорируемой стратегии
+     * Source elements
      */
     protected _sourceItems: T[];
 
     /**
-     * Внутренний индекс -> оригинальный индекс
+     * An array with "Result index -> source index" scheme.
      */
     protected _itemsOrder: number[];
 
     /**
-     * Индекс ребенка -> индекс родителя
+     * An array with "Child index -> parent index" scheme.
      */
     protected _parentsMap: number[];
 
@@ -259,6 +267,13 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
     // region IItemsStrategy
 
     readonly '[Controls/_display/IItemsStrategy]': boolean = true;
+
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор
+     */
+    set keyProperty(value: string): void {
+        this._options.keyProperty = value;
+    }
 
     get options(): ISourceOptions<S, T> {
         return this.source.options as ISourceOptions<S, T>;
@@ -303,13 +318,20 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         }
 
         let item;
-        if (sourceItem instanceof GroupItem) {
+        if (sourceItem['[Controls/_display/GroupItem]']) {
             item = sourceItem;
+        } else if (sourceItem instanceof TreeItem) {
+            if (items.indexOf(sourceItem) === -1) {
+                sourceItem.setParent(this._getParent(index));
+                item = sourceItem;
+            } else {
+                item = this.options.display.createItem({
+                    contents: sourceItem.getContents(),
+                    parent: this._getParent(index)
+                });
+            }
         } else if (sourceItem instanceof CollectionItem) {
-            item = this.options.display.createItem({
-                contents: sourceItem.getContents(),
-                parent: this._getParent(index)
-            });
+            item = sourceItem;
         } else {
             throw new TypeError('Unexpected item type');
         }
@@ -323,7 +345,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         const shiftTail = (start, offset) => (value) => value >= start ? value + offset : value;
 
         const source = this.source;
-        // deleted indices in this.source.items
+        // Deleted indices in this.source.items
         const deletedInSource = [];
         for (let i = start; i < start + deleteCount; i++) {
             deletedInSource.push(source.getDisplayIndex(i));
@@ -525,8 +547,8 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
 
         // Every item leaved the tree should lost their parent
         oldItems.forEach((item) => {
-            if ((item as any as TreeItem<S>).setParent) {
-                (item as any as TreeItem<S>).setParent(undefined);
+            if (item.setParent) {
+                item.setParent(undefined);
             }
         });
 
@@ -552,22 +574,22 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         const options = this._options;
         const sourceItems = this._getSourceItems();
 
-        let root: any = this.options.display.getRoot();
-        root = root && root.getContents ? root.getContents() : root;
-        if (root && root instanceof Object) {
-            root = root.valueOf();
+        const root: T = this.options.display.getRoot();
+        let rootId: unknown = root && root.getContents ? root.getContents() : root;
+        if (rootId && rootId instanceof Object) {
+            rootId = rootId.valueOf();
         }
-        root = normalizeId(root && typeof root === 'object'
-            ? object.getPropertyValue(root, options.keyProperty)
-            : root
-        );
+        if (rootId && typeof rootId === 'object') {
+            rootId = object.getPropertyValue(rootId, options.keyProperty);
+        }
+        rootId = normalizeId(rootId as number | string);
 
         const childrenMap = buildChildrenMap(sourceItems, options.parentProperty);
         const groupsMap = buildGroupsMap(sourceItems);
 
-        // FIXME: backward compatibility with controls logic: 1st level items may don\'t have parentProperty
-        if (root === null && !childrenMap.has(root) && childrenMap.has(undefined)) {
-            root = undefined;
+        // FIXME: compatibility with controls logic when 1st level items may not have parentProperty
+        if (rootId === null && !childrenMap.has(rootId) && childrenMap.has(undefined)) {
+            rootId = undefined;
         }
 
         return buildTreeIndex({
@@ -576,13 +598,13 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
             childrenMap,
             groupsMap,
             parentsMap: this._parentsMap,
-            path: [root]
+            path: [rootId as number | string]
         });
     }
 
     /**
-     * Возращает родителя элемента проекции.
-     * @param index Индекс элемента
+     * Returns the parent element for given element index.
+     * @param index Element index to find parent for
      */
     protected _getParent(index: number): T {
         const parentsMap = this._parentsMap;
@@ -590,7 +612,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         if (parentIndex === -1) {
             return undefined;
         }
-        return parentIndex === undefined ? this.options.display.getRoot() as any : this.at(parentIndex);
+        return parentIndex === undefined ? this.options.display.getRoot() : this.at(parentIndex);
     }
 
     // endregion

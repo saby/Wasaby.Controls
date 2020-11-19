@@ -6,6 +6,7 @@ import {register} from 'Types/di';
 export interface IOptions<T> {
     source: TreeItem<T>;
     parent?: TreeItem<T> | BreadcrumbsItem<T>;
+    multiSelectVisibility: string;
 }
 
 /**
@@ -19,9 +20,12 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
     protected _$source: TreeItem<T>;
 
     constructor(options?: IOptions<T>) {
-        super();
-        this._$source = options && options.source;
-        this._$parent = options && options.parent;
+        super({
+            contents: options?.source?.contents,
+            multiSelectVisibility: options?.multiSelectVisibility
+        });
+        this._$source = options?.source;
+        this._$parent = options?.parent;
     }
 
     getSource(): TreeItem<T> {
@@ -96,14 +100,6 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
 
     setHasChildren(value: boolean): void {
         return this._$source && this._$source.setHasChildren(value);
-    }
-
-    isLoaded(): boolean {
-        return this._$source && this._$source.isLoaded();
-    }
-
-    setLoaded(value: boolean): void {
-        return this._$source && this._$source.setLoaded(value);
     }
 
     getChildrenProperty(): string {

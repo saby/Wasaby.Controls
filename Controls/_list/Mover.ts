@@ -1,70 +1,59 @@
-import rk = require('i18n!Controls');
 import BaseAction from 'Controls/_list/BaseAction';
 import Deferred = require('Core/Deferred');
 import cInstance = require('Core/core-instance');
-import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
-import TreeItemsUtil = require('Controls/_list/resources/utils/TreeItemsUtil');
-import template = require('wml!Controls/_list/Mover/Mover');
-import {isEqual} from 'Types/object';
+import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
 import {Logger} from 'UI/Utils';
 import {ContextOptions as dataOptions} from 'Controls/context';
-import {TKeysSelection} from 'Controls/interface';
 
-const BEFORE_ITEMS_MOVE_RESULT = {
-    CUSTOM: 'Custom',
-    MOVE_IN_ITEMS: 'MoveInItems'
-};
+import {MoveController, IMoveControllerOptions} from './Controllers/MoveController';
+import {Model} from 'Types/entity';
+import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+
+
+// @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
+//   selectedTypeChanged даже от MultiSelect
+//  https://online.sbis.ru/doc/0445b971-8675-42ef-b2bc-e68d7f82e0ac
+import * as Template from 'wml!Controls/_list/Mover/Mover';
+import {Dialog} from 'Controls/popup';
+import * as TreeItemsUtil from './resources/utils/TreeItemsUtil';
+import {ISelectionObject, TKeysSelection} from 'Controls/interface';
+import {IHashMap} from 'Types/declarations';
+import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
+import {BEFORE_ITEMS_MOVE_RESULT, IMoveItemsParams} from './interface/IMoverAndRemover';
+
 const DEFAULT_SORTING_ORDER = 'asc';
-const MOVE_POSITION = {
-    on: 'on',
-    before: 'before',
-    after: 'after'
-};
-interface IMoveItemsParams {
-    selectedKeys: TKeysSelection;
-    excludedKeys: TKeysSelection;
-    filter: object;
-}
+
 var _private = {
     moveItems(self, items, target, position) {
-        const isNewLogic = !items.forEach && !items.selected;
+        const useController = _private.useController(items);
+        const afterItemsMove = function (result) {
+            _private.afterItemsMove(self, items, target, position, result);
+            return result;
+        }
         return _private.beforeItemsMove(self, items, target, position).addCallback(function (beforeItemsMoveResult) {
-            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS && !isNewLogic) {
-                _private.moveInItems(self, items, target, position);
+            if (useController) {
+                return self._controller.move(
+                    _private.convertItemsToISelectionObject(items),
+                    _private.extractFilter(items),
+                    _private.getIdByItem(self, target),
+                    position, beforeItemsMoveResult);
+            }
+            if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
+                return _private.moveInItems(self, items, target, position);
             } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
                 return _private.moveInSource(self, items, target, position).addCallback(function (moveResult) {
-                    if (!isNewLogic) {
-                        _private.moveInItems(self, items, target, position);
-                    }
+                    _private.moveInItems(self, items, target, position);
                     return moveResult;
                 });
             }
-        }).addBoth(function (result) {
-            _private.afterItemsMove(self, items, target, position, result);
-            return result;
-        });
+        }).addBoth(afterItemsMove);
     },
-    openMoveDialog(self, items): void {
-        const isNewLogic = !items.forEach && !items.selected;
-        const templateOptions = {
-            movedItems: isNewLogic ? items.selectedKeys : items,
-            source: self._source,
-            keyProperty: self._keyProperty,
-            ...self._moveDialogOptions
-        };
-        self._children.dialogOpener.open({
-            templateOptions,
-            eventHandlers: {
-                onResult: (target): void => {
-                    self.moveItems(items, target, MOVE_POSITION.on);
-                }
-            }
-        });
-    },
+
     beforeItemsMove: function (self, items, target, position) {
         var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
         return beforeItemsMoveResult instanceof Promise ? beforeItemsMoveResult : Deferred.success(beforeItemsMoveResult);
     },
+
     afterItemsMove: function (self, items, target, position, result) {
         self._notify('afterItemsMove', [items, target, position, result]);
 
@@ -79,7 +68,7 @@ var _private = {
     },
 
     moveInItems: function (self, items, target, position) {
-        if (position === MOVE_POSITION.on) {
+        if (position === LOCAL_MOVE_POSITION.On) {
             _private.hierarchyMove(self, items, target);
         } else {
             _private.reorderMove(self, items, target, position);
@@ -88,20 +77,24 @@ var _private = {
 
     reorderMove: function (self, items, target, position) {
         var
-            itemIndex,
-            movedItem,
-            parentProperty = self._options.parentProperty,
-            targetId = _private.getIdByItem(self, target),
-            targetItem = _private.getModelByItem(self, targetId),
-            targetIndex = self._items.getIndex(targetItem);
+           movedIndex,
+           movedItem,
+           parentProperty = self._options.parentProperty,
+           targetId = _private.getIdByItem(self, target),
+           targetItem = _private.getModelByItem(self, targetId),
+           targetIndex = self._items.getIndex(targetItem);
 
         items.forEach(function (item) {
             movedItem = _private.getModelByItem(self, item);
             if (movedItem) {
-                itemIndex = self._items.getIndex(movedItem);
-                if (itemIndex === -1) {
+                if (position === LOCAL_MOVE_POSITION.Before) {
+                    targetIndex = self._items.getIndex(targetItem);
+                }
+
+                movedIndex = self._items.getIndex(movedItem);
+                if (movedIndex === -1) {
                     self._items.add(movedItem);
-                    itemIndex = self._items.getCount() - 1;
+                    movedIndex = self._items.getCount() - 1;
                 }
 
                 if (parentProperty && targetItem.get(parentProperty) !== movedItem.get(parentProperty)) {
@@ -109,12 +102,12 @@ var _private = {
                     movedItem.set(parentProperty, targetItem.get(parentProperty));
                 }
 
-                if (position === MOVE_POSITION.after && targetIndex < itemIndex) {
+                if (position === LOCAL_MOVE_POSITION.After && targetIndex < movedIndex) {
                     targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
-                } else if (position === MOVE_POSITION.before && targetIndex > itemIndex) {
+                } else if (position === LOCAL_MOVE_POSITION.Before && targetIndex > movedIndex) {
                     targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
                 }
-                self._items.move(itemIndex, targetIndex);
+                self._items.move(movedIndex, targetIndex);
             }
         });
     },
@@ -131,36 +124,13 @@ var _private = {
 
     moveInSource: function (self, items, target, position) {
         const targetId = _private.getIdByItem(self, target);
-        const isNewLogic = !items.forEach && !items.selected;
-        if (isNewLogic) {
-            if (self._source.call) {
-                return import('Controls/operations').then((operations) => {
-                    const callFilter = {
-                        selection: operations.selectionToRecord({
-                            selected: items.selectedKeys,
-                            excluded: items.excludedKeys
-                        }, self._source.getAdapter()), ...items.filter
-                    };
-                    return self._source.call(self._source.getBinding().move, {
-                        method: self._source.getBinding().list,
-                        filter: callFilter,
-                        folder_id: targetId
-                    });
-                });
-            }
-            return self._source.move(items.selectedKeys, targetId, {
-                position,
-                parentProperty: self._options.parentProperty
-            });
-        }
-        var
-            idArray = items.map(function (item) {
-                return _private.getIdByItem(self, item);
-            });
+        const idArray = items.map(function (item) {
+            return _private.getIdByItem(self, item);
+        });
 
         //If reverse sorting is set, then when we call the move on the source, we invert the position.
-        if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
-            position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
+        if (position !== LOCAL_MOVE_POSITION.On && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+            position = position === LOCAL_MOVE_POSITION.After ? LOCAL_MOVE_POSITION.Before : LOCAL_MOVE_POSITION.After;
         }
         return self._source.move(idArray, targetId, {
             position,
@@ -169,11 +139,19 @@ var _private = {
     },
 
     moveItemToSiblingPosition: function (self, item, position) {
-        var target = _private.getSiblingItem(self, item, position);
+        const target = _private.getTargetItem(self, item, position);
         return target ? self.moveItems([item], target, position) : Deferred.success();
     },
 
-    getSiblingItem: function (self, item, position) {
+    /**
+     * Получает элемент к которому мы перемещаем текущий элемент
+     * Метод сделан публичным для совместимости с HOC
+     * @param self текущий контрол
+     * @param item текущий элемент
+     * @param position позиция (направление перемещения)
+     * @private
+     */
+    getTargetItem(self, item, position: LOCAL_MOVE_POSITION): Model {
         var
             result,
             display,
@@ -196,22 +174,48 @@ var _private = {
                 display.setRoot(self._options.root)
             }
             itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
-            siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            siblingItem = display[position === LOCAL_MOVE_POSITION.Before ? 'getPrevious' : 'getNext'](itemFromProjection);
             result = siblingItem ? siblingItem.getContents() : null;
         } else {
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
-            result = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
+            result = self._items.at(position === LOCAL_MOVE_POSITION.Before ? --itemIndex : ++itemIndex);
         }
 
         return result;
     },
 
-    updateDataOptions: function (self, dataOptions) {
-        if (dataOptions) {
-            self._items = dataOptions.items;
-            self._source = self._options.source || dataOptions.source;
-            self._keyProperty = self._options.keyProperty || dataOptions.keyProperty;
-            self._filter = dataOptions.filter;
+    updateDataOptions: function (self, newOptions, contextDataOptions) {
+		self._items = newOptions.items || contextDataOptions?.items;
+
+        let controllerOptions: Partial<IMoveControllerOptions> = {
+            parentProperty: newOptions.parentProperty
+        };
+        if (contextDataOptions) {
+			controllerOptions.source = newOptions.source || contextDataOptions.source;
+            self._source = controllerOptions.source;
+            self._keyProperty = newOptions.keyProperty || contextDataOptions.keyProperty;
+            self._filter = contextDataOptions.filter;
+        }
+        if (newOptions.moveDialogTemplate) {
+            controllerOptions.popupOptions = {
+                opener: self
+            };
+
+            if (newOptions.moveDialogTemplate.templateName) {
+                self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
+                self._moveDialogOptions = newOptions.moveDialogTemplate.templateOptions;
+                controllerOptions.popupOptions.template = self._moveDialogTemplate;
+                controllerOptions.popupOptions.templateOptions = self._moveDialogOptions;
+            } else {
+                self._moveDialogTemplate = newOptions.moveDialogTemplate;
+                controllerOptions.popupOptions.template = self._moveDialogTemplate;
+                Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
+            }
+        }
+        if (!self._controller) {
+            self._controller = new MoveController(controllerOptions as IMoveControllerOptions);
+        } else {
+            self._controller.updateOptions(controllerOptions);
         }
     },
 
@@ -227,7 +231,7 @@ var _private = {
 
         //Check for a item to be moved because it may not be in the current recordset
         if (self._options.parentProperty && movedItem) {
-            if (target && position === MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
+            if (target && position === LOCAL_MOVE_POSITION.On && target.get(self._options.nodeProperty) === null) {
                 return false;
             }
             parentsMap = _private.getParentsMap(self, _private.getIdByItem(self, target));
@@ -275,11 +279,21 @@ var _private = {
         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
     },
 
-    getItemsBySelection: function (selection) {
-        //Support moving with mass selection.
-        //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+    getItemsBySelection(selection): Promise<any> {
+        let resultSelection;
+        // Support moving with mass selection.
+        // Full transition to selection will be made by:
+        // https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
         selection.recursive = false;
-        return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
+
+        if (selection instanceof Array) {
+            resultSelection = Deferred.success(selection);
+        } else {
+            const filter = _private.prepareFilter(this, this._filter, selection);
+            resultSelection = getItemsBySelection(selection, this._source, this._items, filter);
+        }
+
+        return resultSelection;
     },
 
     prepareMovedItems(self, items) {
@@ -289,80 +303,134 @@ var _private = {
         });
         return result;
     },
+
+    prepareFilter(self, filter, selection): object {
+        const searchParam = self._options.searchParam;
+        const root = self._options.root;
+        let resultFilter = filter;
+
+        if (searchParam && !selection.selected.includes(root)) {
+            resultFilter = {...filter};
+            delete resultFilter[searchParam];
+        }
+
+        return resultFilter;
+    },
+
+    useController(items): boolean {
+        return !items.forEach && !items.selected;
+    },
+
+    openMoveDialog(self, selection): Promise<void> {
+        const templateOptions: IMoverDialogTemplateOptions = {
+            movedItems: _private.useController(selection) ? selection.selectedKeys : selection,
+            source: self._source,
+            keyProperty: self._keyProperty, // keyProperty может быть заменён в moveDialogOptions
+            ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
+        };
+        return new Promise((resolve) => {
+            self._children.dialogOpener.open({
+                templateOptions,
+                eventHandlers: {
+                    onResult: (target: Model) => {
+                        resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
+                    }
+                }
+            });
+        });
+    },
+
+    convertItemsToISelectionObject(item): ISelectionObject {
+        let selectionObject: ISelectionObject
+        if (item.selected) {
+            selectionObject = item;
+        } else if (item.selectedKeys) {
+            selectionObject = {
+                selected: item.selectedKeys,
+                excluded: item.excludedKeys,
+            }
+        } else if (item.forEach) {
+            selectionObject = {
+                selected: item,
+                excluded: undefined
+            }
+        }
+        return selectionObject;
+    },
+
+    extractFilter(item): IHashMap<any> {
+        let filter: IHashMap<any>;
+        if (item.filter) {
+            filter = item.filter;
+        }
+        return filter || {};
+    }
 };
 
 /**
  * Контрол для перемещения элементов списка в recordSet и dataSource.
+ *
+ * @remark
  * Контрол должен располагаться в одном контейнере {@link Controls/list:DataContainer} со списком.
- * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
+ * В случае использования {@link Controls/operations:Controller} для корректной обработки событий необходимо помещать Controls/list:Mover внутри Controls/operations:Controller.
+ *
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ *
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * @deprecated Класс устарел и буден удалён. Используйте методы интерфейса {@link Controls/list:IMovableList}, который по умолчанию подключен в списки.
+ * @demo Controls-demo/treeGrid/Mover/Base/Index
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 /*
  * Сontrol to move the list items in recordSet and dataSource.
  * Сontrol must be in one {@link Controls/list:DataContainer} with a list.
- * <a href="/materials/demo-ws4-operations-panel">Demo examples</a>.
+ * In case you are using {@link Controls/operations:Controller}
+ * you should place Controls/list:Mover inside of Controls/operations:Controller.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo examples</a>.
  * @class Controls/_list/Mover
  * @extends Controls/_list/BaseAction
  * @mixes Controls/interface/IMovable
  * @mixes Controls/_interface/IHierarchy
- * @control
+ *
  * @public
  * @author Авраменко А.С.
- * @category List
  */
 
 var Mover = BaseAction.extend({
-    _template: template,
+    _controller: null,
     _moveDialogTemplate: null,
     _moveDialogOptions: null,
+    _template: Template,
     _beforeMount: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
-
-        if (options.moveDialogTemplate) {
-            if (options.moveDialogTemplate.templateName) {
-                this._moveDialogTemplate = options.moveDialogTemplate.templateName;
-                this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
-            } else {
-                this._moveDialogTemplate = options.moveDialogTemplate;
-                Logger.warn('Mover', 'Wrong type of moveDialogTemplate option, use object notation instead of template function', this);
-            }
-        }
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     _beforeUpdate: function (options, context) {
-        _private.updateDataOptions(this, context.dataOptions);
-        if (options.moveDialogTemplate && options.moveDialogTemplate.templateOptions && !isEqual(this._moveDialogOptions, options.moveDialogTemplate.templateOptions)) {
-           this._moveDialogOptions = options.moveDialogTemplate.templateOptions;
-        }
+        _private.updateDataOptions(this, options, context.dataOptions);
     },
 
     moveItemUp: function (item) {
-        return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
+        return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.Before);
     },
 
     moveItemDown: function (item) {
-        return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
+        return _private.moveItemToSiblingPosition(this, item, LOCAL_MOVE_POSITION.After);
     },
+
     moveItems(items: []|IMoveItemsParams, target, position): Promise<any> {
         const self = this;
-        const isNewLogic = !items.forEach && !items.selected;
         if (target === undefined) {
             return Deferred.success();
         }
-        if (isNewLogic) {
-            if (items.selectedKeys.length) {
-                return _private.moveItems(self, items, target, position);
-            } else {
-                return Deferred.success();
-            }
+        if (_private.useController(items)) {
+            return _private.moveItems(self, items, target, position);
         } else {
             return _private.getItemsBySelection.call(this, items).addCallback(function (items) {
                 items = items.filter((item) => {
@@ -376,18 +444,22 @@ var Mover = BaseAction.extend({
             });
         }
     },
-    moveItemsWithDialog(items: []|IMoveItemsParams): void {
-        const isNewLogic = !items.forEach && !items.selected;
 
-        if (this.validate(items)) {
-            if (isNewLogic) {
-                _private.openMoveDialog(this, items);
-            } else {
-                _private.getItemsBySelection.call(this, items).addCallback((items: []) => {
-                    _private.openMoveDialog(this, _private.prepareMovedItems(this, items));
-                });
+    moveItemsWithDialog(items: []|IMoveItemsParams): Promise<any> {
+        if (this._moveDialogTemplate) {
+            if (this.validate(items)) {
+                if (_private.useController(items)) {
+                    return _private.openMoveDialog(this, items);
+                } else {
+                    return _private.getItemsBySelection.call(this, items).addCallback((items: []) => (
+                        _private.openMoveDialog(this, _private.prepareMovedItems(this, items))
+                    ));
+                }
             }
+        } else {
+            Logger.warn('Mover: Can\'t call moveItemsWithDialog! moveDialogTemplate option, is undefined', this);
         }
+        return Promise.resolve();
     }
 });
 

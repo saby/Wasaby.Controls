@@ -5,9 +5,7 @@
       <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
    </ws:if>
    <ws:else data="{{_options.type === 'stack'}}">
-      <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_theme_{{_options.theme}}">
-         <div  class="controls-StackTemplate-shadow__content controls-StackTemplate-shadow__content_theme_{{_options.theme}}"></div>
-      </div>
+      <div class="controls-StackTemplate-shadow controls-StackTemplate-shadow_theme_{{_options.theme}}"></div>
       <Controls.popupTemplate:Stack
          closeButtonVisibility="{{!_options.hideCross}}"
          showMaximizedButton="{{_options.canMaximize}}"
@@ -16,6 +14,7 @@
          <ws:bodyContentTemplate>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
+         <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Stack>
    </ws:else>
    <ws:else>
@@ -28,7 +27,10 @@
          <ws:bodyContentTemplate>
                <div name="compoundBlock" attr:class="controls-CompoundArea__container {{_getDialogClasses()}}"></div>
          </ws:bodyContentTemplate>
+         <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
       </Controls.popupTemplate:Dialog>
    </ws:else>
-   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+   <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()">
+      <ws:tabindex><ws:Number>0</ws:Number></ws:tabindex>
+   </Controls.event:Listener>
 </div>

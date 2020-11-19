@@ -1,3 +1,20 @@
+export type TagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 'secondary';
+
+export interface ITagOptions {
+    tagStyle?: TagStyle;
+}
+
+/**
+ * Интерфейс тега (цветной индикатор, который отображается в правом верхнем углу поля).
+ *
+ * @interface Controls/_input/interface/ITag
+ * @public
+ * @author Красильников А.С.
+ */
+export interface ITag {
+    readonly '[Controls/_input/interface/ITag]': boolean;
+}
+
 /**
  * @typedef {String} TagStyle
  * @variant info
@@ -7,23 +24,11 @@
  * @variant warning
  * @variant secondary
  */
-export type TagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 'secondary';
-
 /**
- * Интерфейс тега (цветной индикатор, который отображается в правом верхнем углу поля).
- *
- * @interface Controls/_input/interface/ITag
- * @public
+ * @name Controls/_input/interface/ITag#tagStyle
+ * @cfg {TagStyle} Стиль отображения тега.
+ * @demo Controls-demo/Input/TagStyles/Index
  */
-export interface ITagOptions {
-    /**
-     * @name Controls/_input/interface/ITag#tagStyle
-     * @cfg {TagStyle} Стиль отображения тега.
-     * @demo Controls-demo/Input/TagStyles/Index
-     */
-    tagStyle?: TagStyle;
-}
-
 /**
  * @event Происходит при клике на тег.
  * @name Controls/_input/interface/ITag#tagClick
@@ -34,7 +39,6 @@ export interface ITagOptions {
  * @see tagStyle
  * @see tagHover
  */
-
 /**
  * @event Происходит при наведении курсора мыши на тег.
  * @name Controls/_input/interface/ITag#tagHover
@@ -45,9 +49,3 @@ export interface ITagOptions {
  * @see tagStyle
  * @see tagClick
  */
-
-interface ITag {
-    readonly '[Controls/_input/interface/ITag]': boolean;
-}
-
-export default ITag;

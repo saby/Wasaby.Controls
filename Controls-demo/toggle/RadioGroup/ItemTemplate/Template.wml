@@ -1,0 +1,10 @@
+<span on:mouseenter="_open(_options.readOnly)"  on:mouseleave="_close()" style="width: 100px">
+    <ws:partial
+            template="Controls/toggle:ItemTemplate"
+            item="{{_options.item}}"
+            readOnly="{{_options.readOnly}}"
+            selected="{{_options.selected}}">
+    </ws:partial>
+    <Controls.popup:Infobox name="IBOpener"></Controls.popup:Infobox>
+</span>
+

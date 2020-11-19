@@ -14,6 +14,7 @@ export default {
     _container: null,
     _indicator: null,
     _popupHeaderTheme: undefined,
+    _theme: undefined,
     _popupSettingsController: undefined,
     setManager(manager: Control): void {
         this._manager = manager;
@@ -31,6 +32,14 @@ export default {
         return this._popupHeaderTheme;
     },
 
+    setTheme(themeName: string): void {
+        this._theme = themeName;
+    },
+
+    getTheme(): string {
+        return this._theme;
+    },
+
     // Регистрируем индикатор, лежащий в application.
     // Необходимо для того, чтобы старый индикатор на вдомной странице мог работать через новый компонент
     setIndicator(indicator: Control): void {
@@ -44,7 +53,11 @@ export default {
     },
 
     popupUpdated(id: string): void {
-        this._manager._eventHandler(null, 'popupUpdated', id);
+        this._manager.eventHandler('popupUpdated', [id]);
+    },
+
+    isDestroying(id: string): boolean {
+        return this._callManager('isDestroying', arguments);
     },
 
     /**
@@ -60,7 +73,12 @@ export default {
      */
 
     remove(id: string): Promise<void> {
-        return this._callManager('remove', arguments);
+        const managerResult = this._callManager('remove', arguments);
+        // todo: https://online.sbis.ru/opendoc.html?guid=6c5ce49a-db79-4fb0-af28-5b50ff688b2e
+        if (managerResult === false) { // вызвали метод до маунта Manager'a.
+            return Promise.resolve();
+        }
+        return managerResult;
     },
 
     /**
@@ -83,8 +101,8 @@ export default {
         return this._callManager('show', arguments);
     },
 
-    reindex(): void {
-        this._callManager('reindex', arguments);
+    loadData(dataLoaders): Promise<unknown> {
+        return this._callManager('loadData', arguments);
     },
 
     isPopupCreating(id: string): boolean {
@@ -97,5 +115,9 @@ export default {
             return this._manager[methodName].apply(this._manager, args || []);
         }
         return false;
+    },
+
+    notifyToManager(actionName: string, args: any[]): void {
+        this._callManager('eventHandler', [actionName, args]);
     }
 };

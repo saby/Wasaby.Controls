@@ -1,0 +1,23 @@
+<div>
+    <Controls.scroll:IntersectionObserverController
+            observerName="monthList"
+            on:intersect="_intersectHandler()">
+        <Controls.scroll:Container attr:style="height: 180px">
+            <Controls.scroll:IntersectionObserverContainer
+                    observerName="monthList"
+                    data="1">
+                <div style="height: 120px; border: 1px solid #000;">Отслеживаемый контент1</div>
+            </Controls.scroll:IntersectionObserverContainer>
+            <Controls.scroll:IntersectionObserverContainer
+                    observerName="monthList"
+                    data="2">
+                <div style="height: 120px; border: 1px solid #000">Отслеживаемый контент2</div>
+            </Controls.scroll:IntersectionObserverContainer>
+        </Controls.scroll:Container>
+    </Controls.scroll:IntersectionObserverController>
+    <Controls.scroll:Container attr:style="width: 170px; height: 200px;">
+        <div>
+            {{_logs}}
+        </div>
+    </Controls.scroll:Container>
+</div>

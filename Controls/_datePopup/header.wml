@@ -1,16 +1,17 @@
-<div class="controls-PeriodDialog__header">
+<div class="controls-PeriodDialog__header controls-PeriodDialog__header_theme-{{theme}}">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
+      <Controls._datePopup.fakeThemeLoader theme="{{theme}}"/>
       <Controls.toggle:Button
          if="{{_monthStateEnabled}}"
-         attr:class="controls-PeriodDialog__stateButton"
+         attr:class="controls-PeriodDialog__stateButton controls-PeriodDialog__stateButton_theme-{{theme}}"
          value="{{_state === 'year'}}"
          fontColorStyle="link"
          viewMode="link"
          tooltip="{{_state === 'year' ? rk('Месячный режим') : rk('Годовой режим')}}"
-         icons="{{['icon-small icon-ArrangeList', 'icon-small icon-ArrangeSmallIconsPreview']}}"
+         icons="{{['icon-ArrangeList', 'icon-ArrangeSmallIconsPreview']}}"
          icon="icon-ArrangeList"
          iconStyle="secondary"
-         iconSize="s"
+         iconSize="datePopupStateButton"
          readOnly="{{false}}"
          on:valueChanged="_toggleStateClick()"
       />
@@ -35,52 +36,42 @@
         name="inputs"
         class="controls-PeriodDialog__header-period"
         on:focusout="_inputFocusOutHandler()">
-      <Controls.validate:InputContainer>
-         <ws:validators>
-            <ws:Function value="{{_rangeModel.startValue}}">Controls/validate:isValidDate</ws:Function>
-         </ws:validators>
-         <ws:content>
-            <Controls.input:DateBase
-               name="startValueField"
-               mask="{{_mask}}"
-               autocompleteMode="start"
-               value="{{_rangeModel.startValue}}"
-               dateConstructor="{{_options.dateConstructor}}"
-               attr:ws-autofocus="true"
-               attr:class="controls-PeriodDialog__header-datePickerStart"
-               on:valueChanged="_startValuePickerChanged()"
-               on:keyup="_startValueFieldKeyUpHandler()"
-            />
-         </ws:content>
-      </Controls.validate:InputContainer>
+       <Controls.input:DateBase
+          name="startValueField"
+          mask="{{_mask}}"
+          autocompleteMode="start"
+          value="{{_rangeModel.startValue}}"
+          dateConstructor="{{_options.dateConstructor}}"
+          valueValidators="{{_startValueValidators}}"
+          validateByFocusOut="{{false}}"
+          attr:ws-autofocus="true"
+          attr:class="controls-PeriodDialog__header-datePickerStart"
+          on:valueChanged="_startValuePickerChanged()"
+          on:inputControl="_inputControlHandler()"
+       />
 
       <ws:if data="{{_options.selectionType !== 'single'}}">
-         <div class="controls-PeriodDialog__header-rangeDash"></div>
-         <Controls.validate:InputContainer>
-            <ws:validators>
-               <ws:Function value="{{_rangeModel.endValue}}">Controls/validate:isValidDate</ws:Function>
-               <ws:Function startValue="{{_rangeModel.startValue}}" endValue="{{_rangeModel.endValue}}">Controls/validate:isValidDateRange</ws:Function>
-            </ws:validators>
-            <ws:content>
-               <Controls.input:DateBase
-                  name="endValueField"
-                  mask="{{_mask}}"
-                  autocompleteMode="start"
-                  value="{{_rangeModel.endValue}}"
-                  dateConstructor="{{_options.dateConstructor}}"
-                  attr:class="controls-PeriodDialog__header-datePickerEnd"
-                  on:valueChanged="_endValuePickerChanged()"
-               />
-            </ws:content>
-         </Controls.validate:InputContainer>
+         <div class="controls-PeriodDialog__header-rangeDash controls-PeriodDialog__header-rangeDash_theme-{{theme}}"></div>
+            <Controls.input:DateBase
+               name="endValueField"
+               mask="{{_mask}}"
+               autocompleteMode="start"
+               value="{{_rangeModel.endValue}}"
+               _yearSeparatesCenturies="{{_rangeModel.startValue}}"
+               dateConstructor="{{_options.dateConstructor}}"
+               valueValidators="{{_endValueValidators}}"
+               validateByFocusOut="{{false}}"
+               attr:class="controls-PeriodDialog__header-datePickerEnd"
+               on:valueChanged="_endValuePickerChanged()"
+            />
       </ws:if>
    </div>
 
    <div if="{{_homeButtonVisible}}" title="{[Текущий период]}"
         attr:class="controls-PeriodDialog__homeButton controls-PeriodDialog__cursor-pointer"
         on:click="_homeButtonClick()">
-      <i attr:class="icon-Home3 controls-icon controls-icon_style-secondary_theme-{{_options.theme}}
-                     controls-PeriodDialog__homeButton-icon"/>
+      <i attr:class="icon-Home3 controls-icon controls-icon_style-secondary_theme-{{theme}}
+                     controls-PeriodDialog__homeButton-icon_theme-{{theme}} "/>
    </div>
 
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
@@ -92,7 +83,7 @@
       iconSize="m"
       inlineHeight="l"
       tooltip="{[Подтвердить]}"
-      attr:class="controls-PeriodDialog__applyButton"
+      attr:class="controls-PeriodDialog__applyButton controls-PeriodDialog__applyButton_theme-{{theme}}"
       on:click="_applyClick()"
    />
 

@@ -9,11 +9,10 @@ define([
    describe('Controls.Container.MultiSelector', function() {
       it('_selectedTypeChangedHandler', function() {
          var instance = new MultiSelector.Controller();
-         instance._children = {
-            registrator: {
-               start: function(typeName) {
-                  assert.equal(typeName, 'toggleAll');
-               }
+         instance._beforeMount({});
+         instance._selectedTypeRegister = {
+            start: function(typeName) {
+               assert.equal(typeName, 'toggleAll');
             }
          };
          instance._selectedTypeChangedHandler({}, 'toggleAll');

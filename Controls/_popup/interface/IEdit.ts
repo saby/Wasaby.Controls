@@ -28,14 +28,13 @@ export interface IEditOpener {
  *  <li>If option 'mode' is set to 'stack' use {@link Controls/popup:Stack Stack options}</li>
  *  <li>If option 'mode' is set to 'dialog' use  {@link Controls/popup:Dialog Dialog options}</li>
  *  <li>If option 'mode' is set to 'sticky' use  {@link Controls/popup:Sticky Sticky options}</li>
- * <a href="/materials/demo-ws4-popup-edit">Demo-example</a>
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">Demo-example</a>
  * {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ Подробнее}
  * @class Controls/_popup/interface/IEdit
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
- * @category Popup
  */
 
 /**
@@ -163,9 +162,9 @@ export interface IEditOpener {
 
 /**
  * @name Controls/_popup/interface/IEdit#items
- * @cfg {Object} Рекордсет для синхронизации с редактируемой записью.
+ * @cfg {Types/collection:RecordSet} Рекордсет для синхронизации с редактируемой записью.
  */
 /*
  * @name Controls/_popup/interface/IEdit#items
- * @cfg {Object} RecordSet for synchronization with the editing record.
+ * @cfg {Types/collection:RecordSet} RecordSet for synchronization with the editing record.
  */

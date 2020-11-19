@@ -17,12 +17,12 @@ export interface IStickyPopupOptions extends IBasePopupOptions {
     height?: number;
     maxHeight?: number;
     target?: HTMLElement | EventTarget | Control;
-    actionOnScroll?: string;
+    actionOnScroll?: 'close' | 'track' | 'none';
+    restrictiveContainer?: string | HTMLElement | Control;
     targetPoint?: IStickyPosition;
     direction?: IStickyPosition;
     offset?: IStickyPositionOffset;
     fittingMode?: string | IStickyPosition;
-    horizontalAlign?: any; //TODO НУЖНО УДАЛЯТЬ ИСПОЛЬЗОВАНИЕ ОПЦИИ
 }
 
 export interface IStickyPosition {
@@ -31,8 +31,8 @@ export interface IStickyPosition {
 }
 
 export interface IStickyPositionOffset {
-    vertical: number;
-    horizontal: number;
+    vertical?: number;
+    horizontal?: number;
 }
 
 export interface IStickyOpener extends IOpener {
@@ -43,6 +43,7 @@ export interface IStickyOpener extends IOpener {
  * @typedef {Object} PopupOptions
  * @description Конфигурация прилипающего блока.
  * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
+ * @property {String} actionOnScroll Определяет реакцию всплывающего окна на скролл родительской области.
  * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
  * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
  * @property {Boolean} closeOnOutsideClick Определяет возможность закрытия всплывающего окна по клику вне.
@@ -242,83 +243,4 @@ export interface IStickyOpener extends IOpener {
  * @variant overflow Координаты точки позиционирования меняются (окно сдвигается относительно целевого элемента настолько, насколько не помещается в области видимости экрана, причем окно, возможно, будет перекрывать целевой элемент.) Если окно имеет размеры больше экрана, то ширина и высота уменьшаются так, чтобы окно поместилось.
  * @variant adaptive Координаты точки позиционирования ({@link Controls/_popup/interface/ISticky#targetPoint targetPoint}) и выравнивание ({@link Controls/_popup/interface/ISticky#direction direction}) меняются на противоположные. Если и в этом случае окно не помещается на экран, выбирается тот способ позиционирования (изначальный или инвертируемый), при котором на экране помещается наибольшая часть контента. Например если поле ввода с автодополнением находится внизу экрана, то список автодополнения раскроется вверх от поля. Ширина и высота при этом уменьшаются так, чтобы окно поместилось на экран.
  * @default adaptive
- */
-
-
-/**
- * Статический метод для открытия всплывающего окна. При использовании метода не требуется создавать popup:Sticky в верстке.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
- * @function Controls/_popup/interface/ISticky#openPopup
- * @param {PopupOptions} config Конфигурация прилипающего блока.
- * @return {Promise<string>} Возвращает Promise, который в качестве результата вернет идентификатор окна, который потребуется для закрытия этого окна. см метод {@link closePopup}
- * @remark
- * Для обновления уже открытого окна в config нужно передать св-во id с идентификатором открытого окна.
- * @static
- * @example
- * js
- * <pre>
- *    import {Sticky} from 'Controls/popup';
- *    ...
- *    openSticky() {
- *        Sticky.openPopup({
- *          template: 'Example/MyStickyTemplate',
- *          opener: this._children.myButton
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeSticky() {
- *       Sticky.closePopup(this._popupId);
- *    }
- * </pre>
- * @see closePopup
- * @see close
- * @see open
- */
-
-/*
- * Open Sticky popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
- * @function Controls/_popup/interface/ISticky#openPopup
- * @param {PopupOptions} config Sticky popup options.
- * @return {Promise<string>} Returns id of popup. This id used for closing popup.
- * @static
- * @see closePopup
- */
-
-/**
- * Статический метод для закрытия окна по идентификатору.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/#open-popup Подробнее}.
- * @function Controls/_popup/interface/ISticky#closePopup
- * @param {String} popupId Идентификатор окна, который был получен при вызове метода {@link openPopup}.
- * @static
- * @example
- * js
- * <pre>
- *    import {Sticky} from 'Controls/popup';
- *    ...
- *    openSticky() {
- *        Sticky.openPopup({
- *          template: 'Example/MyStickyTemplate',
- *          autoClose: true
- *        }).then((popupId) => {
- *          this._popupId = popupId;
- *        });
- *    },
- *
- *    closeSticky() {
- *       Sticky.closePopup(this._popupId);
- *    }
- * </pre>
- * @see openPopup
- */
-
-/*
- * Close Sticky popup.
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/sticky/ See more}.
- * @function Controls/_popup/interface/ISticky#closePopup
- * @param {String} popupId Id of popup.
- * @static
- * @see openPopup
  */

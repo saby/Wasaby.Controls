@@ -1,0 +1,9 @@
+<Controls.filterPopup:Dropdown
+   multiSelect="{{true}}"
+   bind:selectedKeys="_options.item.value"
+   bind:textValue="_options.item.textValue"
+   emptyText="Не выбрано"
+   keyProperty="id"
+   displayProperty="title"
+   source="{{_options.item.editorOptions.source}}"
+/>

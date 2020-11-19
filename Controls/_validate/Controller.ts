@@ -1,101 +1,59 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_validate/Controller');
-import ValidateContainer = require('wml!Controls/_validate/Container');
-import {Logger} from 'UI/Utils';
-import {IValidateConfig} from 'Controls/_validate/Container';
-
-interface IValidateResult {
-    [key: number]: boolean;
-
-    hasErrors?: boolean;
-}
+import ValidateContainer from 'Controls/_validate/Container';
+import ControllerClass from 'Controls/_validate/ControllerClass';
+import IValidateResult from 'Controls/_validate/interfaces/IValidateResult';
 
 /**
  * Контрол, регулирующий валидацию формы.
  * Валидация запускается при вызове метода {@link Controls/_validate/Controller#submit submit}.
  * @class Controls/_validate/Controller
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @demo Controls-demo/Input/Validate/FormController
  * @author Красильников А.С.
  */
 
 class Form extends Control<IControlOptions> {
-    _template: TemplateFunction = template;
-    _validates: ValidateContainer[] = [];
+    private _validateController: ControllerClass = new ControllerClass();
+
+    protected _template: TemplateFunction = template;
+
+    protected _afterUpdate(oldOptions?: IControlOptions, oldContext?: any): void {
+        super._afterUpdate(oldOptions, oldContext);
+        this._validateController.resolveSubmit();
+    }
 
     onValidateCreated(e: Event, control: ValidateContainer): void {
-        this._validates.push(control);
+        this._validateController.addValidator(control);
     }
 
     onValidateDestroyed(e: Event, control: ValidateContainer): void {
-        this._validates = this._validates.filter((validate) => {
-            return validate !== control;
-        });
+        this._validateController.removeValidator(control);
     }
 
     submit(): Promise<IValidateResult | Error> {
-        const validatePromises = [];
-
-        // The infobox should be displayed on the first not valid field.
-        this._validates.reverse();
-        let config: IValidateConfig = {
-            hideInfoBox: true,
-        };
-        this._validates.forEach((validate: ValidateContainer) => {
-            if (!(validate._options && validate._options.readOnly)) {
-                //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=2ebc5fff-6c4f-44ed-8764-baf39e4d4958
-                validatePromises.push(validate.validate(config));
-            }
-        });
-
-        const resultPromise = Promise.all(validatePromises);
-
-        this._notify('registerPending', [resultPromise, {showLoadingIndicator: true}], {bubbling: true});
-        return resultPromise.then((results: IValidateResult) => {
-            let key: string;
-            let needValid: boolean;
-            let resultCounter: number = 0;
-
-            // Walking through object with errors and focusing first not valid field.
-            for (key in this._validates) {
-                if (!this._validates[key]._options.readOnly) {
-                    if (results[resultCounter]) {
-                        needValid = this._validates[key];
-                    }
-                    resultCounter++;
-                }
-            }
-            if (needValid) {
-                results.hasErrors = true;
-                this.activateValidator(needValid);
-            }
-            this._validates.reverse();
-            return results;
-        }).catch((e: Error) => {
-            Logger.error('Form: Submit error', this, e);
-            return e;
-        });
-    }
-
-    activateValidator(control: ValidateContainer): void {
-        control.activate();
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
     }
 
     setValidationResult(): void {
-        this._validates.forEach((validate: ValidateContainer) => {
-            validate.setValidationResult(null);
-        });
+        return this._validateController.setValidationResult();
     }
 
-    isValid(): IValidateResult {
-        const results: IValidateResult = {};
-        let i: number = 0;
-        this._validates.forEach((validate: ValidateContainer) => {
-            results[i++] = validate.isValid();
-        });
-        return results;
+    getValidationResult(): IValidateResult {
+        return this._validateController.getValidationResult();
+    }
+
+    isValid(): boolean {
+        return this._validateController.isValid();
+    }
+
+    protected _beforeUnmount(): void {
+        this._validateController.destroy();
+        this._validateController = null;
     }
 }
 
@@ -104,10 +62,6 @@ export default Form;
 /**
  * @name Controls/_validate/Controller#content
  * @cfg {Content} Содержимое, к которому добавлена ​​логика валидации.
- */
-/*
- * @name Controls/_validate/Controller#content
- * @cfg {Content} The content to which the logic of validation is added.
  */
 
 /**
@@ -144,49 +98,10 @@ export default Form;
  *    });
  * </pre>
  */
-/*
- * @name Controls/_validate/Controller#submit
- * @description Start the validation
- * @returns {Deferred}
- * @example
- * WML
- * <pre>
- * <Controls.validate:Controller name="formController">
- *    <ws:content>
- *       <Controls.validate:Container>
- *          <ws:validators>
- *             <ws:Function value="{{_value2}}" >Controls/validate:isRequired</ws:Function>
- *          </ws:validators>
- *          <ws:content>
- *             <Controls.input:Text bind:value="_value2"/>
- *          </ws:content>
- *       </Controls.validate:Container>
- *    </ws:content>
- * </Controls.validate:Controller>
- * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
- * </pre>
- * JavaScript
- * <pre>
- *     Control.extend({
- *        ...
- *
- *        _clickHandler: function() {
- *           this._children.formController.submit();
- *        }
- *        ...
- *    });
- * </pre>
- */
 
 /**
- * Return the result of validation
+ * Возвращает значение, указывающее, прошла ли проверка валидации содержимого успешно.
  * @name Controls/_validate/Controller#isValid
  * @function
- * @returns {Array}
- */
-/*
- * Возвращает результат валидации. 
- * @name Controls/_validate/Controller#isValid
- * @function
- * @returns {Array}
+ * @returns {Boolean}
  */

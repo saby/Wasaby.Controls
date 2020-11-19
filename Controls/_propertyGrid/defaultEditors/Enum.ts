@@ -6,10 +6,15 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
 
 /**
  * Редактор для перечисляемого типа данных.
+ *
+ * @remark
+ * Полезные ссылки:
+ * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less">переменные тем оформления</a>
+ *
  * @class Controls/_propertyGrid/defaultEditors/Enum
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -19,7 +24,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
  * @class Controls/_propertyGrid/defaultEditors/Enum
  * @extends Core/Control
  * @mixes Controls/_propertyGrid/IEditor
- * @control
+ * 
  * @public
  * @author Герасимов А.М.
  */
@@ -29,9 +34,14 @@ class EnumEditor extends Control implements IEditor {
     protected _template: Function = template;
     protected _options: IEditorOptions;
 
-    private selectedKey: string = '';
+    protected selectedKey: string = '';
 
     _beforeMount(options: IEditorOptions): void {
+        this._enum = options.propertyValue;
+        this.selectedKey = options.propertyValue.getAsValue();
+    }
+
+    _beforeUpdate(options: IEditorOptions): void {
         this._enum = options.propertyValue;
         this.selectedKey = options.propertyValue.getAsValue();
     }

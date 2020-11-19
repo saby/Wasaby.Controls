@@ -1,41 +1,55 @@
-.controls-Sticky__reset-margins {
-   // todo: To do without it, just take into account the indentation when positioning
-   margin: 0 !important;
-}
-
 .controls-StickyTemplate {
+   display: flex;
+   flex-direction: column;
    position: relative;
    width: 100%;
-   padding-bottom: @padding-bottom_sticky;
-   background: @border-color_sticky;
-   box-shadow: @box-shadow_sticky;
+   box-sizing: border-box;
+   min-height: 0;
+   height: 100%;
+   overflow: hidden;
 }
 
 .controls-StickyTemplate_theme_@{themeName} {
    background-color: @background-color_sticky;
+   border: @border-thickness_sticky solid @border-color_sticky;
+}
+
+.controls-StickyTemplate-shadow_theme_@{themeName} {
+   box-shadow: @box-shadow_sticky;
 }
 
 .controls-StickyTemplate__top-area_theme_@{themeName} {
    display: flex;
    align-items: center;
    justify-content: space-between;
-   flex-shrink: 1;
-   padding: @padding-top_sticky @close-button_offset-right_sticky + @close-button_offset-left_sticky + @width_closeButton_link 0 @header_padding-horizontal_sticky;
-   height: @header_min-height_sticky;
-   border-bottom: @header_bottom-border-thickness_sticky solid @header_bottom-border-color_sticky;
+   flex-shrink: 0;
+   padding-left: @header_padding-horizontal_sticky;
+   min-height: @header_min-height_sticky;
    background: @header_background-color_sticky;
+}
+
+.controls-StickyTemplate__top-area-withClose_theme_@{themeName} {
+   padding-right: @close-button_offset-right_sticky + @close-button_offset-left_sticky + @width_closeButton_link;
+}
+
+.controls-StickyTemplate__top-area-withoutClose_theme_@{themeName} {
+   padding-right: @header_padding-horizontal_sticky;
 }
 
 .controls-StickyTemplate__top-area-content {
    width: 100%;
    display: flex;
    align-items: center;
-   justify-content: space-between;
+   cursor: default;
+   .flex-shrink(0);
+}
+
+.controls-StickyTemplate__top-area-content_theme_@{themeName} {
+   height: @header_min-height_sticky;
 }
 
 .controls-StickyTemplate__content-area {
-   display: inline-flex;
-   padding: @padding-top_sticky @header_padding-horizontal_sticky 0;
+   display: flex;
    flex-direction: column;
    overflow: hidden;
 }
@@ -43,6 +57,14 @@
 .controls-StickyTemplate__close_button_theme_@{themeName} {
    position: absolute;
    right: @close-button_offset-right_sticky;
+   z-index: 2;
+}
+
+.controls-StickyTemplate__close_button-without-header_theme-@{themeName} {
+   top: @close-button_offset-top_sticky + @content_padding-top_sticky;
+}
+
+.controls-StickyTemplate__close_button-with-header_theme-@{themeName} {
    top: @close-button_offset-top_sticky;
 }
 
@@ -50,6 +72,7 @@
    display: flex;
    align-items: center;
    overflow: hidden;
+   cursor: default;
 }
 
 .controls-StickyTemplate__caption_text {
@@ -58,7 +81,13 @@
    white-space: nowrap;
 }
 
-.controls-StickyTemplate__caption_theme_@{themeName} {
-   min-height: @header_min-height_sticky;
+.controls-StickyTemplate__caption_theme-@{themeName} {
    font-size: @header_font-size_sticky;
+   font-weight: bold;
+   color: @header_color_sticky;
+}
+
+.controls-StickyTemplate__footer_theme-@{themeName} {
+   display: flex;
+   align-items: center;
 }

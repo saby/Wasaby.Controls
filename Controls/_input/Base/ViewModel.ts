@@ -130,12 +130,12 @@ import {isEqual} from 'Types/object';
             var displayValue = splitValue.before + splitValue.insert + splitValue.after;
             var hasChangedDisplayValue = this._displayValue !== displayValue;
 
+            this._value = this._convertToValue(displayValue);
             this._displayValue = displayValue;
 
             // здесь нельзя добавлять проверку, иначе нельзя будет поставить точку в тексте. например Number.js пишем 123.456, вот когда будем писать точку, число при этом не изменилось, но _nextVersion звать надо..
             this._nextVersion();
 
-            this._value = this._convertToValue(displayValue);
             this._selection.start = position;
             this._selection.end = position;
 
@@ -160,6 +160,10 @@ import {isEqual} from 'Types/object';
 
             this._nextVersion();
             this._shouldBeChanged = true;
+         },
+
+         isValueChanged: function(oldDisplayValue: string, oldValue?: string) {
+            return oldDisplayValue !== this._displayValue;
          }
       });
 

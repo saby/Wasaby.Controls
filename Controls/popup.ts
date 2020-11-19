@@ -20,6 +20,12 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
+ * @includes StickyOpener Controls/_popup/PopupHelper/Sticky
+ * @includes StackOpener Controls/_popup/PopupHelper/Stack
+ * @includes DialogOpener Controls/_popup/PopupHelper/Dialog
+ * @includes NotificationOpener Controls/_popup/PopupHelper/Notification
+ * @includes MouseEventHelper Controls/_popup/fastOpenUtils/MouseEventHelper
+ * @includes FastOpen Controls/_popup/fastOpenUtils/FastOpen
  * @public
  * @author Крайнов Д.О.
  */
@@ -46,6 +52,9 @@
  * @includes IBaseOpener Controls/_popup/interface/IBaseOpener
  * @includes IPreviewerOptions Controls/_popup/interface/IPreviewer
  * @includes IInfoBoxOptions Controls/_popup/interface/IInfoBox
+ * @includes IInfoBoxPopupOptions Controls/_popup/interface/IInfoBoxOpener
+ * @includes MouseEventHelper Controls/_popup/fastOpenUtils/MouseEventHelper
+ * @includes FastOpen Controls/_popup/fastOpenUtils/FastOpen
  * @public
  * @author Крайнов Д.О.
  */
@@ -56,10 +65,11 @@
  * @includes PreviewerTemplate wml!Controls/_popup/Global/Global
  */
 
-export {default as Manager} from './_popup/Manager';
+export {default as ManagerClass} from './_popup/Manager';
 export {default as Container} from './_popup/Manager/Container';
 export {default as Controller} from './_popup/Manager/ManagerController';
 export {default as Global} from './_popup/Global';
+export {default as GlobalController} from './_popup/GlobalController';
 
 export {default as BaseOpener} from 'Controls/_popup/Opener/BaseOpener';
 export {default as Stack} from './_popup/Opener/Stack';
@@ -77,15 +87,26 @@ export {default as PreviewerTarget} from './_popup/Previewer';
 export {default as InfoboxTarget} from './_popup/InfoBox';
 export {default as PreviewerTemplate} from './_popup/Previewer/PreviewerTemplate';
 
-export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers} from './_popup/interface/IPopup';
+export {default as StackOpener} from './_popup/PopupHelper/Stack';
+export {default as StickyOpener} from './_popup/PopupHelper/Sticky';
+export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
+export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
+
+export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
 export {IBasePopupOptions} from './_popup/interface/IBaseOpener';
 export {IStackPopupOptions} from './_popup/interface/IStack';
-export {IStickyPopupOptions} from './_popup/interface/ISticky';
+export {IStickyPopupOptions, IStickyPosition, IStickyPositionOffset} from './_popup/interface/ISticky';
 export {IDialogPopupOptions} from './_popup/interface/IDialog';
 export {IConfirmationOptions} from './_popup/interface/IConfirmation';
 export {INotificationPopupOptions} from './_popup/interface/INotification';
 export {IPreviewerOptions} from './_popup/interface/IPreviewer';
 export {IInfoBoxOptions} from './_popup/interface/IInfoBox';
+export {IInfoBoxPopupOptions} from './_popup/interface/IInfoBoxOpener';
+
+export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
+
+export {isMouseEvent, MouseUp, MouseButtons} from './_popup/fastOpenUtils/MouseEventHelper';
+export {isLeftMouseButton, DependencyTimer} from './_popup/fastOpenUtils/FastOpen';
 
 // TODO Compatible
 import GlobalTemplate = require('wml!Controls/_popup/Global/Global');

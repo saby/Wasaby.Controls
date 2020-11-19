@@ -6,9 +6,10 @@ define(
       'Types/collection',
       'Controls/history',
       'Types/entity',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Application/Env'
    ],
-   function(filterMod, sourceLib, Clone, collection, history, entity, Deferred) {
+   function(filterMod, sourceLib, Clone, collection, history, entity, Deferred, Env) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -149,6 +150,12 @@ define(
             close: setTrue.bind(this, assert),
             open: setTrue.bind(this, assert)
          };
+
+         it('_selectorOpenCallback', () => {
+            let fastFilter = getFastFilterWithItems(configItems);
+            const items = fastFilter._selectorOpenCallback();
+            assert.isTrue(items instanceof collection.List);
+         });
 
          it('_beforeMount', function(done) {
             let fastFilter = getFastFilter(configItems);
@@ -413,7 +420,7 @@ define(
             let fastFilter = getFastFilter(configWithItems);
             fastFilter._children = { DropdownOpener: { close: ()=> {closed = true;} } };
             fastFilter._beforeMount(configWithItems);
-            fastFilter._onResult(null, { action: 'footerClick' });
+            fastFilter._onResult({}, 'footerClick');
             assert.isTrue(closed);
          });
 
@@ -422,7 +429,7 @@ define(
                filterMod.Fast._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult(null, { data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
+                  fastData._onResult(null, 'itemClick', fastData._configs[0]._items.at(2));
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -436,10 +443,10 @@ define(
                { key: 1, title: 'Россия' },
                { key: 3, title: 'Великобритания' }
             ];
-            fastData2._onResult(null, { data: selectedItems, action: 'applyClick' });
+            fastData2._onResult(null, 'applyClick', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Великобритания']);
 
-            fastData2._onResult(null, { data: [], action: 'applyClick' });
+            fastData2._onResult(null, 'applyClick',  []);
             assert.deepEqual(fastData2._items.at(0).value, ['все страны']);
          });
 
@@ -453,7 +460,7 @@ define(
                ]
             });
             fastData2._afterSelectorOpenCallback([]);
-            fastData2._onResult(null, { data: selectedItems, action: 'selectorResult' });
+            fastData2._onResult(null, 'selectorResult', selectedItems);
             assert.deepEqual(fastData2._items.at(0).value, ['Россия', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 5);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 5, title: 'Франция' });
@@ -478,6 +485,21 @@ define(
             assert.deepEqual(fastData2._items.at(0).value, ['Китай', 'Франция']);
             assert.deepEqual(fastData2._configs[0]._items.getCount(), 6);
             assert.deepEqual(fastData2._configs[0]._items.at(0).getRawData(), { key: 11, title: 'Китай' });
+         });
+
+         it('_onResult selectorDialogOpened', () => {
+            let instance = getFastFilterWithItems(configItems);
+            let opened = true;
+            let notifyFire = false;
+            instance._children.DropdownOpener = {
+               close: () => { opened = false }
+            };
+            instance._notify = () => {
+               notifyFire = true;
+            };
+            instance._onResult(null, 'selectorDialogOpened', []);
+            assert.isFalse(notifyFire);
+            assert.isFalse(opened);
          });
 
          it('_onSelectorTemplateResult', function() {
@@ -615,6 +637,7 @@ define(
 
          it('open dropdown', function() {
             let fastFilter = new filterMod.Fast(config);
+            fastFilter._options.theme = 'default';
             let expectedConfig, isOpened, isLoading = false;
             fastFilter._children = {
                DropdownOpener: { open: (openerConfig) => {expectedConfig = openerConfig; isOpened = true;} }
@@ -624,7 +647,8 @@ define(
                   keyProperty: 'key',
                   rawData: items[0]
                }),
-               _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading} }}];
+               _source: 'targetSource',
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {return isLoading}, getNavigation: () => {} }}];
             fastFilter._items = new collection.RecordSet({
                rawData: configItems.items,
                keyProperty: 'title'
@@ -634,10 +658,12 @@ define(
                horizontal: 'overflow',
                vertical: 'adaptive'
             });
-            assert.deepStrictEqual(expectedConfig.templateOptions.items, fastFilter._configs[0]._items);
+            assert.isOk(expectedConfig.templateOptions.source);
             assert.deepStrictEqual(expectedConfig.templateOptions.selectorItems, fastFilter._configs[0]._items);
             assert.strictEqual(expectedConfig.templateOptions.selectedKeys[0], 'Россия');
             assert.isTrue(isOpened);
+            assert.equal(expectedConfig.templateOptions.dropdownClassName, 'controls-FastFilter_width-popup_theme-default');
+            assert.isOk(expectedConfig.templateOptions.selectorOpener)
 
             isOpened = false;
             isLoading = true;
@@ -656,7 +682,8 @@ define(
                   keyProperty: 'key',
                   rawData: items[0]
                }),
-               _sourceController: { hasMoreData: () => {}, isLoading: () => {} },
+               _source: 'targetSource',
+               _sourceController: { hasMoreData: () => {}, isLoading: () => {}, getNavigation: () => {} },
                _needQuery: true
             }];
             fastFilter._items = new collection.RecordSet({
@@ -700,7 +727,10 @@ define(
                selectorTemplate: 'selectorTemplate'
             };
             var result = filterMod.Fast._private.getItemPopupConfig(properties);
-            assert.deepEqual(properties, result);
+            const resultProps = {...properties};
+            resultProps.footerContentTemplate = resultProps.footerTemplate;
+            delete resultProps.footerTemplate;
+            assert.deepEqual(result, resultProps);
          });
 
          it('_private::prepareItems', function() {
@@ -782,7 +812,16 @@ define(
          describe('history', () => {
             let historySource, historyConfig;
             let fastFilter;
+            const originalGetStore = Env.getStore;
+            const originalSetStore = Env.setStore;
             beforeEach(function() {
+               Env.getStore = (key) => {
+                  return stores[key];
+               };
+               Env.setStore = (key, value) => {
+                  stores[key] = value;
+               };
+               stores = {};
                historySource = new history.Source({
                   originSource: new sourceLib.Memory({
                      keyProperty: 'id',
@@ -792,7 +831,7 @@ define(
                      historyId: 'TEST_HISTORY_ID_FAST_FILTER'
                   })
                });
-               historySource.historySource._historyDataSource = () => {
+               historySource._$historySource._$historyDataSource = () => {
                   return new Deferred.success();
                };
                historySource.getItems = () => {
@@ -843,6 +882,7 @@ define(
                   })]);
                   assert.strictEqual(fastFilter._configs[0]._items.getCount(), 1);
 
+                  fastFilter._configs[0].keyProperty = 'id';
                   filterMod.Fast._private.onSelectorResult(fastFilter._configs[0], [new entity.Model({
                      keyProperty: 'key',
                      rawData: { key: 5, title: 'Китай' }
@@ -879,7 +919,10 @@ define(
                   done();
                });
             });
-
+            afterEach(function() {
+               Env.getStore = originalGetStore;
+               Env.setStore = originalSetStore;
+            });
          });
 
          function setTrue(assert) {

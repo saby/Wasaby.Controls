@@ -9,8 +9,11 @@
 }
 
 .controls-Input-DateRange__buttonWrapper {
-   padding-left: @spacing_DateRange-between-input-button;
    display: inline-flex;
+}
+
+.controls-Input-DateRange__buttonWrapper_theme-@{themeName} {
+   padding-left: @trigger-offset_inputDate;
 }
 
 .controls-Input-DateRange__buttonBaseLine::before {
@@ -19,35 +22,36 @@
 
 .controls-Input-DateRange__button {
    cursor: pointer;
-   font-size: @size_DateRange-icon;
-   line-height: @size_DateRange-icon;
-   width: @size_DateRange-icon;
-   height: @size_DateRange-icon;
-   font-family: @font-family_DateRange;
+}
+
+.controls-Input-DateRange__button_theme-@{themeName} {
+   font-size: @trigger_icon-size_inputDate;
+   line-height: @trigger_icon-size_inputDate;
+   width: @trigger_icon-size_inputDate;
+   height: @trigger_icon-size_inputDate;
+   font-family: @icon_font-family_s;
 }
 
 .controls-Input-DateRange__dash {
    display: inline-block;
-   width: @width_DateRange-dash;
-   margin: 0 @spacing_DateRange-between-dash-date;
-   border-top: @thickness_DateRange-dash solid @color_DateRange-dash;
    vertical-align: middle;
 }
 
-.controls-PeriodDialog__picker {
-   margin-top: @shift-top_PeriodDialog-picker;
-   margin-left: @shift-left_PeriodDialog-picker;
+.controls-Input-DateRange__dash_theme-@{themeName} {
+   width: @dash_length_dateRangeInput;
+   margin: 0 @dash_padding-horizontal_dateRangeInput;
+   border-top: @dash_thickness_dateRangeInput solid @dash_color_dateRangeInput;
 }
 
 .ws-is-hover {
-   .controls-Input-DateRange__button:hover {
-      color: @color_DateRange-calendar-icon_hover;
+   .controls-Input-DateRange__button_theme-@{themeName}:hover {
+      color: @trigger_hover_icon-color_inputDate;
    }
 }
 
 .ws-is-no-touch,
 .ws-is-touch {
-   .controls-Input-DateRange__button:active {
-      color: @color_DateRange-calendar-icon_hover;
+   .controls-Input-DateRange__button_theme-@{themeName}:active {
+      color: @trigger_active_icon-color_inputDate;
    }
 }

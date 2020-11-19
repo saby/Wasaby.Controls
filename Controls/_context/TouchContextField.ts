@@ -19,7 +19,9 @@ const Context = DataContext.extend({
    },
    setIsTouch: function(touch) {
       this.isTouch = touch;
-      this.updateConsumers();
+      if (this.isTouch !== touch) {
+         this.updateConsumers();
+      }
    }
 });
 

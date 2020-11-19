@@ -2,7 +2,6 @@ define('Controls-demo/Date/Month', [
    'Core/Control',
    'wml!Controls-demo/Date/Month',
    'Controls/calendar',
-   'css!Controls-demo/Date/Month'
 ], function (
    BaseControl,
    template
@@ -16,6 +15,8 @@ define('Controls-demo/Date/Month', [
       _endValue: new Date(2017, 0, 30),
       _startValue2: new Date(2017, 0, 1),
       _endValue2: new Date(2017, 0, 30),
+      _startValueSelected: new Date(2017, 0, 5),
+      _endValueSelected: new Date(2017, 0, 11),
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
@@ -31,5 +32,7 @@ define('Controls-demo/Date/Month', [
          this._forceUpdate();
       }
    });
+   ModuleClass._styles = ['Controls-demo/Date/Month'];
+
    return ModuleClass;
 });

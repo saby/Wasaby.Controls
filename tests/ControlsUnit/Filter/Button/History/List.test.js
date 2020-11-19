@@ -1,7 +1,7 @@
 define(
    [
       'Controls/_filterPopup/History/List',
-      'Core/Serializer',
+      'UI/State',
       'Types/chain',
       'ControlsUnit/Filter/Button/History/testHistorySource',
       'Controls/filter',
@@ -10,7 +10,7 @@ define(
       'Types/collection',
       'Env/Env'
    ],
-   function(List, Serializer, chain, HistorySourceDemo, filter, entity, history, collection, Env) {
+   function(List, uiState, chain, HistorySourceDemo, filter, entity, history, collection, Env) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -107,9 +107,16 @@ define(
          });
 
          it('click separator', function() {
+            let isResized = false;
+            list._notify = (event) => {
+               if (event === 'controlResize') {
+                  isResized = true;
+               }
+            };
             list._isMaxHeight = true;
             list._clickSeparatorHandler();
             assert.isFalse(list._isMaxHeight);
+            assert.isTrue(isResized);
          });
 
          it('_clickHandler', function() {
@@ -177,6 +184,7 @@ define(
 
          it('_private::deleteFavorite', () => {
             let closed = false;
+            let removeFired = false;
             const sandBox = sinon.createSandbox();
             const self = {
                _editItem: {get: () => {}},
@@ -188,37 +196,31 @@ define(
                },
                _notify: () => {}
             };
-
-            sandBox.stub(List._private, 'removeRecordFromOldFavorite');
-            sandBox.stub(List._private, 'updateOldFavoriteList');
             sandBox.replace(List._private, 'getSource',() => {
                return {
-                  remove: () => {},
+                  remove: () => {removeFired = true},
                   getDataObject: () => {}
                };
             });
 
             List._private.deleteFavorite(self, {});
             assert.isTrue(closed);
-            sinon.assert.calledOnce(List._private.removeRecordFromOldFavorite);
-            sinon.assert.calledOnce(List._private.updateOldFavoriteList);
+            assert.isTrue(removeFired);
             sandBox.restore();
          });
 
          it('_private::saveFavorite', () => {
             let editedItem;
+            let updateFired = false;
             const sandBox = sinon.createSandbox();
             const self = {
                _editItem: { get: () => {}, set: (property, data) => { editedItem = data; } },
                _options: { historyId: '1231123' },
                _notify: () => {}
             };
-
-            sandBox.stub(List._private, 'removeRecordFromOldFavorite').returns(-1);
-            sandBox.stub(List._private, 'updateOldFavoriteList');
             sandBox.replace(List._private, 'getSource', () => {
                return {
-                  update: () => {},
+                  update: () => {updateFired = true},
                   getDataObject: () => {}
                };
             });
@@ -237,10 +239,8 @@ define(
                isClient: false
             });
             List._private.saveFavorite(self, record);
-
-            sinon.assert.calledOnce(List._private.removeRecordFromOldFavorite);
-            sinon.assert.calledOnce(List._private.updateOldFavoriteList);
             assert.deepEqual(editedItem, expectedEditedItem);
+            assert.isTrue(updateFired);
             sandBox.restore();
          });
 

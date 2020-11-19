@@ -1,13 +1,12 @@
 import DetailPanel = require('Controls/_filterPopup/DetailPanel');
 
 /**
- * @class
- * @name Controls/_filterPopup/Panel
+ * @class Controls/_filterPopup/Panel
  * @extends Controls/_filterPopup/DetailPanel
- * @control
  * @public
- * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filterPopup:DetailPanel}.
  * @author Золотова Э.Е.
+ * 
+ * @deprecated Контрол устарел и в скором времени будет удалён, используйте {@link Controls/filterPopup:DetailPanel}.
  */
 
 export = DetailPanel;

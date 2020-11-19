@@ -2,7 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/CheckboxGroup/CheckboxGroup');
 import groupTemplate = require('wml!Controls/_toggle/CheckboxGroup/GroupTemplate');
 import defaultItemTemplate = require('wml!Controls/_toggle/CheckboxGroup/resources/ItemTemplate');
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {isEqual} from 'Types/object';
 import {descriptor as EntityDescriptor, Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
@@ -12,8 +12,19 @@ import {
     IMultiSelectableOptions, IHierarchy, IHierarchyOptions
 } from 'Controls/interface';
 
+export interface ICheckboxGroupOptions extends IControlOptions,
+            IMultiSelectableOptions,
+            IHierarchyOptions,
+            ISourceOptions,
+            IToggleGroupOptions {
+    direction?: string;
+}
 /**
  * Группа контролов, которые предоставляют пользователям возможность выбора между двумя или более параметрами.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
  *
  * @class Controls/_toggle/CheckboxGroup
  * @extends Core/Control
@@ -21,11 +32,10 @@ import {
  * @implements Controls/_interface/IMultiSelectable
  * @implements Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Checkbox/Group
+ * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
 
 /*
@@ -37,21 +47,11 @@ import {
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/IHierarchy
  * @implements Controls/_toggle/interface/IToggleGroup
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
- * @demo Controls-demo/Checkbox/Group
+ * @demo Controls-demo/toggle/CheckboxGroup/Base/Index
  */
-
-export interface ICheckboxGroupOptions extends IControlOptions,
-            IMultiSelectableOptions,
-            IHierarchyOptions,
-            ISourceOptions,
-            IToggleGroupOptions {
-    direction?: string;
-}
-
 class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements ISource,
                                                                       IMultiSelectable, IHierarchy, IToggleGroup {
     '[Controls/_interface/ISource]': boolean = true;
@@ -63,7 +63,7 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
     protected _groupTemplate: Function = groupTemplate;
     protected _defaultItemTemplate: Function = defaultItemTemplate;
     protected _items: RecordSet;
-    protected _sourceController: any;
+    protected _crudWrapper: CrudWrapper;
     protected _selectedKeys: string[] = [];
     protected _triStateKeys: string[] = [];
     protected _groups: object;
@@ -92,10 +92,10 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
     }
 
     private _initItems(options: ICheckboxGroupOptions): Promise<RecordSet> {
-        this._sourceController = new SourceController({
+        this._crudWrapper = new CrudWrapper({
             source: options.source
         });
-        return this._sourceController.load().addCallback((items) => {
+        return this._crudWrapper.query({}).then((items) => {
             this._prepareItems(options, items);
             return items;
         });
@@ -240,7 +240,7 @@ class CheckboxGroup extends Control<ICheckboxGroupOptions, RecordSet> implements
         return item.get(options.keyProperty);
     }
 
-    private _valueChangedHandler(e: Event, item: Record, value: boolean | null): void {
+    protected _valueChangedHandler(e: Event, item: Record, value: boolean | null): void {
         const key = this._getItemKey(item, this._options);
         if (value) {
             this._addKey(key);

@@ -1,68 +1,132 @@
-<ws:template name="itemOutputLocalTemplate">
-   <ws:partial
-      template="{{itemOutputWrapper}}"
-      itemOutputWrapper="{{itemOutputWrapper}}"
-      listModel="{{listModel}}"
-      itemActionsClass="{{itemActionsClass}}"
-      itemActionsTemplate="{{itemActionsTemplate}}"
-      swipeTemplate="{{swipeTemplate}}"
-      multiSelectTpl="{{multiSelectTpl}}"
-      editArrowTemplate="{{editArrowTemplate}}"
-      editingItemData="{{editingItemData}}"
-      isAdd="{{isAdd}}"
-      itemTemplate="{{itemTemplate}}"
-      itemActionsPosition="{{itemActionsPosition}}" />
+<ws:template name="ITEM">
+
+    <!-- Скрыта, если запись перетаскивается драг-н-дропом -->
+    <!-- Подвалы перемещаемой записи не нужно скрывать, т.к. они могут рисоваться не для этой записи, а для родителя. -->
+    <ws:if data="{{ isVisible !== false }}">
+
+        <!-- Дублирование блока - необходимая жертва. -->
+        <!-- Редактируемую строку необходимо обернуть в контрол EditingRow. Сделать это прямо в цикле нельзя, т.к. -->
+        <!-- за один шаг цикла может отрисоваться несколько записей, например шапка группы и добавляемая запись. -->
+        <!-- В таком случае контрол обернет сразу две записи, что неверно. -->
+        <!-- Выход только один - дублирование. Обернуть можно непосредственно при вызове рендера -->
+        <!-- записи (шаблона ITEM), но тогда таких мест получится 6, либо здесь, внутри ITEM. -->
+        <ws:if data="{{ wrapEditingRow }}">
+            <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
+            <Controls._list.EditInPlace.EditingRow
+                    name="editingRow"
+                    isScrollToElement="{{isScrollToElement}}"
+                    on:deactivated="_onRowDeactivated()">
+                <ws:partial
+                        template="{{ (itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate }}"
+                        itemData="{{ itemData }}"
+
+                        itemActionsTemplate="{{ itemActionsTemplate }}"
+                        itemActionsClass="{{ itemActionsClass }}"
+                        swipeTemplate="{{ swipeTemplate }}"
+                        editArrowTemplate="{{ editArrowTemplate }}"
+                        multiSelectTpl="{{ multiSelectTpl }}"
+                        backgroundStyle="{{ backgroundStyle }}"
+                        isColumnScrollVisible="{{ isColumnScrollVisible }}"
+                        tagTemplate="{{ tagTemplate }}"
+                        markerPosition="{{_options.markerPosition}}"
+
+                        on:contextmenu="_onItemContextMenu(itemData)"
+                        on:swipe="_onItemSwipe(itemData)"
+                        on:longtap="_onItemLongTap(itemData)"
+                        on:mouseup="_onItemMouseUp(itemData)"
+                        on:mouseenter="_onItemMouseEnter(itemData)"
+                        on:mouseleave="_onItemMouseLeave(itemData)"
+                        on:mousemove="_onItemMouseMove(itemData)"
+                        on:wheel="_onItemWheel(itemData)"/>
+            </Controls._list.EditInPlace.EditingRow>
+        </ws:if>
+        <ws:else>
+            <ws:partial
+                    template="{{ (itemData.item.get && itemData.item.get(itemData.itemTemplateProperty)) || itemTemplate }}"
+                    itemData="{{ itemData }}"
+
+                    itemActionsTemplate="{{ itemActionsTemplate }}"
+                    itemActionsClass="{{ itemActionsClass }}"
+                    swipeTemplate="{{ swipeTemplate }}"
+                    editArrowTemplate="{{ editArrowTemplate }}"
+                    multiSelectTpl="{{ multiSelectTpl }}"
+                    backgroundStyle="{{ backgroundStyle }}"
+                    isColumnScrollVisible="{{ isColumnScrollVisible }}"
+                    tagTemplate="{{ tagTemplate }}"
+                    markerPosition="{{_options.markerPosition}}"
+
+                    on:click="_onItemClick(itemData.dispItem)"
+                    on:contextmenu="_onItemContextMenu(itemData)"
+                    on:swipe="_onItemSwipe(itemData)"
+                    on:longtap="_onItemLongTap(itemData)"
+                    on:mousedown="_onItemMouseDown(itemData)"
+                    on:mouseup="_onItemMouseUp(itemData)"
+                    on:mouseenter="_onItemMouseEnter(itemData)"
+                    on:mouseleave="_onItemMouseLeave(itemData)"
+                    on:mousemove="_onItemMouseMove(itemData)"
+                    on:wheel="_onItemWheel(itemData)"/>
+        </ws:else>
+    </ws:if>
+
+    <!-- Подвалы узлов для дерева. Живем так до перехода на новую модель или до ws:fragment. -->
+    <!-- В записи подвал не вывести, т.к. редатируемая строка оборачивается в контрол. Контрол может принять только один корневой элемент. -->
+    <ws:if data="{{ nodeFooters && nodeFooters.length > 0 }}">
+        <ws:partial template="{{ itemData.footerContentTemplate }}" useNewNodeFooters="{{ itemData.useNewNodeFooters }}" nodeFooters="{{nodeFooters}}"/>
+    </ws:if>
 </ws:template>
-<ws:template name="addItem">
-   <ws:partial
-           on:click="_onItemClick(editingItemData.dispItem)"
-           itemTemplate="{{itemTemplate}}"
-           template="wml!Controls/_list/ItemTemplateWrapper"
-           itemActionsTemplate="{{itemActionsTemplate}}"
-           swipeTemplate="{{swipeTemplate}}"
-           multiSelectTpl="{{multiSelectTpl}}"
-           itemData="{{editingItemData}}"
-           actionsType="{{itemActionsPosition}}"/>
-</ws:template>
-<ws:template name="groupOutputLocalTemplate">
-   <ws:partial
-      template="{{groupTemplate}}"
-      on:click="_onGroupClick(listModel.getCurrent().dispItem)"
-      itemData="{{listModel.getCurrent()}}"/>
-   {{listModel.goToNext();}}
-   <ws:if data="{{currentGroup.isGroupExpanded}}">
-      <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
-         <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
-      </ws:for>
-   </ws:if>
-</ws:template>
-<ws:template name="itemTemplate">
-   <ws:if data="{{currentItem.beforeItemTemplate}}">
-      <ws:partial template="{{currentItem.beforeItemTemplate}}"
-                  scope="{{currentItem.beforeItemTemplateOptions}}"
-                  itemTemplate="{{itemTemplate}}"
-                  listModel="{{listModel}}"/>
-   </ws:if>
-   <ws:if data="{{currentItem.isGroup}}">
-      <ws:if data="{{ editingItemData && isAdd && currentItem.index === 0 && editingItemData.index === 0}}">
-         <ws:partial template="addItem" currentItem="{{currentItem}}"/>
-      </ws:if>
-      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{currentItem}}"
-                  attr:key="{{currentItem.key}}"/>
-   </ws:if>
-   <ws:else>
-      <ws:partial template="itemOutputLocalTemplate" attr:key="{{currentItem.key}}"/>
-   </ws:else>
-   <ws:if data="{{currentItem.afterItemTemplate}}">
-      <ws:partial template="{{currentItem.afterItemTemplate}}"
-                  scope="{{currentItem.afterItemTemplateOptions}}"
-                  itemTemplate="{{itemTemplate}}"
-                  listModel="{{listModel}}"/>
-   </ws:if>
-</ws:template>
-<ws:for data="listModel.reset(); listModel.isEnd();">
-   <ws:partial template="itemTemplate" currentItem="{{listModel.getCurrent()}}"/>
+
+
+<ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
+
+    <ws:partial if="{{ listModel.getCurrent().beforeItemTemplate }}"
+                template="{{ listModel.getCurrent().beforeItemTemplate }}"
+                scope="{{ listModel.getCurrent().beforeItemTemplateOptions }}"
+                itemTemplate="{{ itemTemplate }}"
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
+
+
+    <!-- Группа -->
+    <ws:if data="{{ listModel.getCurrent().isGroup }}">
+        <!-- Шаблон элемента -->
+        <ws:partial template="{{groupTemplate}}"
+                    itemData="{{listModel.getCurrent()}}"
+                    attr:key="{{listModel.getCurrent().key}}"
+                    backgroundStyle="{{backgroundStyle}}"
+                    on:click="_onGroupClick(listModel.getCurrent().dispItem)"
+                    __notExcessiveRender="{{ true }}" />
+    </ws:if>
+    <ws:else> <!-- Запись -->
+        <ws:if data="{{listModel.isShouldBeDrawnItem(listModel.getCurrent())}}">
+
+            <!-- Перетаскивается запись в позицию перед текущей -->
+            <ws:partial if="{{ listModel.getCurrent().dragTargetPosition === 'before' }}"
+                        template="ITEM"
+                        attr:key="{{ listModel.getCurrent().draggingItemData.key }}__dragged"
+                        itemData="{{ listModel.getCurrent().draggingItemData }}"/>
+
+            <!-- [ЗАПИСЬ] Текущая запись -->
+            <ws:partial template="ITEM"
+                        isVisible="{{ listModel.getCurrent().isVisible }}"
+                        isScrollToElement="{{isEditingRowScrollToElement}}"
+                        wrapEditingRow="{{ listModel.getCurrent().isEditing() }}"
+                        itemData="{{ listModel.getCurrent() }}"
+                        nodeFooters="{{ listModel.getCurrent().nodeFooters }}"
+                        attr:key="{{ listModel.getCurrent().key }}"/>
+
+            <!-- Перетаскивается запись в позицию после текущей -->
+            <ws:partial if="{{ listModel.getCurrent().dragTargetPosition === 'after' }}"
+                        template="ITEM"
+                        itemData="{{ listModel.getCurrent().draggingItemData }}"
+                        attr:key="{{ listModel.getCurrent().draggingItemData.key }}__dragged"/>
+        </ws:if>
+    </ws:else>
+
+
+    <ws:partial if="{{ listModel.getCurrent().afterItemTemplate }}"
+                template="{{ listModel.getCurrent().afterItemTemplate }}"
+                scope="{{ listModel.getCurrent().afterItemTemplateOptions }}"
+                itemTemplate="{{ itemTemplate }}"
+                listModel="{{ listModel }}"
+                __notExcessiveRender="{{ true }}" />
 </ws:for>
-<ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
-   <ws:partial template="addItem" currentItem="{{currentItem}}"/>
-</ws:if>

@@ -1,0 +1,105 @@
+.controls-Scroll-Container {
+   position: relative;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+   min-height: 0;
+}
+
+.controls-Scroll-Container__base {
+   height: 100%;
+   flex-grow: 1;
+   flex-shrink: 1;
+   min-height: 0;
+   max-height: inherit;
+}
+
+.ws-is-hover {
+   .controls-Scroll-Container:hover {
+       > .controls-Scroll__scrollbar {
+         visibility: visible;
+      }
+   }
+}
+
+.controls-Scroll-Container__content_hidden {
+   overflow: hidden;
+}
+
+.controls-Scroll__background-Shadow_style-default_theme-@{themeName} {
+   background: @shadow_thickness_background_scroll;
+   background-repeat: no-repeat;
+   background-attachment: local, local, scroll, scroll;
+}
+
+.controls-Scroll__background-Shadow_top-hidden_bottom-visible_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% 0, 100% 0, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-hidden_bottom-hidden_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness-hider_height_scroll, 100% 0, 100% 0;
+}
+
+.controls-Scroll__background-Shadow_top-hidden_bottom-auto_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness-hider_height_scroll, 100% 0, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-visible_bottom-hidden_style-default_theme-@{themeName} {
+   background-size: 100% 0, 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness_scroll, 100% 0;
+}
+
+.controls-Scroll__background-Shadow_top-visible_bottom-visible_style-default_theme-@{themeName} {
+   background-size: 100% 0, 100% 0, 100% @shadow_thickness_scroll, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-visible_bottom-auto_style-default_theme-@{themeName} {
+   background-size: 100% 0, 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness_scroll, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness_scroll, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-auto_bottom-visible_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% 0, 100% @shadow_thickness_scroll, 100% @shadow_thickness_scroll;
+}
+
+.controls-Scroll__background-Shadow_top-auto_bottom-hidden_style-default_theme-@{themeName} {
+   background-size: 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness-hider_height_scroll, 100% @shadow_thickness_scroll, 100% 0;
+}
+
+.controls-Scroll__content_hideNativeScrollbar::-webkit-scrollbar {
+   width: 0;
+   // Следующие свойства нужны для того, чтобы убрать скроллбар с айпада
+   -webkit-appearance: none;
+   display: none;
+}
+
+// В рознице и админке цвет фона плавающих панелей не такой как на страницах.
+// Избавиться от каскада https://online.sbis.ru/opendoc.html?guid=758cfffc-cfde-4a52-8df0-94984c72dc4e
+.controls-StackTemplate_theme_@{themeName} {
+   .controls-Scroll__background-Shadow_style-default_theme-@{themeName} {
+      background-image: linear-gradient(@background-color_stack 10%, rgba(@background-color_stack, 0)),
+                        linear-gradient(rgba(@background-color_stack, 0), @background-color_stack 90%),
+                        linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
+                        linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
+   }
+}
+
+.controls-DialogTemplate_backgroundStyle-default_theme_@{themeName} {
+   .controls-Scroll__background-Shadow_style-default_theme-@{themeName} {
+      background-image: linear-gradient(@background-color_dialog 10%, rgba(@background-color_dialog, 0)),
+                        linear-gradient(rgba(@background-color_dialog, 0), @background-color_dialog 90%),
+                        linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
+                        linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
+   }
+}
+
+.controls-StickyTemplate_theme_@{themeName} {
+   .controls-Scroll__background-Shadow_style-default_theme-@{themeName} {
+      background-image: linear-gradient(@background-color_sticky 10%, rgba(@background-color_sticky, 0)),
+                        linear-gradient(rgba(@background-color_sticky, 0), @background-color_sticky 90%),
+                        linear-gradient(to bottom, @shadow_start-color_scroll, @shadow_end-color_scroll),
+                        linear-gradient(to top, @shadow_start-color_scroll, @shadow_end-color_scroll);
+   }
+}

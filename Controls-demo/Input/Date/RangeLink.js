@@ -1,7 +1,6 @@
 define('Controls-demo/Input/Date/RangeLink', [
    'Core/Control',
    'wml!Controls-demo/Input/Date/RangeLink',
-   'css!Controls-demo/Input/Date/RangeLink'
 ], function(
    BaseControl,
    template
@@ -20,10 +19,13 @@ define('Controls-demo/Input/Date/RangeLink', [
       _endValueHalfYear: new Date(2018, 5, 30),
       _startValueYear: new Date(2018, 0, 1),
       _endValueYear: new Date(2018, 11, 31),
+      _displayDateBind: new Date(2019, 0, 1),
 
       _captionFormatter: function() {
          return 'Custom range format';
       }
    });
+   ModuleClass._styles = ['Controls-demo/Input/Date/RangeLink'];
+
    return ModuleClass;
 });

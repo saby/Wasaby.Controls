@@ -21,7 +21,8 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
-                  focus: function() {},
+                  focus: function() {
+                  },
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
                      this.selectionEnd = end;
@@ -57,20 +58,14 @@ define(
             it('The text is not selected.', function(done) {
                ctrl._options.selectOnClick = false;
 
-               ctrl._getField().selectionStart = 5;
-               ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._clickHandler();
 
                setTimeout(function() {
-                  assert.deepEqual(calls, [{
-                     name: 'selection',
-                     value: {
-                        start: 5,
-                        end: 5
-                     }
-                  }]);
+                  assert.deepEqual(calls, []);
                   done();
                }, 100);
             });
@@ -80,7 +75,9 @@ define(
                ctrl._getField().selectionStart = 5;
                ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
-               ctrl._focusInHandler();
+               ctrl._focusInHandler({
+                  target: {}
+               });
                ctrl._clickHandler();
 
                assert.deepEqual(calls, [{
@@ -103,7 +100,7 @@ define(
             it('Trim option equal false. Spaces on both sides are not trimmed.', function() {
                ctrl._options.trim = false;
 
-               ctrl._changeHandler();
+               ctrl._notifyInputCompleted();
 
                assert.deepEqual(calls, [{
                   name: 'notify',
@@ -116,7 +113,7 @@ define(
                   value: 'test value'
                });
 
-               ctrl._changeHandler();
+               ctrl._notifyInputCompleted();
 
                assert.deepEqual(calls, [{
                   name: 'notify',
@@ -126,7 +123,7 @@ define(
             it('Trim option equal true. Spaces on both sides are trimmed.', function() {
                ctrl._options.trim = true;
 
-               ctrl._changeHandler();
+               ctrl._notifyInputCompleted();
 
                assert.deepEqual(calls, [
                   {
@@ -142,45 +139,6 @@ define(
                      arguments: ['inputCompleted', ['test value', 'test value']]
                   }
                ]);
-            });
-         });
-         describe('User input.', function() {
-            beforeEach(function() {
-               ctrl._getActiveElement = function() {
-                  return ctrl._getField();
-               };
-            });
-            it('Constraint option equal [0-9]. The value of numbers only.', function() {
-               ctrl._beforeMount({
-                  value: '',
-                  constraint: '[0-9]'
-               });
-               ctrl._getField().value = 'text';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.equal(ctrl._viewModel.value, '');
-               assert.deepEqual(ctrl._viewModel.selection, {
-                  start: 0,
-                  end: 0
-               });
-            });
-            it('Max length option equal 3. The value is not more than 3 characters.', function() {
-               ctrl._beforeMount({
-                  value: '',
-                  maxLength: 3
-               });
-               ctrl._getField().value = 'text';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.equal(ctrl._viewModel.value, 'tex');
-               assert.deepEqual(ctrl._viewModel.selection, {
-                  start: 3,
-                  end: 3
-               });
             });
          });
          describe('Validate the constraint option.', function() {

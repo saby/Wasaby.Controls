@@ -1,17 +1,19 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import template = require('wml!Controls-demo/list_new/ColumnsView/Default/Default');
-import 'css!Controls-demo/Controls-demo';
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
+import { INavigation } from 'Controls-demo/types';
+import { SyntheticEvent } from 'wasaby-cli/store/_repos/saby-ui/UI/Vdom';
+import { ItemsEntity } from '../../../../Controls/dragnDrop';
 
 const NUMBER_OF_ITEMS = 1000;
 
 export default class RenderDemo extends Control {
     protected _template: TemplateFunction = template;
 
-    private _viewSource: Memory;
+    protected _viewSource: Memory;
 
-    private _navigation: any;
+    protected _navigation: INavigation;
 
     private _dataArray: Array<{id: number, title: string}>;
 
@@ -37,4 +39,10 @@ export default class RenderDemo extends Control {
             }
         };
     }
+
+    protected _dragStart(e: SyntheticEvent, items: string[]): ItemsEntity {
+        return new ItemsEntity({ items });
+    }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,0 +1,136 @@
+.controls-Menu__popup {
+   display: flex;
+   position: relative;
+   flex-direction: column;
+   height: 100%;
+}
+
+.controls-Menu__popup_theme-@{themeName} {
+   max-width: @popup_max-width_menuPopup;
+   .flexbox();
+   .flex-direction(column);
+   border: @border-thickness_sticky solid @border-color_sticky;
+   background: @background-color_sticky;
+   box-sizing: border-box;
+   overflow: hidden;
+}
+
+.controls-Menu__popup-list {
+   height: 100%;
+   position: static;
+}
+
+.controls-Menu__popup-header-multiSelect_theme-@{themeName} {
+   padding-right: @apply-button_inline-height_menuPopup + (@apply-button_offset_menuPopup * 2);
+}
+
+.controls-Menu__popup-list-padding-top_theme-@{themeName} {
+   padding-bottom: @content_padding-top_sticky;
+}
+
+.controls-Menu__popup-list-padding-bottom_theme-@{themeName} {
+   padding-top: @content_padding-top_sticky;
+}
+
+.controls-Menu__popup-shadow-default_theme-@{themeName} {
+   box-shadow: @popup_box-shadow-color_menuPopup 0 0 @popup_box-shadow-offset_menuPopup 0;
+}
+
+.controls-Menu__popup-direction-vertical-top.controls-Menu__popup-shadow-suggestionsContainer_theme-@{themeName}{
+   box-shadow: @popup_box-shadow-color_menuPopup -@popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
+   @popup_box-shadow-color_menuPopup @popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
+   @popup_box-shadow-color_menuPopup 0 -@popup_box-shadow-offset_menuPopup @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup;
+}
+
+.controls-Menu__popup-direction-vertical-bottom.controls-Menu__popup-shadow-suggestionsContainer_theme-@{themeName}{
+   box-shadow: @popup_box-shadow-color_menuPopup -@popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
+   @popup_box-shadow-color_menuPopup @popup_box-shadow-offset_menuPopup 0 @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup,
+   @popup_box-shadow-color_menuPopup 0 @popup_box-shadow-offset_menuPopup @popup_box-shadow-blur_menuPopup -@popup_box-shadow-offset_menuPopup;
+}
+
+.controls-StickyTemplate.controls-Menu__popup-reverse {
+   padding-bottom: 0;
+}
+
+.controls-Menu__popup-content.controls-Menu__popup-reverse {
+   flex-direction: column-reverse;
+   padding-bottom: 0;
+}
+
+.controls-Menu__popup-direction-vertical-top.controls-StickyTemplate {
+   padding-top: @content_padding-top_sticky;
+   flex-direction: column-reverse;
+}
+
+.controls-Menu__popup-direction-vertical-bottom {
+   padding-bottom: @content_padding-top_sticky;
+}
+
+.controls-Menu__popup-content {
+   max-height: 100%;
+   height: 100%;
+   overflow: hidden;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-Menu__popup-content_theme-@{themeName} {
+   background: @background-color_sticky;
+}
+
+.controls-Menu__popup-header {
+   display: flex;
+   align-items: center;
+   overflow: hidden;
+   cursor: default;
+}
+
+.controls-Menu__popup_headerIcon_padding_theme-@{themeName} {
+   margin-right: @item_icon_offset_menu;
+}
+
+.controls-Menu__popup_headerIcon_theme-@{themeName} {
+   color: @header_color_sticky;
+}
+
+.controls-Menu__popup_headerSearch_theme-@{themeName} {
+   display: flex;
+   align-items: center;
+   width: @search_width_menuPopup;
+   margin-right: @search_offset-right_menuPopup;
+}
+
+.controls-MenuButton__popup-header_theme-@{themeName} {
+   background: @header_background-color_sticky;
+   padding: 0 @header_padding-horizontal_sticky 0 @header_padding-horizontal_sticky;
+   min-height: @header_min-height_sticky;
+}
+
+.controls-Menu__popup_headerSearch-multiSelect-@{themeName} {
+   margin-right: @padding-right_menu-multiSelect - @header_padding-horizontal_sticky;
+}
+
+.controls-Menu__applyButton_theme-@{themeName} {
+   position: absolute;
+   z-index: 2;
+}
+
+.controls-Menu_withHeader__applyButton_theme-@{themeName} {
+   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
+}
+
+.controls-Menu_withHeader-reverse__applyButton_theme-@{themeName} {
+   bottom: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2;
+}
+
+.controls-Menu_withoutHeader__applyButton_theme-@{themeName} {
+   top: (@item_height_menu - @apply-button_inline-height_menuPopup) / 2 + @content_padding-top_sticky;
+}
+
+.controls-Menu_withClose__applyButton_theme-@{themeName} {
+   right: @close-button_offset-right_sticky + @width_closeButton_link + @apply-button_offset_menuPopup;
+}
+
+.controls-Menu_withoutClose__applyButton_theme-@{themeName} {
+   right: @apply-button_offset_menuPopup;
+}

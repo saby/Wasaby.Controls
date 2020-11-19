@@ -1,1 +1,4 @@
-<div class=" controls-Tabs__item_overflow controls-Tabs__content_heading{{selected ? '_state_selected' : ''}}">{{item.get(displayProperty)}}</div>
+<div class="ws-flexbox ws-align-items-baseline ws-ellipsis">
+    <div class="ws-ellipsis mainTemplate__header {{selected ? 'mainTemplate__header_selected'}}">{{item.get(displayProperty)}}</div>
+</div>
+

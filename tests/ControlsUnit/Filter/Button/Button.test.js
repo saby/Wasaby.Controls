@@ -126,7 +126,10 @@ define(
                   items: ['testItems'],
                   historyId: 'testHistoryId'
                },
-               fittingMode: 'fixed',
+               fittingMode: {
+                  horizontal: 'overflow',
+                  vertical: 'adaptive'
+               },
                template: 'Controls/filterPopup:_FilterPanelWrapper',
                target: 'panelTarget'
             };

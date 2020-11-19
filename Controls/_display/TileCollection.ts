@@ -1,8 +1,6 @@
 import Collection from './Collection';
 import TileCollectionItem from './TileCollectionItem';
 
-import { register } from 'Types/di';
-
 const DEFAULT_TILE_HEIGHT = 200;
 const DEFAULT_TILE_WIDTH = 250;
 const DEFAULT_COMPRESSION_COEFF = 0.7;
@@ -32,14 +30,7 @@ export default class TileCollection<
 
     protected _$tileScalingMode: string;
 
-    setHoveredItem(item: CollectionItem<S>): void {
-        this._hoverManager.setHoveredItem(item);
-        this._nextVersion();
-    }
-
-    getHoveredItem(): CollectionItem<S> {
-        return this._hoverManager.getHoveredItem() as CollectionItem<S>;
-    }
+    protected _hoveredItem: T;
 
     getTileMode(): string {
         return this._$tileMode;
@@ -189,7 +180,7 @@ Object.assign(TileCollection.prototype, {
     _$tileMode: 'static',
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$imageProperty: '',
-    _$tileScalingMode: 'none'
+    _$tileScalingMode: 'none',
+    _hoveredItem: null
 });
 
-register('Controls/display:TileCollection', TileCollection, {instantiate: false});

@@ -3,37 +3,96 @@
    height: 100%;
    position: relative;
 }
-.controls-ResizingLine__areaWrapper {
+
+/**
+ * https://online.sbis.ru/doc/0541f1fe-00f9-412c-b779-5d0c26a9b2be
+ * В Edge неправильно расчитывается позиция области, которая показывает изменение размера.
+ * Предположительно это связано с внутренними расчётами, потому что при вызове reflow, после неправильного позиционирования,
+ * позиция пересчитывается правильно.
+ * Точно сказать не получается, так как при попытке провзаимоействовать с DevTools происходит reflow, и ошибку не удаётся отладить.
+ * Так же выяснилось, что на это влияет overflow: scroll на контейнере, который лежит внутри стековой панели, но в скроллировании
+ * не нуждается. Поменять overflow: scroll, на что-либо другое неполучается в рамках текущей реализации.
+ * Поэтому в качестве решения выносим содержимое контрола в отдельный слой, чтобы убрать влияние внешних элементов.
+ * Так как увеличение количества слоёв ведёт к увеличению рендеринга, то делаем это только в браузерах с этой ошибкой.
+ */
+.ws-is-ie12 .controls-ResizingLine__wrapper {
+   transform: translateZ(0);
+}
+
+.controls-ResizingLine__area {
+   // https://wi.sbis.ru/doc/platform/developmentapl/interface-development/pattern-and-practice/zindex/
+   z-index: 41;
+}
+
+.controls-ResizingLine__areaWrapper_vertical {
+   position: relative;
+   width: 100%;
+}
+
+.controls-ResizingLine__areaWrapper_horizontal {
    position: relative;
    height: 100%;
 }
-.controls-ResizingLine__areaWrapper_theme-@{themeName} {
-   width: @size_DragBordersContainer-border;
+
+.controls-ResizingLine__areaWrapper_vertical_theme-@{themeName} {
+   height: @thickness_dragnDropResizingLine;
 }
-.controls-ResizingLine__areaWrapper_direction-direct {
+
+/**
+ * Перед изменением класса поправьте файл Controls/_popupTemplate/Stack/Opener/_Stack.less, он там используется.
+ */
+.controls-ResizingLine__areaWrapper_horizontal_theme-@{themeName} {
+   width: @thickness_dragnDropResizingLine;
+}
+
+.controls-ResizingLine__areaWrapper_vertical_direction-direct {
+   margin: auto 0 0;
+}
+
+.controls-ResizingLine__areaWrapper_vertical_direction-reverse {
+   margin: 0 0 auto;
+}
+
+.controls-ResizingLine__areaWrapper_horizontal_direction-direct {
    margin: 0 auto 0 0;
 }
-.controls-ResizingLine__areaWrapper_direction-reverse {
+
+.controls-ResizingLine__areaWrapper_horizontal_direction-reverse {
    margin: 0 0 0 auto;
 }
-.controls-ResizingLine__area {
+
+.controls-ResizingLine__area_vertical {
+   position: absolute;
+   left: 0;
+   right: 0;
+}
+
+.controls-ResizingLine__area_horizontal {
    position: absolute;
    top: 0;
    bottom: 0;
 }
+
 .controls-ResizingLine__area_theme_@{themeName} {
-   background: @background_DragBordersContainer-area;
+   background: @drag-area_background-color_dragnDropResizingLine;
 }
+
 .controls-ResizingLine__border {
    top: 0;
    width: 100%;
    height: 100%;
-   cursor: ew-resize;
    position: absolute;
 }
 
-.controls-ResizingLine__cursor {
+.controls-ResizingLine__border_horizontal {
    cursor: ew-resize;
+}
+
+.controls-ResizingLine__border_vertical {
+   cursor: n-resize;
+}
+
+.controls-ResizingLine__cursor {
    position: fixed;
    top: 0;
    left: 0;
@@ -41,3 +100,10 @@
    height: 100vh;
 }
 
+.controls-ResizingLine__cursor_horizontal {
+   cursor: ew-resize;
+}
+
+.controls-ResizingLine__cursor_vertical {
+   cursor: n-resize;
+}

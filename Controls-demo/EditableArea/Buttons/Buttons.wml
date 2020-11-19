@@ -1,0 +1,88 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">Кастомное расположение кнопок</div>
+        <Controls.editableArea:View
+                autoEdit="{{true}}"
+                toolbarVisible="{{false}}"
+                style="withBackground"
+                editObject="{{_editObject}}">
+            <ws:if data="{{content.isEditing}}">
+                <div class="controlsDemo-EditableArea__mainWrapper">
+                    <div class="controlsDemo__cell ws-flexbox">
+                        <div class="ws-flexbox">
+                            <div class="controlsDemo-EditableArea__input ws-flexbox ws-flex-column">
+                                        <Controls.lookup:Link
+                                                attr:class="controlsDemo-EditableArea__label"
+                                                caption="КБК"
+                                        />
+                                        <Controls.input:Mask
+                                                mask="ddd d dd ddddd dd dddd ddd"
+                                                placeholder="КБК">
+                                            <ws:rightFieldTemplate>
+                                                <Controls.buttons:Button
+                                                        viewMode="link"
+                                                        iconSize="s"
+                                                        icon="icon-ListView"
+                                                        attr:class="controlsDemo-EditableArea__menuButton"/>
+                                            </ws:rightFieldTemplate>
+                                        </Controls.input:Mask>
+                                    </div>
+                            <div class="controlsDemo-EditableArea__input ws-flexbox ws-flex-column">
+                                        <Controls.lookup:Link
+                                                attr:class="controlsDemo-EditableArea__label"
+                                                caption="OKTMO"/>
+                                        <Controls.input:Mask
+                                                mask="ddd d dd ddddd dd dddd ddd"
+                                                placeholder="OKTMO">
+                                            <ws:rightFieldTemplate>
+                                                <Controls.buttons:Button
+                                                        viewMode="link"
+                                                        iconSize="s"
+                                                        icon="icon-ListView"
+                                                        attr:class="controlsDemo-EditableArea__menuButton"
+                                                />
+                                            </ws:rightFieldTemplate>
+                                        </Controls.input:Mask>
+                                    </div>
+                        </div>
+                    </div>
+                    <div class="controlsDemo__cell ws-flexbox">
+                        <div class="ws-flexbox ws-flex-column">
+                            <span class="controlsDemo-EditableArea__label">Налоговый период</span>
+                            <div class="ws-flexbox">
+                                <Controls.dropdown:Combobox
+                                        attr:class="controlsDemo-EditableArea__input"
+                                        keyProperty="id"
+                                        displayProperty="title"
+                                        source="{{_periodType}}"
+                                        bind:selectedKey="_periodTypeKey"
+                                />
+                                <Controls.dropdown:Combobox
+                                        attr:class="controlsDemo-EditableArea__input"
+                                        keyProperty="id"
+                                        displayProperty="title"
+                                        source="{{_periodQuarter}}"
+                                        bind:selectedKey="_periodQuarterKey"
+                                />
+                            </div>
+                        </div>
+                        <div class="controlsDemo-EditableArea__input ws-flexbox ws-flex-column">
+                            <span class="controlsDemo-EditableArea__label">УИН</span>
+                            <Controls.input:Text
+                                    placeholder="УИН"
+                                    maxLength="{{25}}"
+                                    constraint="[0-9]"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <ws:partial template="{{content.buttonsTemplate}}"
+                            attr:class="controlsDemo-EditableArea__buttons">
+                </ws:partial>
+            </ws:if>
+            <ws:else>
+                <div>Нажмите для начала редактирования</div>
+            </ws:else>
+        </Controls.editableArea:View>
+    </div>
+</div>

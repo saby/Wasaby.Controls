@@ -1,19 +1,17 @@
-.controls-DecoratorMoney_theme_@{themeName} {
+.controls-DecoratorMoney {
    white-space: nowrap;
 }
 
-.controls-DecoratorMoney__fraction_theme_@{themeName} {
-   color: @color_DecoratorMoney-fractional;
-   font-size: @font-size_DecoratorMoney-fractional;
-   font-weight: @font-weight_DecoratorMoney-fractional;
+.controls-DecoratorMoney__integer_fontWeight_default_theme-@{themeName} {
+   font-weight: @font-weight;
 }
 
-.controls-DecoratorMoney__integer_theme_@{themeName}_style {
-   @variants: default, accentResults, noAccentResults, group, basicRegistry, noBasicRegistry, accentRegistry, noAccentRegistry, error;
-
-   .for(@variants, { &_@{_item} {
-      color: ~"@{color_DecoratorMoney-integer_style_@{_item}}";
-      font-size: ~"@{font-size_DecoratorMoney-integer_style_@{_item}}";
-      font-weight: ~"@{font-weight_DecoratorMoney-integer_style_@{_item}}";
-   } });
+.controls-DecoratorMoney__integer_fontWeight_bold_theme-@{themeName} {
+   font-weight: bold;
 }
+
+.controls-DecoratorMoney__fraction_theme-@{themeName} {
+   color: @fractional_color;
+   font-weight: @font-weight;
+}
+

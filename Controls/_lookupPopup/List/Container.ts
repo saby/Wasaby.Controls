@@ -2,23 +2,149 @@ import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/List/Container');
 import {showType} from 'Controls/Utils/Toolbar';
+import {Record} from 'Types/entity';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import { IItemAction } from 'Controls/itemActions';
 
+type Key = string|number;
+type SelectionChangedEventResult = [Key[], Key[], Key[]];
+
+let SELECT_ACTION_ID = 'selector.action';
+let ACTION_TITLE = rk('Выбрать');
+let ACTION = {
+   id: SELECT_ACTION_ID,
+   title: ACTION_TITLE,
+   showType: showType.TOOLBAR
+};
+
+let _private = {
+   getItemActivateResult(itemKey: Key, keys: Key[], multiSelect: boolean): SelectionChangedEventResult {
+      const added = [];
+      const removed = [];
+      const itemIndex = keys.indexOf(itemKey);
+      keys = keys.slice();
+
+      if (itemIndex === -1) {
+         if (!multiSelect && keys.length) {
+            removed.push(keys[0]);
+            keys.splice(0, 1);
+         }
+
+         keys.push(itemKey);
+         added.push(itemKey);
+      } else if (multiSelect) {
+         keys.splice(itemIndex, 1);
+         removed.push(itemKey);
+      }
+
+      return [keys, added, removed];
+   },
+
+   isSelectedAll(self): boolean {
+      return self._options.root !== undefined ?
+          self._options.selectedKeys.includes(self._options.root) :
+          self._options.selectedKeys.includes(null);
+   },
+
+   selectItem(self, item: Record): void {
+      const itemKey = item.get(self._options.keyProperty);
+      const eventResult = [[itemKey], [itemKey], []] as SelectionChangedEventResult;
+      _private.notifySelectedKeysChanged(self, eventResult);
+      self._notify('selectComplete', [self._options.multiSelect, true], {bubbling: true});
+   },
+
+   selectionChanged(self, item: Record): void {
+      const itemKey = item.get(self._options.keyProperty);
+      const isSelectedAll = _private.isSelectedAll(self);
+      let eventName;
+      let keys;
+
+      if (isSelectedAll) {
+         eventName = 'notifyExcludedKeysChanged';
+         keys = self._options.excludedKeys;
+      } else {
+         eventName = 'notifySelectedKeysChanged';
+         keys = self._options.selectedKeys;
+      }
+
+      _private[eventName](self, _private.getItemActivateResult(itemKey, keys, self._options.multiSelect));
+   },
+
+   notifySelectedKeysChanged(self, result: SelectionChangedEventResult): void {
+      self._notify('listSelectedKeysChanged', result, {bubbling: true});
+   },
+
+   notifyExcludedKeysChanged(self, result: SelectionChangedEventResult): void {
+      self._notify('listExcludedKeysChanged', result, {bubbling: true});
+   },
+
+   getItemActions(self, options) {
+      let itemActions = options.itemActions || [];
+
+      if (options.selectionType !== 'leaf') {
+         const selectAction = {...ACTION, handler: (item) => _private.selectItem(self, item)};
+         itemActions = itemActions.concat(selectAction);
+      }
+
+      return itemActions;
+   },
+
+   getItemActionVisibilityCallback(options) {
+      return function(action, item) {
+         let showByOptions;
+         let showByItemType;
+
+         if (action.id === SELECT_ACTION_ID) {
+            showByOptions = !options.multiSelect || !options.selectedKeys.length;
+            showByItemType = options.selectionType === 'node' ? true : item.get(options.nodeProperty);
+            return showByOptions && showByItemType;
+         } else {
+            return options.itemActionVisibilityCallback ? options.itemActionVisibilityCallback(action, item) : true;
+         }
+      };
+   },
+
+   itemActivate(self, item: Record): void {
+      const isMultiSelect = self._options.multiSelect;
+      const selectedKeys = self._options.selectedKeys;
+
+      if (!isMultiSelect || !selectedKeys.length) {
+         _private.selectItem(self, item);
+      } else {
+         _private.selectionChanged(self, item);
+      }
+   },
+
+   getMarkedKeyBySelectedKeys(selectedKeys: number[]|string[]): null|string|number {
+      let result = null;
+
+      if (selectedKeys.length === 1) {
+         result = selectedKeys[0];
+      }
+
+      return result;
+   },
+
+   getSelectedKeysFromOptions(options): number[]|string[] {
+      return options.multiSelect ? options.selectedKeys : [];
+   }
+};
 /**
  *
  * Контейнер для списков, который отслеживает нажатия на его элементы и уведомляет с помощью события «selectComplete», когда выбор завершен.
  * Также добавляет действие «Выбрать» в иерархические списки.
- * Используется внутри Controls/lookupPopup:Controller и Controls/lookupPopup:Container.
+ * Используется внутри {@link Controls/lookupPopup:Controller} и {@link Controls/lookupPopup:Container}.
  *
- * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>статье</a>.
+ * Подробное описание и инструкцию по настройке смотрите в <a href='/doc/platform/developmentapl/interface-development/controls/directory/layout-selector-stack/'>статье</a>.
  *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Пример</a> использования контрола.
+ * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
  *
  * @class Controls/_lookupPopup/List/Container
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
+ * 
  * @public
- * @author Герасимов Александр Максимович
+ * @author Герасимов А.М.
  */
 
 /*
@@ -29,15 +155,72 @@ import {showType} from 'Controls/Utils/Toolbar';
  *
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/layout-selector-stack/'>here</a>.
  *
- * <a href="/materials/demo/demo-ws4-engine-selector-browser">Here</a> you can see a demo.
+ * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
  *
  * @class Controls/_lookupPopup/List/Container
  * @extends Core/Control
  * @mixes Controls/_interface/IMultiSelectable
- * @control
+ * 
  * @public
  * @author Герасимов Александр Максимович
  */
+let Container = Control.extend({
+
+   _template: template,
+   _selectedKeys: null,
+   _markedKey: null,
+   _itemsActions: null,
+
+   constructor(options) {
+      Container.superclass.constructor.call(this, options);
+   },
+
+   _beforeMount(options): void {
+      this._selectedKeys = _private.getSelectedKeysFromOptions(options);
+      this._markedKey = _private.getMarkedKeyBySelectedKeys(options.selectedKeys);
+      this._itemActions = _private.getItemActions(this, options);
+      this._itemActionVisibilityCallback = _private.getItemActionVisibilityCallback(options);
+   },
+
+   _beforeUpdate(newOptions) {
+      let selectionTypeChanged = newOptions.selectionType !== this._options.selectionType;
+      let selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
+
+      if (selectedKeysChanged) {
+         this._selectedKeys = newOptions.selectedKeys;
+      }
+
+      if (selectedKeysChanged || selectionTypeChanged) {
+         this._itemActionVisibilityCallback = _private.getItemActionVisibilityCallback(newOptions);
+      }
+
+      if (newOptions.itemActions !== this._options.itemActions || selectionTypeChanged) {
+         this._itemActions = _private.getItemActions(this, newOptions);
+      }
+   },
+
+   _beforeUnmount() {
+      this._itemActions = null;
+      this._visibilityCallback = null;
+      this._itemActionsClick = null;
+      this._selectedKeys = null;
+   },
+
+   _itemActivate(event: SyntheticEvent, item: Record): void {
+      if (!item.get(this._options.nodeProperty)) {
+         _private.itemActivate(this, item);
+      }
+   }
+
+});
+
+Container._private = _private;
+
+Container.getDefaultOptions = function getDefaultOptions() {
+   return {
+      selectionType: 'all'
+   };
+};
 
 /**
  * @typedef {Object} ItemAction
@@ -68,13 +251,13 @@ import {showType} from 'Controls/Utils/Toolbar';
 /**
  * @name Controls/_lookupPopup/List/Container#itemActions
  * @cfg {Array.<ItemAction>} Массив конфигурационных объектов для кнопок, которые будут отображаться, когда пользователь наводит курсор на элемент.
- * <a href="/materials/demo-ws4-list-item-actions">Пример</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Пример</a>.
  */
 
 /*
  * @name Controls/_lookupPopup/List/Container#itemActions
  * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
- * <a href="/materials/demo-ws4-list-item-actions">Example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
  */
 
 /**
@@ -174,162 +357,6 @@ import {showType} from 'Controls/Utils/Toolbar';
  *    </Controls.lookupPopup:ListContainer>
  * </pre>
  */
-
-let ACTION_ID = 'selector.action';
-let ACTION_TITLE = rk('Выбрать');
-let ACTION = {
-   id: ACTION_ID,
-   title: ACTION_TITLE,
-   showType: showType.TOOLBAR
-};
-
-let _private = {
-   getItemClickResult(itemKey, selectedKeys, multiSelect) {
-      let added = [];
-      let removed = [];
-      let itemIndex = selectedKeys.indexOf(itemKey);
-      selectedKeys = selectedKeys.slice();
-
-      if (itemIndex === -1) {
-         if (!multiSelect && selectedKeys.length) {
-            removed.push(selectedKeys[0]);
-            selectedKeys.splice(0, 1);
-         }
-
-         selectedKeys.push(itemKey);
-         added.push(itemKey);
-      } else if (multiSelect) {
-         selectedKeys.splice(itemIndex, 1);
-         removed.push(itemKey);
-      }
-
-      return [selectedKeys, added, removed];
-   },
-
-   selectItem(self, itemClickResult) {
-      self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
-      self._notify('selectComplete', [self._options.multiSelect, true], {bubbling: true});
-   },
-
-   selectionChanged(self, itemClickResult) {
-      self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
-   },
-
-   getItemActions(options) {
-      let itemActions = options.itemActions || [];
-
-      if (options.selectionType !== 'leaf') {
-         itemActions = itemActions.concat(ACTION);
-      }
-
-      return itemActions;
-   },
-
-   getItemActionVisibilityCallback(options) {
-      return function(action, item) {
-         let showByOptions;
-         let showByItemType;
-
-         if (action.id === ACTION_ID) {
-            showByOptions = !options.multiSelect || !options.selectedKeys.length;
-            showByItemType = options.selectionType === 'node' ? true : item.get(options.nodeProperty);
-            return showByOptions && showByItemType;
-         } else {
-            return options.itemActionVisibilityCallback ? options.itemActionVisibilityCallback(action, item) : true;
-         }
-      };
-   },
-
-   itemClick(self, itemKey, multiSelect, selectedKeys) {
-      let itemClickResult = _private.getItemClickResult(itemKey, selectedKeys, multiSelect);
-
-      if (!multiSelect || !selectedKeys.length) {
-         _private.selectItem(self, itemClickResult);
-      } else {
-         _private.selectionChanged(self, itemClickResult);
-      }
-   },
-
-   getMarkedKeyBySelectedKeys(selectedKeys: number[]|string[]): null|string|number {
-      let result = null;
-
-      if (selectedKeys.length === 1) {
-         result = selectedKeys[0];
-      }
-
-      return result;
-   },
-
-   getSelectedKeysFromOptions(options): number[]|string[] {
-      return options.multiSelect ? options.selectedKeys : [];
-   }
-};
-
-let Container = Control.extend({
-
-   _template: template,
-   _selectedKeys: null,
-   _markedKey: null,
-   _itemsActions: null,
-
-   constructor(options) {
-      this._itemActionsClick = this._itemActionsClick.bind(this);
-      Container.superclass.constructor.call(this, options);
-   },
-
-   _beforeMount(options): void {
-      this._selectedKeys = _private.getSelectedKeysFromOptions(options);
-      this._markedKey = _private.getMarkedKeyBySelectedKeys(options.selectedKeys);
-      this._itemActions = _private.getItemActions(options);
-      this._itemActionVisibilityCallback = _private.getItemActionVisibilityCallback(options);
-   },
-
-   _beforeUpdate(newOptions) {
-      let selectionTypeChanged = newOptions.selectionType !== this._options.selectionType;
-      let selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
-
-      if (selectedKeysChanged) {
-         this._selectedKeys = newOptions.selectedKeys;
-      }
-
-      if (selectedKeysChanged || selectionTypeChanged) {
-         this._itemActionVisibilityCallback = _private.getItemActionVisibilityCallback(newOptions);
-      }
-
-      if (newOptions.itemActions !== this._options.itemActions || selectionTypeChanged) {
-         this._itemActions = _private.getItemActions(newOptions);
-      }
-   },
-
-   _beforeUnmount() {
-      this._itemActions = null;
-      this._visibilityCallback = null;
-      this._itemActionsClick = null;
-      this._selectedKeys = null;
-   },
-
-   _itemClick(event, item) {
-      if (!item.get(this._options.nodeProperty)) {
-         _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this._options.selectedKeys);
-      }
-   },
-
-   _itemActionsClick(event, action, item) {
-      if (action.id === ACTION_ID) {
-         let itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this._options.selectedKeys, this._options.multiSelect);
-         _private.selectItem(this, itemClickResult);
-      }
-   }
-
-});
-
-Container._private = _private;
-
-Container.getDefaultOptions = function getDefaultOptions() {
-   return {
-      selectionType: 'all'
-   };
-};
 
 export = Container;
 

@@ -4,11 +4,16 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
-   IHeight, IHeightOptions, IFontColorStyle,
-   IFontColorStyleOptions, IFontSize, IFontSizeOptions,
-   IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
+    IHeight, IHeightOptions, IFontColorStyle,
+    IFontColorStyleOptions, IFontSize, IFontSizeOptions,
+    IBorderStyle, IBorderStyleOptions, IValidationStatus, IValidationStatusOptions
 } from 'Controls/interface';
+import IBorderVisibility, {
+    TBorderVisibility, IBorderVisibilityOptions,
+    getDefaultBorderVisibilityOptions, getOptionBorderVisibilityTypes
+} from './interface/IBorderVisibility';
 
+// @ts-ignore
 import * as template from 'wml!Controls/_input/Render/Render';
 
 type State =
@@ -24,7 +29,14 @@ type State =
     | 'secondary'
     | 'warning';
 
-interface IRenderOptions extends IControlOptions, IHeightOptions,
+export interface IBorder {
+    top: boolean;
+    right: boolean;
+    bottom: boolean;
+    left: boolean;
+}
+
+export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
     IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {
     /**
      * @name Controls/_input/Render#multiline
@@ -49,15 +61,28 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
      */
     content: TemplateFunction;
     /**
-     * @name Controls/_input/Render#beforeFieldWrapper
+     * @name Controls/_input/Render#leftFieldWrapper
      * @cfg {HTMLElement}
      */
-    beforeFieldWrapper?: TemplateFunction;
+    leftFieldWrapper?: TemplateFunction;
     /**
-     * @name Controls/_input/Render#afterFieldWrapper
+     * @name Controls/_input/Render#rightFieldWrapper
      * @cfg {HTMLElement}
      */
-    afterFieldWrapper?: TemplateFunction;
+    rightFieldWrapper?: TemplateFunction;
+    state: string;
+    border: IBorder;
+    wasActionByUser: boolean;
+
+    /**
+     * @name Controls/_input/Render#contrastBackground
+     * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+     * @default true
+     * @variant true Контрастный фон.
+     * @variant false Фон, гармонично сочетающийся с окружением.
+     * @demo Controls-demo/Input/ContrastBackground/Index
+     */
+    contrastBackground: boolean;
 }
 
 /**
@@ -66,44 +91,48 @@ interface IRenderOptions extends IControlOptions, IHeightOptions,
  * @class Controls/_input/Render
  * @extends UI/_base/Control
  *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_input/interface/ITag
- * @mixes Controls/_interface/IValidationStatus
- * @mixes Controls/interface/IBorderStyle
+ * @mixes Controls/interface:IHeight
+ * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IBorderStyle
+ * @mixes Controls/interface:IFontColorStyle
+ * @mixes Controls/interface:IValidationStatus
+ * @mixes Controls/input:ITag
+ * @mixes Controls/input:IBorderVisibility
  *
  * @author Красильников А.С.
  * @private
  */
 
-class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle {
-    private _tag: SVGElement | null = null;
+class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IValidationStatus, IBorderStyle, IBorderVisibility {
+    protected _tag: SVGElement | null = null;
+    private _border: IBorder = null;
     private _contentActive: boolean = false;
 
     protected _state: string;
+    protected _statePrefix: string;
     protected _fontSize: string;
     protected _inlineHeight: string;
     protected _fontColorStyle: string;
-    protected _validationStatus: string;
     protected _template: TemplateFunction = template;
-    protected _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
-   readonly '[Controls/_interface/IHeight]': true;
-   readonly '[Controls/_interface/IFontSize]': true;
-   readonly '[Controls/_interface/IFontColorStyle]': true;
-   readonly '[Controls/_interface/IValidationStatus]': true;
-   readonly '[Controls/interface/IBorderStyle]': true;
+    readonly '[Controls/_interface/IHeight]': boolean = true;
+    readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
+    readonly '[Controls/_interface/IValidationStatus]': boolean = true;
+    readonly '[Controls/interface/IBorderStyle]': boolean = true;
+    readonly '[Controls/interface/IBorderVisibility]': boolean = true;
 
-    private updateState(options: IRenderOptions): void {
-        this._fontSize = ActualAPI.fontSize(options.fontStyle, options.fontSize);
-        this._inlineHeight = ActualAPI.inlineHeight(options.size, options.inlineHeight);
-        this._fontColorStyle = ActualAPI.fontColorStyle(options.fontStyle, options.fontColorStyle);
-        this._validationStatus = ActualAPI.validationStatus(options.style, options.validationStatus);
-        this._state = `${options.state}${this.calcState(options)}`;
+    private _setState(options: IRenderOptions): void {
+        if (options.state === '') {
+            this._state = `${this._calcState(options)}`;
+            this._statePrefix = '';
+        } else {
+            this._state = `${options.state}-${this._calcState(options)}`;
+            this._statePrefix = `_${options.state}`;
+        }
     }
 
-    private calcState(options: IRenderOptions): State {
+    private _calcState(options: IRenderOptions): State {
         if (options.readOnly) {
             if (options.multiline) {
                 return 'readonly-multiline';
@@ -111,72 +140,94 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
             return 'readonly';
         }
-        if (options.borderStyle && this._validationStatus === 'valid') {
+        if (options.borderStyle && options.validationStatus === 'valid') {
             return options.borderStyle;
         }
 
         if (this._contentActive && Render.notSupportFocusWithin()) {
-            return this._validationStatus + '-active';
+            return options.validationStatus + '-active';
         }
-        return this._validationStatus;
+        return options.validationStatus;
     }
 
-    private _tagClickHandler(event: SyntheticEvent<MouseEvent>) {
+    protected _tagClickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._notify('tagClick', [this._children.tag]);
     }
 
-    private _tagHoverHandler(event: SyntheticEvent<MouseEvent>) {
+    protected _tagHoverHandler(event: SyntheticEvent<MouseEvent>): void {
         this._notify('tagHover', [this._children.tag]);
     }
 
     protected _beforeMount(options: IRenderOptions): void {
-        this.updateState(options);
+        this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        this._setState(options);
     }
 
     protected _beforeUpdate(options: IRenderOptions): void {
-        this.updateState(options);
+        if (options.borderVisibility !== this._options.borderVisibility) {
+            this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        }
+        this._setState(options);
     }
 
     protected _setContentActive(event: SyntheticEvent<FocusEvent>, newContentActive: boolean): void {
         this._contentActive = newContentActive;
 
-        this.updateState(this._options);
+        this._setState(this._options);
     }
+
+    static _theme: string[] = ['Controls/input', 'Controls/Classes'];
 
     private static notSupportFocusWithin(): boolean {
         return detection.isIE || (detection.isWinXP && detection.yandex);
     }
 
-    static getDefaultTypes() {
+    private static _detectToBorder(borderVisibility: TBorderVisibility, multiline: boolean): IBorder {
+        switch (borderVisibility) {
+            case 'visible':
+                return {
+                    top: true,
+                    right: true,
+                    bottom: true,
+                    left: true
+                };
+            case 'partial':
+                return {
+                    top: multiline,
+                    right: false,
+                    bottom: true,
+                    left: false
+                };
+            case 'hidden':
+                return {
+                    top: false,
+                    right: false,
+                    bottom: false,
+                    left: false
+                };
+        }
+    }
+
+    static getDefaultTypes(): object {
         return {
+            ...getOptionBorderVisibilityTypes(),
             content: descriptor(Function).required(),
-            afterFieldWrapper: descriptor(Function),
-            beforeFieldWrapper: descriptor(Function),
+            rightFieldWrapper: descriptor(Function),
+            leftFieldWrapper: descriptor(Function),
             multiline: descriptor(Boolean).required(),
-            roundBorder: descriptor(Boolean).required()
+            roundBorder: descriptor(Boolean).required(),
+            contrastBackground: descriptor(Boolean)
         };
     }
 
-    static getDefaultOptions() {
+    static getDefaultOptions(): Partial<IRenderOptions> {
         return {
-            state: ''
+            ...getDefaultBorderVisibilityOptions(),
+            contrastBackground: true,
+            state: '',
+            validationStatus: 'valid'
         };
     }
 }
 
 export default Render;
-
-/*
- * Control the rendering of text fields.
- *
- * @class Controls/_input/Render
- * @extends UI/_base/Control
- *
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- *
- * @public
- *
- * @author Krasilnikov A.S.
- */

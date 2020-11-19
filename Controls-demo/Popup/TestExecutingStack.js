@@ -15,7 +15,7 @@ define('Controls-demo/Popup/TestExecutingStack',
             var def = new Deferred();
             this._text = options.text;
             this._textFotTest = 'not updated';
-            setTimeout(def.callback.bind(def), 500);
+            setTimeout(def.callback.bind(def), options.delay || 500);
             return def;
          },
 

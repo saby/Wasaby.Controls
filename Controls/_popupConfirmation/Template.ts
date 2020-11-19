@@ -1,99 +1,77 @@
-/// <amd-module name='Controls/_popupConfirmation/Template' />
-// @ts-ignore
-import * as Control from 'Core/Control';
-// @ts-ignore
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupConfirmation/template';
 
-class Template extends Control {
-   _notify: (event: string, params: [], config: { bubbling: boolean }) => void;
-   _template = template;
-   _size = null;
-
-   close() {
-      this._notify('close', [], { bubbling: true });
-   }
-   static _theme: string[] = ['Controls/popupConfirmation'];
+type TStyle = 'default' | 'danger' | 'secondary' | 'success' | 'primary';
+type TSize = 's' | 'l';
+interface IConfirmationTemplate extends IControlOptions {
+   bodyContentTemplate?: TemplateFunction;
+   footerContentTemplate?: TemplateFunction;
+   size: TSize | string;
+   style: TStyle;
 }
-export default Template;
 /**
- * Базовый шаблон <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/confirmation/'>диалога подтверждения</a>.
+ * Базовый шаблон <a href='/doc/platform/developmentapl/interface-development/controls/openers/confirmation/'>диалога подтверждения</a>.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popupConfirmation/Template
  * @extends Core/Control
- * @control
+ * 
  * @public
- * @category Popup
  * @author Красильников А.С.
  * @mixes Controls/_popupConfirmation/Template/mixin
  * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
  * @demo Controls-demo/PopupTemplate/Confirmation/Footer/Index
  */
+class Template extends Control<IConfirmationTemplate> {
+   protected _template: TemplateFunction = template;
 
-/*
- * Base template of confirm dialog.
- * @class Controls/_popupConfirmation/Template
- * @extends Core/Control
- * @control
- * @public
- * @category Popup
- * @author Красильников А.С.
- * @mixes Controls/_popupConfirmation/Template/mixin
- * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
- * @demo Controls-demo/PopupTemplate/Confirmation/Index
- */
+   close(): void {
+      this._notify('close', [], { bubbling: true });
+   }
+
+   static getDefaultOptions(): IConfirmationTemplate {
+      return {
+         size: 's',
+         style: 'secondary'
+      };
+   }
+
+   static _theme: string[] = ['Controls/popupConfirmation'];
+}
 
 /**
  * @name Controls/_popupConfirmation/Template#size
  * @cfg {String} Размер окна диалога.
- * @variant m
+ * @variant s
  * @variant l
- * @default m
- */
-
-/*
- * @name Controls/_popupConfirmation/Template#size
- * @cfg {String} Confirmation size
- * @variant m
- * @variant l
- * @default m
+ * @default s
  */
 
 /**
  * @name Controls/_popupConfirmation/Template#style
  * @cfg {String} Стиль отображения окна диалога.
- * @variant default
+ * @variant secondary
  * @variant success
  * @variant danger
- */
-/*
- * @name Controls/_popupConfirmation/Template#style
- * @cfg {String} Confirmation display style
- * @variant default
- * @variant success
- * @variant danger
+ * @variant primary
+ * @variant secondary
  */
 
 /**
  * @name Controls/_popupConfirmation/Template#bodyContentTemplate
  * @cfg {function|String} Основной контент окна диалога.
  */
-/*
- * @name Controls/_popupConfirmation/Template#bodyContentTemplate
- * @cfg {function|String} Main content.
- */
 
 /**
  * @name Controls/_popupConfirmation/Template#footerContentTemplate
- * @cfg {function|String} Контент футера окна диалога.
+ * @cfg {function|String} Контент подвала окна диалога.
  */
-/*
- * @name Controls/_popupConfirmation/Template#footerContentTemplate
- * @cfg {function|String} Content at the bottom of the confirm panel.
- */
+
 /**
-* Закрытие всплывающего окна диалога подтверждения.
-* @function Controls/_popupConfirmation/Template#close
-*/
-/*
- * Close the dialog
+ * Закрытие окна диалога подтверждения.
  * @function Controls/_popupConfirmation/Template#close
  */
+export default Template;

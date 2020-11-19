@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Tooltip</div>
-                     <Controls.input:Text fontStyle="default" class="ControlsDemo-ExampleInput_fontHeader"
+                     <Controls.input:Text fontSize="m" fontColorStyle="default" class="ControlsDemo-ExampleInput_fontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_default1Value"/>
                   </div>
@@ -15,7 +15,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="secondary"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="secondary"
                                           placeholder="Tooltip"
                                           bind:value="_default2Value"/>
                   </div>
@@ -24,7 +24,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="primary"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="primary"
                                           placeholder="Tooltip"
                                           bind:value="_default3Value"/>
                   </div>
@@ -40,7 +40,7 @@
                <ws:template>
                   <div class="example-Base__wrapper ControlsDemo-ExampleInput__fontFilledFirst">
                      <div class="example-Base__specify">Filled input field</div>
-                     <Controls.input:Text fontStyle="default"
+                     <Controls.input:Text fontSize="m" fontColorStyle="default"
                                           placeholder="Tooltip"
                                           bind:value="_filled1Value"/>
                   </div>
@@ -49,7 +49,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_filled2Value"/>
                   </div>
@@ -58,7 +58,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
                                           placeholder="Tooltip"
                                           bind:value="_filled3Value"/>
                   </div>
@@ -74,7 +74,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled input field in read mode</div>
-                     <Controls.input:Text fontStyle="default"
+                     <Controls.input:Text fontSize="m" fontColorStyle="default"
                                           placeholder="Tooltip"
                                           readOnly="{{true}}"
                                           bind:value="_filledRMValue"/>
@@ -84,7 +84,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="secondary"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="secondary"
                                           placeholder="Tooltip"
                                           readOnly="{{true}}"
                                           bind:value="_filledRMValue"/>
@@ -94,7 +94,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Text fontStyle="primary"
+                     <Controls.input:Text fontSize="3xl" fontColorStyle="primary"
                                           placeholder="Tooltip"
                                           readOnly="{{true}}"
                                           bind:value="_filledRMValue"/>
@@ -111,7 +111,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled number input field</div>
-                     <Controls.input:Number fontStyle="default"
+                     <Controls.input:Number fontSize="m" fontColorStyle="default"
                                             placeholder="Tooltip"
                                             bind:value="_filledNumber1Value"/>
                   </div>
@@ -120,7 +120,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Number fontStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
+                     <Controls.input:Number fontSize="3xl" fontColorStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
                                             placeholder="Tooltip"
                                             bind:value="_filledNumber2Value"/>
                   </div>
@@ -129,7 +129,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Number fontStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
+                     <Controls.input:Number fontSize="3xl" fontColorStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
                                             placeholder="Tooltip"
                                             bind:value="_filledNumber3Value"/>
                   </div>
@@ -145,7 +145,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled number input field in read mode</div>
-                     <Controls.input:Number fontStyle="default"
+                     <Controls.input:Number fontSize="m" fontColorStyle="default"
                                           readOnly="{{true}}"
                                           placeholder="Tooltip"
                                           bind:value="_filledNumberRMValue"/>
@@ -155,7 +155,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Number fontStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
+                     <Controls.input:Number fontSize="3xl" fontColorStyle="secondary" class="ControlsDemo-ExampleInput_fontHeader"
                                           readOnly="{{true}}"
                                           placeholder="Tooltip"
                                           bind:value="_filledNumberRMValue"/>
@@ -165,7 +165,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Number fontStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
+                     <Controls.input:Number fontSize="3xl" fontColorStyle="primary" class="ControlsDemo-ExampleInput_accentFontHeader"
                                           readOnly="{{true}}"
                                           placeholder="Tooltip"
                                           bind:value="_filledNumberRMValue"/>
@@ -182,7 +182,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field</div>
-                     <Controls.input:Money fontStyle="default"
+                     <Controls.input:Money fontSize="m" fontColorStyle="default"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoney1Value"/>
                   </div>
@@ -191,7 +191,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Money fontStyle="secondary"
+                     <Controls.input:Money fontSize="3xl" fontColorStyle="secondary"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoney2Value"/>
                   </div>
@@ -200,7 +200,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Money fontStyle="primary"
+                     <Controls.input:Money fontSize="3xl" fontColorStyle="primary"
                                            placeholder="Tooltip"
                                            bind:value="_filledMoney3Value"/>
                   </div>
@@ -216,7 +216,7 @@
                <ws:template>
                   <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Filled money input field in read mode</div>
-                     <Controls.input:Money fontStyle="default"
+                     <Controls.input:Money fontSize="m" fontColorStyle="default"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyRMValue"/>
@@ -226,7 +226,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Money fontStyle="secondary"
+                     <Controls.input:Money fontSize="3xl" fontColorStyle="secondary"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyRMValue"/>
@@ -236,7 +236,7 @@
             <ws:Object spacing="normal">
                <ws:template>
                   <div class="example-Base__wrapper">
-                     <Controls.input:Money fontStyle="primary"
+                     <Controls.input:Money fontSize="3xl" fontColorStyle="primary"
                                            placeholder="Tooltip"
                                            readOnly="{{true}}"
                                            bind:value="_filledMoneyRMValue"/>

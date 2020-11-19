@@ -20,6 +20,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _addRecordCount: 1,
          _cancelEdit: false,
          _openRecordByNewKey: false,
+         _initializingDelayedCreate: false,
 
          _beforeMount: function(opt, context) {
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -96,6 +97,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _itemClick: function(event, record) {
             var popupOptions = {
                closeOnOutsideClick: false,
+               opener: this._children.grid
             };
 
             var meta = {
@@ -110,7 +112,24 @@ define('Controls-demo/Popup/Edit/Opener',
          },
 
          _addRecord: function() {
-            this._children.EditOpener.open();
+            var record;
+            var initializingWay;
+            if (this._initializingDelayedCreate) {
+               initializingWay = 'delayedCreate';
+               record = this._items.at(0).clone();
+               record.set('id', 1000);
+               record.set('name', 'Запись для первичной отрисовки');
+               record.set('price', -10000);
+               record.set('balance', -10000);
+               record.set('costPrice', -10000);
+            }
+
+            this._children.EditOpener.open(null, {
+               templateOptions: {
+                  record: record,
+                  initializingWay: initializingWay
+               }
+            });
          },
 
          _openHandler: function(event) {

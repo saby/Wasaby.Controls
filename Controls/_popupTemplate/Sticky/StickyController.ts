@@ -6,6 +6,8 @@ import Env = require('Env/Env');
 import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import StickyContent = require('wml!Controls/_popupTemplate/Sticky/StickyContent');
 import * as cInstance from 'Core/core-instance';
+import {Logger} from 'UI/Utils';
+import {getScrollbarWidthByMeasuredBlock} from 'Controls/scroll';
 
 export type TVertical = 'top' | 'bottom' | 'center';
 export type THorizontal = 'left' | 'right' | 'center';
@@ -49,27 +51,10 @@ let _fakeDiv;
 
 const _private = {
     prepareOriginPoint(config) {
-        const newCfg = cClone(config);
+        const newCfg = {...config};
         newCfg.direction = newCfg.direction || {};
         newCfg.offset = newCfg.offset || {};
 
-        if (newCfg.horizontalAlign && typeof (config.horizontalAlign) === 'object') {
-            if ('side' in newCfg.horizontalAlign) {
-                newCfg.direction.horizontal = newCfg.horizontalAlign.side;
-            }
-            if ('offset' in newCfg.horizontalAlign) {
-                newCfg.offset.horizontal = newCfg.horizontalAlign.offset;
-            }
-        }
-
-        if (newCfg.verticalAlign && typeof (config.verticalAlign) === 'object') {
-            if ('side' in newCfg.verticalAlign) {
-                newCfg.direction.vertical = newCfg.verticalAlign.side;
-            }
-            if ('offset' in newCfg.verticalAlign) {
-                newCfg.offset.vertical = newCfg.verticalAlign.offset;
-            }
-        }
         if (typeof config.fittingMode === 'string') {
             newCfg.fittingMode = {
                 vertical: config.fittingMode,
@@ -94,9 +79,9 @@ const _private = {
         cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
         const popupCfg = self._getPopupConfig(cfg, sizes);
 
-        cfg.position = StickyStrategy.getPosition(popupCfg, self._getTargetCoords(cfg, sizes));
-
-        cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
+        const targetCoords = self._getTargetCoords(cfg, sizes);
+        cfg.position = StickyStrategy.getPosition(popupCfg, targetCoords);
+        _private.updateStickyPosition(cfg, popupCfg, targetCoords);
 
         cfg.positionConfig = popupCfg;
         _private.updateClasses(cfg, popupCfg);
@@ -108,47 +93,50 @@ const _private = {
         cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
     },
 
+    updateSizes(positionCfg, popupOptions) {
+        const properties = ['width', 'maxWidth', 'minWidth', 'height', 'maxHeight', 'minHeight'];
+        properties.forEach((prop) => {
+            if (popupOptions[prop]) {
+                positionCfg.config[prop] = popupOptions[prop];
+            }
+        });
+    },
+
     getOrientationClasses(cfg) {
         let className = 'controls-Popup-corner-vertical-' + cfg.targetPoint.vertical;
         className += ' controls-Popup-corner-horizontal-' + cfg.targetPoint.horizontal;
         className += ' controls-Popup-align-horizontal-' + cfg.direction.horizontal;
         className += ' controls-Popup-align-vertical-' + cfg.direction.vertical;
-        className += ' controls-Sticky__reset-margins';
         return className;
     },
 
     removeOrientationClasses(cfg) {
         if (cfg.popupOptions.className) {
-            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*|controls-Sticky__reset-margins/g, '').trim();
+            cfg.popupOptions.className = cfg.popupOptions.className.replace(/controls-Popup-corner\S*|controls-Popup-align\S*/g, '').trim();
         }
     },
 
-    getTargetNode(cfg): HTMLElement {
-        if (cInstance.instanceOfModule(cfg.popupOptions.target, 'UI/Base:Control')) {
-            return cfg.popupOptions.target._container;
-        }
-        return cfg.popupOptions.target || (document && document.body);
-    },
-
-    prepareStickyPosition(cfg) {
-        return {
-            targetPoint: cfg.targetPoint,
-            direction: cfg.direction,
-            offset: cfg.offset,
-            horizontalAlign: { // TODO: to remove
-                side: cfg.direction.horizontal,
-                offset: cfg.offset.horizontal
-            },
-            verticalAlign: { // TODO: to remove
-                side: cfg.direction.vertical,
-                offset: cfg.offset.vertical
-            },
-            corner: cfg.corner // TODO: to remove
+    updateStickyPosition(item, position, targetCoords): void {
+        const newStickyPosition = {
+            targetPoint: position.targetPoint,
+            direction: position.direction,
+            offset: position.offset,
+            position: item.position,
+            targetPosition: targetCoords,
+            margins: item.margins,
+            sizes: item.sizes
         };
+        // быстрая проверка на равенство простых объектов
+        if (JSON.stringify(item.popupOptions.stickyPosition) !== JSON.stringify(newStickyPosition)) {
+            item.popupOptions.stickyPosition = newStickyPosition;
+        }
     },
 
     getWindowWidth() {
         return window && window.innerWidth;
+    },
+    getWindowHeight() {
+        return window && window.innerHeight;
     },
     setStickyContent(item) {
         item.popupOptions.content = StickyContent;
@@ -210,13 +198,13 @@ const _private = {
 /**
  * Sticky Popup Controller
  * @class Controls/_popupTemplate/Sticky/StickyController
- * @control
+ * 
  * @private
- * @category Popup
  */
 class StickyController extends BaseController {
-    TYPE = 'Sticky';
+    TYPE: string = 'Sticky';
     _private = _private;
+    _bodyOverflow: string;
 
     elementCreated(item, container) {
         if (this._isTargetVisible(item)) {
@@ -224,15 +212,22 @@ class StickyController extends BaseController {
             item.position.position = undefined;
             this.prepareConfig(item, container);
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
+        return true;
     }
 
     elementUpdated(item, container) {
         _private.setStickyContent(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
+        const targetCoords = this._getTargetCoords(item, item.positionConfig.sizes);
+        _private.updateStickyPosition(item, item.positionConfig, targetCoords);
         if (this._isTargetVisible(item)) {
             _private.updateClasses(item, item.positionConfig);
+
+            // If popupOptions has new sizes, calculate position using them.
+            // Else calculate position using current container sizes.
+            _private.updateSizes(item.positionConfig, item.popupOptions);
+
             item.position = StickyStrategy.getPosition(item.positionConfig, this._getTargetCoords(item, item.positionConfig.sizes));
 
             // In landscape orientation, the height of the screen is low when the keyboard is opened.
@@ -250,36 +245,79 @@ class StickyController extends BaseController {
                 }
             }
         } else {
-            require('Controls/popup').Controller.remove(item.id);
+            this._printTargetRemovedWarn();
         }
     }
 
     elementAfterUpdated(item, container) {
-        const target = _private.getTargetNode(item);
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
-        if (target && target.closest && target.closest('.ws-hidden')) {
+        if (!this._isTargetVisible(item)) {
+            this._printTargetRemovedWarn();
             return false;
         }
         /* start: We remove the set values that affect the size and positioning to get the real size of the content */
         const width = container.style.width;
         const maxHeight = container.style.maxHeight;
-        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '100vh';
-        container.style.width = 'auto';
-        container.style.height = 'auto';
+        const maxWidth = container.style.maxWidth;
+        // Если внутри лежит скроллконтейнер, то восстанавливаем позицию скролла после изменения размеров
+        const scroll = container.querySelector('.controls-Scroll__content');
+        const scrollTop = scroll?.scrollTop;
+        container.style.maxHeight = item.popupOptions.maxHeight ? item.popupOptions.maxHeight + 'px' : '100vh';
+        container.style.maxWidth = item.popupOptions.maxWidth ? item.popupOptions.maxWidth + 'px' : '100vw';
+        const hasScrollBeforeReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        // Если значения явно заданы на опциях, то не сбрасываем то что на контейнере
+        if (!item.popupOptions.width) {
+            container.style.width = 'auto';
+        }
+        if (!item.popupOptions.height) {
+            container.style.height = 'auto';
+        }
+        let hasScrollAfterReset = document && (document.body.scrollHeight > document.body.clientHeight);
+        if (hasScrollAfterReset) {
+            // Скролл на боди может быть отключен через стили
+           if (!this._bodyOverflow) {
+               this._bodyOverflow = getComputedStyle(document.body).overflowY;
+           }
+           if (this._bodyOverflow === 'hidden') {
+               hasScrollAfterReset = false;
+           }
+        }
 
         /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
         this.prepareConfig(item, container);
 
+        // Для ситуаций, когда скролл на боди: После сброса высоты для замеров содержимого (style.height = 'auto'),
+        // содержимое может быть настолько большим, что выходит за пределы окна браузера (maxHeight 100vh не помогает,
+        // т.к. таргет может находиться по центру, соответственно пол попапа все равно уйдет за пределы экрана).
+        // Если контент вылез за пределы - на боди появится скролл, но он пропадет, после того как мы высчитаем позицию
+        // окна (а считать будем с учетом скролла на странице) и ограничим его размеры.
+        // Если позиция идет по координате right (теоретически тоже самое для bottom), то это показ/скрытие скролла
+        // влияет на позиционирование. Компенсирую размеры скроллбара.
+        if (!hasScrollBeforeReset && hasScrollAfterReset) {
+            if (item.position.right) {
+                item.position.right += getScrollbarWidthByMeasuredBlock();
+            }
+        }
+
         /* start: Return all values to the node. Need for vdom synchronizer */
         container.style.width = width;
-        container.style.maxHeight = maxHeight;
+        container.style.maxWidth = maxWidth;
         // После того, как дочерние контролы меняют размеры, они кидают событие controlResize, окно отлавливает событие,
         // измеряет верстку и выставляет себе новую позицию и размеры. Т.к. это проходит минимум в 2 цикла синхронизации,
         // то визуально видны прыжки. Уменьшаю на 1 цикл синхронизации простановку размеров
         // Если ограничивающих размеров нет (контент влезает в экран), то ставим высоту по контенту.
+        container.style.maxHeight = item.position.maxHeight ? item.position.maxHeight + 'px' : '';
         container.style.height = item.position.height ? item.position.height + 'px' : 'auto';
 
+        // Синхронно ставлю новую позицию, чтобы не было прыжков при изменении контента
+        const verticalPosition = item.position.top ? 'top' : 'bottom';
+        const revertVerticalPosition = item.position.top ? 'bottom' : 'top';
+        container.style[verticalPosition] = item.position[verticalPosition] + 'px';
+        container.style[revertVerticalPosition] = 'auto';
+
+        //TODO: https://online.sbis.ru/opendoc.html?guid=5ddf9f3b-2d0e-49aa-b5ed-12e943c761d8
+        scroll?.scrollTop = scrollTop;
         /* end: Return all values to the node. Need for vdom synchronizer */
 
         // toDO выписана задача https://online.sbis.ru/opendoc.html?guid=79cdc24c-cf4c-45da-97b4-7353540a2b1b
@@ -297,11 +335,14 @@ class StickyController extends BaseController {
         _private.setStickyContent(item);
         item.popupOptions = _private.prepareOriginPoint(item.popupOptions);
         const popupCfg = this._getPopupConfig(item);
-        item.popupOptions.stickyPosition = _private.prepareStickyPosition(popupCfg);
+        _private.updateStickyPosition(item, popupCfg);
         item.position = {
             top: -10000,
             left: -10000,
             maxWidth: item.popupOptions.maxWidth || _private.getWindowWidth(),
+            maxHeight: item.popupOptions.maxHeight || _private.getWindowHeight(),
+            width: item.popupOptions.width,
+            height: item.popupOptions.height,
 
             // Error on ios when position: absolute container is created outside the screen and stretches the page
             // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
@@ -312,7 +353,7 @@ class StickyController extends BaseController {
         if (Env.detection.isMobileIOS) {
             item.position.top = 0;
             item.position.left = 0;
-            item.position.hidden = true;
+            item.position.invisible = true;
         }
     }
 
@@ -328,8 +369,10 @@ class StickyController extends BaseController {
     }
 
     _getPopupConfig(cfg, sizes) {
+        const restrictiveContainerCoords = this._getRestrictiveContainerCoords(cfg);
         return {
             targetPoint: cMerge(cClone(DEFAULT_OPTIONS.targetPoint), cfg.popupOptions.targetPoint || {}),
+            restrictiveContainerCoords,
             direction: cMerge(cClone(DEFAULT_OPTIONS.direction), cfg.popupOptions.direction || {}),
             offset: cMerge(cClone(DEFAULT_OPTIONS.offset), cfg.popupOptions.offset || {}),
             config: {
@@ -343,6 +386,24 @@ class StickyController extends BaseController {
             sizes,
             fittingMode: cfg.popupOptions.fittingMode
         };
+    }
+
+    private _getRestrictiveContainerCoords(item) {
+        if (item.popupOptions.restrictiveContainer) {
+            let restrictiveContainer;
+            if (cInstance.instanceOfModule(item.popupOptions.restrictiveContainer, 'UI/Base:Control')) {
+                restrictiveContainer = item.popupOptions.restrictiveContainer._container;
+            } else if (item.popupOptions.restrictiveContainer instanceof HTMLElement) {
+                restrictiveContainer = item.popupOptions.restrictiveContainer;
+            } else if (typeof item.popupOptions.restrictiveContainer === 'string') {
+                // ищем ближайшего
+                restrictiveContainer = item.popupOptions.target.closest(item.popupOptions.restrictiveContainer);
+            }
+
+            if (restrictiveContainer) {
+                return TargetCoords.get(restrictiveContainer);
+            }
+        }
     }
 
     private _getTargetCoords(cfg, sizes) {
@@ -383,12 +444,23 @@ class StickyController extends BaseController {
                 leftScroll: 0
             };
         }
-        return TargetCoords.get(_private.getTargetNode(cfg));
+        return TargetCoords.get(StickyController._getTargetNode(cfg));
+    }
+
+    private _printTargetRemovedWarn(): void {
+        Logger.warn('Controls/popup:Sticky: Пропал target из DOM. Позиция окна может быть не верная');
     }
 
     private _isTargetVisible(item): boolean {
         const targetCoords = this._getTargetCoords(item, {});
         return !!targetCoords.width;
+    }
+
+    protected static _getTargetNode(cfg): HTMLElement {
+        if (cInstance.instanceOfModule(cfg.popupOptions.target, 'UI/Base:Control')) {
+            return cfg.popupOptions.target._container;
+        }
+        return cfg.popupOptions.target || (document && document.body);
     }
 }
 

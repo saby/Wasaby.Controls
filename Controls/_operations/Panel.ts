@@ -1,56 +1,74 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_operations/Panel/Panel');
+import {error as loadDataError} from 'Controls/dataSource';
 
 /**
  * Контрол, предназначенный для операций над множеством записей списка.
+ *
  * @remark
- * См. <a href="/materials/demo-ws4-operations-panel">демо-пример</a>.
- * Подробное описание и инструкцию по настройке читайте контрола читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/operations/ здесь}.
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/operations/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
+ *
  * @class Controls/_operations/Panel
  * @extends Core/Control
  * @mixes Controls/_toolbars/IToolbarSource
- * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
- * @public
- * @author Авраменко А.С.
- * @demo Controls-demo/OperationsPanel/Panel
  * 
- *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
+ * @public
+ * @author Герасимов А.М.
+ * @demo Controls-demo/OperationsPanelNew/Base/Index
+ * @demo Controls-demo/OperationsPanelNew/ReadOnly/Index
  */
 
 /*
  * Control for grouping operations.
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
- * <a href="/materials/demo-ws4-operations-panel">Demo</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo</a>.
  *
  * @class Controls/_operations/Panel
  * @extends Core/Control
- * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
- * @control
+ * 
  * @public
- * @author Авраменко А.С.
- * @demo Controls-demo/OperationsPanel/Panel
- *
- * @css @background-color_OperationsPanel Background color of the panel.
- * @css @height_OperationsPanel Height of the panel.
- * @css @spacing_OperationsPanel-between-items Spacing between items.
- * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
+ * @author Герасимов А.М.
+ * @demo Controls-demo/OperationsPanelNew/Base/Index
  */
+
+var Panel = Control.extend({
+   _template: template,
+   _hidePanel: false,
+
+   _beforeMount(): void {
+      this._errorCallback = this._errorCallback.bind(this);
+   },
+
+   _errorCallback(viewConfig: object, error): void {
+      this._hidePanel = true;
+      loadDataError.process({error});
+   }
+});
 
 /**
  * @name Controls/_operations/Panel#rightTemplate
  * @cfg {String|Function} Шаблон, отображаемый в правой части панели массового выбора.
+ * @demo Controls-demo/OperationsPanelNew/RightTemplate/Index
  * @example
  * <pre class="brush: html">
- * <Controls.operations:Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
+ * <Controls.operations:Panel>
+ *     <ws:rightTemplate>
+ *         <Controls.buttons:Button
+ *             caption="Доп. операции"
+ *             on:click="_onClickAddBlock()"
+ *             iconSize="s"
+ *             icon="icon-Settings"
+ *             viewMode="link"
+ *             fontColorStyle="link"
+ *     </ws:rightTemplate>
+ * </Controls.operations:Panel>
  * </pre>
  */
 
@@ -65,6 +83,12 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  */
 
 /**
+ * @name Controls/_operations/Panel#popupFooterTemplate
+ * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
+ * @demo Controls-demo/OperationsPanelNew/PopupFooterTemplate/Index
+ */
+
+/**
  * @event Происходит после появления панели массовых операций на экране.
  * @name Controls/_operations/Panel#operationsPanelOpened
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
@@ -76,6 +100,8 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @name Controls/_operations/Panel#itemClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Record} item Элемент, по которому произвели клик.
+ * @param {Object} nativeEvent Объект нативного события браузера
+ * @param {Controls/interface:ISelectionObject} selection Объект, который содержит идентификаторы отмеченных и исключённых записей.
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
@@ -128,12 +154,14 @@ import template = require('wml!Controls/_operations/Panel/Panel');
  * @variant null Кпопка скрыта.
  * @variant all Кнопка "Показать отмеченные".
  * @variant selected Кнопка "Показать все".
- */ 
+ */
 
 /**
  * @name Controls/_operations/Panel#selectionViewMode
  * @cfg {SelectionViewMode} Задает отображение кнопки "Показать отмеченные" в меню мультивыбора.
+ * @demo Controls-demo/OperationsPanelNew/SelectionViewMode/Index
  * @default null
+ * @remark Вызываемый списочный метод нужно перевести на использование функции ShowMarked, о которой подробнее можно прочитать {@link https://wi.sbis.ru/doc/platform/developmentapl/service-development/service-contract/logic/list/list-iterator/show-marked/ здесь}.
  * @example
  * <pre class="brush: js">
  * // JavaScript
@@ -158,41 +186,37 @@ import template = require('wml!Controls/_operations/Panel/Panel');
 /**
  * @name Controls/_operations/Panel#selectedCountConfig
  * @cfg {ISelectedCountConfig} Конфигурация для получения счётчика отмеченных записей.
+ * @demo Controls-demo/operations/SelectedCountConfig/Index
+ * @default undefined
  * @example
- * TS:
- * <pre>
- *    import {SbisService} from 'Types/source';
+ * <pre class="brush: html">
+ * // TypeScript
+ * import {SbisService} from 'Types/source';
  *
- *    private _filter: object = null;
- *    private _selectedCountConfig: object = null;
+ * private _filter: object = null;
+ * private _selectedCountConfig: object = null;
  *
- *    _beforeMount():void {
- *        this._filter = {};
- *        this._selectedCountConfig = this._getSelectedCountConfig();
+ * _beforeMount():void {
+ *    this._filter = {};
+ *    this._selectedCountConfig = this._getSelectedCountConfig();
+ * }
+ *
+ * private _getSelectedCountConfig() {
+ *    return {
+ *       rpc: new SbisService({
+ *          endpoint: 'Employee'
+ *       }),
+ *       command: 'employeeCount',
+ *       data: {
+ *          filter: this._filter
+ *       }
  *    }
- *
- *    private _getSelectedCountConfig() {
- *        return {
- *            rpc: new SbisService({
- *                endpoint: 'Employee'
- *            }),
- *            command: 'employeeCount',
- *            data: {
- *                filter: this._filter
- *            }
- *        }
- *    }
+ * }
  * </pre>
- *
- * WML:
- * <pre>
- *    <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}"/>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.operations:Panel selectedCountConfig="{{_selectedCountConfig}}"/>
  * </pre>
  */
-
-
-var Panel = Control.extend({
-   _template: template
-});
 
 export = Panel;

@@ -1,60 +1,43 @@
-import {detection, constants} from 'Env/Env';
-import {debounce, delay as runDelayed} from 'Types/function';
+import {constants} from 'Env/Env';
+import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {detection} from 'Env/Env';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IPopupOptions} from 'Controls/_popup/interface/IPopup';
+import {RegisterClass} from 'Controls/event';
+import {ResizeObserverUtil} from 'Controls/sizeUtils';
+import ManagerController from 'Controls/_popup/Manager/ManagerController';
 
 import * as template from 'wml!Controls/_popup/Manager/Popup';
 import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
 const RESIZE_DELAY = 10;
-// on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
-const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 
 interface IPopupControlOptions extends IPopupOptions, IControlOptions {}
-
-type UpdateCallback = () => void;
-
+/**
+ * Control Popup
+ * @class Controls/_popup/Manager/Popup
+ * @mixes Controls/interface/IOpenerOwner
+ * @mixes Controls/_interface/ICanBeDefaultOpener
+ * @extends Core/Control
+ * 
+ * @private
+ * @author Красильников А.С.
+ */
 class Popup extends Control<IPopupControlOptions> {
-
-    /**
-     * Control Popup
-     * @class Controls/_popup/Manager/Popup
-     * @mixes Controls/interface/IOpenerOwner
-     * @mixes Controls/interface/ICanBeDefaultOpener
-     * @extends Core/Control
-     * @control
-     * @private
-     * @category Popup
-     * @author Красильников А.С.
-     */
-
-    /**
-     * @name Controls/_popup/Manager/Popup#template
-     * @cfg {Content} Template
-     */
-
-    /**
-     * @name Controls/_popup/Manager/Popup#templateOptions
-     * @cfg {Object} Template options
-     */
 
     protected _template: TemplateFunction = template;
     protected _stringTemplate: boolean;
+    protected _resizeObserver: ResizeObserverUtil;
     protected waitForPopupCreated: boolean; // TODO: COMPATBILE
     protected callbackCreated: Function|null; // TODO: COMPATBILE
 
-    // Register the openers that initializing inside current popup
-    // After updating the position of the current popup, calls the repositioning of popup from child openers
-    protected _openersUpdateCallback: UpdateCallback[] = [];
+    private _isPopupMounted: boolean = false;
 
     protected _isEscDown: boolean = false;
 
-    // _moduleName is assign in the callback of require.
-    // Private modules are not visible for this mechanism,
-    // _moduleName must be specified manually for them.
-    // It is necessary for checking relationship between popups.
-    protected _moduleName: string = 'Controls/_popup/Manager/Popup';
+    private _resizeRegister: RegisterClass;
+    private _isDragStarted: boolean;
 
     private _closeByESC(event: SyntheticEvent<KeyboardEvent>): void {
         if (event.nativeEvent.keyCode === constants.key.esc) {
@@ -63,28 +46,41 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _beforePaintOnMount(): void {
-        this._notify('popupBeforePaintOnMount', [this._options.id], {bubbling: true});
+        ManagerController.notifyToManager('popupBeforePaintOnMount', [this._options.id]);
     }
 
     protected _beforeMount(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
+        this._compatibleTemplateName = this._getCompatibleTemplateName(options);
+        this._resizeRegister = new RegisterClass({register: 'controlResize'});
+
+        this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
+    }
+
+    //TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
+    private _getCompatibleTemplateName(options: IPopupOptions): string {
+        if (options.isCompoundTemplate) {
+            return options.templateOptions.template;
+        } else if (typeof options.template === 'string') {
+            return options.template;
+        }
     }
 
     protected _afterMount(): void {
+        this._isPopupMounted = true;
+
         /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
          * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
-        this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
-        this._scrollHandler = debounce(this._scrollHandler.bind(this), SCROLL_DELAY);
-
         if (this.waitForPopupCreated) {
             this.callbackCreated = (() => {
                 this.callbackCreated = null;
-                this._notify('popupCreated', [this._options.id], {bubbling: true});
+                ManagerController.notifyToManager('popupCreated', [this._options.id]);
             });
         } else {
-            this._notify('popupCreated', [this._options.id], {bubbling: true});
+            ManagerController.notifyToManager('popupCreated', [this._options.id]);
             this.activatePopup();
         }
+        this._checkResizeObserver();
     }
 
     protected _beforeUpdate(options: IPopupControlOptions): void {
@@ -92,110 +88,166 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     protected _afterRender(oldOptions: IPopupOptions): void {
-        this._notify('popupAfterUpdated', [this._options.id], {bubbling: true});
+        ManagerController.notifyToManager('popupAfterUpdated', [this._options.id]);
 
         if (this._isResized(oldOptions, this._options)) {
-            const eventCfg = {
-                type: 'controlResize',
-                target: this,
-                _bubbling: false
-            };
-            this._children.resizeDetect.start(new SyntheticEvent(null, eventCfg));
+            this._startResizeRegister();
+            this._checkResizeObserver();
         }
     }
 
-    protected _beforeUnmount(): void {
-        this._notify('popupDestroyed', [this._options.id], {bubbling: true});
+    private _startResizeRegister(event?: SyntheticEvent): void {
+        const eventCfg = {
+            type: 'controlResize',
+            target: this,
+            _bubbling: false
+        };
+        const customEvent = new SyntheticEvent(null, eventCfg);
+        this._resizeRegister.start(event || customEvent);
     }
 
+    protected _beforeUnmount(): void {
+        if (this._resizeRegister) {
+            this._resizeRegister.destroy();
+        }
+        this._unregisterResizeObserver();
+    }
+
+    private _checkResizeObserver(): void {
+        if (this._needListenResizeObserver()) {
+            this._registerResizeObserver();
+        } else {
+            this._unregisterResizeObserver();
+        }
+    }
+
+    private _registerResizeObserver(): void {
+        if (!this._resizeObserver) {
+            this._resizeObserver = new ResizeObserverUtil(
+                this, this._resizeObserverCallback.bind(this));
+            this._resizeObserver.observe(this._container);
+        }
+    }
+
+    private _unregisterResizeObserver(): void {
+        if (this._resizeObserver) {
+            this._resizeObserver.terminate();
+            this._resizeObserver = null;
+        }
+    }
+
+    protected _registerHandler(event, registerType, component, callback, config): void {
+        this._resizeRegister.register(event, registerType, component, callback, config);
+    }
+
+    protected _unregisterHandler(event, registerType, component, config): void {
+        this._resizeRegister.unregister(event, registerType, component, config);
+    }
     /**
      * Close popup
      * @function Controls/_popup/Manager/Popup#_close
      */
     protected _close(): void {
-        this._notify('popupClose', [this._options.id], {bubbling: true});
+        if (!this._isDragStarted) {
+            ManagerController.notifyToManager('popupClose', [this._options.id]);
+        }
     }
 
     protected _maximized(event: SyntheticEvent<Event>, state: boolean): void {
-        this._notify('popupMaximized', [this._options.id, state], {bubbling: true});
+        ManagerController.notifyToManager('popupMaximized', [this._options.id, state]);
     }
 
     protected _popupDragStart(event: SyntheticEvent<Event>, offset: number): void {
-        this._notify('popupDragStart', [this._options.id, offset], {bubbling: true});
+        this._isDragStarted = true;
+        ManagerController.notifyToManager('popupDragStart', [this._options.id, offset]);
     }
 
     protected _popupDragEnd(): void {
-        this._notify('popupDragEnd', [this._options.id], {bubbling: true});
+        this._isDragStarted = false;
+        ManagerController.notifyToManager('popupDragEnd', [this._options.id]);
     }
 
     protected _popupMouseEnter(event: SyntheticEvent<MouseEvent>, popupEvent: SyntheticEvent<MouseEvent>): void {
-        this._notify('popupMouseEnter', [this._options.id, popupEvent], {bubbling: true});
+        ManagerController.notifyToManager('popupMouseEnter', [this._options.id, popupEvent]);
     }
 
     protected _popupMouseLeave(event: SyntheticEvent<MouseEvent>, popupEvent: SyntheticEvent<MouseEvent>): void {
-        this._notify('popupMouseLeave', [this._options.id, popupEvent], {bubbling: true});
+        ManagerController.notifyToManager('popupMouseLeave', [this._options.id, popupEvent]);
     }
 
     protected _popupResizingLine(event: SyntheticEvent<Event>, offset: number): void {
-        this._notify('popupResizingLine', [this._options.id, offset], {bubbling: true});
+        ManagerController.notifyToManager('popupResizingLine', [this._options.id, offset]);
     }
 
     protected _animated(event: SyntheticEvent<AnimationEvent>): void {
-        this._children.resizeDetect.start(event);
-        this._notify('popupAnimated', [this._options.id], {bubbling: true});
+        this._startResizeRegister(event);
+        ManagerController.notifyToManager('popupAnimated', [this._options.id]);
     }
 
-    protected _registerOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
-        this._openersUpdateCallback = this._openersUpdateCallback
-            .filter((updateCallback) => !updateCallback._isNeedless);
-        this._openersUpdateCallback.push(callback);
-    }
-
-    protected _unregisterOpenerUpdateCallback(event: SyntheticEvent<Event>, callback: UpdateCallback): void {
-        const index = this._openersUpdateCallback.indexOf(callback);
-        if (index > -1) {
-            this._openersUpdateCallback.splice(index, 1);
-        }
-    }
-
-    protected _callOpenersUpdate(): void {
-        for (let i = 0; i < this._openersUpdateCallback.length; i++) {
-            this._openersUpdateCallback[i]();
-        }
-    }
-
-    protected _showIndicatorHandler(event: SyntheticEvent<MouseEvent>): string {
-        const args = Array.prototype.slice.call(arguments, 1);
+    protected _showIndicatorHandler(event: Event, config: object = {}, promise?: Promise<any>): string {
+        // Вернул для индикаторов, вызванных из кода
         event.stopPropagation();
-        const config = args[0];
         if (typeof config === 'object') {
             config.popupId = this._options.id;
         }
         // catch showIndicator and add popupId property for Indicator.
-        return this._notify('showIndicator', args, {bubbling: true}) as string;
+        return this._notify('showIndicator', [config, promise], {bubbling: true}) as string;
     }
 
-    protected _scrollHandler(): void {
-        this._notify('pageScrolled', [this._options.id], {bubbling: true});
+    protected _registerPendingHandler(event: Event): string {
+        const args = this._prepareEventArs(event, arguments);
+        const config = args[1] || {};
+        config.root = this._options.id;
+        args[1] = config;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('registerPending', args, {bubbling: true}) as string;
     }
 
-    /**
-     * Update popup
-     * @function Controls/_popup/Manager/Popup#_close
-     */
-    protected _update(): void {
-        this._notify('popupUpdated', [this._options.id], {bubbling: true});
-
-        // After updating popup position we will updating the position of the popups open with it.
-        runDelayed(this._callOpenersUpdate.bind(this));
+    protected _finishPendingOperationsHandler(event: Event): string {
+        const args = Array.prototype.slice.call(arguments, 1);
+        args[1] = args[1] || this._options.id;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('finishPendingOperations', args, {bubbling: true}) as string;
     }
 
-    protected _controlResizeOuterHandler(): void {
-        this._notify('popupResizeOuter', [this._options.id], {bubbling: true});
+    protected _cancelFinishingPendingHandler(event: Event): string {
+        const args = this._prepareEventArs(event, arguments);
+        args[0] = args[0] || this._options.id;
+        // catch showIndicator and add popupId property for Indicator.
+        return this._notify('cancelFinishingPending', args, {bubbling: true}) as string;
+    }
+
+    private _prepareEventArs(event: Event, args: IArguments): unknown[] {
+        event.stopPropagation();
+        return Array.prototype.slice.call(args, 1);
     }
 
     protected _controlResizeHandler(): void {
-        this._notify('popupResizeInner', [this._options.id], {bubbling: true});
+        // Children controls can notify events while parent control isn't mounted
+        // Because children's afterMount happens before parent afterMount
+
+        if (this._isPopupMounted) {
+            if (!this._needListenResizeObserver()) {
+                this._notifyResizeInner();
+            }
+        }
+    }
+
+    private _resizeObserverCallback(): void {
+        if (this._needListenResizeObserver()) {
+            this._notifyResizeInner();
+        }
+    }
+
+    private _needListenResizeObserver(): boolean {
+        // Если размеров, ограничивающих контейнер, на окне нет, то
+        // отслеживание изменение размеров окна осуществляется через resizeObserverUtil
+        const hasSizes = this._options.position.width !== undefined || this._options.position.height !== undefined;
+        return !hasSizes && !detection.isIE;
+    }
+
+    private _notifyResizeInner(): void {
+        ManagerController.notifyToManager('popupResizeInner', [this._options.id]);
     }
 
     /**
@@ -204,7 +256,7 @@ class Popup extends Control<IPopupControlOptions> {
      */
     protected _sendResult(event: SyntheticEvent<Event>, ...args: any[]): void {
         const popupResultArgs = [this._options.id].concat(args);
-        this._notify('popupResult', popupResultArgs, {bubbling: true});
+        ManagerController.notifyToManager('popupResult', popupResultArgs);
     }
 
     /**
@@ -245,14 +297,24 @@ class Popup extends Control<IPopupControlOptions> {
     }
 
     private _isResized(oldOptions: IPopupOptions, newOptions: IPopupOptions): boolean {
-        const {position: oldPosition, hidden: oldHidden}: IPopupOptions = oldOptions;
-        const {position: newPosition, hidden: newHidden}: IPopupOptions = newOptions;
+        const {position: oldPosition}: IPopupOptions = oldOptions;
+        const {position: newPosition}: IPopupOptions = newOptions;
         const hasWidthChanged: boolean = oldPosition.width !== newPosition.width;
         const hasHeightChanged: boolean = oldPosition.height !== newPosition.height;
         const hasMaxHeightChanged: boolean = oldPosition.maxHeight !== newPosition.maxHeight;
-        const hasHiddenChanged: boolean = oldHidden !== newHidden;
+        const hasHiddenChanged: boolean = oldPosition.hidden !== newPosition.hidden;
 
-        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged || (hasHiddenChanged && newHidden === false);
+        return hasWidthChanged || hasHeightChanged || hasMaxHeightChanged ||
+            (hasHiddenChanged && newPosition.hidden === false);
+    }
+
+    // TODO Compatible
+    // Для совместимости новых окон и старого индикатора:
+    // Чтобы событие клавиатуры в окне не стопилось, нужно правильно рассчитать индексы в методе getMaxZWindow WS.Core/core/WindowManager.js
+    // В старых окнах есть метод getZIndex, а в новых нет. Поэтому, чтобы метод находил правильный максимальный z-index, добавляю геттер
+
+    getZIndex(): number {
+        return this._options.zIndex;
     }
 
     static getDefaultOptions(): IPopupControlOptions {
@@ -263,4 +325,22 @@ class Popup extends Control<IPopupControlOptions> {
     }
 }
 
+// _moduleName is assign in the callback of require.
+// Private modules are not visible for this mechanism,
+// _moduleName must be specified manually for them.
+// It is necessary for checking relationship between popups.
+// Значение теперь нужно присваивать до выполнения конструктора.
+Object.assign(Popup.prototype, {
+    _moduleName: 'Controls/_popup/Manager/Popup'
+});
+
 export default Popup;
+/**
+ * @name Controls/_popup/Manager/Popup#template
+ * @cfg {Content} Template
+ */
+
+/**
+ * @name Controls/_popup/Manager/Popup#templateOptions
+ * @cfg {Object} Template options
+ */

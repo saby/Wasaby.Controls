@@ -3,15 +3,13 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 // @ts-ignore
 import * as template from 'wml!Controls/_decorator/WrapURLs/WrapURLs';
 
-import {wrapURLsValue} from 'Controls/_decorator/ActualAPI';
-
 /**
+ * Интерфейс для опций контрола {@link Controls/decorator:WrapURLs}.
  * @interface Controls/_decorator/WrapURLs/IWrapURLsOptions
  * @public
  * @author Красильников А.С.
  */
 export interface IWrapURLsOptions extends IControlOptions {
-    text: string;
     /**
      * Декорируемый текст.
      * @demo Controls-demo/Decorator/WrapURLs/Index
@@ -61,9 +59,12 @@ type Path = ILink | IEmail | IPlain;
  * Активная ссылка - это элемент страницы, при клике на который происходит переход на внешний ресурс.
  * @remark
  * Поддерживаемые ссылки:
- * 1. Ссылка на web-страницу ({@link https://en.wikipedia.org/wiki/File_Transfer_Protocol ftp}, www, http, https).
- * 2. Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
- * 3. Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
+ * * Ссылка на web-страницу ({@link https://en.wikipedia.org/wiki/File_Transfer_Protocol ftp}, www, http, https).
+ * * Ссылка на email адрес ([текст]@[текст].[текст от 2 до 6 знаков]).
+ * * Ссылка на локальный файл ({@link https://en.wikipedia.org/wiki/File_URI_scheme file}).
+ *
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
  *
  * @class Controls/_decorator/WrapURLs
  * @extends UI/Base:Control
@@ -79,12 +80,12 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IWrapURLsOptions): void {
-        this._parsedText = WrapURLs.parseText(wrapURLsValue(options.text, options.value, true));
+        this._parsedText = WrapURLs.parseText(options.value);
     }
 
     protected _beforeUpdate(newOptions: IWrapURLsOptions): void {
-        const oldValue = wrapURLsValue(this._options.text, this._options.value);
-        const newValue = wrapURLsValue(newOptions.text, newOptions.value);
+        const oldValue = this._options.value;
+        const newValue = newOptions.value;
 
         if (oldValue !== newValue) {
             this._parsedText = WrapURLs.parseText(newValue);
@@ -188,9 +189,8 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
 
     static getOptionTypes() {
         return {
-            newTab: descriptor(Boolean)/*,
-            TODO: https://online.sbis.ru/opendoc.html?guid=d04dc579-2453-495f-b0a7-282370f6a9c5
-            value: descriptor(String).required()*/
+            newTab: descriptor(Boolean),
+            value: descriptor(String).required()
         };
     }
 

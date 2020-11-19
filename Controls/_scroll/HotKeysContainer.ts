@@ -1,8 +1,14 @@
 import {Control, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_scroll/HotKeysContainer');
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 /**
  * Контрол настраивает Controls/scroll:Container на перехват клавиш "up", "down", "page up", "page down", "home", "end" по умолчанию.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less">переменные тем оформления</a>
+ * 
  * @class Controls/_scroll/HotKeysContainer
  * @extends Core/Control
  * @author Шипин А.А.
@@ -21,10 +27,10 @@ class HotKeysContainer extends Control<IControlOptions> {
     protected _defaultActions = [{keyCode: 33}, {keyCode: 34}, {keyCode: 35}, {keyCode: 36}, {keyCode: 38}, {keyCode: 40}];
     // Этого кода не будет, когда добавится еще один хук жизненного цикла - "заморозка".
     // https://online.sbis.ru/opendoc.html?guid=ba32a992-5f5b-4f00-9b6a-73f62871a193
-    private _afterMount(): void {
+    protected _afterMount(): void {
         this._notify('registerKeyHook', [this], { bubbling: true});
     }
-    private _beforeUnmount(): void {
+    protected _beforeUnmount(): void {
         this._notify('unregisterKeyHook', [this], { bubbling: true});
     }
     register(): void {
@@ -32,6 +38,12 @@ class HotKeysContainer extends Control<IControlOptions> {
     }
     unregister(): void {
         this._children.KeyHook.unregister();
+    }
+    protected _keyDown(event: SyntheticEvent<KeyboardEvent>): void {
+        const hotKeys = this._defaultActions.map((e) => e.keyCode );
+        if (hotKeys.includes(event.nativeEvent.keyCode)) {
+            event.preventDefault();
+        }
     }
 }
 

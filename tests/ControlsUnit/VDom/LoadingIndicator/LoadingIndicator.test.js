@@ -4,11 +4,11 @@ define([
    'use strict';
 
    describe('LoadingIndicator-tests', () => {
-      let Loading = new LoadingIndicator();
+      let Loading = new LoadingIndicator.default();
       Loading._beforeMount({});
 
       it('LoadingIndicator - delay', () => {
-         let LoadingDelay = new LoadingIndicator();
+         let LoadingDelay = new LoadingIndicator.default();
          LoadingDelay._beforeMount({
             delay: 1
          });
@@ -21,7 +21,7 @@ define([
       });
 
       it('LoadingIndicator - add', () => {
-         let Loading2 = new LoadingIndicator();
+         let Loading2 = new LoadingIndicator.default();
          Loading2._beforeMount({});
          Loading._toggleIndicator = () => {
          };
@@ -77,6 +77,18 @@ define([
          });
       });
 
+      it('LoadingIndicator - open config', () => {
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+         const waitPromise = Promise.resolve();
+         const config = {};
+
+         LoadingInd.show(config, waitPromise);
+         assert.equal(config.waitPromise, undefined);
+
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - isOpened', () => {
          let cfg1 = Loading._stack.at(0);
          assert.equal(Loading._isOpened(cfg1), true);
@@ -98,36 +110,44 @@ define([
       });
 
       it('LoadingIndicator - remove indicator from stack', () => {
-         let resultVisible;
-         let resultConfigMessage;
-         let baseToggleMethod = Loading._toggleIndicator;
-         Loading._toggleIndicator = (visible, config) => {
-            assert.equal(resultVisible, visible);
-            assert.equal(resultConfigMessage, config && config.message);
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+
+         let config1 = {
+            message: 'message 1'
          };
+         let config2 = {
+            message: 'message 2'
+         };
+         let config3 = {
+            message: 'message 3'
+         };
+         LoadingInd.show(config1);
+         LoadingInd.show(config2);
+         LoadingInd.show(config3);
 
-         let id = Loading._stack.at(0).id;
-         resultVisible = true;
-         resultConfigMessage = 'message 0';
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 2);
+         let id = LoadingInd._stack.at(0).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 2);
 
-         id = Loading._stack.at(1).id;
-         resultConfigMessage = 'message 3';
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 1);
+         id = LoadingInd._stack.at(1).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 1);
 
-         id = Loading._stack.at(0).id;
-         resultConfigMessage = undefined;
-         resultVisible = false;
-         Loading._hide(id);
-         assert.equal(Loading._stack.getCount(), 0);
+         id = LoadingInd._stack.at(0).id;
+         LoadingInd._hide(id);
+         assert.equal(LoadingInd._stack.getCount(), 0);
 
-         Loading._toggleIndicator = baseToggleMethod;
+         let isItemRemove = false;
+         LoadingInd._removeItem = () => isItemRemove = true;
+
+         LoadingInd._hide('id');
+         assert.equal(isItemRemove, false);
+         LoadingInd.destroy();
       });
 
       it('LoadingIndicator - getOverlay', () => {
-         let LoadingInd = new LoadingIndicator();
+         let LoadingInd = new LoadingIndicator.default();
          let overlay = 'dark';
          LoadingInd._isOverlayVisible = true;
          LoadingInd._isMessageVisible = false;
@@ -152,8 +172,24 @@ define([
          assert.equal(Loading._stack.getCount(), 0);
       });
 
+      it ('LoadingIndicator with empty config', () => {
+         let LoadingInd = new LoadingIndicator.default();
+         LoadingInd._beforeMount({});
+
+         const cfg = LoadingInd._prepareConfig({message: 'Loading'});
+         LoadingInd._updateProperties(cfg);
+         LoadingInd._beforeUpdate({});
+         assert.equal(LoadingInd.message, 'Loading');
+
+         const cfgEmpty = LoadingInd._prepareConfig({});
+         LoadingInd._updateProperties(cfgEmpty);
+         LoadingInd._beforeUpdate({});
+         assert.equal(LoadingInd.message, '');
+         LoadingInd.destroy();
+      });
+
       it('LoadingIndicator - toggleIndicator', (done) => {
-         let LoadingInd = new LoadingIndicator();
+         let LoadingInd = new LoadingIndicator.default();
          let isMessageVisible = true;
          LoadingInd._beforeMount({});
          let baseToggleIndicatorVisible = LoadingInd._toggleIndicatorVisible;
@@ -178,12 +214,12 @@ define([
 
          LoadingInd._stack.add({ delay: undefined });
          LoadingInd._toggleIndicator(true, config);
-         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isOverlayVisible, false);
          assert.equal(LoadingInd._isMessageVisible, false);
 
          LoadingInd._stack.clear();
          LoadingInd._toggleIndicator(true, config);
-         assert.equal(LoadingInd._isOverlayVisible, true);
+         assert.equal(LoadingInd._isOverlayVisible, false);
          assert.equal(LoadingInd._isMessageVisible, false);
 
          LoadingInd._toggleIndicatorVisible = function() {

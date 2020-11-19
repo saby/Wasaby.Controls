@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.toolbars:View
+                source="{{_toolbarSource}}"
+                keyProperty="id"
+        >
+            <ws:itemTemplate>
+                <div style="background: #E1E1E1">
+                    <ws:partial template="Controls/toolbars:ItemTemplate" />
+                </div>
+            </ws:itemTemplate>
+        </Controls.toolbars:View>
+    </div>
+</div>

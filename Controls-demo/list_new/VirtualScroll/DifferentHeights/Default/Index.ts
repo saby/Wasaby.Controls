@@ -1,14 +1,13 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/VirtualScroll/DifferentHeights/Default/Default"
-import {Memory} from "Types/source"
-import {generateData} from "../../../DemoHelpers/DataCatalog"
-import 'css!Controls-demo/Controls-demo'
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/DifferentHeights/Default/Default';
+import {Memory} from 'Types/source';
+import {generateData} from '../../../DemoHelpers/DataCatalog';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: Memory;
+    protected _viewSource: Memory;
 
-    private _dataArray = generateData<{id: number, title: string}>({
+    private _dataArray: Array<{ id: number, title: string }> = generateData<{id: number, title: string}>({
         count: 1000,
         entityTemplate: {title: 'lorem'},
         beforeCreateItemCallback: (item) => {
@@ -16,10 +15,12 @@ export default class extends Control {
         }
     });
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this._dataArray
         });
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

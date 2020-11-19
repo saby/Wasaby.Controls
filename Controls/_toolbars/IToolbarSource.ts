@@ -16,29 +16,51 @@ export default interface IToolbarSource {
 }
 
 /**
+ * @typedef {String} ShowType
+ * @variant showType.MENU Элемент отображается только в меню.
+ * @variant showType.MENU_TOOLBAR Элемент отображается в меню и в тулбаре.
+ * @variant showType.TOOLBAR Элемент отображается только в тулбаре.
+ */
+
+/*
+ * @typedef {String} ShowType
+ * @variant showType.MENU item is displayed only in the menu
+ * @variant showType.MENU_TOOLBAR item is displayed in the menu and toolbar
+ * @variant showType.TOOLBAR item is displayed only in the toolbar
+ */
+
+/**
+ * @typedef {String} CaptionPosition
+ * @variant left Текст расположен перед иконкой.
+ * @variant right Текст расположен после иконки.
+ */
+
+/**
  * @typedef {Object} Item
- * @property {Boolean} [item.readOnly] Определяет, может ли пользователь изменить значение контрола. {@link UI/_base/Control#readOnly Подробнее}
- * @property {String} [item.caption] Текст кнопки элемента. {@link Controls/_interface/ICaption#caption Подробнее}
- * @property {Boolean} [item.contrastBackground] Определяет, имеет ли кнопка элемента фон.{@link Controls/_buttons/Button#contrastBackground Подробнее}
- * @property {String} [item.iconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
- * @property {String} [item.icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
- * @property {String} [item.title] Определеяет текст элемента.
+ * @property {Boolean} [item.readOnly] Определяет, может ли пользователь изменить значение контрола. См. {@link UI/_base/Control#readOnly подробнее}.
+ * @property {String} [item.caption] Текст кнопки элемента. См. {@link Controls/interface/ICaption#caption подробнее}.
+ * @property {Boolean} [item.contrastBackground] Определяет, имеет ли кнопка элемента фон. См. {@link Controls/buttons:IButton#contrastBackground подробнее}.
+ * @property {String} [item.iconStyle] Цвет иконки элемента. См. {@link Controls/interface/IIconStyle#iconStyle подробнее}.
+ * @property {String} [item.icon] Иконка элемента. См. {@link Controls/interface/IIcon#icon подробнее}.
+ * @property {String} [item.title] Текст элемента.
  * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
- * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. {@link Controls/_interface/ITooltip#tooltip Подробнее}
- * @property {Number} [item.showType] Определяет, где будет отображаться элемент( 0 - только в меню,1 - в меню и в тулбаре, 2 - только в тулбаре)
- * @property {String} [item.viewMode] Определяет стиль отображения кнопки элемента.{@link Controls/_buttons/Button#viewMode Подробнее }
+ * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. См. {@link Controls/interface/ITooltip#tooltip подробнее}.
+ * @property {ShowType} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты {@link Controls/Utils/Toolbar}.
+ * @property {String} [item.viewMode] Стиль отображения кнопки элемента. См. {@link Controls/buttons:Button#viewMode подробнее}.
+ * @property {CaptionPosition} [item.captionPosition] Определяет, с какой стороны расположен текст кнопки относительно иконки.
+ * @property {String} [item.buttonStyle] Стиль отображения кнопки. См. {@link Controls/buttons:IButton#buttonStyle подробнее}.
  */
 /*
  * @typedef {Object} Item
  * @property {Boolean} [item.readOnly] Determines item readOnly state.
- * @property {String} [item.buttonCaption] Caption of toolbar element.
- * @property {Boolean} [item.buttonTransparent] Transparent of toolbar element.
- * @property {String} [item.buttonIconStyle] Icon style of toolbar element.
+ * @property {String} [item.caption] Caption of toolbar element.
+ * @property {String} [item.iconStyle] Icon style of toolbar element.
  * @property {String} [item.icon] Icon of toolbar element.
  * @property {String} [item.title] Determines item caption.
  * @property {Boolean} [item.showHeader] Indicates whether folders should be displayed.
  * @property {String} [item.tooltip] Text of the tooltip shown when the item is hovered over.
- * @property {Number} [item.showType] Determines where item is displayed ( 0 - in menu,1 - in menu and toolbar, 2 - in toolbar)
+ * @property {ShowType} [item.showType] Determines where item is displayed. The value is taken from the util 'Controls/Utils/Toolbar'. {@link Controls/Utils/Toolbar Details}
+ * @property {CaptionPosition} [item.captionPosition]
  * @property {String} [item.buttonStyle] Button style of toolbar element.
  * @property {String} [item.buttonViewMode] Button style of toolbar element.
  */
@@ -55,15 +77,15 @@ export default interface IToolbarSource {
 
 /**
  * @name Controls/_toolbars/IToolbarSource#source
- * @cfg {SourceCfg} Объект, который реализует интерфейс {@link Types/source/ICrud ICrud}, необходимый для работы с источником данных.
+ * @cfg {SourceCfg} Объект, который реализует интерфейс {@link Types/source:ICrud}, необходимый для работы с источником данных.
  * @default undefined
  * @remark
  * Может иметь свойства 'title' и 'showType':
  * * 'title' определяет заголовок элемента.
- * * 'showType' определяет, где отображается элемент:
- *     * 0 - в меню.
- *     * 1 - в меню и тулбаре.
- *     * 2 - в тулбаре.
+ * * 'showType' определяет, где будет отображаться элемент. Значение берется из утилиты 'Controls/Utils/Toolbar'. {@link Controls/Utils/Toolbar Подробнее}:
+ *     * showType.MENU - Элемент отображается только в меню
+ *     * showType.MENU_TOOLBAR - Элемент отображается в меню и в тулбаре
+ *     * showType.TOOLBAR - Элемент отображается только в тулбаре
  * Для readOnly элемента, установите значение 'true' в поле readOnly.
  * @example
  * Кнопки будут отображены из источника _source. Первый элемент выравнен по левому краю, другие элементы выравнены по правому краю по умолчанию.
@@ -71,25 +93,32 @@ export default interface IToolbarSource {
  *    <Controls.toolbars:View keyProperty="key" source="{{_source}}" />
  * </pre>
  * <pre>
- *    _source: new source.Memory({
+ *    import {showType} from 'Controls/Utils/Toolbar';
+ *      .....
+ *    this._source = new source.Memory({
  *        keyProperty: 'key',
  *        data: [
  *        {
  *           id: '1',
- *           showType: 2,
+ *           showType: showType.TOOLBAR,
  *           icon: 'icon-Time',
+ *           iconStyle: 'secondary',
  *           '@parent': false,
- *           parent: null
+ *           parent: null,
+ *           contrastBackground: true
  *        },
  *        {
  *           id: '2',
  *           title: 'Moscow',
  *           '@parent': false,
- *           parent: null
+ *           parent: null,
+ *           readOnly: true
  *        },
  *        {
  *           id: '3',
- *           title: 'St-Petersburg',
+ *           viewMode: 'button',
+ *           captionPosition: 'left',
+ *           caption: 'St-Petersburg',
  *           '@parent': false,
  *           parent: null
  *        }

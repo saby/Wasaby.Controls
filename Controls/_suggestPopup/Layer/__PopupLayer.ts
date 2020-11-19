@@ -7,39 +7,30 @@ import template = require('wml!Controls/_suggestPopup/Layer/__PopupLayer');
 import getZIndex = require('Controls/Utils/getZIndex');
 import {detection} from 'Env/Env';
 
-var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
-
 var _private = {
    openPopup(self, opener, options): void {
        // !!closeOnOutsideClick не добавлять, иначе саггест закрывается при клике на саггест
       const dynamicConfig = {
          target: options.target,
          opener: self,
-         actionOnScroll: detection.isMobileIOS ? 'none' : 'close',
+         actionOnScroll: (detection.isMobileIOS || detection.isMobileAndroid) ? 'none' : 'close',
          zIndex: getZIndex(self) // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.k
       };
       opener.open({...dynamicConfig, ...self._popupOptions});
    },
 
-   getPopupClassName: function(verAlign) {
-      return POPUP_CLASS_NAME + '_' + verAlign;
-   },
-
-   setPopupOptions: function(self) {
-      self._popupOptions = {
+   setPopupOptions: function(self, options) {
+      const config =  {
          autofocus: false,
-         className: _private.getPopupClassName('bottom'),
          direction: {
             vertical: 'bottom'
          },
          targetPoint: {
             vertical: 'bottom'
          },
-         eventHandlers: {
-            onResult: self._onResult
-         },
          resizeCallback: self._resizeCallback
       };
+      self._popupOptions = {...config, ...options.suggestPopupOptions || {}};
    }
 };
 
@@ -47,10 +38,9 @@ var __PopupLayer = Control.extend({
 
    _template: template,
 
-   _beforeMount: function() {
-      this._onResult = this._onResult.bind(this);
+   _beforeMount: function(options) {
       this._resizeCallback = this._resizeCallback.bind(this);
-      _private.setPopupOptions(this);
+      _private.setPopupOptions(this, options);
    },
 
    _afterMount: function(options) {
@@ -71,7 +61,7 @@ var __PopupLayer = Control.extend({
       this._children.suggestPopup.close();
    },
 
-   _onResult: function(position) {
+   _onResult(event, position): void {
       // fix suggest position after show
       this._popupOptions.direction = {
          vertical: position.direction.vertical,
@@ -84,7 +74,6 @@ var __PopupLayer = Control.extend({
 
       // position.corner fixed by https://online.sbis.ru/opendoc.html?guid=b7a05d49-4a68-423f-81d0-70374f875a22
       this._popupOptions.targetPoint = position.targetPoint;
-      this._popupOptions.className = _private.getPopupClassName(position.direction.vertical);
       this._popupOptions.fittingMode = 'fixed';
 
       // update popup's options

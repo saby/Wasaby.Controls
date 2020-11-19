@@ -1,0 +1,14 @@
+<div class="controlsDemo__flexRow">
+   <div class="controlsDemo__ml3">
+      <div class="controls-text-label_theme-{{_options.theme}}">Поиск в иерархическом списке</div>
+      <Controls.dropdown:Input
+              source="{{_source}}"
+              keyProperty="id"
+              bind:selectedKeys="_selectedKeys"
+              displayProperty="title"
+              searchParam="title"
+              parentProperty="parent"
+              nodeProperty="@parent"
+      />
+   </div>
+</div>

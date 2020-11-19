@@ -27,6 +27,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseMonths
              * @cfg {Boolean} В значении false недоступен выбор месяца.
+             * @demo Controls-demo/dateRange/LiteSelector/ChoosePeriod/Index
              * @default true
              */
 
@@ -40,6 +41,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseQuarters
              * @cfg {Boolean} В значении false недоступен выбор квартала.
+             * @demo Controls-demo/dateRange/LiteSelector/ChoosePeriod/Index
              * @default true
              */
 
@@ -53,6 +55,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseHalfyears
              * @cfg {Boolean} В значении false недоступен выбор полугодия.
+             * @demo Controls-demo/dateRange/LiteSelector/ChoosePeriod/Index
              * @default true
              */
 
@@ -66,6 +69,7 @@ export default {
             /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#chooseYears
              * @cfg {Boolean} В значении false недоступен выбор года.
+             * @demo Controls-demo/dateRange/LiteSelector/ChoosePeriod/Index
              * @default true
              */
 
@@ -90,26 +94,26 @@ export default {
             emptyCaption: undefined,
 
             /**
-             * @name Controls/dateLitePopup/IDateLitePopup#popupClassName
+             * @name Controls/shortDatePicker/IDateLitePopup#popupClassName
              * @cfg {String} Имена классов, которые будут применены к корневой ноде всплывающего окна.
              * @default undefined
              */
             popupClassName: undefined,
             // TODO: Доделать полноценную поддержку следующих опций. Пока не показываем их в документации.
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedStart
              * @cfg {Date} Дата (месяц) начала установленного периода.
-             * 
+             *
              */
 
             /*
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedStart
              * @cfg {Date} The date (month) of the beginning of the checked period
-             * 
+             *
              */
             checkedStart: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedEnd
              * @cfg {Date} Дата (месяц) окончания установленного периода.
              *
@@ -121,9 +125,10 @@ export default {
              */
             checkedEnd: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedIconCssClass
-             * @cfg {String} CSS-класс, который будет установлен у выделенных иконок. По умолчанию это зеленая галочка.
+             * @cfg {String} CSS-класс, который будет установлен у выделенных иконок.
+             * По умолчанию это зеленая галочка.
              */
 
             /*
@@ -132,9 +137,10 @@ export default {
              */
             checkedIconCssClass: 'icon-Yes icon-done',
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#uncheckedIconCssClass
-             * @cfg {String} CSS-класс, который будет установлен у невыделенных иконок. По умолчанию это серая галочка.
+             * @cfg {String} CSS-класс, который будет установлен у невыделенных иконок.
+             * @default undefined
              */
 
             /*
@@ -143,9 +149,10 @@ export default {
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#checkedIconTitle
-             * @cfg {String} Подсказка, которая будет отображаться при наведении на выделенную иконку. По умолчанию всплывающая подсказка отсутствует.
+             * @cfg {String} Подсказка, которая будет отображаться при наведении на выделенную иконку.
+             * @default undefined
              */
 
             /*
@@ -154,9 +161,10 @@ export default {
              */
             checkedIconTitle: undefined,
 
-            /*
+            /**
              * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#uncheckedIconTitle
-             * @cfg {String} Подсказка, которая будет отображаться при наведении на невыделенную иконку. По умолчанию всплывающая подсказка отсутствует.
+             * @cfg {String} Подсказка, которая будет отображаться при наведении на невыделенную иконку.
+             * @default undefined
              */
 
             /*
@@ -171,17 +179,20 @@ export default {
              * @cfg {Function} Устанавливает функцию, которая будет вызвана во время перерисовки компонента.
              * @remark
              * Аргументы функции:
-             * <ol>
-             *    <li>periods — Массив, содержащий массивы начала и окончания периода.</li>
-             * </ol>
+             *
+             * * periods — Массив, содержащий массивы начала и окончания периода.</li>
+             *
              * Функция должна возвращать массив логических элементов или объект, содержащий информацию об отображаемой иконке или Deffered'е, который запускает такой объект.
-             * Если функция возвращает true, будет отображена иконка, соответствующая параметрам {@Link checkedIconCssClass} и {@Link checkedIconTitle}.
-             * Если функция возвращает false, икноки будут отображены в соответствии с параметрами {@Link uncheckedIconCssClass} и {@Link uncheckedIconTitle}.
+             * Если функция возвращает true, будет отображена иконка, соответствующая параметрам {@link checkedIconCssClass} и {@link checkedIconTitle}.
+             * Если функция возвращает false, икноки будут отображены в соответствии с параметрами {@link uncheckedIconCssClass} и {@link uncheckedIconTitle}.
              * По умолчанию это зеленые и серые галочки.
              * Функция может возвращать объект, содержащий сведения о пользовательских окнах.
-             * { iconClass: 'icon-Yes icon-done',
-             *   title: 'Reporting period is closed'
-             *   }
+             * <pre class="brush: js">
+             * {
+             *    iconClass: 'icon-Yes icon-done',
+             *    title: 'Reporting period is closed'
+             * }
+             * </pre>
              *
              * @see updateIcons
              * @noshow
@@ -197,9 +208,9 @@ export default {
              * </ol>
              * The function must return an array of Boolean elements or an object containing information about
              * the displayed icon {@link Icon} or Deferred, which fires such an object.
-             * If the function returns true, the icon corresponding to the options {@Link checkedIconCssClass}
-             * and {@Link checkedIconTitle} will be drawn. If false, the icons will match the options
-             * {@Link uncheckedIconCssClass} and {@Link uncheckedIconTitle}.
+             * If the function returns true, the icon corresponding to the options {@link checkedIconCssClass}
+             * and {@link checkedIconTitle} will be drawn. If false, the icons will match the options
+             * {@link uncheckedIconCssClass} and {@link uncheckedIconTitle}.
              * By default, these are green and gray check marks.
              * The function can return an object containing information about custom windows.
              * { iconClass: 'icon-Yes icon-done',
@@ -220,7 +231,7 @@ export default {
              *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
              *       <ws:monthCaptionTemplate>
              *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}"
              *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
              *                {{ formatDate(month, "MMMM") }} !
              *             </div>
@@ -240,7 +251,7 @@ export default {
              *    <ws:partial template="{{itemTemplate.defaultTemplate}}">
              *       <ws:monthCaptionTemplate>
              *          <ws:if data="{{month.getMonth() % 2 === 0}}">
-             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption"
+             *             <div class="controls-PeriodLiteDialog__vLayoutItem-caption_theme-{{_options.theme}}"
              *                  style="{{ (month.getMonth() % 4 === 0) ? 'color: red;' }}">
              *                {{ formatDate(month, "MMMM") }} !
              *             </div>
@@ -253,35 +264,6 @@ export default {
             /* That not to drag dependence on a template in all, the default value we set only in the PeriodLiteDialog
              * itemTemplate: undefined,
              */
-
-            /*
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#captionFormatter
-             * @cfg {Function} Функция форматирования заголовка.
-             * Аргументы функции:
-             * <ol>
-             *    <li>startValue — Начальное значение периода.</li>
-             *    <li>endValue — Конечное значение периода.</li>
-             *    <li>emptyCaption — Отображаемый текст, когда в контроле не выбран период.</li>
-             * </ol>
-             * @returns {String}
-             * @example
-             * WML:
-             * <pre>
-             * <Controls.dateRange:Selector captionFormatter="{{_captionFormatter}}" />
-             * </pre>
-             * JS:
-             * <pre>
-             * _captionFormatter: function(startValue, endValue, emptyCaption) {
-             *    return 'Custom range format';
-             * }
-             * </pre>
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/IPeriodLiteDialog#captionFormatter
-             * @cfg {Function} Caption formatting function.
-             */
-            captionFormatter: dateControlsUtils.formatDateRangeCaption
         };
     },
 
@@ -292,9 +274,7 @@ export default {
             chooseMonths: descriptor(Boolean),
             chooseQuarters: descriptor(Boolean),
             chooseHalfyears: descriptor(Boolean),
-            chooseYears: descriptor(Boolean),
-            emptyCaption: descriptor(String),
-            captionFormatter: descriptor(Function)
+            chooseYears: descriptor(Boolean)
         };
     }
 };

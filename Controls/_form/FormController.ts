@@ -1,649 +1,893 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
-import cInstance = require('Core/core-instance');
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import Deferred = require('Core/Deferred');
-import {Logger} from 'UI/Utils';
-import dataSource = require('Controls/dataSource');
+import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
+import * as cInstance from 'Core/core-instance';
+import { readWithAdditionalFields } from './crudProgression';
+import * as Deferred from 'Core/Deferred';
+import { Logger } from 'UI/Utils';
+import { error as dataSourceError } from 'Controls/dataSource';
+import { IContainerConstructor } from 'Controls/_dataSource/error';
+import { Model } from 'Types/entity';
+import { Memory } from 'Types/source';
+import { Container as ValidateContainer, ControllerClass, IValidateResult } from 'Controls/validate';
+import { IFormOperation } from 'Controls/interface';
+import { Confirmation } from 'Controls/popup';
+import { CRUD_EVENTS, default as CrudController } from 'Controls/_form/CrudController';
+import { DialogOpener } from 'Controls/error';
+import { Mode } from 'Controls/error';
 
+interface IFormController extends IControlOptions {
+    readMetaData?: object;
+    createMetaData?: object;
+    destroyMetaData?: object;
+    errorContainer?: IContainerConstructor;
+    isNewRecord?: boolean;
+    key?: string;
+    keyProperty?: string;
+    record?: Model;
+    errorController?: dataSourceError.Controller;
+    source?: Memory;
+    confirmationShowingCallback?: Function;
+    initializingWay?: string;
+}
 
-   /**
-    * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
-    * В частном случае контрол применяется для создания <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
-    * @category FormController
-    * @class Controls/_form/FormController
-    * @extends Core/Control
-    * @mixes Controls/_interface/ISource
-    * @mixes Controls/interface/IFormController
-    * @implements Controls/_interface/IErrorController
-    * @demo Controls-demo/Popup/Edit/Opener
-    * @control
-    * @public
-    * @author Красильников А.С.
-    */
+interface IReceivedState {
+    data?: Model;
+    errorConfig?: dataSourceError.ViewConfig;
+}
 
-   /*
-    * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
-    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
-    * @category FormController
-    * @class Controls/_form/FormController
-    * @extends Core/Control
-    * @mixes Controls/_interface/ISource
-    * @mixes Controls/interface/IFormController
-    * @implements Controls/_interface/IErrorController
-    * @demo Controls-demo/Popup/Edit/Opener
-    * @control
-    * @public
-    * @author Красильников А.С.
-    */
+interface ICrudResult extends IReceivedState {
+    error?: Error;
+}
 
-   /**
-    * Объект с состоянием, полученным при серверном рендеринге.
-    * @typedef {Object}
-    * @name ReceivedState
-    * @property {*} [data]
-    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
-    */
+interface IAdditionalData {
+    key?: string;
+    record?: Model;
+    isNewRecord?: boolean;
+    error?: Error;
+}
 
-   /*
-    * Object with state from server side rendering
-    * @typedef {Object}
-    * @name ReceivedState
-    * @property {*} [data]
-    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
-    */
+interface IResultData {
+    formControllerEvent: string;
+    record: Model;
+    additionalData: IAdditionalData;
+}
 
-   /**
-    * @typedef {Object}
-    * @name CrudResult
-    * @property {*} [data]
-    * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
-    * @property {Controls/dataSource:error.ViewConfig} [error]
-    */
+interface IDataValid {
+    data: {
+        validationErrors: undefined | Array<string>
+    };
+}
 
-   /**
-    * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
-    * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
-    * @param {CrudResult} crudResult
-    * @return {ReceivedState}
-    */
-   var getState = function(crudResult) {
-      delete crudResult.error;
-      return crudResult;
-   };
+interface IConfigInMounting {
+    isError: boolean;
+    result: Model;
+}
 
+interface IUpdateConfig {
+    additionalData: IAdditionalData;
+}
 
-   /**
-    * Получение результата из обертки <CrudResult>
-    * @param {CrudResult} [crudResult]
-    * @return {Promise}
-    */
+export const enum INITIALIZING_WAY {
+    LOCAL = 'local',
+    READ = 'read',
+    CREATE = 'create',
+    DELAYED_READ = 'delayedRead',
+    DELAYED_CREATE = 'delayedCreate'
+}
 
-   /*
-    * getting result from <CrudResult> wrapper
-    * @param {CrudResult} [crudResult]
-    * @return {Promise}
-    */
-   var getData = function(crudResult) {
-      if (!crudResult) {
-         return Promise.resolve();
-      }
-      if (crudResult.data) {
-         return Promise.resolve(crudResult.data);
-      }
-      return Promise.reject(crudResult.error);
-   };
+/**
+ * Контроллер, в котором определена логика CRUD-методов, выполняемых над редактируемой записью.
+ * В частном случае контрол применяется для создания <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">диалогов редактирования записи</a>. Может выполнять запросы CRUD-методов на БЛ.
+ * @remark
+ * Для того, чтобы дочерние контролы могли отреагировать на начало сохранения, либо уничтожения контрола, им необходимо зарегистрировать соответствующие обработчики.
+ * Обработчики регистрируются через событие registerFormOperation, в аргументах которого ожидается объект с полями
+ *
+ * * save:Function - вызов происходит перед началом сохранения
+ * * cancel:Function - вызов происходит перед показом вопроса о сохранении
+ * * isDestroyed:Function - функция, которая сообщает о том, не разрушился ли контрол, зарегистрировавший операцию.
+ * В случае, если он будет разрушен - операция автоматически удалится из списка зарегистрированных
+ *
+ * @class Controls/_form/FormController
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_form/interface/IFormController
+ * @implements Controls/_interface/IErrorController
+ * @public
+ * @author Красильников А.С.
+ * 
+ * @demo Controls-demo/Popup/Edit/Opener
+ */
 
-   var _private = {
-      checkRecordType: function(record) {
-         return cInstance.instanceOfModule(record, 'Types/entity:Record');
-      },
-      readRecordBeforeMount: (instance, cfg) => {
-         // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
-         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем читать рекорд напрямую
-         return instance._source.read(cfg.key, cfg.readMetaData).then((record) => {
-            instance._setRecord(record);
-            instance._readInMounting = { isError: false, result: record };
+/*
+ * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
+ * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
+ * @class Controls/_form/FormController
+ * @extends Core/Control
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_form/interface/IFormController
+ * @implements Controls/_interface/IErrorController
+ * @demo Controls-demo/Popup/Edit/Opener
+ *
+ * @public
+ * @author Красильников А.С.
+ */
 
-            if (instance._isMount) {
-               _private.readRecordBeforeMountNotify(instance);
-            }
+class FormController extends Control<IFormController, IReceivedState> {
+    protected _template: TemplateFunction = tmpl;
+    private _record: Model = null;
+    private _isNewRecord: boolean = false;
+    private _createMetaDataOnUpdate: unknown = null;
+    private _errorContainer: IContainerConstructor = dataSourceError.Container;
+    private __errorController: dataSourceError.Controller;
+    private _createdInMounting: IConfigInMounting;
+    private _isMount: boolean;
+    private _readInMounting: IConfigInMounting;
+    private _wasCreated: boolean;
+    private _wasRead: boolean;
+    private _formOperationsStorage: IFormOperation[] = [];
+    private _wasDestroyed: boolean;
+    private _pendingPromise: Promise<any>;
+    private __error: dataSourceError.ViewConfig;
+    private _crudController: CrudController = null;
+    private _validateController: ControllerClass = new ControllerClass();
+    private _isConfirmShowed: boolean;
+    private _dialogOpener: DialogOpener;
 
-            return {
-               data: record
-            };
-         }, (e: Error) => {
-            instance._readInMounting = { isError: true, result: e };
-            return instance._processError(e).then(getState);
-         });
-      },
-      readRecordBeforeMountNotify: function(instance) {
-         if (!instance._readInMounting.isError) {
-            instance._notifyHandler('readSuccessed', [instance._readInMounting.result]);
+    protected _beforeMount(options?: IFormController, context?: object, receivedState: IReceivedState = {}): Promise<ICrudResult> | void {
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
+        this._crudController = new CrudController(options.source, this._notifyHandler.bind(this),
+            this.registerPendingNotifier.bind(this), this.indicatorNotifier.bind(this));
+        const receivedError = receivedState.errorConfig;
+        const receivedData = receivedState.data;
 
-            // перерисуемся
-            instance._readHandler(instance._record);
-         } else {
-            instance._notifyHandler('readFailed', [instance._readInMounting.result]);
-         }
-         instance._readInMounting = null;
-      },
-
-      createRecordBeforeMount: function(instance, cfg) {
-         // если ни рекорда, ни ключа, создаем новый рекорд и используем его
-         // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
-         return instance._source.create(cfg.initValues || cfg.createMetaData).then(function(record) {
-            instance._setRecord(record);
-            instance._createdInMounting = { isError: false, result: record };
-
-            if (instance._isMount) {
-               _private.createRecordBeforeMountNotify(instance);
-            }
-            return {
-               data: record
-            };
-         }, function(e) {
-            instance._createdInMounting = { isError: true, result: e };
-            return instance._processError(e).then(getState);
-         });
-      },
-
-      createRecordBeforeMountNotify: function(instance) {
-         if (!instance._createdInMounting.isError) {
-            instance._notifyHandler('createSuccessed', [instance._createdInMounting.result]);
-
-            // зарегистрируем пендинг, перерисуемся
-            instance._createHandler(instance._record);
-         } else {
-            instance._notifyHandler('createFailed', [instance._createdInMounting.result]);
-         }
-         instance._createdInMounting = null;
-      }
-   };
-
-   var FormController = Control.extend({
-      _template: tmpl,
-      _record: null,
-      _isNewRecord: false,
-      _createMetaDataOnUpdate: null,
-      _errorContainer: dataSource.error.Container,
-
-      constructor: function(options) {
-         FormController.superclass.constructor.apply(this, arguments);
-         options = options || {};
-         this.__errorController = options.errorController || new dataSource.error.Controller({});
-      },
-      _beforeMount: function(cfg, _, receivedState) {
-         this._source = cfg.source || cfg.dataSource;
-         if (cfg.dataSource) {
-             Logger.warn('FormController: Use option "source" instead of "dataSource"', this);
-         }
-         if (cfg.initValues) {
-             Logger.warn('FormController: Use option "createMetaData" instead of "initValues"', this);
-         }
-         if (cfg.destroyMeta) {
-             Logger.warn('FormController: Use option "destroyMetaData " instead of "destroyMeta"', this);
-         }
-         if (cfg.idProperty) {
-             Logger.warn('FormController: Use option "keyProperty " instead of "idProperty"', this);
-         }
-
-         receivedState = receivedState || {};
-         var receivedError = receivedState.errorConfig;
-         var receivedData = receivedState.data;
-
-         if (receivedError) {
+        if (receivedError) {
             return this._showError(receivedError);
-         }
-         var record = receivedData || cfg.record;
+        }
+        const record = receivedData || options.record || null;
 
-         // use record
-         if (record && _private.checkRecordType(record)) {
-            this._setRecord(record);
-            this._isNewRecord = !!cfg.isNewRecord;
+        this._isNewRecord = !!options.isNewRecord;
+        this._setRecord(record);
 
-            // If there is a key - read the record. Not waiting for answer BL
-            if (cfg.key !== undefined && cfg.key !== null) {
-               _private.readRecordBeforeMount(this, cfg);
-            }
-         } else if (cfg.key !== undefined && cfg.key !== null) {
-            return _private.readRecordBeforeMount(this, cfg);
-         } else {
-            return _private.createRecordBeforeMount(this, cfg);
-         }
-      },
-      _afterMount: function() {
-         // если рекорд был создан во время beforeMount, уведомим об этом
-         if (this._createdInMounting) {
-            _private.createRecordBeforeMountNotify(this);
-         }
+        const initializingWay = this._calcInitializingWay(options);
 
-         // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
-         if (this._readInMounting) {
-            _private.readRecordBeforeMountNotify(this);
-         }
-         this._createChangeRecordPending();
-         this._isMount = true;
-      },
-      _beforeUpdate: function(newOptions) {
-         let self = this;
-         if (newOptions.dataSource || newOptions.source) {
-            this._source = newOptions.source || newOptions.dataSource;
-            //Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
-            // создание записи -> ошибка -> beforeUpdate
-            if (this._source !== this._options.source && this._source !== this._options.dataSource) {
-               this._createMetaDataOnUpdate = null;
-            }
-         }
-
-         if (newOptions.record && this._options.record !== newOptions.record) {
-            this._setRecord(newOptions.record);
-         }
-         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            if (newOptions.record && newOptions.record.isChanged()) {
-               this._showConfirmPopup('yesno').addCallback(function(answer) {
-                  if (answer === true) {
-                     self.update().addCallback(function(res) {
-                        self.read(newOptions.key, newOptions.readMetaData);
-                        return res;
-                     });
-                  } else {
-                     self._tryDeleteNewRecord().addCallback(() => {
-                        self.read(newOptions.key, newOptions.readMetaData);
-                     });
-                  }
-               });
+        if (initializingWay !== INITIALIZING_WAY.LOCAL) {
+            let recordPromise;
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
+                const hasKey: boolean = options.key !== undefined && options.key !== null;
+                if (!hasKey) {
+                    this._throwInitializingWayException(initializingWay, 'key');
+                }
+                recordPromise = this._readRecordBeforeMount(options);
             } else {
-               self.read(newOptions.key, newOptions.readMetaData);
+                recordPromise = this._createRecordBeforeMount(options);
             }
-            return;
-         }
-         // Если нет ключа и записи - то вызовем метод создать. Состояние isNewRecord обновим после того, как запись вычитается
-         // Иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится
-         const createMetaData = newOptions.initValues || newOptions.createMetaData;
-         // Добавил защиту от циклических вызовов: У контрола стреляет _beforeUpdate, нет рекорда и ключа => вызывается
-         // создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate, вызов метода создать повторяется бесконечно.
-         // Нельзя чтобы контрол ддосил БЛ.
-         if (newOptions.key === undefined && !newOptions.record && this._createMetaDataOnUpdate !== createMetaData) {
-            this._createMetaDataOnUpdate = createMetaData;
-            this.create(newOptions.initValues || newOptions.createMetaData).addCallback(function() {
-               if (newOptions.hasOwnProperty('isNewRecord')) {
-                  self._isNewRecord = newOptions.isNewRecord;
-               }
-               self._createMetaDataOnUpdate = null;
+            if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.CREATE) {
+                return recordPromise;
+            }
+        } else if (!record) {
+            this._throwInitializingWayException(initializingWay, 'record');
+        }
+    }
+
+    protected _afterMount(): void {
+        this._isMount = true;
+        // если рекорд был создан во время beforeMount, уведомим об этом
+        if (this._createdInMounting) {
+            this._createRecordBeforeMountNotify();
+        }
+
+        // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
+        if (this._readInMounting) {
+            this._readRecordBeforeMountNotify();
+        }
+        this._createChangeRecordPending();
+    }
+
+    protected _beforeUpdate(newOptions: IFormController): void {
+        this._crudController.setDataSource(newOptions.source);
+        if (newOptions.source) {
+            // Сбрасываем состояние, только если данные поменялись, иначе будет зацикливаться
+            // создание записи -> ошибка -> beforeUpdate
+            if (newOptions.source !== this._options.source) {
+                this._createMetaDataOnUpdate = null;
+            }
+        }
+        const createMetaData = newOptions.createMetaData;
+        const needRead: boolean = newOptions.key !== undefined && this._options.key !== newOptions.key;
+        const needCreate: boolean = newOptions.key === undefined &&
+            !newOptions.record && this._createMetaDataOnUpdate !== createMetaData;
+
+        if (newOptions.record && this._record !== newOptions.record) {
+            const isEqualId = this._isEqualId(this._record, newOptions.record);
+            if (!needCreate && !needRead && !isEqualId) {
+                this._confirmRecordChangeHandler(() => {
+                    this._setRecord(newOptions.record);
+                });
+            } else {
+                this._setRecord(newOptions.record);
+            }
+        }
+        if (needRead) {
+            // Если текущий рекорд изменен, то покажем вопрос
+            this._confirmRecordChangeHandler(() => {
+                this.read(newOptions.key, newOptions.readMetaData);
+            }, () => {
+                this._tryDeleteNewRecord().then(() => {
+                    this.read(newOptions.key, newOptions.readMetaData);
+                });
             });
-         } else {
+        } else if (needCreate) {
+            // Если нет ключа и записи - то вызовем метод создать.
+            // Состояние isNewRecord обновим после того, как запись вычитается,
+            // иначе можем удалить рекорд, к которому новое значение опции isNewRecord не относится.
+            // Добавил защиту от циклических вызовов: У контрола стреляет _beforeUpdate, нет рекорда и ключа =>
+            // вызывается создание записи. Метод падает с ошибкой. У контрола стреляет _beforeUpdate,
+            // вызов метода создать повторяется бесконечно. Нельзя чтобы контрол ддосил БЛ.
+            this._confirmRecordChangeHandler(() => {
+                this._createMetaDataOnUpdate = createMetaData;
+                this.create(newOptions.createMetaData).then(() => {
+                    if (newOptions.hasOwnProperty('isNewRecord')) {
+                        this._isNewRecord = newOptions.isNewRecord;
+                    }
+                    this._createMetaDataOnUpdate = null;
+                });
+            });
+        } else if (!this._isConfirmShowed) {
             if (newOptions.hasOwnProperty('isNewRecord')) {
-               this._isNewRecord = newOptions.isNewRecord;
+                this._isNewRecord = newOptions.isNewRecord;
             }
-         }
-      },
-      _afterUpdate: function() {
-         if (this._wasCreated || this._wasRead || this._wasDestroyed) {
+        }
+    }
+
+    private _isEqualId(oldRecord: Model, newRecord: Model): boolean {
+        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
+        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
+        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
+            return false;
+        }
+        const oldId: string = this._getRecordId(oldRecord) as string;
+        const newId: string = this._getRecordId(newRecord) as string;
+        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
+    }
+
+    private _throwInitializingWayException(initializingWay: INITIALIZING_WAY, requiredOptionName: string): void {
+        throw new Error(`${this._moduleName}: Опция initializingWay установлена в значение ${initializingWay}.
+        Для корректной работы требуется передать опцию ${requiredOptionName}, либо изменить значение initializingWay`);
+    }
+
+    private _calcInitializingWay(options: IFormController): string {
+        if (options.initializingWay) {
+            return options.initializingWay;
+        }
+        const hasKey: boolean = options.key !== undefined && options.key !== null;
+        if (options.record) {
+            if (hasKey) {
+                return INITIALIZING_WAY.DELAYED_READ;
+            }
+            return INITIALIZING_WAY.LOCAL;
+        }
+        if (hasKey) {
+            return INITIALIZING_WAY.READ;
+        }
+        return INITIALIZING_WAY.CREATE;
+    }
+
+    private _confirmRecordChangeHandler(defaultAnswerCallback: Function, negativeAnswerCallback?: Function): void {
+        if (this._isConfirmShowed) { // Защита от множ. вызова окна
+            return;
+        }
+        if (this._needShowConfirmation()) {
+            this._isConfirmShowed = true;
+            this._showConfirmPopup('yesno').then((answer) => {
+                if (answer === true) {
+                    this.update().then(() => {
+                        this._isConfirmShowed = false;
+                        defaultAnswerCallback();
+                    }, () => {
+                        // Промис с необработанным исключением кидает ошибку в консоль. Ставлю заглушку
+                    });
+                } else {
+                    this._isConfirmShowed = false;
+                    if (negativeAnswerCallback) {
+                        negativeAnswerCallback();
+                    } else {
+                        defaultAnswerCallback();
+                    }
+                }
+            });
+        } else {
+            return defaultAnswerCallback();
+        }
+    }
+
+    protected _afterUpdate(): void {
+        if (this._wasCreated || this._wasRead || this._wasDestroyed) {
             // сбрасываем результат валидации, если только произошло создание, чтение или удаление рекорда
-            this._children.validation.setValidationResult(null);
+            this._validateController.setValidationResult(null);
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
-         }
-      },
-      _beforeUnmount: function() {
-         if (this._pendingPromise) {
+        }
+        this._validateController.resolveSubmit();
+    }
+
+    protected _beforeUnmount(): void {
+        if (this._pendingPromise) {
             this._pendingPromise.callback();
             this._pendingPromise = null;
-         }
-         // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
-         this._tryDeleteNewRecord();
-      },
-      _setRecord: function(record) {
-         if (!record || _private.checkRecordType(record)) {
+        }
+        this._validateController.destroy();
+        this._validateController = null;
+        // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
+        // Текущая реализация не подходит, завершать пендинги могут как сверху(при закрытии окна), так и
+        // снизу (редактирование закрывает пендинг).
+        // надо делать так, чтобы редактирование только на свой пендинг влияло
+        // https://online.sbis.ru/opendoc.html?guid=78c34d53-8705-4e25-bbb5-0033e81d6152
+        if (this._needDestroyRecord()) {
+            const removePromise = this._tryDeleteNewRecord();
+            this._notifyToOpener(CRUD_EVENTS.DELETE_STARTED, [this._record, this._getRecordId(), {removePromise}]);
+        }
+        this._crudController.hideIndicator();
+        this._crudController = null;
+        this._dialogOpener?.destroy();
+        this._dialogOpener = null;
+    }
+
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
+    }
+
+    private _checkRecordType(record: Model): boolean {
+        return cInstance.instanceOfModule(record, 'Types/entity:Record');
+    }
+
+    private _createRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
+        // если ни рекорда, ни ключа, создаем новый рекорд и используем его.
+        // до монитрования в DOM не можем сделать notify событий (которые генерируются в CrudController,
+        // а стреляются с помощью FormController'а, в данном случае), поэтому будем создавать рекорд напрямую.
+        return cfg.source.create(cfg.createMetaData).then((record: Model) => {
+            const initializingWay = this._calcInitializingWay(cfg);
+            // Если initializingWay === Create, то нужно установить запись на состояние, чтобы на момент маунта
+            // Верстка была готова. Если этого не сделать, то опция record обновится только после маунта, т.к.
+            // раньше событие о вычитке записи мы пронотифаить не можем.
+            if (initializingWay === INITIALIZING_WAY.CREATE) {
+                this._setRecord(record);
+            }
+            this._createdInMounting = {isError: false, result: record};
+
+            if (this._isMount) {
+                this._createRecordBeforeMountNotify();
+            }
+            return {
+                data: record
+            };
+        },  (e: Error) => {
+            this._createdInMounting = {isError: true, result: e};
+            return this._processError(e).then(this._getState);
+        });
+    }
+
+    private _readRecordBeforeMount(cfg: IFormController): Promise<ICrudResult> {
+        // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать.
+        // до монитрования в DOM не можем сделать notify событий (которые генерируются в CrudController,
+        // а стреляются с помощью FormController'а, в данном случае), поэтому будем создавать рекорд напрямую.
+        return readWithAdditionalFields(cfg.source, cfg.key, cfg.readMetaData).then((record: Model) => {
+            this._setRecord(record);
+            this._readInMounting = {isError: false, result: record};
+
+            if (this._isMount) {
+                this._readRecordBeforeMountNotify();
+            }
+
+            return {
+                data: record
+            };
+        }, (e: Error) => {
+            this._readInMounting = {isError: true, result: e};
+            return this._processError(e).then(this._getState);
+        }) as Promise<{data: Model}>;
+    }
+
+    private _readRecordBeforeMountNotify(): void {
+        if (!this._readInMounting.isError) {
+            this._notifyHandler(CRUD_EVENTS.READ_SUCCESSED, [this._readInMounting.result]);
+
+            // перерисуемся
+            this._readHandler(this._record);
+        } else {
+            this._notifyHandler(CRUD_EVENTS.READ_FAILED, [this._readInMounting.result]);
+        }
+        this._readInMounting = null;
+    }
+
+    private  _createRecordBeforeMountNotify(): void {
+        if (!this._createdInMounting.isError) {
+            this._notifyHandler(CRUD_EVENTS.CREATE_SUCCESSED, [this._createdInMounting.result]);
+
+            // зарегистрируем пендинг, перерисуемся
+            this._createHandler(this._record);
+        } else {
+            this._notifyHandler(CRUD_EVENTS.CREATE_FAILED, [this._createdInMounting.result]);
+        }
+        this._createdInMounting = null;
+    }
+
+    private _getState = (crudResult: ICrudResult): IReceivedState => {
+        delete crudResult.error;
+        return crudResult;
+    }
+
+    private _getData = (crudResult: ICrudResult): Promise<undefined | Model> => {
+        if (!crudResult) {
+            return Promise.resolve();
+        }
+        if (crudResult.data) {
+            return Promise.resolve(crudResult.data);
+        }
+        return Promise.reject(crudResult.error);
+    }
+
+    private _setRecord(record: Model): void {
+        if (!record || this._checkRecordType(record)) {
             this._record = record;
-         }
-      },
-      _getRecordId: function() {
-         if (!this._record.getId && !this._options.idProperty && !this._options.keyProperty) {
-             Logger.error('FormController: Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда', this);
-             return null;
-         }
-         var keyProperty = this._options.idProperty || this._options.keyProperty;
-         return keyProperty ? this._record.get(keyProperty) : this._record.getId();
-      },
+        }
+    }
 
-      _tryDeleteNewRecord: function() {
-         if (this._needDestroyRecord()) {
-            return this._source.destroy(this._getRecordId(), this._options.destroyMeta || this._options.destroyMetaData);
-         }
-         return (new Deferred()).callback();
-      },
-      _needDestroyRecord: function() {
-         // Destroy record when:
-         // 1. The record obtained by the method "create"
-         // 2. The "create" method returned the key
-         return this._record && this._isNewRecord && this._getRecordId();
-      },
+    private _getRecordId(record?: Model): number | string {
+        if (!record) {
+            record = this._record;
+        }
+        if (!record.getId && !this._options.keyProperty) {
+            Logger.error('FormController: Рекорд не является моделью и не задана опция keyProperty, указывающая на ключевое поле рекорда', this);
+            return null;
+        }
+        return this._options.keyProperty ? record.get(this._options.keyProperty) : record.getId();
+    }
 
-      _createChangeRecordPending(): void {
-         const self = this;
-         self._pendingPromise = new Deferred();
-         self._notify('registerPending', [self._pendingPromise, {
+    private _tryDeleteNewRecord(): Promise<undefined> {
+        if (this._needDestroyRecord()) {
+            return this._options.source.destroy(this._getRecordId(), this._options.destroyMetaData);
+        }
+        return Promise.resolve();
+    }
+
+    private _needDestroyRecord(): number | string {
+        // Destroy record when:
+        // 1. The record obtained by the method "create"
+        // 2. The "create" method returned the key
+        return this._record && this._isNewRecord && this._getRecordId();
+    }
+
+    private _createChangeRecordPending(): void {
+        const self = this;
+        self._pendingPromise = new Deferred();
+        self._notify('registerPending', [self._pendingPromise, {
             showLoadingIndicator: false,
             validate(): boolean {
-               return self._record && self._record.isChanged();
+                return self._needShowConfirmation();
             },
             onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-               self._showConfirmDialog(deferred, forceFinishValue);
+                self._startFormOperations('cancel').then(() => {
+                    self._showConfirmDialog(deferred, forceFinishValue);
+                });
             }
-         }], { bubbling: true });
-      },
+        }], {bubbling: true});
+    }
 
-      _confirmDialogResult(answer: boolean, def: Promise<boolean>): void {
-         if (answer === true) {
-            this.update().addCallbacks((res) => {
-               if (!res.validationErrors) {
-                  // если нет ошибок в валидации, просто завершаем пендинг с результатом
-                  if (!def.isReady()) {
-                     this._pendingPromise = null;
-                     def.callback(res);
-                  }
-               } else {
-                  // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
-                  // чтобы оно не сработало, когда пендинг завершится.
-                  // иначе попробуем закрыть панель, не получится, потом сохраним рекорд и панель закроется сама собой
-                  this._notify('cancelFinishingPending', [], {bubbling: true});
-               }
-               return res;
-            }, (err: Error) => {
-               this._notify('cancelFinishingPending', [], {bubbling: true});
-            });
-         } else if (answer === false) {
-            if (!def.isReady()) {
-               this._pendingPromise = null;
-               def.callback(false);
+    private _needShowConfirmation(): boolean {
+        if (this._options.confirmationShowingCallback) {
+            return this._options.confirmationShowingCallback();
+        } else {
+            return this._record && this._record.isChanged();
+        }
+    }
+
+    private _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
+        this._formOperationsStorage.push(operation);
+    }
+
+    private _startFormOperations(command: string): Promise<void> {
+        const resultPromises: Promise<void>[] = [];
+        this._formOperationsStorage = this._formOperationsStorage.filter((operation: IFormOperation) => {
+            if (operation.isDestroyed()) {
+                return false;
             }
-         } else {
+            const result = operation[command]();
+            if (result instanceof Promise || result instanceof Deferred) {
+                resultPromises.push(result);
+            }
+            return true;
+        });
+
+        return Promise.all(resultPromises);
+    }
+
+    private _confirmDialogResult(answer: boolean, def: Promise<any>): void {
+        if (answer === true) {
+            this.update().then((res) => {
+                if (!res.validationErrors) {
+                    // если нет ошибок в валидации, просто завершаем пендинг с результатом
+                    if (!def.isReady()) {
+                        this._pendingPromise = null;
+                        def.callback(res);
+                    }
+                } else {
+                    // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
+                    // чтобы оно не сработало, когда пендинг завершится.
+                    // иначе попробуем закрыть панель, не получится, потом сохраним рекорд и панель закроется сама собой
+                    this._notify('cancelFinishingPending', [], {bubbling: true});
+                }
+                return res;
+            },(err: Error) => {
+                this._notify('cancelFinishingPending', [], {bubbling: true});
+            });
+        } else if (answer === false) {
+            if (!def.isReady()) {
+                this._pendingPromise = null;
+                def.callback(false);
+            }
+        } else {
             // if user press 'cancel' button, then cancel finish pendings
             this._notify('cancelFinishingPending', [], {bubbling: true});
-         }
-      },
+        }
+    }
 
-      _showConfirmDialog(def: Promise<boolean>, forceFinishValue: boolean): void {
-         if (forceFinishValue !== undefined) {
+    private _showConfirmDialog(def: Promise<boolean>, forceFinishValue: boolean): void {
+        if (forceFinishValue !== undefined) {
             this._confirmDialogResult(forceFinishValue, def);
-         } else {
+        } else {
             this._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите \'Отмена\'')).then((answer) => {
-               this._confirmDialogResult(answer, def);
-               return answer;
+                this._confirmDialogResult(answer, def);
+                return answer;
             });
-         }
-      },
+        }
+    }
 
-      _showConfirmPopup(type: string, details: string): Promise<string> {
-         return this._children.popupOpener.open({
+    private _showConfirmPopup(type: string, details?: string): Promise<string | boolean> {
+        return Confirmation.openPopup({
             message: rk('Сохранить изменения?'),
             details,
             type
-         });
-      },
+        });
+    }
 
-      create: function(createMetaData) {
-         createMetaData = createMetaData || this._options.initValues || this._options.createMetaData;
-         return this._children.crud.create(createMetaData).addCallbacks(
+    create(createMetaData: unknown): Promise<undefined | Model> {
+        createMetaData = createMetaData || this._options.createMetaData;
+        return this._crudController.create(createMetaData).then(
             this._createHandler.bind(this),
             this._crudErrback.bind(this)
-         );
-      },
-      _createHandler: function(record) {
-         this._updateIsNewRecord(true);
-         this._wasCreated = true;
-         this._forceUpdate();
-         return record;
-      },
-      read: function(key, readMetaData) {
-         readMetaData = readMetaData || this._options.readMetaData;
-         return this._children.crud.read(key, readMetaData).addCallbacks(
+        );
+    }
+
+    private _createHandler(record: Model): Model {
+        this._updateIsNewRecord(true);
+        this._setRecord(record);
+        this._wasCreated = true;
+        this._forceUpdate();
+        return record;
+    }
+
+    read(key: string, readMetaData: unknown): Promise<Model> {
+        readMetaData = readMetaData || this._options.readMetaData;
+        return this._crudController.read(key, readMetaData).then(
             this._readHandler.bind(this),
             this._crudErrback.bind(this)
-         );
-      },
-      _readHandler: function(record) {
-         this._wasRead = true;
-         this._updateIsNewRecord(false);
-         this._forceUpdate();
-         this._hideError();
-         return record;
-      },
+        );
+    }
 
-      update: function() {
-         var updateResult = new Deferred(),
-            self = this;
+    registerPendingNotifier(params: [any]): void {
+        this._notify('registerPending', params, {bubbling: true});
+    }
 
-         function updateCallback(result) {
+    indicatorNotifier(eventType: string, params: []): string {
+        return this._notify(eventType, params, {bubbling: true});
+    }
+
+    private _readHandler(record: Model): Model {
+        this._wasRead = true;
+        this._setRecord(record);
+        this._updateIsNewRecord(false);
+        this._forceUpdate();
+        this._hideError();
+        return record;
+    }
+
+    update(config?: IUpdateConfig): Promise<undefined | Model> {
+        const updateResult = new Deferred();
+        const updateCallback = (result) => {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-               self._notifyToOpener('updateStarted', [self._record, self._getRecordId()]);
-               var res = self._update().addCallback(getData);
-               updateResult.dependOn(res);
+                this._notifyToOpener(CRUD_EVENTS.UPDATE_STARTED, [this._record, this._getRecordId()]);
+                this._startFormOperations('save').then(() => {
+                    const res = this._update(config).then(this._getData);
+                    updateResult.dependOn(res);
+                });
             } else {
-               updateResult.callback(true);
-               self._updateIsNewRecord(false);
+                this._updateIsNewRecord(false);
+                updateResult.callback(true);
             }
-         }
+        }
 
-         // maybe anybody want to do custom update. check it.
-         var result = this._notify('requestCustomUpdate', [], { bubbling: true });
+        // maybe anybody want to do custom update. check it.
+        const result = this._notify('requestCustomUpdate', [this._record], {bubbling: true});
 
          // pending waiting while update process finished
-         var def = new Deferred();
-         self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
-         def.dependOn(updateResult);
+         this._updatePromise = new Deferred();
+         this._notify('registerPending', [this._updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+         this._updatePromise.dependOn(updateResult);
 
-         if (result && result.then) {
-            result.then(function(defResult) {
-               updateCallback(defResult);
-               return defResult;
-            }, function(err) {
-               updateResult.errback(err);
-               return err;
+        if (result && result.then) {
+            result.then((defResult) => {
+                updateCallback(defResult);
+                return defResult;
+            }, (err) => {
+                updateResult.errback(err);
+                return err;
             });
-         } else {
+        } else {
             updateCallback(result);
-         }
-         return updateResult;
-      },
-      _update: function() {
-         var self = this,
-            record = this._record,
-            updateDef = new Deferred();
+        }
+        return updateResult;
+    }
 
-         // запускаем валидацию
-         var validationDef = this._children.validation.submit();
-         validationDef.addCallback(function(results) {
+    private _update(config?: IUpdateConfig): Promise<IDataValid> {
+        const record = this._record;
+        const updateDef = new Deferred();
+
+        // запускаем валидацию
+        const validationDef = this.validate();
+        validationDef.then((results) => {
             if (!results.hasErrors) {
-               // при успешной валидации пытаемся сохранить рекорд
-               self._notify('validationSuccessed', [], { bubbling: true });
-               var res = self._children.crud.update(record, self._isNewRecord);
+                // при успешной валидации пытаемся сохранить рекорд
+                this._notify('validationSuccessed', [], {bubbling: true});
+                let res = this._crudController.update(record, this._isNewRecord, config);
+                // fake deferred used for code refactoring
+                if (!(res && res.then)) {
+                    res = new Deferred();
+                    res.callback();
+                }
+                res.then((arg) => {
+                    this._updateIsNewRecord(false);
 
-               // fake deferred used for code refactoring
-               if (!(res && res.addCallback)) {
-                  res = new Deferred();
-                  res.callback();
-               }
-               res.addCallback(function(arg) {
-                  self._updateIsNewRecord(false);
-
-                  updateDef.callback({ data: true });
-                  return arg;
-               });
-               res.addErrback((error: Error) => {
-                  updateDef.errback(error);
-                  return self._processError(error, dataSource.error.Mode.dialog);
-               });
+                    updateDef.callback({data: true});
+                    return arg;
+                }).catch((error: Error) => {
+                    updateDef.errback(error);
+                    return this._processError(error, dataSourceError.Mode.dialog);
+                });
             } else {
-               // если были ошибки валидации, уведомим о них
-               var validationErrors = self._children.validation.isValid();
-               self._notify('validationFailed', [validationErrors], { bubbling: true });
-               updateDef.callback({
-                  data: {
-                     validationErrors: validationErrors
-                  }
-               });
+                // если были ошибки валидации, уведомим о них
+                const validationErrors = this._validateController.getValidationResult();
+                this._notify('validationFailed', [validationErrors], {bubbling: true});
+                updateDef.callback({
+                    data: {
+                        validationErrors
+                    }
+                });
             }
-         });
-         validationDef.addErrback(function(e) {
+        }, (e) => {
             updateDef.errback(e);
             return e;
-         });
-         return updateDef;
-      },
-      delete: function(destroyMetaData) {
-         destroyMetaData = destroyMetaData || this._options.destroyMeta || this._options.destroyMetaData;
-         var self = this;
-         var resultDef = this._children.crud.delete(this._record, destroyMetaData);
+        });
+        return updateDef;
+    }
 
-         resultDef.addCallbacks(function(record) {
-            self._setRecord(null);
-            self._wasDestroyed = true;
-            self._updateIsNewRecord(false);
-            self._forceUpdate();
+    delete(destroyMetaData: unknown): Promise<Model | undefined> {
+        const resultProm = this._crudController.delete(this._record, destroyMetaData || this._options.destroyMetaData);
+
+        return resultProm.then((record) => {
+            this._setRecord(null);
+            this._wasDestroyed = true;
+            this._updateIsNewRecord(false);
+            this._forceUpdate();
             return record;
-         }, function(error) {
-            return self._crudErrback(error, dataSource.error.Mode.dialog);
-         });
-         return resultDef;
-      },
+        }, (error) => {
+            return this._crudErrback(error, dataSourceError.Mode.dialog);
+        });
+    }
 
-      validate: function() {
-         return this._children.validation.submit();
-      },
+    validate(): Promise<IValidateResult | Error> {
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
+    }
 
-      /**
-       *
-       * @param {Error} error
-       * @param {Controls/_dataSource/_error/Mode} [mode]
-       * @return {Promise<*>}
-       * @private
-       */
-      _crudErrback: function(error, mode) {
-         return this._processError(error, mode).then(getData);
-      },
+    /**
+     *
+     * @param {Error} error
+     * @param {Controls/_dataSource/_error/Mode} [mode]
+     * @return {Promise<*>}
+     * @private
+     */
+    private _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
+        return this._processError(error, mode).then(this._getData);
+    }
 
-      _updateIsNewRecord: function(value) {
-         if (this._isNewRecord !== value) {
+    private _updateIsNewRecord(value: boolean): void {
+        if (this._isNewRecord !== value) {
             this._isNewRecord = value;
             this._notify('isNewRecordChanged', [value]);
-         }
-      },
+        }
+    }
 
-      /**
-       * @param {Error} error
-       * @param {Controls/_dataSource/_error/Mode} [mode]
-       * @return {Promise.<CrudResult>}
-       * @private
-       */
-      _processError: function(error, mode) {
-         var self = this;
-         return self.__errorController.process({
-            error: error,
-            mode: mode || dataSource.error.Mode.include
-         }).then(function(errorConfig) {
-            self._showError(errorConfig);
+    /**
+     * @param {Error} error
+     * @param {Controls/_dataSource/_error/Mode} [mode]
+     * @return {Promise.<CrudResult>}
+     * @private
+     */
+    private _processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
+        return this.__errorController.process({
+            error,
+            theme: this._options.theme,
+            mode: mode || dataSourceError.Mode.include
+        }).then((errorConfig: dataSourceError.ViewConfig) => {
+            if (errorConfig) {
+                this._showError(errorConfig);
+            }
+
             return {
-               error: error,
-               errorConfig: errorConfig
+                error,
+                errorConfig
             };
-         });
-      },
+        });
+    }
 
-      /**
-       * @private
-       */
-      _showError: function(errorConfig) {
-         this.__error = errorConfig;
-      },
+    /**
+     * @private
+     */
+    private _showError(errorConfig: dataSourceError.ViewConfig): void {
+        if (errorConfig.mode !== Mode.dialog) {
+            this.__error = errorConfig;
+            return;
+        }
 
-      _hideError: function() {
-         if (this.__error) {
+        if (!this._dialogOpener) {
+            this._dialogOpener = new DialogOpener();
+        }
+
+        this._dialogOpener.open(errorConfig, {
+            opener: this,
+            modal: false,
+            eventHandlers: {
+                onClose: this._onCloseErrorDialog.bind(this)
+            }
+        });
+    }
+
+    private _hideError(): void {
+        if (this.__error) {
             this.__error = null;
-         }
-      },
+        }
+        this._dialogOpener?.close();
+    }
 
-      _onCloseErrorDialog: function() {
-         if (!this._record) {
-            this._notify('close', [], { bubbling: true });
-         }
-      },
+    private _onCloseErrorDialog(): void {
+        this._hideError();
+        if (!this._record) {
+            this._notify('close', [], {bubbling: true});
+        }
+    }
 
-      _crudHandler: function(event) {
-         var eventName = event.type;
-         var args = Array.prototype.slice.call(arguments, 1);
-         event.stopPropagation(); // FC the notification event by itself
-         this._notifyHandler(eventName, args);
-      },
+    private _notifyHandler(eventName: string, args): void {
+        this._notifyToOpener(eventName, args);
+        this._notify(eventName, args, {bubbling: true});
+    }
 
-      _notifyHandler: function(eventName, args) {
-         this._notifyToOpener(eventName, args);
-         this._notify(eventName, args, { bubbling: true });
-      },
+    private _notifyToOpener(eventName: string, args: [Model, string | number, object?]): void {
+        const handlers = {
+            [CRUD_EVENTS.CREATE_SUCCESSED]: '_getCreateSuccessedData',
+            [CRUD_EVENTS.UPDATE_STARTED]: '_getUpdateStartedData',
+            [CRUD_EVENTS.UPDATE_SUCCESSED]: '_getUpdateSuccessedData',
+            [CRUD_EVENTS.READ_SUCCESSED]: '_getReadSuccessedData',
+            [CRUD_EVENTS.DELETE_STARTED]: '_getDeleteStartedData',
+            [CRUD_EVENTS.DELETE_SUCCESSED]: '_getDeleteSuccessedData',
+            [CRUD_EVENTS.UPDATE_FAILED]: '_getUpdateFailedData'
+        };
+        const resultDataHandlerName = handlers[eventName.toLowerCase()];
+        if (this[resultDataHandlerName]) {
+            const resultData = this[resultDataHandlerName].apply(this, args);
+            this._notify('sendResult', [resultData], {bubbling: true});
+        }
+    }
 
-      _notifyToOpener: function(eventName, args) {
-         var handlers = {
-            'updatestarted': '_getUpdateStartedData',
-            'updatesuccessed': '_getUpdateSuccessedData',
-            'createsuccessed': '_getCreateSuccessedData',
-            'readsuccessed': '_getReadSuccessedData',
-            'deletesuccessed': '_getDeleteSuccessedData',
-            'updatefailed': '_getUpdateFailedData'
-         };
-         var resultDataHandlerName = handlers[eventName.toLowerCase()];
-         if (this[resultDataHandlerName]) {
-            var resultData = this[resultDataHandlerName].apply(this, args);
-            this._notify('sendResult', [resultData], { bubbling: true });
-         }
-      },
+    private _getUpdateStartedData(record: Model, key: string): IResultData {
+        const config = this._getUpdateSuccessedData(record, key);
+        config.formControllerEvent = CRUD_EVENTS.UPDATE_STARTED;
+        return config;
+    }
 
-       _getUpdateStartedData(record, key) {
-          let config = this._getUpdateSuccessedData(record, key);
-          config.formControllerEvent = 'updateStarted';
-          return config;
-       },
+    private _getUpdateSuccessedData(record: Model, key: string, config?: object): IResultData {
+        const configData = config ? config.additionalData : {};
+        const additionalData: IAdditionalData = {
+            key,
+            isNewRecord: this._isNewRecord,
+            ...configData
+        };
+        return this._getResultData('update', record, additionalData);
+    }
 
-      _getUpdateSuccessedData: function(record, key) {
-         var additionalData = {
-            key: key,
+    private _getDeleteStartedData(record: Model, key: string, config: object): IResultData {
+        return this._getResultData(CRUD_EVENTS.DELETE_STARTED, record, config);
+    }
+
+    private _getDeleteSuccessedData(record: Model): IResultData {
+        return this._getResultData('delete', record);
+    }
+
+    private _getCreateSuccessedData(record: Model): IResultData {
+        return this._getResultData('create', record);
+    }
+
+    private _getReadSuccessedData(record: Model): IResultData {
+        return this._getResultData('read', record);
+    }
+
+    private _getUpdateFailedData(error: Error, record: Model): IResultData {
+        const additionalData: IAdditionalData = {
+            record,
+            error,
             isNewRecord: this._isNewRecord
-         };
-         return this._getResultData('update', record, additionalData);
-      },
+        };
+        return this._getResultData(CRUD_EVENTS.UPDATE_FAILED, record, additionalData);
+    }
 
-      _getDeleteSuccessedData: function(record) {
-         return this._getResultData('delete', record);
-      },
-
-      _getCreateSuccessedData: function(record) {
-         return this._getResultData('create', record);
-      },
-
-      _getReadSuccessedData: function(record) {
-         return this._getResultData('read', record);
-      },
-
-      _getUpdateFailedData: function(error, record) {
-         var additionalData = {
-            record: record,
-            error: error,
-            isNewRecord: this._isNewRecord
-         };
-         return this._getResultData('updateFailed', record, additionalData);
-      },
-      _getResultData: function(eventName, record, additionalData) {
-         return {
+    private _getResultData(eventName: string, record: Model, additionalData?: IAdditionalData): IResultData {
+        return {
             formControllerEvent: eventName,
-            record: record,
+            record,
             additionalData: additionalData || {}
-         };
-      }
-   });
+        };
+    }
+}
 
-   FormController._private = _private;
-   export = FormController;
+/**
+ * Объект с состоянием, полученным при серверном рендеринге.
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
 
+/*
+ * Object with state from server side rendering
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ */
+
+/**
+ * @typedef {Object}
+ * @name CrudResult
+ * @property {*} [data]
+ * @property {Controls/dataSource:error.ViewConfig} [errorConfig]
+ * @property {Controls/dataSource:error.ViewConfig} [error]
+ */
+
+/**
+ * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * который не сможет нормально разобрать/собрать экземпляр случайной ошибки.
+ * @param {CrudResult} crudResult
+ * @return {ReceivedState}
+ */
+
+
+
+/**
+ * Получение результата из обертки <CrudResult>
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+
+/*
+ * getting result from <CrudResult> wrapper
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+export default FormController;

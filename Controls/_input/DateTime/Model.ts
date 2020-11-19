@@ -1,28 +1,8 @@
 import cExtend = require('Core/core-simpleExtend');
 import entity = require('Types/entity');
 import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
-import dateUtils = require('Controls/Utils/Date');
-   
+import {Base as dateUtils} from 'Controls/dateUtils';
 
-   /**
-    * Модель для контрола 'Controls/input:Date'.
-    *
-    * @class Controls/_input/DateTime/Model
-    *
-    * @author Красильников А.С.
-    * @public
-    * @noShow
-    */
-
-   /*
-    * Model for 'Controls/input:Date' control.
-    *
-    * @class Controls/_input/DateTime/Model
-    *
-    * @author Красильников А.С.
-    * @public
-    * @noShow
-    */
 
    var _private = {
       updateLastValue: function(self) {
@@ -44,7 +24,23 @@ import dateUtils = require('Controls/Utils/Date');
          }
       }
    };
+   /**
+    * Модель для контрола {@link Controls/input:Date}.
+    *
+    * @class Controls/_input/DateTime/Model
+    *
+    * @author Красильников А.С.
+    * @public
+    */
 
+   /*
+    * Model for 'Controls/input:Date' control.
+    *
+    * @class Controls/_input/DateTime/Model
+    *
+    * @author Красильников А.С.
+    * @public
+    */
    var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
@@ -75,7 +71,8 @@ import dateUtils = require('Controls/Utils/Date');
          this._stringValueConverter.update({
             replacer: this._replacer,
             mask: options.mask,
-            dateConstructor: options.dateConstructor
+            dateConstructor: options.dateConstructor,
+            yearSeparatesCenturies: options._yearSeparatesCenturies
          });
          if (this._mask !== options.mask || !dateUtils.isDatesEqual(this._value, options.value)) {
             this._mask = options.mask;

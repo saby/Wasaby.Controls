@@ -8,7 +8,6 @@ define('Controls-demo/List/Grid/MultyHeader', [
   'wml!Controls-demo/List/Grid/DemoCostPrice',
   'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
   'wml!Controls-demo/List/Grid/DemoName',
-  'css!Controls-demo/List/Grid/Grid',
   'Controls/scroll',
   'Controls/grid',
   'wml!Controls-demo/List/Grid/Results',
@@ -89,71 +88,6 @@ define('Controls-demo/List/Grid/MultyHeader', [
            title: 'Цена',
            align: 'right'
         }
-     ],
-     fullHeader2 = [
-        {
-           title: 'Наименование',
-           startColumn:   1,
-           endColumn:     2,
-           startRow:      1,
-           endRow:        3,
-
-        },
-        {
-           title: 'Цена',
-           startColumn:   2,
-           endColumn:     3,
-           startRow:      2,
-           endRow:        3,
-            align: 'right'
-        },
-        {
-           title: 'Остаток',
-           sortingProperty: 'balance',
-           startColumn:   3,
-           endColumn:     4,
-           startRow:      2,
-           endRow:        3,
-            align: 'right'
-        },
-        {
-           title: 'Резерв',
-           startColumn:   4,
-           endColumn:     5,
-           startRow:      2,
-           endRow:        3,
-            align: 'right'
-        },
-        {
-           title: 'Себест.',
-           startColumn:   5,
-           endColumn:     6,
-           startRow:      2,
-           endRow:        3,
-            align: 'right'
-        },
-        {
-           title: 'Магазин',
-           startColumn:   2,
-           endColumn:     5,
-           startRow:      1,
-           endRow:        2,
-        },
-        {
-           title: 'Склад',
-           startColumn:   5,
-           endColumn:     7,
-           startRow:      1,
-           endRow:        2,
-        },
-         {
-             title: 'Сумма остатка',
-             startColumn:   6,
-             endColumn:     7,
-             startRow:      2,
-             endRow:        3,
-             align: 'right'
-         }
      ],
       fullHeader = [
           {
@@ -287,6 +221,8 @@ define('Controls-demo/List/Grid/MultyHeader', [
            this.gridColumns2 = field[0] === 'price' ? partialColumns : partialColumns2;
         }
      });
+
+  ModuleClass._styles = ['Controls-demo/List/Grid/Grid'];
 
   return ModuleClass;
 });

@@ -1,8 +1,9 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
         <Controls.scroll:Container attr:class="controlsDemo__height400">
-            <Controls.scroll:HotKeysContainer>
+            <Controls.list:HotKeysContainer>
                 <Controls.list:View
                         keyProperty="id"
+                        attr:class="controlsDemo_line-height18"
                         moveMarkerOnScrollPaging="{{true}}"
                         source="{{_viewSource}}">
                     <ws:navigation source="page" view="infinity">
@@ -10,7 +11,7 @@
                         <ws:viewConfig pagingMode="direct"/>
                     </ws:navigation>
                 </Controls.list:View>
-            </Controls.scroll:HotKeysContainer>
+            </Controls.list:HotKeysContainer>
         </Controls.scroll:Container>
 
 </div>

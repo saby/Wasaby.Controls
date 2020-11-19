@@ -1,37 +1,37 @@
-import {Control, TemplateFunction} from "UI/Base"
-import * as Template from "wml!Controls-demo/list_new/LoadingIndicator/Center/Center"
-import {Memory} from "Types/source"
-import {getFewCategories as getData} from "../../DemoHelpers/DataCatalog"
-import 'css!Controls-demo/Controls-demo'
+import {Control, TemplateFunction} from 'UI/Base';
+import * as Template from 'wml!Controls-demo/list_new/LoadingIndicator/Center/Center';
+import {Memory} from 'Types/source';
+import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
+
+const TIMEOUT3500 = 3500;
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     private _viewSource: Memory;
 
-    protected _beforeMount() {
+    protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getData()
         });
     }
 
-    private _reloadList(): void {
-        this._slowDownSource(this._viewSource, 3000);
+    protected _reloadList(): void {
+        this._slowDownSource(this._viewSource, TIMEOUT3500);
         this._children.list.reload();
     }
 
-    private _slowDownSource(source: Memory, timeMs: number) {
+    private _slowDownSource(source: Memory, timeMs: number): void {
         const originalQuery = source.query;
-        const self = this;
 
-        source.query = function() {
-            const args = arguments;
-            return new Promise(function(success) {
-                setTimeout(function() {
+        source.query = (...args) => {
+            return new Promise((success) => {
+                setTimeout(() => {
                     success(originalQuery.apply(source, args));
                 }, timeMs);
             });
         };
     }
 
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

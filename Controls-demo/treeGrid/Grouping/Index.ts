@@ -2,19 +2,21 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGrid/Grouping/Grouping';
 import {HierarchicalMemory} from 'Types/source';
 import {createGroupingSource} from 'Controls-demo/treeGrid/Grouping/Source';
-import 'css!Controls-demo/Controls-demo';
+import { IColumn } from 'Controls/grid';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    private _viewSource: HierarchicalMemory;
-    private _columns: object[];
-    private _navigation: object;
+    protected _viewSource: HierarchicalMemory;
+    protected _columns: IColumn[];
+    protected _navigation: object;
 
-    protected _beforeMount(): any {
+    protected _beforeMount(): void {
         this._columns = [{
-            displayProperty: 'title'
+            displayProperty: 'title',
+            width: ''
         }, {
-            displayProperty: 'count'
+            displayProperty: 'count',
+            width: ''
         }];
         this._navigation = {
             source: 'position',
@@ -23,7 +25,7 @@ export default class extends Control {
                 limit: 20,
                 field: 'key',
                 position: 'key_0',
-                direction: 'after'
+                direction: 'forward'
             },
             viewConfig: {
                 pagingMode: 'direct'
@@ -33,4 +35,6 @@ export default class extends Control {
             count: 1000
         });
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -15,7 +15,6 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
    'wml!Controls-demo/List/EditInPlace/FifthScenario/Column',
    'wml!Controls-demo/List/EditInPlace/FifthScenario/SecondColumn',
    'wml!Controls-demo/List/EditInPlace/FifthScenario/Results',
-   'css!Controls-demo/List/EditInPlace/Scenarios'
 ], function(
    Control,
    template,
@@ -444,12 +443,12 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._gridColumns5 = [
             {
                displayProperty: 'date',
-               width: '70px',
+               width: '80px',
                resultTemplate: 'wml!Controls-demo/List/EditInPlace/FifthScenario/Results'
             },
             {
                displayProperty: 'type',
-               width: '130px',
+               width: '150px',
                template: 'wml!Controls-demo/List/EditInPlace/FifthScenario/SecondColumn',
                resultTemplate: 'wml!Controls-demo/List/EditInPlace/FifthScenario/Results'
             },
@@ -504,6 +503,8 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._showAddButton = state;
       }
    });
+
+   EIPScenarios._styles = ['Controls-demo/List/EditInPlace/Scenarios'];
 
    return EIPScenarios;
 });

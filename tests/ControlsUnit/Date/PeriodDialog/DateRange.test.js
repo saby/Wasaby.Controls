@@ -1,6 +1,7 @@
 define([
    'Core/core-merge',
    'Core/core-instance',
+   'Types/entity',
    'Controls/_datePopup/DateRange',
    'Controls/_datePopup/Utils',
    'Controls/Utils/Date',
@@ -8,6 +9,7 @@ define([
 ], function(
    coreMerge,
    cInstance,
+   entity,
    DateRange,
    datePopupUtils,
    dateUtils,
@@ -69,7 +71,7 @@ define([
             sandbox.stub(component, '_notify');
             component._monthCaptionClick(null, new Date(2019, 0), 3);
             sinon.assert.calledWith(
-               component._notify, 'fixedPeriodClick', [new Date(2019, 3, 1), new Date(2019, 3, 30)]);
+               component._notify, 'fixedPeriodClick', [new entity.applied.Date(2019, 3, 1), new entity.applied.Date(2019, 3, 30)]);
          });
          it('should not notify event if month selection disabled.', function() {
             const component = calendarTestUtils.createComponent(
@@ -152,7 +154,7 @@ define([
             const component = calendarTestUtils.createComponent(DateRange, { year: year });
             assert.strictEqual(
                component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-sticky-support'
+               'controls-PeriodDialog-DateRangeItem__separator-sticky-support'
             );
          });
          it('sticky not supported.', function() {
@@ -160,7 +162,7 @@ define([
             component._isStickySupport = false;
             assert.strictEqual(
                component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator controls-PeriodDialog-DateRangeItem__separator-not-sticky-support'
+               'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support'
             );
          });
       });

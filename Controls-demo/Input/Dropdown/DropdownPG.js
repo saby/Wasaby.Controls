@@ -11,8 +11,6 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
       'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
       'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
       'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownCustom2',
-      'css!Controls-demo/Input/Dropdown/Dropdown',
-      'css!Controls-demo/Wrapper/Wrapper'
    ],
 
    function(Control, template, config, sourceLib) {
@@ -73,14 +71,14 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
                },
                contentTemplate: {
                   items: [
-                     { id: '1', title: 'Default template', template: '' },
+                     { id: '1', title: 'Default template', template: undefined },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownWithIconLeft' }
                   ],
                   value: 'Default template'
                },
                itemTemplate: {
                   items: [
-                     { id: '1', title: 'Default template', template: '' },
+                     { id: '1', title: 'Default template', template: undefined },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdownCustom2' }
                   ],
                   value: 'Default template'
@@ -166,5 +164,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
+      DropdownPG._styles = ['Controls-demo/Input/Dropdown/Dropdown', 'Controls-demo/Wrapper/Wrapper'];
+
       return DropdownPG;
    });

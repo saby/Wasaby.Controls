@@ -1,0 +1,18 @@
+<ws:if data="{{ !!contentTemplate }}">
+    <ws:partial template="{{ contentTemplate }}" colData="{{ colData }}"/>
+</ws:if>
+<ws:else>
+    <ws:if data="{{ colData.getSortingProperty() }}">
+        <Controls._grid.SortingButton
+                align="{{ colData.getAlign() }}"
+                textOverflow="{{ colData.getTextOverflow() }}"
+                caption="{{ colData.getCaption() }}"
+                attr:class="controls-Grid__sorting-button"
+                property="{{ colData.getSortingProperty() }}"/>
+    </ws:if>
+    <ws:else>
+        <div title="{{ colData.getCaption() }}" class="controls-Grid__header-cell__content__innerWrapper controls-Grid__header-cell__content-{{ colData.getTextOverflow() }}">
+            {{ colData.getCaption() }}
+        </div>
+    </ws:else>
+</ws:else>

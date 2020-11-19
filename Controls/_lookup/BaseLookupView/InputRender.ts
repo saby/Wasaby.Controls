@@ -1,10 +1,19 @@
 import input = require('Controls/input');
 import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/InputRender');
 
-
    var InputRenderLookup = input.Text.extend({
       _template: template,
       _defaultInput: null,
+
+      _beforeMount: function(options) {
+         InputRenderLookup.superclass._beforeMount.apply(this, arguments);
+         input.generateStates(this, options);
+      },
+
+      _beforeUpdate: function(options) {
+         InputRenderLookup.superclass._beforeUpdate.apply(this, arguments);
+         input.generateStates(this, options);
+      },
 
       _beforeUnmount: function() {
          this._defaultInput = null;
@@ -24,13 +33,29 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
          }
       },
 
-      _getReadOnlyField: function() {
-         return this._getField();
+      _getReadOnlyField(): HTMLElement {
+         // В поле связи с единичным выбором не строится input
+         // Подробнее в комментарии в методе _getField
+         if (this._options.isInputVisible) {
+            return InputRenderLookup.superclass._getReadOnlyField.call(this);
+         } else {
+            return this._getDefaultInput();
+         }
       },
 
       _getDefaultInput: function() {
          if (!this._defaultInput) {
-            this._defaultInput = document.createElement('input');
+            const nativeInput: HTMLInputElement = document.createElement('input');
+            this._defaultInput = {
+               setValue: () => undefined,
+               setCaretPosition: () => undefined,
+               setSelectionRange: () => undefined,
+               getFieldData: (name: string) => {
+                  return nativeInput[name];
+               },
+               hasHorizontalScroll: () => false,
+               paste: () => undefined
+            };
          }
 
          return this._defaultInput;
@@ -40,6 +65,8 @@ import template = require('wml!Controls/_lookup/BaseLookupView/InputRender/Input
          this._notify('keyDownInput', [event]);
       }
    });
+
+   InputRenderLookup._theme = ['Controls/lookup'];
 
    export = InputRenderLookup;
 

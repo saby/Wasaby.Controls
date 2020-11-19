@@ -57,6 +57,7 @@ define(
                   enum: enumInstance
                };
                containerInstance = new controlsSourceLib.EnumAdapter(cfg);
+               containerInstance._beforeMount(cfg);
 
                containerInstance._enumSubscribe(enumInstance);
                enumInstance.set(2);
@@ -88,6 +89,24 @@ define(
                containerInstance._beforeUpdate(cfg);
                assert.equal(newEnumInstance, containerInstance._enum, '_beforeUpdate: wrong _enum property');
                assert.equal('Red', containerInstance._selectedKey, '_beforeUpdate: wrong _selectedKey property');
+            });
+
+            it('_beforeUnmount', function() {
+               var cfg = {
+                  enum: enumInstance
+               };
+               containerInstance = new controlsSourceLib.EnumAdapter(cfg);
+               containerInstance.saveOptions(cfg);
+               containerInstance._beforeMount(cfg);
+
+               assert.equal(enumInstance, containerInstance._enum, '_beforeMount: wrong _enum property');
+               assert.equal('Second', containerInstance._selectedKey, '_beforeMount: wrong _selectedKey property');
+
+               containerInstance._beforeUnmount();
+               enumInstance.setByValue('Third');
+
+               assert.isNull(containerInstance._enum, '_beforeUnmount: wrong _enum property');
+               assert.equal('Second', containerInstance._selectedKey, '_beforeUnmount: wrong _selectedKey property');
             });
          });
       });

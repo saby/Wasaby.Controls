@@ -1,8 +1,8 @@
 /// <amd-module name="Controls/_dataSource/error" />
 /**
- * Набор модулей необходимых для обработки и отображения ошибок
- * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/handling-errors/}
- * @library Controls/_dataSource/error
+ * Компоненты для обработки и отображения ошибок.
+ * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/application-architecture/error-handling/}
+ * @library Controls/dataSource/error
  * @includes Controller Controls/_dataSource/_error/Controller
  * @includes Container Controls/_dataSource/_error/Container
  * @includes DataLoader Controls/_dataSource/_error/DataLoader
@@ -10,19 +10,23 @@
  * @includes Handler Controls/_dataSource/_error/Handler
  * @includes ViewConfig Controls/_dataSource/_error/ViewConfig
  * @includes IContainer Controls/_dataSource/_error/IContainer
- * @includes IContainerConfig Controls/_dataSource/_error/IContainer.IContainerConfig
- * @includes IContainerConstructor Controls/_dataSource/_error/IContainer.IContainerConstructor
+ * @includes IContainerConfig Controls/_dataSource/_error/IContainerConfig
+ * @includes IContainerConstructor Controls/_dataSource/_error/IContainerConstructor
+ * @includes process Controls/_dataSource/_error/process
  * @public
- * @author Санников К.А.
+ * @author Северьянов А.А.
  */
 
 export {
+    Config,
+    Controller,
     Handler,
-    ViewConfig,
-    HandlerConfig
-} from './_error/Handler';
-export { default as Controller, Config } from './_error/Controller';
-export { default as Mode } from './_error/Mode';
+    HandlerConfig,
+    Mode,
+    Popup,
+    process,
+    ViewConfig
+} from 'Controls/error';
 export { default as Container } from './_error/Container';
 export { default as DataLoader } from './_error/DataLoader';
 export {

@@ -2,6 +2,13 @@
 @import "_monthsRange";
 @import "_dateRange";
 
+@shift-top_PeriodDialog-picker: -((@header_height_datePicker - @inline_height_default)/2 + @border-thickness_datePicker);
+@shift-left_PeriodDialog-picker: -(@header_padding-left_datePicker + @border-thickness_datePicker + @icon-size_s + @switcher_offset_datePicker);
+@shift-left_PeriodDialog-picker-withoutModeBtn: -(@header_padding-left_datePicker + @border-thickness_datePicker);
+@shift-top_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker;
+@shift-top_fontSize-l_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker + 1;
+@shift-top_fontSize-s_PeriodDialog-selector: ceil((@height_dateRangeSelector - @header_height_datePicker)/2) - @border-thickness_datePicker - 1;
+
 // TODO: выпилить после того как приведут стили List в порядок
 .controls-PeriodDialog {
    .controls-ListView__itemContent {
@@ -24,58 +31,97 @@
    display: flex;
    min-height: 1px;
    flex-direction: column;
-   background-color: @background-color_PeriodDialog;
-   width: @width_PeriodDialog;
-   border: @border-width_PeriodDialog solid @border-color_PeriodDialog;
-   box-shadow: @size_shadow_default @color_shadow_popup;
 }
 
-.controls-PeriodDialog__body {
-   max-height: @height_PeriodDialog - @height_PeriodDialog-header;
+.controls-PeriodDialog_theme-@{themeName} {
+   background-color: @background-color_datePicker;
+   border: @border-thickness_datePicker solid @border-color_datePicker;
+   box-shadow: @box-shadow-size_datePicker @box-shadow-color_datePicker;
 }
 
-.controls-DatePopup__selector-marginTop {
+.controls-PeriodDialog__body_theme-@{themeName} {
+   max-height: @yearnav_height_datePicker + @yearlist_month_height_datePicker * 4 -
+         @yearlist_item_border-thickness_datePicker * 3;
+}
+
+.controls-DatePopup__selector-marginTop_fontSize-m_theme-@{themeName} {
    margin-top: @shift-top_PeriodDialog-selector;
 }
 
-.controls-DatePopup__selector-marginLeft {
+.controls-DatePopup__selector-marginTop_fontSize-l_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-l_PeriodDialog-selector;
+}
+
+.controls-DatePopup__selector-marginTop_fontSize-s_theme-@{themeName} {
+   margin-top: @shift-top_fontSize-s_PeriodDialog-selector;
+}
+
+.controls-DatePopup__selector-marginLeft_theme-@{themeName} {
    margin-left: @shift-left_PeriodDialog-picker;
 }
 
-.controls-DatePopup__selector-marginLeft-withoutModeBtn {
+.controls-DatePopup__selector-marginLeft-withoutModeBtn_theme-@{themeName} {
    margin-left: @shift-left_PeriodDialog-picker-withoutModeBtn;
 }
-
 
 // Header
 .controls-PeriodDialog__header {
    flex-shrink: 0;
-   background-color: @background-color__PeriodDialog-header;
-   padding-left: @spacing_PeriodDialog-header-between-borderLeft-content;
    box-sizing: border-box;
    display: flex;
    align-items: center;
-   height: @height_PeriodDialog-header;
 }
 
-.controls-PeriodDialog__stateButton {
-   padding-right: @spacing_PeriodDialog-header-between-stateButton-date;
+.controls-PeriodDialog__header_theme-@{themeName} {
+   background-color: @header_background-color_datePicker;
+   padding-left: @header_padding-left_datePicker;
+   height: @header_height_datePicker;
+}
+
+.controls-PeriodDialog__stateButton_theme-@{themeName} {
+   padding-right: @switcher_offset_datePicker;
 }
 
 .controls-PeriodDialog__header-period {
    flex-grow: 1;
+   align-self: baseline;
+}
+
+/*
+     Механизмы рендеринга webkit и FF/IE по-разному реализуют высоту строки.
+     Чтобы не было прыжков между вызывающим элементом и заголовком (который выровнен по базовой линии)
+     вычитаем 1px (чтобы в FF/IE/EDGE было так же, как chrome).
+     Вертикальное выравнивание элементов заголовка по центру не подойдёт, т.к по стандартам эл-ты в заголовках находится
+     не по центру, а выше на 1px.
+     Демо пример https://jsfiddle.net/yxf25pjh/3/
+   */
+
+.ws-is-mobile-safari,
+.ws-is-firefox {
+   .controls-PeriodDialog__header-period::before {
+      font-size: @header_lineheight_dialog - 1;
+   }
+}
+.controls-PeriodDialog__header-period::before {
+   content: '\200b';
+   display: inline-block;
+   width: 0;
+   font-size: @header_lineheight_dialog;
 }
 
 .controls-PeriodDialog__header-rangeDash {
-   width: @width_PeriodDialog-header-dash;
-   border-bottom: @thickness_PeriodDialog-header-dash solid @color_PeriodDialog-header-dash;
-   margin: 0 @spacing_PeriodDialog-header-between-dash-date;
    display: inline-block;
    vertical-align: middle;
 }
 
-.controls-PeriodDialog__applyButton {
-   margin: 0 @spacing_PeriodDialog-header-between-applyButton-otherElements;
+.controls-PeriodDialog__header-rangeDash_theme-@{themeName} {
+   width: @dash_length_dateRangeInput;
+   border-bottom: @dash_thickness_dateRangeInput solid @dash_color_dateRangeInput;
+   margin: 0 @dash_padding-horizontal_dateRangeInput;
+}
+
+.controls-PeriodDialog__applyButton_theme-@{themeName} {
+   margin: 0 @apply-button_offset_datePicker;
 }
 
 .controls-PeriodDialog__homeButton {
@@ -89,11 +135,19 @@
    }
 }
 
-.controls-PeriodDialog__homeButton-icon {
-   font-size: @home-button_icon-size_datePopup;
-   line-height: @home-button_icon-size_datePopup;
-   width: @home-button_icon-size_datePopup;
-   height: @home-button_icon-size_datePopup;
+.controls-PeriodDialog__homeButton-icon_theme-@{themeName} {
+   font-size: @home_icon-size_datePicker;
+   line-height: @home_icon-size_datePicker;
+   width: @home_icon-size_datePicker;
+   height: @home_icon-size_datePicker;
+   font-family: @icon_font-family_s;
+}
+
+.controls-icon_size-datePopupStateButton_theme-@{themeName} {
+   font-size: @switcher_icon-size_datePicker;
+   line-height: @switcher_icon-size_datePicker;
+   width: @switcher_icon-size_datePicker;
+   height: @switcher_icon-size_datePicker;
    font-family: @icon_font-family_s;
 }
 
@@ -106,4 +160,14 @@
    flex-direction: column;
    flex-shrink: 1;
    min-height: 1px;
+}
+
+.controls-PeriodDialog__picker_theme-@{themeName} {
+   margin-top: @shift-top_PeriodDialog-picker;
+   margin-left: @shift-left_PeriodDialog-picker;
+}
+
+.controls-PeriodDialog__picker-withoutModeBtn {
+   margin-top: @shift-top_PeriodDialog-picker;
+   margin-left: @shift-left_PeriodDialog-picker-withoutModeBtn;
 }

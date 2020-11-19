@@ -5,10 +5,11 @@ define(
       'ControlsUnit/resources/ProxyCall',
       'ControlsUnit/resources/TemplateUtil',
       'Vdom/Vdom',
+      'UI/Utils',
 
       'wml!ControlsUnit/Input/Area/LinkInReadMode'
    ],
-   function(Env, input, ProxyCall, TemplateUtil, Vdom, linkInReadMode) {
+   function(Env, input, ProxyCall, TemplateUtil, Vdom, UIUtils, linkInReadMode) {
       'use strict';
 
       var SyntheticEvent = Vdom.SyntheticEvent;
@@ -22,7 +23,12 @@ define(
          });
          describe('Template', function() {
             describe('ReadOnly', function() {
-               var template;
+               var template, compat;
+
+               before(function() {
+                  compat = Env.constants.compat;
+                  Env.constants.compat = true;
+               });
 
                beforeEach(function() {
                   ctrl._beforeMount({
@@ -30,10 +36,16 @@ define(
                   });
                   template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
                });
+
+               after(function() {
+                  Env.constants.compat = compat;
+               });
+
                it('Insert in the text field "Hi https://www.google.ru/"', function() {
                   ctrl._readOnlyField.scope.value = 'Hi https://www.google.ru/';
                   ctrl._readOnlyField.scope.options = {
-                     theme: 'default'
+                     theme: 'default',
+                     horizontalPadding: 'xs'
                   };
 
                   assert.equal(template(ctrl._readOnlyField.scope), linkInReadMode({}));
@@ -253,6 +265,78 @@ define(
                      arguments: []
                   }
                ]);
+            });
+         });
+
+         describe('Validate lines', function() {
+            var stubLogger;
+            beforeEach(function() {
+               stubLogger = sinon.stub(UIUtils.Logger, 'error').callsFake(() => undefined);
+            });
+            afterEach(function() {
+               stubLogger.restore();
+            });
+            it('min > max in beforeMount', function() {
+               ctrl._beforeMount({
+                  minLines: 10,
+                  maxLines: 1
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 10);
+            });
+
+            it('min > max in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
+                  minLines: 10,
+                  maxLines: 1
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 10);
+            });
+
+            it('min < 1 and max < 1 in beforeMount', function() {
+               ctrl._beforeMount({
+                  minLines: -5,
+                  maxLines: -5
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 1);
+            });
+
+            it('min < 1 and max < 1 in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
+                  minLines: -5,
+                  maxLines: -5
+               });
+
+               assert.equal(ctrl._minLines, 1);
+               assert.equal(ctrl._maxLines, 1);
+            });
+
+            it('min > 10 and max > 10 in beforeMount', function() {
+               ctrl._beforeMount({
+                  minLines: 15,
+                  maxLines: 15
+               });
+
+               assert.equal(ctrl._minLines, 10);
+               assert.equal(ctrl._maxLines, 10);
+            });
+
+            it('min > 10 and max > 10 in beforeUpdate', function() {
+               ctrl._beforeMount({});
+               ctrl._beforeUpdate({
+                  minLines: 15,
+                  maxLines: 15
+               });
+
+               assert.equal(ctrl._minLines, 10);
+               assert.equal(ctrl._maxLines, 10);
             });
          });
       });

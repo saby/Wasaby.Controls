@@ -1,53 +1,76 @@
-import Control = require('Core/Control');
+import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
-import MenuUtils = require('Controls/_dropdown/Button/MenuUtils');
-import tmplNotify = require('Controls/Utils/tmplNotify');
-import ActualApi from 'Controls/_buttons/ActualApi';
+import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
+import {tmplNotify} from 'Controls/eventUtils';
+import Controller from 'Controls/_dropdown/_Controller';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {loadItems} from 'Controls/_dropdown/Util';
+import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
+import {IIconOptions, IHeightOptions} from 'Controls/interface';
+import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
+import {IStickyPopupOptions} from 'Controls/popup';
+import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
+import * as Merge from 'Core/core-merge';
+import {isLeftMouseButton} from 'Controls/popup';
+
+interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+   additionalProperty?: string;
+   lazyItemsLoading?: boolean;
+   buttonStyle?: string;
+   contrastBackground?: boolean;
+   caption?: string;
+   fontColorStyle?: string;
+   fontSize?: string;
+   showHeader?: boolean;
+}
 
 /**
  * Контрол «Кнопка с меню».
- * 
- * Полезные ссылки:
- * * <a href="/materials/demo-ws4-button-menu">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
  *
+ * @remark
+ * Полезные ссылки:
+ *
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
+ * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
- * @extends Core/Control
+ * @extends Controls/_buttons/Button
+ * @mixes Controls/_menu/interface/IMenuPopup
+ * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_dropdown/interface/IDropdownSource
+ * @mixes Controls/interface/IDropdown
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/IFilter
- * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_dropdown/interface/IDropdownSource
+ * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/interface/IDropdown
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/IIconSize
+ * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_buttons/interface/IButton
- * @control
+ * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/_interface/ISearch
+ * 
  * @public
  * @author Герасимов А.М.
- * @category Button
- * @demo Controls-demo/Buttons/Menu/MenuPG
  */
 
 /*
  * Button by clicking on which a drop-down list opens.
  *
- * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FMenu%2FMenu">Demo-example</a>.
  *
  * @class Controls/_dropdown/Button
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/ITooltip
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
@@ -56,56 +79,80 @@ import ActualApi from 'Controls/_buttons/ActualApi';
  * @mixes Controls/interface/IDropdown
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/IIcon
+ * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
- * @control
+ * @mixes Controls/_dropdown/interface/IGrouped
+ * 
  * @public
  * @author Герасимов А.М.
- * @category Button
- * @demo Controls-demo/Buttons/Menu/MenuPG
+ * @demo Controls-demo/dropdown_new/Button/Source/Index
  */
 
-var Button = Control.extend({
-   _template: template,
-   _tmplNotify: tmplNotify,
-   _filter: null,
+export default class Button extends BaseDropdown {
+   protected _template: TemplateFunction = template;
+   protected _tmplNotify: Function = tmplNotify;
+   protected _hasItems: boolean = true;
 
-   constructor: function () {
-      Button.superclass.constructor.apply(this, arguments);
+   _beforeMount(options: IButtonOptions,
+                context: object,
+                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+      this._offsetClassName = cssStyleGeneration(options);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
-   },
+      this._controller = new Controller(this._getControllerOptions(options));
 
-   _beforeMount: function (options) {
-      this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-      this._updateState(options);
-   },
+      if (!options.lazyItemsLoading) {
+         return loadItems(this._controller, receivedState, options.source);
+      }
+   }
 
-   _beforeUpdate: function (options) {
+   _beforeUpdate(options: IButtonOptions): void {
+      this._controller.update(this._getControllerOptions(options));
       if (this._options.size !== options.size || this._options.icon !== options.icon ||
          this._options.viewMode !== options.viewMode) {
-         this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+         this._offsetClassName = cssStyleGeneration(options);
       }
-      this._updateState(options);
-   },
+   }
 
-   _updateState: function (options) {
-      const currentButtonClass = ActualApi.styleToViewMode(options.style);
-
-      this._fontSizeButton = ActualApi.fontSize(options);
-      this._viewModeButton = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode).viewMode;
-   },
-
-   _dataLoadCallback: function (items) {
+   _dataLoadCallback(items): void {
       this._hasItems = items.getCount() > 0;
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(items);
       }
-   },
+   }
 
-   _onItemClickHandler: function (event, result) {
+   _getControllerOptions(options: IButtonOptions): object {
+      const controllerOptions = getDropdownControllerOptions(options);
+      return { ...controllerOptions, ...{
+            headerTemplate: options.headTemplate || options.headerTemplate,
+            headingCaption: options.caption,
+            headingIcon: options.icon,
+            headingIconSize: options.iconSize,
+            dataLoadCallback: this._dataLoadCallback.bind(this),
+            popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
+            hasIconPin: this._hasIconPin,
+            allowPin: true
+         }
+      };
+   }
+
+   _getMenuPopupConfig(): IStickyPopupOptions {
+      return {
+         opener: this._children.content,
+         eventHandlers: {
+            onOpen: this._onOpen.bind(this),
+            onClose: this._onClose.bind(this),
+            onResult: (action, data, nativeEvent) => {
+               this._onResult(action, data, nativeEvent);
+            }
+         }
+      };
+   }
+
+   _onItemClickHandler(result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
-      const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0]]);
-      const menuItemActivateResult = this._notify('menuItemActivate', [result[0]]);
+      const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
+      const menuItemActivateResult = this._notify('menuItemActivate', [result[0], nativeEvent]);
       let handlerResult;
 
       // (false || undefined) === undefined
@@ -116,47 +163,72 @@ var Button = Control.extend({
       }
 
       return handlerResult;
-   },
-
-   _deactivated: function() {
-      this.closeMenu();
-   },
-
-   openMenu(popupOptions?: object): void {
-      this._children.controller.openMenu(popupOptions);
-   },
-
-   closeMenu(): void {
-      this._children.controller.closeMenu();
    }
 
-});
+   _handleMouseDown(event: SyntheticEvent<MouseEvent>): void {
+      if (!isLeftMouseButton(event)) {
+         return;
+      }
+      this.openMenu();
+   }
 
-Button.getDefaultOptions = function () {
-   return {
-      showHeader: true,
-      filter: {},
-      style: 'secondary',
-      viewMode: 'button',
-      size: 'm',
-      iconStyle: 'secondary',
-      transparent: true,
-      lazyItemsLoading: false
-   };
-};
+   openMenu(popupOptions?: IStickyPopupOptions): void {
+      const config = this._getMenuPopupConfig();
+      this._controller.setMenuPopupTarget(this._children.content);
 
-Button._theme = ['Controls/dropdown', 'Controls/Classes'];
+      this._controller.openMenu(Merge(config, popupOptions || {})).then((result) => {
+         if (result) {
+            this._onItemClickHandler(result);
+         }
+      });
+   }
 
-export = Button;
+   protected _onResult(action, data, nativeEvent): void {
+      switch (action) {
+         case 'pinClick':
+            this._controller.pinClick(data);
+            break;
+         case 'itemClick':
+            this._itemClick(data, nativeEvent);
+            break;
+         case 'footerClick':
+            this._footerClick(data);
+      }
+   }
+
+   protected _itemClick(data, nativeEvent): void {
+      const item = this._controller.getPreparedItem(data);
+      const res = this._onItemClickHandler([item], nativeEvent);
+
+      // dropDown must close by default, but user can cancel closing, if returns false from event
+      if (res !== false) {
+         this._controller.handleSelectedItems(item);
+      }
+   }
+
+   protected _deactivated(): void {
+      this.closeMenu();
+   }
+
+   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+
+   static getDefaultOptions(): object {
+      return {
+         showHeader: true,
+         filter: {},
+         buttonStyle: 'secondary',
+         viewMode: 'button',
+         fontSize: 'm',
+         iconStyle: 'secondary',
+         contrastBackground: false,
+         lazyItemsLoading: false
+      };
+   }
+}
 
 /**
- * @cfg {boolean} Конфигурация шапки меню.
- * @name Controls/_dropdown/Button#headConfig
- * @deprecated Используйте {@link Controls/_dropdown/interface/IHeaderTemplate#headerTemplate}.
- */
-
-/**
- * @event Controls/_dropdown/Button#menuItemActivate Происходит при выборе элемента из списка.
+ * @event Происходит при выборе элемента из списка.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Types/entity:Model} item Выбранный элемент.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
@@ -164,7 +236,8 @@ export = Button;
  */
 
 /*
- * @event Controls/_dropdown/Button#menuItemActivate Occurs when an item is selected from the list.
+ * @event Occurs when an item is selected from the list.
+ * @name Controls/_dropdown/Button#menuItemActivate
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Event object.
  * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
  * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
@@ -205,6 +278,7 @@ export = Button;
 
 /**
  * @name Controls/_dropdown/Button#additionalProperty
- * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
+ * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
+ * @demo Controls-demo/dropdown_new/Button/AdditionalProperty/Index
  */
-

@@ -3,7 +3,7 @@ import {VersionableMixin, Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import cExtend = require('Core/core-simpleExtend');
 import coreMerge = require('Core/core-merge');
-import DateUtil = require('Controls/Utils/Date');
+import {Base as DateUtil} from 'Controls/dateUtils';
 
 /**
  * Модель для представления месяца.
@@ -15,9 +15,18 @@ import DateUtil = require('Controls/Utils/Date');
 var ModuleClass = cExtend.extend([VersionableMixin], {
    _state: null,
    _modelArray: [],
+   _singleDayHover: true,
 
    constructor: function(cfg) {
       ModuleClass.superclass.constructor.apply(this, arguments);
+
+      // Нет необходимости каждый раз обовлять стили месяца при наведении,
+      // если хавер работает только по одной ячейке дня, а не по нескольким.
+      const isQuantumSelection = cfg.selectionType === 'quantum' && cfg.quantum;
+      if (isQuantumSelection) {
+         const isSingleDayQuantum = 'days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1;
+         this._singleDayHover = isSingleDayQuantum;
+      }
 
       this._state = this._normalizeState(cfg);
       this._validateWeeksArray();
@@ -44,7 +53,9 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          enabled: state.enabled,
          daysData: state.daysData,
          dateConstructor: state.dateConstructor || WSDate,
-         readOnly: state.readOnly
+         readOnly: state.readOnly,
+         dayFormatter: state.dayFormatter,
+         _date: state._date
       };
    },
 
@@ -58,9 +69,12 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
    _getDayObject: function(date, state) {
       state = state || this._state;
-
+      /* Опция _date устаналивается только(!) в демках, для возможности протестировать
+       визуальное отображение текущей даты */
       var obj = {},
-         today = DateUtil.normalizeDate(new this._state.dateConstructor()),
+         today = this._state._date ?
+             DateUtil.normalizeDate(this._state._date) :
+             DateUtil.normalizeDate(new this._state.dateConstructor()),
          firstDateOfMonth = DateUtil.getStartOfMonth(date),
          lastDateOfMonth = DateUtil.getEndOfMonth(date);
 
@@ -82,6 +96,9 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       obj.weekend = obj.dayOfWeek === 5 || obj.dayOfWeek === 6;
       obj.enabled = state.enabled;
       obj.clickable = obj.mode === 'extended' || obj.isCurrentMonth;
+
+      obj.hovered = state.hoveredStartValue <= obj.date && state.hoveredStartValue !== null &&
+          state.hoveredEndValue >= obj.date;
 
       if (state.dayFormatter) {
          coreMerge(obj, state.dayFormatter(date) || {});
@@ -105,12 +122,11 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }, this);
    },
 
-   _prepareClass: function(scope) {
-      scope = scope.value;
+   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle) {
 
-      var textColorClass = 'controls-MonthViewVDOM__textColor',
-         backgroundColorClass = 'controls-MonthViewVDOM__backgroundColor',
-         borderClass = 'controls-MonthViewVDOM__border',
+      let textColorClass = 'controls-MonthView__textColor',
+         backgroundColorClass = 'controls-MonthView__backgroundColor',
+         backgroundColorClassRangeHovered,
          css = [];
 
       if (scope.isCurrentMonth) {
@@ -124,7 +140,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       if (scope.weekend) {
          textColorClass += '-weekend';
       } else {
-         textColorClass += '-workday';
+         textColorClass += scope.today ? '-today' : '-workday';
       }
 
       if (scope.selected && (scope.isCurrentMonth || scope.mode === 'extended')) {
@@ -140,20 +156,43 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       if (scope.readOnly) {
           backgroundColorClass += '-readOnly';
-          borderClass += '-readOnly';
+      }
+      backgroundColorClassRangeHovered = backgroundColorClass + '-hovered';
+      textColorClass += '_theme-' + theme;
+      backgroundColorClass += '_theme-' + theme;
+      backgroundColorClassRangeHovered += '_theme-' + theme;
+
+      if (fontColorStyle) {
+         textColorClass += '_style-' + fontColorStyle;
       }
 
-      css.push(textColorClass, backgroundColorClass, borderClass);
+      if (backgroundStyle) {
+         backgroundColorClass += '_style-' + backgroundStyle;
+         backgroundColorClassRangeHovered += '_style-' + backgroundStyle;
+      }
+      if (scope.isCurrentMonth || scope.mode === 'extended') {
+         css.push(textColorClass, backgroundColorClass);
+         if (scope.hovered) {
+            css.push(backgroundColorClassRangeHovered);
+         }
+      }
 
       // Оставляем старые классы т.к. они используются в большом выборе периода до его редизайна
       // TODO: Выпилить старые классы
-      if (scope.isCurrentMonth) {
+      if (scope.isCurrentMonth || scope.mode === 'extended') {
          if (scope.selectionEnabled) {
             css.push('controls-MonthViewVDOM__cursor-item');
          }
          if (!scope.selected) {
-            if (scope.selectionEnabled) {
-               css.push('controls-MonthViewVDOM__border-currentMonthDay-unselected');
+            let borderStyle;
+            if (scope.selectionEnabled && this._singleDayHover) {
+               borderStyle = 'controls-MonthView__border-currentMonthDay-unselected_theme-' + theme;
+            } else if (scope.hovered) {
+               borderStyle = 'controls-MonthView__border-hover_theme-' + theme;
+            }
+            if (borderStyle) {
+              borderStyle += backgroundStyle ? '_style-' + backgroundStyle : '';
+              css.push(borderStyle);
             }
          }
          css.push('controls-MonthViewVDOM__selectableItem');
@@ -165,31 +204,34 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
          }
 
          if (scope.selectedUnfinishedStart) {
-            css.push('controls-MonthViewVDOM__item-selectedStart-unfinished');
+            css.push('controls-MonthViewVDOM__item-selectedStart-unfinished_theme-' + theme);
          }
          if (scope.selectedUnfinishedEnd) {
-            css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished');
+            css.push('controls-MonthViewVDOM__item-selectedEnd-unfinished_theme-' + theme);
          }
          if (scope.selected) {
             if (scope.selectedStart && scope.selectedEnd && !scope.selectionProcessing) {
-               css.push('controls-MonthViewVDOM__item-selectedStartEnd');
+               css.push('controls-MonthViewVDOM__item-selectedStartEnd_theme-' + theme);
             } else if (scope.selectedStart && !scope.selectedUnfinishedStart) {
+               css.push('controls-MonthViewVDOM__item-selectedStart_theme-' + theme);
                css.push('controls-MonthViewVDOM__item-selectedStart');
             } else if (scope.selectedEnd && (!scope.selectionProcessing ||
                 (scope.selectedEnd !== scope.selectedStart && !scope.selectedUnfinishedEnd))) {
+               css.push('controls-MonthViewVDOM__item-selectedEnd_theme-' + theme);
                css.push('controls-MonthViewVDOM__item-selectedEnd');
             }
          }
          if (scope.selectedInner) {
+            css.push('controls-MonthViewVDOM__item-selectedInner_theme-' + theme);
             css.push('controls-MonthViewVDOM__item-selectedInner');
          }
 
          if (scope.today) {
+            css.push('controls-MonthViewVDOM__today_theme-' + theme);
             css.push('controls-MonthViewVDOM__today');
          }
       }
-
-      css.push(scope.isCalendar ? 'controls-MonthViewVDOM__currentMonthDay' : 'controls-MonthViewVDOM__' + scope.month);
+      css.push(scope.isCalendar ? 'controls-MonthViewVDOM__currentMonthDay_theme-' + theme : 'controls-MonthViewVDOM__' + scope.month + '_theme-' + theme);
 
       if (scope.weekend) {
          css.push('controls-MonthViewVDOM__weekend');

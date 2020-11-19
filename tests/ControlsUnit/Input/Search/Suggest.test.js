@@ -1,4 +1,4 @@
-define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
+define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity, Env) {
    'use strict';
 
    describe('Controls/_suggest/Input/Search/Suggest', function() {
@@ -50,6 +50,7 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
          var searchClickNotifyed = false;
          var suggestStateChangedNotifyed = false;
          var searchClickResult = true;
+         var isSuggestClosed = false;
 
          searchSuggest._notify = function(eventName) {
             if (eventName === 'searchClick') {
@@ -60,17 +61,29 @@ define(['Controls/suggest', 'Types/entity'], function(suggest, entity) {
             }
             return searchClickResult;
          };
+         searchSuggest._children = {
+            suggestController: {
+               closeSuggest: () => {
+                  isSuggestClosed = true;
+               }
+            }
+         };
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
-         searchSuggest._searchClick();
+         searchSuggest._searchClick(null,{
+            which: Env.constants.key.enter
+         });
          assert.isFalse(searchClickNotifyed);
          assert.isTrue(searchSuggest._suggestState);
 
          searchSuggest._suggestMarkedKeyChanged(null, null);
-         searchSuggest._searchClick();
+         searchSuggest._searchClick(null, {
+            which: 'any'
+         });
          assert.isTrue(searchClickNotifyed);
          assert.isFalse(searchSuggest._suggestState);
          assert.isTrue(suggestStateChangedNotifyed);
+         assert.isTrue(isSuggestClosed);
 
          searchSuggest._suggestState = true;
          searchClickResult = false;

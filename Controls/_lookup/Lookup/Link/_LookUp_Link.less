@@ -1,8 +1,35 @@
-.controls-Lookup__link {
+.controls-Lookup__link_theme-@{themeName} {
   display: inline-block;
-  font-size: @font-size_LookupLink;
-  color: @color_LookupLink;
-  line-height: @line-height_LookupLink;
+  font-size: @label_font-size_lookupInput;
+  color: @label_text-color;
+}
+
+.controls-Lookup__link-inlineheight-default_theme-@{themeName} {
+  line-height: @inline_height_default_button;
+}
+
+.controls-Lookup__link-inlineheight-m_theme-@{themeName} {
+  line-height: @inline_height_m_button;
+}
+
+.controls-Lookup__link-inlineheight-xs_theme-@{themeName} {
+  line-height: @inline_height_xs_button;
+}
+
+.controls-Lookup__link-inlineheight-s_theme-@{themeName} {
+  line-height: @inline_height_s_button;
+}
+
+.controls-Lookup__link-inlineheight-l_theme-@{themeName} {
+  line-height: @inline_height_l_button;
+}
+
+.controls-Lookup__link-inlineheight-xl_theme-@{themeName} {
+  line-height: @inline_height_xl_button;
+}
+
+.controls-Lookup__link-inlineheight-2xl_theme-@{themeName} {
+  line-height: @inline_height_2xl_button;
 }
 
 .controls-Lookup__link-default {
@@ -11,13 +38,13 @@
 }
 
 .ws-is-hover {
-  .controls-Lookup__link-default:hover {
-    color: @color_LookupLink_hovered;
+  .controls-Lookup__link-default_theme-@{themeName}:hover {
+    color: @link_hover_text-color;
   }
 }
 
-.controls-Lookup__link-default:active {
-  color: @color_LookupLink_active;
+.controls-Lookup__link-default_theme-@{themeName}:active {
+  color: @link_hover_text-color;
 }
 
 .controls-Lookup__link__text {

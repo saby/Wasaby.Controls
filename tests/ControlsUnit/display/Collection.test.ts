@@ -1,4 +1,5 @@
 import { assert } from 'chai';
+import { spy } from 'sinon';
 
 import {
     Abstract as Display,
@@ -22,7 +23,7 @@ import {
 
 const ComputeFunctor = functor.Compute;
 
-import * as Serializer from 'Core/Serializer';
+import {Serializer} from 'UI/State';
 import * as coreInstance from 'Core/core-instance';
 
 describe('Controls/_display/Collection', () => {
@@ -1388,7 +1389,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1420,7 +1421,7 @@ describe('Controls/_display/Collection', () => {
             const display = new CollectionDisplay({
                 collection: list,
                 filter: (item, index, collectionItem, position, hasMembers) => {
-                    if (collectionItem instanceof GroupItem) {
+                    if (collectionItem['[Controls/_display/GroupItem]']) {
                         return hasMembers;
                     }
                     return item.enabled;
@@ -1474,7 +1475,7 @@ describe('Controls/_display/Collection', () => {
             let index = 0;
             display.setGroup((item) => item.group);
             display.each((item) => {
-                if (item instanceof GroupItem) {
+                if (item['[Controls/_display/GroupItem]']) {
                     assert.strictEqual(item.getContents(), items[index + 1].group);
                 } else {
                     assert.strictEqual(item.getContents(), items[index]);
@@ -1822,6 +1823,26 @@ describe('Controls/_display/Collection', () => {
             check(display.getGroupItems(2), [2, 4]);
             check(display.getGroupItems(3), []);
         });
+    });
+
+    describe('.isAllGroupsCollpsed()', () => {
+        const list = new List({
+            items: [
+                { id: 1, group: 1 },
+                { id: 2, group: 2 }
+            ]
+        });
+        const display = new CollectionDisplay({
+            collection: list,
+            collapsedGroups: [1, 2],
+            groupingKeyCallback: (item) => {
+                return item.group;
+            }
+        });
+
+        assert.isTrue(display.isAllGroupsCollapsed());
+        display.setCollapsedGroups([1]);
+        assert.isFalse(display.isAllGroupsCollapsed());
     });
 
     describe('.getGroupByIndex()', () => {
@@ -2611,20 +2632,17 @@ describe('Controls/_display/Collection', () => {
                 i++;
             });
             display.setSelectedItemsAll(true);
-            assert.strictEqual(i, 1);
+            assert.strictEqual(i, 8);
         });
     });
 
     describe('.setSelectedItems()', () => {
         it('should selected was given items', () => {
             display.setSelectedItems(
-                [list.at(0), list.at(1)],
+                [display.at(0), display.at(1)],
                 true
             );
-            const selected = [
-                display.getItemBySourceItem(list.at(0)),
-                display.getItemBySourceItem(list.at(1))
-            ];
+            const selected = [display.at(0), display.at(1)];
             display.each((item) => {
                 if (selected.indexOf(item) !== -1) {
                     assert.isTrue(item.isSelected());
@@ -2637,13 +2655,10 @@ describe('Controls/_display/Collection', () => {
         it('should deselect was given items', () => {
             display.setSelectedItemsAll(true);
             display.setSelectedItems(
-                [list.at(0), list.at(1)],
+                [display.at(0), display.at(1)],
                 false
             );
-            const deselect = [
-                display.getItemBySourceItem(list.at(0)),
-                display.getItemBySourceItem(list.at(1))
-            ];
+            const deselect = [display.at(0), display.at(1)];
             display.each((item) => {
                 if (deselect.indexOf(item) !== -1) {
                     assert.isFalse(item.isSelected());
@@ -2651,6 +2666,18 @@ describe('Controls/_display/Collection', () => {
                     assert.isTrue(item.isSelected());
                 }
             });
+        });
+
+        it('set selected silent', () => {
+            const notifyLaterSpy = spy(display, '_notifyLater');
+
+            display.setSelectedItems(
+               [display.at(0), display.at(1)],
+               true,
+               true
+            );
+
+            assert.isFalse(notifyLaterSpy.called);
         });
     });
 
@@ -3381,7 +3408,8 @@ describe('Controls/_display/Collection', () => {
 
         it('should fire "onCollectionChange" with valid item contents when work in events queue', () => {
             const getModel = (data) => new Model({
-                    rawData: data
+                keyProperty: 'id',
+                rawData: data
             });
             const list = new ObservableList({
                 items: [
@@ -4249,31 +4277,21 @@ describe('Controls/_display/Collection', () => {
         )
     });
 
-    it('.getRowSpacing()', () => {
-        const rowSpacing = 'rowSpacing';
+    it('.getPadding()', () => {
+        const itemPadding = {
+            left: 'leftPadding',
+            right: 'rightPadding',
+            top: 'topPadding',
+            bottom: 'bottomPadding'
+        };
         const collection = new CollectionDisplay({
             collection: [],
-            rowSpacing
+            itemPadding
         });
-        assert.strictEqual(collection.getRowSpacing(), rowSpacing);
-    });
-
-    it('.getLeftSpacing()', () => {
-        const leftSpacing = 'leftSpacing';
-        const collection = new CollectionDisplay({
-            collection: [],
-            leftSpacing
-        });
-        assert.strictEqual(collection.getLeftSpacing(), leftSpacing);
-    });
-
-    it('.getRightSpacing()', () => {
-        const rightSpacing = 'rightSpacing';
-        const collection = new CollectionDisplay({
-            collection: [],
-            rightSpacing
-        });
-        assert.strictEqual(collection.getRightSpacing(), rightSpacing);
+        assert.strictEqual(collection.getLeftPadding(), itemPadding.left);
+        assert.strictEqual(collection.getRightPadding(), itemPadding.right);
+        assert.strictEqual(collection.getTopPadding(), itemPadding.top);
+        assert.strictEqual(collection.getBottomPadding(), itemPadding.bottom);
     });
 
     it('.setEditingConfig()', () => {
@@ -4310,25 +4328,7 @@ describe('Controls/_display/Collection', () => {
         assert.strictEqual(collection.getSearchValue(), searchValue);
     });
 
-    describe('.setViewIndices()', () => {
-        it('changes the start and stop index and increases the version', () => {
-            const collection = new CollectionDisplay({
-                collection: [0, 1, 2, 3, 4, 5]
-            });
-            const prevVersion = collection.getVersion();
-
-            collection.setViewIndices(2, 3);
-            assert.strictEqual(collection.getStartIndex(), 2);
-            assert.strictEqual(collection.getStopIndex(), 3);
-            assert.isAbove(
-                collection.getVersion(),
-                prevVersion,
-                '.setViewIndices() should increase collection version'
-            );
-        });
-    });
-
-    it('.getItemBySourceId()', () => {
+    it('.getItemBySourceKey()', () => {
         const list = new RecordSet({
             rawData: items,
             keyProperty: 'id'
@@ -4337,7 +4337,7 @@ describe('Controls/_display/Collection', () => {
             collection: list,
             keyProperty: 'id'
         });
-        const item = collection.getItemBySourceId(1);
+        const item = collection.getItemBySourceKey(1);
         assert.strictEqual(item.getContents().getId(), 1);
     });
 
@@ -4368,6 +4368,52 @@ describe('Controls/_display/Collection', () => {
             display.getLastItem(),
             items[items.length - 1]
         );
+    });
+
+    describe('add strategy', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
+        let newItem;
+
+        beforeEach(() => {
+            rs = new RecordSet({
+                rawData: [],
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs,
+                groupProperty: 'group'
+            });
+            newItem = display.createItem({
+                contents: new Model({
+                    keyProperty: 'id',
+                    rawData: {
+                        id: 1,
+                        group: '123'
+                    }
+                }),
+                isAdd: true,
+                addPosition: 'bottom'
+            })
+        });
+
+        it('should notify of two added items if adding in empty group', () => {
+            let isCollectionChanged = false;
+
+            const handler = (e, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
+                assert.equal(newItems.length, 2);
+                assert.instanceOf(newItems[0], GroupItem);
+                assert.instanceOf(newItems[1], CollectionItem);
+                isCollectionChanged = true;
+            };
+
+            display.subscribe('onCollectionChange', handler);
+            display.setAddingItem(newItem);
+            display.addFilter(() => true);
+            display.unsubscribe('onCollectionChange', handler);
+
+            assert.isTrue(isCollectionChanged);
+        });
     });
 
     describe('version increases on collection change', () => {
@@ -4447,6 +4493,69 @@ describe('Controls/_display/Collection', () => {
             const version = display.getVersion();
             rs.move(1, 0);
             assert.isAbove(display.getVersion(), version);
+        });
+    });
+
+    // возможно, это уйдёт из Collection
+    describe('setActiveItem(), getActiveItem()', () => {
+        let rs: RecordSet;
+        let display: CollectionDisplay<unknown>;
+
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('deactivates old active item', () => {
+            const testingItem = display.getItemBySourceKey(1);
+            display.setActiveItem(display.getItemBySourceKey(1));
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.isFalse(testingItem.isActive());
+        });
+        it('activates new active item', () => {
+            const testingItem = display.getItemBySourceKey(2);
+            display.setActiveItem(display.getItemBySourceKey(1));
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.isTrue(testingItem.isActive());
+        });
+        it('correctly returns active item', () => {
+            const testingItem = display.getItemBySourceKey(2);
+            display.setActiveItem(display.getItemBySourceKey(2));
+            assert.equal(display.getActiveItem(), testingItem);
+        });
+    });
+
+    describe('drag', () => {
+        let display: CollectionDisplay<unknown>;
+        beforeEach(() => {
+            const items = [
+                { id: 1, name: 'Ivan' },
+                { id: 2, name: 'Alexey' },
+                { id: 3, name: 'Olga' }
+            ];
+            const rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs
+            });
+        });
+
+        it('setDraggedItems', () => {
+            const draggedItem = display.createItem({contents: {getKey: () => '123'}});
+            display.setDraggedItems(draggedItem, ['123']);
+            assert.equal(display.getItems()[2].getContents().getKey(), '123');
         });
     });
 });

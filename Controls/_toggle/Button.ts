@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import {ActualApi, cssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
+import {ActualApi, simpleCssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
@@ -38,7 +38,11 @@ export interface IToggleButtonOptions extends
 /**
  * Кнопка, которая переключается между двумя состояниями: включено и выключено.
  *
- * <a href="/materials/demo-ws4-buttons">Демо-пример</a>.
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less">переменные тем оформления</a>
+ *
  *
  * @class Controls/_toggle/Button
  * @extends Core/Control
@@ -48,12 +52,12 @@ export interface IToggleButtonOptions extends
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
  * @implements Controls/_interface/IIconStyle
- * @implements Controls/_interface/IHeight
+ * @implements Control
+ * s/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
@@ -61,7 +65,7 @@ export interface IToggleButtonOptions extends
 /*
  * Button that switches between two states: on-state and off-state.
  *
- * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">Demo-example</a>.
  *
  * @class Controls/_toggle/Button
  * @extends Core/Control
@@ -73,14 +77,105 @@ export interface IToggleButtonOptions extends
  * @implements Controls/_interface/IIconStyle
  * @implements Controls/_interface/IHeight
  * @implements Controls/_interface/ITooltip
- * @control
+ * 
  * @public
  * @author Красильников А.С.
- * @category Toggle
  *
  * @demo Controls-demo/toggle/Button/ViewModes/Index
  */
+class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
+    ICheckable,
+    IFontColorStyle,
+    IFontSize,
+    IHeight,
+    IIconSize,
+    IIconStyle,
+    ITooltip {
+    '[Controls/_toggle/interface/ICheckable]': true;
+    '[Controls/_buttons/interface/IButton]': true;
+    '[Controls/_interface/IIconStyle]': true;
+    '[Controls/_interface/ITooltip]': true;
+    '[Controls/_interface/IFontColorStyle]': true;
+    '[Controls/_interface/IFontSize]': true;
+    '[Controls/_interface/IHeight]': true;
+    '[Controls/_interface/IIconSize]': true;
 
+    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
+    protected _template: TemplateFunction = ToggleButtonTemplate;
+
+    protected _buttonStyle: string;
+    protected _fontColorStyle: string;
+    protected _fontSize: string;
+    protected _contrastBackground: boolean;
+    protected _hasIcon: boolean;
+    protected _viewMode: string;
+    protected _height: string;
+    private _caption: string | String | TemplateFunction;
+    protected _stringCaption: boolean;
+    private _icon: string;
+    protected _iconSize: string;
+    protected _iconStyle: string;
+    protected _hoverIcon: boolean = true;
+
+    private _calculateState(newOptions: IToggleButtonOptions): void {
+        const value = newOptions.value;
+        this._icon = (newOptions.icons ? (!value && newOptions.icons[1] ? newOptions.icons[1]
+                                                                        : newOptions.icons[0]) : '');
+        this._hasIcon = !!this._icon;
+
+        this._caption = (newOptions.captions ? (!newOptions.value && newOptions.captions[1] ? newOptions.captions[1]
+                                                                                        : newOptions.captions[0]) : '');
+        this._stringCaption = typeof this._caption === 'string' || this._caption instanceof String;
+
+        const clonedOptions = {...newOptions};
+        clonedOptions.icon = this._icon;
+        this._iconSize = this._icon ? ActualApi.iconSize(newOptions.iconSize, this._icon) : '';
+        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions.iconStyle, this._icon,
+            newOptions.readOnly, false) : '';
+
+        if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
+            this._hoverIcon = !newOptions.value;
+        } else {
+            this._hoverIcon = true;
+        }
+    }
+
+    protected _clickHandler(): void {
+        if (!this._options.readOnly) {
+            this._notify('valueChanged', [!this._options.value]);
+        }
+    }
+
+    protected _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
+        if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
+            this._notify('click');
+        }
+    }
+
+    protected _beforeMount(newOptions: IToggleButtonOptions): void {
+        // TODO удалить когда актуализируем опции в кнопках у прикладников
+        simpleCssStyleGeneration.call(this, newOptions);
+        this._calculateState(newOptions);
+    }
+
+    protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
+        // TODO удалить когда актуализируем опции в кнопках у прикладников
+        simpleCssStyleGeneration.call(this, newOptions);
+        this._calculateState(newOptions);
+    }
+
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+
+    static getDefaultOptions(): object {
+        return {
+            viewMode: 'button',
+            iconStyle: 'secondary',
+            contrastBackground: false,
+            fontSize: 'm',
+            buttonStyle: 'secondary'
+        };
+    }
+}
 /**
  * @name Controls/_toggle/Button#icons
  * @cfg {Array} Пара иконок.
@@ -88,12 +183,12 @@ export interface IToggleButtonOptions extends
  * Вторая иконка отображается, когда переключатель включен.
  * @example
  * Переключатель с одной иконкой:
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" iconSize="s"  viewMode="link"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button icons="{{['icon-ArrangeList03']}}" iconSize="s"  viewMode="link"/>
  * </pre>
  * Переключатель с двумя иконками:
- * <pre>
- *    <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s"  viewMode="link"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button icons="{{['icon-ArrangeList03', 'icon-ArrangeList04']}}" iconStyle="success" iconSize="s"  viewMode="link"/>
  * </pre>
  */
 
@@ -120,12 +215,12 @@ export interface IToggleButtonOptions extends
  * Второй заголовок отображается, когда переключатель в состоянии "включено".
  * @example
  * Переключатель с двумя заголовками:
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
  * </pre>
  * Переключатель с одним заголовком
- * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" viewMode="link"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
  * </pre>
  */
 
@@ -137,33 +232,33 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with two captions.
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Change', 'Save']}}" viewMode="link"/>
  * </pre>
  * Toggle button with one caption.
  * <pre>
- *    <Controls.toggle:Button readOnly="{{false}}" size="m" captions="{{['Save']}}" viewMode="link"/>
+ *    <Controls.toggle:Button readOnly="{{false}}" captions="{{['Save']}}" viewMode="link"/>
  * </pre>
  */
 
 /**
  * @name Controls/_toggle/Button#viewMode
- * @cfg {Enum} Режим отображения кнопки.
+ * @cfg {String} Режим отображения кнопки.
  * @variant link В виде гиперссылки.
  * @variant toolButton В виде кнопки для панели инструментов.
  * @variant pushButton В виде гиперссылки, которая меняет свой внешний в зажатом состоянии
  * @default link
  * @example
  * Кнопка-переключатель в режиме отображения - 'link'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" size="xl"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
  * </pre>
  * Кнопка-переключатель в режиме отображения - 'toolButton'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
  * </pre>
  * Кнопка-переключатель в режиме отображения - 'pushButton'.
- * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
+ * <pre class="brush: html">
+ * <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
  * </pre>
  */
 
@@ -177,107 +272,15 @@ export interface IToggleButtonOptions extends
  * @example
  * Toggle button with 'link' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="link" fontSize="3xl"/>
  * </pre>
  * Toggle button with 'toolButton' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="danger" viewMode="toolButton"/>
  * </pre>
  * Toggle button with 'pushButton' viewMode.
  * <pre>
- *    <Controls.toggle:Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+ *    <Controls.toggle:Button captions="{{['Send document']}}" buttonStyle="primary" viewMode="pushButton"/>
  * </pre>
  */
-class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
-    ICheckable,
-    IFontColorStyle,
-    IFontSize,
-    IHeight,
-    IIconSize,
-    IIconStyle,
-    ITooltip {
-    '[Controls/_toggle/interface/ICheckable]': true;
-    '[Controls/_buttons/interface/IButton]': true;
-    '[Controls/_interface/IIconStyle]': true;
-    '[Controls/_interface/ITooltip]': true;
-    '[Controls/_interface/IFontColorStyle]': true;
-    '[Controls/_interface/IFontSize]': true;
-    '[Controls/_interface/IHeight]': true;
-    '[Controls/_interface/IIconSize]': true;
-
-    // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
-    protected _template: TemplateFunction = ToggleButtonTemplate;
-
-    private _buttonStyle: string;
-    private _fontColorStyle: string;
-    private _fontSize: string;
-    private _contrastBackground: boolean;
-    private _hasIcon: boolean;
-    private _viewMode: string;
-    private _height: string;
-    private _caption: string | TemplateFunction;
-    private _stringCaption: boolean;
-    private _icon: string;
-    private _iconSize: string;
-    private _iconStyle: string;
-    protected _hoverIcon: boolean = true;
-
-    private _calculateState(newOptions: IToggleButtonOptions): void {
-        const value = newOptions.value;
-        this._icon = (newOptions.icons ? (!value && newOptions.icons[1] ? newOptions.icons[1]
-                                                                        : newOptions.icons[0]) : '');
-        this._hasIcon = !!this._icon;
-
-        this._caption = (newOptions.captions ? (!newOptions.value && newOptions.captions[1] ? newOptions.captions[1]
-                                                                                        : newOptions.captions[0]) : '');
-        this._stringCaption = typeof this._caption === 'string';
-
-        const clonedOptions = {...newOptions};
-        clonedOptions.icon = this._icon;
-        this._iconSize = this._icon ? ActualApi.iconSize(newOptions.iconSize, this._icon) : '';
-        this._iconStyle = this._icon ? ActualApi.iconStyle(newOptions.iconStyle, this._icon,
-            newOptions.readOnly, false) : '';
-
-        if (newOptions.viewMode === 'pushButton' || newOptions.viewMode === 'toolButton') {
-            this._hoverIcon = !newOptions.value;
-        } else {
-            this._hoverIcon = true;
-        }
-    }
-
-    private _clickHandler(): void {
-        if (!this._options.readOnly) {
-            this._notify('valueChanged', [!this._options.value]);
-        }
-    }
-
-    private _keyUpHandler(e: SyntheticEvent<KeyboardEvent>): void {
-        if (e.nativeEvent.keyCode === constants.key.enter && !this._options.readOnly) {
-            this._notify('click');
-        }
-    }
-
-    protected _beforeMount(newOptions: IToggleButtonOptions): void {
-        // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
-        this._calculateState(newOptions);
-    }
-
-    protected _beforeUpdate(newOptions: IToggleButtonOptions): void {
-        // TODO удалить когда актуализируем опции в кнопках у прикладников
-        cssStyleGeneration.call(this, newOptions);
-        this._calculateState(newOptions);
-    }
-
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
-
-    static getDefaultOptions(): object {
-        return {
-            viewMode: 'button',
-            iconStyle: 'secondary',
-            theme: 'default'
-        };
-    }
-}
-
 export default ToggleButton;

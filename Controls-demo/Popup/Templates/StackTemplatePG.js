@@ -10,9 +10,6 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
       'wml!Controls-demo/Popup/Templates/resources/headerContent',
       'wml!Controls-demo/Popup/Templates/resources/customHeaderContent',
 
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
    ],
 
    function(Control, template, config) {
@@ -79,7 +76,7 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
             this._componentOptions = {
                name: 'StackTemplate',
                headingCaption: 'caption',
-               headingStyle: 'secondary',
+               headingFontColorStyle: 'secondary',
                headerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/headerContent',
                bodyContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
                footerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
@@ -92,5 +89,7 @@ define('Controls-demo/Popup/Templates/StackTemplatePG',
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
+      DialogPG._styles = ['Controls-demo/Filter/Button/PanelVDom', 'Controls-demo/Input/resources/VdomInputs', 'Controls-demo/Wrapper/Wrapper'];
+
       return DialogPG;
    });

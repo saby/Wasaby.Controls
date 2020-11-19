@@ -6,11 +6,11 @@ define('Controls-demo/DragNDrop/Demo', [
    'Controls-demo/DragNDrop/Demo/Data',
    'Controls/dragnDrop',
    'Core/core-instance',
-   'css!Controls-demo/DragNDrop/Demo/Demo',
+   'Controls/Utils/Toolbar',
    'wml!Controls-demo/DragNDrop/Demo/columnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/timeColumnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/receivedColumnTemplate'
-], function(BaseControl, template, source, cClone, DemoData, dragnDrop, cInstance) {
+], function(BaseControl, template, source, cClone, DemoData, dragnDrop, cInstance, Toolbar) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -23,7 +23,7 @@ define('Controls-demo/DragNDrop/Demo', [
          this._itemsReadyCallbackThird = this._itemsReadyThird.bind(this);
          this._itemActionsFirst = [{
             icon: 'sprite:icon-medium icon-Erase icon-error',
-            showType: 2,
+            showType: Toolbar.showType.TOOLBAR,
             id: 0
          }];
          this._viewSourceFirst = new source.Memory({
@@ -131,5 +131,7 @@ define('Controls-demo/DragNDrop/Demo', [
          });
       }
    });
+   ModuleClass._styles = ['Controls-demo/DragNDrop/Demo/Demo'];
+
    return ModuleClass;
 });

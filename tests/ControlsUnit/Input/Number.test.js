@@ -31,42 +31,6 @@ define(
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
-         it('Checking default values of options.', function() {
-            assert.deepEqual(inputMod.Number.getDefaultOptions(), {
-               tooltip: '',
-               style: 'info',
-               spellCheck: true,
-               size: 'default',
-               placeholder: '',
-               useGrouping: true,
-               textAlign: 'left',
-               autoComplete: 'off',
-               onlyPositive: false,
-               fontStyle: 'default',
-               selectOnClick: false,
-               showEmptyDecimals: false
-            });
-         });
-         it('Checking types of options.', function() {
-            assert.deepEqual(Object.keys(inputMod.Number.getOptionTypes()).sort(), [
-               'size',
-               'value',
-               'style',
-               'tooltip',
-               'tagStyle',
-               'precision',
-               'textAlign',
-               'fontStyle',
-               'spellCheck',
-               'useGrouping',
-               'onlyPositive',
-               'selectOnClick',
-               'inputCallback',
-               'integersLength',
-               'showEmptyDecimals'
-            ].sort());
-         });
-
          it('The model belongs to the "Controls/_input/Number/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: 0
@@ -84,105 +48,12 @@ define(
             it('ShowEmptyDecimals option equal true. Trailing zeros are not trimmed.', function() {
                ctrl._options.showEmptyDecimals = true;
 
-               ctrl._changeHandler();
+               ctrl._notifyInputCompleted();
 
                assert.deepEqual(calls, [{
                   name: 'notify',
                   arguments: ['inputCompleted', [0, '0']]
                }]);
-            });
-         });
-         describe('User input.', function() {
-            beforeEach(function() {
-               ctrl._getActiveElement = function() {
-                  return ctrl._getField();
-               };
-            });
-            it('The display value divided into triads is correctly converted to a value.', function() {
-               ctrl._beforeMount({
-                  value: null,
-                  useGrouping: true
-               });
-
-               ctrl._getField().value = '1111';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', [1111, '1 111']]
-               }]);
-            });
-            it('Triad partitioning is disabled. Enter 123456', function() {
-               ctrl._beforeMount({
-                  value: null,
-                  useGrouping: false
-               });
-
-               ctrl._getField().value = '123456';
-               ctrl._getField().selectionStart = 6;
-               ctrl._getField().selectionEnd = 6;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.deepEqual(calls, [{
-                  name: 'notify',
-                  arguments: ['valueChanged', [123456, '123456']]
-               }]);
-            });
-            it('On iPad, enter twice "-"', function() {
-               ctrl._isMobileIOS = true;
-               ctrl._beforeMount({
-                  value: null
-               });
-
-               ctrl._getField().value = '123';
-               ctrl._getField().selectionStart = 3;
-               ctrl._getField().selectionEnd = 3;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               ctrl._getField().value = '123.';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               ctrl._getField().value = '123-.0';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               ctrl._getField().value = '-12.0';
-               ctrl._getField().selectionStart = 3;
-               ctrl._getField().selectionEnd = 3;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               ctrl._getField().value = '-12—.0';
-               ctrl._getField().selectionStart = 4;
-               ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
-
-               assert.deepEqual(calls, [
-                  {
-                     name: 'notify',
-                     arguments: ['valueChanged', [123, '123']]
-                  },
-                  {
-                     name: 'notify',
-                     arguments: ['valueChanged', [123, '123.0']]
-                  },
-                  {
-                     name: 'notify',
-                     arguments: ['valueChanged', [-123, '-123.0']]
-                  },
-                  {
-                     name: 'notify',
-                     arguments: ['valueChanged', [-12, '-12.0']]
-                  },
-                  {
-                     name: 'notify',
-                     arguments: ['valueChanged', [-123, '-123.0']]
-                  }
-               ]);
             });
          });
       });

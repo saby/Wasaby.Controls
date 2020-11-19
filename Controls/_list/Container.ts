@@ -1,11 +1,25 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_list/Container');
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
+// @ts-ignore
+import * as template from 'wml!Controls/_list/Container';
 import {ContextOptions as DataOptions} from 'Controls/context';
+import {ISourceControllerState} from 'Controls/dataSource';
+import {SyntheticEvent} from 'Vdom/Vdom';
+
+interface IDataContext {
+    dataOptions: ISourceControllerState;
+}
 
 /**
  * Контрол-контейнер для списка. Передает опции из контекста в список.
  *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/component-kinds/'>здесь</a>.
+ * @remark 
+ * Контейнер ожидает поле контекста "dataOptions", которое поставляет Controls/list:DataContainer.
+ * Из поля контекста "dataOptions" контейнер передает в список следующие опции: <a href="/docs/js/Controls/list/View/options/filter/">filter</a>, <a href="/docs/js/Controls/list/View/options/navigation/">navigation</a>, <a href="/docs/js/Controls/list/View/options/sorting/">sorting</a>, <a href="/docs/js/Controls/list/View/options/keyProperty/">keyProperty</a>, <a href="/docs/js/Controls/list/View/options/source/">source</a>, sourceController.
+ * 
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
+ * * <a href="/docs/js/Controls/list/DataContainer/">Controls/list:DataContainer</a> 
  *
  * @class Controls/_list/Container
  * @extends Core/Control
@@ -23,27 +37,27 @@ import {ContextOptions as DataOptions} from 'Controls/context';
  * @author Герасимов А.М.
  * @public
  */
+export default class ListContainer extends Control<IControlOptions> {
+    protected _template: TemplateFunction = template;
+    protected _dataOptions: ISourceControllerState = null;
 
-var List = Control.extend({
-
-    _template: template,
-
-    _beforeMount: function (options, context) {
-        this._dataOptions = context.dataOptions;
-    },
-    _expandedItemsChanged(event, expandedItems) {
-        this._notify('listExpandedItemsChanged', [expandedItems], { bubbling: true });
-    },
-    _beforeUpdate: function (options, context) {
+    protected _beforeMount(options: IControlOptions, context: IDataContext): void {
         this._dataOptions = context.dataOptions;
     }
 
-});
+    protected _beforeUpdate(options: IControlOptions, context: IDataContext): void {
+        this._dataOptions = context.dataOptions;
+    }
 
-List.contextTypes = function () {
-    return {
-        dataOptions: DataOptions
-    };
-};
+    protected _notifyEventWithBubbling(e: SyntheticEvent, eventName: string): unknown {
+        return this._notify(eventName, Array.prototype.slice.call(arguments, 2), {
+            bubbling: true
+        });
+    }
 
-export = List;
+    static contextTypes(): IDataContext {
+        return {
+            dataOptions: DataOptions
+        };
+    }
+}

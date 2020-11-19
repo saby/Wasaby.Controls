@@ -1,7 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/ResizingLine/ResizingLine');
-import 'css!Controls-demo/Controls-demo';
-import 'css!Controls-demo/ResizingLine/ResizingLine';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
 class ResizingLine extends Control<IControlOptions> {
@@ -11,7 +9,7 @@ class ResizingLine extends Control<IControlOptions> {
 
     protected _template: TemplateFunction = controlTemplate;
 
-    private _offsetHandler(event: SyntheticEvent<Event>, containerName: string, offset: number): void {
+    protected _offsetHandler(event: SyntheticEvent<Event>, containerName: string, offset: number): void {
         let value: number;
         switch (containerName) {
             case 'leftContainer':
@@ -37,6 +35,8 @@ class ResizingLine extends Control<IControlOptions> {
     private static _limit(value: number): number {
         return  Math.max(ResizingLine.MIN_WIDTH, Math.min(value, ResizingLine.MAX_WIDTH));
     }
+
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/ResizingLine/ResizingLine'];
 }
 
 export default ResizingLine;

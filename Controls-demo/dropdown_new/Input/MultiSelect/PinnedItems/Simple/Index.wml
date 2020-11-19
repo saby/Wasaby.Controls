@@ -1,0 +1,15 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo_m demo-Dropdown__simple">
+        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 multiSelect="{{true}}"
+                                 iconSize="m"
+                                 dataLoadCallback="{{_dataLoadCallback}}"
+                                 source="{{_source}}">
+            <ws:headerTemplate>
+                <ws:partial template="Controls/dropdown:HeaderTemplate" caption="Operations"/>
+            </ws:headerTemplate>
+        </Controls.dropdown:Input>
+    </div>
+</div>

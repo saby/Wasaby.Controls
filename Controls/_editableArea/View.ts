@@ -1,11 +1,9 @@
 import Control = require('Core/Control');
 import Deferred = require('Core/Deferred');
-import Constants = require('Controls/Constants');
+import {editing as constEditing} from 'Controls/Constants';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
-import {delay} from 'Types/function';
-import 'css!theme?Controls/editableArea';
-import 'css!theme?Controls/list';
+import {autoEdit, toolbarVisible, backgroundStyleClass} from './ActualAPI';
 
 'use strict';
 var
@@ -30,12 +28,15 @@ var
             bubbling: true
          });
 
-         if (result === Constants.editing.CANCEL) {
+         if (result === constEditing.CANCEL) {
             return Deferred.success();
          }
 
          if (result && result.addCallback) {
-            return result.addCallback(function () {
+            return result.addCallback((res) => {
+               if (res === constEditing.CANCEL) {
+                  return Deferred.success();
+               }
                return _private.afterEndEdit(self, commit);
             });
          }
@@ -61,69 +62,58 @@ var
                self._options.editObject.set(field, self._editObject.get(field));
             });
          }
-         self._editObject.acceptChanges();
-      },
-      /**
-       * Асинхронно завершить редактирование и сохранить изменения.
-       * @remark
-       * Асинхронный вызов завершения редактирования решает проблему обработки устаревших данных в дочернем контроле:
-       * Например, если у поля ввода установлена опция trim = 'true', то при завершении редактирования будет обработано значение с пробелами,
-       * т.к. последовательно произойдет измененние значения поля ввода -> завершение редактирования -> обновление значения в поле ввода.
-       */
-      delayCommitEdit: function (self): void {
-         delay(self.commitEdit.bind(self));
+
+         /* При старте редактирования в стейт кладется клон
+          * Нужно вернуть оригинальную запись, чтобы при изменении в ней изменения отражались в контроле
+          */
+         self._editObject = self._options.editObject;
       }
    };
 
 /**
- * Контроллер для редактирования полей ввода.
- * <a href="/materials/demo-ws4-editable-area">Демо-пример</a>.
+ * Контроллер для <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">редактирования по месту в полях ввода</a>.
  *
  * @class Controls/_editableArea/View
  * @extends Core/Control
- * @mixes Controls/interface/IEditableArea
- * @author Авраменко А.С.
+ * @mixes Controls/editableArea:IView
+ * @author Красильников А.С
  * @public
  *
- * @css @background-color_EditableArea_style_withBackground Background color of the input field with the style option set to "accentHeader".
- * @css @spacing_EditableArea-between-editor-toolbar Spacing between the editor and the toolbar.
+ * @remark
+ * Если в качестве шаблона редактирования используются поля ввода, то при переключении в режим чтения может наблюдаться скачок текста.
+ * Для того, чтобы избежать этого, рекомендуется навесить CSS-класс **controls-Input_negativeOffset_theme_{{_options.theme}}** на редактируемую область.
  *
- * @demo Controls-demo/EditableArea/EditableArea
- */
-
-/*
- * Controller for editing of input fields.
- * <a href="/materials/demo-ws4-editable-area">Demo</a>.
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_editableArea.less">переменные тем оформления</a>
  *
- * @class Controls/_editableArea/View
- * @extends Core/Control
- * @mixes Controls/interface/IEditableArea
- * @author Авраменко А.С.
- * @public
- *
+ * @demo Controls-demo/EditableArea/View/Index
  */
 
 var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _template: template,
    _buttonsTemplate: buttonsTemplate,
    _isEditing: false,
+   _isStartEditing: false,
 
    _beforeMount: function (newOptions) {
-      this._isEditing = newOptions.editWhenFirstRendered;
-      this._editObject = newOptions.editObject.clone();
+      this._isEditing = autoEdit(newOptions.autoEdit, newOptions.editWhenFirstRendered);
+      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
+      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
+      this._editObject = newOptions.editObject;
    },
-
+   /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
+    актуального объекта */
    _beforeUpdate: function (newOptions) {
-      if (this._options.editObject !== newOptions.editObject) {
-         this._editObject = newOptions.editObject.clone();
+      if (newOptions.editObject !== this._options.editObject) {
+         this._editObject = newOptions.editObject;
       }
+      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
+      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
    },
-
    _afterUpdate: function () {
-      if (this._beginEditTarget) {
-         // search closest input and focus
-         this._beginEditTarget.getElementsByTagName('input')[0].focus();
-         this._beginEditTarget = null;
+      if (this._isStartEditing) {
+         this.activate();
+         this._isStartEditing = false;
       }
    },
 
@@ -134,8 +124,8 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    _onDeactivatedHandler: function () {
-      if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisibility) {
-         _private.delayCommitEdit(this);
+      if (!this._options.readOnly && this._isEditing && !this._toolbarVisible) {
+         this.commitEdit();
       }
    },
 
@@ -143,7 +133,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       if (this._isEditing) {
          switch (event.nativeEvent.keyCode) {
             case 13: // Enter
-               _private.delayCommitEdit(this);
+               this.commitEdit();
                break;
             case 27: // Esc
                this.cancelEdit();
@@ -153,17 +143,26 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    beginEdit: function (event, res) {
+      this._editObject = this._options.editObject.clone();
+      // Если опция editObject изменилась, то она ждет подтверждения изменения, делаем подтверждение у клона.
+      this._editObject.acceptChanges();
       // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110, как только появится веха
       var result = res || this._notify('beforeBeginEdit', [this._editObject], {
          bubbling: true
       });
-      if (result !== Constants.editing.CANCEL) {
+      if (result !== constEditing.CANCEL) {
          this._isEditing = true;
-         this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
+         this._isStartEditing = true;
       }
    },
 
    cancelEdit: function () {
+      /**
+       * Защита от ситуации, когда зовут отмену редактирования, а оно не начиналось.
+       */
+      if (!this._isEditing) {
+         return;
+      }
       return _private.endEdit(this, false);
    },
 
@@ -180,9 +179,12 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    }
 });
 
+View._theme = ['Controls/list', 'Controls/editableArea', 'Controls/Classes'];
+
 View.getDefaultOptions = function () {
    return {
-      style: 'withoutBackground'
+      autoEdit: false,
+      toolbarVisible: false
    };
 };
 

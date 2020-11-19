@@ -1,0 +1,17 @@
+<div class="controls-JumpingLabel controls-JumpingLabel_padding-{{_containerHorizontalPadding}}_theme-{{_options.theme}}">
+   <div class="controls-JumpingLabel__value
+               controls-JumpingLabel__value_theme-{{_options.theme}}
+               controls-JumpingLabel__value_{{_fontColorStyle}}_theme-{{_options.theme}}
+               controls-JumpingLabel_padding-{{_padding}}_theme-{{_options.theme}}
+               {{_showFromAbove ? '' : 'ws-invisible'}}"
+   >{{_options.caption}}</div>
+   <ws:partial template="{{_options.content}}"
+               attr:class="controls-JumpingLabel__content"
+               placeholder="{{_options.caption}}"
+               borderVisibility="{{_borderVisibility}}"
+               horizontalPadding="{{_horizontalPadding}}"
+               validationStatus="{{_validationStatus}}"
+               on:valueChanged="_valueChangedHandler()"
+               on:selectedKeyChanged="_selectedChangedHandler()"
+               on:selectedKeysChanged="_selectedChangedHandler()"/>
+</div>

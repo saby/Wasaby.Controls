@@ -1,0 +1,5 @@
+<div>
+    <div>Normal text style</div>
+    <div class="controls-text-unaccented_theme-{{_options.theme}}
+                controls-fontsize-xs_theme-{{_options.theme}}">Custom text style</div>
+</div>

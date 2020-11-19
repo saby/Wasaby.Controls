@@ -6,18 +6,8 @@ import isEmpty = require('Core/helpers/Object/isEmpty');
 import EventProxyMixin from './Mixin/EventProxy';
 import {MonthModel as modelViewModel} from 'Controls/calendar';
 import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
-import dateUtils = require('Controls/Utils/Date');
+import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
-
-/**
- * Item for the period selection component of multiple months.
- *
- * @class Controls/_datePopup/MonthsRangeItem
- * @extends Core/Control
- * @control
- * @author Красильников А.С.
- * @private
- */
 
 var _private = {},
     SELECTION_VEIW_TYPES = {
@@ -26,7 +16,15 @@ var _private = {},
     };
 
 const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
-
+/**
+ * Item for the period selection component of multiple months.
+ *
+ * @class Controls/_datePopup/MonthsRangeItem
+ * @extends Core/Control
+ *
+ * @author Красильников А.С.
+ * @private
+ */
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
     _monthViewModel: modelViewModel,
@@ -106,7 +104,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (this._quarterSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfQuarter(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfQuarter(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 
@@ -122,11 +121,21 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
+    _calculateRangeSelectedCallback: function(startValue, endValue) {
+        if (this._options.rangeSelectedCallback) {
+            const ranges = this._options.rangeSelectedCallback(startValue, endValue);
+            startValue = ranges[0];
+            endValue = ranges[1];
+        }
+        return [startValue, endValue];
+    },
+
     _onHalfYearClick: function (e, date) {
         if (this._halfyearSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfHalfyear(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfHalfyear(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 
@@ -198,8 +207,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._options.selectionBaseValue, this._options.selectionHoveredValue) &&
             this._selectionViewType === SELECTION_VEIW_TYPES.months) {
             css.push('controls-PeriodDialog-MonthsRange__item-selected');
+            css.push('controls-PeriodDialog-MonthsRange__item-selected_theme-' + this._options.theme);
         } else {
             css.push('controls-PeriodDialog-MonthsRange__item');
+            css.push('controls-PeriodDialog-MonthsRange__item_theme-' + this._options.theme);
         }
 
         if (this._selectionViewType === SELECTION_VEIW_TYPES.months) {
@@ -212,15 +223,16 @@ var Component = BaseControl.extend([EventProxyMixin], {
                 this._options.selectionHoveredValue,
                 this._options.hoveredStartValue,
                 this._options.hoveredEndValue,
-                {periodQuantum: rangeSelectionUtils.PERIOD_TYPE.month}
+                {periodQuantum: rangeSelectionUtils.PERIOD_TYPE.month, theme: this._options.theme}
             ));
         } else if (this._options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.disable) {
-            css.push(rangeSelectionUtils.prepareHoveredClass(
+            const hoveredClass: string = rangeSelectionUtils.prepareHoveredClass(
                 itemValue,
                 this._options.hoveredStartValue,
                 this._options.hoveredEndValue,
-                {cssPrefix: MONTHS_RANGE_CSS_CLASS_PREFIX}
-            ));
+                {cssPrefix: MONTHS_RANGE_CSS_CLASS_PREFIX, theme: this._options.theme}
+            );
+            css.push(hoveredClass);
         }
 
         return css.join(' ');

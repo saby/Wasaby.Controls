@@ -1,24 +1,26 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
-import {Logger} from 'UI/Utils';
-import {IPopupItem, IPopupOptions, IPopupController} from 'Controls/_popup/interface/IPopup';
+import {Logger, Library} from 'UI/Utils';
+import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
+import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import {goUpByControlTree} from 'UI/Focus';
-import {delay as runDelayed} from 'Types/function';
 import {List} from 'Types/collection';
 import {Bus as EventBus} from 'Env/Event';
 import {detection} from 'Env/Env';
+import {debounce} from 'Types/function';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
-import template = require('wml!Controls/_popup/Manager/Manager');
+import * as cClone from 'Core/core-clone';
+
+const ORIENTATION_CHANGE_DELAY = 50;
 
 /**
  * Popups Manager
  * @class Controls/_popup/Manager
  * @private
  * @singleton
- * @category Popup
  * @author Красильников Андрей
  */
 
@@ -33,17 +35,45 @@ interface IManagerTouchContext {
     };
 }
 
-class Manager extends Control<IManagerOptions> {
-    _template: TemplateFunction = template;
-    _hasMaximizePopup: boolean = false;
-    _contextIsTouch: boolean = false;
-    _popupItems: List<IPopupItem> = new List();
+const RESIZE_DELAY = 10;
+// on ios increase delay for scroll handler, because popup on frequent repositioning loop the scroll.
+const SCROLL_DELAY = detection.isMobileIOS ? 100 : 10;
 
-    protected _afterMount(options: IManagerOptions, context: IManagerTouchContext): void {
+class Manager {
+    _contextIsTouch: boolean = false;
+    _dataLoaderModule: string;
+    _popupItems: List<IPopupItem> = new List();
+    private _pageScrolled: Function;
+    private _popupResizeOuter: Function;
+
+    constructor(options = {}) {
+        this.initTheme(options);
+        this._dataLoaderModule = options.dataLoaderModule;
+        this._pageScrolled = debounce(this._pageScrolledBase, SCROLL_DELAY);
+        this._popupResizeOuter = debounce(this._popupResizeOuterBase, RESIZE_DELAY);
+    }
+
+    protected initTheme(options): void {
+        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
+        ManagerController.setTheme(options.theme);
+    }
+
+    protected init(options: IManagerOptions, context: IManagerTouchContext): void {
         this._updateContext(context);
         ManagerController.setManager(this);
-        ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
         EventBus.channel('navigation').subscribe('onBeforeNavigate', this._navigationHandler.bind(this));
+
+        if (detection.isMobilePlatform) {
+            window.addEventListener('orientationchange', () => {
+                // На момент срабатывания обработчика приходят старые размеры страницы.
+                // Опытным путем был подобран таймаут, после которого приходят актуальные размеры.
+                // Для IPAD PRO необходимо 50мс
+                setTimeout(() => {
+                    this.orientationChangeHandler();
+                }, ORIENTATION_CHANGE_DELAY);
+            });
+        }
+
         if (detection.isMobileIOS) {
             this._controllerVisibilityChangeHandler = this._controllerVisibilityChangeHandler.bind(this);
             EventBus.globalChannel().subscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
@@ -51,21 +81,39 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    protected _afterUpdate(oldOptions: IManagerOptions, context: IManagerTouchContext): void {
+    protected updateOptions(options: IManagerOptions, context: IManagerTouchContext): void {
         this._updateContext(context);
         // Theme of the popup header can be changed dynamically.
         // The option is not inherited, so in order for change option in 1 synchronization cycle,
         // we have to make an event model on ManagerController.
         // Now there are no cases where the theme changes when the popup are open,
         // so now just change the theme to afterUpdate.
-        ManagerController.setPopupHeaderTheme(this._options.popupHeaderTheme);
+        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
     }
 
-    protected _beforeUnmount(): void {
+    protected destroy(): void {
         if (detection.isMobileIOS) {
             EventBus.globalChannel().unsubscribe('MobileInputFocus', this._controllerVisibilityChangeHandler);
             EventBus.globalChannel().unsubscribe('MobileInputFocusOut', this._controllerVisibilityChangeHandler);
         }
+    }
+
+    loadData(dataLoaders): Promise<unknown> {
+        const Loader = getModuleByName(this._dataLoaderModule);
+        if (Loader) {
+            return Loader.load(dataLoaders);
+        }
+        if (!this._dataLoaderModule) {
+            const message = 'На приложении не задан загрузчик данных. Опция окна dataLoaders будет проигнорирована';
+            Logger.warn(message, this);
+            return undefined;
+        }
+
+        return new Promise((resolve) => {
+            Library.load(this._dataLoaderModule).then((DataLoader) => {
+               resolve(DataLoader.load(dataLoaders));
+           });
+        });
     }
 
     /**
@@ -97,8 +145,9 @@ class Manager extends Control<IManagerOptions> {
         const item = this.find(id);
         if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
             item.popupOptions = options;
-            item.controller.getDefaultConfig(item);
-            this._popupItems._nextVersion();
+            Promise.resolve(item.controller.getDefaultConfig(item)).then(() => {
+                this._popupItems._nextVersion();
+            });
         }
     }
 
@@ -135,12 +184,13 @@ class Manager extends Control<IManagerOptions> {
     remove(id: string): Promise<void> {
         const item = this.find(id);
         if (item) {
+            const itemContainer = this._getItemContainer(id);
             // TODO: https://online.sbis.ru/opendoc.html?guid=7a963eb8-1566-494f-903d-f2228b98f25c
-            item.startRemove = true;
+            item.controller._beforeElementDestroyed(item, itemContainer);
             return new Promise((resolve) => {
                 this._closeChilds(item).then(() => {
                     this._finishPendings(id, null, null, () => {
-                        this._removeElement(item, this._getItemContainer(id), id).then(() => {
+                        this._removeElement(item, itemContainer).then(() => {
                             resolve();
                             const parentItem = this.find(item.parentId);
                             this._closeChildHandler(parentItem);
@@ -170,12 +220,24 @@ class Manager extends Control<IManagerOptions> {
         return item;
     }
 
-    /**
-     * Reindex a set of popups, for example, after changing the configuration of one of them
-     * @function Controls/_popup/Manager#reindex
-     */
-    reindex(): void {
-        this._popupItems._reindex();
+    isDestroying(id: string): boolean {
+        const item = this.find(id);
+        return item &&
+            (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
+             item.popupState === item.controller.POPUP_STATE_DESTROYING ||
+             item.popupState === item.controller.POPUP_STATE_DESTROYED);
+    }
+
+    private orientationChangeHandler(): void {
+        let needUpdate = false;
+        this._popupItems.each((item) => {
+            if (this._popupUpdated(item.id)) {
+                needUpdate = true;
+            }
+        });
+        if (needUpdate) {
+            this._redrawItems();
+        }
     }
 
     private _updateContext(context: IManagerTouchContext): void {
@@ -193,12 +255,8 @@ class Manager extends Control<IManagerOptions> {
             activeControlAfterDestroy: this._getActiveControl(),
             activeNodeAfterDestroy: this._getActiveElement(), // TODO: COMPATIBLE
             popupState: controller.POPUP_STATE_INITIALIZING,
-            hasMaximizePopup: this._hasMaximizePopup,
             childs: []
         };
-        if (!this._hasMaximizePopup && options.maximize) {
-            this._hasMaximizePopup = true;
-        }
 
         this._registerPopupLink(popupConfig);
         return popupConfig;
@@ -231,9 +289,6 @@ class Manager extends Control<IManagerOptions> {
 
     private _addElement(item: IPopupItem): void {
         this._popupItems.add(item);
-        if (item.modal) {
-            ManagerController.getContainer().setOverlay(this._popupItems.getCount() - 1);
-        }
     }
 
     private _closeChilds(item: IPopupItem): Promise<null> {
@@ -258,24 +313,19 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    private _removeElement(item: IPopupItem, container: HTMLElement, id: string): Promise<void> {
+    private _removeElement(item: IPopupItem, container: HTMLElement): Promise<void> {
         const removeDeferred = item.controller._elementDestroyed(item, container);
         this._redrawItems();
 
-        if (item.popupOptions.maximize) {
-            this._hasMaximizePopup = false;
-        }
-
-        this._notify('managerPopupBeforeDestroyed', [item, this._popupItems, container], {bubbling: true});
+        Manager._notifyEvent('managerPopupBeforeDestroyed', [item, this._popupItems, container]);
         return removeDeferred.addCallback(() => {
-            this._fireEventHandler(id, 'onClose');
             this._popupItems.remove(item);
             this._removeFromParentConfig(item);
 
-            this._updateOverlay();
-            this._redrawItems();
-            this._notify('managerPopupDestroyed', [item, this._popupItems], {bubbling: true});
-            EventBus.channel('popupManager').notify('managerPopupDestroyed', item, this._popupItems);
+            this._removeContainerItem(item, (removedItem: IPopupItem) => {
+                this._fireEventHandler(removedItem, 'onClose');
+            });
+            Manager._notifyEvent('managerPopupDestroyed', [item, this._popupItems]);
         });
     }
 
@@ -291,25 +341,11 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    private _updateOverlay(): void {
-        const indices = this._popupItems.getIndicesByValue('modal', true);
-        ManagerController.getContainer().setOverlay(indices.length ? indices[indices.length - 1] : -1);
-    }
-
-    protected _pageScrolled(id: string): boolean {
-        const item = this.find(id);
-        if (item) {
-            return item.controller.pageScrolled(item, this._getItemContainer(id));
-        }
-        return false;
-    }
-
     protected _popupBeforePaintOnMount(id: string): void {
         const item = this.find(id);
         if (item) {
             if (!item.popupOptions.isCompoundTemplate) {
-                this._notify('managerPopupCreated', [item, this._popupItems], {bubbling: true});
-                EventBus.channel('popupManager').notify('managerPopupCreated', item, this._popupItems);
+                Manager._notifyEvent('managerPopupCreated', [item, this._popupItems]);
             }
         }
     }
@@ -318,15 +354,14 @@ class Manager extends Control<IManagerOptions> {
         const item = this.find(id);
         if (item) {
             // Register new popup
-            this._fireEventHandler(id, 'onOpen');
+            this._fireEventHandler(item, 'onOpen');
             this._prepareIsTouchData(item);
-            item.controller._elementCreated(item, this._getItemContainer(id));
+            return item.controller._elementCreated(item, this._getItemContainer(id));
             // if it's CompoundTemplate, then compoundArea notify event, when template will ready.
             // notify this event on popupBeforePaintOnMount, cause we need synchronous reaction on created popup
             // if (!item.popupOptions.isCompoundTemplate) {
-            //     this._notify('managerPopupCreated', [item, this._popupItems], {bubbling: true});
+            //     Manager._notifyEvent('managerPopupCreated', [item, this._popupItems]);
             // }
-            return true;
         }
         return false;
     }
@@ -339,7 +374,7 @@ class Manager extends Control<IManagerOptions> {
         const element = this.find(id);
         if (element) {
             element.controller._popupResizingLine(element, offset);
-            this._notify('managerPopupUpdated', [element, this._popupItems], {bubbling: true});
+            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
             return true;
         }
         return false;
@@ -350,7 +385,7 @@ class Manager extends Control<IManagerOptions> {
         if (element) {
             // при создании попапа, зарегистрируем его
             const needUpdate = element.controller._elementUpdated(element, this._getItemContainer(id));
-            this._notify('managerPopupUpdated', [element, this._popupItems], {bubbling: true});
+            Manager._notifyEvent('managerPopupUpdated', [element, this._popupItems]);
             return !!needUpdate;
         }
         return false;
@@ -360,7 +395,7 @@ class Manager extends Control<IManagerOptions> {
         const element = this.find(id);
         if (element) {
             element.controller._elementMaximized(element, this._getItemContainer(id), state);
-            this._notify('managerPopupMaximized', [element, this._popupItems], {bubbling: true});
+            Manager._notifyEvent('managerPopupMaximized', [element, this._popupItems]);
             return true;
         }
         return false;
@@ -399,7 +434,7 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
-    protected _mouseDownHandler(event: Event): void {
+    protected mouseDownHandler(event: Event): void {
         if (this._popupItems && !this._isIgnoreActivationArea(event.target as HTMLElement)) {
             const deactivatedPopups = [];
             this._popupItems.each((item) => {
@@ -479,19 +514,57 @@ class Manager extends Control<IManagerOptions> {
             // Если над скрытым стековым окном позиционируются другие окна,
             // то не даем им реагировать на внутренние ресайзы
             // иначе позиция может сбиться, т.к. таргет в текущий момент невидим
-            if (!parentItem || parentItem.popupOptions.hidden !== true) {
+            if (!parentItem || parentItem.position.hidden !== true) {
                 return item.controller.resizeInner(item, this._getItemContainer(id));
             }
         }
         return false;
     }
 
-    protected _popupResizeOuter(id: string): boolean {
-        const item = this.find(id);
-        if (item) {
-            return item.controller.resizeOuter(item, this._getItemContainer(id));
+    protected _popupResizeOuterBase(): void {
+        const result = this._updatePopupPosition('resizeOuter');
+        // Обработчик обернут в debounce, обновление нужно звать самому, после выполнения функции.
+        if (result) {
+            this._redrawItems();
         }
-        return false;
+    }
+
+    protected _workspaceResize(): boolean {
+        return this._updatePopupPosition('workspaceResize');
+    }
+
+    protected _pageScrolledBase(): boolean {
+        const result = this._updatePopupPosition('pageScrolled');
+        // Обработчик обернут в debounce, обновление нужно звать самому, после выполнения функции.
+        if (result) {
+            this._redrawItems();
+        }
+    }
+
+    private _updatePopupPosition(callbackName: string): boolean {
+        let needUpdatePopups = false;
+        // Изменились размеры контентной области. Сбросим кэш и пересчитаем позиции окон.
+        this._resetRestrictiveContainerCache();
+        this._popupItems.each((item: IPopupItem) => {
+            const needUpdate = item.controller[callbackName](item, this._getItemContainer(item.id));
+            if (needUpdate) {
+                needUpdatePopups = true;
+            }
+        });
+        return needUpdatePopups;
+    }
+
+    private _resetRestrictiveContainerCache(): void {
+        const BaseController = this._getBaseController();
+        BaseController?.resetRootContainerCoords();
+    }
+
+    private _getBaseController(): unknown {
+        const controllerLibName = 'Controls/popupTemplate';
+        if (requirejs.defined(controllerLibName)) {
+            const {BaseController} = requirejs(controllerLibName);
+            return BaseController;
+        }
     }
 
     protected _popupDragEnd(id: string, offset: number): boolean {
@@ -505,7 +578,13 @@ class Manager extends Control<IManagerOptions> {
 
     protected _popupResult(id: string): boolean {
         const args = Array.prototype.slice.call(arguments, 1);
-        return this._fireEventHandler.apply(this, [id, 'onResult'].concat(args));
+        // Окно уничтожается из верстки за счет удаления конфигурации из массива, по которому строятся окна.
+        // В этом случае вызов unmount дочерних контролов произойдет после того, как конфига с окном в списке не будет.
+        // Поэтому если на beforeUnmount пронотифаят sendResult, то мы его не обработаем, т.к. не найдем конфиг окна.
+        // Поэтому достаю опции не из массива, а из самого инстанса, который в этом случае находится в состоянии
+        // анмаунта, но еще не удален.
+        const popup = this._getPopupContainer().getPopupById(id);
+        this._callEvents(popup?._options, 'onResult', args);
     }
 
     protected _popupClose(id: string): boolean {
@@ -521,19 +600,26 @@ class Manager extends Control<IManagerOptions> {
         return false;
     }
 
-    private _fireEventHandler(id: string, event: string): boolean {
-        const item = this._findItemById(id);
-        const args = Array.prototype.slice.call(arguments, 2);
+    private _fireEventHandler(item: IPopupItem, event: string): boolean {
         if (item) {
-            if (item.popupOptions._events) {
-                item.popupOptions._events[event](event, args);
-            }
-            if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
-                item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);
-                return true;
+            const popupOptions = cClone(item.popupOptions || {});
+            popupOptions.id = item.id;
+            try {
+                this._callEvents(popupOptions, event);
+            } catch (e: Error) {
+                Logger.error(`В окне с шаблоном ${popupOptions.template}
+                произошла ошибка в обработчике события ${event}`, undefined, e);
             }
         }
-        return false;
+    }
+
+    private _callEvents(options: IPopupOptions = {}, event: string, args: unknown[] = []): boolean {
+        if (options._events && options._events[event]) {
+            options._events[event](event, args);
+        }
+        if (options.eventHandlers && typeof options.eventHandlers[event] === 'function') {
+            options.eventHandlers[event].apply(options, args);
+        }
     }
 
     private _getItemContainer(id: string): HTMLElement {
@@ -548,9 +634,65 @@ class Manager extends Control<IManagerOptions> {
         return container;
     }
 
-    private _redrawItems(): void {
+    private _removeContainerItem(removedItem: IPopupItem, removedCallback: Function): void {
+        ManagerController.getContainer().removePopupItem(this._popupItems, removedItem, removedCallback);
+        this._redrawItems();
+    }
+
+    private _redrawItems(): Promise<void> {
+        this._updateZIndex();
         this._popupItems._nextVersion();
-        ManagerController.getContainer().setPopupItems(this._popupItems);
+        return ManagerController.getContainer().setPopupItems(this._popupItems);
+    }
+
+    private _updateZIndex(): void {
+        const popupList = this._preparePopupList();
+        const POPUP_ZINDEX_STEP = 10;
+        // для topPopup сделал шаг 2000, чтобы не писать отдельный просчет zIndex на старой странице
+        const TOP_POPUP_ZINDEX_STEP = 2000;
+
+        this._popupItems.each((item: IPopupItem, index: number) => {
+            // todo Нужно будет удалить поддержку опции zIndex, теперь есть zIndexCallback
+            let customZIndex: number = item.popupOptions.zIndex;
+            const currentItem = popupList.at(index);
+            if (item.popupOptions.zIndexCallback) {
+                customZIndex = item.popupOptions.zIndexCallback(currentItem, popupList);
+            }
+            const step = item.popupOptions.topPopup ? TOP_POPUP_ZINDEX_STEP : POPUP_ZINDEX_STEP;
+            const calculatedZIndex: number = currentItem.parentZIndex ? currentItem.parentZIndex + step : null;
+            const baseZIndex: number = (index + 1) * step;
+
+            // zIndex c конфига не может быть меньше родительского
+            if (currentItem.parentZIndex && customZIndex < currentItem.parentZIndex) {
+                customZIndex = calculatedZIndex;
+            }
+
+            item.currentZIndex = customZIndex || calculatedZIndex || baseZIndex;
+        });
+    }
+
+    private _preparePopupList(): List<IPopupItemInfo> {
+        const popupList: List<IPopupItemInfo> = new List();
+        this._popupItems.each((item: IPopupItem) => {
+            let parentZIndex = null;
+            if (item.parentId) {
+                const index = this._popupItems && this._popupItems.getIndexByValue('id', item.parentId);
+                if (index > -1) {
+                    parentZIndex = this._popupItems.at(index).currentZIndex;
+                }
+            }
+            popupList.add({
+                id: item.id,
+                type: item.controller.TYPE,
+                parentId: item.parentId,
+                parentZIndex,
+                popupOptions: {
+                    maximize: !!item.popupOptions.maximize, // for notification popup
+                    modal: !!item.popupOptions.modal // for notification popup
+                }
+            });
+        });
+        return popupList;
     }
 
     private _controllerVisibilityChangeHandler(): void {
@@ -574,20 +716,20 @@ class Manager extends Control<IManagerOptions> {
                             popupCallback: Function,
                             pendingCallback: Function,
                             pendingsFinishedCallback: Function): void {
-        const registrator = this._getPopupContainer().getPendingById(popupId);
+        const registrator = this._getPopupContainer().getPending();
         const item = this._findItemById(popupId);
         if (item && registrator) {
             popupCallback && popupCallback();
 
             if (registrator) {
-                const hasRegisterPendings = registrator._hasRegisteredPendings();
+                const hasRegisterPendings = registrator.hasRegisteredPendings(popupId);
                 if (hasRegisterPendings) {
                     pendingCallback && pendingCallback();
                 }
                 if (item.removePending) {
                     return item.removePending;
                 }
-                item.removePending = registrator.finishPendingOperations();
+                item.removePending = registrator.finishPendingOperations(undefined, popupId);
 
                 // TODO: Compatible Пендинги от совместимости старого FormController'a не
                 // попадают в _hasRegisteredPendings,
@@ -602,6 +744,8 @@ class Manager extends Control<IManagerOptions> {
                     pendingsFinishedCallback && pendingsFinishedCallback();
                 }, (e) => {
                     item.removePending = null;
+                    // Change popupState from 'destroyed' to 'created' after cancelFinishPending
+                    item.popupState = item.controller.POPUP_STATE_CREATED;
                     if (e.canceled !== true) {
                         Logger.error('Controls/_popup/Manager/Container: Не получилось завершить пендинги: ' +
                             '(name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')',
@@ -624,7 +768,8 @@ class Manager extends Control<IManagerOptions> {
                 focusedContainer.classList.contains('ws-wait-indicator')) {
                 return true;
             }
-            focusedContainer = focusedContainer.parentElement;
+            // У SVG в IE11 нет parentElement
+            focusedContainer = focusedContainer.parentElement || focusedContainer.parentNode;
         }
         return false;
     }
@@ -647,11 +792,7 @@ class Manager extends Control<IManagerOptions> {
 
     private _updatePopupOptions(id: string, item: IPopupItem, oldOptions: IPopupOptions, result: boolean): void {
         if (result) {
-            this._updateOverlay();
-            this._redrawItems();
-
-            // wait, until popup will be update options
-            runDelayed(() => {
+            this._redrawItems().then(() => {
                 ManagerController.getContainer().activatePopup(id);
             });
         } else {
@@ -665,14 +806,15 @@ class Manager extends Control<IManagerOptions> {
         // Если пытаются перейти по аккордеону, то закрываем все открытые окна
         // Если есть пендинги - отменяем переход.
         this._popupItems.each((item) => {
-            const registrator = this._getPopupContainer().getPendingById(item.id);
+            const registrator = this._getPopupContainer().getPending();
             if (registrator) {
-                if (registrator._hasRegisteredPendings()) {
+                if (registrator.hasRegisteredPendings(item.id)) {
                     hasPendings = true;
                 }
             }
             // Закрываю окна первого уровня, дочерние закроются вместе с ними
-            if (!item.parentId) {
+            // нотификационные окна не закрываем ( ДО, звонки )
+            if (!item.parentId && item.controller.TYPE !== 'Notification') {
                 this.remove(item.id);
             }
         });
@@ -683,12 +825,15 @@ class Manager extends Control<IManagerOptions> {
         }
     }
 
-    protected _eventHandler(event: Event, actionName: string): void {
-        const args = Array.prototype.slice.call(arguments, 2);
+    eventHandler(actionName: string, args: any[]): void {
         const actionResult = this[`_${actionName}`].apply(this, args);
         if (actionResult === true) {
             this._redrawItems();
         }
+    }
+
+    private static _notifyEvent(event: string, args: unknown[]): void {
+        EventBus.channel('popupManager').notify(event, ...args);
     }
 }
 

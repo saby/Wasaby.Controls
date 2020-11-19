@@ -1,20 +1,23 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_suggest/Input/Input');
-import tmplNotify = require('Controls/Utils/tmplNotify');
+import {tmplNotify} from 'Controls/eventUtils';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
+import {generateStates} from 'Controls/input';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
  * @remark
- * См. <a href="/materials/demo/demo-suggest-input">демо-пример</a>
+ * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSuggest">демо-пример</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less">переменные тем оформления</a>
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IBorderStyle
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -24,10 +27,8 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
- * @mixes Controls/_suggest/Input/Styles
- * @control
+ * 
  * @public
- * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Герасимов А.М.
  */
@@ -35,25 +36,22 @@ import {getOptionTypes} from 'Controls/_suggest/Utils';
 /*
  * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
  *
- * Here you can see the <a href="/materials/demo/demo-suggest-input">demo examples</a>.
+ * Here you can see the <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSuggest">demo examples</a>.
  *
  * @class Controls/_suggest/Input
  * @extends Core/Control
  * @mixes Controls/_suggest/ISuggest
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
- * @mixes Controls/_suggest/Input/Styles
- * @control
+ * 
  * @public
- * @category Input
  * @demo Controls-demo/Input/Suggest/SuggestPG
  * @author Gerasimov A.M.
  */
-
 var Suggest = Control.extend({
 
    _template: template,
@@ -63,9 +61,11 @@ var Suggest = Control.extend({
 
    // <editor-fold desc="LifeCycle">
 
-   _beforeMount: function() {
+   _beforeMount: function(options) {
       this._searchStart = this._searchStart.bind(this);
       this._searchEnd = this._searchEnd.bind(this);
+      this._searchError = this._searchError.bind(this);
+      generateStates(this, options);
    },
 
    // </editor-fold>
@@ -115,8 +115,11 @@ var Suggest = Control.extend({
    _searchEnd: function() {
       this._searchState = false;
       this._forceUpdate();
-   }
+   },
 
+   _searchError: function() {
+      this._searchState = false;
+   }
    // </editor-fold>
 
 });
@@ -133,5 +136,11 @@ Suggest.getDefaultOptions = function() {
 };
 
 // </editor-fold>
-
+/**
+ * @event Происходит перед открытием окна выбора, которое открывается при клике на "Показать всё".
+ * @remark
+ * Кнопка "Показать всё" отображается в подвале автодополнения.
+ * @name Controls/_suggest/Input#showSelector
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
 export = Suggest;

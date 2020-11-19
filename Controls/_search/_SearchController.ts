@@ -53,17 +53,23 @@ var _private = {
       });
    },
 
-   abort(self, force: boolean): void {
+   abort(self, force: boolean, callback): void {
       _private.getSearch(self).addCallback((search) => {
          search.abort(force).addCallback(() => {
-            const filter = clone(self._options.filter);
-            delete filter[self._options.searchParam];
-            if (self._options.abortCallback) {
-               self._options.abortCallback(filter);
+            if (callback) {
+               callback(self);
             }
          });
          return search;
       });
+   },
+
+   resetFilters(self): void {
+      const filter = clone(self._options.filter);
+      delete filter[self._options.searchParam];
+      if (self._options.abortCallback) {
+         self._options.abortCallback(filter);
+      }
    }
 };
 
@@ -72,7 +78,7 @@ var _private = {
  * При необходимости загружает Controls/search:_Search и делает запрос за данными.
  * @author Герасимов Александр
  * @class Controls/_search/_SearchController
- * @mixes Controls/interface/ISearch
+ * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @private
  */
@@ -94,12 +100,13 @@ var SearchController = extend({
    search: function(value, force) {
       const valueLength = value.length;
       const searchByValueChanged = this._options.minSearchLength !== null;
+      const forceAbort = valueLength ? force : true;
       let result;
 
       if ((searchByValueChanged && valueLength >= this._options.minSearchLength) || (force && valueLength)) {
          result = _private.search(this, value, force);
       } else if (searchByValueChanged || !valueLength) {
-         result = _private.abort(this);
+         result = _private.abort(this, forceAbort, _private.resetFilters);
       }
 
       return result;
@@ -122,7 +129,11 @@ var SearchController = extend({
    },
 
    abort: function(force) {
-      _private.abort(this, force);
+      _private.abort(this, force, _private.resetFilters);
+   },
+
+   cancel: function() {
+      _private.abort(this, true);
    },
 
    isLoading: function() {

@@ -2,7 +2,7 @@ import {Service as HistoryService, FilterSource as HistorySource, Constants} fro
 import {factory} from 'Types/chain';
 import * as CoreClone from 'Core/core-clone';
 
-import {Controller as SourceController} from 'Controls/source';
+import {CrudWrapper} from 'Controls/dataSource';
 import {factory as CollectionFactory} from 'Types/collection';
 import entity = require('Types/entity');
 import collection = require('Types/collection');
@@ -51,13 +51,13 @@ function getHistorySource(cfg) {
 }
 
 function loadHistoryItems(historyConfig) {
-   var source = getHistorySource(historyConfig);
-   var sourceController = new SourceController({
-      source: source
-   });
-   return sourceController.load({
-      '$_history': true
-   }).addCallback(function(items) {
+   const source = getHistorySource(historyConfig);
+   const crudWrapper = new CrudWrapper({source});
+   return crudWrapper.query({
+      filter: {
+         $_history: true
+      }
+   }).then((items) => {
       return new collection.RecordSet({
          rawData: items.getRawData(),
          adapter: new entity.adapter.Sbis()
@@ -79,30 +79,36 @@ function deleteHistorySourceFromConfig(initConfig, sourceField) {
    return configs;
 }
 
+function createRecordSet(items, sourceRecordSet) {
+   return items.value(CollectionFactory.recordSet, {
+      adapter: sourceRecordSet.getAdapter(),
+      keyProperty: sourceRecordSet.getKeyProperty(),
+      format: sourceRecordSet.getFormat(),
+      model: sourceRecordSet.getModel(),
+      metaData: sourceRecordSet.getMetaData()
+   });
+}
+
 function getUniqItems(items1, items2, keyProperty) {
-   const uniqItems = factory(items2).filter((item) => {
-      if (!items1.getRecordById(item.get(keyProperty))) {
+   const resultItems = items1.clone();
+   resultItems.prepend(items2);
+
+   let uniqItems = factory(resultItems).filter((item, index) => {
+      if (resultItems.getIndexByValue(keyProperty, item.get(keyProperty)) === index) {
          return item;
       }
-   }).value();
-   const resultItems = items1.clone();
-   resultItems.prepend(uniqItems);
-   return resultItems;
+   });
+   return createRecordSet(uniqItems, items1);
 }
 
 function prependNewItems(oldItems, newItems, sourceController, keyProperty) {
    const allCount = oldItems.getCount();
-   const uniqItems = getUniqItems(oldItems, newItems, keyProperty);
+   let uniqItems = getUniqItems(oldItems, newItems, keyProperty);
 
    if (sourceController && sourceController.hasMoreData('down')) {
-      uniqItems = factory(uniqItems).first(allCount).value(CollectionFactory.recordSet, {
-         adapter: oldItems.getAdapter(),
-         keyProperty: oldItems.getKeyProperty(),
-         format: oldItems.getFormat(),
-         model: oldItems.getModel()
-      });
+      uniqItems = factory(uniqItems).first(allCount);
+      uniqItems = createRecordSet(uniqItems, oldItems);
    }
-   uniqItems.setMetaData(oldItems.getMetaData());
    return uniqItems;
 }
 

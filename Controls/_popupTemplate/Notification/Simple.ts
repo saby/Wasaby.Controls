@@ -10,30 +10,22 @@ export interface INotificationSimpleOptions extends IControlOptions, INotificati
 /**
  * Базовый шаблон {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/notification/ простого окна уведомления}.
  *
+ * @remark
+ * Полезные ссылки:
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/notification/">руководство разработчика</a>
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * 
  * @class Controls/_popupTemplate/Notification/Simple
  * @extends Core/Control
  * @mixes Controls/_popupTemplate/Notification/interface/INotification
- * @control
+ * 
  * @public
- * @category popup
  * @demo Controls-demo/NotificationDemo/NotificationTemplate
  * @author Красильников А.С.
  */
-
-/**
- * @name Controls/_popupTemplate/Notification/Simple#icon
- * @cfg {String} Устанавливает значок сообщения окна уведомления.
- */
-
-/**
- * @name Controls/_popupTemplate/Notification/Simple#text
- * @cfg {String} Устанавливает текст уведомления.
- */
-
-
 class NotificationSimple extends Control<INotificationSimpleOptions> implements INotification {
     protected _template: TemplateFunction = template;
-    private _iconStyle: String;
+    protected _iconStyle: String;
 
     private _prepareIconStyle(popupOptions: INotificationSimpleOptions): String {
         switch (popupOptions.style) {
@@ -66,5 +58,13 @@ class NotificationSimple extends Control<INotificationSimpleOptions> implements 
 
     static _theme: string[] = ['Controls/popupTemplate', 'Controls/Classes'];
 }
+/**
+ * @name Controls/_popupTemplate/Notification/Simple#icon
+ * @cfg {String} Устанавливает значок сообщения окна уведомления.
+ */
 
+/**
+ * @name Controls/_popupTemplate/Notification/Simple#text
+ * @cfg {String} Устанавливает текст уведомления.
+ */
 export default NotificationSimple;

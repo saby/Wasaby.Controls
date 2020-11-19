@@ -1,0 +1,14 @@
+<div class="controlsDemo__wrapper controlsDemo__childMaxWidth550">
+    <div class="controlsDemo__cell">
+        <Controls.buttons:Button caption="{{ 'Сменить количество записей на ' + (_elementsCount === 5 ? 6 : 5) }}"
+                                 on:click="_onUpdateElementsCount()"></Controls.buttons:Button>
+    </div>
+    <Controls.list:View
+            keyProperty="id"
+            source="{{_viewSource}}">
+        <ws:navigation source="page" view="pages">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+            <ws:viewConfig totalInfo="basic"/>
+        </ws:navigation>
+    </Controls.list:View>
+</div>

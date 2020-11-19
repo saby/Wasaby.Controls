@@ -1,12 +1,10 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import template = require('wml!Controls/_validate/Container');
 import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import isNewEnvironment = require('Core/helpers/isNewEnvironment');
-import getZIndex = require('Controls/Utils/getZIndex');
 import {UnregisterUtil, RegisterUtil} from 'Controls/event';
 import errorMessage = require('wml!Controls/_validate/ErrorMessage');
-import 'css!theme?Controls/validate';
 import {ValidationStatus} from "Controls/interface";
 import {Logger} from 'UI/Utils';
 
@@ -14,107 +12,32 @@ export interface IValidateConfig {
     hideInfoBox?: boolean;
 }
 
+interface IValidateContainerOptions extends IControlOptions {
+    content?: TemplateFunction;
+    validators?: Function[];
+    errorTemplate?: TemplateFunction;
+}
+
+type ValidResult = boolean|null|Promise<boolean>|string[];
 /**
  * Контрол, регулирующий валидацию своего контента. Валидация запускается вызовом метода {@link Controls/_validate/Container#validate validate}.
  * @remark
  * Подробнее о работе с валидацией читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
  * @extends Core/Control
- * @control
+ * 
  * @public
  * @author Красильников А.С.
  */
-
-const _private = {
-
-    openInfoBox(self) {
-        if (self._validationResult && self._validationResult.length && !self._isOpened) {
-            self._isOpened = true;
-            const cfg = {
-                target: self._container,
-                style: 'danger',
-                styleType: 'outline',
-                template: errorMessage,
-                templateOptions: {content: self._validationResult},
-                eventHandlers: {
-                    onResult: self._mouseInfoboxHandler.bind(self),
-                    onClose: self._closeHandler.bind(self)
-                }
-            };
-
-            _private.callInfoBox(self, cfg);
-        }
-    },
-    callInfoBox(self, cfg) {
-        // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
-        if (self._isNewEnvironment) {
-            self._notify('openInfoBox', [cfg], {bubbling: true});
-        } else {
-            // To place zIndex in the old environment
-            // Аналог self._notify('openInfoBox', [cfg], { bubbling: true });, только обработчик
-            // Вызывается напрямую, так как события через compoundControl не летят
-            cfg.zIndex = getZIndex(self);
-            // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
-            // В том числе инфобоксы.
-            requirejs(['Controls/popup'], (popup) => {
-                popup.BaseOpener.getManager().then(() => {
-                    const GlobalPopup = _private.getGlobalPopup();
-                    if (GlobalPopup) {
-                        const event = {
-                            target: self._container
-                        };
-                        GlobalPopup._openInfoBoxHandler(event, cfg);
-                    }
-                });
-            });
-        }
-    },
-    getGlobalPopup() {
-        // Получаем обработчик глобальных событий по открытию окон, который на вдом
-        // Лежит в application
-        const ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
-        if (requirejs.defined(ManagerWrapperControllerModule)) {
-            return requirejs(ManagerWrapperControllerModule).default.getGlobalPopup();
-        }
-    },
-
-    closeInfoBox(self) {
-        self._closeId = setTimeout(function() {
-            _private.forceCloseInfoBox(self);
-        }, 300);
-    },
-
-    forceCloseInfoBox(self) {
-        const delay = 0;
-        if (self._isNewEnvironment) {
-            self._notify('closeInfoBox', [delay], {bubbling: true});
-        } else {
-            // Аналог self._notify('closeInfoBox', [delay], { bubbling: true });, только обработчик
-            // Вызывается напрямую, так как события через compoundControl не летят
-            const GlobalPopup = _private.getGlobalPopup();
-            if (GlobalPopup) {
-                const event = {
-                    target: self._container
-                };
-                GlobalPopup._closeInfoBoxHandler(event, delay);
-            }
-        }
-        self._isOpened = false;
-    }
-
-};
-
-type ValidResult = boolean|null|Promise<boolean>|string[];
-class ValidateContainer extends Control {
+class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
     _contentActive: boolean = false;
+    _validationStatus: string = 'valid';
     _currentValue: any;
-    _validationResult: ValidResult;
+    _validationResult: ValidResult = null;
     _isNewEnvironment: boolean;
     _closeId: number;
-
-    _private: any = _private;
 
     protected _beforeMount(): void {
         this._isNewEnvironment = isNewEnvironment();
@@ -123,19 +46,126 @@ class ValidateContainer extends Control {
     protected _afterMount(): void {
         // Use listener without template.
         // Some people can add style to the container of validation, and some people can add style to the content.
-        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this));
+        RegisterUtil(this, 'scroll', this._scrollHandler.bind(this), {listenAll: true});
         this._notify('validateCreated', [this], {bubbling: true});
     }
 
     protected _beforeUnmount(): void {
-        UnregisterUtil(this, 'scroll');
+        UnregisterUtil(this, 'scroll', {listenAll: true});
         this._notify('validateDestroyed', [this], {bubbling: true});
         if (this._isOpened) {
-            _private.forceCloseInfoBox(this);
+            this._forceCloseInfoBox();
         }
     }
 
-    _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
+    /**
+     * @typedef {Object} IValidateConfig
+     * @description Конфигурация метода validate для контейнеров валидации.
+     * @property {Boolean} hideInfobox Позволяет скрыть всплывающую подсказку при проваленной валидации.
+     */
+
+    /**
+     * Запускает валидацию.
+     * @function
+     * @name Controls/_validate/Container#validate
+     * @param {IValidateConfig} validateConfig
+     * @see setValidationResult
+     * @see isValid
+     */
+    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
+        return new Promise((resolve) => {
+            const validators = this._options.validators || [];
+            this.setValidationResult(null, validateConfig);
+            this._callValidators(validators, validateConfig).then((validationResult) => {
+                const isValid = validationResult === null;
+                if (this._isOpened && isValid) {
+                    this._forceCloseInfoBox();
+                }
+                resolve(validationResult);
+            });
+        });
+
+    }
+
+    /**
+     * Устанавливает результат валидации.
+     * @name Controls/_validate/Container#setValidationResult
+     * @function
+     * @param {null|Boolean|Array.<String>} validationResult Результат валидации.
+     * @see isValid
+     * @see validate
+     */
+    setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
+        if (this._validationResult !== validationResult) {
+            this._validationResult = validationResult;
+            this._validationStatus = this._getValidStatus(this._contentActive);
+            if (!(validationResult instanceof Promise)) {
+                this._forceUpdate();
+            }
+            if (!config.hideInfoBox) {
+                if (validationResult) {
+                    this._openInfoBox();
+                } else if (this._isOpened) {
+                    this._closeInfoBox();
+                }
+            }
+        }
+    }
+
+    /**
+     * Возвращает значение, указывающее, прошла ли проверка валидации содержимого успешно.
+     * @name Controls/_validate/Container#isValid
+     * @function
+     * @returns {Boolean}
+     * @see setValidationResult
+     * @see validate
+     */
+    isValid(): boolean {
+        return !this._validationResult;
+    }
+
+    openInfoBox(): void {
+        this._openInfoBox();
+    }
+
+    protected _hoverHandler(): void {
+        this._clearCloseId();
+        if (!this._isOpened) {
+            this._openInfoBox();
+        }
+    }
+
+    protected _focusInHandler(): void {
+        this._contentActive = true;
+        this._validationStatus = this._getValidStatus(this._contentActive);
+        this._clearCloseId();
+        if (!this._isOpened) {
+            this._openInfoBox();
+        }
+    }
+
+    protected _focusOutHandler(): void {
+        this._contentActive = false;
+        this._validationStatus = this._getValidStatus(this._contentActive);
+    }
+
+    protected _mouseLeaveHandler(): void {
+        if (!this.isValid()) {
+            this._closeInfoBox();
+        }
+    }
+    protected _valueChangedHandler(event: Event, value: any): void {
+        // We clean validation, if the value has changed.
+        // But some controls notify valueChanged if the additional data has changed.
+        // For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
+        if (this._currentValue !== value) {
+            this._currentValue = value;
+            this._notify('valueChanged', [value]);
+            this._cleanValid();
+        }
+    }
+
+    private _callValidators(validators: Function[], validateConfig?: IValidateConfig) {
         let validationResult = null,
             errors = [],
             validatorResult, validator, resultDeferred, index;
@@ -209,79 +239,94 @@ class ValidateContainer extends Control {
 
         return resultDeferred;
     }
-    /**
-     * Запускает валидацию.
-     * @function
-     * @name Controls/_validate/Container#validate
-     * @see setValidationResult
-     * @see isValid
-     */
-    validate(validateConfig?: IValidateConfig): Promise<boolean[]> {
-        return new Promise((resolve) => {
-            const validators = this._options.validators || [];
-            this.setValidationResult(undefined);
-            this._callValidators(validators, validateConfig).then(resolve);
-        });
 
-    }
+    private _openInfoBox(): void {
+        this._clearCloseId();
+        if (this._validationResult && this._validationResult.length && !this._isOpened) {
+            this._isOpened = true;
+            const cfg = {
+                target: this._container,
+                validationStatus: 'invalid',
+                template: this._options.errorTemplate,
+                templateOptions: {errors: this._validationResult},
+                closeOnOutsideClick: false,
+                eventHandlers: {
+                    onResult: this._mouseInfoboxHandler.bind(this),
+                    onClose: this._closeHandler.bind(this)
+                }
+            };
 
-    /**
-     * Устанавливает результат валидации.
-     * @name Controls/_validate/Container#setValidationResult
-     * @function
-     * @param {null|Boolean|Array.<String>} validationResult Результат валидации.
-     * @see isValid
-     * @see validate
-     */
-    setValidationResult(validationResult: ValidResult, config: IValidateConfig = {}): void {
-        this._validationResult = validationResult;
-        if (!(validationResult instanceof Promise)) {
-            this._forceUpdate();
-        }
-        if (validationResult && !config.hideInfoBox) {
-            _private.openInfoBox(this);
-        } else if (this._isOpened && validationResult === null) {
-            _private.closeInfoBox(this);
+            this._callInfoBox(cfg);
         }
     }
-
-    /**
-     * Возвращает результат валидации.
-     * @name Controls/_validate/Container#isValid
-     * @function
-     * @returns {undefined|Array.<String>}
-     * @see setValidationResult
-     * @see validate
-     */
-    isValid(): ValidResult {
-        return this._validationResult;
-    }
-
-    _hoverHandler(): void {
-        clearTimeout(this._closeId);
-        if (!this._isOpened) {
-            _private.openInfoBox(this);
+    private _callInfoBox(cfg): void {
+        // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+        if (this._isNewEnvironment) {
+            this._notify('openInfoBox', [cfg], {bubbling: true});
+        } else {
+            // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
+            // В том числе инфобоксы.
+            requirejs(['Controls/popup'], (popup) => {
+                popup.BaseOpener.getManager().then(() => {
+                    const GlobalPopup = this._getGlobalPopup();
+                    if (GlobalPopup) {
+                        const event = {
+                            target: this._container
+                        };
+                        GlobalPopup.openInfoBoxHandler(event, cfg);
+                    }
+                });
+            });
         }
     }
 
-    _scrollHandler(): void {
+    private _getGlobalPopup(): unknown {
+        // Получаем обработчик глобальных событий по открытию окон, который на вдом
+        // Лежит в application
+        const ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+        if (requirejs.defined(ManagerWrapperControllerModule)) {
+            return requirejs(ManagerWrapperControllerModule).default.getGlobalPopup();
+        }
+    }
+
+    private _closeInfoBox(): void {
+        this._closeId = setTimeout(() => {
+            this._forceCloseInfoBox();
+        }, 300);
+    }
+
+    private _clearCloseId(): void {
+        if (this._closeId) {
+            clearTimeout(this._closeId);
+            this._closeId = null;
+        }
+    }
+
+    private _forceCloseInfoBox(): void {
+        const delay = 0;
+        if (this._isNewEnvironment) {
+            this._notify('closeInfoBox', [delay], {bubbling: true});
+        } else {
+            // Аналог self._notify('closeInfoBox', [delay], { bubbling: true });, только обработчик
+            // Вызывается напрямую, так как события через compoundControl не летят
+            const GlobalPopup = this._getGlobalPopup();
+            if (GlobalPopup) {
+                const event = {
+                    target: this._container
+                };
+                GlobalPopup.closeInfoBoxHandler(event, delay);
+            }
+        }
+        this._isOpened = false;
+    }
+
+    private _scrollHandler(): void {
         if (this._isOpened) {
-            _private.forceCloseInfoBox(this);
+            this._forceCloseInfoBox();
         }
     }
 
-    _focusInHandler(): void {
-        this._contentActive = true;
-        if (!this._isOpened) {
-            _private.openInfoBox(this);
-        }
-    }
-
-    _focusOutHandler(): void {
-        this._contentActive = false;
-    }
-
-    _mouseInfoboxHandler(event: Event): void {
+    private _mouseInfoboxHandler(event: Event): void {
         if (event.type === 'mouseenter') {
             this._hoverInfoboxHandler();
         } else if (event.type === 'mouseleave') {
@@ -291,38 +336,21 @@ class ValidateContainer extends Control {
         }
     }
 
-    _closeHandler(): void {
+    private _closeHandler(): void {
         this._isOpened = false;
     }
 
-    _mouseLeaveHandler(): void {
-        if (this.isValid()) {
-            _private.closeInfoBox(this);
-        }
+    private _hoverInfoboxHandler(): void {
+        this._clearCloseId();
     }
 
-    _hoverInfoboxHandler(): void {
-        clearTimeout(this._closeId);
-    }
-
-    _valueChangedHandler(event: Event, value: any): void {
-        // We clean validation, if the value has changed.
-        // But some controls notify valueChanged if the additional data has changed.
-        // For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
-        if (this._currentValue !== value) {
-            this._currentValue = value;
-            this._notify('valueChanged', [value]);
-            this._cleanValid();
-        }
-    }
-
-    _cleanValid(): void {
+    private _cleanValid(): void {
         if (this._validationResult) {
             this.setValidationResult(null);
         }
     }
 
-    private _getValidStatus(contentActive: boolean): ValidationStatus {
+    protected _getValidStatus(contentActive: boolean): ValidationStatus {
         //ie is not support focus-within
         if (this._isValidResult()) {
             return contentActive ? 'invalidAccent' : 'invalid';
@@ -330,13 +358,19 @@ class ValidateContainer extends Control {
         return 'valid';
     }
 
-
     // todo это временный фикс, этот код должен уйти в контрол поля ввода,
     //  валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
     _isValidResult(): boolean {
         return this._validationResult && !(this._validationResult instanceof Promise);
     }
 
+    static _theme: [string] = ['Controls/validate'];
+
+    static getDefaultOptions(): IValidateContainerOptions {
+        return {
+            errorTemplate: errorMessage
+        };
+    }
 }
 
 export default ValidateContainer;
@@ -360,11 +394,8 @@ export default ValidateContainer;
  */
 
 /**
- * @name Controls/_validate/Container#readOnly
- * @cfg {Boolean} Валидация контрола в режиме чтения.
+ * @name Controls/_validate/Container#errorTemplate
+ * @cfg {Function} Пользовательский шаблон для отображения содержимого окна с ошибкой.
+ * @remark Шаблон принимает опцию errors (string[]), содержащую массив сообщений с ошибками.
+ * @demo Controls-demo/Validate/ErrorTemplate/Index
  */
-/*
- * @name Controls/_validate/Container#readOnly
- * @cfg {Boolean} Validate field in read mode.
- */
-

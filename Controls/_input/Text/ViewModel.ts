@@ -1,44 +1,74 @@
-import BaseViewModel = require('Controls/_input/Base/ViewModel');
-      
+import BaseViewModel from '../BaseViewModel';
+import {InputType, ISplitValue} from '../resources/Types';
+import {textBySplitValue} from '../resources/Util';
+import {IText} from 'Controls/decorator';
 
-      /**
-       * @class Controls/_input/Text/ViewModel
-       * @extends Controls/_input/Base/ViewModel
-       *
-       * @private
-       *
-       * @author Красильников А.С.
-       */
+export interface IViewModelOptions {
+    maxLength?: number;
+    constraint?: string;
+    punycodeToUnicode?: (punycode: string) => string;
+}
 
-      var _private = {
-         constraint: function(splitValue, constraint) {
-            var constraintRegExp = new RegExp(constraint, 'g');
-            var match = splitValue.insert.match(constraintRegExp);
+class ViewModel extends BaseViewModel<string, IViewModelOptions> {
+    private _punycodeToUnicode(punycode: string): string {
+        const start: number = ViewModel._indexPunycode(punycode);
 
-            splitValue.insert = match ? match.join('') : '';
-         },
+        if (start === -1) {
+            return punycode;
+        }
 
-         maxLength: function(splitValue, maxLength) {
-            var maxInsertionLength = maxLength - splitValue.before.length - splitValue.after.length;
+        /**
+         * При копировании URL из поисковой строки браузера, в буфер будет помещено значение http[s]://{Punycode}/.
+         * Метод toUnicode взят из публичного ресурса, и не предназначен для преобразования такой строки. Поэтому
+         * разбиваем строку так, чтобы можно было преобразовать только часть с Punycode.
+         */
+        const urlParts: string[] = punycode.match(ViewModel.URL);
 
-            splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
-         }
-      };
+        return `${urlParts[1]}${this._options.punycodeToUnicode(urlParts[2])}${urlParts[3]}`;
+    }
 
-      var ViewModel = BaseViewModel.extend({
-         handleInput: function(splitValue, inputType) {
-            if (inputType === 'insert') {
-               if (this.options.constraint) {
-                  _private.constraint(splitValue, this.options.constraint);
-               }
-               if (this.options.maxLength) {
-                  _private.maxLength(splitValue, this.options.maxLength);
-               }
+    protected _convertToDisplayValue(value: string | null): string {
+        return value === null ? '' : value;
+    }
+
+    protected _convertToValue(displayValue: string): string {
+        return displayValue;
+    }
+
+    protected _createText(splitValue: ISplitValue, inputType: InputType): IText {
+        if (inputType === 'insert') {
+            if (this._options.punycodeToUnicode) {
+                splitValue.insert = this._punycodeToUnicode(splitValue.insert);
             }
+            if (this._options.constraint) {
+                ViewModel._limitChars(splitValue, this._options.constraint);
+            }
+            if (this._options.maxLength) {
+                ViewModel._limitLength(splitValue, this._options.maxLength);
+            }
+        }
 
-            return ViewModel.superclass.handleInput.call(this, splitValue, inputType);
-         }
-      });
+        return  textBySplitValue(splitValue);
+    }
 
-      export = ViewModel;
-   
+    private static URL: RegExp = /^(https?:\/\/|)([\s\S]*?)(\/|)$/;
+
+    private static _limitChars(splitValue: ISplitValue, constraint: string): void {
+        const constraintRegExp: RegExp = new RegExp(constraint, 'g');
+        const match: RegExpMatchArray | null = splitValue.insert.match(constraintRegExp);
+
+        splitValue.insert = match ? match.join('') : '';
+    }
+
+    private static _limitLength(splitValue: ISplitValue, maxLength: number): void {
+        const maxInsertionLength: number = maxLength - splitValue.before.length - splitValue.after.length;
+        splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
+    }
+
+    private static _indexPunycode(code: string): number {
+        const punycodeStarts: string = 'xn--';
+        return code.indexOf(punycodeStarts);
+    }
+}
+
+export default ViewModel;

@@ -1,3 +1,6 @@
+import {ICrudPlus, ICrud} from 'Types/source';
+import {IPopupOptions} from 'Controls/popup';
+import {INavigationOptionValue} from 'Controls/interface';
 /**
  * Интерфейс для поддержки просмотра и редактирования полей фильтра.
  * @interface Controls/_filter/View/interface/IFilterView
@@ -19,18 +22,19 @@
  * @property {Types/source:Base} source Объект, который реализует интерфейс {@link Types/source:ICrud} для доступа к данным.
  * Если свойство items указано, то свойство source будет игнорироваться.
  * @property {Boolean} multiSelect Определяет, установлен ли множественный выбор.
- * @property {Controls/interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
+ * @property {Controls/_interface/ISelectorDialog} selectorTemplate Шаблон панели выбора элементов.
  * @property {Function|String} itemTemplate Шаблон рендеринга элементов.
- * Подробнее читайте {@link Controls/interface/IDropdown#itemTemplate здесь}.
+ * Подробнее о настройке itemTemplate читайте {@link Controls/_menu/interface/IMenuBase#itemTemplate здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {String} itemTemplateProperty Имя свойства, содержащего шаблон для рендеринга элементов.
- * Подробнее читайте {@link Controls/interface/IDropdown#itemTemplateProperty здесь}.
+ * Подробнее о настройке itemTemplateProperty читайте {@link Controls/_menu/interface/IMenuBase#itemTemplateProperty здесь}.
  * Для задания элемента в качестве заголовка используйте шаблон {@link Controls/filterPopup:SimplePanelEmptyItemTemplate}.
  * @property {Object} filter Конфигурация фильтра-объект с именами полей и их значениями.
- * Подробнее читайте {@link Controls/interface/IFilter#filter здесь}.
+ * Подробнее читайте {@link Controls/_interface/IFilter#filter здесь}.
  * @property {Object} navigation Конфигурация навигации по списку. Настройка навигации источника данных (страницы, смещение, положение) и представления навигации (страницы, бесконечная прокрутка и т. д.).
- * Подробнее читайте {@link Controls/interface/INavigation#navigation здесь}.
- * @property {String} editorMode Режим отображения редактора. Принимаемые значения см. в документации редактора.
+ * Подробнее читайте {@link Controls/_interface/INavigation#navigation здесь}.
+ * @property {String} editorMode Режим отображения редактора. Принимаемые значения смотрите в документации редактора.
+ * @property {Number} minVisibleItems Минимальное количество элементов для отображения фильтра. По умолчанию фильтр с одним элементом будет скрыт.
  */
 
 /*
@@ -78,7 +82,7 @@
  * Для каждого типа будет построен соответствующий редактор этого типа.
  *
  * В настоящей версии фреймворка поддерживается только 1 значение — dateRange.
- * При его установке будет построен контрол {@link Controls/dateRange:Selector}.
+ * При его установке будет построен контрол {@link Controls/dateRange:RangeShortSelector}.
  */
 
 /*
@@ -93,9 +97,25 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#emptyText
+ * @default Все
+ * @cfg {String} Текстовое значение, которое будет использовано для отображения рядом с кнопкой, когда во всех фильтрах установлено значение "по-умолчанию"
+ * @demo Controls-demo/Filter_new/FilterView/EmptyText/Index
+ * @example
+ * <pre>
+ * <Controls.filter:View
+ *    source="{{_source}}"
+ *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
+ *    emptyText="Все состояния"
+ *    panelTemplateName="Controls/filterPopup:SimplePanel"/>
+ * </pre>
+ */
+
+/**
  * @name Controls/_filter/View/interface/IFilterView#source
- * @cfg {Array.<FilterItem>} Устанавливает список полей фильтра и их конфигурацию. 
+ * @cfg {Array.<FilterItem>} Устанавливает список полей фильтра и их конфигурацию.
  * В числе прочего, по конфигурации определяется визуальное представление поля фильтра в составе контрола.
+ * @demo Controls-demo/Filter_new/FilterView/Source/AdditionalTemplateProperty/Index
  * @example
  * Пример настройки для двух фильтров.
  * Первый фильтр отобразится в главном блоке "Отбираются" и не будет сохранен в истории.
@@ -152,7 +172,7 @@
  * TMPL:
  * <pre>
  *    <Controls.filter:View
- *       source="{{_source}}" 
+ *       source="{{_source}}"
  *       detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *       panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
@@ -203,10 +223,10 @@
  * <pre>
  * <!-- MyModule.wml -->
  * <Controls.filter:View
- *    items="{{_items}}"
+ *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/panelTemplate"/>
  * </pre>
- * 
+ *
  * <pre>
  * <!-- MyModule/panelTemplate.wml -->
  * <Controls.filterPopup:DetailPanel>
@@ -214,14 +234,14 @@
  *    <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
  * </Controls.filterPopup:DetailPanel>
  * </pre>
- * 
+ *
  * <pre>
  * // MyModule.js
  * _items: null,
  * _beforeMount: function(options) {
- *    this._items = [
+ *    this._source = [
  *       { name: 'type', value: ['1'], resetValue: ['1'] },
- *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: extended }
+ *       { name: 'deleted', value: true, resetValue: false, textValue: 'Deleted', viewMode: 'extended' }
  *    ];
  * }
  * </pre>
@@ -376,6 +396,20 @@
  */
 
 /**
+ * @name Controls/_filter/View/interface/IFilterView#detailPanelPopupOptions
+ * @cfg {Controls/popup:IStickyPopupOptions} Опции для Sticky-опенера, открывающего панель фильтров.
+ * @example
+ * <pre>
+ * <!-- MyModule.wml -->
+ * <Controls.filter:View
+ *    items="{{_items}}"
+ *    detailPanelTemplateName="wml!MyModule/panelTemplate">
+ *        <ws:detailPanelPopupOptions closeOnOutSideClick="{{false}}"/>
+ * </Controls.filter:View>
+ * </pre>
+ */
+
+/**
  * @name Controls/_filter/View/interface/IFilterView#panelTemplateOptions
  * @cfg {Object} Опции для контрола, который передан в {@link panelTemplateName}.
  * @example
@@ -398,7 +432,7 @@
  * @typedef {String} Alignment
  * @variant right Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
  * @variant left Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
- */ 
+ */
 
 /**
  * @name Controls/_filter/View/interface/IFilterView#alignment
@@ -417,7 +451,7 @@
  * @typedef {String} Alignment
  * right The button is attached to the right edge, the pop-up panel opens to the left.
  * left The button is attached to the left edge, the pop-up panel opens to the right.
- */ 
+ */
 
 /*
  * @name Controls/_filter/View/interface/IFilterView#alignment
@@ -439,6 +473,7 @@
  * @name Controls/_filter/View/interface/IFilterView#itemTemplate
  * @cfg {String|Function} Устанавливает шаблон отображения фильтров на панели.
  * @default Controls/filter:ViewItemTemplate
+ * @demo Controls-demo/FilterView/ItemTemplates/Index
  * @example
  * <pre>
  * <Controls.filter:View
@@ -517,6 +552,7 @@
  * </pre>
  * @see Controls/_filter/View/interface/IFilterView#detailPanelTemplateName
  */
+
 /**
  * Сбрасывает объединенный фильтр к значениям по умолчанию.
  * Для каждого фильтра такие значения задаются через свойство resetValue при настройке структуры фильтров (см. {@link source}).
@@ -577,3 +613,34 @@
  * </pre>
  * @function Controls/_list/interface/IList#openDetailPanel
  */
+export interface IFilterItem {
+    name: string;
+    id?: string;
+    value: any;
+    resetValue?: any;
+    textValue: string;
+    emptyText?: string;
+    emptyKey?: boolean | string | number;
+    doNotSaveToHistory?: boolean;
+    visibility?: boolean;
+    viewMode?: 'basic' | 'frequent' | 'extended';
+    type?: 'dateRange';
+    editorOptions?: {
+        source?: ICrudPlus | ICrud;
+        keyProperty?: string;
+        displayProperty?: string;
+        minVisibleItems?: number;
+        multiSelect?: boolean;
+        selectorTemplate?: {
+            templateName: string;
+            templateOptions?: Record<string, any>;
+            popupOptions?: IPopupOptions;
+        }
+        itemTemplate?: string;
+        editorMode?: string;
+        filter?: Record<string, any>;
+        navigation?: INavigationOptionValue<any>
+        itemTemplateProperty?: string;
+    };
+    [key: string]: any;
+}

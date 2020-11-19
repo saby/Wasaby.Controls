@@ -4,10 +4,14 @@
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ItemsUtil = require('Controls/_list/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
-import ControlsConstants = require('Controls/Constants');
+import {view as constView} from 'Controls/Constants';
 import {Logger} from 'UI/Utils';
 import collection = require('Types/collection');
 import * as Grouping from 'Controls/_list/Controllers/Grouping';
+import {RecordSet} from 'Types/collection';
+import {Record, Model} from 'Types/entity';
+import {isEqual} from 'Types/object';
+import {CollectionItem} from 'Controls/display';
 
 /**
  *
@@ -16,33 +20,14 @@ import * as Grouping from 'Controls/_list/Controllers/Grouping';
  */
 
 var _private = {
-    isFullCacheResetAction: function(action) {
+    isFullCacheResetAction(action: string) {
         return (
             action === collection.IObservable.ACTION_REMOVE ||
             action === collection.IObservable.ACTION_ADD ||
             action === collection.IObservable.ACTION_MOVE
         );
     },
-    checkDeprecated: function(cfg) {
-        if (cfg.leftSpacing && !this.leftSpacing) {
-            this.leftSpacing = true;
-            Logger.warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.leftPadding && !this.leftPadding) {
-            this.leftPadding = true;
-            Logger.warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
-        }
-        if (cfg.rightSpacing && !this.rightSpacing) {
-            this.rightSpacing = true;
-            Logger.warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.rightPadding && !this.rightPadding) {
-            this.rightPadding = true;
-            Logger.warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
-        }
-        if (cfg.groupMethod) {
-            Logger.warn('IGrouped: Option "groupMethod" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
-        }
+    checkDeprecated(cfg): void {
         if (cfg.groupingKeyCallback) {
             Logger.warn('IGrouped: Option "groupingKeyCallback" is deprecated and removed in 20.2000. Use option "groupProperty".', self);
         }
@@ -58,27 +43,14 @@ var _private = {
             (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
     },
     displayFilterGroups: function(item, index, displayItem) {
-        return item === ControlsConstants.view.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
+        return (item ? (item === constView.hiddenGroup || !item.get) : true) || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
-    prepareCollapsedGroupsByArray: function(collapsedGroups) {
-        var
-            result = {};
+    prepareCollapsedGroupsByArray(collapsedGroups: Grouping.TArrayGroupId): {} {
+        const result = {};
         if (collapsedGroups) {
-            collapsedGroups.forEach(function(group) {
+            collapsedGroups.forEach((group) => {
                 result[group] = true;
             });
-        }
-        return result;
-    },
-    prepareCollapsedGroupsByObject: function(collapsedGroups) {
-        var
-            result = [];
-        if (collapsedGroups) {
-            for (var group in collapsedGroups) {
-                if (collapsedGroups.hasOwnProperty(group)) {
-                    result.push(group);
-                }
-            }
         }
         return result;
     },
@@ -100,25 +72,34 @@ var ItemsViewModel = BaseViewModel.extend({
     _itemDataCache: null,
     _curIndex: 0,
     _onCollectionChangeFnc: null,
-    _collapsedGroups: null,
+    _onAfterCollectionChangeFnc: null,
     _prefixItemVersion: null,
     _updateIndexesCallback: null,
-    _hasMoreData: false,
 
     constructor: function(cfg) {
         this._prefixItemVersion = 0;
         this._itemDataCache = {};
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-        this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
-        this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
+        this._onAfterCollectionChangeFnc = this._onAfterCollectionChange.bind(this);
+        this._onMetaDataChanged = this._onMetaDataChanged.bind(this);
         if (cfg.items) {
             if (cfg.itemsReadyCallback) {
                 cfg.itemsReadyCallback(cfg.items);
             }
             this._items = cfg.items;
+            this._updateSubscriptionOnMetaChange(null, cfg.items);
             this._display = this._prepareDisplay(cfg.items, this._options);
+            this._updateResults(this._items);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            this._display.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
+        }
+    },
+
+    getMetaResults(): {} {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getMetaResults();
         }
     },
 
@@ -128,19 +109,38 @@ var ItemsViewModel = BaseViewModel.extend({
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
 
-    reset: function() {
-        this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
-        this._curIndex = this._startIndex;
+    setSupportVirtualScroll: function(value) {
+        this._options.supportVirtualScroll = value;
     },
 
-    isEnd: function() {
+    _isSupportVirtualScroll: function() {
+        return this._options.supportVirtualScroll;
+    },
+
+    _getCurIndexForReset(startIndex: number): number {
+        return startIndex;
+    },
+    _getEndIndexForReset(): number {
         var endIndex;
-        if (this._options.virtualScrolling) {
+        if (this._isSupportVirtualScroll()) {
             endIndex = !!this._stopIndex ? this._stopIndex : 0;
         } else {
             endIndex = (this._display ? this._display.getCount() : 0);
         }
-        return this._curIndex < endIndex;
+        return endIndex;
+    },
+    reset(): void {
+        this._startIndex = this._isSupportVirtualScroll() && !!this._startIndex ? this._startIndex : 0;
+        this._curIndex = this._getCurIndexForReset(this._startIndex);
+        this._endIndex = this._getEndIndexForReset();
+    },
+
+    isEnd: function() {
+        return this._curIndex < this._endIndex;
+    },
+
+    isShouldBeDrawnItem: function() {
+        return this._startIndex <= this._curIndex && this._curIndex <= this._stopIndex;
     },
 
     setUpdateIndexesCallback(updateIndexesCallback: Function): void {
@@ -167,7 +167,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     isLast: function() {
         var lastIndex;
-        if (this._options.virtualScrolling) {
+        if (this._isSupportVirtualScroll()) {
             lastIndex = this._stopIndex - 1;
         } else {
             lastIndex = (this._display ? this._display.getCount() - 1 : 0);
@@ -185,10 +185,31 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     setKeyProperty(keyProperty: string): void {
-        this._options.keyProperty = keyProperty;
+        const display = this.getDisplay();
+        if (display) {
+            display.setKeyProperty(keyProperty);
+        } else {
+            this._options.keyProperty = keyProperty;
+        }
     },
 
-    _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    getKeyProperty(): string {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getKeyProperty();
+        } else {
+            return this._options.keyProperty;
+        }
+    },
+
+    _nextModelVersion(
+        notUpdatePrefixItemVersion?: boolean,
+        changesType?: string | string[],
+        action?: string,
+        newItems?: [CollectionItem<Model>],
+        newItemsIndex?: number,
+        removedItems?: [CollectionItem<Model>],
+        removedItemsIndex?: number): void {
         let changedItems = [];
 
         if (!notUpdatePrefixItemVersion) {
@@ -230,6 +251,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     getItemDataByItem: function(dispItem) {
         const cacheKey = this._getDisplayItemCacheKey(dispItem);
+        const display = this.getDisplay();
 
         if (this.isCachedItemData(cacheKey)) {
             return this.getCachedItemData(cacheKey);
@@ -240,17 +262,13 @@ var ItemsViewModel = BaseViewModel.extend({
             itemData = {
                 getPropValue: ItemsUtil.getPropertyValue,
                 style: this._options.style,
-                keyProperty: this._options.keyProperty,
-                displayProperty: this._options.displayProperty,
+                keyProperty: this.getKeyProperty(),
                 index: this._display.getIndex(dispItem),
                 item: dispItem.getContents(),
-                dispItem: dispItem,
-
-                //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
-                leftSpacing: this._options.leftSpacing || this._options.leftPadding,
-                rightSpacing: this._options.rightSpacing || this._options.rightPadding,
+                dispItem,
+                theme: this.getTheme(),
                 _preferVersionAPI: true,
-                getVersion: function() {
+                getVersion(): string {
                     return self._calcItemVersion(itemData.item, itemData.key);
                 }
             };
@@ -258,16 +276,16 @@ var ItemsViewModel = BaseViewModel.extend({
         // The key of breadcrumbs row is the key of the last item in the crumbs.
         if (dispItem.getContents() instanceof Array) {
             let breadCrumbs = dispItem.getContents();
-            itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length-1], this._options.keyProperty);
+            itemData.key = ItemsUtil.getPropertyValue(breadCrumbs[breadCrumbs.length - 1], this.getKeyProperty());
         } else {
-            itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty);
+            itemData.key = ItemsUtil.getPropertyValue(dispItem.getContents(), this.getKeyProperty());
         }
 
-        if (this._options.groupingKeyCallback || this._options.groupProperty) {
+        if (display.getGroup()) {
             if (this._isGroup(itemData.item)) {
                 itemData.isGroup = true;
-                itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
-                itemData.isGroupExpanded = !this._collapsedGroups[itemData.item];
+                itemData.isHiddenGroup = itemData.item === constView.hiddenGroup;
+                itemData.isGroupExpanded = this.isGroupExpanded(itemData.item);
                 itemData.metaData = this._items.getMetaData();
             }
         }
@@ -278,39 +296,51 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     getCollapsedGroups(): Grouping.TArrayGroupId {
-        return _private.prepareCollapsedGroupsByObject(this._collapsedGroups);
+        const display = this.getDisplay();
+        if (display) {
+            return display.getCollapsedGroups();
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            return this._options.collapsedGroups;
+        }
     },
 
     setCollapsedGroups(collapsedGroups: Grouping.TArrayGroupId): void {
-        this._options.collapsedGroups = collapsedGroups;
-        this._collapsedGroups = {};
-
-        for (let i = 0; i < collapsedGroups.length; i++) {
-            this._collapsedGroups[collapsedGroups[i]] = true;
+        const display = this.getDisplay();
+        if (display) {
+            display.setCollapsedGroups(collapsedGroups);
+            this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+            this._nextModelVersion();
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            this._options.collapsedGroups = collapsedGroups;
         }
-        this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-        this._nextModelVersion();
     },
 
     isGroupExpanded(groupId: Grouping.TGroupId): boolean {
-        return typeof this._collapsedGroups[groupId] === 'undefined';
+        const collapsedGroups = this.getCollapsedGroups();
+        return collapsedGroups ? collapsedGroups.indexOf(groupId) === -1 : true;
     },
 
     toggleGroup(groupId: Grouping.TGroupId, state: boolean): void {
         if (typeof state === 'undefined') {
             state = !this.isGroupExpanded(groupId);
         }
+        const collapsedGroups = this.getCollapsedGroups() || [];
+        const newCollapsedGroups = [...collapsedGroups];
         if (state) {
-            delete this._collapsedGroups[groupId];
+            const index = newCollapsedGroups.indexOf(groupId, 0);
+            if (index > -1) {
+                newCollapsedGroups.splice(index, 1);
+            }
         } else {
-            this._collapsedGroups[groupId] = true;
+            newCollapsedGroups.push(groupId);
         }
-        this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-        this._nextModelVersion();
+        this.setCollapsedGroups(newCollapsedGroups);
         this._notify('onGroupsExpandChange', {
             group: groupId,
             changeType: state ? 'expand' : 'collapse',
-            collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
+            collapsedGroups: newCollapsedGroups
         });
     },
 
@@ -319,9 +349,9 @@ var ItemsViewModel = BaseViewModel.extend({
         this.nextModelVersion();
     },
 
-    prepareDisplayFilterData: function() {
+    prepareDisplayFilterData(): {} {
         return {
-            collapsedGroups: this._collapsedGroups
+            collapsedGroups: _private.prepareCollapsedGroupsByArray(this.getCollapsedGroups())
         };
     },
 
@@ -330,21 +360,23 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     setGroupProperty(groupProperty: string): void {
-        this._options.groupProperty = groupProperty;
+        const display = this.getDisplay();
+        if (display) {
+            display.setGroupProperty(groupProperty);
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            this._options.groupProperty = groupProperty;
+        }
     },
 
     getGroupProperty(): string {
-        return this._options.groupProperty;
-    },
-
-    setGroupMethod: function(groupMethod) {
-        this._options.groupMethod = groupMethod;
-        this._nextModelVersion();
-    },
-
-    setGroupingKeyCallback: function(groupingKeyCallback) {
-        this._options.groupingKeyCallback = groupingKeyCallback;
-        this._nextModelVersion();
+        const display = this.getDisplay();
+        if (display) {
+            return display.getGroupProperty();
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            return this._options.groupProperty;
+        }
     },
 
     getNext: function() {
@@ -353,8 +385,7 @@ var ItemsViewModel = BaseViewModel.extend({
             dispItem = this._display.at(itemIndex);
         return {
             getPropValue: ItemsUtil.getPropertyValue,
-            keyProperty: this._options.keyProperty,
-            displayProperty: this._options.displayProperty,
+            keyProperty: this.getKeyProperty(),
             index: itemIndex,
             item: dispItem.getContents(),
             dispItem: dispItem
@@ -366,7 +397,11 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     getItemById: function(id, keyProperty) {
-        return this._display ? ItemsUtil.getDisplayItemById(this._display, id, keyProperty) : undefined;
+        return this._display ? this._display.getItemBySourceKey(id) : undefined;
+    },
+
+    getItemBySourceKey: function(id) {
+        return this.getItemById(id);
     },
 
     getCount: function() {
@@ -385,16 +420,66 @@ var ItemsViewModel = BaseViewModel.extend({
            this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
 
         const shouldNotUpdatePrefix =
-            collectionChangeResult === 'updatePrefix' ? false : action !== collection.IObservable.ACTION_RESET;
+            collectionChangeResult === 'updatePrefix' ? false : (action !== collection.IObservable.ACTION_RESET &&
+                                                                 action !== collection.IObservable.ACTION_MOVE);
+        let changesType = 'collectionChanged';
+        // TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+        //  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+        //  Это нужно, чтобы в ListView не вызывался resize при изменении прогрессбара и не сбрасывался hovered в плитке
+        if (action === collection.IObservable.ACTION_CHANGE && this._isLoadingPercentsChanged(newItems)) {
+            changesType = 'loadingPercentChanged';
+        }
 
-        this._nextModelVersion(shouldNotUpdatePrefix, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+        this._nextModelVersion(shouldNotUpdatePrefix, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
+
+    _onAfterCollectionChange(): void {
+        this._notify('onAfterCollectionChange');
+    },
+
     _onBeginCollectionChange: function() {
         // method may be implemented
     },
     _onEndCollectionChange: function() {
         // method may be implemented
+    },
+
+    _execUpdateSubscriptionOnMetaChange(items: RecordSet, command: 'subscribe' | 'unsubscribe', isRecordSetEqual?: boolean): void {
+        if (items && cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
+            if (!isRecordSetEqual) {
+                items[command]('onPropertyChange', this._onMetaDataChanged);
+            }
+
+            const meta = items.getMetaData();
+            if (meta && meta.results && cInstance.instanceOfModule(meta.results, 'Types/entity:Model')) {
+                meta.results[command]('onPropertyChange', this._onMetaDataChanged);
+            }
+        }
+    },
+
+    _updateSubscriptionOnMetaChange(oldItems: RecordSet | null, newItems: RecordSet | null, isRecordSetEqual?: boolean): void {
+        this._execUpdateSubscriptionOnMetaChange(oldItems, 'unsubscribe', isRecordSetEqual);
+        this._execUpdateSubscriptionOnMetaChange(newItems, 'subscribe', isRecordSetEqual);
+    },
+
+    _onMetaDataChanged(): void {
+        if (this._updateResults(this._items)) {
+            this._nextModelVersion(true);
+        }
+    },
+
+    _updateResults(items: RecordSet): boolean {
+        const metaData = items && items.getMetaData && items.getMetaData();
+        const shouldUpdate = !!metaData && !isEqual(metaData, {}) && typeof metaData.results !== 'undefined';
+        if (shouldUpdate) {
+            this._updateSubscriptionOnMetaChange(this._items, items, true);
+            const display = this.getDisplay();
+            if (display) {
+                display.setMetaResults(metaData && metaData.results);
+            }
+        }
+        return shouldUpdate;
     },
 
     _convertItemKeyToCacheKey: function(itemKey) {
@@ -407,7 +492,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemKey;
     },
     _getDisplayItemCacheKey: function(dispItem) {
-        const key = ItemsUtil.getDisplayItemKey(dispItem, this._options.keyProperty);
+        const key = ItemsUtil.getDisplayItemKey(dispItem, this.getKeyProperty());
         return this._convertItemKeyToCacheKey(key);
     },
     isCachedItemData: function(itemKey) {
@@ -449,33 +534,48 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     _isGroup: function(item) {
-        return item === ControlsConstants.view.hiddenGroup || !item.get;
+        return item ? (item === constView.hiddenGroup || !item.get) : true;
     },
 
     isAllGroupsCollapsed(): boolean {
-        for (let i = 0; i < this._display.getItems().length; i++) {
-            if (!this._collapsedGroups[this._display.getGroupByIndex(i)]) {
+        const collapsedGroups = this.getCollapsedGroups();
+        const display = this.getDisplay();
+        if (!collapsedGroups || !display) {
+            return false;
+        }
+        for (let i = 0; i < display.getItems().length; i++) {
+            if (collapsedGroups.indexOf(display.getGroupByIndex(i)) === -1) {
                 return false;
             }
         }
-
         return true;
     },
-    setItems: function(items) {
+
+    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+    setItems(items, cfg): void {
+        const metaData = items.getMetaData();
         if (_private.isEqualItems(this._items, items)) {
-            this._items.setMetaData(items.getMetaData());
+            this._items.setMetaData(metaData);
             this._items.assign(items);
+            this._updateSubscriptionOnMetaChange(this._items, items, true);
+            this._display.setHasMoreData(metaData?.more);
         } else {
             if (this._options.itemsReadyCallback) {
                 this._options.itemsReadyCallback(items);
             }
+            this._updateSubscriptionOnMetaChange(this._items, items);
             this._items = items;
-            if (this._display) {
-                this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
-                this._display.destroy();
-            }
-            this._display = this._prepareDisplay(this._items, this._options);
+            const oldDisplay = this._display;
+            this._display = this._prepareDisplay(this._items, cfg);
+            this._updateResults(this._items);
+            this._display.setHasMoreData(metaData?.more);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+            this._display.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
+            if (oldDisplay) {
+                oldDisplay.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
+                oldDisplay.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFnc);
+                oldDisplay.destroy();
+            }
             this.setIndexes(0, this.getCount());
             this._nextModelVersion();
 
@@ -489,18 +589,32 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
+    // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
     getItems: function() {
         return this._items;
+    },
+
+    // для совместимости с новой моделью
+    getCollection: function() {
+        return this.getItems();
     },
 
     appendItems: function(items) {
         let shouldAppend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldAppend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldAppend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldAppend) {
             this._items.append(items);
+        }
+    },
+
+    acceptChanges(): void {
+        if (this._items && this._items.isChanged()) {
+            this._items.acceptChanges();
         }
     },
 
@@ -513,18 +627,45 @@ var ItemsViewModel = BaseViewModel.extend({
         let shouldPrepend = true;
         if (cInstance.instanceOfModule(items, 'Types/collection:RecordSet')) {
             this._items.setMetaData(items.getMetaData());
-            shouldPrepend = items.getCount() > 0;
+
+            // (this._items.getCount() === 0) для того чтоб emptyTemplate перерисовался
+            shouldPrepend = (items.getCount() > 0) || (this._items.getCount() === 0);
         }
         if (shouldPrepend) {
             this._items.prepend(items);
         }
     },
 
-    getIndexBySourceItem: function(item) {
+    // New Model compatibility
+    each(callback: collection.EnumeratorCallback<Record>, context?: object): void {
+        if (this._display) {
+            this._display.each(callback, context);
+        }
+    },
+
+    // New Model compatibility
+    find(predicate: (item: Model) => boolean): Model {
+        if (this._display) {
+            return this._display.find(predicate);
+        }
+    },
+
+    // New Model compatibility
+    getIndex(item: CollectionItem<Model>): number | string {
+        return this._display ? this._display.getIndex(item) : undefined;
+    },
+
+    // New Model compatibility
+    getSourceIndexByItem(item: CollectionItem<Model>): number {
+        return this._display ? this._display.getSourceIndexByItem(item) : undefined;
+    },
+
+    // New Model compatibility
+    getIndexBySourceItem(item: Model): number | string {
         return this._display ? this._display.getIndexBySourceItem(item) : undefined;
     },
 
-    at: function(index) {
+    at(index: number): Model {
         return this._display ? this._display.at(index) : undefined;
     },
 
@@ -538,19 +679,65 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display.destroy();
             this._display = null;
         }
-        this._items = null;
+        if (this._items) {
+            this._execUpdateSubscriptionOnMetaChange(this._items, 'unsubscribe');
+            this._items = null;
+        }
         this._itemDataCache = null;
         this._curIndex = null;
         this._onCollectionChangeFnc = null;
+        this._onAfterCollectionChangeFnc = null;
     },
 
-    setHasMoreData: function(value: boolean) {
-        this._hasMoreData = value;
+    setHasMoreData(hasMoreData: boolean): boolean {
+        const display = this.getDisplay();
+        if (display) {
+            return this._display.setHasMoreData(hasMoreData);
+        }
     },
 
-    getHasMoreData: function() {
-        return this._hasMoreData;
+    getHasMoreData(): boolean {
+        const display = this.getDisplay();
+        if (display) {
+            return this._display.getHasMoreData();
+        }
     },
+
+    getTheme(): string|undefined {
+        const display = this.getDisplay();
+        if (display) {
+            return display.getTheme();
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            return this._options.theme;
+        }
+    },
+
+    setTheme(theme: string): void {
+        const display = this.getDisplay();
+        if (display) {
+            if (display.setTheme(theme)) {
+                this.resetCachedItemData();
+            }
+        } else {
+            // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
+            this._options.theme = theme;
+        }
+    },
+
+    /**
+     * TODO https://online.sbis.ru/opendoc.html?guid=b8b8bd83-acd7-44eb-a915-f664b350363b
+     *  Костыль, позволяющий определить, что мы загружаем файл и его прогрессбар изменяется
+     *  Это нужно, чтобы в ListView не вызывался resize при изменении прогрессбара и не сбрасывался hovered в плитке
+     */
+    _isLoadingPercentsChanged(newItems: Array<CollectionItem<Model>>): boolean {
+        return newItems &&
+            newItems.length &&
+            newItems[0].getContents() &&
+            newItems[0].getContents().getChanged &&
+            newItems[0].getContents().getChanged().indexOf('docviewLoadingPercent') !== -1 &&
+            newItems[0].getContents().getChanged().indexOf('docviewIsLoading') === -1;
+    }
 });
 
 export = ItemsViewModel;

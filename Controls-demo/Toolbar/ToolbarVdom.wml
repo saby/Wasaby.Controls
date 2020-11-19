@@ -7,7 +7,8 @@
              parentProperty="parent"
              nodeProperty="@parent"
              keyProperty="id"
-             source="{{_getMemorySource(_defaultItemsWithoutToolbutton)}}"
+             source="{{_source1}}"
+             contrastBackground="{{true}}"
              popupClassName="controls-Toolbar_test_popupClassName"
              on:itemClick="_itemClick()"
              itemsSpacing="big"
@@ -21,7 +22,7 @@
                   nodeProperty="@parent"
                   keyProperty="id"
                   additionalProperty="additional"
-                  source="{{_getMemorySource(_defaultItems)}}"
+                  source="{{_source2}}"
                   popupClassName="controls-Toolbar_test_popupClassName"
                   on:itemClick="_itemClick()"
                   itemsSpacing="big"
@@ -33,10 +34,23 @@
              attr:id="Toolbar_2"
              keyProperty="id"
              itemTemplateProperty="myTemplate"
-             source="{{_getMemorySource(_flatItems)}}"
+             source="{{_source3}}"
              on:itemClick="_itemClick()"
           />
           контент идущий за Toolbar'ом
+       </div>
+       <div style="padding: 5px;">Пример тулбара с опцией readOnly = true:
+           <Controls.toolbars:View
+                   name="toolbarReadOnly"
+                   attr:id="toolbarReadOnly"
+                   parentProperty="parent"
+                   nodeProperty="@parent"
+                   keyProperty="id"
+                   readOnly="true"
+                   source="{{_source4}}"
+                   popupClassName="controls-Toolbar_test_popupClassName"
+                   on:itemClick="_itemClick()"
+           />
        </div>
    </div>
    <div style="padding: 5px;" name="toolbarAnswer">{{_currentClick}}</div>

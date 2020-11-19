@@ -3,18 +3,21 @@
  */
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
-import 'css!theme?Controls/lookup';
 
 /**
  * Кнопка-ссылка для использования внутри подсказки поля связи.
+ * 
+ * @remark
+ * Полезные ссылки:
+ * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less">переменные тем оформления</a>
  *
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
- * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @control
+ * @mixes Controls/_interface/IHeight
+ * 
  * @public
- * @author Капустин И.А.
+ * @author Герасимов А.М.
  */
 /*
  * Label for use within the link field.
@@ -22,10 +25,10 @@ import 'css!theme?Controls/lookup';
  * @class Controls/_lookup/Lookup/Link
  * @extends Core/Control
  * @mixes Controls/_interface/ICaption
- * @mixes Controls/_lookup/Lookup/Link/LookupLinkStyles
- * @control
+ * @mixes Controls/_interface/IHeight
+ * 
  * @public
- * @author Kapustin I.A.
+ * @author Герасимов А.М.
  */
 
 const Link = Control.extend({
@@ -49,5 +52,7 @@ const Link = Control.extend({
       }
    }
 });
+
+Link._theme = ['Controls/lookup'];
 
 export = Link;

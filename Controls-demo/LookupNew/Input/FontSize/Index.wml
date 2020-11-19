@@ -1,0 +1,92 @@
+<div class="controlsDemo__wrapper controlsDemo__flexColumn">
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: s</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="s"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="s"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: m</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="m"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="m"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: l</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="l"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="l"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: xl</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="xl"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="xl"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: 2xl</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="2xl"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="2xl"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+    <div class="controlsDemo__mb1 controlsDemo__wrapper__horizontal controlsDemo__cell controlsDemo__childWidth400">
+        <div class="controls-text-label_theme-{{_options.theme}}">fontSize: 3xl</div>
+        <Controls.lookup:Input
+                bind:selectedKeys="_selectedKeys"
+                bind:value="_value"
+                searchParam="title"
+                source="{{_source}}"
+                fontSize="3xl"
+                keyProperty="id"
+                multiSelect="{{true}}">
+            <ws:itemTemplate>
+                <ws:partial template="Controls/lookup:ItemTemplate" size="3xl"/>
+            </ws:itemTemplate>
+        </Controls.lookup:Input>
+    </div>
+</div>

@@ -1,39 +1,73 @@
 import * as CntTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/content';
 import * as CntTwoLvlTpl from 'wml!Controls-demo/treeGrid/ItemTemplate/WithPhoto/contentTwoLvl';
-import * as explorerImages from 'Controls-demo/Explorer/ExplorerImages';
+import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
+
+import { IHeader } from 'Controls-demo/types';
+import { IColumn } from 'Controls/grid';
+
+export interface IData {
+   id: number;
+   parent?: null | number;
+   'parent@'?: null | Boolean;
+   title: string;
+   Раздел?: null | number;
+   'Раздел@'?: null | boolean;
+   Раздел$?: null | boolean;
+   hasChild?: boolean;
+   rating?: number | string;
+   country?: string;
+   type?: boolean | null;
+   photo?: string;
+   modelId?: string;
+   size?: string;
+   year?: string;
+   note?: string;
+   nodeType?: boolean | null;
+   subtask?: boolean;
+}
+
+interface IResults {
+    full: Array<{ rating: number, price: number }>;
+    partial: number[];
+}
 
 export const Gadgets = {
-
-    getDeepSet() {
+    getDeepSet(): IData[] {
         return [
             {
-                id: 1, title: 'Node', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true, rating: 1, country: 'Russia',
+                id: 1, title: 'Node', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true, rating: 1, country: 'Russia'
             },
             {
-                id: 11, title: 'Node2', Раздел: 1, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 11, title: 'Node2', Раздел: 1, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 111, title: 'Node3', Раздел: 11, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 111, title: 'Node3', Раздел: 11, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 1111, title: 'Node4', Раздел: 111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 1111, title: 'Node4', Раздел: 111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 11111, title: 'Node5', Раздел: 1111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 11111, title: 'Node5', Раздел: 1111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 111111, title: 'Node6', Раздел: 11111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 111111, title: 'Node6', Раздел: 11111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 2, title: 'Node7', Раздел: 111111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 2, title: 'Node7', Раздел: 111111, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
             {
-                id: 22, title: 'Node8', Раздел: 2, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia',
+                id: 22, title: 'Node8', Раздел: 2, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
             },
+            {
+                id: 222, title: 'Node9', Раздел: 22, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
+            },
+            {
+                id: 2222, title: 'Node10', Раздел: 222, 'Раздел@': true, Раздел$: null, rating: 1, country: 'Russia'
+            }
         ];
     },
 
-    getDataSet() {
+    getDataSet(): IData[] {
         return [
             {
                 id: 1, title: 'Node', Раздел: null, 'Раздел@': true, Раздел$: null, hasChild: true
@@ -62,7 +96,7 @@ export const Gadgets = {
         ];
     },
 
-    getFlatData() {
+    getFlatData(): IData[] {
         return [
             {
                 id: 1,
@@ -177,7 +211,8 @@ export const Gadgets = {
                         year: '2019',
                         note: '2 порта Thunderbolt 3',
                         parent: 16,
-                        type: null
+                        type: null,
+                        photo: explorerImages[3]
                     },
                     {
                         id: 162,
@@ -188,7 +223,8 @@ export const Gadgets = {
                         year: '2019',
                         note: '',
                         parent: 16,
-                        type: null
+                        type: null,
+                        photo: explorerImages[3]
                     },
                     {
                         id: 163,
@@ -199,7 +235,8 @@ export const Gadgets = {
                         year: '2019',
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
-                        type: null
+                        type: null,
+                        photo: explorerImages[3]
                     },
                     {
                         id: 164,
@@ -210,7 +247,8 @@ export const Gadgets = {
                         year: '2017',
                         note: '',
                         parent: 16,
-                        type: null
+                        type: null,
+                        photo: explorerImages[3]
                     },
                     {
                         id: 165,
@@ -221,7 +259,8 @@ export const Gadgets = {
                         year: '2017',
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
-                        type: null
+                        type: null,
+                        photo: explorerImages[3]
                     },
                 {
                     id: 17,
@@ -300,63 +339,85 @@ export const Gadgets = {
         ];
     },
 
-    getDataTwoLvl: function() {
+    getDataTwoLvl(): IData[] {
         return [
             {
-                id: 1, title: 'Apple', 'Раздел': null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
-                country: 'Южная Корея',
+                id: 1, title: 'Apple', Раздел: null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 2, title: 'Samsung', 'Раздел': null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
-                country: 'Южная Корея',
+                id: 2, title: 'Samsung', Раздел: null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 3, title: 'Asus', 'Раздел': null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
-                country: 'Южная Корея',
+                id: 3, title: 'Asus', Раздел: null, 'Раздел@': true, photo: explorerImages[1], rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 11, title: 'Asus', 'Раздел': 1, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 11, title: 'Asus', Раздел: 1, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 12, title: 'Apple', 'Раздел': 1, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 12, title: 'Apple', Раздел: 1, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 13, title: 'Samsung', 'Раздел': 1, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 13, title: 'Samsung', Раздел: 1, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 21, title: 'Apple', 'Раздел': 2, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 21, title: 'Apple', Раздел: 2, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 22, title: 'SamsungApple', 'Раздел': 2, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 22, title: 'SamsungApple', Раздел: 2, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 23, title: 'Samsung 2', 'Раздел': 3, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 23, title: 'Samsung 2', Раздел: 3, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 31, title: 'Samsung', 'Раздел': 3, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 31, title: 'Samsung', Раздел: 3, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             },
             {
-                id: 32, title: 'Samsung', 'Раздел': 3, 'Раздел@': null, photo: null, rating: '9.5',
-                country: 'Южная Корея',
+                id: 32, title: 'Samsung', Раздел: 3, 'Раздел@': null, photo: null, rating: '9.5',
+                country: 'Южная Корея'
             }
         ];
     },
 
-    getColumnsForFlat() {
+    getResults(): IResults {
+        return {
+            full: [
+                {
+                    rating: 8.4,
+                    price: 1554
+                },
+                {
+                    rating: 4.58,
+                    price: 2855.5
+                },
+                {
+                    rating: 9.41,
+                    price: 3254.09
+                }
+            ],
+            // tslint:disable-next-line
+            partial: [23415.454, 56151, 57774]
+        };
+    },
+
+    getColumnsForFlat(): IColumn[] {
         return [
             {
-                displayProperty: 'title'
+                displayProperty: 'title',
+                width: ''
             }
         ];
     },
-    getColumnsForColumnScroll() {
+    getColumnsForColumnScroll(): IColumn[] {
         return [
             {
                 displayProperty: 'id',
@@ -388,7 +449,7 @@ export const Gadgets = {
             }
         ];
     },
-    getHeaderForColumnScroll() {
+    getHeaderForColumnScroll(): IHeader[] {
         return [
             {
                 title: '#'
@@ -413,83 +474,95 @@ export const Gadgets = {
             }
         ];
     },
-    getGridColumnsForFlat() {
-        return [
-            {
-                displayProperty: 'title'
-            },
-            {
-                displayProperty: 'rating'
-            },
-            {
-                displayProperty: 'country'
-            }
-        ];
-    },
-    getGridColumnsWithPhoto() {
+    getGridColumnsForFlat(): IColumn[] {
         return [
             {
                 displayProperty: 'title',
-                template: CntTpl
+                width: ''
             },
             {
-                displayProperty: 'rating'
+                displayProperty: 'rating',
+                width: ''
             },
             {
-                displayProperty: 'country'
+                displayProperty: 'country',
+                width: ''
             }
-        ]
+        ];
     },
-    getGridTwoLevelColumnsWithPhoto() {
+    getGridColumnsWithPhoto(): IColumn[] {
         return [
             {
                 displayProperty: 'title',
-                template: CntTwoLvlTpl
+                template: CntTpl,
+                width: ''
             },
             {
-                displayProperty: 'rating'
+                displayProperty: 'rating',
+                width: ''
             },
             {
-                displayProperty: 'country'
+                displayProperty: 'country',
+                width: ''
             }
-        ]
+        ];
     },
-
-    getCellPaddingHeader: () => {
+    getGridTwoLevelColumnsWithPhoto(): IColumn[] {
         return [
             {
-                title: 'cellPadding: right: S',
+                displayProperty: 'title',
+                template: CntTwoLvlTpl,
+                width: ''
             },
             {
-                title: 'cellPadding:  left: S and right: null',
+                displayProperty: 'rating',
+                width: ''
             },
             {
-                title: 'cellPadding left: default',
-            },
+                displayProperty: 'country',
+                width: ''
+            }
         ];
     },
 
-    getGridColumnsWithCellPadding() {
+    getCellPaddingHeader: (): IHeader[] => {
+        return [
+            {
+                title: 'cellPadding: right: S'
+            },
+            {
+                title: 'cellPadding:  left: S and right: null'
+            },
+            {
+                title: 'cellPadding left: default'
+            }
+        ];
+    },
+
+    getGridColumnsWithCellPadding(): IColumn[] {
         return [
             {
                 displayProperty: 'title',
                 cellPadding: {
-                    right: 's'
-                }
+                    right: 'S'
+                },
+                width: ''
             },
             {
                 displayProperty: 'rating',
                 cellPadding: {
-                    left: 's',
+                    left: 'S',
                     right: 'null'
-                }
+                },
+                width: ''
             },
             {
                 displayProperty: 'country',
+                width: ''
             }
         ];
     },
-    getColumnsWithFixedWidth() {
+    getColumnsWithFixedWidth(): IColumn[] {
         return [
             {
                 displayProperty: 'title',
@@ -505,7 +578,7 @@ export const Gadgets = {
             }
         ];
     },
-    getHeaderForFlat() {
+    getHeaderForFlat(): IHeader[] {
         return [
             {
                 title: 'Наименование'
@@ -518,7 +591,7 @@ export const Gadgets = {
             }
         ];
     },
-    getLongHeader: () => [
+    getLongHeader: (): IHeader[] => [
         {
             title: 'Население страны по данным на 2018г - 2019г.'
         },
@@ -529,7 +602,7 @@ export const Gadgets = {
             title: 'Плотность населения чел/км2'
         }
     ],
-    getMultiHeader: () => [
+    getMultiHeader: (): IHeader[] => [
         {
             title: 'Название',
             startRow: 1,
@@ -594,22 +667,24 @@ export const VirtualScrollHasMore = {
                     parent: 0,
                     type: null
                 },
-                {
+                {   // tslint:disable-next-line
                     id: itemsCount + (2 * i),
+                    // tslint:disable-next-line
                     title: `Запись второго уровня с id = ${itemsCount + itemsCount + (2 * i)}`,
                     parent: 0,
                     type: null
-                },
+                }
             );
         }
 
         return result.sort((a, b) => a.id > b.id ? 1 : -1);
     },
-    getColumns: () => ([{
-        displayProperty: 'title'
+    getColumns: (): IColumn[] => ([{
+        displayProperty: 'title',
+        width: ''
     }]),
 
-    getDataForVirtual: () => [
+    getDataForVirtual: (): IData[] => [
         {
             id: 1,
             title: 'Apple',
@@ -643,14 +718,14 @@ export const VirtualScrollHasMore = {
             title: 'Iphone 1 pro',
             parent: 11,
             rating: '9.2',
-            type: null,
+            type: null
         },
         {
             id: 101,
             title: 'Iphone 2 default',
             parent: 11,
             rating: '9.2',
-            type: null,
+            type: null
         },
         {
             id: 12,
@@ -658,21 +733,21 @@ export const VirtualScrollHasMore = {
             parent: 1,
             rating: '9.2',
             type: true,
-            hasChild: true,
+            hasChild: true
         },
         {
             id: 103,
             title: 'Iphone 3 pro',
             parent: 12,
             rating: '9.2',
-            type: null,
+            type: null
         },
         {
             id: 104,
             title: 'Iphone 3 default',
             parent: 12,
             rating: '9.2',
-            type: null,
+            type: null
         },
         {
             id: 13,
@@ -698,7 +773,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: null,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 135,
@@ -742,42 +817,42 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: null,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 6,
             title: 'iPhone X Series',
             rating: '7.6',
             parent: null,
-            type: true,
+            type: true
         },
         {
             id: 7,
             title: 'iPhone 6s',
             rating: '7.4',
             parent: null,
-            type: true,
+            type: true
         },
         {
             id: 8,
             title: 'iPhone Xs Max',
             rating: '6.8',
             parent: null,
-            type: true,
+            type: true
         },
         {
             id: 9,
             title: 'iPhone XR',
             rating: '7.1',
             parent: 6,
-            type: true,
+            type: true
         },
         {
             id: 10,
             title: 'Notebooks',
             parent: null,
             rating: '9.4',
-            type: true,
+            type: true
         },
         {
             id: 11,
@@ -788,7 +863,7 @@ export const VirtualScrollHasMore = {
             year: '2019',
             note: '2 порта Thunderbolt 3',
             parent: null,
-            type: true,
+            type: true
         },
         {
             id: 12,
@@ -810,7 +885,7 @@ export const VirtualScrollHasMore = {
             year: '2019',
             note: '2 порта Thunderbolt 3',
             parent: 12,
-            type: true,
+            type: true
         },
         {
             id: 121,
@@ -832,7 +907,7 @@ export const VirtualScrollHasMore = {
             year: '2019',
             note: '2 порта Thunderbolt 3',
             parent: 13,
-            type: null,
+            type: null
         },
         {
             id: 124,
@@ -954,28 +1029,28 @@ export const VirtualScrollHasMore = {
             title: 'Samusng 1',
             rating: '9.5',
             parent: 17,
-            type: null,
+            type: null
         },
         {
             id: 24,
             title: 'Samsung 2',
             rating: '9.5',
             parent: 17,
-            type: null,
+            type: null
         },
         {
             id: 25,
             title: 'Samsung 3',
             rating: '9.5',
             parent: 17,
-            type: null,
+            type: null
         },
         {
             id: 26,
             title: 'Samsung 4',
             rating: '9.5',
             parent: 17,
-            type: null,
+            type: null
         },
         {
             id: 30,
@@ -983,7 +1058,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 31,
@@ -991,7 +1066,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 32,
@@ -999,7 +1074,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 33,
@@ -1007,7 +1082,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 34,
@@ -1015,7 +1090,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 35,
@@ -1023,7 +1098,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 36,
@@ -1031,7 +1106,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 37,
@@ -1039,7 +1114,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 38,
@@ -1047,7 +1122,7 @@ export const VirtualScrollHasMore = {
             rating: '9.5',
             parent: 3,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 39,
@@ -1055,7 +1130,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 4,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 40,
@@ -1063,7 +1138,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 4,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 41,
@@ -1071,7 +1146,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 4,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 42,
@@ -1079,7 +1154,7 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 4,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 43,
@@ -1087,255 +1162,256 @@ export const VirtualScrollHasMore = {
             rating: '8.9',
             parent: 4,
             hasChild: true,
-            type: true,
+            type: true
         },
         {
             id: 44,
             title: 'Phone 2000',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 45,
             title: 'Asus 2001',
             rating: '3',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 46,
             title: 'Aser 2002',
             rating: '2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 47,
             title: 'Iphone 2003',
             rating: '2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 48,
             title: 'Samsung 2004',
             rating: '3.6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 49,
             title: 'Note 2005',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 50,
             title: 'Del 2006',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 51,
             title: 'Hp 2007',
             rating: '9.6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 52,
             title: 'Cristal 2008',
             rating: '3.1',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 53,
             title: 'Phone 2009',
             rating: '2.4',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 54,
             title: 'Balalaika 2010',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 55,
             title: 'Elements 2011',
             rating: '9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 56,
             title: 'Light House 2012',
             rating: '4',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 57,
             title: 'Google Chrome',
             rating: '0.2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 58,
             title: 'Explorer',
             rating: '5',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 59,
             title: 'Spider Monky',
             rating: '6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 60,
             title: 'V8',
             rating: '8',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 61,
             title: 'IE 2001',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 62,
             title: 'IE 2002',
             rating: '3',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 63,
             title: 'IE 2003',
             rating: '2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 64,
             title: 'IE 2004',
             rating: '2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 65,
             title: 'IE 2005',
             rating: '3.6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 66,
             title: 'Chrome 2006',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 67,
             title: 'Mozila 2007',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 68,
             title: 'Mozila 2008',
             rating: '9.6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 69,
             title: 'Chrome 2009',
             rating: '3.1',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 70,
             title: 'Yandex 2010',
             rating: '2.4',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 71,
             title: 'Chrome 2010',
             rating: '8.9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 72,
             title: 'Mozila 2011',
             rating: '9',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 73,
             title: 'Light House 2011',
             rating: '4',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 74,
             title: 'Google Chrome 2014',
             rating: '0.2',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 75,
             title: 'Explorer 2015',
             rating: '5',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 76,
             title: 'Web engine 2016',
             rating: '6',
             parent: null,
-            type: null,
+            type: null
         },
         {
             id: 77,
             title: 'V8 2017',
             rating: '8',
             parent: null,
-            type: null,
-        },
+            type: null
+        }
     ]
 
 };
 
 export const DeepInside = {
-    getColumns: () => ([{
-        displayProperty: 'title'
+    getColumns: (): IColumn[] => ([{
+        displayProperty: 'title',
+        width: ''
     }]),
-    getData: () => ([
+    getData: (): IData[] => ([
         { id: 1, title: 'Узел 1', parent: null, nodeType: true },
         { id: 11, title: 'Узел 1-1', parent: 1, nodeType: true },
         { id: 111, title: 'Узел 1-1-1', parent: 11, nodeType: true },

@@ -1,0 +1,29 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label_theme-{{_options.theme}}">validationStatus: valid</div>
+        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 multiSelect="{{true}}"
+                                 source="{{_source}}"
+                                 validationStatus="valid"/>
+    </div>
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label_theme-{{_options.theme}}">validationStatus: invalid</div>
+        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 multiSelect="{{true}}"
+                                 source="{{_source}}"
+                                 validationStatus="invalid"/>
+    </div>
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label_theme-{{_options.theme}}">validationStatus: invalidAccent</div>
+        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 multiSelect="{{true}}"
+                                 source="{{_source}}"
+                                 validationStatus="invalidAccent"/>
+    </div>
+</div>

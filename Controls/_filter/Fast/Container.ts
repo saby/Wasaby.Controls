@@ -14,9 +14,9 @@ import template = require('wml!Controls/_filter/Fast/Container');
  *
  * @class Controls/_filter/Fast/Container
  * @extends Core/Control
- * @author Герасимов А.М.
- * @control
  * @public
+ * @author Герасимов А.М.
+ * 
  * @deprecated Данный контрол устарел и будет удалён.
  */
 
@@ -31,7 +31,7 @@ import template = require('wml!Controls/_filter/Fast/Container');
  * @class Controls/_filter/Fast/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * @control
+ * 
  * @public
  */
 

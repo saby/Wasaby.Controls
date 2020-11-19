@@ -1,11 +1,11 @@
 import splitIntoTriads from 'Controls/Utils/splitIntoTriads';
 import {IParsedNumber} from 'Controls/_input/Number/parse';
 import {decimalSplitter} from 'Controls/_input/Number/constant';
-import {IText, paste, pasteWithRepositioning, remove, removeWithRepositioning} from 'Controls/_input/Base/Util';
+import {IText, paste, pasteWithRepositioning, remove, removeWithRepositioning} from 'Controls/decorator';
 
 interface INumberLength {
-    precision: number;
-    integersLength: number;
+    precision?: number;
+    integersLength?: number;
 }
 
 interface INumberDisplay {
@@ -33,42 +33,43 @@ type NumberOptions = INumberLength & INumberDisplay & INumberSign;
 
 /**
  * Format number by options.
- * @param number
+ * @param parsedNumber
  * @param options
  * @param carriagePosition
  * @return {IText}
  */
-export function format(original: IParsedNumber, options: NumberOptions, carriagePosition: number): IText {
-    let position: number = correctSign(original, options, carriagePosition);
-    position = correctIntegerPart(original, options, position);
-    if (shouldBeFractional(original.fractional, options)) {
-        position = correctFractionalPart(original, options, position);
+export function format(parsedNumber: IParsedNumber, options: NumberOptions, carriagePosition: number): IText {
+    let position: number = correctSign(parsedNumber, options, carriagePosition);
+    position = correctSplitter(parsedNumber, options, position);
+    position = correctIntegerPart(parsedNumber, options, position);
+    if (shouldBeFractional(parsedNumber.fractional, options)) {
+        position = correctFractionalPart(parsedNumber, options, position);
     }
 
-    return concat(original, options, position);
+    return concat(parsedNumber, options, position);
 }
 
-function correctSign(original: IParsedNumber, {onlyPositive}: INumberSign, carriagePosition: number): number {
+function correctSign(parsedNumber: IParsedNumber, {onlyPositive}: INumberSign, carriagePosition: number): number {
     let position: number = carriagePosition;
 
     if (onlyPositive) {
-        position -= original.negative;
-        original.negative = 0;
+        position -= parsedNumber.negative;
+        parsedNumber.negative = 0;
     }
 
     return position;
 }
 
-function correctIntegerPart(original: IParsedNumber, options: INumberLength & INumberDisplay, carriagePosition: number): number {
-    const needlessChars: number = calcNeedlessChars(original, 'integer', options);
-    const positionRelativeIntegerPart: number = getPositionRelativePart(original, 'integer', carriagePosition);
+function correctIntegerPart(parsedNumber: IParsedNumber, options: INumberLength & INumberDisplay, carriagePosition: number): number {
+    const needlessChars: number = calcNeedlessChars(parsedNumber, 'integer', options);
+    const positionRelativeIntegerPart: number = getPositionRelativePart(parsedNumber, 'integer', carriagePosition);
 
-    const limitedValue: IDataAfterLimiting = limitValue(original.integer, {
+    const limitedValue: IDataAfterLimiting = limitValue(parsedNumber.integer, {
         absolute: carriagePosition,
         relative: positionRelativeIntegerPart
     }, needlessChars);
 
-    const position: number = shouldBeFractional(original.fractional, options) ? moveIntegerToFractional(original, {
+    const position: number = shouldBeFractional(parsedNumber.fractional, options) ? moveIntegerToFractional(parsedNumber, {
         value: limitedValue.movedValue,
         carriagePosition: limitedValue.position
     }, limitedValue.value) : limitedValue.position;
@@ -77,7 +78,7 @@ function correctIntegerPart(original: IParsedNumber, options: INumberLength & IN
         options, {
             value: limitedValue.value,
             carriagePosition: position
-        }, original.negative
+        }, parsedNumber.negative
     );
 
     /**
@@ -85,11 +86,11 @@ function correctIntegerPart(original: IParsedNumber, options: INumberLength & IN
      * the cursor automatically passes through the splitter and is set before the first
      * character in the fractional part.
      */
-    if (needlessChars === 0 && original.negative + processedData.value.length === processedData.carriagePosition) {
+    if (needlessChars === 0 && parsedNumber.negative + processedData.value.length === processedData.carriagePosition) {
         processedData.carriagePosition += decimalSplitter.length;
     }
 
-    original.integer = processedData.value;
+    parsedNumber.integer = processedData.value;
 
     return processedData.carriagePosition;
 }
@@ -157,19 +158,19 @@ function limitValue(value: string, position: IPosition, needlessChars: number): 
 /**
  * Move the integer part to the beginning of the fractional part.
  */
-function moveIntegerToFractional(original: IParsedNumber, text: IText, integer: string): number {
+function moveIntegerToFractional(parsedNumber: IParsedNumber, text: IText, integer: string): number {
     if (!text.value) {
         return text.carriagePosition;
     }
 
     const {value: fractional, carriagePosition: shiftedPosition}: IText = pasteWithRepositioning({
-        value: original.fractional,
+        value: parsedNumber.fractional,
         carriagePosition: text.carriagePosition
     }, text.value, 0);
 
-    original.fractional = fractional;
+    parsedNumber.fractional = fractional;
 
-    const movedValuePosition: number = original.negative + integer.length +
+    const movedValuePosition: number = parsedNumber.negative + integer.length +
         decimalSplitter.length + text.value.length;
 
     return Math.max(shiftedPosition, movedValuePosition);
@@ -213,18 +214,27 @@ function calcFirstSignificantDigit(value: string): number {
 
 const significantDigit: RegExp = /[1-9]/;
 
-function correctFractionalPart(original: IParsedNumber, options: INumberLength, carriagePosition: number): number {
-    const needlessChars: number = calcNeedlessChars(original, 'fractional', options);
-    const positionRelativeIntegerPart: number = getPositionRelativePart(original, 'fractional', carriagePosition);
+function correctFractionalPart(parsedNumber: IParsedNumber, options: INumberLength, carriagePosition: number): number {
+    const needlessChars: number = calcNeedlessChars(parsedNumber, 'fractional', options);
+    const positionRelativeIntegerPart: number = getPositionRelativePart(parsedNumber, 'fractional', carriagePosition);
 
-    const limitedValue: IDataAfterLimiting = limitValue(original.fractional, {
+    const limitedValue: IDataAfterLimiting = limitValue(parsedNumber.fractional, {
         absolute: carriagePosition,
         relative: positionRelativeIntegerPart
     }, needlessChars);
 
-    original.fractional = handleVoid(options, limitedValue.value);
+    parsedNumber.fractional = handleVoid(options, limitedValue.value);
 
     return limitedValue.position;
+}
+
+function correctSplitter(parsedNumber: IParsedNumber, options: INumberLength, carriagePosition: number): number {
+    if (options.precision === 0 && parsedNumber.hasSplitter) {
+        parsedNumber.hasSplitter = false;
+        return Math.min(carriagePosition, parsedNumber.integer.length);
+    }
+
+    return carriagePosition;
 }
 
 /**

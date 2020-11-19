@@ -17,7 +17,7 @@
 }
 
 .ControlsDemo-EditableArea__title {
-   font-size: 16px;
+   font-size: 18px;
    color: #999999;
    margin-left: auto;
    padding: 10px 0;
@@ -25,16 +25,26 @@
 
 .ControlsDemo-EditableArea__firstExample {
    background-color: #f8f8f8;
-   min-width: 301px;
-   min-height: 32px;
+   min-width: 302px;
    flex-shrink: 0;
 }
-
+.ControlsDemo-EditableArea__FirstExample__long {
+   background-color: #f8f8f8;
+   width: 700px;
+   height: 30px;
+   padding-left: 10px;
+}
+.ControlsDemo-EditableArea__longExample__editor {
+   max-width: 700px;
+}
+.ControlsDemo-EditableArea__longExample__editor_wrapper {
+   flex-grow: 1;
+}
+.ControlsDemo-EditableArea__longExample__input {
+   width: 100%;
+}
 .ControlsDemo-EditableArea__firstExampleWrapper {
-   display: inline-flex;
-   align-items: center;
    padding: 4px 0 4px 4px;
-   width: 220px;
 }
 
 .ControlsDemo-EditableArea__tabs {
@@ -56,7 +66,7 @@
 }
 
 .ControlsDemo-EditableArea__date {
-   width: 63px;
+   width: 66px;
 }
 
 .ControlsDemo-EditableArea__number {
@@ -89,11 +99,6 @@
    width: 100%;
 }
 
-.controls-EditableArea__Text_style_asLink {
-   font-size: 14px;
-   color: #313E78;
-   cursor: pointer;
-   &:hover {
-      text-decoration: underline;
-   }
+.ControlsDemo-EditableArea__firstExample__editor_wrapper {
+   width: 160px;
 }

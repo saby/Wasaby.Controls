@@ -1,14 +1,13 @@
 import {ListView} from 'Controls/list';
 import template = require('wml!Controls/_tile/TileView/TileView');
 import defaultItemTpl = require('wml!Controls/_tile/TileView/TileTpl');
+import {TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY} from './resources/Constants';
 import {TouchContextField} from 'Controls/context';
 import ItemSizeUtils = require('Controls/_tile/TileView/resources/ItemSizeUtils');
-import 'css!theme?Controls/tile';
 
 var _private = {
     getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient, withoutCorrection = false) {
         var
-            result,
             additionalWidth = (itemNewSize.width - itemRect.width) / 2,
             additionalHeightBottom = (itemNewSize.height - itemRect.height * zoomCoefficient),
             additionalHeight = (itemNewSize.height - itemRect.height - additionalHeightBottom) / 2,
@@ -67,7 +66,7 @@ var _private = {
         self._mouseMoveTimeout = null;
     },
     isTouch: function (self) {
-        return self._context.isTouch.isTouch;
+        return self._context?.isTouch?.isTouch;
     },
     getPositionStyle: function (position) {
         var result = '';
@@ -90,18 +89,6 @@ var _private = {
     }
 };
 
-var
-    ZOOM_DELAY = 100,
-    ZOOM_COEFFICIENT = 1.5;
-
-var TILE_SCALING_MODE = {
-    NONE: 'none',
-    OUTSIDE: 'outside',
-    INSIDE: 'inside',
-    OVERLAP: 'overlap'
-};
-
-
 var TileView = ListView.extend({
     _template: template,
     _defaultItemTemplate: defaultItemTpl,
@@ -111,7 +98,7 @@ var TileView = ListView.extend({
 
     _afterMount: function () {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
-        this._notify('register', ['scroll', this, this._onScroll], {bubbling: true});
+        this._notify('register', ['scroll', this, this._onScroll, {listenAll: true}], {bubbling: true});
         TileView.superclass._afterMount.apply(this, arguments);
     },
 
@@ -122,6 +109,9 @@ var TileView = ListView.extend({
     _beforeUpdate: function (newOptions) {
         if (this._options.tileMode !== newOptions.tileMode) {
             this._listModel.setTileMode(newOptions.tileMode);
+        }
+        if (this._options.itemsContainerPadding !== newOptions.itemsContainerPadding) {
+            this._listModel.setItemsContainerPadding(newOptions.itemsContainerPadding);
         }
         if (this._options.tileHeight !== newOptions.tileHeight) {
             this._listModel.setItemsHeight(newOptions.tileHeight);
@@ -169,7 +159,7 @@ var TileView = ListView.extend({
     _onItemMouseLeave: function (event, itemData) {
         var hoveredItem = this._listModel.getHoveredItem();
         if (hoveredItem && hoveredItem.key === itemData.key) {
-            if (!itemData.isActive || hoveredItem.key !== itemData.key) {
+            if (!itemData.isActive() || hoveredItem.key !== itemData.key) {
                 this._listModel.setHoveredItem(null);
             }
         }
@@ -180,15 +170,19 @@ var TileView = ListView.extend({
     _onItemMouseMove(event, itemData): void {
         const hoveredItem = this._listModel.getHoveredItem();
         const isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
-
-        if (
-            this._options.tileScalingMode !== TILE_SCALING_MODE.NONE &&
-            !isCurrentItemHovered &&
-            !this._listModel.getDragEntity() &&
-            _private.shouldProcessHover(this)
+        const activeItem = this._listModel.getActiveItem();
+        if (!isCurrentItemHovered &&
+            _private.shouldProcessHover(this) &&
+            !this._listModel.getDragItemData() &&
+            !activeItem
         ) {
-            _private.clearMouseMoveTimeout(this);
-            this._calculateHoveredItemPosition(event, itemData);
+            if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
+                _private.clearMouseMoveTimeout(this);
+                this._calculateHoveredItemPosition(event, itemData);
+            } else {
+                const itemWidth = event.target.closest('.controls-TileView__item').clientWidth;
+                this._setHoveredItem(itemData, null, null, true, itemWidth);
+            }
         }
 
         TileView.superclass._onItemMouseMove.apply(this, arguments);
@@ -213,9 +207,9 @@ var TileView = ListView.extend({
                 let position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
                 const documentRect = documentObject.documentElement.getBoundingClientRect();
                 position = _private.getPositionInDocument(position, containerRect, documentRect, true);
-                this._setHoveredItem(itemData, position, position, true);
+                this._setHoveredItem(itemData, position, position, true, itemSize.width);
             } else {
-                this._setHoveredItem(itemData);
+                this._setHoveredItem(itemData, null, null, null, itemContainerRect.width);
             }
         } else {
             itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
@@ -238,7 +232,7 @@ var TileView = ListView.extend({
                 itemStartPosition = null;
             }
             this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition);
+                self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition, null, itemSize.width);
             }, ZOOM_DELAY);
         } else {
             this._setHoveredItem(itemData);
@@ -249,7 +243,8 @@ var TileView = ListView.extend({
         return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
     },
 
-    _setHoveredItem: function (itemData, position, startPosition, noZoom) {
+    _setHoveredItem: function (itemData, position, startPosition, noZoom, itemWidth?: number): void {
+        const needUpdateActions = this._options.actionMode === 'adaptive' && !itemData.dispItem.isNode();
         if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
             this._listModel.setHoveredItem({
                 key: itemData.key,
@@ -258,6 +253,9 @@ var TileView = ListView.extend({
                 position: _private.getPositionStyle(startPosition || position),
                 endPosition: _private.getPositionStyle(position)
             });
+        }
+        if (needUpdateActions) {
+            this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
         }
     },
 
@@ -297,5 +295,6 @@ TileView.contextTypes = function contextTypes() {
 };
 
 TileView._private = _private;
+TileView._theme = ['Controls/tile'];
 
 export = TileView;

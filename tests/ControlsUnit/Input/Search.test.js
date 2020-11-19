@@ -27,17 +27,16 @@ define(
                };
 
                search._options.readOnly = true;
-               search._searchClick();
+               search._searchClick({});
                assert.isFalse(searched);
                assert.isFalse(activated);
 
                search._options.readOnly = false;
-               search._searchClick();
-               assert.isTrue(searched);
+               search._searchClick({});
                assert.isTrue(activated);
 
                searched = activated = false;
-               search._searchClick();
+               search._searchClick({});
                assert.isFalse(searched);
                assert.isTrue(activated);
 
@@ -71,6 +70,24 @@ define(
                search._searchClick();
                assert.isFalse(resetClicked);
                assert.isFalse(activated);
+            });
+
+            it('_resetClick', function() {
+               let search = new searchMod.Input();
+               let eventPreventDefault = false;
+               let eventStopPropagation = false;
+               let event = {
+                  stopPropagation: () => {
+                     eventStopPropagation = true;
+                  },
+                  preventDefault: () => {
+                     eventPreventDefault = true;
+                  }
+               };
+
+               search._resetMousedown(event);
+               assert.isTrue(eventPreventDefault);
+               assert.isTrue(eventStopPropagation);
             });
 
             it('Enter click', function() {

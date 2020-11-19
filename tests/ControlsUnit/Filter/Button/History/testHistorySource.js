@@ -7,10 +7,10 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
       'Types/source',
       'Types/collection',
       'Types/entity',
-      'Core/Serializer'
+      'UI/State'
    ],
 
-   function(Control, Di, history, Deferred, source, collection, entity, Serializer) {
+   function(Control, Di, history, Deferred, source, collection, entity, uiState) {
 
       'use strict';
 
@@ -113,10 +113,10 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
          _type: 'recordset',
          d: [
             [
-               '8', JSON.stringify(items2, new Serializer().serialize), 'TEST_HISTORY_ID_2'
+               '8', JSON.stringify(items2, new uiState.Serializer().serialize), 'TEST_HISTORY_ID_2'
             ],
             [
-               '5', JSON.stringify(items1, new Serializer().serialize), 'TEST_HISTORY_ID_1'
+               '5', JSON.stringify(items1, new uiState.Serializer().serialize), 'TEST_HISTORY_ID_1'
             ]
          ],
          s: [
@@ -148,8 +148,8 @@ define('ControlsUnit/Filter/Button/History/testHistorySource',
 
       var histSource = Control.extend({
          constructor: function(cfg) {
-            this._recent = cfg.recent;
-            this._favorite = cfg.favorite;
+            this._$recent = cfg.recent;
+            this._$favorite = cfg.favorite;
          },
 
          getHistoryId: function() {

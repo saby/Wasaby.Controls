@@ -1,3 +1,0 @@
-<div>
-    <Controls.buttons:Button caption="+ Задача" viewMode="link" fontColorStyle="link"/>
-</div>

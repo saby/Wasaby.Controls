@@ -3,7 +3,7 @@ import getFormattedDateRange = require('Core/helpers/Date/getFormattedDateRange'
 // @ts-ignore
 import locales = require('Core/helpers/i18n/locales');
 import {Date as WSDate, DateTime} from 'Types/entity';
-import DateUtil = require('Controls/Utils/Date');
+import {Base as DateUtil} from 'Controls/dateUtils';
 
 var locale = locales.current;
 var weekdaysCaptions;
@@ -27,6 +27,7 @@ var getDayRange = function(startDate, endDate, quantum) {
 /**
  * @class Controls/_dateRange/Utils
  * @public
+ * @author Красильников А.С.
  */
 var Utils = {
 
@@ -45,7 +46,7 @@ var Utils = {
          days.push(locale.config.daysSmall[0]);
 
          weekdaysCaptions = days.map(function(value, index) {
-            return {caption: value, weekend: index === 5 || index === 6};
+            return {caption: value, weekend: index === 5 || index === 6, day: index};
          });
       }
       return weekdaysCaptions;
@@ -226,14 +227,6 @@ var Utils = {
       } else {
          return [date, baseDate];
       }
-   },
-
-   proxyModelEvents: function(component, model, eventNames) {
-      eventNames.forEach(function(eventName) {
-         model.subscribe(eventName, function(event, value) {
-            component._notify(eventName, value);
-         });
-      });
    }
 };
 

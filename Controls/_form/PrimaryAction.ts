@@ -32,7 +32,8 @@ const PrimaryAction = Control.extend({
 });
 
 /**
- * @event Controls/_form/PrimaryAction#triggered Происходит при нажатии комбинации клавиш Ctrl + Enter и Сmd + Enter.
+ * @event Происходит при нажатии комбинации клавиш Ctrl + Enter и Сmd + Enter.
+ * @name Controls/_form/PrimaryAction#triggered
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
 
