@@ -36,6 +36,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import SearchSeparator from "./SearchSeparator";
+import {INavigationOptionValue} from '../_interface/INavigation';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -105,6 +106,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
+    navigation: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -277,6 +279,7 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REMOVE:
@@ -286,6 +289,7 @@ function onCollectionChange<T>(
             if (this._isFiltered()) {
                 this._reFilter();
             }
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REPLACE:
@@ -296,6 +300,7 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_MOVE:
@@ -303,6 +308,7 @@ function onCollectionChange<T>(
             this._moveItems(newItemsIndex, oldItemsIndex, newItems);
             this._reSort();
             this._reFilter();
+            this._handleCollectionChange(action);
             break;
     }
 
@@ -581,6 +587,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemTemplateProperty: string;
 
+    protected _$itemsDragNDrop: boolean;
+
     protected _$multiSelectVisibility: string;
 
     protected _$multiSelectPosition: 'default' | 'custom';
@@ -622,6 +630,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$itemActionsProperty: string;
 
     protected _$markerVisibility: string;
+
+    protected _$style: string;
+
+    protected _$navigation: INavigationOptionValue;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -739,6 +751,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
 
+        this._$navigation = options.navigation;
         this._$filter = this._$filter || [];
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
@@ -913,6 +926,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._getUtilityEnumerator().getIndexByValue('instanceId', instanceId);
     }
 
+    /**
+     * Возвращает парамметры для навигации
+     * @return {INavigationOptionValue}
+     */
+    getNavigation(): INavigationOptionValue {
+        return this._$navigation;
+    }
     /**
      * Возвращает энумератор для перебора элементов проекции
      * @return {Controls/_display/CollectionEnumerator}
@@ -2058,6 +2078,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setKeyProperty(keyProperty: string): void {
         this._$keyProperty = keyProperty;
+        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
         this.nextVersion();
     }
 
@@ -2204,6 +2225,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
+    getItemsDragNDrop(): boolean {
+        return this._$itemsDragNDrop;
+    }
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
@@ -2335,6 +2359,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getTheme(): string {
         return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
     }
 
     getHoverBackgroundStyle(): string {
@@ -2656,6 +2684,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
+    }
+
+    protected _handleCollectionChange(action: string): void {
     }
 
     private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
@@ -3809,6 +3840,7 @@ Object.assign(Collection.prototype, {
     _$keyProperty: '',
     _$displayProperty: '',
     _$itemTemplateProperty: '',
+    _$itemsDragNDrop: false,
     _$multiSelectVisibility: 'hidden',
     _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
@@ -3825,6 +3857,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

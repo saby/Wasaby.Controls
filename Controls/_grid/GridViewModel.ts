@@ -1702,6 +1702,19 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
+            
+            current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
+                if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
+                    const index = current.stickyProperties.indexOf(stickyProperty);
+                    const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
+                    if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                        index === 1 && !hasMainCell ||
+                        index === 0 && hasMainCell) || stickyProperty === undefined) {
+                        return false;
+                    }
+                }
+                return true;
+            }
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
@@ -1783,6 +1796,7 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
+                        shouldDrawLadderContent: current.shouldDrawLadderContent,
                         getLadderContentClasses: current.getLadderContentClasses,
                         hoverBackgroundStyle: self._options.hoverBackgroundStyle || 'default',
                         getVersion: function () {
@@ -1992,10 +2006,10 @@ var
 
                 column.getWrapperStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
-                    if (isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `${styles} width: ${containerSize}px;`;
                     }
-                    return styles
+                    return styles;
                 };
 
                 column.getContentClasses = (containerSize: number) => {
@@ -2007,7 +2021,7 @@ var
                 column.getContentStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
                     // При табличной верстке выводится td который игнорирует width. Ограничивать необходимо контент
-                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `width: ${containerSize}px;`;
                     }
                     return '';

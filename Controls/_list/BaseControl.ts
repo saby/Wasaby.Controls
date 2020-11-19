@@ -1131,9 +1131,16 @@ const _private = {
                 const pageSize = self._options.navigation.sourceConfig.pageSize;
                 const page = direction === 'up' ? 0 : Math.ceil(metaMore / pageSize) - 1;
                 const neededPagesCount = Math.ceil(itemsOnPage / pageSize);
+                let neededPage = direction === 'up' ? 0 : 1;
+                let neededPageSize = direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount);
+                if (page - neededPagesCount <= neededPagesCount && direction === 'down') {
+                        neededPage = 0;
+                        neededPageSize = (page + 1) * pageSize;
+                }
                 navigationQueryConfig = {
-                    page: direction === 'up' ? 0 : 1,
-                    pageSize: direction === 'up' ? pageSize * neededPagesCount : pageSize * (page - neededPagesCount)
+                    ...navigationQueryConfig,
+                    page: neededPage,
+                    pageSize: neededPageSize
                 };
             }
 
@@ -1666,6 +1673,8 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
+                    self._shouldDrawFooter = false;
                 }
             }
 
@@ -1853,9 +1862,11 @@ const _private = {
             model.subscribe('onAfterCollectionChange', _private.onAfterCollectionChanged.bind(null, self));
         }
 
-        model.subscribe('onGroupsExpandChange', function(event, changes) {
-            _private.groupsExpandChangeHandler(self, changes);
-        });
+        if (!useNewModel) {
+            model.subscribe('onGroupsExpandChange', function(event, changes) {
+                _private.groupsExpandChangeHandler(self, changes);
+            });
+        }
     },
 
     /**
@@ -2090,10 +2101,10 @@ const _private = {
      * @private
      */
     processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
-        if (config.dataLoadErrback instanceof Function) {
-            config.dataLoadErrback(config.error);
-        }
-        if (!config.error.canceled) {
+        if (!config.error.canceled && !config.error.isCanceled) {
+            if (config.dataLoadErrback instanceof Function) {
+                config.dataLoadErrback(config.error);
+            }
             _private.hideIndicator(self);
         }
         return self.__errorController.process({
@@ -4270,6 +4281,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeBeforePaint();
             this._updateShadowModeBeforePaint = null;
         }
+
+        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
+            _private.activateEditingRow(this);
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4403,9 +4418,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 callback();
             });
             this._callbackAfterUpdate = null;
-        }
-        if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
-            _private.activateEditingRow(this);
         }
     },
 
@@ -4549,6 +4561,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 } else {
                     dispItem.setExpanded(needExpandGroup);
                 }
+
+                // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
+                const collapsedGroups = collection.getCollapsedGroups() || [];
+                if (collapsedGroups.indexOf(groupId) === -1) {
+                    collapsedGroups.push(groupId);
+                }
+                const changes = {
+                    changeType: needExpandGroup ? 'expand' : 'collapse',
+                    group: groupId,
+                    collapsedGroups
+                };
+                _private.groupsExpandChangeHandler(this, changes);
             } else {
                 const needExpandGroup = !collection.isGroupExpanded(groupId);
                 if (groupingLoader && needExpandGroup && !groupingLoader.isLoadedGroup(groupId)) {

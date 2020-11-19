@@ -92,6 +92,7 @@ var Suggest = Control.extend({
          if (eventResult !== false) {
             this._suggestState = false;
             this._notify('suggestStateChanged', [false]);
+            this._children.suggestController.closeSuggest();
          }
       }
    },

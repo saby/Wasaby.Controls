@@ -149,6 +149,12 @@ define(
 
          describe('check readOnly state', () => {
             let combobox;
+            let itemsCallback = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: [{
+                  key: '2'
+               }]
+            });
             beforeEach(() => {
                combobox = getCombobox(config);
                combobox._controller = {
@@ -157,28 +163,29 @@ define(
             });
 
             it('count of items = 1', () => {
-               const itemsCallback = { getCount: () => 1 };
                combobox._dataLoadCallback(itemsCallback);
                assert.isTrue(combobox._readOnly);
+               assert.deepEqual(combobox._selectedItem, itemsCallback.at(0));
             });
 
             it('count of items = 1, with emptyText', () => {
                combobox._options.emptyText = 'test';
                combobox._options.readOnly = false;
-               const itemsCallback = { getCount: () => 1 };
                combobox._dataLoadCallback(itemsCallback);
                assert.isFalse(combobox._readOnly);
             });
 
             it('count of items = 2', () => {
-               const itemsCallback = { getCount: () => 2 };
+               itemsCallback.add(new entity.Model({
+                  rawData: { id: '2' }
+               }));
                combobox._dataLoadCallback(itemsCallback);
                assert.isFalse(combobox._readOnly);
+               assert.isUndefined(combobox._selectedItem);
             });
 
             it('count of items = 2, with options.readOnly', () => {
                combobox._options.readOnly = true;
-               const itemsCallback = { getCount: () => 2 };
                combobox._dataLoadCallback(itemsCallback);
                assert.isTrue(combobox._readOnly);
             });

@@ -174,6 +174,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
+      if (this._searchController) {
+         this._searchController = null;
+      }
       this._searchResult = null;
 
       // when closing popup we reset the cache with recent keys
@@ -264,7 +267,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
          if (!this._options.suggestState &&
             this._options.source &&
-            !this._getSourceController().isLoading() && !this._historyLoad) {
+            !this._getSourceController().isLoading() && (!this._historyLoad || this._historyLoad.isReady())) {
 
             if (this._options.historyId) {
 
@@ -1006,6 +1009,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             }
          }
       }
+   }
+
+   closeSuggest(): void {
+      this._close();
    }
 
    static _theme: string[] = ['Controls/suggest'];
