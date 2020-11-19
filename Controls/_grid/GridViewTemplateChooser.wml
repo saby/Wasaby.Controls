@@ -44,7 +44,7 @@
 
         <!-- При table-layout скроллбар нужно выводить вне таблицы. Т.к. таблица имеет transform:translateX, абсолютно -->
         <!-- спозиционированные элементы позиционируются относительно ее. Скроллбар должен занимать ширину видимой области таблицы. -->
-        <ws:if data="{{ _isColumnScrollVisible() && !_listModel.isFullGridSupport() }}">
+        <ws:if data="{{ _isColumnScrollVisible() && !_listModel.isFullGridSupport() && _listModel.isDrawHeaderWithEmptyList() }}">
             <Controls._grid.ScrollWrapper
                     name="horizontalScrollWrapper"
                     contentSize="{{ _contentSizeForHScroll }}"

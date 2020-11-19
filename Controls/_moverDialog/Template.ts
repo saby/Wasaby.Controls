@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_moverDialog/Template/Template');
 import {Record} from 'Types/entity';
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TColumns} from 'Controls/grid';
 import rk = require('i18n!Controls');
@@ -21,7 +21,7 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
     keyProperty: string;
     nodeProperty: string;
     parentProperty: string;
-    filter?: IHashMap<any>;
+    filter?: QueryWhereExpression<unknown>;
 }
 
 /**
@@ -54,6 +54,7 @@ export default class extends Control<IMoverDialogTemplateOptions> {
     protected _itemActions: any[];
     protected _root: string|number;
     protected _expandedItems: any[];
+    protected _filter: QueryWhereExpression<unknown>;
     private _columns: TColumns;
 
     protected _beforeMount(options: IMoverDialogTemplateOptions): void {
@@ -64,6 +65,7 @@ export default class extends Control<IMoverDialogTemplateOptions> {
         }];
         this._root = options.root;
         this._expandedItems = options.expandedItems;
+        this._filter = options.filter;
 
         // TODO: сейчас прикладной программист передает в MoveDialog опцию columns, что плохо, он может повлиять на
         // отображение колонки, а диалог во всех реестрах должен выглядеть одинаково. Нужно убрать возможно передавать

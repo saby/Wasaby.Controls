@@ -10,6 +10,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
    protected _value: string;
+   protected _contextCallbackId: string;
    protected _searchResolverController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
@@ -22,11 +23,26 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
+      if (this._contextCallbackId) {
+         Store.unsubscribe(this._contextCallbackId);
+      }
    }
 
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._value = newOptions.inputSearchValue;
+      }
+   }
+
+   protected _afterMount(): void {
+      if (this._options.useStore) {
+         this._contextCallbackId = Store.onPropertyChanged(
+             '_contextName',
+             () => {
+                this._value = this._options.inputSearchValue;
+             },
+             true
+         );
       }
    }
 
