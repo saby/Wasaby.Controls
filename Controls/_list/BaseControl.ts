@@ -1690,7 +1690,7 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
-                } else {
+                } else if (typeof moreMetaCount === 'number') {
                     self._shouldDrawFooter = false;
                 }
             }
