@@ -254,7 +254,7 @@ function onCollectionChange<T>(
                 projectionOldItems,
                 0
             );
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
             this._nextVersion();
             return;
 
@@ -281,7 +281,6 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REMOVE:
@@ -291,7 +290,6 @@ function onCollectionChange<T>(
             if (this._isFiltered()) {
                 this._reFilter();
             }
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REPLACE:
@@ -302,7 +300,6 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_MOVE:
@@ -310,7 +307,6 @@ function onCollectionChange<T>(
             this._moveItems(newItemsIndex, oldItemsIndex, newItems);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
     }
 
@@ -886,7 +882,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             projectionOldItems,
             0
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     destroy(): void {
@@ -2148,7 +2144,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             index
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -2696,9 +2692,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    protected _handleCollectionChange(action: string): void {
-    }
-
     private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
         const strategyOptions = { ...options, display: this };
         let index = 0;
@@ -2876,7 +2869,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         super._analizeUpdateSession.call(this, session);
 
         if (session) {
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3699,7 +3692,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     index
                 );
             });
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3762,7 +3755,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 );
             }
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     /**
@@ -3863,6 +3856,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
         this._notify('onAfterCollectionChange');
+    }
+
+    protected _handleAfterCollectionChange(): void {
+        this._notifyAfterCollectionChange();
     }
 
     // endregion
