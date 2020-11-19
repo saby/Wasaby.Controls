@@ -282,14 +282,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateHasUnrenderedContent(event: SyntheticEvent, hasUnrenderedContent: IUnrenderedContent): void {
         super.updateHasUnrenderedContent(hasUnrenderedContent);
-        this._updateShadowVisibility(hasUnrenderedContent);
-    }
-
-    private _updateShadowVisibility(hasUnrenderedContent: IUnrenderedContent): void {
         const shadowsVisibility = {
             top: hasUnrenderedContent.top ? 'visible' : 'auto',
             bottom: hasUnrenderedContent.bottom ? 'visible' : 'auto'
         };
+        this._updateShadowVisibility(shadowsVisibility);
+    }
+
+    private _updateShadowVisibility(shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, this._wasMouseEnter);
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
