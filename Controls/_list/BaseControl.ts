@@ -3448,9 +3448,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
+    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
+        this._scrollTop = scrollTop;
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
@@ -5678,7 +5679,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.scrollMoveSyncHandler(params);
                 break;
             case 'viewportResize':
-                this.viewportResizeHandler(params.clientHeight, params.rect);
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
                 break;
             case 'virtualScrollMove':
                 _private.throttledVirtualScrollPositionChanged(this, params);
