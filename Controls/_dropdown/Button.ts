@@ -274,3 +274,9 @@ export default class Button extends BaseDropdown {
  * }
  * </pre>
  */
+
+/**
+ * @name Controls/_dropdown/Button#fontSize
+ * @cfg
+ * @demo Controls-demo/dropdown_new/Button/FontSize/Index
+ */
