@@ -68,7 +68,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
           });
       });
 
-      describe('hover on node', () => {
+      describe('drag on node', () => {
 
          it('drag node before node', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
