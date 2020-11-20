@@ -338,6 +338,9 @@ const _private = {
             const isDeepReload = _private.isDeepReload(options, self._deepReload);
 
             if (!isDeepReload || self._needResetExpandedItems) {
+                if (options.sourceController && options.searchValue) {
+                    _private.clearNodesSourceControllers(self); //до 21.1000, т.к. nodeSourceController были удалены
+                }
                 _private.resetExpandedItems(self);
                 self._needResetExpandedItems = false;
             }
