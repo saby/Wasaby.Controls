@@ -30,8 +30,8 @@ export interface ISelectionObject {
 }
 
 export interface ISelectionTypeOptions {
-    selectionType: TSelectionType;
-    recursiveSelection: boolean;
+    selectionType?: TSelectionType;
+    recursiveSelection?: boolean;
 }
 
 /**
