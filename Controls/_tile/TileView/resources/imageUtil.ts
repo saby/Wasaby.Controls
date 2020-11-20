@@ -101,7 +101,9 @@ export function getImageRestrictions(
         if (imageDeltaH >= tileDeltaH) {
             restrictions.height = true;
         }
-    } else if (imageDeltaH >= tileDeltaH) {
+    } else if (tileDeltaH <= imageDeltaH) {
+        restrictions.width = true;
+    } else {
         restrictions.height = true;
     }
     return restrictions;

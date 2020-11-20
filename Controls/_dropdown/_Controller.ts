@@ -308,10 +308,10 @@ export default class _Controller implements IDropdownController {
       this._createMenuSource(error);
    }
 
-   private _prepareFilterForQuery(options): object {
+   private _prepareFilterForQuery(options, withHistory: boolean = true): object {
       let filter = options.filter;
 
-      if (this._hasHistory(options)) {
+      if (this._hasHistory(options) && withHistory) {
          if (this._isLocalSource(options.source) || !options.historyNew) {
             filter = getSourceFilter(options.filter, this._source);
          } else {
@@ -336,11 +336,10 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   private _loadItems(options) {
+   private _loadItems(options, withHistory?: boolean) {
       return this._getSourceController(options).then(
           (sourceController) => {
-             this._filter = this._prepareFilterForQuery(options);
-
+             this._filter = this._prepareFilterForQuery(options, withHistory);
              return sourceController.load(this._filter).addCallback((items) => {
                 const unloadedKeys = this._getUnloadedSelectedKeys(options.selectedKeys, items);
                 if (options.needLoadSelectedItems && unloadedKeys) {
@@ -390,7 +389,7 @@ export default class _Controller implements IDropdownController {
          keyProperty: options.keyProperty,
          filter
       };
-      return this._loadItems(config).then((newItems) => {
+      return this._loadItems(config, false).then((newItems) => {
          items.prepend(newItems);
          this._resolveLoadedItems(options, items);
          return items;

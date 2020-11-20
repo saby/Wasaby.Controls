@@ -78,8 +78,14 @@ define([
             rawData: data
          });
          sandbox = sinon.createSandbox();
+         global.window = {
+            requestAnimationFrame: (callback) => {
+               callback();
+            }
+         };
       });
       afterEach(function() {
+         global.window = undefined;
          sandbox.restore();
       });
       it('remove incorrect config', async function() {
@@ -162,6 +168,7 @@ define([
 
             ctrl._isScrollShown = true;
             ctrl._beforeUpdate(cfg);
+            ctrl._beforePaint();
 
             // check saving loaded items after new viewModelConstructor
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
@@ -179,6 +186,7 @@ define([
             );
             setTimeout(function() {
                ctrl._afterUpdate({});
+               ctrl._beforePaint();
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
                   getItemsContainer: function() {
@@ -2459,11 +2467,16 @@ define([
                },
                handleResetItems: () => undefined,
                registerObserver: () => undefined,
+               continueScrollToItemIfNeed: () => undefined,
+               completeVirtualScrollIfNeed: () => undefined,
+               update: () => undefined,
+               setRendering: () => undefined,
                scrollPositionChange: () => undefined,
                setTriggers: () => undefined,
                setIndicesAfterCollectionChange: () => undefined,
                calculateVirtualScrollHeight: () => 0,
                getParamsToRestoreScrollPosition: () => null,
+               setTriggerVisibility: () => undefined,
                getPlaceholders: () => { return { top: 0, bottom: 0 }; }
             };
 
@@ -2482,6 +2495,7 @@ define([
 
             assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Next until _afterUpdate');
             ctrl._afterUpdate(cfg);
+            ctrl._beforePaint();
             assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
             ctrl.__onPagingArrowClick({}, 'Prev');
@@ -2489,6 +2503,7 @@ define([
 
             assert.isTrue(ctrl._scrollPageLocked, 'Paging should be locked after paging Prev until _afterUpdate');
             ctrl._afterUpdate(cfg);
+            ctrl._beforePaint();
             assert.isFalse(ctrl._scrollPageLocked, 'Paging should be unlocked in _afterUpdate');
 
             ctrl.__onPagingArrowClick({}, 'Prev');
@@ -2660,8 +2675,10 @@ define([
                               return res;
                            });
                         lnBaseControl._afterUpdate({});
+                        lnBaseControl._beforePaint();
                      });
                   lnBaseControl._afterUpdate({});
+                  lnBaseControl._beforePaint();
                }, 10);
             }, 10);
          });
@@ -3029,12 +3046,14 @@ define([
             await lists.BaseControl._private.reload(baseControl, cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
             await baseControl._afterUpdate(cfg);
+            baseControl._beforePaint();
             assert.isFalse(doScrollNotified);
          });
          it('with scroll', async function() {
             baseControl._isScrollShown = true;
             await lists.BaseControl._private.reload(baseControl, cfg);
             await baseControl._afterUpdate(cfg);
+            baseControl._beforePaint();
             assert.isFalse(doScrollNotified);
             baseControl._shouldNotifyOnDrawItems = true;
             baseControl._resetScrollAfterReload = true;
@@ -3215,6 +3234,7 @@ define([
                resolve();
             });
             ctrl._afterUpdate(cfgWithSource);
+            ctrl._beforePaint();
          });
       });
 
@@ -3907,51 +3927,57 @@ define([
 
       it('startDragNDrop', () => {
          const self = {
-               _options: {
-                  readOnly: false,
-                  itemsDragNDrop: true,
-                  source,
-                  filter: {},
-                  selectedKeys: [],
-                  excludedKeys: [],
-               },
-               _listViewModel: new lists.ListViewModel({
-                  items: new collection.RecordSet({
-                     rawData: data,
-                     keyProperty: 'id'
-                  }),
-                  keyProperty: 'key'
+            _options: {
+               readOnly: false,
+               itemsDragNDrop: true,
+               source,
+               filter: {},
+               selectedKeys: [],
+               excludedKeys: [],
+            },
+            _listViewModel: new lists.ListViewModel({
+               items: new collection.RecordSet({
+                  rawData: data,
+                  keyProperty: 'id'
                }),
-               _registerMouseMove: () => null,
-               _registerMouseUp: () => null
-            },
-            domEvent = {
-               nativeEvent: {},
-               target: {
-                  closest: function() {
-                     return false;
+               keyProperty: 'key'
+            }),
+            _registerMouseMove: () => null,
+            _registerMouseUp: () => null
+         },
+         domEvent = {
+            nativeEvent: {},
+            target: {
+               closest: function() {
+                  return false;
+               }
+            }
+         },
+         itemData = {
+            getContents() {
+               return {
+                  getKey() {
+                     return 2;
                   }
-               }
-            },
-            itemData = {
-               getContents() {
-                  return {
-                     getKey() {
-                        return 2;
-                     }
-                  };
-               }
-            };
-
-         // self._listViewModel.setItems(data);
+               };
+            }
+         };
 
          let notifyCalled = false;
+
          self._notify = function(eventName, args) {
             notifyCalled = true;
             assert.equal(eventName, 'dragStart');
             assert.deepEqual(args[0], [2]);
             assert.equal(args[1], 2);
          };
+
+         Env.compatibility.touch = 1;
+
+         lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
+         assert.isFalse(notifyCalled, 'On touch device can\'t drag');
+
+         Env.compatibility.touch = 0;
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
@@ -5437,6 +5463,7 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          var fakeNotify = sandbox.spy(instance, '_notify')
             .withArgs('drawItems');
@@ -5447,6 +5474,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isTrue(fakeNotify.calledOnce);
       });
 
@@ -5492,6 +5520,7 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          instance.saveOptions({
             ...cfg,
@@ -5510,6 +5539,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isFalse(fakeNotify.calledOnce);
 
          const redrawChange = [{ sourceItem: true}];
@@ -5520,6 +5550,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isTrue(fakeNotify.calledOnce);
       });
 
@@ -5540,6 +5571,7 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          instance.saveOptions({
             ...cfg,
@@ -5558,6 +5590,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isFalse(fakeNotify.calledOnce);
 
          const redrawChange = [{ sourceItem: true}];
@@ -5568,6 +5601,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isTrue(fakeNotify.calledOnce);
       });
 
@@ -5591,6 +5625,7 @@ define([
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          var fakeNotify = sandbox.spy(instance, '_notify')
             .withArgs('drawItems');
 
@@ -5600,6 +5635,7 @@ define([
          instance._beforeUpdate(cfg);
          assert.isFalse(fakeNotify.called);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.isTrue(fakeNotify.calledOnce);
       });
 
@@ -5711,6 +5747,7 @@ define([
 
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          lists.BaseControl._private.showIndicator(instance, 'down');
          assert.equal(instance._loadingState, 'down');
@@ -5718,6 +5755,7 @@ define([
          cfgClone.loading = true;
          instance.saveOptions(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
          assert.equal(instance._loadingState, 'down');
       });
 
@@ -5747,6 +5785,7 @@ define([
 
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          let clock = sandbox.useFakeTimers();
          let loadPromise;
@@ -5756,6 +5795,7 @@ define([
          loadPromise = instance._beforeUpdate(cfgClone);
          clock.tick(100);
          instance._afterUpdate({});
+         instance._beforePaint();
          await loadPromise;
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
          assert.isTrue(portionSearchReseted);
@@ -5766,6 +5806,7 @@ define([
          cfgClone.filter = { test: 'test' };
          loadPromise = instance._beforeUpdate(cfgClone);
          instance._afterUpdate({});
+         instance._beforePaint();
          clock.tick(100);
          await loadPromise;
          assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
@@ -5820,6 +5861,7 @@ define([
 
          instance._beforeUpdate(cfg);
          instance._afterUpdate(cfg);
+         instance._beforePaint();
 
          assert.isTrue(portionSearchReseted);
          portionSearchReseted = false;
@@ -5828,6 +5870,7 @@ define([
          instance._beforeUpdate(cfgClone);
          assert.isTrue(instance._listViewModel._options.searchValue !== cfgClone.searchValue);
          instance._afterUpdate({});
+         instance._beforePaint();
          assert.isTrue(instance._listViewModel._options.searchValue === cfgClone.searchValue);
 
          assert.isTrue(portionSearchReseted);
@@ -7519,17 +7562,24 @@ define([
                      }
                   };
                },
-               getDraggableItem: () => ({
-                  getContents: () => ({
-                     getKey: () => 1
-                  })
-               })
+               getDraggableItem: () => undefined
             };
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
 
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('dragEnd').called);
+            assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+            baseControl._dndListController.getDraggableItem = () => ({
+               getContents: () => ({
+                  getKey: () => 1
+               })
+            });
+
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
@@ -7686,6 +7736,26 @@ define([
                }
             };
             return baseControl._beforeMount(cfg);
+         });
+
+         describe('mount', () => {
+            let newBaseControl;
+            it('beforeMount', () => {
+               const newCfg = { ...cfg };
+               newBaseControl = new lists.BaseControl();
+               newBaseControl.saveOptions(newCfg);
+               return newBaseControl._beforeMount(newCfg).then(() => {
+                  const viewModel = newBaseControl.getViewModel();
+                  assert.isTrue(viewModel.getItemBySourceKey(1).isMarked());
+               });
+            });
+
+            it('afterMount', () => {
+               const notifySpy = sinon.spy(newBaseControl, '_notify');
+               newBaseControl._afterMount();
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            });
          });
 
          describe('_private.changeMarkedKey', () => {
