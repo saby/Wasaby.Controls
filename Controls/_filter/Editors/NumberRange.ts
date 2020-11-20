@@ -11,6 +11,16 @@ import DateRangeTemplate = require('wml!Controls/_filter/Editors/NumberRange');
  */
 class NumberRangeEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
+    protected _minValue: number|null = null;
+    protected _maxValue: number|null = null;
+
+    protected _beforeMount(options?: IControlOptions): void {
+        this._updateValues(options.propertyValue);
+    }
+
+    protected _beforeUpdate(newOptions?: IControlOptions): void {
+        this._updateValues(newOptions.propertyValue);
+    }
 
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
         this._notifyExtendedValue([value, this._options.propertyValue[1]]);
@@ -18,6 +28,11 @@ class NumberRangeEditor extends Control<IControlOptions> {
 
     protected _handleMaxValueChanged(event: SyntheticEvent, value: number): void {
         this._notifyExtendedValue([this._options.propertyValue[0], value]);
+    }
+
+    private _updateValues(newValue: number[]): void {
+        this._minValue = newValue[0] !== undefined ? newValue[0] : null;
+        this._maxValue = newValue[1] !== undefined ? newValue[1] : null;
     }
 
     private _notifyExtendedValue(value: number[]): void {

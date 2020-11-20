@@ -2,13 +2,15 @@
    <Controls.input:Number scope="{{_options}}"
                           contrastBackground="{{false}}"
                           borderVisibility='partial'
-                          value="{{_options.propertyValue[0]}}"
+                          placeholder="{{_options.minValueTitle}}"
+                          value="{{_minValue}}"
                           on:valueChanged="_handleMinValueChanged()"/>
    <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
    <Controls.input:Number scope="{{_options}}"
                           borderVisibility='partial'
                           contrastBackground="{{false}}"
-                          value="{{_options.propertyValue[1]}}"
+                          placeholder="{{_options.maxValueTitle}}"
+                          value="{{_maxValue}}"
                           on:valueChanged="_handleMaxValueChanged()"/>
 
    <ws:if data="{{_options.afterEditorTemplate}}">

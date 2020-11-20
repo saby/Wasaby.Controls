@@ -27,7 +27,7 @@ export default class extends Control {
                 let addToData = true;
                 const emptyFields = {
                     owner: 'По ответственному',
-                    amount: 1
+                    amount: []
                 };
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
@@ -56,9 +56,11 @@ export default class extends Control {
                 itemTemplate: 'Controls/filter:NumberRangeEditor',
                 editorTemplateName: 'Controls/filter:NumberRangeEditor',
                 resetValue: [0, 150],
-                value: [0, 15],
+                value: [],
                 editorOptions: {
-                    afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate'
+                    afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate',
+                    minValueTitle: '0',
+                    maxValueTitle: '1 000 000'
                 }
             },
             {
