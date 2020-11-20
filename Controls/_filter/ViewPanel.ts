@@ -53,6 +53,7 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: object): void {
         this._editingObject = editingObject;
         this._updateSource(editingObject);
+        this._updateEditingObject();
     }
 
     protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
@@ -81,7 +82,8 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     private _updateSource(editingObject: object): void {
         this._source.forEach((item) => {
-            item.value = editingObject[item.name];
+                item.value = editingObject[item.name].value || editingObject[item.name];
+                item.textValue = editingObject[item.name].textValue || editingObject[item.name];
         });
     }
 
@@ -93,14 +95,8 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     private _updateGroupItems(): void {
         this._source.forEach((item) => {
-            let textValue;
-            if (Array.isArray(item.value)) {
-                textValue = item.value[0] + ' - ' + item.value[1];
-            } else {
-                textValue = item.value;
-            }
             this._groupItems[item.group] = {
-                textValue,
+                textValue: item.textValue || item.value,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate
             };
         });

@@ -22,7 +22,18 @@ class ListEditor extends Control<IControlOptions> {
     }
 
     protected _handleMarkedKeyChanged(event: SyntheticEvent, value: number): void {
-        this._notify('propertyValueChanged', [value], {bubbling: true});
+        const extendedValue = {
+            value,
+            textValue: this._getTextValue(value)
+        };
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _getTextValue(value: string|number): string {
+        const item = this._options.source.data.find((item) => {
+            return item[this._options.keyProperty] === value;
+        });
+        return item[this._options.displayProperty];
     }
 }
 export default ListEditor;

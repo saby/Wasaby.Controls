@@ -13,11 +13,19 @@ class NumberRangeEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
 
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
-        this._notify('propertyValueChanged', [[value, this._options.propertyValue[1]]], {bubbling: true});
+        this._notifyExtendedValue([value, this._options.propertyValue[1]]);
     }
 
     protected _handleMaxValueChanged(event: SyntheticEvent, value: number): void {
-        this._notify('propertyValueChanged', [[this._options.propertyValue[0], value]], {bubbling: true});
+        this._notifyExtendedValue([this._options.propertyValue[0], value]);
+    }
+
+    private _notifyExtendedValue(value: number[]): void {
+        const extendedValue = {
+            value,
+            textValue: value[0] + ' - ' + value[1]
+        };
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 }
 export default NumberRangeEditor;
