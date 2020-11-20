@@ -38,7 +38,8 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
 
         let result;
 
-        const moveTileNodeToLeaves = this._model['[Controls/_tile/TreeTileViewModel]'] && this._draggableItem.isNode() && !targetItem.isNode();
+        const moveTileNodeToLeaves = this._model['[Controls/_tile/TreeTileViewModel]'] && this._draggableItem.isNode()
+            && targetItem && !targetItem.isNode();
         if (targetItem && targetItem.isNode() && !moveTileNodeToLeaves) {
             result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
         } else {
