@@ -176,9 +176,7 @@ export default class VirtualScroll {
         this._itemsCount -= count;
         this._removeItemHeights(removeIndex, count);
 
-        return this._setRange(
-            this.rangeChanged && !forcedShift ? this._range : this._shiftRangeBySegment(direction, count)
-        );
+        return this._setRange(this._shiftRangeBySegment(direction, count));
     }
 
     /**
