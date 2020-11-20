@@ -11,7 +11,7 @@
               {{collectionItem.isExpanded() ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
    </div>
-   <ws:if data="{{!collectionItem.isExpanded()}}">
+   <ws:if data="{{!collectionItem.isExpanded() && _options.groupItems[item].textValue}}">
       <span class="controls-FilterViewPanel__groupReset controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить фильтр]}"></span>
