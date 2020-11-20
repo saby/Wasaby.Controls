@@ -57,7 +57,9 @@ export default class extends Control {
                 editorTemplateName: 'Controls/filter:NumberRangeEditor',
                 resetValue: [0, 150],
                 value: [0, 15],
-                type: 'text'
+                editorOptions: {
+                    afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate'
+                }
             },
             {
                 group: 'Ответственный',
@@ -65,7 +67,6 @@ export default class extends Control {
                 resetValue: 'По ответственному',
                 value: 'По ответственному',
                 editorTemplateName: 'Controls/filter:ListEditor',
-                textValue: '',
                 editorOptions: {
                     keyProperty: 'owner',
                     columns: [{displayProperty: 'title', width: 'auto'}, {align: 'right', displayProperty: 'id'}],

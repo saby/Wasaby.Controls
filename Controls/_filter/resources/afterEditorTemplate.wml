@@ -1,0 +1,3 @@
+<Controls.Container.Async templateName="{{_options.afterEditorTemplate}}">
+   <ws:partial template="{{ content.resolvedTemplate }}"/>
+</Controls.Container.Async>

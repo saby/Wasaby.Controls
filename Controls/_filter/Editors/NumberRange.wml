@@ -10,4 +10,8 @@
                           contrastBackground="{{false}}"
                           value="{{_options.propertyValue[1]}}"
                           on:valueChanged="_handleMaxValueChanged()"/>
+
+   <ws:if data="{{_options.afterEditorTemplate}}">
+      <ws:partial template="wml!Controls/_filter/resources/afterEditorTemplate" afterEditorTemplate="{{_options.afterEditorTemplate}}"/>
+   </ws:if>
 </div>

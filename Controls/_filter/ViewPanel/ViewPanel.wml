@@ -11,7 +11,7 @@
          </div>
       </Controls.scroll:StickyHeader>
       <Controls.propertyGrid:PropertyGrid
-              bind:editingObject="_editingObject"
+              editingObject="{{_editingObject}}"
               source="{{_source}}"
               on:editingObjectChanged="_editingObjectChanged()"
               on:itemClick="_itemClick()"

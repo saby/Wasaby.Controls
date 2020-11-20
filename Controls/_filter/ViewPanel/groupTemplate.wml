@@ -15,8 +15,13 @@
       <span class="controls-FilterViewPanel__groupReset controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить фильтр]}"></span>
-      <div class="controls-FilterViewPanel__group-result_theme-{{_options.theme}}">
-         {{_options.groupItems[item]}}
+      <div class="controls-FilterViewPanel__group-result_wrapper">
+         <div class="controls-FilterViewPanel__group-result_theme-{{_options.theme}}">
+            {{_options.groupItems[item].textValue}}
+         </div>
+         <ws:if data="{{_options.groupItems[item].afterEditorTemplate}}">
+            <ws:partial template="wml!Controls/_filter/resources/afterEditorTemplate" afterEditorTemplate="{{_options.groupItems[item].afterEditorTemplate}}"/>
+         </ws:if>
       </div>
    </ws:if>
 </div>

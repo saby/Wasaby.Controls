@@ -31,7 +31,8 @@
    display: flex;
    flex-direction: row;
    align-items: center;
-   padding: 0 @padding-left_filterViewPanel;
+   padding-left: @padding-left_filterViewPanel;
+   padding-right: @padding-right_filterViewPanel;
 }
 
 .controls-FilterEditors__numberRange_separator_theme-@{themeName} {
@@ -70,6 +71,11 @@
 .controls-FilterViewPanel__group-wrapper_theme-@{themeName} {
    position: relative;
    padding-left: @padding-left_filterViewPanel;
+}
+
+.controls-FilterViewPanel__group-result_wrapper {
+   display: flex;
+   flex-direction: row;
 }
 
 .controls-FilterViewPanel__group-result_theme-@{themeName} {
