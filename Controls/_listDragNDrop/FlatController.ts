@@ -63,10 +63,9 @@ export default class FlatController {
    setDraggedItems(entity: ItemsEntity, draggableItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      this._draggableItem = draggableItem;
-      this._startIndex = this._getIndex(draggableItem);
-
       if (draggableItem) {
+         this._draggableItem = draggableItem;
+         this._startIndex = this._getIndex(draggableItem);
          this._model.setDraggedItems(draggableItem, entity.getItems());
       }
    }
