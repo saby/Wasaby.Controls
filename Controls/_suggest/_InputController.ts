@@ -701,11 +701,17 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       this._searchValue = value;
+      const valueCleared = this._options.value !== value && !value && typeof value === 'string';
+
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
 
-      return this._resolveSearch(value);
+      if (!valueCleared) {
+         return this._resolveSearch(value);
+      }
+
+      return Promise.resolve();
    }
 
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {

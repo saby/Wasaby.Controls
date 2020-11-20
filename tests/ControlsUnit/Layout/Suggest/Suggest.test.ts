@@ -1379,8 +1379,12 @@ describe('Controls/suggest', () => {
          await suggestComponent._beforeMount(suggestComponent._options);
          assert.strictEqual(suggestComponent._filter.testSearchParam, 'testValue');
 
+         const resolveLoadStub = sinon.stub(suggestComponent, '_resolveSearch');
          suggestComponent._changeValueHandler({}, '');
          assert.strictEqual(suggestComponent._filter.testSearchParam, '');
+         assert.isFalse(resolveLoadStub.called);
+
+         resolveLoadStub.restore();
       });
 
       describe('_beforeUnmount', () => {
