@@ -4,6 +4,7 @@
                        markedKey="{{_options.propertyValue}}"
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
+                       hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
    </Controls.grid:View>
