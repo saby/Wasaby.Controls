@@ -167,34 +167,38 @@ const _private = {
             // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
             let shouldCancelEditing = false;
             if (self._editingItem) {
-                const collection = self._options.useNewModel ? listViewModel : listViewModel.getDisplay();
-                const editingCollectionItem = collection.getItemBySourceKey(self._editingItem.getKey());
-                shouldCancelEditing = _private.hasInParents(collection, editingCollectionItem, dispItem);
+                shouldCancelEditing = _private.hasInParents(
+                    self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
+                    self._editingItem.getKey(),
+                    dispItem.contents.getKey()
+                );
             }
 
             // TODO: Переписать
             //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
             if (shouldCancelEditing) {
-                return self.cancelEdit().then((res) => {
-                    if (!(res && res.canceled)) {
+                return self.cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     }
-                    return res;
+                    return result;
                 });
             } else {
                 _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
             }
         }
     },
-    hasInParents(collection: Collection, child: TreeItem, stepParent: TreeItem): boolean {
-        let parent;
+    hasInParents(collection: Collection, childKey, stepParentKey): boolean {
+        const child = collection.getItemBySourceKey(childKey);
+        const targetParent = collection.getItemBySourceKey(stepParentKey);
 
+        let current = child;
         do {
-            parent = child.getParent();
-            if (parent === stepParent) {
+            current = current.getParent();
+            if (!current.isRoot() && current === targetParent) {
                 return true;
             }
-        } while (!parent.isRoot());
+        } while (!current.isRoot());
         return false;
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
@@ -384,8 +388,34 @@ const _private = {
 
     resetExpandedItems(self): void {
         const viewModel = self._children.baseControl.getViewModel();
-        viewModel.resetExpandedItems();
-        viewModel.setHasMoreStorage({});
+        let shouldCancelEditing = false;
+
+        if (self._editingItem) {
+            const editingKey = self._editingItem.getKey();
+            viewModel.getExpandedItems().forEach((itemKey) => {
+                shouldCancelEditing = shouldCancelEditing || _private.hasInParents(
+                    self._options.useNewModel ? viewModel : viewModel.getDisplay(),
+                    editingKey,
+                    itemKey
+                );
+            });
+        }
+
+        const reset = () => {
+            viewModel.resetExpandedItems();
+            viewModel.setHasMoreStorage({});
+        };
+
+        if (shouldCancelEditing) {
+            self.cancelEdit().then((result) => {
+                if (!(result && result.canceled)) {
+                    reset();
+                }
+                return result;
+            });
+        } else {
+            reset();
+        }
     },
 
     getHasMoreData(self, sourceController, direction, key) {
