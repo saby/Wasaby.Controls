@@ -6,7 +6,21 @@ import { RecordSet } from 'Types/collection';
 import { TreeViewModel } from 'Controls/tree';
 import {TreeStrategy} from 'Controls/listDragNDrop';
 
+function equalPosition(pos1, pos2): boolean {
+   assert.equal(pos1.index, pos2.index, 'Индексы разные');
+   assert.equal(pos1.position, pos2.position, 'Позиции разные');
+   assert.isTrue(pos1.dispItem === pos2.dispItem, 'Итемы разные');
+}
+
 describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
+   /*
+      1
+         2
+            4
+         3
+      5
+      6
+    */
    const items = new RecordSet({
       rawData: [{
          id: 1,
@@ -41,8 +55,12 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
       parentProperty: 'parent',
       nodeProperty: 'node'
    };
-   const model = new TreeViewModel(cfg);
+   let model;
    let strategy;
+
+   beforeEach(() => {
+      model = new TreeViewModel(cfg);
+   });
 
    describe('calculatePosition', () => {
       it('hover on dragged item', () => {
@@ -61,7 +79,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
           const currentPosition = { index: 0, position: 'on', dispItem: targetItem };
           const position = strategy.calculatePosition({targetItem, currentPosition, mouseOffsetInTargetItem });
 
-          assert.deepEqual(position, {
+          equalPosition(position, {
               index: 1,
               position: 'before',
               dispItem: targetItem
@@ -69,7 +87,6 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
       });
 
       describe('drag on node', () => {
-
          it('drag node before node', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
@@ -77,7 +94,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             const mouseOffsetInTargetItem = {top: 5, bottom: 20};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
-            assert.deepEqual(newPosition, {
+            equalPosition(newPosition, {
                index: 1,
                position: 'before',
                dispItem: targetNode
@@ -91,8 +108,36 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             const mouseOffsetInTargetItem = {top: 20, bottom: 5};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
-            assert.deepEqual(newPosition, {
+            equalPosition(newPosition, {
                index: 1,
+               position: 'after',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag node before leaf', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(6);
+            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 2,
+               position: 'after',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag node after leaf', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(6);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 2,
                position: 'after',
                dispItem: targetNode
             });
@@ -105,7 +150,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             const mouseOffsetInTargetItem = {top: 12, bottom: 12};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
-            assert.deepEqual(newPosition, {
+            equalPosition(newPosition, {
                index: 1,
                position: 'on',
                dispItem: targetNode
@@ -119,7 +164,153 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             const mouseOffsetInTargetItem = {top: 12, bottom: 13};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
-            assert.deepEqual(newPosition, {
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'on',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag leaf before node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'before',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag leaf after node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'after',
+               dispItem: targetNode
+            });
+         });
+      });
+
+      describe('drag tiles', () => {
+         beforeEach(() => {
+            model['[Controls/_tile/TreeTileViewModel]'] = true;
+         });
+
+         it('drag node before node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(5);
+            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'before',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag node after node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(5);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'after',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag node before leaf', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(6);
+            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'before',
+               dispItem: model.getItemBySourceKey(1)
+            });
+         });
+
+         it('drag node after leaf', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(6);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'before',
+               dispItem: model.getItemBySourceKey(1)
+            });
+         });
+
+         it('drag node on node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
+
+            const targetNode = model.getItemBySourceKey(5);
+            const mouseOffsetInTargetItem = {top: 12, bottom: 12};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'on',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag leaf on node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 12, bottom: 13};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'on',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag leaf before node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'on',
+               dispItem: targetNode
+            });
+         });
+
+         it('drag leaf after node', () => {
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
                index: 0,
                position: 'on',
                dispItem: targetNode
