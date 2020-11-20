@@ -737,5 +737,45 @@ define([
             });
          });
       });
+
+      describe('_monthsRangeSelectionEnded', () => {
+         it('should send correct range with rangeSelectedCallback', () => {
+            const startValue = new Date(2018, 0);
+            const endValue = new Date(2018, 2);
+            const formattedStartValue = new Date(2018, 0, 2);
+            const formattedEndValue = new Date(2018, 3);
+            const rangeSelectedCallback = (startValue, endValue) => {
+               return [
+                  new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 1),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 1)
+               ];
+            };
+            const component = calendarTestUtils.createComponent(PeriodDialog.default, {rangeSelectedCallback});
+            const stubSendResult = sinon.stub(component, 'sendResult');
+            component._monthsRangeSelectionEnded(null, startValue, endValue);
+            sinon.assert.calledWith(stubSendResult, formattedStartValue, formattedEndValue);
+            sinon.restore();
+         });
+      });
+
+      describe('_yearsRangeSelectionEnded', () => {
+         it('should send correct range with rangeSelectedCallback', () => {
+            const startValue = new Date(2018, 0);
+            const endValue = new Date(2018, 0);
+            const formattedStartValue = new Date(2018, 0, 2);
+            const formattedEndValue = new Date(2019, 0);
+            const rangeSelectedCallback = (startValue, endValue) => {
+               return [
+                  new Date(startValue.getFullYear(), startValue.getMonth(), startValue.getDate() + 1),
+                  new Date(endValue.getFullYear(), endValue.getMonth(), endValue.getDate() + 1)
+               ];
+            };
+            const component = calendarTestUtils.createComponent(PeriodDialog.default, {rangeSelectedCallback});
+            const stubSendResult = sinon.stub(component, 'sendResult');
+            component._yearsRangeSelectionEnded(null, startValue, endValue);
+            sinon.assert.calledWith(stubSendResult, formattedStartValue, formattedEndValue);
+            sinon.restore();
+         });
+      });
    });
 });
