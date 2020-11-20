@@ -1687,27 +1687,29 @@ const _private = {
             }
             if (self._scrollController) {
                 if (action) {
+                    const collectionStartIndex = self._listViewModel.getStartIndex();
                     let result = null;
-                    if (action === IObservable.ACTION_ADD || action === IObservable.ACTION_MOVE) {
-
-                        // TODO: this._batcher.addItems(newItemsIndex, newItems)
-                        if (self._addItemsDirection) {
-                            self._addItems.push(...newItems);
-                            self._addItemsIndex = newItemsIndex;
-                        } else {
-                            const collectionStartIndex = self._listViewModel.getStartIndex();
-                            result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                    switch (action) {
+                        case IObservable.ACTION_ADD: 
+                            // TODO: this._batcher.addItems(newItemsIndex, newItems)
+                            if (self._addItemsDirection) {
+                                self._addItems.push(...newItems);
+                                self._addItemsIndex = newItemsIndex;
+                            } else {
+                                result = self._scrollController.handleAddItems(newItemsIndex, newItems,
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                            }
+                            break;
+                        case IObservable.ACTION_MOVE:
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems, 
                                 newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
-                        }
-
-                    }
-                    if (action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_MOVE) {
-                        // When move items call removeHandler with "forceShift" param.
-                        // https://online.sbis.ru/opendoc.html?guid=4e6981f5-27e1-44e5-832e-2a080a89d6a7
-                        result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems, true);
-                    }
-                    if (action === IObservable.ACTION_RESET) {
-                        result = self._scrollController.handleResetItems();
+                            break;
+                        case IObservable.ACTION_REMOVE: 
+                            result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
+                            break;
+                        case IObservable.ACTION_RESET: 
+                            result = self._scrollController.handleResetItems();
+                            break;
                     }
                     if (result) {
                         _private.handleScrollControllerResult(self, result);
