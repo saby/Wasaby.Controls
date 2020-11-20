@@ -11,6 +11,7 @@ import {default as IPropertyGridItem} from './IProperty';
 import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD, PROPERTY_VALUE_FIELD} from './Constants';
 import {view as constView} from '../Constants';
 import PropertyGridItem from './PropertyGridItem';
+import { factory } from 'Types/chain';
 
 /**
  * Контрол, который позволяет пользователям просматривать и редактировать свойства объекта.
@@ -133,20 +134,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
             const sourceItem = object.clone(item);
             const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
-            const nameProperty = (sourceItem instanceof Model) ? sourceItem.get('name') : sourceItem.name;
+            const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
             defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
 
-            if (sourceItem instanceof Model) {
-                sourceItem.each((key: string, value: unknown) => {
-                    defaultItem[key] = value;
-                });
-                itemsWithPropertyValue.push(defaultItem);
-                return;
-            }
+            factory(sourceItem).each((key: string, value: unknown) => {
+                defaultItem[key] = value;
+            });
 
             itemsWithPropertyValue.push({
                 ...defaultItem,
-                ...sourceItem
+                ...(sourceItem instanceof Model ? {} : sourceItem)
             });
         });
 
