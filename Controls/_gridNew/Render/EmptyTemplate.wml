@@ -1,8 +1,10 @@
-<ws:for data="column in prepareColumnsForEmptyTemplate(columns, content || contentTemplate, topSpacing, bottomSpacing, theme)">
-    <div class="{{ column.classes }}"
-         style="grid-column: {{column.startColumn}} / {{ column.endColumn }};">
-        <ws:if data="{{ column.template }}">
-            <ws:partial template="{{ column.template }}"/>
-        </ws:if>
-    </div>
-</ws:for>
+<div style="display: contents">
+    <ws:for data="column in prepareColumnsForEmptyTemplate(columns, content || contentTemplate, topSpacing, bottomSpacing, theme)">
+        <div class="{{ column.classes }}"
+             style="grid-column: {{column.startColumn}} / {{ column.endColumn }};">
+            <ws:if data="{{ column.template }}">
+                <ws:partial template="{{ column.template }}"/>
+            </ws:if>
+        </div>
+    </ws:for>
+</div>
