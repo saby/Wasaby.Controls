@@ -1,7 +1,7 @@
 <div class="ControlsDemo-Wrap">
 	<div class="controlsDemo__flexRow">
 		<div class="controlsDemo__cell controlsDemo__mr4">
-			<div class="controlsDemo__wrapper demo-TopShadowVisibility__auto">
+			<div class="controlsDemo__wrapper demo-ShadowVisibility__auto">
 				<div class="options-value">topShadowVisibility = auto</div>
 				<Controls.scroll:Container attr:class="controlsDemo_fixedWidth300 controlsDemo__height300"
 										   topShadowVisibility="auto">
@@ -19,7 +19,7 @@
 		</div>
 		
 		<div class="controlsDemo__cell controlsDemo__mr4">
-			<div class="controlsDemo__wrapper demo-TopShadowVisibility__visible">
+			<div class="controlsDemo__wrapper demo-ShadowVisibility__visible">
 				<div class="options-value">topShadowVisibility = visible</div>
 				<Controls.scroll:Container attr:class="controlsDemo_fixedWidth300 controlsDemo__height300"
 										   topShadowVisibility="visible">
@@ -37,7 +37,7 @@
 		</div>
 		
 		<div class="controlsDemo__cell controlsDemo__mr4">
-			<div class="controlsDemo__wrapper demo-TopShadowVisibility__hidden">
+			<div class="controlsDemo__wrapper demo-ShadowVisibility__hidden">
 				<div class="options-value">topShadowVisibility = hidden</div>
 				<Controls.scroll:Container attr:class="controlsDemo_fixedWidth300 controlsDemo__height300"
 										   topShadowVisibility="hidden">
