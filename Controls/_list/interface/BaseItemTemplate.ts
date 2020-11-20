@@ -57,9 +57,19 @@ export default interface IBaseItemTemplateOptions {
     * @variant controls-itemActionsV_position_topRight В правом верхнем углу элемента.
     */
    /**
-    * @name Controls/_list/interface/BaseItemTemplate#itemActionsClass
-    * @cfg {Controls/_list/interface/BaseItemTemplate/ItemActionsClass.typedef} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи} внутри элемента.
+    * @name Controls/list:BaseItemTemplate#itemActionsClass
+    * @cfg {ItemActionsClass} Класс, используемый для позиционирования {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} при отображении её внутри элемента списка (опция {@link Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition itemActionsPosition}).
     * @default controls-itemActionsV_position_bottomRight
+    * @remark
+    * Панель опций записи абсолютно позиционируется относительно элемента списка.
+    * 
+    * Опция может использоваться для определения угла элемента списка, к которому прижимается панель опций.
+    * Поддерживаются следующие значения:
+    * * .controls-itemActionsV_position_bottomRight — панель опций записи отображается в правом нижмем углу элемента.
+    * * .controls-itemActionsV_position_topRight — панель опций записи отображается в правом верхнем углу элемента списка.
+    * 
+    * Также можно задавать собственный класс, таким образом управляя местоположением панели опций записи.
+    * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
     */
    itemActionsClass?: string;
    /**
