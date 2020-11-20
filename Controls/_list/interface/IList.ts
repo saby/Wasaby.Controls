@@ -2,6 +2,7 @@ import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
 import {IFontColorStyle} from 'Controls/interface';
+import {IMovableOptions} from './IMovableList';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
@@ -32,7 +33,7 @@ export interface IItemPadding {
  * @author Авраменко А.С.
  */
 
-export interface IList extends IItemActionsOptions, IMarkerListOptions {
+export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
@@ -552,7 +553,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @typedef {String} VerticalItemPaddingEnum
- * @variant null Нулевой отступ. 
+ * @variant null Нулевой отступ.
  * @variant s Маленький отступ.
  * @variant l Большой отступ.
  */
