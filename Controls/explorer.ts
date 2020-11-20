@@ -9,8 +9,10 @@
 
 import View = require('Controls/_explorer/View');
 import SearchItemTemplate = require('wml!Controls/_treeGrid/SearchView/Item');
+import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 
 export {
    View,
-   SearchItemTemplate
+   SearchItemTemplate,
+   TExplorerViewMode
 };
