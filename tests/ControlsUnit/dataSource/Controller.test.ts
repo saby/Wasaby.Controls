@@ -268,6 +268,26 @@ describe('Controls/dataSource:SourceController', () => {
             controller.updateOptions(options);
             deepStrictEqual(controller._expandedItems, ['testRoot']);
         });
+
+        it('updateOptions with navigationParamsChangedCallback',  async () => {
+            let isNavigationParamsChangedCallbackCalled = false;
+            const controller = getController({
+                navigation: getPagingNavigation(),
+                navigationParamsChangedCallback: () => {
+                    isNavigationParamsChangedCallbackCalled = true;
+                }
+            });
+            await controller.reload();
+            ok(isNavigationParamsChangedCallbackCalled);
+
+            controller.updateOptions({
+                ...getControllerOptions(),
+                navigation: getPagingNavigation()
+            });
+            isNavigationParamsChangedCallbackCalled = false;
+            await controller.reload();
+            ok(isNavigationParamsChangedCallbackCalled);
+        });
     });
 
     describe('setItems', () => {
