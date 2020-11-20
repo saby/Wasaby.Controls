@@ -14,7 +14,7 @@ import { DndTreeController } from 'Controls/listDragNDrop';
 import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
-import { TreeItem } from 'Controls/display';
+import { Collection, TreeItem } from 'Controls/display';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
@@ -206,10 +206,34 @@ const _private = {
                     self._children.baseControl.hideIndicator();
                 });
         } else {
-            // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
-            _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
-            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+            // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
+            let shouldCancelEditing = false;
+            if (self._editingItem) {
+                const collection = self._options.useNewModel ? listViewModel : listViewModel.getDisplay();
+                const editingCollectionItem = collection.getItemBySourceKey(self._editingItem.getKey());
+                shouldCancelEditing = _private.hasInParents(collection, editingCollectionItem, dispItem);
+            }
+
+            return Promise.resolve(shouldCancelEditing ? self.cancelEdit() : null).then((res) => {
+                if (!(res && res.canceled)) {
+                    // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
+                    _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
+                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                }
+            });
         }
+    },
+    hasInParents(collection: Collection, child: TreeItem, stepParent: TreeItem): boolean {
+        let parent;
+
+        do {
+            parent = child.getParent();
+            if (parent === stepParent) {
+                return true;
+            }
+        } while (!parent.isRoot());
+        return false;
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
         // загружаем узел только если:
@@ -556,6 +580,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _notifyHandler: tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
+    _editingItem: null,
+
     constructor: function(cfg) {
         this._nodesSourceControllers = _private.getNodesSourceControllers(this);
         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -889,6 +915,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
         return eventResult;
+    },
+
+    _onAfterBeginEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterBeginEdit', [item, isAdd]);
+        this._editingItem = item;
+    },
+
+    _onAfterEndEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterEndEdit', [item, isAdd]);
+        this._editingItem = null;
     },
 
     handleKeyDown(event): void {
