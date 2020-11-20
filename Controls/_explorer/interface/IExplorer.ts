@@ -16,7 +16,7 @@
 
 /**
  * Режим отображения списка
- * @typedef {String} ExplorerViewMode
+ * @typedef {String} TExplorerViewMode
  * @variant table Таблица.
  * @variant search Режим поиска.
  * @variant tile Плитка.
@@ -24,7 +24,7 @@
  */
 
 /*
- * @typedef {String} ExplorerViewMode
+ * @typedef {String} TExplorerViewMode
  * @variant table Table.
  * @variant search Search.
  * @variant tile Tiles.
