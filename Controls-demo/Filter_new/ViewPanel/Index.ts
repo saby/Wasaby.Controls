@@ -55,7 +55,7 @@ export default class extends Control {
                 name: 'amount',
                 itemTemplate: 'Controls/filter:NumberRangeEditor',
                 editorTemplateName: 'Controls/filter:NumberRangeEditor',
-                resetValue: [0, 150],
+                resetValue: [],
                 value: [],
                 editorOptions: {
                     afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate',

@@ -27,6 +27,16 @@
    color: @button_color-hover_filterViewPanel;
 }
 
+.controls-FilterViewPanel__group-marker_theme-@{themeName} {
+   position: absolute;
+   width: @group-marker_size_filterViewPanel;
+   height: @group-marker_size_filterViewPanel;
+   background-color: #0000cc;
+   border-radius: 50%;
+   top: (@group_height_filterViewPanel - @group-marker_size_filterViewPanel) / 2;
+   left: (@padding-left_filterViewPanel - @group-marker_size_filterViewPanel) / 2;
+}
+
 .controls-FilterEditors__numberRange_theme-@{themeName} {
    display: flex;
    flex-direction: row;
@@ -46,6 +56,8 @@
    font-size: @group_font-size_filterViewPanel;
 }
 
+.controls-FilterViewPanel__groupExpander_theme-@{themeName}:hover,
+.controls-FilterViewPanel__groupReset_theme-@{themeName}:hover,
 .controls-FilterViewPanel__group-content_theme-@{themeName}:hover {
    color: @button_color-hover_filterViewPanel;
 }
@@ -57,12 +69,18 @@
    align-self: center;
 }
 
-.controls-FilterViewPanel__group {
+.controls-FilterViewPanel__group_theme-@{themeName} {
    display: flex;
    flex-direction: row;
+   height: @group_height_filterViewPanel;
 }
 
-.controls-FilterViewPanel__groupReset {
+.controls-FilterViewPanel__groupReset_theme-@{themeName} {
+   .icon-size(@reset-button_icon-size_filterView);
+   display: flex;
+   color: @reset-button_icon-color_filterView;
+   cursor: pointer;
+   flex-shrink: 0;
    position: absolute;
    top: @group-close-button_padding-top_filterViewPanel;
    right: @padding-right_filterViewPanel;

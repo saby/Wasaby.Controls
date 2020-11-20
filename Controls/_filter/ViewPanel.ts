@@ -30,13 +30,11 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._source = this._getSource(options.source);
-        this._updateGroupItems();
         this._updateEditingObject();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         this._source = this._getSource(newOptions.source);
-        this._updateGroupItems();
         this._updateEditingObject();
     }
 
@@ -83,18 +81,13 @@ export default class ViewPanel extends Control<IControlOptions> {
     private _updateSource(editingObject: object): void {
         this._source.forEach((item) => {
                 item.value = editingObject[item.name].value || editingObject[item.name];
-                item.textValue = editingObject[item.name].textValue || editingObject[item.name];
+                item.textValue = editingObject[item.name].textValue;
         });
     }
 
     private _updateEditingObject(): void {
         this._source.forEach((item) => {
             this._editingObject[item.name] = item.value;
-        });
-    }
-
-    private _updateGroupItems(): void {
-        this._source.forEach((item) => {
             this._groupItems[item.group] = {
                 textValue: item.textValue,
                 afterEditorTemplate: item.editorOptions?.afterEditorTemplate

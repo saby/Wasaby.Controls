@@ -12,9 +12,10 @@
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
    </div>
    <ws:if data="{{!collectionItem.isExpanded() && _options.groupItems[item].textValue}}">
-      <span class="controls-FilterViewPanel__groupReset controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew"
+      <span class="controls-FilterViewPanel__groupReset controls-FilterViewPanel__groupReset_theme-{{_options.theme}} icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить фильтр]}"></span>
+      <div class="controls-FilterViewPanel__group-marker_theme-{{_options.theme}}"></div>
       <div class="controls-FilterViewPanel__group-result_wrapper">
          <div class="controls-FilterViewPanel__group-result_theme-{{_options.theme}}">
             {{_options.groupItems[item].textValue}}

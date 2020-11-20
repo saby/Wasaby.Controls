@@ -7,5 +7,8 @@
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
+      <ws:itemTemplate>
+         <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}"/>
+      </ws:itemTemplate>
    </Controls.grid:View>
 </div>
