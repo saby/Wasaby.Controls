@@ -3313,7 +3313,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                result = filter(
+                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                result = isAddingItem || filter(
                     item.getContents(),
                     index,
                     item,
