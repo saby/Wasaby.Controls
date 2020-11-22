@@ -110,7 +110,10 @@ export default class ScrollPagingController {
     }
 
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
-        const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
+        // При не 100% масштабе не получается корректно определить что мы в конце списка.
+        // Поэтому округляем в большую сторону.
+        // https://online.sbis.ru/opendoc.html?guid=f921aafd-eb99-4362-a5e7-6f60acf7ee6d
+        const canScrollForward = Math.round(scrollParams.clientHeight + scrollParams.scrollTop) < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle(hasMoreData);
