@@ -1037,6 +1037,7 @@ define([
 
                   let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
                   treeControl._children.baseControl._afterUpdate({});
+                  treeControl._children.baseControl._beforePaint();
                   afterUpdatePromise.then(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');

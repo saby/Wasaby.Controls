@@ -47,8 +47,8 @@ export default class Controller<P> {
     */
    setDraggedItems(entity: ItemsEntity, draggableItem: IDraggableItem = null): void {
       this._entity = entity;
-      this._draggableItem = draggableItem;
       if (draggableItem) {
+         this._draggableItem = draggableItem;
          this._model.setDraggedItems(draggableItem, entity.getItems());
       }
    }

@@ -438,7 +438,11 @@ define([
             component._model = { fixedPosition: 'top' };
             component._isFixed = true;
             component._scrollState = {
-               verticalPosition: 'middle'
+               verticalPosition: 'middle',
+               hasUnrenderedContent: {
+                  top: false,
+                  bottom: false
+              }
             };
             assert.isTrue(component._isShadowVisible('bottom', mode, shadowVisibility));
          });
@@ -449,7 +453,11 @@ define([
             component._model = { fixedPosition: 'top' };
             component._isFixed = true;
             component._scrollState = {
-               verticalPosition: 'middle'
+               verticalPosition: 'middle',
+               hasUnrenderedContent: {
+                  top: false,
+                  bottom: false
+              }
             };
             component.updateShadowVisibility(false);
             assert.isFalse(component._isShadowVisible('bottom'));

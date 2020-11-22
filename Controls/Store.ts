@@ -93,7 +93,7 @@ class Store implements IStore {
         const state = Store._getState()[Store._getContextName(isGlobal)] || {};
 
         if (!state.hasOwnProperty(propertyName)) {
-            this._defineProperty(state, propertyName);
+            this._defineProperty(state, propertyName, isGlobal);
         }
         state['_' + propertyName].value = value;
 
@@ -101,7 +101,7 @@ class Store implements IStore {
     }
 
     // объявление поля в стейте
-    private _defineProperty(state: ICtxState, propertyName: string): void {
+    private _defineProperty(state: ICtxState, propertyName: string, isGlobal?: boolean): void {
         // приватное поле с _ в котором лежит значение и колбэки
         Object.defineProperty(state, '_' + propertyName, {
             value: {value: undefined, callbacks: []},
@@ -118,7 +118,7 @@ class Store implements IStore {
             enumerable: true
         });
 
-        Store._setState(state, Store._getActiveContext());
+        Store._setState(state, Store._getContextName(isGlobal));
     }
 
     private _addCallback(propertyName: string, callbackFn: Function, isGlobal?: boolean): string {
@@ -126,7 +126,7 @@ class Store implements IStore {
         const state = Store._getState()[activeContext] || {};
 
         if (!state.hasOwnProperty(propertyName)) {
-            this._defineProperty(state, propertyName);
+            this._defineProperty(state, propertyName, isGlobal);
         }
         const currentCallbacks = state['_' + propertyName].callbacks;
         const newCallbackId = currentCallbacks.length > 0 ?
@@ -144,7 +144,7 @@ class Store implements IStore {
         const state = Store._getState();
         const [ctxName, propertyName]: string[] = id.split(ID_SEPARATOR);
 
-        if (state[ctxName][propertyName]?.callbacks) {
+        if (state && state[ctxName] && state[ctxName][propertyName]?.callbacks) {
             state[ctxName][propertyName].callbacks = state[ctxName][propertyName].callbacks.reduce(
                 (acc, callbackObj) => {
                     if (callbackObj.id !== id) {

@@ -1,6 +1,7 @@
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
 import {NavigationController} from 'Controls/source';
+import {INavigationControllerOptions} from 'Controls/_source/NavigationController';
 import {INavigationOptionValue,
         INavigationSourceConfig,
         Direction,
@@ -73,10 +74,12 @@ enum NAVIGATION_DIRECTION_COMPATIBILITY {
 export default class Controller {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<unknown>;
-    private _crudWrapper: CrudWrapper;
-    private _navigationController: NavigationController;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<LoadResult>;
+
+    private _crudWrapper: CrudWrapper;
+    private _navigationController: NavigationController;
+    private _navigationParamsChangedCallback: Function;
 
     private _parentProperty: string;
     private _root: TKey = null;
@@ -86,13 +89,13 @@ export default class Controller {
 
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
-        this._filter = cfg.filter;
+        this.setFilter(cfg.filter);
 
         if (cfg.root !== undefined) {
             this.setRoot(cfg.root);
         }
         this.setParentProperty(cfg.parentProperty);
-
+        this._resolveNavigationParamsChangedCallback(cfg);
         this._collectionChange = this._collectionChange.bind(this);
     }
     load(direction?: Direction,
@@ -170,9 +173,10 @@ export default class Controller {
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
+        this._resolveNavigationParamsChangedCallback(newOptions);
 
         if (isFilterChanged) {
-            this._filter = newOptions.filter;
+            this.setFilter(newOptions.filter);
         }
 
         if (newOptions.parentProperty !== undefined && newOptions.parentProperty !== this._options.parentProperty) {
@@ -194,10 +198,7 @@ export default class Controller {
         if (isNavigationChanged) {
             if (newOptions.navigation && this._hasNavigationBySource(newOptions.navigation)) {
                 if (this._navigationController)  {
-                    this._navigationController.updateOptions({
-                        navigationType: newOptions.navigation.source,
-                        navigationConfig: newOptions.navigation.sourceConfig
-                    });
+                    this._navigationController.updateOptions(this._getNavigationControllerOptions(newOptions));
                 } else {
                     this._navigationController = this._getNavigationController(newOptions);
                 }
@@ -304,21 +305,22 @@ export default class Controller {
         return this._crudWrapper;
     }
 
-    private _getNavigationController(
-        {
-            navigation,
-            navigationParamsChangedCallback
-        }: Partial<IControllerOptions>
-    ): NavigationController {
+    private _getNavigationController(options: IControllerOptions): NavigationController {
         if (!this._navigationController) {
-            this._navigationController = new NavigationController({
-                navigationType: navigation.source,
-                navigationConfig: navigation.sourceConfig,
-                navigationParamsChangedCallback
-            });
+            this._navigationController = new NavigationController(this._getNavigationControllerOptions(options));
         }
 
         return this._navigationController;
+    }
+
+    private _getNavigationControllerOptions(
+        {navigation}: IControllerOptions
+    ): INavigationControllerOptions {
+        return {
+            navigationType: navigation.source,
+            navigationConfig: navigation.sourceConfig,
+            navigationParamsChangedCallback: this._navigationParamsChangedCallback
+        };
     }
 
     private _updateQueryPropertiesByItems(
@@ -358,6 +360,12 @@ export default class Controller {
         } else {
             this._subscribeItemsCollectionChangeEvent(items);
             this._items = items;
+        }
+    }
+
+    private _resolveNavigationParamsChangedCallback(cfg: IControllerOptions): void {
+        if (cfg.navigationParamsChangedCallback) {
+            this._navigationParamsChangedCallback = cfg.navigationParamsChangedCallback;
         }
     }
 

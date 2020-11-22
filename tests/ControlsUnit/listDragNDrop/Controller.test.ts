@@ -45,6 +45,10 @@ describe('Controls/_listDragNDrop/Controller', () => {
          const modelSetDraggedItemsSpy = spy(model, 'setDraggedItems');
          controller.setDraggedItems(new ItemsEntity({items: [1]}));
          assert.isFalse(modelSetDraggedItemsSpy.called);
+
+         const item = model.getItemBySourceKey(1);
+         controller.setDraggedItems(new ItemsEntity({items: [1]}), item);
+         assert.equal(controller.getDraggableItem(), item);
       });
 
       it ('pass draggedItem', () => {
