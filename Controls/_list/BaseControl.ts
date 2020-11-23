@@ -4463,6 +4463,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     __selectedPageChanged(e, page: number) {
         let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
         const direction = this._currentPage < page ? 'down' : 'up';
+        const canScroll = this._canScroll(scrollTop, direction);
+        const itemsCount = this._items.getCount();
+        const allDataLoaded = _private.getAllDataCount(this) === itemsCount;
+        const startIndex = this._listViewModel.getStartIndex();
+        const stopIndex = this._listViewModel.getStopIndex();
+        if (!canScroll && allDataLoaded && direction === 'up' && startIndex === 0) {
+            scrollTop = 0;
+            page = 1;
+        } 
+        if (!canScroll && allDataLoaded && direction === 'down' && stopIndex === this._listViewModel.getCount()) {
+            page = this._pagingCfg.pagesCount;
+        }
         this._applySelectedPage = () => {
             this._currentPage = page;
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
@@ -4495,7 +4507,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             // При выборе некрайней страницы, проверяем,
             // можно ли проскроллить к ней, по отрисованным записям
-            if (this._canScroll(scrollTop, direction)) {
+            if (canScroll) {
                 this._applySelectedPage();
             } else {
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона
