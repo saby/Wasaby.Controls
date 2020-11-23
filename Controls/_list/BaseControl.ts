@@ -1298,6 +1298,9 @@ const _private = {
         _private.doAfterUpdate(self, () => {
             if (self._pagingVisible) {
                 self._pagingVisible = false;
+                if (self._cachedPagingState) {
+                    self._recalcPagingVisible = true;
+                }
                 self._cachedPagingState = false;
                 self._forceUpdate();
             }
