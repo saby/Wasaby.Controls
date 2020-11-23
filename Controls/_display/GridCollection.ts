@@ -14,13 +14,13 @@ export interface IOptions<
     T extends GridCollectionItem<S> = GridCollectionItem<S>
 > extends IBaseOptions<S, T> {
     columns: TColumns;
-    footerTemplate: TemplateFunction;
-    header: THeader;
-    resultsTemplate: TemplateFunction;
-    resultsPosition: TResultsPosition;
-    headerInEmptyListVisible: boolean;
-    ladderProperties: string[];
-    stickyColumn: {};
+    footerTemplate?: TemplateFunction;
+    header?: THeader;
+    resultsTemplate?: TemplateFunction;
+    resultsPosition?: TResultsPosition;
+    headerInEmptyListVisible?: boolean;
+    ladderProperties?: string[];
+    stickyColumn?: {};
 }
 
 export default class GridCollection<
