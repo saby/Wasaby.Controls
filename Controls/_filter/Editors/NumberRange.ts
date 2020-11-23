@@ -2,6 +2,15 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import DateRangeTemplate = require('wml!Controls/_filter/Editors/NumberRange');
 
+interface INumberRangeOptions extends IControlOptions {
+    propertyValue: number[];
+    afterEditorTemplate: TemplateFunction;
+}
+
+interface INumberRange {
+    readonly '[Controls/_filter/Editors/NumberRange]': boolean;
+}
+
 /**
  * Контрол используют в качестве редактора для выбора диапазона чисел на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
  * @class Controls/_filter/Editors/NumberRange
@@ -9,16 +18,17 @@ import DateRangeTemplate = require('wml!Controls/_filter/Editors/NumberRange');
  * @author Мельникова Е.А.
  * @public
  */
-class NumberRangeEditor extends Control<IControlOptions> {
+class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberRange {
+    readonly '[Controls/_filter/Editors/NumberRange]': boolean = true;
     protected _template: TemplateFunction = DateRangeTemplate;
     protected _minValue: number|null = null;
     protected _maxValue: number|null = null;
 
-    protected _beforeMount(options?: IControlOptions): void {
+    protected _beforeMount(options?: INumberRangeOptions): void {
         this._updateValues(options.propertyValue);
     }
 
-    protected _beforeUpdate(newOptions?: IControlOptions): void {
+    protected _beforeUpdate(newOptions?: INumberRangeOptions): void {
         this._updateValues(newOptions.propertyValue);
     }
 
