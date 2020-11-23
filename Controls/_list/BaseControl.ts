@@ -3560,7 +3560,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _getScrollParams(): IScrollParams {
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this),
+            scrollHeight: _private.getViewSize(this, true),
             clientHeight: this._viewportSize
         };
         /**
