@@ -28,9 +28,12 @@ import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyH
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
+import {TNavigationPagingMode} from "../_interface/INavigation";
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
+    pagingMode?: TNavigationPagingMode;
+    pagingVisible?: boolean;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -111,9 +114,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     _afterMount(options: IContainerOptions, context) {
 
-        if (context.ScrollData?.pagingVisible) {
+        if (this._isPagingVisible(this._options, context)) {
             this._paging = new PagingModel();
             this._scrollCssClass = this._getScrollContainerCssClass(options);
+            this._paging.pagingMode = this._options.pagingMode;
         }
 
         super._afterMount();
@@ -135,13 +139,23 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    protected _isPagingVisible(options: IContainerOptions, context): boolean {
+        if (typeof options.pagingVisible !== 'undefined') {
+            return options.pagingVisible;
+        }
+        return context.ScrollData?.pagingVisible;
+    }
+
     protected _beforeUpdate(options: IContainerOptions, context) {
         super._beforeUpdate(...arguments);
-        if (context.ScrollData?.pagingVisible) {
+        if (this._isPagingVisible(options, context)) {
             if (!this._paging) {
                 this._paging = new PagingModel();
             }
             this._paging.isVisible = this._state.canVerticalScroll;
+            if (this._options.pagingMode !== options.pagingMode) {
+                this._paging.pagingMode = options.pagingMode;
+            }
         } else if (this._paging) {
             this._paging = null;
         }
@@ -523,4 +537,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingMode
+ * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
+ * @default basic
  */

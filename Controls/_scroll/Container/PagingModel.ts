@@ -2,49 +2,52 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_POSITION} from '../Utils/Scroll';
 import {IScrollState} from '../Utils/ScrollState';
-
+import {TNavigationPagingMode} from '../../_interface/INavigation';
+import {IArrowState} from '../../_paging/Paging';
 
 export default class PagingModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
 
-    private _stateUp: boolean = false;
-    private _stateDown: boolean = true;
-    private _arrowState = {};
+    private _arrowState: IArrowState = {};
     private _isVisible: boolean = false;
     private _position: SCROLL_POSITION;
+    private _pagingMode: TNavigationPagingMode = 'basic';
+    private _showEndButton: boolean = false;
 
     update(scrollState: IScrollState): void {
-         if (this._position !== scrollState.verticalPosition) {
-             this._position = scrollState.verticalPosition;
+        if (this._position !== scrollState.verticalPosition) {
+            this._position = scrollState.verticalPosition;
             if (scrollState.verticalPosition === SCROLL_POSITION.START) {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'readonly',
                     prev: 'readonly',
-                    next: 'visible'
-               };
-               this._stateUp = false;
-               this._stateDown = true;
+                    next: 'visible',
+                    end: 'visible'
+                };
             } else if (scrollState.verticalPosition === SCROLL_POSITION.END) {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
-                    next: 'readonly'
-               };
-               this._stateUp = true;
-               this._stateDown = false;
+                    next: 'readonly',
+                    end: 'readonly'
+                };
             } else {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
-                    next: 'visible'
-               };
-               this._stateUp = true;
-               this._stateDown = true;
+                    next: 'visible',
+                    end: 'visible'
+                };
+            }
+            if (this.pagingMode === 'numbers') {
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                this._showEndButton = true;
             }
             if (this._isVisible) {
                 this._nextVersion();
             }
-         }
+        }
     }
 
     set isVisible(value: boolean) {
@@ -58,15 +61,42 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
         return this._isVisible;
     }
 
-    get stateUp(): boolean {
-        return this._stateUp;
-    }
+    get arrowState(): IArrowState {
+        switch (this.pagingMode) {
+            case 'edge':
+                this. _arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                if (this._arrowState.end === 'visible') {
+                    this._arrowState.begin = 'hidden';
+                    this._showEndButton = true;
+                } else if (this._arrowState.begin === 'visible') {
+                    this._arrowState.end = 'hidden';
+                }
+                break;
 
-    get stateDown(): boolean {
-        return this._stateDown;
-    }
-
-    get arrowState() {
+            case 'end':
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                this._arrowState.begin = 'hidden';
+                if (this._arrowState.end === 'visible') {
+                    this._showEndButton = true;
+                } else {
+                    this._arrowState.end = 'hidden';
+                }
+                break;
+        }
         return this._arrowState;
+    }
+
+    get showEndButton(): boolean {
+        return this._showEndButton;
+    }
+
+    set pagingMode(pagingMode: TNavigationPagingMode): void {
+        this._pagingMode = pagingMode;
+    }
+
+    get pagingMode(): TNavigationPagingMode {
+        return this._pagingMode || 'basic';
     }
 }
