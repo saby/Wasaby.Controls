@@ -76,6 +76,7 @@
                     showFooter="{{!!_options.footerTemplate}}"
                     misspellingCaption="{{_misspellingCaption}}"
                     suggestPopupOptions="{{_options.suggestPopupOptions}}"
+                    tabsSelectedKey="{{_tabsSelectedKey}}"
                     on:close="_closeHandler()">
             <ws:content>
                 <ws:partial template="suggestWrapperTpl"/>
