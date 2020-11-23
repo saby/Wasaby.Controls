@@ -242,6 +242,9 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
+      if (this._limit && this.getCountOfSelected() === this._limit) {
+         return;
+      }
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
    }
 

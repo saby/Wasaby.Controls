@@ -106,7 +106,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
-    navigation: INavigationOptionValue;
+    navigation?: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -3353,7 +3353,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                result = filter(
+                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                result = isAddingItem || filter(
                     item.getContents(),
                     index,
                     item,
@@ -3875,6 +3876,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _handleAfterCollectionChange(): void {
         this._notifyAfterCollectionChange();
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     // endregion

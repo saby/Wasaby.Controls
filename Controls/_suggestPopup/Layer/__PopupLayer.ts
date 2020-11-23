@@ -52,7 +52,8 @@ var __PopupLayer = Control.extend({
          this._options.filter !== oldOptions.filter ||
          this._options.showContent !== oldOptions.showContent ||
          this._options.showFooter !== oldOptions.showFooter ||
-         this._options.misspellingCaption !== oldOptions.misspellingCaption) {
+         this._options.misspellingCaption !== oldOptions.misspellingCaption ||
+         this._options.tabsSelectedKey !== oldOptions.tabsSelectedKey) {
          _private.openPopup(this, this._children.suggestPopup, this._options);
       }
    },

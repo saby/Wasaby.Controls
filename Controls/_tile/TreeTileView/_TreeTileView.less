@@ -3,7 +3,8 @@
 }
 
 .ws-is-ie, .ws-is-chrome-xp {
-   .controls-TreeTileView__checkbox, .controls-TreeTileView__itemActions_center {
+   .controls-TileView__smallTemplate_item .controls-TreeTileView__checkbox,
+   .controls-TreeTileView__itemActions_center {
       //IE and chrome on XP can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
       top: 50%;
       transform: translateY(-50%);

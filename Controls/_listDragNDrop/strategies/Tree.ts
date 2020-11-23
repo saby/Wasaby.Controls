@@ -38,10 +38,13 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
 
         let result;
 
-        if (targetItem && targetItem.isNode()) {
+        const moveTileNodeToLeaves = this._model['[Controls/_tile/TreeTileViewModel]'] && this._draggableItem.isNode()
+            && targetItem && !targetItem.isNode();
+        if (targetItem && targetItem.isNode() && !moveTileNodeToLeaves) {
             result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
         } else {
-            result = super.calculatePosition({currentPosition, targetItem});
+            // В плитке нельзя смешивать узлы и листья, если перетаскивают узел в листья, то мы не меняем позицию
+            result = super.calculatePosition({currentPosition, targetItem: moveTileNodeToLeaves ? null : targetItem});
         }
 
         return result;
@@ -51,9 +54,11 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         targetItem: IDraggableTreeItem, mouseOffsetInTargetItem: IOffset
     ): IDragPosition<IDraggableTreeItem> {
         let relativePosition: TPosition = 'on';
-        // Если перетаскиваем лист на узел, то позиция может быть только 'on'
-        // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра
-        if (!this._draggableItem || !this._draggableItem.isNode() && targetItem.isNode()) {
+
+        // Если нет перетаскиваемого элемента, то значит мы перетаскивам в папку другого реестра, т.к
+        // если перетаскивают не в узел, то нам вернут рекорд из которого мы создадим draggableItem
+        // В плитке лист мы можем перенести только внутрь узла
+        if (!this._draggableItem || this._model['[Controls/_tile/TreeTileViewModel]'] && !this._draggableItem.isNode() && targetItem.isNode()) {
             relativePosition = 'on';
         } else {
             if (mouseOffsetInTargetItem) {

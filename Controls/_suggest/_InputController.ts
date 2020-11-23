@@ -278,7 +278,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                   .catch((error) => this._searchErrback(error));
             }
 
-            return this._performLoad(this._options, true).catch((error) => {
+            return this._performLoad(this._options).catch((error) => {
                this._searchErrback(error);
             }).then();
          }
@@ -784,7 +784,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   private _performLoad(options?: IInputControllerOptions, openWithChecks?: boolean): Promise<RecordSet> {
+   private _performLoad(options?: IInputControllerOptions): Promise<RecordSet> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
@@ -795,11 +795,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             }
             this._loadEnd(recordSet);
 
-            if (openWithChecks) {
-               this._updateSuggestState();
-            } else {
-               this._open();
-            }
+            this._updateSuggestState();
 
             return recordSet as RecordSet;
          }
