@@ -138,7 +138,7 @@ export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {BaseGroupTemplate} from 'Controls/_list/interface/BaseGroupTemplate';
 export {IContentTemplate} from 'Controls/_list/interface/IContentTemplate';
-export {BaseItemTemplate} from 'Controls/_list/interface/BaseItemTemplate';
+export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
 
 export {
     AddButton,

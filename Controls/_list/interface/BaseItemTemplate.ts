@@ -24,14 +24,14 @@ type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-x
 
 /**
  * Интерфейс для шаблона отображения элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
- * @interface Controls/_list/interface/BaseItemTemplate
+ * @interface Controls/_list/interface/IBaseItemTemplateOptions
  * @author Авраменко А.С.
  * @public
  */
 
 export default interface IBaseItemTemplateOptions {
    /**
-    * @name Controls/_list/interface/BaseItemTemplate#highlightOnHover
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#highlightOnHover
     * @cfg {Boolean} Видимость подсветки строки при наведении курсора мыши.
     * @remark
     * В значении false элементы списка не будут подсвечиваться при наведении курсора мыши.
@@ -40,13 +40,13 @@ export default interface IBaseItemTemplateOptions {
     */
    highlightOnHover?: boolean;
    /**
-    * @name Controls/_list/interface/BaseItemTemplate#cursor
-    * @cfg {Controls/_list/interface/BaseItemTemplate/TCursor.typedef} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#cursor
+    * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/TCursor.typedef} Вид {@link https://developer.mozilla.org/ru/docs/Web/CSS/cursor курсора мыши} при наведении на строку.
     * @default pointer
     */
    cursor?: TCursor;
    /**
-    * @name Controls/_list/interface/BaseItemTemplate#marker
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#marker
     * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
     * @default true
     */
@@ -97,7 +97,7 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/interface/IItemTemplate#backgroundColorStyle
-    * @cfg {Controls/_list/interface/BaseItemTemplate/BackgroundColorStyle.typedef} Настройка фона строки.
+    * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/BackgroundColorStyle.typedef} Настройка фона строки.
     * @remark 
     * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight">руководство разработчика</a>.
     * @demo Controls-demo/list_new/ItemTemplate/BackgroundColorStyle/Index
@@ -106,7 +106,7 @@ export default interface IBaseItemTemplateOptions {
 
    /**
     * @name Controls/interface/IItemTemplate#markerClassName
-    * @cfg {Controls/_list/interface/BaseItemTemplate/TMarkerClassName.typedef} Размер маркера.
+    * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/TMarkerClassName.typedef} Размер маркера.
     * @default default
     */
    markerClassName?: TMarkerClassName;
