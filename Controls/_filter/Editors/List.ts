@@ -9,6 +9,23 @@ import {StackOpener} from 'Controls/popup';
 import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
+import {IFilterOptions, ISourceOptions, INavigationOptions, IItemActionsOptions, ISelectorDialogOptions} from 'Controls/interface';
+import {IList} from 'Controls/list';
+import {IColumn} from 'Controls/grid';
+import {IPopupOptions} from 'Controls/popup';
+
+interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
+    IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
+    columns: object[];
+    propertyValue: number|string;
+    buttonMoreCaption?: string;
+    pageSize?: number;
+    popupOptions?: IPopupOptions;
+}
+
+interface IListEditor {
+    readonly '[Controls/_filter/Editors/List]': boolean;
+}
 /**
  * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
  * @class Controls/_filter/Editors/NumberRange
@@ -16,7 +33,8 @@ import {object} from 'Types/util';
  * @author Мельникова Е.А.
  * @public
  */
-class ListEditor extends Control<IControlOptions> {
+class ListEditor extends Control<IListEditorOptions> implements IListEditor {
+    readonly '[Controls/_filter/Editors/List]': boolean = true;
     protected _template: TemplateFunction = ListTemplate;
     protected _columns: object[] = null;
     protected _navigation: object = null;
@@ -24,7 +42,7 @@ class ListEditor extends Control<IControlOptions> {
     protected _stackOpener: StackOpener = null;
     protected _needShowMoreButton: boolean = false;
 
-    protected _beforeMount(options: IControlOptions): void {
+    protected _beforeMount(options: IListEditorOptions): void {
         this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
         this._buttonMoreCaption = rk(options.buttonMoreCaption);
         this._navigation = {
@@ -39,7 +57,7 @@ class ListEditor extends Control<IControlOptions> {
         this._needShowMoreButton = options.selectorTemplate && options.source.data.length > options.pageSize;
     }
 
-    protected _beforeUpdate(options: IControlOptions): void {
+    protected _beforeUpdate(options: IListEditorOptions): void {
         if (isEqual(options.columns, this._options.columns) || options.propertyValue !== this._options.propertyValue) {
             this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
         }
@@ -65,20 +83,17 @@ class ListEditor extends Control<IControlOptions> {
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {
-        const templateOptions = {
-            ...{markedKey: this._options.propertyValue},
-            ...this._options.selectorTemplate.templateOptions
-        };
+        const selectorOptions = this._options.selectorTemplate;
         this._getStackOpener().open({
             ...{
                 opener: this,
-                templateOptions,
-                template: this._options.selectorTemplate.templateName,
+                templateOptions: selectorOptions.templateOptions,
+                template: selectorOptions.templateName,
                 eventHandlers: {
                     onResult: this._handleSelectorResult.bind(this)
                 }
             },
-            ...this._options.popupOptions
+            ...selectorOptions.popupOptions
         });
     }
 
