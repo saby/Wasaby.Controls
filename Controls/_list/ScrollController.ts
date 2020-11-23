@@ -579,6 +579,32 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
+    
+    handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
+        let result = {}
+        if (!this._virtualScroll) {
+            result = this._initVirtualScroll(
+                {...this._options, forceInitVirtualScroll: true},
+                (this._options.collection.getCount() - addedItems.length)
+            );
+        }
+
+        this._virtualScroll.addItems(
+            addIndex,
+            addedItems.length,
+            this._triggerVisibility,
+            direction
+        );
+        const removeItemsResult = this._virtualScroll.removeItems(removeIndex, removedIitems.length);
+        this._setCollectionIndices(this._options.collection, removeItemsResult.range, false,
+            this._options.needScrollCalculation);
+        this.savePlaceholders(removeItemsResult.placeholders);
+        return {
+            ...result,
+            placeholders: removeItemsResult.placeholders,
+            shadowVisibility: this._calcShadowVisibility(this._options.collection, removeItemsResult.range)
+        };
+    }
     /**
      * Обработатывает добавление элементов в коллекцию
      * @param addIndex
@@ -616,12 +642,11 @@ export default class ScrollController {
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
      * @param items
-     * @param forcedShift
      * @private
      */
-    handleRemoveItems(removeIndex: number, items: object[], forcedShift: boolean): IScrollControllerResult {
+    handleRemoveItems(removeIndex: number, items: object[]): IScrollControllerResult {
         if (this._virtualScroll) {
-            const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
+            const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);

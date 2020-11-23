@@ -106,7 +106,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
-    navigation: INavigationOptionValue;
+    navigation?: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -2239,15 +2239,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-        this._notifyBeforeCollectionChange();
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [strategy.avatarItem],
-            avatarStartIndex,
-            [],
-            0
-        );
-        this._notifyAfterCollectionChange();
+
+        // если элемент перетащили в другой список, то он в него добавится и нужно пересчитать start/stop индексы
+        if (!this.getItemBySourceItem(draggableItem.getContents())) {
+            this._notifyBeforeCollectionChange();
+            this._notifyCollectionChange(
+                IObservable.ACTION_ADD,
+                [strategy.avatarItem],
+                avatarStartIndex,
+                [],
+                0
+            );
+            this._notifyAfterCollectionChange();
+        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
@@ -2638,17 +2642,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }, GroupItemsStrategy);
 
         const itemsForNotify = [item];
-        const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
+        let addingIndex: number = this.getItems().indexOf(item);
 
         if (groupMethod) {
             const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-            const itemGroupId = groupMethod(item.contents);
+
+            // Добавление элемента привело к добавлению группы.
+            // Необходимо уведомить о создании двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
             if (groupsBefore.length < groupsAfter.length) {
+                const itemGroupId = groupMethod(item.contents);
+                addingIndex--;
                 itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
             }
         }
 
-        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
+        const session = this._startUpdateSession();
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0, session);
+        this._finishUpdateSession(session);
     }
 
     resetAddingItem(): void {
@@ -2657,6 +2667,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (addStrategy) {
             const groupMethod = this.getGroup();
             const item = addStrategy?.getAddingItem();
+            let addingIndex: number = this.getItems().indexOf(item);
             let groupsBefore;
 
             if (groupMethod) {
@@ -2669,15 +2680,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             if (groupMethod) {
                 const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+
+                // Отмена добавления элемента привела к удалению его группы.
+                // Необходимо уведомить об удалении двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
                 if (groupsBefore.length > groupsAfter.length) {
                     const itemGroupId = groupMethod(item.contents);
+                    addingIndex--;
                     itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
                 }
             }
 
-            this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
-            );
+            const session = this._startUpdateSession();
+            this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addingIndex);
+            this._finishUpdateSession(session);
         }
     }
 
@@ -3338,7 +3353,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                result = filter(
+                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                result = isAddingItem || filter(
                     item.getContents(),
                     index,
                     item,
@@ -3860,6 +3876,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _handleAfterCollectionChange(): void {
         this._notifyAfterCollectionChange();
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     // endregion

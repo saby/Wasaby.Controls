@@ -14,13 +14,13 @@ export interface IOptions<
     T extends GridCollectionItem<S> = GridCollectionItem<S>
 > extends IBaseOptions<S, T> {
     columns: TColumns;
-    footerTemplate: TemplateFunction;
-    header: THeader;
-    resultsTemplate: TemplateFunction;
-    resultsPosition: TResultsPosition;
-    headerInEmptyListVisible: boolean;
-    ladderProperties: string[];
-    stickyColumn: {};
+    footerTemplate?: TemplateFunction;
+    header?: THeader;
+    resultsTemplate?: TemplateFunction;
+    resultsPosition?: TResultsPosition;
+    headerInEmptyListVisible?: boolean;
+    ladderProperties?: string[];
+    stickyColumn?: {};
 }
 
 export default class GridCollection<
@@ -105,8 +105,14 @@ export default class GridCollection<
 
     setColumns(newColumns: TColumns): void {
         this._$columns = newColumns;
+        this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+    }
+
+    setMultiSelectVisibility(visibility: string): void {
+        super.setMultiSelectVisibility(visibility);
+        this._$colgroup?.reBuild();
     }
 
     protected _reBuild(reset?: boolean): void {
@@ -114,6 +120,7 @@ export default class GridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
         super._reBuild(reset);
+        this._$colgroup?.reBuild();
     }
 
     setIndexes(start: number, stop: number): void {

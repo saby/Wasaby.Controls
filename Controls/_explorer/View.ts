@@ -495,7 +495,11 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
-         const loadedBySourceController = isSearchViewMode && cfg.sourceController;
+         const loadedBySourceController =
+             cfg.sourceController &&
+             ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
+              (cfg.source !== this._options.source));
+         const isSourceControllerLoading = cfg.sourceController && cfg.sourceController.isLoading();
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
          this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
 
@@ -531,13 +535,18 @@ var
             // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
             // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
-            const recreateSource = cfg.source !== this._options.source;
+            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading);
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
             if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
+         } else if (!isViewModeChanged &&
+             this._pendingViewMode &&
+             cfg.viewMode === this._pendingViewMode &&
+             loadedBySourceController) {
+            _private.setViewModeSync(this, this._pendingViewMode, cfg);
          } else {
             _private.applyNewVisualOptions(this);
          }
