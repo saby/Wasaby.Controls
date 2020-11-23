@@ -546,7 +546,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               assert.equal(component.getHeadersHeight('top'), 10);
+               assert.equal(component.getHeadersHeight('top'), 0);
                assert.equal(component.getHeadersHeight('bottom'), 0);
                assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
                assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
@@ -596,9 +596,9 @@ define([
                });
                assert.equal(component.getHeadersHeight('top'), 0);
                assert.equal(component.getHeadersHeight('bottom'), 0);
-               assert.equal(component.getHeadersHeight('top', 'allFixed'), 0);
+               assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
                assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
-               assert.equal(component.getHeadersHeight('top', 'fixed'), 0);
+               assert.equal(component.getHeadersHeight('top', 'fixed'), 10);
                assert.equal(component.getHeadersHeight('bottom', 'fixed'), 0);
             });
          });
@@ -613,7 +613,7 @@ define([
                   height: 10,
                   shadowVisible: true
                });
-               assert.equal(component.getHeadersHeight('top'), 10);
+               assert.equal(component.getHeadersHeight('top'), 0);
                assert.equal(component.getHeadersHeight('bottom'), 0);
                assert.equal(component.getHeadersHeight('top', 'allFixed'), 10);
                assert.equal(component.getHeadersHeight('bottom', 'allFixed'), 0);
