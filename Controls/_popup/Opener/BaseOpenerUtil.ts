@@ -74,8 +74,8 @@ export default {
         const indicatorConfig = cfg.indicatorConfig || {};
         const defaultIndicatorCfg = {
             id,
-            message: rk('Загрузка'),
-            delay: 3000
+            message: rk('Загрузка1'),
+            delay: 2000
         };
         const config = {...defaultIndicatorCfg, ...indicatorConfig};
         if (popupId) {
