@@ -8,6 +8,8 @@
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
  * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
+ * @includes SearchResolver Controls/_search/SearchResolver
+ * @includes ControllerClass Controls/_search/ControllerClass
  * @public
  * @author Крайнов Д.О.
  */
@@ -21,6 +23,8 @@
  * @includes Controller Controls/_search/Controller
  * @includes Input Controls/_search/Input/Search
  * @includes ExpandableInput Controls/_search/Input/ExpandableInput/Search
+ * @includes SearchResolver Controls/_search/SearchResolver
+ * @includes ControllerClass Controls/_search/ControllerClass
  * @public
  * @author Крайнов Д.О.
  */
