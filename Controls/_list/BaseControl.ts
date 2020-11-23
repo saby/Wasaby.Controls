@@ -2529,8 +2529,8 @@ const _private = {
             _private.notifySelection(self, selection);
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected()], {bubbling: true});
         };
 
         if (result instanceof Promise) {
@@ -3675,11 +3675,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasSelectionController(this)) {
             const controller = _private.getSelectionController(this);
             _private.changeSelection(this, controller.getSelection());
-            if (this._options.hasOwnProperty('selectedKeys')) {
-                // changeSelection отправит это событие, только после того как проставится selection,
-                // но в afterMount он не будет проставлен
-                this._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-            }
         }
 
         if (!this._items || !this._items.getCount()) {
@@ -4499,7 +4494,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!canScroll && allDataLoaded && direction === 'up' && startIndex === 0) {
             scrollTop = 0;
             page = 1;
-        } 
+        }
         if (!canScroll && allDataLoaded && direction === 'down' && stopIndex === this._listViewModel.getCount()) {
             page = this._pagingCfg.pagesCount;
         }
