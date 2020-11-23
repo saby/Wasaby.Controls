@@ -1,5 +1,3 @@
-import {NewSourceController} from "../../../../Controls/dataSource";
-
 define([
    'Controls/tree',
    'Controls/treeGrid',
@@ -789,16 +787,16 @@ define([
             data: [],
             keyProperty: 'id'
          });
-         const sourceController = new NewSourceController({
+         const sourceController = new dataSourceLib.NewSourceController({
             source
-         })
+         });
          const treeControlConfig = {
             columns: [],
             root: 1,
             parentProperty: 'testParentProperty',
             source: source,
             sourceController
-         }
+         };
          const treeControl = correctCreateTreeControl(treeControlConfig);
          const stub = sinon.stub(treeControl._children.baseControl, 'reload');
 
