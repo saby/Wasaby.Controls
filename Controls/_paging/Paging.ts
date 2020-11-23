@@ -22,6 +22,7 @@ export interface IPagingOptions extends IControlOptions {
     elementsCount?: number;
     arrowState: IArrowState;
     pagingMode: TNavigationPagingMode;
+    showEndButton?: boolean;
 }
 
 /**
@@ -208,4 +209,29 @@ export default Paging;
 /**
  * @name Controls/_paging/Paging#arrowsState
  * @cfg {IArrowState} Опция управляет возможностью показа/скрытия кнопок в пэйджинге.
+ */
+
+/**
+ * @name Controls/_paging/Paging#pagingMode
+ * @cfg {TNavigationPagingMode} Внешний вид пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
+ */
+
+/**
+ * @name Controls/_paging/Paging#contrastBackground
+ * @cfg {Boolean} Определяет контрастность фона кнопки по отношению к ее окружению.
+ */
+
+/**
+ * @name Controls/_paging/Paging#contentTemplate
+ * @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ */
+
+/**
+ * @name Controls/_paging/Paging#elementsCount
+ * @cfg {Number} Опция управляет возможностью показа количества элементов, если их количество больше 0.
+ */
+
+/**
+ * @name Controls/_paging/Paging#showEndButton
+ * @cfg {Boolean} Опция управляет возможностью показа/скрытия кнопки в конец.
  */
