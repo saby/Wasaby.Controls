@@ -8064,7 +8064,7 @@ define([
             it('afterMount', () => {
                const notifySpy = sinon.spy(newBaseControl, '_notify');
                newBaseControl._afterMount();
-               assert.isFalse(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
+               assert.isTrue(notifySpy.withArgs('listSelectedKeysCountChanged', [1, false]).called);
                assert.isTrue(notifySpy.withArgs('listSelectionTypeForAllSelectedChanged', ['all']).called);
             });
 
