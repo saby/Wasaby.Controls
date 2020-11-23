@@ -22,6 +22,7 @@ export default {
     loadCompatibleLayer(callback: Function): void {
         const layerCompatibleModuleName: string = 'Lib/Control/LayerCompatible/LayerCompatible';
         const loadedCallback = () => {
+            isLayerCompatibleLoaded = false;
             isLayerCompatibleLoaded = true;
             callback();
         };
