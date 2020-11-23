@@ -1,4 +1,4 @@
-import * as loader from 'WasabyLoader/ModulesLoader';
+import { ModulesLoader as loader } from 'UI/Utils';
 import { ParkingController, Controller, ViewConfig } from 'Controls/error';
 import { IoC } from 'Env/Env';
 import rk = require('i18n!Controls');
