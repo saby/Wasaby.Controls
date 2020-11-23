@@ -147,6 +147,31 @@ define(
             assert.equal(result.templateOptions.width, null);
          });
 
+         it('_afterMount', () => {
+            let combobox = getCombobox(config);
+            let selectedItemIsChanged = false;
+            combobox._selectedItemsChangedHandler = () => {
+               selectedItemIsChanged = true;
+            };
+            combobox._selectedItem = new entity.Model({
+               rawData: {
+                  key: 1
+               }
+            });
+            combobox._countItems = 1;
+            combobox._afterMount({
+               keyProperty: 'key',
+               selectedKey: 1
+            });
+            assert.isFalse(selectedItemIsChanged);
+
+            combobox._afterMount({
+               keyProperty: 'key',
+               selectedKey: 5
+            });
+            assert.isTrue(selectedItemIsChanged);
+         });
+
          describe('check readOnly state', () => {
             let combobox;
             let itemsCallback = new collection.RecordSet({
