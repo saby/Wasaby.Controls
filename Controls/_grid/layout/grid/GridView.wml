@@ -54,7 +54,7 @@
         <ws:if data="{{ _options.useNewEmptyTemplate }}">
             <ws:partial template="{{ _options.emptyTemplate }}"
                         attr:class="
-                        controls-GridView__emptyTemplate
+                        controls-OldGridView__emptyTemplate
                         js-controls-GridView__emptyTemplate
                         controls-Grid__row-cell_withRowSeparator_size-{{_options.rowSeparatorSize}}
                         controls-Grid__row-cell_withRowSeparator_size-{{_options.rowSeparatorSize}}_theme-{{_options.theme}}"
