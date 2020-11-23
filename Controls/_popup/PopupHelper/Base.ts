@@ -3,6 +3,7 @@ import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as randomId from 'Core/helpers/Number/randomId';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
+import {IndicatorOpener} from 'Controls/LoadingIndicator';
 
 interface IOpenerStaticMethods {
     openPopup: (popupOptions: IBasePopupOptions, popupController?: string) => Promise<string>;
@@ -17,8 +18,9 @@ interface IOpenerStaticMethods {
  */
 
 export default class Base {
-    _popupId: string;
-    _opener: IOpenerStaticMethods;
+    private _popupId: string;
+    private _opener: IOpenerStaticMethods;
+    private _indicatorId: string;
 
     open(popupOptions: IBasePopupOptions, popupController?: string): void {
         const config: IBasePopupOptions = {...popupOptions};
@@ -29,8 +31,15 @@ export default class Base {
             this._popupId = randomId('popup-');
         }
         config.id = this._popupId;
+        if (!this._indicatorId && config.showIndicator !== false) {
+            this._showIndicator(config);
+        }
         config._events = {
+            onOpen: () => {
+                this._hideIndicator();
+            },
             onClose: () => {
+                this._hideIndicator();
                 // Защита. Могут позвать close и сразу open. В этом случае мы
                 // инициируем закрытие окна, откроем новое и после стрельнет onCLose, который очистит id нового окна.
                 // В итоге повторый вызов метода close ничего не сделает, т.к. popupId уже почищен.
@@ -41,10 +50,6 @@ export default class Base {
         };
         if (config.dataLoaders) {
             config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
-        }
-
-        if (config.showIndicator !== false) {
-            Base._showIndicator(config);
         }
 
         this._opener.openPopup(config, popupController);
@@ -67,13 +72,21 @@ export default class Base {
         this._opener = null;
     }
 
-    private static _showIndicator(config: IBasePopupOptions): void {
+    private _hideIndicator(): void {
+        if (this._indicatorId) {
+            IndicatorOpener.hide(this._indicatorId);
+            this._indicatorId = null;
+        }
+    }
+
+    private _showIndicator(config: IBasePopupOptions): void {
         // Если окно уже открыто или открывается, новые обработчики не создаем
         const popupItem = config.id && ManagerController.find(config.id);
         if (popupItem) {
             config._events = popupItem.popupOptions._events;
         } else {
-            BaseOpenerUtil.showIndicator(config);
+            const indicatorConfig = BaseOpenerUtil.getIndicatorConfig(null, config);
+            this._indicatorId = IndicatorOpener.show(indicatorConfig);
         }
     }
 }
