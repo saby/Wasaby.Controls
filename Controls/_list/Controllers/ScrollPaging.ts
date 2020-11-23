@@ -42,6 +42,7 @@ interface IScrollPagingOptions {
     totalElementsCount: number;
     loadedElementsCount: number;
     showEndButton: boolean;
+
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
 
@@ -55,6 +56,8 @@ interface IHasMoreData {
     up: boolean;
     down: boolean;
 }
+
+const SCALE_ROUNDING_ERROR_FIX: number = 1.5;
 
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
@@ -110,7 +113,11 @@ export default class ScrollPagingController {
     }
 
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
-        const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
+        // На масштабе появляются дробные пиксели в размерах скролл контейнера.
+        // Прибавляем 1.5 пикселя, чтобы избежать неправильных расчетов позиции скролла.
+        // https://online.sbis.ru/opendoc.html?guid=f921aafd-eb99-4362-a5e7-6f60acf7ee6d
+        const canScrollForward = (scrollParams.clientHeight + scrollParams.scrollTop +
+            SCALE_ROUNDING_ERROR_FIX) < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle(hasMoreData);
@@ -120,11 +127,13 @@ export default class ScrollPagingController {
             this.handleScrollBottom(hasMoreData);
         }
     }
+
     getItemsCountOnPage() {
         if (this._pagingData.averageElementHeight) {
             return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
         }
     }
+
     protected getNeededItemsCountForPage(page: number) {
         if (this._options.pagingMode === 'numbers') {
             const itemsOnPage = this.getItemsCountOnPage();
