@@ -119,9 +119,11 @@ export class Controller {
 
    /**
     * Возвращает количество выбранных элементов
+    * @param {ISelection} selection Список выбранных записей, по которому посчитать кол-во выбранных элементов.
+    * Если не передан то будет считать по состоянию контроллера
     */
-   getCountOfSelected(): number|null {
-      return this._strategy.getCount(this._selection, this._model.getHasMoreData(), this._limit);
+   getCountOfSelected(selection?: ISelection): number|null {
+      return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData(), this._limit);
    }
 
    /**
