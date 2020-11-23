@@ -546,7 +546,7 @@ define('Controls/interface/IEditableList', [
     * @remark
     * Перед запуском редактирования по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
     * 
-    * Используйте этот метод в ситуациях, когда вы хотите начать редактирование из нестандартного места, например, из {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/operations/ панели действий элемента}.
+    * Используйте этот метод в ситуациях, когда вы хотите начать редактирование из нестандартного места, например, из {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/operations/ панели действий элемента}.
     * @example
     * В следующем примере показано, как начать редактирование элемента.
     * <pre class="brush: html;">
