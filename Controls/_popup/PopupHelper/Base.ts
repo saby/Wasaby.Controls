@@ -25,6 +25,9 @@ export default class Base {
         config.isHelper = true;
 
         // Защита от множ. вызова. Хэлпер сам генерирует id
+        if (ManagerController.isDestroying(this._popupId)) {
+            this._popupId = null;
+        }
         if (!this._popupId) {
             this._popupId = randomId('popup-');
         }
