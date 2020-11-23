@@ -1671,9 +1671,13 @@ const _private = {
                 const itemsCount = self._listViewModel.getCount();
                 const moreMetaCount = _private.getAllDataCount(self);
 
-                if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
-                    _private.prepareFooter(self, self._options, self._sourceController);
-                } else if (typeof moreMetaCount === 'number' || moreMetaCount === false) {
+                if (typeof moreMetaCount === 'number') {
+                    if (itemsCount !== moreMetaCount) {
+                        _private.prepareFooter(self, self._options, self._sourceController);
+                    } else {
+                        self._shouldDrawFooter = false;
+                    }
+                } else if (moreMetaCount === false) {
                     self._shouldDrawFooter = false;
                 }
             }
