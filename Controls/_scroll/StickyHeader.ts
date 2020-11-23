@@ -498,7 +498,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
          * In this way, the content of the header does not change visually, and the free space disappears.
          * The offset must be at least as large as the free space. Take the nearest integer equal to one.
          */
-        offset = getGapFixSize();
+        // Этот костыль нужен, чтобы убрать щели между заголовками. Для прозрачных заголовков он не нужен.
+        offset = opts.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
