@@ -281,10 +281,31 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+        event.stopImmediatePropagation();
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, this._wasMouseEnter);
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        this._updateStateAndGenerateEvents(this._state);
+    }
+
+    protected _updateStateAndGenerateEvents(newState: IScrollState): void {
+        super._updateStateAndGenerateEvents({
+            ...newState,
+            hasUnrenderedContent: {
+                top: this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE,
+                bottom: this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE
+            }
+        })
+
+    }
+
+    protected _getScrollNotifyConfig(): any[] {
+        const baseConfig = super._getScrollNotifyConfig();
+        const topShadowVisible = this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE;
+        const bottomShadowVisible = this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE;
+        baseConfig.push(topShadowVisible, bottomShadowVisible);
+        return baseConfig;
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {

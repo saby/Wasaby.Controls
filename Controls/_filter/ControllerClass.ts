@@ -100,9 +100,9 @@ export default class FilterControllerClass {
             } else {
                 return this._resolveItemsWithHistory({
                     historyId: state.historyId || this._options.historyId,
-                    filterButtonSource: state.filterSource,
+                    filterButtonSource: state.filterSource || this._options.filterButtonSource,
                     historyItems: this._options.historyItems
-                }, state.filter);
+                }, state.filter || this._options.filter);
             }
         } else {
             return this._resolveItemsWithHistory(this._options, this._filter);

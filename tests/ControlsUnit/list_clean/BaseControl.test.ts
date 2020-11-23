@@ -4,6 +4,7 @@ import {IEditableListOption} from 'Controls/_list/interface/IEditableList';
 import {RecordSet} from 'Types/collection';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {NewSourceController} from 'Controls/dataSource';
+import * as sinon from 'sinon';
 
 const getData = (dataCount: number = 0) => {
     const data = [];
@@ -112,6 +113,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -128,6 +130,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 0;
@@ -141,6 +144,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -162,6 +166,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._afterMount();
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {
                 clientHeight: 1000,
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
@@ -943,6 +948,45 @@ describe('Controls/list_clean/BaseControl', () => {
             });
             return baseControl.commitEdit().then(() => {
                 assert.isFalse(isCommitCalled);
+            });
+        });
+
+        describe('should force cancel editing on reload from parent (by API)', () => {
+            let stubReload;
+            let isCancelCalled = false;
+
+            beforeEach(() => {
+                stubReload = sinon.stub(BaseControl._private, 'reload').callsFake(() => Promise.resolve());
+                baseControl._editInPlaceController = {
+                    isEditing: () => true
+                };
+                baseControl._cancelEdit = (force) => {
+                    isCancelCalled = true;
+                    assert.isTrue(force);
+                    return Promise.resolve();
+                };
+            });
+            afterEach(() => {
+                stubReload.restore();
+                isCancelCalled = false;
+            });
+
+            it('should cancel if reload called not on beforeBeginEdit', () => {
+                baseControl._editInPlaceController.isEndEditProcessing = () => false;
+
+                return baseControl.reload().then(() => {
+                    assert.isTrue(isCancelCalled);
+                    assert.isTrue(stubReload.calledOnce);
+                });
+            });
+
+            it('should not cancel if reload called  on beforeBeginEdit', () => {
+                baseControl._editInPlaceController.isEndEditProcessing = () => true;
+
+                return baseControl.reload().then(() => {
+                    assert.isFalse(isCancelCalled);
+                    assert.isTrue(stubReload.called);
+                });
             });
         });
     });

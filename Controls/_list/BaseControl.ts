@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection} from 'Env/Env';
+import {constants, detection, compatibility} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -142,7 +142,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  * В ie нет нативного IntersectionObserver.
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
-const CHECK_TRIGGERS_DELAY_IF_IE = detection.isIE ? 150 : 0;
+const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
 
 interface IAnimationEvent extends Event {
@@ -1673,7 +1673,7 @@ const _private = {
 
                 if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
                     _private.prepareFooter(self, self._options, self._sourceController);
-                } else {
+                } else if (typeof moreMetaCount === 'number') {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -2650,9 +2650,9 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey): Promise<CrudEntityKey>|CrudEntityKey {
+    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, afterMount: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        if (newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) {
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !afterMount) {
             return newMarkedKey;
         }
 
@@ -2821,7 +2821,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, self._context?.isTouch?.isTouch)
+            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!compatibility.touch)
         ) {
             const key = item.getContents().getKey();
 
@@ -3448,9 +3448,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.onScrollHide(this);
     },
 
-    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect): void {
+    viewportResizeHandler(viewportHeight: number, viewportRect: DOMRect, scrollTop: number): void {
         this._viewportSize = viewportHeight;
         this._viewportRect = viewportRect;
+        if (scrollTop !== undefined) {
+            this._scrollTop = scrollTop;
+        }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
             this._updateItemsHeights();
         }
@@ -3636,7 +3639,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
             if (newMarkedKey !== this._options.markedKey) {
-                _private.changeMarkedKey(this, newMarkedKey);
+                _private.changeMarkedKey(this, newMarkedKey, true);
             }
         }
 
@@ -3733,7 +3736,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            const items = this._listViewModel.getItems();
+            const items = this._loadedBySourceController ? newOptions.sourceController.getItems() : this._listViewModel.getItems();
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
@@ -4285,6 +4288,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
             _private.activateEditingRow(this);
         }
+
+        this._updateInProgress = false;
+        this._notifyOnDrawItems();
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate.forEach((callback) => {
+                callback();
+            });
+            this._callbackAfterUpdate = null;
+        }
     },
 
     // IO срабатывает после перерисовки страницы, поэтому ждем следующего кадра
@@ -4303,7 +4315,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
                 });
-            }, CHECK_TRIGGERS_DELAY_IF_IE);
+            }, CHECK_TRIGGERS_DELAY_IF_NEED);
         });
     },
 
@@ -4381,9 +4393,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _afterUpdate(oldOptions): void {
-        this._updateInProgress = false;
         this._loadedBySourceController = false;
-        this._notifyOnDrawItems();
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4413,12 +4423,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
         this._modelRecreated = false;
-        if (this._callbackAfterUpdate) {
-            this._callbackAfterUpdate.forEach((callback) => {
-                callback();
-            });
-            this._callbackAfterUpdate = null;
-        }
     },
 
     __onPagingArrowClick(e, arrow) {
@@ -4535,7 +4539,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (keepScroll) {
             this._keepScrollAfterReload = true;
         }
-        return _private.reload(this, this._options, sourceConfig).then(getData);
+
+        // Вызов перезагрузки из публичного API должен завершать имеющееся редактирование по месту.
+        // Во время редактирования перезагрузка допустима только в момент завершения редактирования,
+        // точка - beforeEndEdit. При этом возвращение промиса перезагрузки обязательно.
+        const cancelEditPromise = this.isEditing() && !this._getEditInPlaceController().isEndEditProcessing() ?
+            this._cancelEdit(true).catch(() => {
+                // Перезагрузку не остановит даже ошибка во время завершения редактирования.
+                // При отмене редактирования с флагом force ошибка может упасть только в прикладном коде.
+                // Уведомлением об упавших ошибках занимается контроллер редактирования.
+            }) : Promise.resolve();
+
+        return cancelEditPromise.then(() => {
+            return _private.reload(this, this._options, sourceConfig).then(getData);
+        });
     },
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
@@ -4564,8 +4581,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // TODO временное решение для новой модели https://online.sbis.ru/opendoc.html?guid=e20934c7-95fa-44f3-a7c2-c2a3ec32e8a3
                 const collapsedGroups = collection.getCollapsedGroups() || [];
-                if (collapsedGroups.indexOf(groupId) === -1) {
-                    collapsedGroups.push(groupId);
+                const groupIndex = collapsedGroups.indexOf(groupId);
+                if (groupIndex === -1) {
+                    if (!needExpandGroup) {
+                        collapsedGroups.push(groupId);
+                    }
+                } else if (needExpandGroup) {
+                    collapsedGroups.splice(groupIndex, 1);
                 }
                 const changes = {
                     changeType: needExpandGroup ? 'expand' : 'collapse',
@@ -5678,7 +5700,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.scrollMoveSyncHandler(params);
                 break;
             case 'viewportResize':
-                this.viewportResizeHandler(params.clientHeight, params.rect);
+                this.viewportResizeHandler(params.clientHeight, params.rect, params.scrollTop);
                 break;
             case 'virtualScrollMove':
                 _private.throttledVirtualScrollPositionChanged(this, params);
@@ -5885,7 +5907,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._dndListController.endDrag();
 
             // перемещаем маркер только если dragEnd сработал в списке в который перетаскивают
-            if (this._options.markerVisibility !== 'hidden' && targetPosition && this._insideDragging) {
+            if (this._options.markerVisibility !== 'hidden' && targetPosition && draggableItem && this._insideDragging) {
                 const moveToCollapsedNode = targetPosition.position === 'on'
                     && targetPosition.dispItem instanceof TreeItem
                     && !targetPosition.dispItem.isExpanded();

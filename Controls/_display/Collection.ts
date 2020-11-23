@@ -252,7 +252,7 @@ function onCollectionChange<T>(
                 projectionOldItems,
                 0
             );
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
             this._nextVersion();
             return;
 
@@ -279,7 +279,6 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REMOVE:
@@ -289,7 +288,6 @@ function onCollectionChange<T>(
             if (this._isFiltered()) {
                 this._reFilter();
             }
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_REPLACE:
@@ -300,7 +298,6 @@ function onCollectionChange<T>(
             this._reGroup(newItemsIndex, newItems.length);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
 
         case IObservable.ACTION_MOVE:
@@ -308,7 +305,6 @@ function onCollectionChange<T>(
             this._moveItems(newItemsIndex, oldItemsIndex, newItems);
             this._reSort();
             this._reFilter();
-            this._handleCollectionChange(action);
             break;
     }
 
@@ -884,7 +880,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             projectionOldItems,
             0
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     destroy(): void {
@@ -2146,7 +2142,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             index
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -2241,15 +2237,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._reIndex();
 
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-        this._notifyBeforeCollectionChange();
-        this._notifyCollectionChange(
-            IObservable.ACTION_ADD,
-            [strategy.avatarItem],
-            avatarStartIndex,
-            [],
-            0
-        );
-        this._notifyAfterCollectionChange();
+
+        // если элемент перетащили в другой список, то он в него добавится и нужно пересчитать start/stop индексы
+        if (!this.getItemBySourceItem(draggableItem.getContents())) {
+            this._notifyBeforeCollectionChange();
+            this._notifyCollectionChange(
+                IObservable.ACTION_ADD,
+                [strategy.avatarItem],
+                avatarStartIndex,
+                [],
+                0
+            );
+            this._notifyAfterCollectionChange();
+        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
@@ -2632,17 +2632,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }, GroupItemsStrategy);
 
         const itemsForNotify = [item];
-        const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
+        let addingIndex: number = this.getItems().indexOf(item);
 
         if (groupMethod) {
             const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-            const itemGroupId = groupMethod(item.contents);
+
+            // Добавление элемента привело к добавлению группы.
+            // Необходимо уведомить о создании двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
             if (groupsBefore.length < groupsAfter.length) {
+                const itemGroupId = groupMethod(item.contents);
+                addingIndex--;
                 itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
             }
         }
 
-        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
+        const session = this._startUpdateSession();
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0, session);
+        this._finishUpdateSession(session);
     }
 
     resetAddingItem(): void {
@@ -2651,6 +2657,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (addStrategy) {
             const groupMethod = this.getGroup();
             const item = addStrategy?.getAddingItem();
+            let addingIndex: number = this.getItems().indexOf(item);
             let groupsBefore;
 
             if (groupMethod) {
@@ -2663,15 +2670,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             if (groupMethod) {
                 const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+
+                // Отмена добавления элемента привела к удалению его группы.
+                // Необходимо уведомить об удалении двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
                 if (groupsBefore.length > groupsAfter.length) {
                     const itemGroupId = groupMethod(item.contents);
+                    addingIndex--;
                     itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
                 }
             }
 
-            this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
-            );
+            const session = this._startUpdateSession();
+            this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addingIndex);
+            this._finishUpdateSession(session);
         }
     }
 
@@ -2684,9 +2695,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             this._swipeConfig = config;
             this._nextVersion();
         }
-    }
-
-    protected _handleCollectionChange(action: string): void {
     }
 
     private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
@@ -2866,7 +2874,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         super._analizeUpdateSession.call(this, session);
 
         if (session) {
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3305,7 +3313,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                result = filter(
+                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                result = isAddingItem || filter(
                     item.getContents(),
                     index,
                     item,
@@ -3659,7 +3668,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     session
                 );
             });
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3722,7 +3731,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 );
             }
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     /**
@@ -3823,6 +3832,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             return;
         }
         this._notify('onAfterCollectionChange');
+    }
+
+    protected _handleAfterCollectionChange(): void {
+        this._notifyAfterCollectionChange();
     }
 
     // endregion

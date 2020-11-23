@@ -113,7 +113,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
 
         if (!this.getOwner().getItemsDragNDrop() && stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
-            index === 1 && !hasMainCell || index === 0 && hasMainCell) || stickyProperty === undefined) {
+            index === 1 && !hasMainCell || index === 0 && hasMainCell)) {
             return false;
         }
         return true;
@@ -212,9 +212,6 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
     protected _reinitializeColumns(): void {
         if (this._$columnItems) {
-            this._$columnItems.forEach((columnItem) => {
-                columnItem.destroy();
-            });
             this._initializeColumns();
             this._nextVersion();
         }
