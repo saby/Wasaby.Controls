@@ -17,6 +17,7 @@ interface IModuleInfo {
 let ManagerWrapperCreatingPromise; // TODO: Compatible
 let isLayerCompatibleLoaded; // TODO: Compatible
 
+
 export default {
     loadCompatibleLayer(callback: Function): void {
         const layerCompatibleModuleName: string = 'Lib/Control/LayerCompatible/LayerCompatible';
