@@ -4,11 +4,20 @@
                        markedKey="{{_options.propertyValue}}"
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
+                       navigation="{{_navigation}}"
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
       <ws:itemTemplate>
          <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}"/>
       </ws:itemTemplate>
+      <ws:footerTemplate>
+         <ws:if data="{{_needShowMoreButton}}">
+            <Controls.buttons:Button viewMode="linkButton"
+                                     caption="{{_buttonMoreCaption}}"
+                                     fontColorStyle="label"
+                                     on:click="_handleFooterClick()"/>
+         </ws:if>
+      </ws:footerTemplate>
    </Controls.grid:View>
 </div>

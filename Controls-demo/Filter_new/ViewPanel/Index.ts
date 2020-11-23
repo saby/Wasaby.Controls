@@ -9,8 +9,15 @@ export default class extends Control {
     protected _filterButtonData: unknown[] = [];
     protected _source: Memory = null;
     protected _navigation: object = null;
+    protected _filterItems: object[] = null;
 
     protected _beforeMount(): void {
+        this._filterItems = [
+            { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
+            { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
+            { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
+            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+        ];
         this._navigation = {
             source: 'page',
             view: 'page',
@@ -26,7 +33,7 @@ export default class extends Control {
             filter: (item, queryFilter) => {
                 let addToData = true;
                 const emptyFields = {
-                    owner: 'По ответственному',
+                    owner: null,
                     amount: []
                 };
                 for (const filterField in queryFilter) {
@@ -66,21 +73,22 @@ export default class extends Control {
             {
                 group: 'Ответственный',
                 name: 'owner',
-                resetValue: 'По ответственному',
-                value: 'По ответственному',
+                resetValue: null,
+                value: null,
                 editorTemplateName: 'Controls/filter:ListEditor',
                 editorOptions: {
                     keyProperty: 'owner',
                     columns: [{displayProperty: 'title', width: 'auto'}, {align: 'right', displayProperty: 'id'}],
                     displayProperty: 'title',
+                    selectorTemplate: {
+                        templateName: 'Controls-demo/Filter_new/ViewPanel/stackTemplate/StackTemplate',
+                        templateOptions: {items: this._filterItems},
+                        popupOptions: {
+                            width: 500
+                        }
+                    },
                     source: new Memory({
-                        data: [
-                            { id: 0, title: 'По ответственному', owner: 'По ответственному' },
-                            { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
-                            { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
-                            { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
-                            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
-                        ],
+                        data: this._filterItems,
                         keyProperty: 'owner'
                     })
                 }

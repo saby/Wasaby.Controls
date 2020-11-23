@@ -72,6 +72,7 @@ export default class ViewPanel extends Control<IControlOptions> {
             if (group === itemContent || name === itemContent) {
                 const resetValue = object.getPropertyValue(item, 'resetValue');
                 object.setPropertyValue(item, 'value', resetValue);
+                object.setPropertyValue(item, 'textValue', null);
             }
         });
         this._updateEditingObject();
