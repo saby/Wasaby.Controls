@@ -110,7 +110,7 @@ export default class Controller {
     }
 
     reload(sourceConfig?: INavigationSourceConfig): LoadResult {
-        this._navigationController = null;
+        this._destroyNavigationController();
         this._deepReload = true;
 
         return this._load({
@@ -136,6 +136,7 @@ export default class Controller {
 
     setItems(items: RecordSet): RecordSet {
         if (this._hasNavigationBySource()) {
+            this._destroyNavigationController();
             this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
         this._setItems(items);
@@ -291,11 +292,7 @@ export default class Controller {
     destroy(): void {
         this.cancelLoading();
         this._unsubscribeItemsCollectionChangeEvent();
-
-        if (this._navigationController) {
-            this._navigationController.destroy();
-            this._navigationController = null;
-        }
+        this._destroyNavigationController();
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
@@ -495,6 +492,13 @@ export default class Controller {
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
             this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
+        }
+    }
+
+    private _destroyNavigationController(): void {
+        if (this._navigationController) {
+            this._navigationController.destroy();
+            this._navigationController = null;
         }
     }
 

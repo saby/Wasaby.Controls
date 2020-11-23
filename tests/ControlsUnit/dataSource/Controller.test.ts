@@ -3,7 +3,7 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
-import {createSandbox} from 'sinon';
+import {createSandbox, stub} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
 const filterByEntries = (item, filter): boolean => {
@@ -291,6 +291,23 @@ describe('Controls/dataSource:SourceController', () => {
     });
 
     describe('setItems', () => {
+
+        it('navigationController is recreated on setItems', () => {
+            const controller = getController({
+                navigation: getPagingNavigation(true)
+            });
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            const controllerDestroyStub = stub(controller._navigationController, 'destroy');
+
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            ok(controllerDestroyStub.calledOnce);
+        });
 
         it('navigation is updated before assign items', () => {
             const controller = getController({
