@@ -129,5 +129,57 @@ define([
                 assert.isTrue(expandedState !== groupItem.isExpanded());
             });
         });
-    });
+
+      describe('itemActions', () => {
+         it('_updateItemActions', () => {
+            const collection = ViewInstance._getCollection('', '', editingObject, source);
+            ViewInstance._updateItemActions(collection, {
+               itemActions: []
+            });
+
+            assert.isOk(ViewInstance._itemActionsController);
+         });
+
+         it('_onItemActionsMenuResult', () => {
+            let isApplyAction = false;
+            let isClosed = false;
+            const propertyGrid = new PropertyGrid.default({});
+            propertyGrid._itemActionsController = {
+               getActiveItem: () => ({
+                  getContents: () => {}
+               })
+            };
+            propertyGrid._itemActionSticky = {
+               close: () => {isClosed = true;}
+            };
+            propertyGrid._onItemActionsMenuResult('itemClick', new entity.Model({
+               rawData: {
+                  handler: () => {isApplyAction = true;}
+               }
+            }));
+
+            assert.isTrue(isApplyAction);
+            assert.isTrue(isClosed);
+         });
+
+         it('_openItemActionMenu', () => {
+            let isOpened = false;
+            let actualConfig;
+            const propertyGrid = new PropertyGrid.default({});
+            propertyGrid._itemActionsController = {
+               prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
+               setActiveItem: () => {}
+            };
+            propertyGrid._itemActionSticky = {
+               open: (menuConfig) => {
+                  actualConfig = menuConfig;
+                  isOpened = true;
+               }
+            };
+            propertyGrid._openItemActionMenu('item', {}, null);
+            assert.isTrue(isOpened);
+            assert.isOk(actualConfig.eventHandlers);
+         });
+      });
+   });
 });
