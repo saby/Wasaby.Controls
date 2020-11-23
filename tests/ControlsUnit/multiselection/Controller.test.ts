@@ -227,6 +227,13 @@ describe('Controls/_multiselection/Controller', () => {
       assert.isNull(model.getItemBySourceKey(6).isSelected());
    });
 
+   it ('getCountOfSelected', () => {
+      const result = controller.toggleItem(3);
+      assert.equal(controller.getCountOfSelected(result), 1);
+      controller.setSelection(result);
+      assert.equal(controller.getCountOfSelected(), 1);
+   });
+
    it('with limit', () => {
       controller.setLimit(1);
 
