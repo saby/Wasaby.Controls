@@ -37,6 +37,7 @@ export default {
         } else {
             loadedCallback();
         }
+		
     },
 
     getManagerWithCallback(callback: Function): void {
@@ -74,7 +75,7 @@ export default {
         const indicatorConfig = cfg.indicatorConfig || {};
         const defaultIndicatorCfg = {
             id,
-            message: rk('Загрузка1'),
+            message: rk('Загрузка'),
             delay: 2000
         };
         const config = {...defaultIndicatorCfg, ...indicatorConfig};
