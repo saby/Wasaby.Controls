@@ -3942,8 +3942,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged || this._loadedBySourceController && _private.isPortionedLoad(this)) {
-            _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
+        if (newOptions.searchValue || this._loadedBySourceController) {
+            const isPortionedLoad = _private.isPortionedLoad(this);
+            const hasMoreData = _private.hasMoreData(this, this._sourceController, 'down');
+            const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
+            const needCheckLoadToDirection = hasMoreData && isSearchReturnsEmptyResult && !this._sourceController.isLoading();
+
+            // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
+            // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
+            // onCollectionChange у рекордсета не стрельнёт, и не сработает код,
+            // запускающий подгрузку по скролу (в навигации more: true)
+            if (searchValueChanged ||
+                (isPortionedLoad && (this._loadedBySourceController || needCheckLoadToDirection))) {
+                _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
+            }
         }
 
         if (needReload) {

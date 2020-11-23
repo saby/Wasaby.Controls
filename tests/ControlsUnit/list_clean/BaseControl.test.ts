@@ -772,6 +772,46 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(baseControlOptions);
             assert.isTrue(loadStarted);
         });
+
+        it('search returns empty recordSet with iterative in meta', async () => {
+            let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            let loadStarted = false;
+            const navigation = {
+                view: 'infinity',
+                source: 'page',
+                sourceConfig: {
+                    pageSize: 10,
+                    page: 0,
+                    hasMore: false
+                }
+            };
+
+            baseControlOptions.navigation = navigation;
+            baseControlOptions.sourceController = new NewSourceController({
+                source: new Memory(),
+                navigation,
+                keyProperty: 'key'
+            });
+            baseControlOptions.sourceController.hasMoreData = () => true;
+            baseControlOptions.sourceController.load = () => {
+                loadStarted = true;
+                return Promise.reject();
+            };
+            baseControlOptions.sourceController.getItems = () => {
+                const rs = new RecordSet();
+                rs.setMetaData({iterative: true});
+                return rs;
+            };
+            baseControlOptions.searchValue = 'test';
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            baseControl.saveOptions(baseControlOptions);
+
+            loadStarted = false;
+            baseControlOptions = {...baseControlOptions};
+            baseControl._beforeUpdate(baseControlOptions);
+            assert.isTrue(loadStarted);
+        });
     });
 
     describe('_beforeMount', () => {
