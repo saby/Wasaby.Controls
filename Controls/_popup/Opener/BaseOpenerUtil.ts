@@ -52,10 +52,11 @@ export default {
         };
         const indicatorConfig = this.getIndicatorConfig(null, cfg);
         const id: string = IndicatorOpener.show(indicatorConfig);
-        cfg._events = {
-            onOpen: hideFunction,
-            onClose: hideFunction
-        };
+        cfg._events = cfg._events || {};
+        cfg._events.onOpen = hideFunction;
+        if (!cfg._events.onClose) {
+            cfg._events.onClose = hideFunction;
+        }
     },
 
     getIndicatorConfig(id: string, cfg: IBaseOpenerOptions = {}): ILoadingIndicatorOptions {

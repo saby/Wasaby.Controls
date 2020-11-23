@@ -2,6 +2,7 @@ import {IBasePopupOptions} from 'Controls/_popup/interface/IBaseOpener';
 import BaseOpener from 'Controls/_popup/Opener/BaseOpener';
 import * as randomId from 'Core/helpers/Number/randomId';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
+import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 
 interface IOpenerStaticMethods {
     openPopup: (popupOptions: IBasePopupOptions, popupController?: string) => Promise<string>;
@@ -42,6 +43,10 @@ export default class Base {
             config._prefetchPromise = ManagerController.loadData(config.dataLoaders);
         }
 
+        if (config.showIndicator !== false) {
+            Base._showIndicator(config);
+        }
+
         this._opener.openPopup(config, popupController);
     }
 
@@ -60,5 +65,15 @@ export default class Base {
         }
         this._popupId = null;
         this._opener = null;
+    }
+
+    private static _showIndicator(config: IBasePopupOptions): void {
+        // Если окно уже открыто или открывается, новые обработчики не создаем
+        const popupItem = config.id && ManagerController.find(config.id);
+        if (popupItem) {
+            config._events = popupItem.popupOptions._events;
+        } else {
+            BaseOpenerUtil.showIndicator(config);
+        }
     }
 }
