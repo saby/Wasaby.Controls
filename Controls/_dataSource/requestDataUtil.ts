@@ -4,7 +4,7 @@
  * <h2>Аргументы функции</h2>
  *
  * Функция на вход приниает объект с полями:
- * 
+ *
  * * source: SbisService - источник данных;
  * * filterButtonSource: Array - элементы {@link Controls/filter:Controller#filterButtonSource FilterButton};
  * * fastFilterSource: Array - элементы {@link Controls/filter:Controller#fastFilterSource FastFilter};
@@ -24,11 +24,12 @@
 import {Controller as SourceController} from 'Controls/source';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
-import {SbisService} from 'Types/source';
+import {ICrud, PrefetchProxy} from 'Types/source';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
 import {IFilterItem} from 'Controls/filter';
+import {INavigationOptionValue} from 'Controls/interface';
 
 interface IHistoryItems {
    items: IFilterItem[];
@@ -52,10 +53,10 @@ export interface IRequestDataResult {
 }
 
 export interface ISourceConfig {
-   source: SbisService;
-   filterButtonSource?: object[];
+   source: ICrud | PrefetchProxy;
+   filterButtonSource?: IFilterItem[];
    fastFilterSource?: object[];
-   navigation?: object;
+   navigation?: INavigationOptionValue<unknown>;
    historyId?: string;
    groupHistoryId?: string;
    filter?: FilterObject;
