@@ -335,7 +335,7 @@ export default class SearchControllerClass {
         const isSearchValueShorterThenMinLength = this._isSearchValueShort(searchValue, options.minSearchLength);
         const isSearchValueChanged = this._isSearchValueChanged(searchValue);
         return isSearchValueChanged &&
-            !!(!isSearchValueShorterThenMinLength || (this._isSearchViewMode() && !searchValue && this._searchValue));
+            !!(!isSearchValueShorterThenMinLength || (this._isSearchViewMode() && isSearchValueShorterThenMinLength && this._searchValue));
     }
 
     private _isSearchValueChanged(searchValue: string): boolean {

@@ -220,6 +220,18 @@ describe('Controls/search:ControllerClass', () => {
         assert.equal(searchController._viewMode, 'search');
     });
 
+    it('_needStartSearchBySearchValueChanged', () => {
+        const searchController = new ControllerClass(getDefaultOptions(), {});
+        const searchOptions = {
+            searchValue: 'te'
+        };
+        searchController._viewMode === 'search';
+        searchController._searchValue === 'tes';
+
+        const result = searchController._needStartSearchBySearchValueChanged(searchOptions, 'te');
+        assert.isTrue(result);
+    });
+
     describe('search', () => {
         it('search with searchStartCallback', () => {
             const options = getDefaultOptions();
