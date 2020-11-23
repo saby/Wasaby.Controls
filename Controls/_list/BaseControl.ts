@@ -2503,9 +2503,9 @@ const _private = {
             _private.notifySelection(self, selection);
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-        }
+        };
 
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => handleResult(selection));
