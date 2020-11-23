@@ -791,13 +791,12 @@ describe('Controls/list_clean/BaseControl', () => {
             };
             const baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
-            baseControl.saveOptions(baseControlOptions);
-            assert.equal(baseControl._getKeyProperty(), 'keyProperty');
-            baseControlOptions.keyProperty = 'id';
-            assert.equal(baseControl._getKeyProperty(baseControlOptions), 'id');
-            baseControlOptions.keyProperty = undefined;
+            assert.equal(baseControl._keyProperty, 'keyProperty');
+            baseControlOptions.keyProperty = 'keyProperty';
             baseControlOptions.source = null;
-            assert.isFalse(!!baseControl._getKeyProperty(baseControlOptions));
+            baseControl.saveOptions(baseControlOptions);
+            await baseControl._beforeUpdate(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyProperty');
         });
     });
 
