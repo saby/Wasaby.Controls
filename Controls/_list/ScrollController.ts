@@ -73,7 +73,7 @@ export default class ScrollController {
     private _isRendering: boolean = false;
 
     private _placeholders: IPlaceholders;
-
+    private _resetInEnd: boolean;
 
     // Флаг, который необходимо включать, чтобы не реагировать на скроллы происходящие вследствие
     // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
@@ -330,9 +330,12 @@ export default class ScrollController {
 
             let itemsHeights: Partial<IItemsHeights>;
 
-            const initialIndex = typeof options.activeElement !== 'undefined' ?
+            let initialIndex = typeof options.activeElement !== 'undefined' ?
                 options.collection.getIndexByKey(options.activeElement) : 0;
-
+            if (this._resetInEnd) {
+                initialIndex = options.collection.getCount();
+                this._resetInEnd = false;
+            }
             if (options?.virtualScrollConfig?.itemHeightProperty) {
                 this._virtualScroll.applyContainerHeightsData({
                     viewport: options.virtualScrollConfig.viewportHeight
@@ -622,7 +625,9 @@ export default class ScrollController {
     handleResetItems(): IScrollControllerResult {
         return this._initVirtualScroll(this._options);
     }
-
+    setResetInEnd(resetInEnd: boolean) {
+        this._resetInEnd = resetInEnd;
+    }
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean): {top: number, bottom: number} {
         this._triggerOffset =
             (scrollHeight && viewportHeight ? Math.min(scrollHeight, viewportHeight) : 0) *

@@ -1148,6 +1148,7 @@ const _private = {
             // к началу или концу, от этого прыжка его состояние не может
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
+            self._scrollController.setResetInEnd(direction === 'down');
             _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
@@ -1163,7 +1164,7 @@ const _private = {
                         self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                         self._notify('doScroll', ['top'], { bubbling: true });
                     } else {
-                        _private.jumpToEnd(self);
+                        self._jumpToEndOnDrawItems = () => { _private.jumpToEnd(self) };
                     }
                 }
             });
@@ -2352,25 +2353,33 @@ const _private = {
         self._wasScrollToEnd = true;
 
         const hasMoreData = {
-            up: _private.hasMoreData(this, this._sourceController, 'up'),
-            down: _private.hasMoreData(this, this._sourceController, 'down')
+            up: _private.hasMoreData(self, self._sourceController, 'up'),
+            down: _private.hasMoreData(self, self._sourceController, 'down')
         };
-        if (this._scrollPagingCtr) {
-            this._currentPage = this._pagingCfg.pagesCount;
-            this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
+        if (self._scrollPagingCtr) {
+            self._currentPage = self._pagingCfg.pagesCount;
+            self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
-
-        // Последняя страница уже загружена но конец списка не обязательно отображается,
-        // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-        _private.scrollToItem(self, lastItemKey, true, true).then(() => {
-
-            // После того как последний item гарантированно отобразился,
-            // нужно попросить ScrollWatcher прокрутить вниз, чтобы
-            // прокрутить отступ пейджинга и скрыть тень
+        if (self._jumpToEndOnDrawItems) {
+            
+            // Если для подскролла в конец делали reload, то индексы виртуального скролла 
+            // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
-
             _private.updateScrollPagingButtons(self, self._getScrollParams());
-        });
+        } else {
+           
+            // Последняя страница уже загружена но конец списка не обязательно отображается,
+            // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+            _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+
+                // После того как последний item гарантированно отобразился,
+                // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+                // прокрутить отступ пейджинга и скрыть тень
+                self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
+
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
+            }); 
+        }
     },
 
     // region Multiselection
@@ -4309,6 +4318,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         this._updateInProgress = false;
+        if (this._jumpToEndOnDrawItems && this._shouldNotifyOnDrawItems) {
+            this._jumpToEndOnDrawItems();
+            this._jumpToEndOnDrawItems = null;
+        }
         this._notifyOnDrawItems();
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
@@ -4392,6 +4405,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _scrollToFirstItemIfNeed(): void {
         if (this._needScrollToFirstItem) {
             this._needScrollToFirstItem = false;
+
+            if (this._jumpToEndOnDrawItems) {
+                return;
+            }
             // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
             // реальную запись и скролим именно к ней.
             // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
