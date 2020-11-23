@@ -50,7 +50,7 @@ class RegisterClass {
         }
     }
 
-   start(): void {
+   start(event: Event): void {
       if (!this._registry) {
           return;
       }
