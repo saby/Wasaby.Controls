@@ -1298,6 +1298,9 @@ const _private = {
         _private.doAfterUpdate(self, () => {
             if (self._pagingVisible) {
                 self._pagingVisible = false;
+                if (self._cachedPagingState) {
+                    self._recalcPagingVisible = true;
+                }
                 self._cachedPagingState = false;
                 self._forceUpdate();
             }
@@ -1671,9 +1674,13 @@ const _private = {
                 const itemsCount = self._listViewModel.getCount();
                 const moreMetaCount = _private.getAllDataCount(self);
 
-                if (typeof moreMetaCount === 'number' && itemsCount !== moreMetaCount) {
-                    _private.prepareFooter(self, self._options, self._sourceController);
-                } else if (typeof moreMetaCount === 'number') {
+                if (typeof moreMetaCount === 'number') {
+                    if (itemsCount !== moreMetaCount) {
+                        _private.prepareFooter(self, self._options, self._sourceController);
+                    } else {
+                        self._shouldDrawFooter = false;
+                    }
+                } else if (moreMetaCount === false) {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -2503,9 +2510,9 @@ const _private = {
             _private.notifySelection(self, selection);
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
+                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-        }
+        };
 
         if (result instanceof Promise) {
             result.then((selection: ISelectionObject) => handleResult(selection));
@@ -3644,8 +3651,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasSelectionController(this)) {
-            const selection = _private.getSelectionController(this).getSelection();
-            _private.changeSelection(this, selection);
+            const controller = _private.getSelectionController(this);
+            _private.changeSelection(this, controller.getSelection());
+            if (this._options.hasOwnProperty('selectedKeys')) {
+                // changeSelection отправит это событие, только после того как проставится selection,
+                // но в afterMount он не будет проставлен
+                this._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
+            }
         }
 
         if (!this._items || !this._items.getCount()) {
@@ -4461,6 +4473,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     __selectedPageChanged(e, page: number) {
         let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
         const direction = this._currentPage < page ? 'down' : 'up';
+        const canScroll = this._canScroll(scrollTop, direction);
+        const itemsCount = this._items.getCount();
+        const allDataLoaded = _private.getAllDataCount(this) === itemsCount;
+        const startIndex = this._listViewModel.getStartIndex();
+        const stopIndex = this._listViewModel.getStopIndex();
+        if (!canScroll && allDataLoaded && direction === 'up' && startIndex === 0) {
+            scrollTop = 0;
+            page = 1;
+        } 
+        if (!canScroll && allDataLoaded && direction === 'down' && stopIndex === this._listViewModel.getCount()) {
+            page = this._pagingCfg.pagesCount;
+        }
         this._applySelectedPage = () => {
             this._currentPage = page;
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
@@ -4493,7 +4517,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             // При выборе некрайней страницы, проверяем,
             // можно ли проскроллить к ней, по отрисованным записям
-            if (this._canScroll(scrollTop, direction)) {
+            if (canScroll) {
                 this._applySelectedPage();
             } else {
                 // если нельзя проскроллить, проверяем, хватает ли загруженных данных для сдвига диапазона

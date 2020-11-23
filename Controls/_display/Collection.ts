@@ -106,7 +106,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
-    navigation: INavigationOptionValue;
+    navigation?: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -3836,6 +3836,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _handleAfterCollectionChange(): void {
         this._notifyAfterCollectionChange();
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     // endregion
