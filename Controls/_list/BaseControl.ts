@@ -1714,7 +1714,7 @@ const _private = {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     let result = null;
                     switch (action) {
-                        case IObservable.ACTION_ADD: 
+                        case IObservable.ACTION_ADD:
                             // TODO: this._batcher.addItems(newItemsIndex, newItems)
                             if (self._addItemsDirection) {
                                 self._addItems.push(...newItems);
@@ -1725,13 +1725,13 @@ const _private = {
                             }
                             break;
                         case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems, 
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
                                 newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                             break;
-                        case IObservable.ACTION_REMOVE: 
+                        case IObservable.ACTION_REMOVE:
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
-                        case IObservable.ACTION_RESET: 
+                        case IObservable.ACTION_RESET:
                             result = self._scrollController.handleResetItems();
                             break;
                     }
@@ -2988,7 +2988,7 @@ const _private = {
         return result;
     },
 
-    prepareMoverControllerOptions(self, options): IMoveControllerOptions {
+    prepareMoverControllerOptions(self, options: IList): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
             parentProperty: options.parentProperty

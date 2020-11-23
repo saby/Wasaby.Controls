@@ -33,6 +33,8 @@
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_list/interface/IMovableList/IMoveDialogTemplate
+ * @includes IMovableOptions Controls/_list/interface/IMovableList/IMovableOptions
  * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
@@ -70,6 +72,8 @@
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_list/interface/IMovableList/IMoveDialogTemplate
+ * @includes IMovableOptions Controls/_list/interface/IMovableList/IMovableOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -132,7 +136,7 @@ export {
 // endregion @deprecated
 
 export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
-export {IMovableList} from 'Controls/_list/interface/IMovableList';
+export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list/interface/IMovableList';
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
