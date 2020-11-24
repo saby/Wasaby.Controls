@@ -272,7 +272,7 @@ export default class SearchControllerClass {
     private _createNewStoreObserver(): string {
         return Store.onPropertyChanged('searchValue', (searchValue: ISearchStoreData) => {
             // фикс нажатия лупы в .7200, в .1000 это будет неактульно и снова будет просто текст
-            this.search(SearchControllerClass._convertStoreSearchValue(searchValue.text, searchValue.force));
+            this.search(SearchControllerClass._convertStoreSearchValue(searchValue));
         });
     }
 
@@ -532,7 +532,7 @@ export default class SearchControllerClass {
         }
     }
 
-    private static _convertStoreSearchValue(value: ISearchStoreData | string): ISearchStoreData {
+    private static _convertStoreSearchValue(value: unknown): ISearchStoreData {
         return typeof value === 'string' ? {text: value, force: false}: value;
     }
 
