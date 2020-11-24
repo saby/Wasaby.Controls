@@ -4537,6 +4537,7 @@ describe('Controls/_display/Collection', () => {
 
     describe('drag', () => {
         let display: CollectionDisplay<unknown>;
+        let notifyLaterSpy;
         beforeEach(() => {
             const items = [
                 { id: 1, name: 'Ivan' },
@@ -4550,12 +4551,32 @@ describe('Controls/_display/Collection', () => {
             display = new CollectionDisplay({
                 collection: rs
             });
+
+            notifyLaterSpy = spy(display, '_notifyLater');
         });
 
         it('setDraggedItems', () => {
             const draggedItem = display.createItem({contents: {getKey: () => '123'}});
             display.setDraggedItems(draggedItem, ['123']);
             assert.equal(display.getItems()[2].getContents().getKey(), '123');
+            assert.isTrue(notifyLaterSpy.called);
+        });
+
+        it('setDraggedItems', () => {
+            const draggedItem = display.getItemBySourceKey(1);
+            display.setDraggedItems(draggedItem, [1]);
+            assert.equal(display.getItems()[0].getContents().getKey(), 1);
+            assert.isFalse(notifyLaterSpy.called);
+        });
+
+        it('resetDraggedItems', () => {
+            const draggedItem = display.getItemBySourceKey(1);
+            display.setDraggedItems(draggedItem, [1]);
+            assert.equal(display.getItems()[0].getContents().getKey(), 1);
+            assert.isFalse(notifyLaterSpy.called);
+
+            display.resetDraggedItems();
+            assert.isTrue(notifyLaterSpy.called);
         });
     });
 });
