@@ -115,7 +115,7 @@ class StickyHeaderController {
         for (let headerId of headers[position]) {
             header = this._headers[headerId];
 
-            const ignoreHeight: boolean = type === TYPE_FIXED_HEADERS.initialFixed ||
+            const ignoreHeight: boolean = (type === TYPE_FIXED_HEADERS.initialFixed && !header.fixedInitially) ||
                 (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
             if (ignoreHeight) {
                 continue;
@@ -302,20 +302,24 @@ class StickyHeaderController {
         if (!isSingleHeader) {
             for (const id in this._headers) {
                 this._headers[id].inst.updateFixed([
-                    this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
-                    this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
-                ]);
-            }
-            for (const id in this._headers) {
-                this._headers[id].inst.updateFixed([
-                    this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
-                    this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
+                    this._getLastFixedHeaderId(POSITION.top),
+                    this._getLastFixedHeaderId(POSITION.bottom)
                 ]);
             }
         }
         this._updateShadowsVisibility();
         // Спилить после того ак удалим старый скролл контейнер. Используется только там.
         this._callFixedCallback(position);
+    }
+
+    _getLastFixedHeaderId(position: POSITION): number {
+        let header: number;
+        for (const headerId of this._headersStack[position]) {
+            if (this._fixedHeadersStack[position].includes(headerId)) {
+                header = headerId;
+            }
+        }
+        return header;
     }
 
     private _callFixedCallback(position: string): void {

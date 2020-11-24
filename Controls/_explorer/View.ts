@@ -227,6 +227,10 @@ var
                self._itemPadding = self._newItemPadding;
                self._newItemPadding = null;
             }
+            if (self._newItemTemplate) {
+               self._itemTemplate = self._newItemTemplate;
+               self._newItemTemplate = null;
+            }
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -458,6 +462,7 @@ var
       _navigation: null,
       _resetScrollAfterViewModeChange: false,
       _itemPadding: {},
+      _itemTemplate: undefined,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -466,6 +471,9 @@ var
       _beforeMount: function(cfg) {
          if (cfg.itemPadding) {
             this._itemPadding = cfg.itemPadding;
+         }
+         if (cfg.itemTemplate) {
+            this._itemTemplate = cfg.itemTemplate;
          }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
@@ -515,6 +523,10 @@ var
 
          if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
             this._newItemPadding = cfg.itemPadding;
+         }
+
+         if (cfg.itemTemplate !== this._options.itemTemplate) {
+            this._newItemTemplate = cfg.itemTemplate;
          }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.

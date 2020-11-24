@@ -105,6 +105,10 @@ class Container extends Control<IControlOptions> {
         this.setPopupItems(popupItems);
     }
 
+    getRemovingItems(): IRemovedItem[] {
+        return this._removeItems;
+    }
+
     getPopupById(id: string): Control {
         return this._children[id] as Control;
     }

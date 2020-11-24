@@ -265,6 +265,14 @@ describe('Controls/marker/Controller', () => {
             const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
             assert.equal(newMarkedKey, 5);
          });
+
+         it('remove item with parent = root node', () => {
+            controller.setMarkedKey(6);
+            const removedItem = model.getItemBySourceKey(6);
+            model.getCollection().remove(removedItem.getContents());
+            const newMarkedKey = controller.onCollectionRemove(0, [removedItem]);
+            assert.equal(newMarkedKey, 1);
+         });
       });
    });
 
