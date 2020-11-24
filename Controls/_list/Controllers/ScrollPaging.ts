@@ -113,12 +113,7 @@ export default class ScrollPagingController {
     }
 
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
-        // На масштабе появляются дробные пиксели в размерах скролл контейнера.
-        // Прибавляем 1.5 пикселя, чтобы избежать неправильных расчетов позиции скролла.
-        // В среднем для корректного рассчета не хватает 0.5px, но для подстраховки добавляем еще 1px.
-        // https://online.sbis.ru/opendoc.html?guid=f921aafd-eb99-4362-a5e7-6f60acf7ee6d
-        const canScrollForward = (scrollParams.clientHeight + scrollParams.scrollTop +
-            SCALE_ROUNDING_ERROR_FIX) < scrollParams.scrollHeight;
+        const canScrollForward = Math.ceil(scrollParams.clientHeight + scrollParams.scrollTop) < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle(hasMoreData);
