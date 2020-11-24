@@ -180,6 +180,12 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
             assert.deepEqual(instance.removeItems(5, 1, true),
                 { range: { start: 0, stop: 4 }, placeholders: { top: 0, bottom: 60 }});
         });
+        it('removeItems 1 from begin', () => {
+            assert.deepEqual(instance.removeItems(0, 1, true).range, { start: 0, stop: 3 });
+        });
+        it('removeItems all', () => {
+            assert.deepEqual(instance.removeItems(0, 4, true).range, { start: 0, stop: 0 });
+        });
     });
     describe('.shiftRange', () => {
         const instance = new controller({pageSize: 5, segmentSize: 1}, {viewport: 200, trigger: 10, scroll: 600});
