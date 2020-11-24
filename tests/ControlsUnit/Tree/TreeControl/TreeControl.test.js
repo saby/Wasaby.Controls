@@ -630,6 +630,32 @@ define([
          });
       });
 
+      it('TreeControl._afterUpdate', function() {
+         const source = new sourceLib.Memory({
+            data: [],
+            keyProperty: 'id'
+         });
+         const sourceController = new dataSource.NewSourceController({
+            source
+         });
+         const treeControlConfig = {
+            columns: [],
+            root: 1,
+            parentProperty: 'testParentProperty',
+            source: source,
+            sourceController
+         };
+         const treeControl = correctCreateTreeControl(treeControlConfig);
+         const stub = sinon.stub(treeControl._children.baseControl, 'reload');
+
+         treeControl._updateRoot = true;
+         sourceController.isLoading = () => true;
+         treeControl._afterUpdate(treeControlConfig);
+         assert.isTrue(stub.notCalled);
+         stub.restore();
+
+      });
+
 
       it('TreeControl.afterReloadCallback resets expanded items and hasMoreStorage on set root', function () {
          const source = new sourceLib.Memory({

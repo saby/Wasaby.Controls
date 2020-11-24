@@ -18,6 +18,7 @@
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
+ * @includes IList Controls/_list/interface/IList/IItemPadding
  * @includes ISorting Controls/_interface/ISorting
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
@@ -60,6 +61,7 @@
  * @includes DataContainer Controls/_list/Data
  * @includes IHierarchy Controls/_interface/IHierarchy
  * @includes IList Controls/_list/interface/IList
+ * @includes IList Controls/_list/interface/IList/IItemPadding
  * @includes ItemActionsHelper Controls/_list/ItemActions/Helpers
  * @includes HotKeysContainer Controls/_list/HotKeysContainer
  * @includes IVirtualScrollConfig Controls/_list/interface/IVirtualScrollConfig
@@ -110,7 +112,7 @@ import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling'
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
-import {IList} from './_list/interface/IList';
+import {IList, IItemPadding} from './_list/interface/IList';
 import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -119,19 +121,9 @@ import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
 // region @deprecated
 
-import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
-import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
-import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
-import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 import Remover = require('Controls/_list/Remover');
 import * as Mover from 'Controls/_list/Mover';
 export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
-export {
-    _itemActionsForTemplate,
-    ItemActionsTemplate,
-    _swipeActionTemplate,
-    SwipeTemplate
-};
 
 // endregion @deprecated
 
@@ -182,6 +174,7 @@ export {
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
+    IItemPadding,
     IList,
     VirtualScroll,
     ScrollController,

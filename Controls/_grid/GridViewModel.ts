@@ -379,12 +379,6 @@ var
                 style = current.style || 'default';
                 classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
 
-                // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
-                // нужно его принудительно установить как фон таблицы
-                if (!isFullGridSupport && !current.isEditing()) {
-                    classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
-                }
-
                 if (current.columnIndex === 0) {
                     classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
                 }
@@ -1715,7 +1709,7 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
-            
+
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
                 if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);

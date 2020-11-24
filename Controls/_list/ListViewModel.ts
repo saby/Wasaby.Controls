@@ -221,7 +221,9 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
             _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover') : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
-        itemsModelCurrent.backgroundStyle = this._options.backgroundStyle || this._options.style;
+        // Из Controls/scroll:Container прилетает backgroundStyle='default', нужно применять его только если style тоже default
+        itemsModelCurrent.backgroundStyle = this._options.style === 'default' && this._options.backgroundStyle ? this._options.backgroundStyle : this._options.style;
+
         itemsModelCurrent.hoverBackgroundStyle = this._options.hoverBackgroundStyle || this._options.style;
         if (itemsModelCurrent.isGroup) {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
