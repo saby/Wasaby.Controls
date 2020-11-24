@@ -21,7 +21,7 @@
                               attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
                </ws:ladderWrapper>
                <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
-                                   key="{{ (item || itemData).getContents().getKey && (item || itemData).getContents().getKey() }}"
+                                   key="{{ (item || itemData).key }}"
                                    checkboxReadOnly="{{ checkboxReadOnly }}"/>
             </ws:partial>
          </div>
