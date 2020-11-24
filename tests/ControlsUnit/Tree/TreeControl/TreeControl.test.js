@@ -635,7 +635,7 @@ define([
             data: [],
             keyProperty: 'id'
          });
-         const sourceController = new dataSourceLib.NewSourceController({
+         const sourceController = new dataSource.NewSourceController({
             source
          });
          const treeControlConfig = {
