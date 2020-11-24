@@ -91,15 +91,18 @@ export {GridCollectionItem};
 import {default as GridColumn} from './_display/GridColumn';
 export {GridColumn};
 
+import TreeGridCollection from './_display/TreeGridCollection';
+import TreeGridCollectionItem from './_display/TreeGridCollectionItem';
+
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
+
 export { EditInPlaceController };
-
 import * as VirtualScrollController from './_display/controllers/VirtualScroll';
+
 export { VirtualScrollController };
-
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
-export { VirtualScrollHideController };
 
+export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
 export {IDragPosition};
 
@@ -120,3 +123,5 @@ register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate
 register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
+register('Controls/display:TreeGridCollection', TreeGridCollection, {instantiate: false});
+register('Controls/display:TreeGridCollectionItem', TreeGridCollectionItem, {instantiate: false});

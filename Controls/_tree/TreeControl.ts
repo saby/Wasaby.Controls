@@ -305,8 +305,8 @@ const _private = {
                 loadedList.each((item) => {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
-
-                        if (viewModel.getChildren(itemKey, loadedList).length) {
+                        const dispItem = viewModel.getItemBySourceKey(itemKey);
+                        if (viewModel.getChildren(dispItem, loadedList).length) {
                             modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
                         }
                     }

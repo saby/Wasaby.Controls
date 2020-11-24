@@ -7,6 +7,7 @@ import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
+import { TemplateFunction } from 'wasaby-cli/store/_repos/saby-ui/UI/Base';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -57,6 +58,26 @@ export default class TreeItem<T> extends mixin<
      * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
      */
     protected _$childrenProperty: string;
+
+    /**
+     * Шаблон экспандера
+     */
+    protected _$expanderTemplate: TemplateFunction;
+
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
+
+    /**
+     * Позиция экспандера
+     */
+    protected _$expanderPosition: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -179,6 +200,77 @@ export default class TreeItem<T> extends mixin<
         return this.getOwner().getChildren(this, withFilter);
     }
 
+    // TODO удалить
+    isDrawExpander() {
+        return true;
+    }
+
+    // TODO удалить
+    shouldDrawExpanderPadding() {
+        return false;
+    }
+
+    getExpanderTemplate(expanderTemplate: TemplateFunction): TemplateFunction {
+        return expanderTemplate || this._$expanderTemplate;
+    }
+
+    getExpanderIcon(expanderIcon: string): string {
+        return expanderIcon || this._$expanderIcon;
+    }
+
+    getExpanderSize(expanderSize: string): string {
+        return expanderSize || this._$expanderSize;
+    }
+
+    getExpanderPosition(): string {
+        return this._$expanderPosition;
+    }
+
+    getExpanderClasses(itemData: TreeItem<T>, tmplExpanderIcon: string, tmplExpanderSize: string, theme: string, style: string = 'default'): string {
+        const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
+        const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
+        const expanderPosition = itemData.getExpanderPosition();
+
+        let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
+        let expanderIconClass = '';
+
+        if (expanderPosition !== 'right') {
+            expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
+        } else {
+            expanderClasses += ` controls-TreeGrid__row_expander_position_right_theme-${theme} `;
+        }
+        expanderClasses += 'js-controls-ListView__notEditable';
+
+        // TODO взять откуда-то отступы
+/*        expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
+        expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;*/
+
+        expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_default_theme-${theme}`;
+        expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_default_theme-${theme}`;
+
+        if (expanderIcon) {
+            expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
+            expanderClasses += expanderIconClass;
+
+            // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
+            if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode') || (expanderIcon === 'emptyNode')) {
+                expanderIconClass += '_' + (style === 'master' || style === 'masterClassic' ? 'master' : 'default');
+            }
+        } else {
+            expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemData.isNode() ? 'node_' : 'hiddenNode_')
+                + (style === 'master' || style === 'masterClassic' ? 'master' : 'default');
+        }
+
+        expanderClasses += expanderIconClass + `_theme-${theme}`;
+
+        // добавляем класс свертнутости развернутости для тестов
+        expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
+        // добавляем класс свертнутости развернутости стилевой
+        expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
+
+        return expanderClasses;
+    }
+
     // region SerializableMixin
 
     _getSerializableState(state: ICollectionItemSerializableState<T>): ISerializableState<T> {
@@ -230,5 +322,9 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
+    _$expanderTemplate: null,
+    _$expanderIcon: '',
+    _$expanderSize: 's',
+    _$expanderPosition: 'default',
     _instancePrefix: 'tree-item-'
 });

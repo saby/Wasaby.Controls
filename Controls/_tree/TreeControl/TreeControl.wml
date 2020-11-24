@@ -22,7 +22,7 @@
         <div on:mousedown="_onExpanderMouseDown(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"
              on:mouseup="_onExpanderMouseUp(expanderTemplate.itemData.key, expanderTemplate.itemData.dispItem)"
              on:click="_onExpanderClick()"
-             class="{{expanderTemplate.itemData.getExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
+             class="{{expanderTemplate.itemData.getExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize, expanderTemplate.theme)}}"></div>
     </ws:expanderTemplate>
    <ws:footerContentTemplate>
       <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"

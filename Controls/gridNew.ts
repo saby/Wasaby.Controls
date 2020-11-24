@@ -1,4 +1,5 @@
 import { default as View } from 'Controls/_gridNew/Grid';
+import GridView from 'Controls/_gridNew/GridView';
 
 import * as ItemTemplate from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as ColumnTemplate from 'wml!Controls/_gridNew/Render/grid/Column';
@@ -13,6 +14,7 @@ import * as EmptyTemplate from 'wml!Controls/_gridNew/Render/EmptyTemplate';
 
 export {
     View,
+    GridView,
     ItemTemplate,
     ResultsTemplate,
     ResultColumnTemplate,
