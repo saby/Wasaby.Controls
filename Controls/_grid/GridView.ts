@@ -899,7 +899,9 @@ var
                 return;
             }
 
-            this.activate();
+            if (direction === 'left') {
+                this.activate();
+            }
 
             event.stopPropagation();
             if (this._isColumnScrollVisible() && this._dragScrollController) {

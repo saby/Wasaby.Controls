@@ -213,7 +213,9 @@ var ListView = BaseControl.extend(
         },
 
         _onItemSwipe: function(event, itemData) {
-            this.activate();
+            if (event.nativeEvent.direction === 'left') {
+                this.activate();
+            }
             this._notify('itemSwipe', [itemData, event]);
             event.stopPropagation();
         },
