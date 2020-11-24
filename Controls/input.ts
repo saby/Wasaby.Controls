@@ -62,12 +62,6 @@
  * @author Крайнов Д.О.
  */
 
-import Number = require('Controls/_input/Number');
-import Text = require('Controls/_input/Text');
-import {default as Label} from 'Controls/_input/Label';
-import Mask = require('Controls/_input/Mask');
-import Phone = require('Controls/_input/Phone');
-import Password = require('Controls/_input/Password');
 import DateBase = require('Controls/_input/DateTime');
 import Date = require('Controls/_input/Date/Picker');
 export {default as Render, IRenderOptions} from 'Controls/_input/Render';
@@ -87,6 +81,12 @@ import hoursFormat from  'Controls/_input/InputCallback/hoursFormat';
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
 export {default as Base} from 'Controls/_input/Base';
+export {default as Text} from 'Controls/_input/Text';
+export {default as Number} from 'Controls/_input/Number';
+export {default as Mask} from 'Controls/_input/Mask';
+export {default as Phone} from 'Controls/_input/Phone';
+export {default as Password} from 'Controls/_input/Password';
+export {default as Label} from 'Controls/_input/Label';
 import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
 import {THorizontalPadding} from "./_input/interface/IPadding";
 export {IText, ITextOptions} from 'Controls/_input/interface/IText';
@@ -135,12 +135,6 @@ const InputCallback = {
 };
 
 export {
-    Number,
-    Text,
-    Label,
-    Mask,
-    Phone,
-    Password,
     DateBase,
     Date,
     TimeInterval,

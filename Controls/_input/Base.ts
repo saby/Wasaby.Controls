@@ -4,7 +4,7 @@ import {descriptor} from 'Types/entity';
 import {tmplNotify} from 'Controls/eventUtils';
 import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as ViewModel from 'Controls/_input/Base/ViewModel'; // todo
+import * as ViewModel from 'Controls/_input/Base/ViewModel';
 import * as unEscapeASCII from 'Core/helpers/String/unEscapeASCII';
 import {hasHorizontalScroll} from 'Controls/scroll';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
@@ -19,19 +19,20 @@ import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
 
 interface IFieldTemplate {
-    template: 'wml!Controls/_input/Base/Field';
+    template: string|TemplateFunction;
     scope: {
-        emptySymbol: string;
-        controlName: string;
-        autoComplete: boolean;
-        ieVersion: number | null;
-        isFieldFocused: () => boolean;
+        emptySymbol?: string;
+        controlName?: string;
+        autoComplete?: boolean|string;
+        ieVersion?: number | null;
+        isFieldFocused?: () => boolean;
 
         value?: string;
         options?: any;
         autoWidth?: boolean;
     };
 }
+export interface IBaseInputOptions extends IBaseOptions, IControlOptions {}
 /**
  * @type {Number} The width of the cursor in the field measured in pixels.
  * @private
@@ -62,10 +63,7 @@ const WIDTH_CURSOR: number = 1;
  * @author Красильников А.С.
  */
 
-interface IBaseInputOptions extends IBaseOptions, IControlOptions {
-}
-
-class Base extends Control<IBaseInputOptions> {
+class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBaseInputOptions> {
 
     /**
      * @type {Function} Control display template.
@@ -79,7 +77,7 @@ class Base extends Control<IBaseInputOptions> {
      */
     protected _field: IFieldTemplate = null;
 
-    protected _defaultValue: string = null;
+    protected _defaultValue: string|number = null;
 
     /**
      * @type {Boolean} Determines whether the control stretch over the content.
@@ -97,7 +95,7 @@ class Base extends Control<IBaseInputOptions> {
      * @type {Controls/_input/Base/ViewModel} The display model of the input field.
      * @protected
      */
-    protected _viewModel = null; // todo
+    protected _viewModel;
 
     protected _wasActionUser: boolean = true;
 
@@ -189,12 +187,12 @@ class Base extends Control<IBaseInputOptions> {
     protected _fixBugs: string = null;
 
     protected  _currentVersionModel: number;
+    protected _autoComplete: string;
+    protected _firstClick: boolean;
+    protected _focusByMouseDown: boolean;
+    protected _leftFieldWrapper: IFieldTemplate;
+    protected _rightFieldWrapper: IFieldTemplate;
     private _isBrowserPlatform: boolean;
-    private _autoComplete: string;
-    private _firstClick: boolean;
-    private _focusByMouseDown: boolean;
-    private _leftFieldWrapper: TemplateFunction;
-    private _rightFieldWrapper: TemplateFunction;
 
     constructor(cfg: IBaseInputOptions) {
         super(cfg);
@@ -290,11 +288,11 @@ class Base extends Control<IBaseInputOptions> {
         this._notify('mouseenter', [event]);
     }
 
-    protected _cutHandler(): void {
+    protected _cutHandler(event: SyntheticEvent<KeyboardEvent>): void {
         // redefinition
     }
 
-    protected _copyHandler(): void {
+    protected _copyHandler(event: SyntheticEvent<KeyboardEvent>): void {
         // redefinition
     }
 
@@ -388,8 +386,8 @@ class Base extends Control<IBaseInputOptions> {
         return document.activeElement;
     }
 
-    private _updateSelection(selection) {
-        return this._getField().setSelectionRange(selection.start, selection.end);
+    private _updateSelection(selection): void {
+        this._getField().setSelectionRange(selection.start, selection.end);
     }
 
     /**
@@ -405,14 +403,14 @@ class Base extends Control<IBaseInputOptions> {
          * At other times, the element will be used very rarely. So for the rare cases
          * it is better to create it yourself.
          */
-        return element ? this._getTextWidth(element, value) : this._getTextWidthThroughCreationElement(value);
+        return element ? this._getTextWidthByDOM(element, value) : this._getTextWidthThroughCreationElement(value);
     }
 
     /**
      * @param {Object} options Control options.
      * @protected
      */
-    private _initProperties(options: IBaseInputOptions): void {
+    protected _initProperties(options: IBaseInputOptions): void {
         /**
          * Init the name of the control and to pass it to the templates.
          * Depending on it, classes will be generated. An example of class is controls-{{controlsName}}...
@@ -458,11 +456,11 @@ class Base extends Control<IBaseInputOptions> {
         this._readOnlyField.scope.emptySymbol = emptySymbol;
     }
 
-    private _notifyValueChanged(): void {
+    protected _notifyValueChanged(): void {
         this._notify('valueChanged', [this._viewModel.value, this._viewModel.displayValue]);
     }
 
-    private _notifyInputCompleted(): void {
+    protected _notifyInputCompleted(): void {
         this._notify('inputCompleted', [this._viewModel.value, this._viewModel.displayValue]);
     }
 
@@ -471,7 +469,7 @@ class Base extends Control<IBaseInputOptions> {
      * @return {Node}
      * @private
      */
-    private _getField(): HTMLInputElement {
+    protected _getField(): HTMLInputElement {
         return this._children[this._fieldName];
     }
 
@@ -493,7 +491,7 @@ class Base extends Control<IBaseInputOptions> {
      * @return {Controls/_input/Base/ViewModel} View model constructor.
      * @private
      */
-    private _getViewModelConstructor(): ViewModel {
+    protected _getViewModelConstructor(): ViewModel {
         return ViewModel;
     }
 
@@ -507,7 +505,7 @@ class Base extends Control<IBaseInputOptions> {
     _getTooltip(): string {
         let hasFieldHorizontalScroll: boolean = false;
         const field = this._getField();
-        const readOnlyField: HTMLInputElement = this._getReadOnlyField();
+        const readOnlyField: HTMLElement = this._getReadOnlyField();
 
         if (field) {
             hasFieldHorizontalScroll = field.hasHorizontalScroll();
@@ -543,17 +541,17 @@ class Base extends Control<IBaseInputOptions> {
             return;
         }
 
-        let textWidthBeforeCursor = this._getTextWidth(displayValue.substring(0, selection.end));
+        const textWidthBeforeCursor = this._getTextWidth(displayValue.substring(0, selection.end));
 
-        let positionCursor = textWidthBeforeCursor + WIDTH_CURSOR;
-        let sizeVisibleArea = field.clientWidth;
-        let beginningVisibleArea = field.scrollLeft;
-        let endingVisibleArea = field.scrollLeft + sizeVisibleArea;
+        const positionCursor = textWidthBeforeCursor + WIDTH_CURSOR;
+        const sizeVisibleArea = field.clientWidth;
+        const beginningVisibleArea = field.scrollLeft;
+        const endingVisibleArea = field.scrollLeft + sizeVisibleArea;
 
         /**
          * The cursor is visible if its position is between the beginning and the end of the visible area.
          */
-        let hasVisibilityCursor = beginningVisibleArea < positionCursor && positionCursor < endingVisibleArea;
+        const hasVisibilityCursor = beginningVisibleArea < positionCursor && positionCursor < endingVisibleArea;
 
         if (!hasVisibilityCursor) {
             field.scrollLeft = positionCursor - sizeVisibleArea / 2;
@@ -572,27 +570,27 @@ class Base extends Control<IBaseInputOptions> {
         return false;
     }
 
-    private _getTextWidth(element: HTMLElement, value: string): number {
+    private _getTextWidthByDOM(element: HTMLElement, value: string): number {
         element.innerHTML = value;
-        let width = element.scrollWidth;
+        const width = element.scrollWidth;
         element.innerHTML = '';
 
         return width;
     }
 
     private _getTextWidthThroughCreationElement(value: string): number {
-        let element = document.createElement('div');
+        const element = document.createElement('div');
         element.classList.add('controls-InputBase__forCalc');
         element.innerHTML = value;
 
         document.body.appendChild(element);
-        let width = element.scrollWidth;
+        const width = element.scrollWidth;
         document.body.removeChild(element);
 
         return width;
     }
 
-    private _compatAutoComplete(autoComplete: boolean): string {
+    private _compatAutoComplete(autoComplete: boolean|string): string {
         if (typeof autoComplete === 'boolean') {
             return autoComplete ? 'on' : 'off';
         }
@@ -621,7 +619,7 @@ class Base extends Control<IBaseInputOptions> {
             return this._viewModel.value;
         }
 
-        return this._defaultValue;
+        return this._defaultValue as string;
     }
 
     private _updateSelectionByOptions(options: IBaseInputOptions): void {
@@ -644,7 +642,7 @@ class Base extends Control<IBaseInputOptions> {
 
     static _theme: string[] = ['Controls/input'];
 
-    static getDefaultOptions(): object {
+    static getDefaultOptions(): IBaseInputOptions {
         return {
             ...getDefaultPaddingOptions(),
             tooltip: '',

@@ -4,19 +4,19 @@ export type TextAlign = 'left' | 'right';
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 
 export interface IBaseOptions {
-    autoComplete: AutoComplete;
-    textAlign: TextAlign;
-    selectOnClick: boolean;
-    spellCheck: boolean;
-    placeholder: string | TemplateFunction;
-    leftFieldTemplate: TemplateFunction;
-    rightFieldTemplate: TemplateFunction;
+    autoComplete?: AutoComplete;
+    textAlign?: TextAlign;
+    selectOnClick?: boolean;
+    spellCheck?: boolean;
+    placeholder?: string | TemplateFunction;
+    leftFieldTemplate?: TemplateFunction;
+    rightFieldTemplate?: TemplateFunction;
     tooltip?: string;
     name?: string;
     inlineHeight?: string;
     fontSize?: string;
     fontColorStyle?: string;
-    paste: (value: string) => void;
+    paste?: (value: string) => void;
 }
 
 /**
