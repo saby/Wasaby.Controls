@@ -2749,21 +2749,27 @@ const _private = {
                 }
             };
         }
+        let style;
+        if (options.itemActionsVisibility === 'visible') {
+            style = 'transparent';
+        } else {
+            style = options.hoverBackgroundStyle || options.style
+        }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingCollectionItem as CollectionItem<Model>,
-                collection: self._listViewModel,
-                itemActions: options.itemActions,
-                itemActionsProperty: options.itemActionsProperty,
-                visibilityCallback: options.itemActionVisibilityCallback,
-                itemActionsPosition: options.itemActionsPosition,
-                style: options.hoverBackgroundStyle || options.style,
-                theme: options.theme,
-                actionMode: options.actionMode,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
-                itemActionsClass: options.itemActionsClass,
-                iconSize: editingConfig ? 's' : 'm',
-                editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editingItem: editingCollectionItem as CollectionItem<Model>,
+            collection: self._listViewModel,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style,
+            theme: options.theme,
+            actionMode: options.actionMode,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig
