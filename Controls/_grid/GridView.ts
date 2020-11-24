@@ -899,6 +899,8 @@ var
                 return;
             }
 
+            this.activate();
+
             event.stopPropagation();
             if (this._isColumnScrollVisible() && this._dragScrollController) {
                 if (event.target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
