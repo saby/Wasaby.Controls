@@ -12,6 +12,10 @@ export interface IBaseOptions {
     leftFieldTemplate: TemplateFunction;
     rightFieldTemplate: TemplateFunction;
     tooltip?: string;
+    name?: string;
+    inlineHeight?: string;
+    fontSize?: string;
+    fontColorStyle?: string;
     paste: (value: string) => void;
 }
 

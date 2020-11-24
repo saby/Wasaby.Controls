@@ -62,7 +62,6 @@
  * @author Крайнов Д.О.
  */
 
-import Base = require('Controls/_input/Base');
 import Number = require('Controls/_input/Number');
 import Text = require('Controls/_input/Text');
 import {default as Label} from 'Controls/_input/Label';
@@ -87,6 +86,7 @@ import StringValueConverter = require('Controls/_input/DateTime/StringValueConve
 import hoursFormat from  'Controls/_input/InputCallback/hoursFormat';
 import lengthConstraint from 'Controls/_input/InputCallback/lengthConstraint';
 
+export {default as Base} from 'Controls/_input/Base';
 import * as MaskFormatterValue from 'Controls/_input/Mask/FormatterValue';
 import {THorizontalPadding} from "./_input/interface/IPadding";
 export {IText, ITextOptions} from 'Controls/_input/interface/IText';
@@ -135,7 +135,6 @@ const InputCallback = {
 };
 
 export {
-    Base,
     Number,
     Text,
     Label,
