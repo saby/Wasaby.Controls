@@ -73,7 +73,8 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
     protected _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
         const extendedValue = {
             value,
-            textValue: this._getTextValue(value)
+            textValue: this._getTextValue(value),
+            needColapse: true
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }

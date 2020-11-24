@@ -27,6 +27,7 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _source: object[] = null;
     protected _editingObject: object = {};
     protected _groupItems: object = {};
+    protected _collapsedGroups: unknown[] = [];
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._source = this._getSource(options.source);
@@ -56,11 +57,11 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        if (displayItem instanceof GroupItem) {
-            displayItem.toggleExpanded();
-            if (isResetClick) {
-                this._resetFilterItem(displayItem);
-            }
+        if (displayItem['[Controls/_display/GroupItem]']) {
+            this._collapsedGroups = this._collapsedGroups.filter(item => item !== displayItem.getContents());
+        }
+        if (isResetClick) {
+            this._resetFilterItem(displayItem);
         }
     }
 
@@ -78,9 +79,17 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     private _updateSource(editingObject: object): void {
         this._source.forEach((item) => {
-                item.value = editingObject[item.name].value || editingObject[item.name];
-                item.textValue = editingObject[item.name].textValue;
+            const editingItem = editingObject[item.name];
+            item.value = editingItem.value || editingItem;
+            item.textValue = editingItem.textValue || editingItem;
+            if (editingItem.needColapse) {
+                this._colapseGroup(item.group);
+            }
         });
+    }
+
+    private _colapseGroup(groupName: string): void {
+        this._collapsedGroups = this._collapsedGroups.concat([groupName]);
     }
 
     private _updateEditingObject(): void {

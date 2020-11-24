@@ -13,6 +13,7 @@
       <Controls.propertyGrid:PropertyGrid
               editingObject="{{_editingObject}}"
               source="{{_source}}"
+              collapsedGroups="{{_collapsedGroups}}"
               on:editingObjectChanged="_editingObjectChanged()"
               on:itemClick="_itemClick()"
               attr:class="controls-FilterViewPanel__propertyGrid">
