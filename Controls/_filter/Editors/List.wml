@@ -5,6 +5,7 @@
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
                        navigation="{{_navigation}}"
+                       backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
