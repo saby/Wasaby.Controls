@@ -48,6 +48,11 @@ interface ISearchCallbackResult {
     hasMore: boolean;
 }
 
+interface ISearchStoreData {
+    text: string;
+    force?: boolean;
+}
+
 export default class SearchControllerClass {
     private _options: ISearchControllerOptions = null;
     private _viewMode: string = '';
@@ -72,7 +77,7 @@ export default class SearchControllerClass {
         let searchValue = options.searchValue;
         if (options.useStore) {
             this._observeStore();
-            searchValue = Store.getState().searchValue as unknown as string;
+            searchValue = SearchControllerClass._convertStoreSearchValue(Store.getState().searchValue || '')?.text;
         }
 
         if (searchValue) {
@@ -265,8 +270,10 @@ export default class SearchControllerClass {
     }
 
     private _createNewStoreObserver(): string {
-        return Store.onPropertyChanged('searchValue', (searchValue: string) => {
-            this.search(searchValue);
+        return Store.onPropertyChanged('searchValue', (searchValue: unknown) => {
+            // фикс нажатия лупы в .7200, в .1000 это будет неактульно и снова будет просто текст
+            const searchStoreData = SearchControllerClass._convertStoreSearchValue(searchValue);
+            this.search(searchStoreData.text, searchStoreData.force);
         });
     }
 
@@ -524,6 +531,10 @@ export default class SearchControllerClass {
         if (this._options.pathChangedCallback) {
             this._options.pathChangedCallback(path);
         }
+    }
+
+    private static _convertStoreSearchValue(value: unknown): ISearchStoreData {
+        return typeof value === 'string' ? {text: value, force: false}: value;
     }
 
     static _prepareExpandedItems(
