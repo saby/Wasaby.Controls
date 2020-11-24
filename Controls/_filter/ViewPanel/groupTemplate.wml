@@ -4,14 +4,15 @@
       <div class="controls-FilterViewPanel__group-content_theme-{{theme}}">
          {{item}}
       </div>
-      <div title="{{collectionItem.isExpanded() ? 'Свернуть' : 'Развернуть'}}"
+      <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
            class="controls-FilterViewPanel__groupExpander
               controls-icon
               controls-icon_size-s_theme-{{_options.theme}}
-              {{collectionItem.isExpanded() ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
+              controls-PropertyGrid__groupExpander
+              {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
    </div>
-   <ws:if data="{{!collectionItem.isExpanded() && _options.groupItems[item].textValue}}">
+   <ws:if data="{{collapsedGroups[item] && _options.groupItems[item].textValue}}">
       <span class="controls-FilterViewPanel__groupReset controls-FilterViewPanel__groupReset_theme-{{_options.theme}} icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить фильтр]}"></span>
