@@ -125,6 +125,7 @@
                 on:hoveredCellChanged="_notifyHandler('hoveredCellChanged')"
                 on:updateItemActionsOnItem="_updateItemActionsOnItem()"
                 on:itemSwipe="_onItemSwipe()"
+                on:editingRowReady="_onEditingRowReady()"
                 on:editingRowKeyDown="_onEditingRowKeyDown()"
                 on:rowDeactivated="_onRowDeactivated()"
                 on:itemsContainerReady="_itemsContainerReadyHandler()"

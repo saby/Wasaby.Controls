@@ -20,6 +20,7 @@ export default class EditingRow extends Control<IEditingRowOptions> {
                 scrollToElement(container);
             }, 0);
         }
+        this._notify('editingRowReady', [], {bubbling: true});
     }
 
     protected _onKeyDown(event): void {
