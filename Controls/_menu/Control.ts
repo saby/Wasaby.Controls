@@ -61,6 +61,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     protected _moreButtonVisible: boolean = false;
     protected _expandButtonVisible: boolean = false;
     protected _expander: boolean;
+    protected _isEmptyItemSelected: boolean = false;
     private _sourceController: typeof SourceController = null;
     private _subDropdownItem: CollectionItem<Model>|null;
     private _selectionChanged: boolean = false;
@@ -104,7 +105,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 if (options.markerVisibility !== MarkerVisibility.Hidden) {
                     this._markerController = this._getMarkerController(options);
                     const markedKey = this._markerController.calculateMarkedKeyForVisible();
-                    this._markerController.setMarkedKey(markedKey);
+                    this._setMarkedKey(options, markedKey);
                 }
                 if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
                     this._selectionController = this._createSelectionController(options);
@@ -146,7 +147,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (this._markerController) {
             this._markerController.updateOptions(this._getMarkerControllerConfig(newOptions));
             const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey, newOptions.multiSelect);
-            this._markerController.setMarkedKey(markedKey);
+            this._setMarkedKey(newOptions, markedKey);
         }
 
         return result;
@@ -258,8 +259,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         if (MenuControl._isPinIcon(sourceEvent.target)) {
             this._pinClick(event, item);
         } else {
-            if (this._options.multiSelect && this._selectionChanged &&
-                !this._isEmptyItem(treeItem.getContents()) && !MenuControl._isFixedItem(item)) {
+            if (this._options.multiSelect && this._selectionChanged && !MenuControl._isFixedItem(item)) {
                 this._changeSelection(key);
 
                 this._notify('selectedKeysChanged', [this._getSelectedKeys()]);
@@ -269,10 +269,23 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
                     this._notify('itemClick', [item, sourceEvent]);
-                    this._getMarkerController(this._options).setMarkedKey(key);
+                    this._setMarkedKey(this._options, key);
                 }
             }
         }
+    }
+
+    protected _emptyItemClick(event: SyntheticEvent<MouseEvent>,
+                              treeItem: CollectionItem<Model>,
+                              sourceEvent: SyntheticEvent<MouseEvent>): void {
+        const item = treeItem.getContents();
+        this._notify('itemClick', [item, sourceEvent]);
+        this._setMarkedKey(this._options, item.getKey());
+    }
+
+    private _setMarkedKey(options: IMenuControlOptions, markedKey: TKey): void {
+        this._isEmptyItemSelected = markedKey === options.emptyKey;
+        this._getMarkerController(options).setMarkedKey(markedKey);
     }
 
     private _getSelectionController(): SelectionController {
@@ -309,12 +322,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getKeysForSelectionController(options: IMenuControlOptions): TSelectedKeys {
-        return options.selectedKeys.map((key) => {
+        const selectedKeys = [];
+        options.selectedKeys.forEach((key) => {
             const item = this._listModel.getItemBySourceKey(key)?.getContents();
             if (item) {
-                return MenuControl._isHistoryItem(item) ? String(key) : key;
+                selectedKeys.push(MenuControl._isHistoryItem(item) ? String(key) : key);
             }
         });
+        return selectedKeys;
     }
 
     private _openItemActionMenu(item: CollectionItem<Model>,
@@ -593,7 +608,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         const isEmptySelected = this._options.emptyText && !selection.selected.length;
         if (isEmptySelected) {
-            this._getMarkerController(this._options).setMarkedKey(this._options.emptyKey);
+            this._setMarkedKey(this._options, this._options.emptyKey);
         }
     }
 

@@ -9,7 +9,9 @@
                                     bottomShadowVisibility="{{_options.footerContentTemplate ? 'auto' : 'hidden'}}">
          <Controls._menu.Render scope="{{_options}}"
                                 listModel="{{_listModel}}"
+                                isEmptyItemSelected="{{_isEmptyItemSelected}}"
                                 on:itemClick="_itemClick()"
+                                on:emptyItemClick="_emptyItemClick()"
                                 on:itemSwipe="_itemSwipe()"
                                 on:itemActionClick="_itemActionClick()"
                                 on:itemMouseEnter="_itemMouseEnter()"

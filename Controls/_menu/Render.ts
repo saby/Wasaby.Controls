@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import {IRenderOptions} from 'Controls/listRender';
 import {IMenuBaseOptions} from 'Controls/_menu/interface/IMenuBase';
-import {Tree, TreeItem, GroupItem, Collection} from 'Controls/display';
+import {Tree, TreeItem, GroupItem, Collection, CollectionItem} from 'Controls/display';
 import * as itemTemplate from 'wml!Controls/_menu/Render/itemTemplate';
 import * as multiSelectTpl from 'wml!Controls/_menu/Render/multiSelectTpl';
 import ViewTemplate = require('wml!Controls/_menu/Render/Render');
@@ -13,6 +13,7 @@ import {ItemsUtil} from 'Controls/list';
 import {create as DiCreate} from 'Types/di';
 
 interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
+    isEmptyItemSelected: boolean;
 }
 
 /**
@@ -27,6 +28,7 @@ interface IMenuRenderOptions extends IMenuBaseOptions, IRenderOptions {
 class MenuRender extends Control<IMenuRenderOptions> {
     protected _template: TemplateFunction = ViewTemplate;
     protected _iconPadding: string;
+    protected _emptyItem: CollectionItem<Model>;
 
     protected _beforeMount(options: IMenuRenderOptions): void {
         this.setListModelOptions(options);
@@ -36,6 +38,9 @@ class MenuRender extends Control<IMenuRenderOptions> {
     protected _beforeUpdate(newOptions: IMenuRenderOptions): void {
         if (newOptions.listModel !== this._options.listModel) {
             this.setListModelOptions(newOptions);
+        }
+        if (newOptions.isEmptyItemSelected !== this._options.isEmptyItemSelected) {
+            this._emptyItem.setMarked(newOptions.isEmptyItemSelected);
         }
     }
 
@@ -87,10 +92,23 @@ class MenuRender extends Control<IMenuRenderOptions> {
         this._notify('separatorMouseEnter', [event]);
     }
 
-    protected _itemClick(e: SyntheticEvent<MouseEvent>, item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
-        e.stopPropagation();
+    protected _itemClick(event: SyntheticEvent<MouseEvent>,
+                         item: Model, sourceEvent: SyntheticEvent<MouseEvent>): void {
+        event.stopPropagation();
         if (item instanceof Model) {
             this._notify('itemClick', [item, sourceEvent]);
+        }
+    }
+
+    protected _emptyItemClick(event: SyntheticEvent<MouseEvent>, treeItem: TreeItem<Model>): void {
+        event.stopPropagation();
+        this._notify('emptyItemClick', [treeItem, event]);
+    }
+
+    protected _itemMouseEnter(event: SyntheticEvent<MouseEvent>, item: Model): void {
+        event.stopPropagation();
+        if (item instanceof Model) {
+            this._notify('itemMouseEnter', [item, event]);
         }
     }
 
@@ -181,11 +199,11 @@ class MenuRender extends Control<IMenuRenderOptions> {
             right: this.getRightPadding(options)
         });
         if (!options.searchValue && options.emptyText && !options.listModel.getItemBySourceKey(options.emptyKey)) {
-            this.addEmptyItem(options.listModel, options);
+            this._createEmptyItem(options.listModel, options);
         }
     }
 
-    private addEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
+    private _createEmptyItem(listModel: Tree, options: IMenuRenderOptions): void {
         const collection = listModel.getCollection();
         const emptyItem = this._getItemModel(collection, options.keyProperty);
 
@@ -200,11 +218,12 @@ class MenuRender extends Control<IMenuRenderOptions> {
             data[options.nodeProperty] = false;
         }
         emptyItem.set(data);
-        collection.prepend([emptyItem]);
-
-        if (!options.selectedKeys.length || options.selectedKeys.includes(options.emptyKey)) {
-            this._selectItem(listModel, options.emptyKey, true);
-        }
+        this._emptyItem = new CollectionItem({
+            owner: listModel,
+            contents: emptyItem,
+            multiSelectVisibility: 'hidden',
+            marked: options.isEmptyItemSelected
+        });
     }
 
     private _getItemModel(collection: RecordSet, keyProperty: string): Model {
@@ -278,14 +297,6 @@ class MenuRender extends Control<IMenuRenderOptions> {
             }
         });
         return result;
-    }
-
-    private _selectItem(collection: Collection<unknown>, key: number|string, state: boolean): void {
-        const item = collection.getItemBySourceKey(key);
-        if (item) {
-            item.setSelected(state, true);
-            collection.nextVersion();
-        }
     }
 
     static _theme: string[] = ['Controls/menu', 'Controls/Classes'];

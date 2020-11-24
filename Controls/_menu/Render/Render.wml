@@ -1,31 +1,41 @@
-<Controls.listRender:Render
-        listModel="{{_options.listModel}}"
-        multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
-        emptyTemplate="{{!_options.listModel.getCount() ? _options.emptyTemplate : null}}"
-        on:itemMouseLeave="_proxyEvent('itemMouseLeave')"
-        on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
-        on:itemSwipe="_proxyEvent('itemSwipe')"
-        on:itemActionClick="_proxyEvent('itemActionClick')"
-        on:itemClick="_itemClick()">
-   <ws:itemTemplate>
-      <ws:partial template="{{itemTemplate.item.getContents()[_options.itemTemplateProperty] || _options.itemTemplate}}"
-                  itemData="{{_getItemData(itemTemplate.item)}}"
-                  treeItem="{{itemTemplate.item}}"
+<div class="controls-Menu__render-wrapper">
+   <ws:if data="{{_emptyItem}}">
+      <ws:partial template="{{_options.itemTemplate}}"
+                  on:mouseenter="_itemMouseEnter(_emptyItem)"
+                  on:click="_emptyItemClick(_emptyItem)"
+                  itemData="{{_getItemData(_emptyItem)}}"
+                  treeItem="{{_emptyItem}}"
                   scope="{{_options}}"
                   item="{{null}}" />  <!-- https://online.sbis.ru/opendoc.html?guid=47950520-ef97-4302-8573-4b8495a3f0ee -->
-      <ws:if data="{{_options.allowPin && _isHistorySeparatorVisible(itemTemplate.item)}}">
-         <div class="controls-Menu__group_separator-container_theme-{{_options.theme}}"
-              attr:key="{{itemTemplate.item.getUid()}} + '_separator'" on:mouseenter="_separatorMouseEnter()">
-            <div class="controls-Menu__group_separator_theme-{{_options.theme}}"></div>
-         </div>
-      </ws:if>
-   </ws:itemTemplate>
-   <ws:multiSelectTpl>
-      <ws:partial template="wml!Controls/_menu/Render/multiSelectTpl" scope="{{_options}}"/>
-   </ws:multiSelectTpl>
-   <ws:groupTemplate>
-      <ws:if data="{{_options.groupTemplate && (_options.groupProperty || _options.groupingKeyCallback) && _isGroupVisible(groupTemplate.item)}}">
-         <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" on:mouseenter="_separatorMouseEnter()" />
-      </ws:if>
-   </ws:groupTemplate>
-</Controls.listRender:Render>
+   </ws:if>
+   <Controls.listRender:Render
+           listModel="{{_options.listModel}}"
+           multiselectVisibility="{{_options.multiSelect ? 'onhover' : 'hidden'}}"
+           emptyTemplate="{{!_options.listModel.getCount() ? _options.emptyTemplate : null}}"
+           on:itemMouseEnter="_proxyEvent('itemMouseEnter')"
+           on:itemSwipe="_proxyEvent('itemSwipe')"
+           on:itemActionClick="_proxyEvent('itemActionClick')"
+           on:itemClick="_itemClick()">
+      <ws:itemTemplate>
+         <ws:partial template="{{itemTemplate.item.getContents()[_options.itemTemplateProperty] || _options.itemTemplate}}"
+                     itemData="{{_getItemData(itemTemplate.item)}}"
+                     treeItem="{{itemTemplate.item}}"
+                     scope="{{_options}}"
+                     item="{{null}}" />  <!-- https://online.sbis.ru/opendoc.html?guid=47950520-ef97-4302-8573-4b8495a3f0ee -->
+         <ws:if data="{{_options.allowPin && _isHistorySeparatorVisible(itemTemplate.item)}}">
+            <div class="controls-Menu__group_separator-container_theme-{{_options.theme}}"
+                 attr:key="{{itemTemplate.item.getUid()}} + '_separator'" on:mouseenter="_separatorMouseEnter()">
+               <div class="controls-Menu__group_separator_theme-{{_options.theme}}"></div>
+            </div>
+         </ws:if>
+      </ws:itemTemplate>
+      <ws:multiSelectTpl>
+         <ws:partial template="wml!Controls/_menu/Render/multiSelectTpl" scope="{{_options}}"/>
+      </ws:multiSelectTpl>
+      <ws:groupTemplate>
+         <ws:if data="{{_options.groupTemplate && (_options.groupProperty || _options.groupingKeyCallback) && _isGroupVisible(groupTemplate.item)}}">
+            <ws:partial template="{{_options.groupTemplate}}" itemData="{{groupTemplate.item}}" on:mouseenter="_separatorMouseEnter()" />
+         </ws:if>
+      </ws:groupTemplate>
+   </Controls.listRender:Render>
+</div>
