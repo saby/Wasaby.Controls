@@ -3,8 +3,7 @@ import template = require('wml!Controls/_filter/ViewPanel/ViewPanel');
 import {resetFilter} from 'Controls/_filter/resetFilterUtils';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {object} from 'Types/util';
-import {GroupItem} from 'Controls/display';
+import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами ".
@@ -19,31 +18,31 @@ import {GroupItem} from 'Controls/display';
  */
 
 interface IViewPanelOptions {
-    source: object[];
+    source: IFilterItem[];
 }
 
 export default class ViewPanel extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
-    protected _source: object[] = null;
+    protected _source: IFilterItem[] = null;
     protected _editingObject: object = {};
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._source = options.source;
-        this._updateEditingObject();
+        this._updateFilterParams();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
-            this._updateEditingObject();
+            this._updateFilterParams();
         }
     }
 
     protected _resetFilter(): void {
         resetFilter(this._source);
-        this._updateEditingObject();
+        this._updateFilterParams();
         this._notifyChanges();
     }
 
@@ -54,7 +53,7 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _editingObjectChanged(event: SyntheticEvent, editingObject: object): void {
         this._editingObject = editingObject;
         this._updateSource(editingObject);
-        this._updateEditingObject();
+        this._updateFilterParams();
     }
 
     protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
@@ -76,7 +75,7 @@ export default class ViewPanel extends Control<IControlOptions> {
                 item.textValue = null;
             }
         });
-        this._updateEditingObject();
+        this._updateFilterParams();
         this._notifyChanges();
     }
 
@@ -95,14 +94,19 @@ export default class ViewPanel extends Control<IControlOptions> {
         this._collapsedGroups = this._collapsedGroups.concat([groupName]);
     }
 
-    private _updateEditingObject(): void {
+    private _updateFilterParams(): void {
         this._source.forEach((item) => {
-            this._editingObject[item.name] = item.value;
-            this._groupItems[item.group] = {
-                textValue: item.textValue,
-                afterEditorTemplate: item.editorOptions?.afterEditorTemplate
-            };
+            this._setEditingParam(item.name, item.value);
+            this._setGroupItem(item.group, item.textValue, item.editorOptions?.afterEditorTemplate);
         });
+    }
+
+    private _setEditingParam(paramName: string, value: unknown): void {
+        this._editingObject[paramName] = value;
+    }
+
+    private _setGroupItem(groupName: string, textValue: string, afterEditorTemplate: TemplateFunction): void {
+        this._groupItems[groupName] = {textValue, afterEditorTemplate};
     }
 
     private _notifyChanges(): void {
