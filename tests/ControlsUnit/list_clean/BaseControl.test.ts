@@ -792,11 +792,10 @@ describe('Controls/list_clean/BaseControl', () => {
             const baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyProperty');
-            baseControlOptions.keyProperty = 'keyProperty';
+            baseControlOptions.keyProperty = 'keyPropertyOptions';
             baseControlOptions.source = null;
-            baseControl.saveOptions(baseControlOptions);
-            await baseControl._beforeUpdate(baseControlOptions);
-            assert.equal(baseControl._keyProperty, 'keyProperty');
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
         });
     });
 
