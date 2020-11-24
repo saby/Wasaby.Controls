@@ -92,11 +92,11 @@
 </ws:template>
 
 <ws:template name="unread">
-<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.filterPopup:Text caption="{{item.caption}}"/>
 </ws:template>
 
 <ws:template name="loose">
-<Controls.filterPopup:Text bind:value="item.value" caption="{{item.textValue}}"/>
+<Controls.filterPopup:Text caption="{{item.caption}}"/>
 </ws:template>
 
 <ws:template name="own">

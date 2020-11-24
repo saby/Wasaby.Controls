@@ -369,7 +369,7 @@ define('Controls-demo/FilterView/FilterView',
                }
             ];
             this._buttonItems = [
-               {name: 'unread', value: true, resetValue: false, textValue: 'Unread', viewMode: 'extended', visibility: false},
+               {name: 'unread', value: true, resetValue: false, textValue: 'Unread', caption: 'Unread', viewMode: 'extended', visibility: false},
                {name: 'limit', value: [null], resetValue: [null], textValue: 'Due date', viewMode: 'extended', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: [
@@ -396,7 +396,7 @@ define('Controls-demo/FilterView/FilterView',
                         filter: memorySourceFilter()
                      })
                   }},
-               {name: 'loose', value: true, resetValue: '', textValue: 'Loose', viewMode: 'extended', visibility: false},
+               {name: 'loose', value: true, resetValue: '', textValue: 'Loose', caption: 'Loose', viewMode: 'extended', visibility: false},
                {name: 'author', value: 'Ivanov K.K.', textValue: 'Author: Ivanov K.K.', resetValue: '', viewMode: 'basic'},
                {name: 'own', value: 2, resetValue: '', textValue: 'On department', viewMode: 'extended', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'id',
