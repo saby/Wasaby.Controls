@@ -80,9 +80,9 @@ export default class ViewPanel extends Control<IControlOptions> {
     private _updateSource(editingObject: object): void {
         this._source.forEach((item) => {
             const editingItem = editingObject[item.name];
-            item.value = editingItem.value || editingItem;
-            item.textValue = editingItem.textValue || editingItem;
-            if (editingItem.needColapse) {
+            item.value = editingItem?.value || editingItem;
+            item.textValue = editingItem?.textValue || editingItem;
+            if (editingItem?.needColapse) {
                 this._colapseGroup(item.group);
             }
         });
