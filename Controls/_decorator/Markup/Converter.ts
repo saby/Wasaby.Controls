@@ -5,6 +5,7 @@ import template = require('Controls/_decorator/Markup/resources/template');
 import linkDecorateUtils = require('Controls/_decorator/Markup/resources/linkDecorateUtils');
 import objectMerge = require('Core/core-merge');
 import { IoC } from 'Env/Env';
+import { getGeneratorConfig } from 'UI/Base';
 
 const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
 /**
@@ -150,6 +151,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver?, resolverParams?) {
+      var generatorConfig = getGeneratorConfig();
       var result = template({
          _options: {
             value: json,
@@ -158,7 +160,7 @@ const hasAnyTagRegExp: RegExp = /<[a-zA-Z]+.*?>/;
          },
          _isMarkupConverter: true,
          _moduleName: 'Controls/decorator:Converter'
-      }, {}, {}, false);
+      }, {}, {}, false, undefined, generatorConfig);
       return result;
    };
 

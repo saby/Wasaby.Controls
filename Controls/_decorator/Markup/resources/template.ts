@@ -178,12 +178,8 @@ import { _FocusAttrs } from 'UI/Focus';
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 
-   var template = function(data, attr, context, isVdom, sets?) {
-      markupGenerator = thelpers.createGenerator(isVdom, undefined, {
-         prepareAttrsForPartial: function prepareAttrsForPartial(attributes) {
-            return _FocusAttrs.prepareAttrsForFocus(attributes.attributes);
-         }
-      });
+   var template = function(data, attr, context, isVdom, sets, forceCompatible, generatorConfig) {
+      markupGenerator = thelpers.createGenerator(isVdom, forceCompatible, generatorConfig);
       defCollection = {
          id: [],
          def: undefined
