@@ -6899,6 +6899,7 @@ define([
                   }
                },
                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id'
             };
 
             it('call check', async function() {

@@ -1244,7 +1244,8 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   keyProperty: 'id'
-               })
+               }),
+                keyProperty: 'id'
             });
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl._children.baseControl.getViewModel().getExpandedItems());
