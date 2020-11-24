@@ -1,6 +1,7 @@
 import { TClosure as thelpers } from 'UI/Executor';
 import validHtml = require('Core/validHtml');
 import {Logger} from 'UI/Utils';
+import { _FocusAttrs } from 'UI/Focus';
 
    var markupGenerator,
       defCollection,
@@ -178,7 +179,11 @@ import {Logger} from 'UI/Utils';
    }
 
    var template = function(data, attr, context, isVdom, sets?) {
-      markupGenerator = thelpers.createGenerator(isVdom);
+      markupGenerator = thelpers.createGenerator(isVdom, undefined, {
+         prepareAttrsForPartial: function prepareAttrsForPartial(attributes) {
+            return _FocusAttrs.prepareAttrsForFocus(attributes.attributes);
+         }
+      });
       defCollection = {
          id: [],
          def: undefined
