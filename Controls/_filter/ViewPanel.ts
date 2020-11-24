@@ -67,12 +67,9 @@ export default class ViewPanel extends Control<IControlOptions> {
     private _resetFilterItem(item: unknown): void {
         const itemContent = item.getContents();
         this._source.forEach((item) => {
-            const group = object.getPropertyValue(item, 'group');
-            const name = object.getPropertyValue(item, 'name');
-            if (group === itemContent || name === itemContent) {
-                const resetValue = object.getPropertyValue(item, 'resetValue');
-                object.setPropertyValue(item, 'value', resetValue);
-                object.setPropertyValue(item, 'textValue', null);
+            if (item.group === itemContent || item.name === itemContent) {
+                item.value = item.resetValue;
+                item.textValue = null;
             }
         });
         this._updateEditingObject();
