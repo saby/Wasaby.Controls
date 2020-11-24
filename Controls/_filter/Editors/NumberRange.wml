@@ -14,6 +14,8 @@
                           on:valueChanged="_handleMaxValueChanged()"/>
 
    <ws:if data="{{_options.afterEditorTemplate}}">
-      <ws:partial template="wml!Controls/_filter/resources/afterEditorTemplate" afterEditorTemplate="{{_options.afterEditorTemplate}}"/>
+      <Controls.Container.Async templateName="{{_options.afterEditorTemplate}}">
+         <ws:partial template="{{ content.resolvedTemplate }}"/>
+      </Controls.Container.Async>
    </ws:if>
 </div>

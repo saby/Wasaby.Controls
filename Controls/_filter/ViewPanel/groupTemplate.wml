@@ -24,7 +24,9 @@
             {{_options.groupItems[item].textValue}}
          </div>
          <ws:if data="{{_options.groupItems[item].afterEditorTemplate}}">
-            <ws:partial template="wml!Controls/_filter/resources/afterEditorTemplate" afterEditorTemplate="{{_options.groupItems[item].afterEditorTemplate}}"/>
+            <Controls.Container.Async templateName="{{_options.groupItems[item].afterEditorTemplate}}">
+               <ws:partial template="{{ content.resolvedTemplate }}"/>
+            </Controls.Container.Async>
          </ws:if>
       </div>
    </ws:if>
