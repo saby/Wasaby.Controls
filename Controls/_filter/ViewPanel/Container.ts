@@ -19,7 +19,7 @@ export default class Container extends Control<IControlOptions> {
      * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
      * @param {Object} items Новые элементы.
      */
-    protected _itemsChanged(event: Event, items: object[]): void {
+    protected _sourceChanged(event: Event, items: object[]): void {
        event.stopPropagation();
        this._notify('filterItemsChanged', [items], {bubbling: true});
     }

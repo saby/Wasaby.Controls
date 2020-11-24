@@ -30,12 +30,12 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _collapsedGroups: unknown[] = [];
 
     protected _beforeMount(options: IViewPanelOptions): void {
-        this._source = this._getSource(options.source);
+        this._source = options.source;
         this._updateEditingObject();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
-        this._source = this._getSource(newOptions.source);
+        this._source = newOptions.source;
         this._updateEditingObject();
     }
 
@@ -58,7 +58,9 @@ export default class ViewPanel extends Control<IControlOptions> {
     protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
         if (displayItem['[Controls/_display/GroupItem]']) {
-            this._collapsedGroups = this._collapsedGroups.filter(item => item !== displayItem.getContents());
+            const index = this._collapsedGroups.indexOf(displayItem.getContents());
+            this._collapsedGroups.splice(index, 1);
+            displayItem.toggleExpanded();
         }
         if (isResetClick) {
             this._resetFilterItem(displayItem);
@@ -104,15 +106,7 @@ export default class ViewPanel extends Control<IControlOptions> {
 
     private _notifyChanges(): void {
         this._notify('filterChanged', [this._editingObject]);
-        this._notify('itemsChanged', [this._source]);
-    }
-
-    private _getSource(source: object[]): object[] {
-        source.forEach((item) => {
-            const caption = object.getPropertyValue(item, 'caption');
-            item.caption = caption || '';
-        });
-        return source;
+        this._notify('sourceChanged', [this._source]);
     }
 
     static _theme: string[] = ['Controls/filter', 'Controls/Classes'];
