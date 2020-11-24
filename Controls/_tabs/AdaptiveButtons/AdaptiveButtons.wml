@@ -26,6 +26,8 @@
                                 keyProperty="{{_options.keyProperty}}"
                                 items="{{_visibleItems}}"
                                 style="{{_options.style}}"
+                                inlineHeight="{{_options.inlineHeight}}"
+                                borderThickness="{{_options.borderThickness}}"
                                 displayProperty="{{_options.displayProperty}}"
                                 align="{{_options.align}}"
                                 on:selectedKeyChanged="_selectedKeyHandler()">
