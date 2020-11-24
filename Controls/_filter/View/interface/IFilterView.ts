@@ -48,7 +48,7 @@ export interface IFilterItem {
     [key: string]: any;
 }
 /**
- * @typedef {Object} EditorOptions
+ * @typedef {Object} Controls/_filter/View/interface/IFilterItem/EditorOptions
  * @property {String} keyProperty Имя свойства, уникально идентифицирующего элемент коллекции.
  * @property {String} displayProperty Имя свойства элемента, содержимое которого будет отображаться. Влияет только на значение при выборе.
  * @property {Types/source:Base} source Объект, который реализует интерфейс {@link Types/source:ICrud} для доступа к данным.
@@ -70,7 +70,7 @@ export interface IFilterItem {
  */
 
 /*
- * @typedef {Object} EditorOptions
+ * @typedef {Object} Controls/_filter/View/interface/IFilterItem/EditorOptions
  * @property {String} keyProperty Name of the item property that uniquely identifies collection item.
  * @property {String} displayProperty Name of the item property that content will be displayed. Only affects the value when selecting.
  * @property {Types/source:Base} source Object that implements ICrud interface for data access. If 'items' is specified, 'source' will be ignored.
@@ -84,29 +84,29 @@ export interface IFilterItem {
  */
 
 /**
- * @typedef {String} FilterViewMode
+ * @typedef {String} Controls/_filter/View/interface/IFilterItem/FilterViewMode
  * @variant frequent Фильтр, отображаемый в быстрых фильтрах.
  * @variant basic Фильтр, отображаемый в блоке "Отбираются".
  * @variant extended Фильтр, отображаемый в блоке "Еще можно отобрать".
  */
 
 /*
- * @typedef {String} FilterViewMode
+ * @typedef {String} Controls/_filter/View/interface/IFilterItem/FilterViewMode
  * @variant frequent Filter is displayed in fast filters.
  * @variant basic Filter is displayed in the "Selected" block.
  * @variant extended Filter is displayed if the "Also possible to select" block.
  */
 
 /**
- * @typedef {Object} FilterItem
+ * @typedef {Object} Controls/_filter/View/interface/IFilterItem/FilterItem
  * @property {String} name Имя фильтра.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста у кнопки фильтра.
  * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
- * @property {EditorOptions} editorOptions Опции для редактора.
- * @property {FilterViewMode} viewMode Режим отображения фильтра.
+ * @property {Controls/_filter/View/interface/IFilterItem/EditorOptions.typedef} editorOptions Опции для редактора.
+ * @property {Controls/_filter/View/interface/IFilterItem/FilterViewMode.typedef} viewMode Режим отображения фильтра.
  * @property {Boolean} doNotSaveToHistory Флаг для отмены сохранения фильтра в истории.
  * @property {Boolean} visibility Отображение фильтра в блоке "Еще можно отобрать".
  * @property {String} type Тип значения фильтра.
@@ -118,13 +118,13 @@ export interface IFilterItem {
  */
 
 /*
- * @typedef {Object} FilterItem
+ * @typedef {Object} Controls/_filter/View/interface/IFilterItem/FilterItem
  * @property {String} name Name of filter field
  * @property {*} value Current filter field value
  * @property {*} resetValue Value for reset
  * @property {String} textValue Text value of filter field.  Used to display a textual representation of the filter
- * @property {EditorOptions} editorOptions Options for editor
- * @property {FilterViewMode} viewMode Filter view mode
+ * @property {Controls/_filter/View/interface/IFilterItem/EditorOptions.typedef} editorOptions Options for editor
+ * @property {Controls/_filter/View/interface/IFilterItem/FilterViewMode.typedef} viewMode Filter view mode
  * @property {Boolean} doNotSaveToHistory Flag to cancel saving filter in history
  */
 
@@ -134,7 +134,7 @@ export interface IFilterItem {
  * @cfg {String} Текстовое значение, которое будет использовано для отображения рядом с кнопкой, когда во всех фильтрах установлено значение "по-умолчанию"
  * @demo Controls-demo/Filter_new/FilterView/EmptyText/Index
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.filter:View
  *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
@@ -145,28 +145,28 @@ export interface IFilterItem {
 
 /**
  * @name Controls/_filter/View/interface/IFilterItem#source
- * @cfg {Array.<FilterItem>} Устанавливает список полей фильтра и их конфигурацию.
+ * @cfg {Array.<Controls/_filter/View/interface/IFilterItem/FilterItem.typedef>} Устанавливает список полей фильтра и их конфигурацию.
  * В числе прочего, по конфигурации определяется визуальное представление поля фильтра в составе контрола.
  * @demo Controls-demo/Filter_new/FilterView/Source/AdditionalTemplateProperty/Index
  * @example
  * Пример настройки для двух фильтров.
  * Первый фильтр отобразится в главном блоке "Отбираются" и не будет сохранен в истории.
  * Второй фильтр будет отображаться в блоке "Еще можно отобрать", так как для него установлено свойство visibility = false.
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
  *    panelTemplateName="Controls/filterPopup:SimplePanel"/>
  * </pre>
- * <pre>
+ * <pre class="brush: html">
  * <!-- detailPanelTemplate.wml -->
  * <Controls.filterPopup:DetailPanel items="{{items}}">
  *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
  *    <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
  * </Controls.filterPopup:DetailPanel>
  * </pre>
- * <pre>
+ * <pre class="brush: js">
  * // MyModule.js
  * _source: null,
  * _beforeMount: function(options) {
@@ -194,7 +194,7 @@ export interface IFilterItem {
 
 /*
  * @name Controls/_filter/View/interface/IFilterItem#source
- * @cfg {Array.<FilterItem>} Special structure for the visual representation of the filter.
+ * @cfg {Array.<Controls/_filter/View/interface/IFilterItem/FilterItem.typedef>} Special structure for the visual representation of the filter.
  * @remark
  * The "value" from every item will insert in filter by "name" of this item.
  * @example
@@ -252,14 +252,14 @@ export interface IFilterItem {
  * Пример настройки параметров для двух фильтров.
  * Шаблоны отображения обоих фильтров в главном блоке находятся в разделе "MyModule/mainBlockTemplate.wml"
  * Шаблоны отображения второго фильтра в дополнительном блоке находятся в разделе "MyModule/additionalBlockTemplate.wml"
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/panelTemplate"/>
  * </pre>
  *
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule/panelTemplate.wml -->
  * <Controls.filterPopup:DetailPanel>
  *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
@@ -267,7 +267,7 @@ export interface IFilterItem {
  * </Controls.filterPopup:DetailPanel>
  * </pre>
  *
- * <pre>
+ * <pre class="brush: js">
  * // MyModule.js
  * _items: null,
  * _beforeMount: function(options) {
@@ -325,19 +325,19 @@ export interface IFilterItem {
  * При указании panelTemplateName, параметр items должен быть передан в шаблон.
  * Важно: для ленивой загрузки шаблона в опции укажите путь до контрола.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    source="{{_source}}"
  *    panelTemplateName="wml!MyModule/panelTemplate"/>
  * </pre>
  *
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule/panelTemplate.wml -->
  * <Controls.filterPopup:SimplePanel items="{{_options.items}}" />
  * </pre>
  *
- * <pre>
+ * <pre class="brush: js">
  * // MyModule.js
  * _source: null,
  * _beforeMount: function(options) {
@@ -408,7 +408,7 @@ export interface IFilterItem {
  * @name Controls/_filter/View/interface/IFilterItem#detailPanelTemplateOptions
  * @cfg {Object} Опции для контрола, который передан в {@link detailPanelTemplateName}
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    items="{{_items}}"
@@ -417,7 +417,7 @@ export interface IFilterItem {
  * </Controls.filter:View>
  * </pre>
  *
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule/panelTemplate.wml -->
  * <Controls.filterPopup:DetailPanel items="{{items}}" historyId="{{historyId}}">
  *    <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
@@ -431,7 +431,7 @@ export interface IFilterItem {
  * @name Controls/_filter/View/interface/IFilterItem#detailPanelPopupOptions
  * @cfg {Controls/popup:IStickyPopupOptions} Опции для Sticky-опенера, открывающего панель фильтров.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    items="{{_items}}"
@@ -445,7 +445,7 @@ export interface IFilterItem {
  * @name Controls/_filter/View/interface/IFilterItem#panelTemplateOptions
  * @cfg {Object} Опции для контрола, который передан в {@link panelTemplateName}.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    items="{{_items}}"
@@ -453,7 +453,7 @@ export interface IFilterItem {
  *    <ws:panelTemplateOptions itemTemplate="wml!MyModule/panelTemplate/itemTemplate"/>
  * </Controls.filter:View>
  * </pre>
- * <pre>
+ * <pre class="brush: html">
  * <!-- MyModule/panelTemplate/itemTemplate.wml -->
  * <Controls.filterPopup:SimplePanel itemTemplate="{{itemTemplate}}" />
  * </pre>
@@ -461,17 +461,17 @@ export interface IFilterItem {
  */
 
 /**
- * @typedef {String} Alignment
+ * @typedef {String} Controls/_filter/View/interface/IFilterItem/Alignment
  * @variant right Кнопка прикреплена к правому краю. Всплывающая панель открывается влево. Строка выбранных фильтров отображается слева от кнопки.
  * @variant left Кнопка прикреплена к левому краю. Всплывающая панель открывается вправо. Строка выбранных фильтров отображается справа от кнопки.
  */
 
 /**
  * @name Controls/_filter/View/interface/IFilterItem#alignment
- * @cfg {Alignment} Задаёт выравнивание элементов объединённого фильтра.
+ * @cfg {Controls/_filter/View/interface/IFilterItem/Alignment.typedef} Задаёт выравнивание элементов объединённого фильтра.
  * @default right
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.filter:View
  *    detailPanelTemplateName="wml!MyModule/panelTemplate"
  *    source="{{_source}}"
@@ -480,14 +480,14 @@ export interface IFilterItem {
  */
 
 /*
- * @typedef {String} Alignment
+ * @typedef {String} Controls/_filter/View/interface/IFilterItem/Alignment
  * right The button is attached to the right edge, the pop-up panel opens to the left.
  * left The button is attached to the left edge, the pop-up panel opens to the right.
  */
 
 /*
  * @name Controls/_filter/View/interface/IFilterItem#alignment
- * @cfg {Alignment} Sets the direction in which the popup panel will open.
+ * @cfg {Controls/_filter/View/interface/IFilterItem/Alignment.typedef} Sets the direction in which the popup panel will open.
  * @default right
  * @remark
  * The string, that is formed by the values from items, also changes position.
@@ -507,7 +507,7 @@ export interface IFilterItem {
  * @default Controls/filter:ViewItemTemplate
  * @demo Controls-demo/FilterView/ItemTemplates/Index
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.filter:View
  *    source="{{_source}}"
  *    detailPanelTemplateName="wml!MyModule/detailPanelTemplate"
@@ -529,7 +529,7 @@ export interface IFilterItem {
  * {@link Controls/_filter/View Controls/filter:View} занимается только отображением истории последних применённых фильтров,
  * чтобы работало сохранение в историю, контрол должен быть обёрнут в {@link Controls/_filter/Controller Controller}.
  * @example
- * <pre>
+ * <pre class="brush: html">
  * <Controls.filter:View detailTemplateName="EDO.MyPanelTemplate" historyId="myHistoryId"/>
  * </pre>
  */
@@ -554,7 +554,7 @@ export interface IFilterItem {
  * @event Происходит при изменении структуры фильтра.
  * @name Controls/_filter/View/interface/IFilterItem#sourceChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Array.<FilterItem>} items Новая структура фильтра.
+ * @param {Array.<Controls/_filter/View/interface/IFilterItem/FilterItem>} items Новая структура фильтра.
  * @see filterChanged
  */
 
@@ -571,13 +571,13 @@ export interface IFilterItem {
  * @name Controls/_filter/View/interface/IFilterItem#openDetailPanel
  * @function
  * @example
- * <pre>
+ * <pre class="brush: js">
  * // TS
  * private _openFilter():void {
  *    this._children.filterView.openDetailPanel();
  * }
  * </pre>
- * <pre>
+ * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.buttons:Button caption='Open filter' on:click='_openFilter()'/>
  * <Controls.filter:View name='filterView' />
@@ -591,18 +591,18 @@ export interface IFilterItem {
  * @name Controls/_filter/View/interface/IFilterItem#reset
  * @function
  * @example
- * <pre>
+ * <pre class="brush: js">
  * // TS
- *    private _resetFilter():void {
- *       this._children.filterView.reset();
- *    }
+ * private _resetFilter():void {
+ *     this._children.filterView.reset();
+ * }
  * </pre>
- * <pre>
+ * <pre class="brush: html">
  * <!-- WML -->
- *    <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
- *    <Controls.filter:View name='filterView'>
- *       ...
- *    </Controls.filter:View>
+ * <Controls.buttons:Button caption='Reset filter' on:click='_resetFilter()'/>
+ * <Controls.filter:View name='filterView'>
+ *     ...
+ * </Controls.filter:View>
  * </pre>
  * @see source
  */
