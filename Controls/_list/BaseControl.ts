@@ -2202,13 +2202,14 @@ const _private = {
     getSourceController(self, options): SourceController {
         return new SourceController({
             ...options,
-            navigationParamsChangedCallback: self._notifyNavigationParamsChanged
+            navigationParamsChangedCallback: self._notifyNavigationParamsChanged,
+            keyProperty: self._keyProperty
         });
     },
 
     checkRequiredOptions(options) {
         if (!this._keyProperty) {
-            Logger.warn('BaseControl: Option "keyProperty" is required.');
+            Logger.error('IList: Option "keyProperty" is required.');
         }
     },
 
