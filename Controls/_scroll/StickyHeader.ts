@@ -149,6 +149,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     private _needUpdateObserver: boolean = false;
 
+    // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
+    // До этого не синхронизируем дом дерево при изменении состояния.
+    private _initialized: boolean = false;
+
     protected _beforeMount(options: IStickyHeaderOptions, context): void {
         if (!this._isStickySupport) {
             return;
@@ -285,6 +289,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            this._initialized = true;
             // При установке top'а учитываем gap
             const offset = getGapFixSize();
             const topValue = value - offset;
@@ -303,6 +308,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            this._initialized = true;
             // При установке bottom учитываем gap
             const offset = getGapFixSize();
             const bottomValue = value - offset;
@@ -339,7 +345,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         this._scrollState = scrollState;
 
-        if (changed) {
+        if (changed && this._initialized) {
             this._updateStyles(this._options);
         }
     }
@@ -428,7 +434,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
-            if (this._canScroll) {
+            if (this._canScroll && this._initialized) {
                 this._updateStyles(this._options);
             }
         }
@@ -697,7 +703,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStylesIfCanScroll(): void {
-        if (this._canScroll) {
+        if (this._canScroll && this._initialized) {
             this._updateStyles(this._options);
         }
     }
