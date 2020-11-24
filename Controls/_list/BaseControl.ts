@@ -1697,7 +1697,7 @@ const _private = {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     let result = null;
                     switch (action) {
-                        case IObservable.ACTION_ADD: 
+                        case IObservable.ACTION_ADD:
                             // TODO: this._batcher.addItems(newItemsIndex, newItems)
                             if (self._addItemsDirection) {
                                 self._addItems.push(...newItems);
@@ -1708,13 +1708,13 @@ const _private = {
                             }
                             break;
                         case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems, 
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
                                 newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                             break;
-                        case IObservable.ACTION_REMOVE: 
+                        case IObservable.ACTION_REMOVE:
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
-                        case IObservable.ACTION_RESET: 
+                        case IObservable.ACTION_RESET:
                             result = self._scrollController.handleResetItems();
                             break;
                     }
@@ -4483,7 +4483,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!canScroll && allDataLoaded && direction === 'up' && startIndex === 0) {
             scrollTop = 0;
             page = 1;
-        } 
+        }
         if (!canScroll && allDataLoaded && direction === 'down' && stopIndex === this._listViewModel.getCount()) {
             page = this._pagingCfg.pagesCount;
         }
@@ -4943,15 +4943,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _commitEditActionHandler(e, collectionItem) {
+        const next = this._getEditInPlaceController().getNextEditableItem();
+
         return this.commitEdit().then((result) => {
             if (result && result.canceled) {
                 return result;
             }
             const editingConfig = this._getEditingConfig();
-            if (editingConfig.autoAddByApplyButton && collectionItem.isAdd) {
-                return this._beginAdd({}, editingConfig.addPosition);
+
+            if (collectionItem.isAdd) {
+                if (editingConfig.autoAddByApplyButton) {
+                    return this._beginAdd({}, editingConfig.addPosition);
+                }
             } else {
-                return result;
+                if (editingConfig.sequentialEditing) {
+                    return !!next ? this._beginEdit({ item: next.contents }) : result;
+                } else {
+                    return result
+                }
             }
         });
     },
