@@ -32,6 +32,10 @@ export default class GroupItem<T> extends mixin<CollectionItem<any>,
         ExpandableMixin.call(this);
     }
 
+    get key(): T {
+        return this._$contents;
+    }
+
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
