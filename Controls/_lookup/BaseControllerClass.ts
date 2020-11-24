@@ -252,7 +252,14 @@ export default class LookupBaseControllerClass {
     ): void {
         items.each((item) => {
             if (selectedKeys.indexOf(item.get(keyProperty)) === -1) {
-                Logger.error(`Controls/lookup: ошибка при загрузке записи с ключом ${item.get(keyProperty)}`);
+                Logger.error(`Controls/lookup: ошибка при загрузке записи с ключом ${item.get(keyProperty)}.
+                                   Необходимо проверить, что метод корректно вернул данные.`);
+            }
+        });
+        selectedKeys.forEach((key) => {
+            if (items.getIndexByValue(keyProperty, key) === -1) {
+                Logger.error(`Controls/lookup: ошибка при загрузке записи с ключом ${key}.
+                                   Необходимо проверить, что метод корректно вернул данные.`);
             }
         });
     }
