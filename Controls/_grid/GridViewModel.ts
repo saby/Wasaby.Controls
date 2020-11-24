@@ -991,8 +991,7 @@ var
         },
 
         isGridListNotEmpty(): boolean {
-            const items = this.getItems();
-            return !!items && items.getCount() > 0;
+            return !!(this.getDisplay()?.getCount());
         },
 
         getCurrentHeaderRow: function() {
@@ -1702,7 +1701,7 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
-            
+
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
                 if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
                     const index = current.stickyProperties.indexOf(stickyProperty);
