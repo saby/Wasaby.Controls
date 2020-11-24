@@ -1,122 +1,51 @@
-<Layout.browsers:Browser
-        attr:class="rightsAreas-userListOfAreas__browser ws-ellipsis"
-        keyProperty="{{_keyProperty}}"
-        source="{{_source}}"
-        itemsReadyCallback="{{_itemsReadyCallback}}"
-        searchParam="{{_searchParam}}"
-        filterButtonSource="{{_fastFilterSource}}"
-        hasChildrenProperty="Hierarchy$"
-        parentProperty="{{_parentProperty}}"
-        nodeProperty="{{_nodeProperty}}"
+<ws:partial
+        template="{{_options.content}}"
+        scope="{{_options}}"
+        viewMode="{{_options.selectionViewMode === 'selected' ? 'search': _viewMode}}"
+        itemOpenHandler="{{ _itemOpenHandler }}"
+        selectedKeysCount="{{ _selectedKeysCount }}"
+        selectionTypeForAllSelected="{{_selectionType}}"
+        isAllSelected="{{ _isAllSelected }}"
+        listMarkedKey="{{ _listMarkedKey }}"
         dataLoadCallback="{{_dataLoadCallback}}"
-        historyId="{{ _treeKey === 'byRoles' ? 'UserListOfAreasByRolesFilterHistory' : 'UserListOfAreasFilterHistory' }}"
-        historyItems="{{ ([]) }}"
-        bind:filter="_filter"
-        root="{{_root}}"
-        navigation="{{_navigation}}"
-        on:filterChanged="_handlerFilterChanged()"
->
-    <ws:filterView>
-        <ws:if data="{{ _filterVisible }}">
-            <Controls.filter:View
-                    name="filter"
-                    alignment="right"
-                    detailPanelTemplateName="Rights/_zonesList/ZonesList/Filter/DetailPanelTemplate"
-                    panelTemplateName="Controls/filterPopup:SimplePanel"
-                    readOnly="{{false}}"
-            />
-        </ws:if>
-        <ws:else>
-            <invisible-node/>
-        </ws:else>
-    </ws:filterView>
-    <ws:search>
-        <Controls.search:Input readOnly="{{ !_items }}"
-                               attr:class="rightsAreas-userListOfAreas__searchField"
-                               attr:ws-autofocus="true"
-                               name="searchField"/>
-    </ws:search>
-    <ws:topTemplate>
-        <Controls.source:SelectedKey selectedKey="{{_treeKey}}" on:selectedKeyChanged="_changeTreeView()">
-            <Controls.dropdown:Input
-                    attr:class="rightsAreas-userListOfAreas__listSwitcher"
-                    keyProperty="id"
-                    displayProperty="title"
-                    multiselect="{{false}}"
-                    bind:source="_treeSource"
-                    contentTemplate="{{_tmplSwitchList}}"
-            />
-        </Controls.source:SelectedKey>
-    </ws:topTemplate>
-    <ws:content>
-        <div class="rightsAreas-userListOfAreas__content">
-            <ws:if data="{{ _showConstraintsByArea }}">
-                <Rights._areas.AccessArea
-                        name="AccessArea"
-                        attr:class="rightsAreas-userListOfAreas__accessArea"
-                        area="{{_accessArea}}"
-                />
-            </ws:if>
-            <Controls.LoadingIndicator
-                    name="LoadingIndicator"
-                    attr:class="rightsAreas-userListOfAreas__content"
-                    isGlobal="{{ false }}"
-                    overlay="none"
-                    delay="{{ 2000 }}"
-            >
-                <Controls.scroll:Container attr:class="rightsAreas-userListOfAreas__scroll {{!_isShowTable ? 'rightsAreas-userListOfAreas__hidden' : ''}}">
-                    <Controls.explorer:View
-                            task1180503140="{{true}}"
-                            attr:class="rightsAreas-userListOfAreas__treeGrid {{_expanderIcon === 'none' ? 'rightsAreas-userListOfAreas__employeeList' : ''}}"
-                            name="browser"
-                            viewMode="{{_viewMode}}"
-                            displayProperty="{{_displayProperty}}"
-                            hasChildrenProperty="{{_hasChildrenProperty}}"
-                            columns="{{_columns}}"
-                            highlighter="['Controls/Decorator/Highlight']"
-                            showActionButton="{{ false }}"
-                            bind:expandedItems="_expandedItems"
-                            on:itemClick="_openCard()"
-                            on:rootChanged="_changeRoot()"
-                    >
-                        <ws:virtualScrollConfig pageSize="{{50}}" segmentSize="{{15}}"/>
-                        <ws:itemTemplate>
-                            <ws:partial template="Controls/treeGrid:ItemTemplate" expanderIcon="{{_expanderIcon}}"/>
-                        </ws:itemTemplate>
-                    </Controls.explorer:View>
-                </Controls.scroll:Container>
-            </Controls.LoadingIndicator>
-            <Controls.popup:Edit
-                    name="ResultAccessOpener"
-                    template="Rights/resultAccess:Card"
-                    on:beforeItemEndEdit="_reloadItem()"
-            />
-            <Controls.popup:Edit
-                    name="RoleOpener"
-                    on:beforeItemEndEdit="_reloadTable()"
-            />
-            <Controls.popup:Stack
-                    name="AccessAreaOpener"
-                    width="{{650}}"
-                    template="Rights/zonesList:SystemAreasSelector"
-                    on:result="_savePersonalRights()"
-            />
-            <Controls.popup:Confirmation name="Message"/>
-        </div>
-    </ws:content>
-    <ws:hintTemplate>
-        <Hint.Template:Wrapper
-                emptyTemplateName="Hint/Template:ColumnLayout"
-                isFilteredCallback="{{_isFilteredCallbackVar}}"
-                emptyFilteredTemplateName="Hint/Template:ColumnLayout">
-            <ws:emptyTemplateOptions
-                    image="{{_helpPersonAgree}}"
-                    message="{[ Нет записей ]}">
-            </ws:emptyTemplateOptions>
-            <ws:emptyFilteredTemplateOptions
-                    image="{{_helpPersonConfused}}"
-                    message="{[ Не найдено ни одной записи ]}">
-            </ws:emptyFilteredTemplateOptions>
-        </Hint.Template:Wrapper>
-    </ws:hintTemplate>
-</Layout.browsers:Browser>
+        dataLoadErrback="{{_dataLoadErrback}}"
+        afterSetItemsOnReloadCallback="{{_afterSetItemsOnReloadCallback}}"
+        deepReload="{{_deepReload}}"
+        root="{{_options.searchNavigationMode === 'expand' ? undefined : _root}}"
+        searchParam="{{null}}"
+        searchValue="{{_searchValue}}"
+        groupHistoryId="{{_groupHistoryId}}"
+        inputSearchValue="{{_inputSearchValue}}"
+        misspellValue="{{_misspellValue}}"
+        loading="{{_loading || _options.loading}}"
+        items="{{_items}}"
+        filter="{{_filter}}"
+        itemsReadyCallback="{{_itemsReadyCallback}}"
+        filterButtonItems="{{_filterButtonItems}}"
+        fastFilterItems="{{_fastFilterItems}}"
+        topShadowVisibility="{{_topShadowVisibility}}"
+        bottomShadowVisibility="{{_bottomShadowVisibility}}"
+        on:filterChanged="_filterChanged()"
+        on:rootChanged="_rootChanged()"
+        on:itemsChanged="_itemsChanged()"
+        on:dataError="_onDataError()"
+        on:listSelectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+        on:listExcludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+        on:listSelectedKeysCountChanged="_selectedKeysCountChanged()"
+        on:listSelectionTypeForAllSelectedChanged="_listSelectionTypeForAllSelectedChanged()"
+        on:markedKeyChanged="_markedKeyChangedHandler()"
+        on:selectedTypeChanged="_selectedTypeChangedHandler()"
+        on:listMarkedKeyChanged="_listMarkedKeyChangedHandler()"
+        on:listRootChanged="_rootChanged()"
+        on:operationsPanelOpen="_operationsPanelOpen()"
+        on:operationsPanelClose="_operationsPanelClose()"
+        on:register="_registerHandler()"
+        on:unregister="_unregisterHandler()"
+        on:search="_search()"
+        on:searchReset="_searchReset()"
+        on:listExpandedItemsChanged="_notifyHandler('expandedItemsChanged')"
+        on:misspellCaptionClick="_misspellCaptionClick()"
+        on:filterItemsChanged="_filterItemsChanged()"
+        on:filterHistoryApply="_filterHistoryApply()"
+/>
+
