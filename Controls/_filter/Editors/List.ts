@@ -38,13 +38,11 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
     protected _template: TemplateFunction = ListTemplate;
     protected _columns: object[] = null;
     protected _navigation: object = null;
-    protected _buttonMoreCaption: string = '';
     protected _stackOpener: StackOpener = null;
     protected _needShowMoreButton: boolean = false;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
-        this._buttonMoreCaption = rk(options.buttonMoreCaption);
         this._navigation = {
             source: 'page',
             view: 'page',
@@ -58,16 +56,18 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
-        if (isEqual(options.columns, this._options.columns) || options.propertyValue !== this._options.propertyValue) {
+        const columnsChanged = isEqual(options.columns, this._options.columns);
+        const valueChanged = options.propertyValue !== this._options.propertyValue;
+        const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
+        const sourceItemsHidden = options.source.data.length > options.pageSize;
+
+        if (columnsChanged || valueChanged || displayPropertyChanged) {
             this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
-        }
-        if (options.buttonMoreCaption !== this._options.buttonMoreCaption) {
-            this._buttonMoreCaption = rk(options.buttonMoreCaption);
         }
         if (options.pageSize !== this._options.pageSize) {
             this._navigation.sourceConfig.pageSize = options.pageSize;
         }
-        this._needShowMoreButton = options.selectorTemplate && options.source.data.length > options.pageSize;
+        this._needShowMoreButton = options.selectorTemplate && sourceItemsHidden;
     }
 
     protected _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
@@ -98,7 +98,13 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
         });
     }
 
-     private _getSelectedKey(items: Model[], keyProperty: string): string|number {
+    protected _beforeUnmount(): void {
+        if (this._stackOpener) {
+            this._stackOpener.destroy();
+        }
+    }
+
+    private _getSelectedKey(items: Model[], keyProperty: string): string|number {
         let key;
         factory(items).each((item) => {
             key = object.getPropertyValue(item, keyProperty);
@@ -122,9 +128,8 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
 
     private _getColumns(columns: object[], displayProperty: string, propertyValue: number|string|unknown[]): object[] {
         const customColumns = clone(columns);
-        const additionalParameters = {template: ColumnTemplate, selected: propertyValue};
         const firstColumn = columns.length ? customColumns.shift() : {displayProperty};
-        customColumns.unshift({...additionalParameters, ...firstColumn});
+        customColumns.unshift({...{template: ColumnTemplate, selected: propertyValue}, ...firstColumn});
         return customColumns;
     }
 
@@ -132,7 +137,7 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
 
     static getDefaultOptions(): object {
         return {
-            buttonMoreCaption: 'Другие',
+            buttonMoreCaption: rk('Другие'),
             columns: [],
             pageSize: 3
         };

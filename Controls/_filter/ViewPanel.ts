@@ -35,8 +35,10 @@ export default class ViewPanel extends Control<IControlOptions> {
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
-        this._source = newOptions.source;
-        this._updateEditingObject();
+        if (this._options.source !== newOptions.source) {
+            this._source = newOptions.source;
+            this._updateEditingObject();
+        }
     }
 
     protected _resetFilter(): void {

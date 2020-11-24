@@ -15,7 +15,7 @@
       <ws:footerTemplate>
          <ws:if data="{{_needShowMoreButton}}">
             <Controls.buttons:Button viewMode="linkButton"
-                                     caption="{{_buttonMoreCaption}}"
+                                     caption="{{_options.buttonMoreCaption}}"
                                      fontColorStyle="label"
                                      on:click="_handleFooterClick()"/>
          </ws:if>

@@ -29,7 +29,9 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     }
 
     protected _beforeUpdate(newOptions?: INumberRangeOptions): void {
-        this._updateValues(newOptions.propertyValue);
+        if (this._options.propertyValue !== newOptions.propertyValue) {
+            this._updateValues(newOptions.propertyValue);
+        }
     }
 
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
