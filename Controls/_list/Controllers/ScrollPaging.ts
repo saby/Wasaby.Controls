@@ -57,8 +57,6 @@ interface IHasMoreData {
     down: boolean;
 }
 
-const SCALE_ROUNDING_ERROR_FIX: number = 1.5;
-
 export default class ScrollPagingController {
     protected _curState: IScrollpagingState = null;
     protected _options: IScrollPagingOptions = null;
