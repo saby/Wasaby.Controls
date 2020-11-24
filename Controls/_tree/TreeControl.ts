@@ -612,6 +612,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         let afterUpdateResult;
 
         if (this._updatedRoot) {
+            const sourceController = this._options.sourceController;
+            const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
             this._updatedRoot = false;
             // При смене корне, не надо запрашивать все открытые папки,
             // т.к. их может не быть и мы загрузим много лишних данных.
@@ -620,7 +622,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._needResetExpandedItems = true;
             }
             // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter) && this._options.source === oldOptions.source) {
+            if (isEqual(this._options.filter, oldOptions.filter) &&
+                this._options.source === oldOptions.source &&
+                !isSourceControllerLoadingNewData) {
                 afterUpdateResult = this._children.baseControl.reload();
             }
         }
