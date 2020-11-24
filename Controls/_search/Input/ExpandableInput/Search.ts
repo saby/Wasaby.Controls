@@ -23,6 +23,7 @@ export default class ExpandableInput extends Control<IControlOptions> {
    protected _expanded: boolean = false;
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = tmplNotify;
+   protected _needShowButtonAnimation: boolean = false;
 
    protected _beforeMount(options: IExpandableInputOptions): void {
       this._expanded = this._getExpanded(options.expanded);
@@ -44,6 +45,7 @@ export default class ExpandableInput extends Control<IControlOptions> {
 
    protected _handleCloseClick(): void {
       this._expanded = false;
+      this._needShowButtonAnimation = true;
       this._notify('valueChanged', ['']);
    }
 
