@@ -30,7 +30,7 @@ export interface IVirtualScrollConfig {
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
- * @typedef {object} Controls/_list/interface/IVirtualScrollConfig/VirtualScrollConfig
+ * @typedef {Object} Controls/_list/interface/IVirtualScrollConfig/VirtualScrollConfig
  * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
  * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
  * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
