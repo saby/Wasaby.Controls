@@ -90,11 +90,6 @@ const _private = {
             return baseSourceController
                 .load(undefined, nodeKey)
                 .addCallbacks((list) => {
-                    if (options.uniqueKeys) {
-                        listViewModel.mergeItems(list);
-                    } else {
-                        listViewModel.appendItems(list);
-                    }
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     listViewModel.setHasMoreStorage(
                         _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -198,11 +193,6 @@ const _private = {
             listViewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
             );
-            if (self._options.uniqueKeys) {
-                listViewModel.mergeItems(list);
-            } else {
-                listViewModel.appendItems(list);
-            }
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
@@ -405,12 +395,8 @@ const _private = {
 
         items.setEventRaising(false, true);
 
-        itemsToRemove.forEach(function(item) {
+        itemsToRemove.forEach((item) => {
             items.remove(item);
-        });
-        items.merge(newItems, {
-            remove: false,
-            inject: true
         });
 
         items.setEventRaising(true, true);
