@@ -23,14 +23,14 @@ export interface IVirtualScrollConfig {
 }
 
 /**
- * @typedef {String} IVirtualScrollMode
+ * @typedef {String} Controls/_list/interface/IVirtualScrollConfig/IVirtualScrollMode
  * @variant remove Скрытые элементы удаляются из DOM.
  * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
  */
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
- * @typedef {object} VirtualScrollConfig
+ * @typedef {object} Controls/_list/interface/IVirtualScrollConfig/VirtualScrollConfig
  * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
  * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
  * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
