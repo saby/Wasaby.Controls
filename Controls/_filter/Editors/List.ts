@@ -28,7 +28,7 @@ interface IListEditor {
 }
 /**
  * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
- * @class Controls/_filter/Editors/NumberRange
+ * @class Controls/_filter/Editors/List
  * @extends Core/Control
  * @author Мельникова Е.А.
  * @public
