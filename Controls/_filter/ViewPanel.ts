@@ -60,7 +60,6 @@ export default class ViewPanel extends Control<IControlOptions> {
         if (displayItem['[Controls/_display/GroupItem]']) {
             const index = this._collapsedGroups.indexOf(displayItem.getContents());
             this._collapsedGroups.splice(index, 1);
-            displayItem.toggleExpanded();
         }
         if (isResetClick) {
             this._resetFilterItem(displayItem);
