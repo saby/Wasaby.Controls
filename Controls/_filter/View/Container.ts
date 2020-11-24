@@ -9,7 +9,7 @@ import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ здесь}.
  *
  * @class Controls/_filter/View/Container
  * @extends Core/Control
@@ -37,24 +37,46 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _template: template,
 
     _beforeMount(options): void {
-        this._initState(options);
+        if (options.useStore) {
+            this._initState(options.preloadedSources);
+        }
+    },
+
+    _afterMount(options): void {
+        if (options.useStore) {
+            this._sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._source = filterSource;
+            });
+        }
     },
 
     _beforeUpdate(options): void {
-        this._initState(options);
+        if (options.useStore) {
+            this._initState(options.preloadedSources, this._options.preloadedSources);
+        }
     },
 
-    _initState(options): void {
-        if (options.useStore && options.preloadedSources && options.preloadedSources[0]) {
-            const mainSource = options.preloadedSources[0];
-            this._historyId = mainSource.historyId;
-            // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
-            // эта часть аналогична тому что делает _filter/Controller
-            let historyItems = mainSource.historyItems;
-            if (historyItems) {
-                historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
+    _beforeUnmount(): void {
+        if (this._sourceCallbackId) {
+            Store.unsubscribe(this._sourceCallbackId);
+        }
+    },
+
+    _initState(newPreloadedSources, oldPreloadedSources): void {
+        if (newPreloadedSources !== oldPreloadedSources) {
+            if (newPreloadedSources && newPreloadedSources[0]) {
+                const mainSource = newPreloadedSources[0];
+                this._historyId = mainSource.historyId;
+                // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
+                // эта часть аналогична тому что делает _filter/Controller
+                let historyItems = mainSource.historyItems;
+                if (historyItems) {
+                    historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
+                }
+                this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
+            } else {
+                this._source = null;
             }
-            this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
         }
     },
 
@@ -89,7 +111,7 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
        if (this._options.useStore) {
-           Store.dispatch('filterSource', items);
+           Store.dispatch('filterSource', items ? [...items] : []);
        } else {
            this._notify('filterItemsChanged', [items], {bubbling: true});
        }

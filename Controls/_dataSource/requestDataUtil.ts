@@ -4,7 +4,7 @@
  * <h2>Аргументы функции</h2>
  *
  * Функция на вход приниает объект с полями:
- * 
+ *
  * * source: SbisService - источник данных;
  * * filterButtonSource: Array - элементы {@link Controls/filter:Controller#filterButtonSource FilterButton};
  * * fastFilterSource: Array - элементы {@link Controls/filter:Controller#fastFilterSource FastFilter};
@@ -49,6 +49,7 @@ export interface IRequestDataResult {
    sorting?: SortingObject;
    historyItems?: IHistoryItems;
    collapsedGroups?: string[];
+   error?: Error;
 }
 
 export interface ISourceConfig {
@@ -62,6 +63,12 @@ export interface ISourceConfig {
    sorting?: SortingObject;
    historyItems?: IHistoryItems;
    propStorageId?: string;
+   filterHistoryLoader: (filterButtonSource: object[], historyId: string) => {
+      filterButtonSource: object[];
+      filter: Record<string, any>;
+      historyItems: object[];
+   };
+  error?: Error;
 }
 
 const HISTORY_FILTER_TIMEOUT = 1000;
@@ -74,7 +81,10 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    let sortingPromise;
    let filterPromise;
    let collapsedGroupsPromise;
-   if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
+
+   if (cfg.historyId && cfg.filterHistoryLoader instanceof Function) {
+      filterPromise = cfg.filterHistoryLoader(cfg.filterButtonSource, cfg.historyId);
+   } else if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
       filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
          return filterLib.Controller.getCalculatedFilter(cfg);
       });
@@ -92,6 +102,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       collapsedGroupsPromise = groupUtil.restoreCollapsedGroups(cfg.groupHistoryId);
    }
 
+
    return Promise.all([
        filterPromise,
       sortingPromise,
@@ -108,7 +119,7 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
       return sourceController.load(filter, sorting).then((data: RecordSet) => {
          return {...result, data};
       }).catch((data: Error) => {
-         return {...result, data};
+         return {...result, data, error: data};
       });
    });
 }

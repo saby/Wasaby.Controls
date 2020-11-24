@@ -281,10 +281,32 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
-        this._shadows.updateVisibilityByInnerComponents(shadowsVisibility);
+        event.stopImmediatePropagation();
+        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
+        this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        this._updateStateAndGenerateEvents(this._state);
+    }
+
+    protected _updateStateAndGenerateEvents(newState: IScrollState): void {
+        super._updateStateAndGenerateEvents({
+            ...newState,
+            hasUnrenderedContent: {
+                top: this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE,
+                bottom: this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE
+            }
+        })
+
+    }
+
+    protected _getScrollNotifyConfig(): any[] {
+        const baseConfig = super._getScrollNotifyConfig();
+        const topShadowVisible = this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE;
+        const bottomShadowVisible = this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE;
+        baseConfig.push(topShadowVisible, bottomShadowVisible);
+        return baseConfig;
     }
 
     protected _keydownHandler(event: SyntheticEvent): void {
@@ -443,14 +465,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     _stickyFixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         this._stickyHeaderController.fixedHandler(event, fixedHeaderData);
-        const top = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
-        const bottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: top, bottom: bottom }, this._isScrollbarsInitialized);
+        const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
+        const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
+        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._isScrollbarsInitialized);
         // Если включены оптимизированные тени, то мы не обновляем состояние теней при изменении состояния скрола
         // если нет зафиксированных заголовков. Что бы тени на заголовках отображались правильно, рассчитаем состояние
         // теней в скролл контейнере.
         if (this._isOptimizeShadowEnabled) {
-            this._shadows.updateScrollState(this._state);
+            this._shadows.updateScrollState(this._state, false);
         }
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
@@ -458,7 +480,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._shadows.setStickyFixed(
             this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
             this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM));
-        this._notify('fixed', [top, bottom]);
+
+        const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.fixed);
+        const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
+        this._notify('fixed', [stickyHeaderOffsetTop, stickyHeaderOffsetBottom]);
     }
 
     _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {

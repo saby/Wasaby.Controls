@@ -50,7 +50,7 @@
 <Controls._moverDialog.BaseTemplate>
    <ws:bodyContentTemplate>
       <Controls.list:DataContainer source="{{_options.source}}"
-                                   filter="{{_options.filter}}"
+                                   bind:filter="_filter"
                                    navigation="{{_options.navigation}}"
                                    dataLoadCallback="{{_options.dataLoadCallback}}"
                                    keyProperty="{{_options.keyProperty}}">

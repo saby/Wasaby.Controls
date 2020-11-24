@@ -106,6 +106,12 @@ export default class Lookup extends BaseLookupInput {
 
    showSelector(popupOptions?: IStackPopupOptions): void {
       this.closeSuggest();
+      // Если lookup лежит на stack панели, и окно выборе окажется шире этой stack панели,
+      // то по особой логике в мехнизме окон, stack панель будет скрыта через display: none,
+      // из-за этого возникает проблема при выборе, поле связи не может посчитать размеры,
+      // т.к. лежит в скрытом блоке, чтобы решить эту пробелму,
+      // кэшируем размеры перед открытием окна выбора
+      this._getFieldWrapperWidth();
       return showSelector(this, popupOptions, this._options.multiSelect);
    }
 
@@ -558,4 +564,10 @@ export default class Lookup extends BaseLookupInput {
  *       multiSelect="{{true}}">
  *    </Controls.lookup:Input>
  * </pre>
+ */
+
+ /**
+ * @name Controls/_lookup/Lookup#fontSize
+ * @cfg
+ * @demo Controls-demo/LookupNew/Input/FontSize/Index
  */

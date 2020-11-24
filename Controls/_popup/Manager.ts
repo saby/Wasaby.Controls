@@ -222,8 +222,17 @@ class Manager {
 
     isDestroying(id: string): boolean {
         const item = this.find(id);
-        return item &&
-            (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
+        if (!item) {
+            // Элемент может быть удален с состояния ( что вызывает непорсдетсвенно анмаунт окна), но
+            // цикла синхронизации еще могло не произойти. Если окно ожидает синхронизации на разрушение, тоже учитываю.
+            const removedItems = ManagerController.getContainer().getRemovingItems();
+            for (const removeData of removedItems) {
+                if (removeData.removedItem.id === id) {
+                    return true;
+                }
+            }
+        }
+        return item && (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }

@@ -33,6 +33,8 @@
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IReloadableList Controls/_list/interface/IReloadableList
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_list/interface/IMovableList/IMoveDialogTemplate
+ * @includes IMovableOptions Controls/_list/interface/IMovableList/IMovableOptions
  * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
@@ -70,6 +72,8 @@
  * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IListNavigation Controls/_list/interface/IListNavigation
  * @includes IMovableList Controls/_list/interface/IMovableList
+ * @includes IMoveDialogTemplate Controls/_list/interface/IMovableList/IMoveDialogTemplate
+ * @includes IMovableOptions Controls/_list/interface/IMovableList/IMovableOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -127,15 +131,18 @@ export {
     ItemActionsTemplate,
     _swipeActionTemplate,
     SwipeTemplate
-}
+};
 
 // endregion @deprecated
 
 export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
-export {IMovableList} from 'Controls/_list/interface/IMovableList';
+export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list/interface/IMovableList';
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
+export {BaseGroupTemplate} from 'Controls/_list/interface/BaseGroupTemplate';
+export {IContentTemplate} from 'Controls/_list/interface/IContentTemplate';
+export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
 
 export {
     AddButton,
@@ -180,3 +187,39 @@ export {
     ScrollController,
     IListNavigation
 };
+
+/**
+ * Константы:
+ * - groupConstants.hiddenGroup — константа для определения элемента hiddenGroup в {@link Controls/interface/IGroupedList#groupProperty groupProperty};
+ * - editing.CANCEL — константа, которую можно вернуть в {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} для отмены редактирования.
+ * - CursorDirection - enum, направление выборки при навигации по курсору.
+ *
+ * @public
+ */
+
+/*
+ * Constants
+ * <ul>
+ *    <li>
+ *       groupConstants.hiddenGroup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGroupedList#groupProperty groupProperty}
+ *    </li>
+ *    <li>
+ *       editing.CANCEL - Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel editing
+ *    </li>
+ *    <li>
+ *       CursorDirection - enum, navigation direction variants for cursor navigation
+ *    </li>
+ * </ul>
+ *
+ * @class Controls/list
+ * @public
+ */
+
+const editing = {
+    CANCEL: 'Cancel'
+};
+
+import {groupConstants} from './_list/Controllers/Grouping';
+import {CursorDirection} from './_interface/INavigation';
+
+export {CursorDirection, groupConstants, editing};

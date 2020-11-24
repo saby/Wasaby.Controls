@@ -12,7 +12,8 @@ import { MouseButtons, MouseUp } from 'Controls/popup';
 import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
-import { TreeItem } from 'Controls/display';
+import { Collection, TreeItem } from 'Controls/display';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 import {ISelectionObject, TKey} from 'Controls/interface';
@@ -110,8 +111,43 @@ const _private = {
                     self._children.baseControl.hideIndicator();
                 });
         } else {
-            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+            // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
+            let shouldCancelEditing = false;
+            if (self._editingItem) {
+                shouldCancelEditing = _private.hasInParents(
+                    self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
+                    self._editingItem.getKey(),
+                    dispItem.contents.getKey()
+                );
+            }
+
+            // TODO: Переписать
+            //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
+            if (shouldCancelEditing) {
+                return self.cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
+                        _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                    }
+                    return result;
+                });
+            } else {
+                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+            }
         }
+    },
+    hasInParents(collection: Collection, childKey, stepParentKey): boolean {
+        const child = collection.getItemBySourceKey(childKey);
+        const targetParent = collection.getItemBySourceKey(stepParentKey);
+
+        let current = child;
+        do {
+            current = current.getParent();
+            if (!current.isRoot() && current === targetParent) {
+                return true;
+            }
+        } while (!current.isRoot());
+        return false;
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
         // загружаем узел только если:
@@ -283,9 +319,34 @@ const _private = {
 
     resetExpandedItems(self): void {
         const viewModel = self._children.baseControl.getViewModel();
+        let shouldCancelEditing = false;
 
-        viewModel.resetExpandedItems();
-        viewModel.setHasMoreStorage({});
+        if (self._editingItem) {
+            const editingKey = self._editingItem.getKey();
+            viewModel.getExpandedItems().forEach((itemKey) => {
+                shouldCancelEditing = shouldCancelEditing || _private.hasInParents(
+                    self._options.useNewModel ? viewModel : viewModel.getDisplay(),
+                    editingKey,
+                    itemKey
+                );
+            });
+        }
+
+        const reset = () => {
+            viewModel.resetExpandedItems();
+            viewModel.setHasMoreStorage({});
+        };
+
+        if (shouldCancelEditing) {
+            self.cancelEdit().then((result) => {
+                if (!(result && result.canceled)) {
+                    reset();
+                }
+                return result;
+            });
+        } else {
+            reset();
+        }
     },
 
     getHasMoreData(self, sourceController, direction, key) {
@@ -440,6 +501,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _notifyHandler: tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
+    _editingItem: null,
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
@@ -569,7 +631,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return afterUpdateResult;
     },
     resetExpandedItems(): void {
-        this._children.baseControl.getViewModel().resetExpandedItems();
+        _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
         const item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
@@ -762,6 +824,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
         return eventResult;
+    },
+
+    _onAfterBeginEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterBeginEdit', [item, isAdd]);
+        this._editingItem = item;
+    },
+
+    _onAfterEndEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterEndEdit', [item, isAdd]);
+        this._editingItem = null;
     },
 
     handleKeyDown(event): void {

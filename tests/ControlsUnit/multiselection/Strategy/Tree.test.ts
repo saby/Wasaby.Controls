@@ -246,6 +246,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 1, 3, 4, 5, 6, 7]);
       });
+
+      it('selected not loaded item', () => {
+         let selection = { selected: [20], excluded: [] };
+         selection = strategy.toggleAll(selection, true);
+
+         assert.deepEqual(selection.selected, [null]);
+         assert.deepEqual(selection.excluded, [null, 20]);
+      });
    });
 
    describe('getSelectionForModel', () => {

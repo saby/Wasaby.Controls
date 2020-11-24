@@ -54,7 +54,9 @@ const Container = Control.extend(/** @lends Controls/_filter/Container.prototype
     },
 
     _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        this?._notify('historySave', [historyData, items]);
+        if (this._mounted) {
+            this?._notify('historySave', [historyData, items]);
+        }
     },
      _beforeUpdate(newOptions): void {
         this._filterController.update({...newOptions,
@@ -122,8 +124,8 @@ export = Container;
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
  *

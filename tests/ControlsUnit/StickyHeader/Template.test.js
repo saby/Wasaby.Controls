@@ -90,6 +90,12 @@ define(
                inst._options.content = function() {
                   return ''
                };
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: false,
+                     bottom: false
+                 }
+               };
                inst._isStickySupport = true;
 
                inst._updateStyles(inst._options);
@@ -113,6 +119,12 @@ define(
                inst._options.content = function() {
                   return ''
                };
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: false,
+                     bottom: false
+                 }
+               };
                inst._isStickySupport = true;
 
                inst._updateStyles(inst._options);
@@ -128,6 +140,12 @@ define(
                inst._options.theme = 'default';
                inst._options.content = function() {
                   return ''
+               };
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: false,
+                     bottom: false
+                 }
                };
                inst._isStickySupport = true;
 
@@ -145,6 +163,12 @@ define(
                inst._options.content = function() {
                   return ''
                };
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: false,
+                     bottom: false
+                 }
+               };
                inst._isStickySupport = true;
 
                inst._updateStyles(inst._options);
@@ -158,6 +182,12 @@ define(
             it('Added content', function() {
                inst._options.content = TemplateUtil.content;
                inst._options.theme = 'default';
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: false,
+                     bottom: false
+                 }
+               };
                inst._isStickySupport = true;
 
                inst._updateStyles(inst._options);
@@ -177,6 +207,12 @@ define(
                inst._options.fixedZIndex = 1;
                inst._options.content = TemplateUtil.content;
                inst._options.theme = 'default';
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: true,
+                     bottom: true
+                 }
+               };
                inst._isStickySupport = true;
 
                inst._updateStyles(inst._options);
@@ -193,6 +229,12 @@ define(
                inst._scrollState.verticalPosition = 'start';
                inst._isFixed = true;
                inst._isShadowVisibleByController = true;
+               inst._scrollState = {
+                  hasUnrenderedContent: {
+                     top: true,
+                     bottom: true
+                 }
+               };
                inst._isStickySupport = true;
                inst._model.fixedPosition = 'bottom';
                inst._options.fixedZIndex = 2;

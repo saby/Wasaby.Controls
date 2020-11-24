@@ -203,18 +203,12 @@ var _private = {
 
             if (newOptions.moveDialogTemplate.templateName) {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate.templateName;
-                self._moveDialogOptions = {
-                    ...newOptions.moveDialogTemplate.templateOptions,
-                    keyProperty: self._keyProperty
-                } as IMoverDialogTemplateOptions;
+                self._moveDialogOptions = newOptions.moveDialogTemplate.templateOptions;
                 controllerOptions.popupOptions.template = self._moveDialogTemplate;
                 controllerOptions.popupOptions.templateOptions = self._moveDialogOptions;
             } else {
                 self._moveDialogTemplate = newOptions.moveDialogTemplate;
                 controllerOptions.popupOptions.template = self._moveDialogTemplate;
-                self._moveDialogOptions = {
-                    keyProperty: self._keyProperty
-                } as IMoverDialogTemplateOptions;
                 Logger.warn('Mover: Wrong type of moveDialogTemplate option, use object notation instead of template function', self);
             }
         }
@@ -331,14 +325,12 @@ var _private = {
         const templateOptions: IMoverDialogTemplateOptions = {
             movedItems: _private.useController(selection) ? selection.selectedKeys : selection,
             source: self._source,
+            keyProperty: self._keyProperty, // keyProperty может быть заменён в moveDialogOptions
             ...(self._moveDialogOptions as IMoverDialogTemplateOptions)
         };
         return new Promise((resolve) => {
-            Dialog.openPopup({
-                opener: self,
+            self._children.dialogOpener.open({
                 templateOptions,
-                closeOnOutsideClick: true,
-                template: self._moveDialogTemplate,
                 eventHandlers: {
                     onResult: (target: Model) => {
                         resolve(self.moveItems(selection, target, LOCAL_MOVE_POSITION.On))
@@ -383,7 +375,7 @@ var _private = {
  * В случае использования {@link Controls/operations:Controller} для корректной обработки событий необходимо помещать Controls/list:Mover внутри Controls/operations:Controller.
  *
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/actions/mover/">руководство разработчика</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/mover/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
  *
  * @class Controls/_list/Mover

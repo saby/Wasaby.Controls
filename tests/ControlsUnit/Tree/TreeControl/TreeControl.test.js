@@ -192,7 +192,8 @@ define([
                   '1': false
                }},
                appendItems: function() {},
-               mergeItems: function() {}
+               mergeItems: function() {},
+               getItemBySourceKey: () => undefined
             };
          };
 
@@ -537,7 +538,8 @@ define([
                   return {
                      at: function () {}
                   };
-               }
+               },
+               getItemBySourceKey: () => undefined
             };
          };
 
@@ -589,7 +591,8 @@ define([
             },
             subscribe: () => {},
             unsubscribe: () => {},
-            getCount: () => 2
+            getCount: () => 2,
+            getItemBySourceKey: () => undefined
          };
 
          // Need to know that list notifies when he has been changed after setting new root by treeControl._afterUpdate
@@ -653,7 +656,8 @@ define([
                treeViewModel._model._root = root;
             },
             getRoot: () => treeViewModel._model._root,
-            getCount: () => 1
+            getCount: () => 1,
+            getItemBySourceKey: () => undefined
          };
 
          treeControl._needResetExpandedItems = true;
@@ -742,7 +746,8 @@ define([
             getRoot: () => treeViewModel._model._root,
             getExpandedItems: () => [1, 2],
             getItems: () => items,
-            getCount: () => 2
+            getCount: () => 2,
+            getItemBySourceKey: () => undefined
          };
          treeControl._deepReload = true;
 
@@ -1002,6 +1007,9 @@ define([
             getItemBySourceItem: function () {
                return null;
             },
+            getItemBySourceKey: function () {
+               return null;
+            },
             getCollapsedGroups: () => undefined,
             getKeyProperty: () => 'id',
             getCount() {
@@ -1029,6 +1037,7 @@ define([
 
                   let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
                   treeControl._children.baseControl._afterUpdate({});
+                  treeControl._children.baseControl._beforePaint();
                   afterUpdatePromise.then(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
@@ -1619,6 +1628,7 @@ define([
          treeControl.saveOptions(cfg);
          treeControl._children = {
             baseControl: {
+               _options: {markerVisibility: 'hidden'},
                getViewModel: function() {
                   return treeGridViewModel;
                },

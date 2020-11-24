@@ -73,6 +73,8 @@ export default class ScrollController {
 
     private _placeholders: IPlaceholders;
 
+    private _resetInEnd: boolean;
+
     // Флаг, который необходимо включать, чтобы не реагировать на скроллы происходящие вследствие
     // подскроллов создаваемых самим контролом (scrollToItem, восстановление позиции скролла после перерисовок)
     private _fakeScroll: boolean;
@@ -342,9 +344,12 @@ export default class ScrollController {
 
             let itemsHeights: Partial<IItemsHeights>;
 
-            const initialIndex = typeof options.activeElement !== 'undefined' ?
+            let initialIndex = typeof options.activeElement !== 'undefined' ?
                 options.collection.getIndexByKey(options.activeElement) : 0;
-
+            if (this._resetInEnd) {
+                initialIndex = options.collection.getCount();
+                this._resetInEnd = false;
+            }
             if (options?.virtualScrollConfig?.itemHeightProperty) {
                 this._virtualScroll.applyContainerHeightsData({
                     viewport: options.virtualScrollConfig.viewportHeight
@@ -579,6 +584,32 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
+    
+    handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
+        let result = {}
+        if (!this._virtualScroll) {
+            result = this._initVirtualScroll(
+                {...this._options, forceInitVirtualScroll: true},
+                (this._options.collection.getCount() - addedItems.length)
+            );
+        }
+
+        this._virtualScroll.addItems(
+            addIndex,
+            addedItems.length,
+            this._triggerVisibility,
+            direction
+        );
+        const removeItemsResult = this._virtualScroll.removeItems(removeIndex, removedIitems.length);
+        this._setCollectionIndices(this._options.collection, removeItemsResult.range, false,
+            this._options.needScrollCalculation);
+        this.savePlaceholders(removeItemsResult.placeholders);
+        return {
+            ...result,
+            placeholders: removeItemsResult.placeholders,
+            shadowVisibility: this._calcShadowVisibility(this._options.collection, removeItemsResult.range)
+        };
+    }
     /**
      * Обработатывает добавление элементов в коллекцию
      * @param addIndex
@@ -616,12 +647,11 @@ export default class ScrollController {
      * Обрабатывает удаление элементов из коллекции
      * @param removeIndex
      * @param items
-     * @param forcedShift
      * @private
      */
-    handleRemoveItems(removeIndex: number, items: object[], forcedShift: boolean): IScrollControllerResult {
+    handleRemoveItems(removeIndex: number, items: object[]): IScrollControllerResult {
         if (this._virtualScroll) {
-            const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length, forcedShift);
+            const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
             this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
                 this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);
@@ -638,6 +668,9 @@ export default class ScrollController {
 
     calculateVirtualScrollHeight(): number {
         return this._virtualScroll.calculateVirtualScrollHeight();
+    }
+    setResetInEnd(resetInEnd: boolean) {
+        this._resetInEnd = resetInEnd;
     }
 
     private getTriggerOffset(scrollHeight: number, viewportHeight: number, attachLoadTopTriggerToNull: boolean):

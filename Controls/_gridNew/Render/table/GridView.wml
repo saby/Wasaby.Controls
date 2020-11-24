@@ -37,7 +37,7 @@
     </tbody>
     <!-- emptyTemplate -->
     <ws:if data="{{_options.emptyTemplate}}">
-        <td colspan="{{ _listModel.getColumns().length.length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0) }}">
+        <td colspan="{{ _listModel.getColumns().length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0) }}">
             <ws:partial template="{{ _options.emptyTemplate }}"
                     attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
                     prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"

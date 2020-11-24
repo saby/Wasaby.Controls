@@ -6,6 +6,9 @@ import { MarkerController } from 'Controls/marker';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel } from 'Controls/treeGrid';
+import { Tree } from 'Controls/display';
+import * as ListData from 'ControlsUnit/ListData';
+import { Model } from 'Types/entity';
 
 describe('Controls/marker/Controller', () => {
    let controller, model, items;
@@ -221,6 +224,55 @@ describe('Controls/marker/Controller', () => {
          const result = controller.onCollectionRemove(0, removedItems);
          assert.equal(result, null);
          removedItems.forEach((item) => assert.isFalse(item.isMarked()));
+      });
+
+      describe('collapse node', () => {
+         beforeEach(() => {
+            model = new Tree({
+               collection: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: ListData.getItems()
+               }),
+               root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+               keyProperty: ListData.KEY_PROPERTY,
+               parentProperty: ListData.PARENT_PROPERTY,
+               nodeProperty: ListData.NODE_PROPERTY,
+               hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
+            });
+
+            controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined });
+         });
+
+         it('was not set marker', () => {
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(1)]);
+            assert.equal(newMarkedKey, undefined);
+         });
+
+         it('collapse node with marker', () => {
+            controller.setMarkedKey(2);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(2)]);
+            assert.equal(newMarkedKey, 1);
+         });
+
+         it('collapse node with marker at depth of several nodes', () => {
+            controller.setMarkedKey(3);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(2), model.getItemBySourceKey(3), model.getItemBySourceKey(4), model.getItemBySourceKey(5)]);
+            assert.equal(newMarkedKey, 1);
+         });
+
+         it('collapse node without marker', () => {
+            controller.setMarkedKey(5);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+            assert.equal(newMarkedKey, 5);
+         });
+
+         it('remove item with parent = root node', () => {
+            controller.setMarkedKey(6);
+            const removedItem = model.getItemBySourceKey(6);
+            model.getCollection().remove(removedItem.getContents());
+            const newMarkedKey = controller.onCollectionRemove(0, [removedItem]);
+            assert.equal(newMarkedKey, 1);
+         });
       });
    });
 

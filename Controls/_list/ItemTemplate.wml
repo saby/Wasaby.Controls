@@ -39,6 +39,7 @@
     <ws:if data="{{ (item || itemData).hasVisibleActions() || (item || itemData).isEditing() }}">
         <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}"
+                        itemData="{{itemData}}"
                         highlightOnHover="{{ highlightOnHover }}" />
         </ws:if>
         <ws:else data="{{ itemActionsPosition !== 'custom' }}">

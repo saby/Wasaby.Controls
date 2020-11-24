@@ -60,7 +60,7 @@ export default class GridGroupCell<T> extends GridColumn<T> {
                       `controls-ListView__groupContent-text_default_theme-${theme} `;
 
         if (expanderVisible !== false) {
-            if (this.isExpanded()) {
+            if (!this.isExpanded()) {
                 classes += ' controls-ListView__groupExpander_collapsed';
                 classes += ` controls-ListView__groupExpander_collapsed_${expander}`;
             }

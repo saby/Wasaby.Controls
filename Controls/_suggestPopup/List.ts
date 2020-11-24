@@ -206,6 +206,7 @@ const List = Control.extend({
 
       if (currentTabMetaKey && currentTabMetaKey !== this._suggestListOptions.tabsSelectedKey) {
          this._suggestListOptions.tabsSelectedKey = currentTabMetaKey;
+         this._notify('tabsSelectedKeyChanged', [currentTabMetaKey]);
       }
    },
 

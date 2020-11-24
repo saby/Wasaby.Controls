@@ -1,5 +1,5 @@
 import { IOptions, TVisibility, Visibility } from './interface';
-import { Collection, CollectionItem } from 'Controls/display';
+import { Collection, CollectionItem, TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 
@@ -133,7 +133,25 @@ export class Controller {
       // поэтому на скрытых элементах нужно сбросить состояние marked
       removedItems.forEach((item) => item.setMarked(false, true));
 
-      return this._getMarkedKeyAfterRemove(removedItemsIndex);
+      let markedKeyAfterRemove = this._getMarkedKeyAfterRemove(removedItemsIndex);
+
+      // Если свернули узел внутри которого есть маркер, то маркер нужно поставить на узел
+      // TODO нужно только для дерева, можно подумать над наследованием
+      if (removedItems[0] instanceof TreeItem && this._markedKey !== undefined && this._markedKey !== null) {
+         const removeMarkedItem = !!removedItems.find((it) => it.getContents().getKey() === this._markedKey);
+         if (removeMarkedItem) {
+            const parent = removedItems[0].getParent();
+            // На корневой узел ставить маркер нет смысла, т.к. в этом случае должно отработать именно удаление элементов, а не скрытие
+            if (parent && parent !== this._model.getRoot()) {
+               const parentItem = parent.getContents();
+               if (parentItem) {
+                  markedKeyAfterRemove = parentItem.getKey();
+               }
+            }
+         }
+      }
+
+      return markedKeyAfterRemove;
    }
 
    /**

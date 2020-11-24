@@ -353,13 +353,13 @@ var _private = {
         });
     },
 
-    reload: function(self, onlyChangedItems: boolean = false, hasSimplePanel = true) {
+    reload: function(self, onlyChangedItems: boolean = false, hasSimplePanel = true, force?: boolean) {
         var pDef = new ParallelDeferred();
         factory(self._source).each(function(item) {
             if (_private.isFrequentItem(item)) {
                 if (!onlyChangedItems || _private.isItemChanged(item)) {
                     if (hasSimplePanel) {
-                        if (!item.textValue) {
+                        if (!item.textValue || force) {
                             const result = _private.loadItems(self, item);
                             pDef.push(result);
                         } else {
@@ -641,9 +641,9 @@ var _private = {
  * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
  *
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/">руководство разработчика по работе с контролом</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter-view/">руководство разработчика по работе с контролом</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less">переменные тем оформления filter</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less">переменные тем оформления filterPopup</a>
  *
@@ -723,11 +723,11 @@ var Filter = Control.extend({
             _private.resolveItems(this, newOptions.source);
             if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
-                resultDef = _private.reload(this, null, newOptions.panelTemplateName).addCallback(() => {
+                resultDef = _private.reload(this, null, newOptions.panelTemplateName, true).addCallback(() => {
                     self._hasSelectorTemplate = _private.hasSelectorTemplate(self._source);
                 });
             } else if (_private.isNeedHistoryReload(this._configs)) {
-                resultDef = _private.reload(this,null, newOptions.panelTemplateName);
+                resultDef = _private.reload(this,null, newOptions.panelTemplateName, true);
             } else if (this._loadDeferred && !this._loadDeferred.isReady()) {
                 resultDef = this._loadDeferred.addCallback((): void => {
                     _private.loadSelectedItems(this._source, this._configs).addCallback(() => {
