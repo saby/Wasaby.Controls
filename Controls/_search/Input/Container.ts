@@ -65,7 +65,10 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    private _resolve(value: string): void {
       if (this._options.useStore) {
-         Store.dispatch('searchValue', value);
+         Store.dispatch('searchValue', {
+            text: value,
+            force: !!force
+         });
       } else {
          this._notify('search', [value || ''], {bubbling: true});
       }
