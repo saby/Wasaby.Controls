@@ -41,6 +41,7 @@ var TreeTileViewModel = TreeViewModel.extend({
             const collapsedGroups = this.getCollapsedGroups() || [];
             current.isExpanded = () => !collapsedGroups.includes(dispItem.getContents());
         }
+        current.isStickyHeader = () => this._options.stickyHeader;
         if (current.hasMultiSelect) {
             current.multiSelectClassList += ' controls-TileView__checkbox js-controls-TileView__withoutZoom';
             current.multiSelectClassList += !current.isGroup && dispItem.isNode() ? ' controls-TreeTileView__checkbox' : '';
@@ -98,6 +99,11 @@ var TreeTileViewModel = TreeViewModel.extend({
             return version;
         };
 
+        // Совместимость с newModel, https://online.sbis.ru/opendoc.html?guid=0bca7ba3-f49f-46da-986a-a1692deb9c47
+        current.isStickyHeader = () => {
+            return this._options.stickyHeader;
+        }
+
         return current;
     },
     isScaled: function(itemData) {
@@ -124,8 +130,8 @@ var TreeTileViewModel = TreeViewModel.extend({
                 itemContents
             );
         } else {
-            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.tileWidth :
-            this._options.folderWidth;
+            opts.itemWidth = dispItem?.isNode && dispItem.isNode() ? this._options.folderWidth :
+            this._options.tileWidth;
         }
         return opts;
     },
@@ -145,6 +151,14 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     setItemsHeight: function (itemsHeight) {
         this._tileModel.setItemsHeight(itemsHeight);
+    },
+
+    setItemsContainerPadding(padding) {
+        this._tileModel.setItemsContainerPadding(padding);
+    },
+
+    getItemsContainerPadding() {
+        return this._tileModel.getItemsContainerPadding();
     },
 
     getItemsHeight: function () {
@@ -240,9 +254,17 @@ var TreeTileViewModel = TreeViewModel.extend({
     getItemsPaddingContainerClasses(): string {
         return this._tileModel.getItemsPaddingContainerClasses();
     },
-    getActionsMenuConfig(item, clickEvent: SyntheticEvent, opener, templateOptions): Record<string, any> {
+    getActionsMenuConfig(
+        item: Model,
+        clickEvent: SyntheticEvent,
+        opener,
+        templateOptions,
+        isActionMenu: boolean,
+        isContextMenu: boolean
+    ): Record<string, any> {
         const itemData = this.getItemDataByItem(item);
-        return this._tileModel.getActionsMenuConfig(itemData, clickEvent, opener, templateOptions);
+        return this._tileModel.getActionsMenuConfig(itemData,
+            clickEvent, opener, templateOptions, isActionMenu, isContextMenu);
     }
 });
 

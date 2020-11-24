@@ -69,7 +69,7 @@ function buildChildrenMap<T>(sourceItems: T[], parentProperty: string): Map<numb
         itemContents = item.getContents();
 
         // Skip groups
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             continue;
         }
 
@@ -99,7 +99,7 @@ function buildGroupsMap<T>(sourceItems: T[]): Map<T, number> {
     let currentGroup;
 
     sourceItems.forEach((item, index) => {
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             currentGroup = index;
         } else {
             itemToGroup.set(item, currentGroup);
@@ -268,6 +268,13 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
 
     readonly '[Controls/_display/IItemsStrategy]': boolean = true;
 
+    /**
+     * Устанавливает название свойства элемента коллекции, содержащего его уникальный идентификатор
+     */
+    set keyProperty(value: string): void {
+        this._options.keyProperty = value;
+    }
+
     get options(): ISourceOptions<S, T> {
         return this.source.options as ISourceOptions<S, T>;
     }
@@ -311,7 +318,7 @@ export default class AdjacencyList<S, T extends TreeItem<S>> extends mixin<
         }
 
         let item;
-        if (sourceItem instanceof GroupItem) {
+        if (sourceItem['[Controls/_display/GroupItem]']) {
             item = sourceItem;
         } else if (sourceItem instanceof TreeItem) {
             if (items.indexOf(sourceItem) === -1) {

@@ -71,7 +71,7 @@ var
              return isColumnScrollVisible && tmplColspan !== false;
          };
          data.resolveItemTemplate = function(itemData) {
-            if (!itemData.breadCrumbs && self._options.itemTemplate) {
+            if (!itemData.breadCrumbs && !itemData.dispItem['[Controls/_display/SearchSeparator]'] && self._options.itemTemplate) {
                return self._options.itemTemplate;
             }
             return data.resolvers.baseItemTemplate();
@@ -113,7 +113,8 @@ var
           let result;
 
           // Use "duck typing" to detect breadCrumbs (faster than "instanceOf Array")
-          if (!!item.forEach) {
+          // For "search separator" item is null and we can't prevent _isGroup() call for it
+          if (!item || !!item.forEach) {
               result = false;
           } else {
               result = SearchViewModel.superclass._isGroup.call(this, item);

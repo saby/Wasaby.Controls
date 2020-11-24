@@ -45,7 +45,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
  * @implements Controls/_list/interface/IListNavigation
  *
@@ -57,7 +57,7 @@ import { RecordSet } from 'Types/collection';
 
 /*
  * Plain list with custom item template. Can load data from data source.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
  *
  * @class Controls/_list/List
  * @extends Core/Control
@@ -81,7 +81,7 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerListOptions
  *
- * @mixes Controls/_list/interface/IVirtualScroll
+ * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
  * 
  * @author Авраменко А.С.

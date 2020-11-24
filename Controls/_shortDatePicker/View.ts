@@ -12,6 +12,14 @@ import monthTmpl = require('wml!Controls/_shortDatePicker/monthTemplate');
 import {Logger} from 'UI/Utils';
 import {Utils as dateControlsUtils} from 'Controls/dateRange';
 
+const enum POSITION {
+    RIGHT = 'right',
+    LEFT = 'left'
+}
+
+// В режиме 'Только года' одновременно отобржается 15 элементов.
+// Таким образом последний отображаемый элемент имеет индекс 14.
+const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
 /**
  * Контрол выбора даты или периода.
  *
@@ -33,16 +41,6 @@ import {Utils as dateControlsUtils} from 'Controls/dateRange';
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
-
-const enum POSITION {
-    RIGHT = 'right',
-    LEFT = 'left'
-}
-
-// В режиме 'Только года' одновременно отобржается 15 элементов.
-// Таким образом последний отображаемый элемент имеет индекс 14.
-const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
-
 class View extends Control<IDateLitePopupOptions> {
     protected _template: TemplateFunction = componentTmpl;
     protected _defaultListTemplate: TemplateFunction = listTmpl;
@@ -188,13 +186,18 @@ class View extends Control<IDateLitePopupOptions> {
 
     protected _updateCloseBtnPosition(options: IDateLitePopupOptions): void {
         if (options.stickyPosition) {
-            const openerLeft = options.stickyPosition.targetPosition.left;
-            const popupLeft = options.stickyPosition.position.left;
-            // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
-            const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
-            this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
-                POSITION.RIGHT :
-                POSITION.LEFT;
+            // если вызывающий элемент находится в левой части экрана, то крестик всегда позиционируем справа
+            if (options.stickyPosition.targetPosition.left <  this.getWindowInnerWidth() / 2) {
+                this._closeBtnPosition =  POSITION.RIGHT;
+            } else {
+                const openerLeft = options.stickyPosition.targetPosition.left;
+                const popupLeft = options.stickyPosition.position.left;
+                // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
+                const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
+                this._closeBtnPosition = (popupLeft + popupOffset) === openerLeft ?
+                    POSITION.RIGHT :
+                    POSITION.LEFT;
+            }
         }
     }
 
@@ -416,6 +419,10 @@ class View extends Control<IDateLitePopupOptions> {
         } else {
             return currentDate;
         }
+    }
+
+    private getWindowInnerWidth(): number {
+        return window?.innerWidth;
     }
 
     static _theme: string[] = ['Controls/shortDatePicker'];

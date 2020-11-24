@@ -213,7 +213,7 @@ export default class User<S, T extends CollectionItem<S> = CollectionItem<S>> ex
         for (let i = 0, count = current.length; i < count; i++) {
             index = current[i];
             item = items[index];
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 // Don't sort groups
                 map.push(index);
             } else {

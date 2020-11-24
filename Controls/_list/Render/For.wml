@@ -24,7 +24,8 @@
            on:mousedown="_onItemMouseDown(item)"
            on:mousemove="_onItemMouseMove(item)"
            on:mouseleave="_onItemMouseLeave(item)"
-           on:wheel="_onItemWheel(item)">
+           on:wheel="_onItemWheel(item)"
+           __notExcessiveRender="{{ true }}">
       <ws:itemActionsTemplate>
          <!-- We have to support setting of "itemActionsClass" option in BaseControl and while using Controls/list:ItemTemplate -->
          <!-- Передача highlightOnHover это костыль, т.к. иначе он не виден внутри шаблона, вставляемого через ws:partial
@@ -51,7 +52,7 @@
    <ws:if data="{{ item.isEditing() }}">
       <!-- Во время редактирования строки View не должна слушать событие click и mouseDown -->
       <Controls._list.EditInPlace.EditingRow isScrollToElement="{{isScrollToElement}}" name="editingRow" on:deactivated="_onRowDeactivated()">
-              <ws:partial template="localItemTemplate"/>
+              <ws:partial template="localItemTemplate" />
       </Controls._list.EditInPlace.EditingRow>
    </ws:if>
    <ws:else>

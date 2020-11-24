@@ -6,8 +6,8 @@ var _private = {
    getBorderWidth: function(container) {
       return +getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2;
    },
-   getSuggestWidth: function(target, container) {
-      return target.offsetWidth - _private.getBorderWidth(container);
+   getSuggestWidth(target: HTMLElement, container?: HTMLElement): number {
+      return target.offsetWidth - (container ? _private.getBorderWidth(container) : 0);
    }
 };
 
@@ -67,6 +67,13 @@ var __PopupContent = BaseLayer.extend({
          this._children.scrollContainer.scrollToBottom();
          this._shouldScrollToBottom = false;
       }
+   },
+
+   _beforeMount(options): void {
+      if (options.target) {
+         this._suggestWidth = _private.getSuggestWidth(options.target[0] || options.target);
+      }
+      __PopupContent.superclass._beforeMount.apply(this, arguments);
    },
 
    _afterMount(): void {

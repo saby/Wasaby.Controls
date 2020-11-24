@@ -6,6 +6,9 @@ import { MarkerController } from 'Controls/marker';
 import { ListViewModel } from 'Controls/list';
 import { RecordSet } from 'Types/collection';
 import { SearchGridViewModel } from 'Controls/treeGrid';
+import { Tree } from 'Controls/display';
+import * as ListData from 'ControlsUnit/ListData';
+import { Model } from 'Types/entity';
 
 describe('Controls/marker/Controller', () => {
    let controller, model, items;
@@ -167,6 +170,13 @@ describe('Controls/marker/Controller', () => {
       assert.equal(result, 1);
    });
 
+   it('getSuitableMarkedKey', () => {
+      controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
+      const item = model.at(0);
+      const result = controller.getSuitableMarkedKey(item);
+      assert.equal(result, 1);
+   });
+
    describe('onCollectionRemove', () => {
       it('exists current marked item', () => {
          controller = new MarkerController({model, markerVisibility: 'visible', markedKey: 2});
@@ -214,6 +224,55 @@ describe('Controls/marker/Controller', () => {
          const result = controller.onCollectionRemove(0, removedItems);
          assert.equal(result, null);
          removedItems.forEach((item) => assert.isFalse(item.isMarked()));
+      });
+
+      describe('collapse node', () => {
+         beforeEach(() => {
+            model = new Tree({
+               collection: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: ListData.getItems()
+               }),
+               root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+               keyProperty: ListData.KEY_PROPERTY,
+               parentProperty: ListData.PARENT_PROPERTY,
+               nodeProperty: ListData.NODE_PROPERTY,
+               hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY
+            });
+
+            controller = new MarkerController({ model, markerVisibility: 'visible', markedKey: undefined });
+         });
+
+         it('was not set marker', () => {
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(1)]);
+            assert.equal(newMarkedKey, undefined);
+         });
+
+         it('collapse node with marker', () => {
+            controller.setMarkedKey(2);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(2)]);
+            assert.equal(newMarkedKey, 1);
+         });
+
+         it('collapse node with marker at depth of several nodes', () => {
+            controller.setMarkedKey(3);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(2), model.getItemBySourceKey(3), model.getItemBySourceKey(4), model.getItemBySourceKey(5)]);
+            assert.equal(newMarkedKey, 1);
+         });
+
+         it('collapse node without marker', () => {
+            controller.setMarkedKey(5);
+            const newMarkedKey = controller.onCollectionRemove(0, [model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+            assert.equal(newMarkedKey, 5);
+         });
+
+         it('remove item with parent = root node', () => {
+            controller.setMarkedKey(6);
+            const removedItem = model.getItemBySourceKey(6);
+            model.getCollection().remove(removedItem.getContents());
+            const newMarkedKey = controller.onCollectionRemove(0, [removedItem]);
+            assert.equal(newMarkedKey, 1);
+         });
       });
    });
 
@@ -289,7 +348,7 @@ describe('Controls/marker/Controller', () => {
          assert.equal(model.getVersion(), 4);
       });
 
-      it('not exists marked item', () => {
+      it('not exists marked item, visible', () => {
          controller.setMarkedKey(1);
          assert.isTrue(model.getItemBySourceKey(1).isMarked());
 
@@ -308,6 +367,51 @@ describe('Controls/marker/Controller', () => {
          assert.isFalse(model.getItemBySourceKey(3).isMarked());
          assert.equal(model.getVersion(), 3);
       });
+
+      it('not exists marked item, onactivated and was set marker before reset', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: undefined });
+         ctrl.setMarkedKey(1);
+         assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.equal(newMarkedKey, 2);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
+
+      it('not exists marked item, onactivated and was not set marker before reset', () => {
+         const ctrl = new MarkerController({ model, markerVisibility: 'onactivated', markedKey: null });
+         model.setItems(new RecordSet({
+            rawData: [
+               {id: 2},
+               {id: 3}
+            ],
+            keyProperty: 'id'
+         }));
+
+         const newMarkedKey = ctrl.onCollectionReset();
+         assert.isNull(newMarkedKey);
+         assert.isFalse(model.getItemBySourceKey(2).isMarked());
+         assert.isFalse(model.getItemBySourceKey(3).isMarked());
+      });
+   });
+
+   it('destroy', () => {
+      controller.setMarkedKey(1);
+      assert.isTrue(model.getItemBySourceKey(1).isMarked());
+
+      controller.destroy();
+      assert.isFalse(model.getItemBySourceKey(1).isMarked());
+      assert.isFalse(model.getItemBySourceKey(2).isMarked());
+      assert.isFalse(model.getItemBySourceKey(3).isMarked());
    });
 
    it('should work with breadcrumbs', () => {
@@ -351,7 +455,7 @@ describe('Controls/marker/Controller', () => {
       assert.equal(controller.getMarkedKey(), 2);
 
       result = controller.getNextMarkedKey();
-      assert.equal(result, 3);
+      assert.equal(result, 4);
 
       result = controller.getPrevMarkedKey();
       assert.equal(result, 1);

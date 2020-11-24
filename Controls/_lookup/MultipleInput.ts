@@ -8,6 +8,8 @@ import {getWidth} from 'Controls/sizeUtils';
 import * as showSelectorTemplate from 'wml!Controls/_lookup/BaseLookupView/resources/showSelectorTemplate';
 import * as inputRender from 'wml!Controls/_lookup/MultipleInput/resources/inputRender';
 
+let SHOW_SELECTOR_WIDTH = 0;
+let OUTER_INDENT_INPUT = 0;
 /**
  * Поле ввода с автодополнением и возможностью выбора значений из справочника.
  *
@@ -74,18 +76,14 @@ import * as inputRender from 'wml!Controls/_lookup/MultipleInput/resources/input
  * @public
  * @author Герасимов А.М.
  */
-
-let SHOW_SELECTOR_WIDTH = 0;
-let OUTER_INDENT_INPUT = 0;
-
 export default class MultipleInput extends BaseLookupInput {
     protected _rootContainerClasses: string = 'controls-Lookup controls-MultipleInput';
     protected _itemTemplateClasses: string = 'controls-MultipleInput__SelectedCollection_item';
     protected _listOfDependentOptions: string[] = ['displayProperty', 'readOnly', 'placeholder', 'isInputVisible'];
     protected _availableWidthCollection: number;
 
-    showSelector(popupOptions: IStackPopupOptions): void {
-        showSelector(this, popupOptions, false);
+    showSelector(popupOptions?: IStackPopupOptions): boolean {
+        return showSelector(this, popupOptions, false);
     }
 
     _calculateSizes(options: ILookupInputOptions): void {

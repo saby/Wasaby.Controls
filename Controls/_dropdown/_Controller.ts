@@ -24,7 +24,7 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
 
@@ -35,17 +35,9 @@ import * as Merge from 'Core/core-merge';
  * @extends Core/Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
- * 
+ *
  * @private
  */
-
-/**
- * @event Происходит при изменении набора выбранных элементов.
- * @name Controls/_dropdown/_Controller#selectedItemsChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Types/collection:RecordSet} items Выбранные элементы.
- */
-
 export default class _Controller implements IDropdownController {
    protected _items: RecordSet = null;
    protected _loadItemsTempPromise: Promise<any> = null;
@@ -147,7 +139,12 @@ export default class _Controller implements IDropdownController {
       const deps = [this._loadMenuTemplates(this._options)];
 
       if (!this._items) {
-         deps.push(this._getloadItemsPromise().then(() => this._loadItemsTemplates(this._options)));
+         deps.push(this._getloadItemsPromise()
+             .then(() => this._loadItemsTemplates(this._options))
+             .catch((error) => {
+               return Promise.reject(error);
+            })
+         );
       } else {
          deps.push(this._loadItemsTemplates(this._options));
       }
@@ -277,10 +274,15 @@ export default class _Controller implements IDropdownController {
    }
 
    private _createMenuSource(items: RecordSet|Error): void {
+      let menuItems = items;
+      if (this._options.needLoadSelectedItems && this._isHistoryMenu()) {
+         // FIXME https://online.sbis.ru/opendoc.html?guid=300c6a3f-6870-492e-8308-34a457ad7b85
+         menuItems = items.clone();
+      }
       this._menuSource = new PrefetchProxy({
          target: this._source,
          data: {
-            query: items
+            query: menuItems
          }
       });
    }
@@ -311,10 +313,10 @@ export default class _Controller implements IDropdownController {
       this._createMenuSource(error);
    }
 
-   private _prepareFilterForQuery(options): object {
+   private _prepareFilterForQuery(options, withHistory: boolean = true): object {
       let filter = options.filter;
 
-      if (this._hasHistory(options)) {
+      if (this._hasHistory(options) && withHistory) {
          if (this._isLocalSource(options.source) || !options.historyNew) {
             filter = getSourceFilter(options.filter, this._source);
          } else {
@@ -339,11 +341,10 @@ export default class _Controller implements IDropdownController {
       });
    }
 
-   private _loadItems(options) {
+   private _loadItems(options, withHistory?: boolean) {
       return this._getSourceController(options).then(
           (sourceController) => {
-             this._filter = this._prepareFilterForQuery(options);
-
+             this._filter = this._prepareFilterForQuery(options, withHistory);
              return sourceController.load(this._filter).addCallback((items) => {
                 const unloadedKeys = this._getUnloadedSelectedKeys(options.selectedKeys, items);
                 if (options.needLoadSelectedItems && unloadedKeys) {
@@ -393,7 +394,7 @@ export default class _Controller implements IDropdownController {
          keyProperty: options.keyProperty,
          filter
       };
-      return this._loadItems(config).then((newItems) => {
+      return this._loadItems(config, false).then((newItems) => {
          items.prepend(newItems);
          this._resolveLoadedItems(options, items);
          return items;
@@ -456,7 +457,7 @@ export default class _Controller implements IDropdownController {
    }
 
    private _prepareItem(item, keyProperty, source): Model {
-      if (isHistorySource(source)) {
+      if (this._isHistoryMenu()) {
          // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
          // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
          if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty())) {
@@ -537,6 +538,10 @@ export default class _Controller implements IDropdownController {
       return Object.keys(templates);
    }
 
+   private _isHistoryMenu(): boolean {
+      return isHistorySource(this._source) && this._items && this._items.at(0).has('HistoryId');
+   }
+
    private _getPopupOptions(popupOptions?): object {
       let baseConfig = {...this._options};
       const ignoreOptions = [
@@ -556,10 +561,11 @@ export default class _Controller implements IDropdownController {
          }
       }
       let templateOptions = {
+         dataLoadCallback: null,
          closeButtonVisibility: false,
          emptyText: this._getEmptyText(),
          allowPin: this._options.allowPin && this._hasHistory(this._options),
-         keyProperty: isHistorySource(this._source) ? 'copyOriginalId' : baseConfig.keyProperty,
+         keyProperty: this._isHistoryMenu() ? 'copyOriginalId' : baseConfig.keyProperty,
          headerTemplate: this._options.headTemplate || this._options.headerTemplate,
          footerContentTemplate: this._options.footerContentTemplate,
          items: this._items,
@@ -605,3 +611,9 @@ _Controller.getOptionTypes = function getOptionTypes() {
       selectedKeys: descriptor(Array)
    };
 };
+/**
+ * @event Происходит при изменении набора выбранных элементов.
+ * @name Controls/_dropdown/_Controller#selectedItemsChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/collection:RecordSet} items Выбранные элементы.
+ */

@@ -18,6 +18,19 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IFontColorStyle} from './interface';
 import {ILinkViewControlOptions} from './_dateRange/LinkView';
 
+const HEADER_TYPES = {
+        link: 'link',
+        input: 'input'
+};
+
+const STATES = {
+        year: 'year',
+        month: 'month'
+};
+
+const MONTH_STATE_SELECTION_DAYS = 30;
+const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
+
 /**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
  *
@@ -29,7 +42,7 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @mixes Controls/_datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
@@ -46,25 +59,11 @@ import {ILinkViewControlOptions} from './_dateRange/LinkView';
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/datePopup/interfaces/IDatePopup
  * @mixes Controls/_interface/IDateRangeValidators
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/datePopup/datePopup
  */
-
-const HEADER_TYPES = {
-        link: 'link',
-        input: 'input'
-};
-
-const STATES = {
-        year: 'year',
-        month: 'month'
-};
-
-const MONTH_STATE_SELECTION_DAYS = 30;
-const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
-
 export default class DatePopup extends Control implements EventProxyMixin {
     _template: TemplateFunction = componentTmpl;
     _headerTmpl: TemplateFunction = headerTmpl;
@@ -275,7 +274,11 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _yearsRangeSelectionEnded(e: SyntheticEvent, start: Date, end: Date): void {
-        this.sendResult(start, dateUtils.getEndOfYear(end));
+        const endOfYear = dateUtils.getEndOfYear(end);
+        const ranges = this._calculateRangeSelectedCallback(start, endOfYear);
+        const startValue = ranges[0];
+        const endValue = ranges[1];
+        this.sendResult(startValue, endValue);
     }
 
     _onYearsItemClick(e: SyntheticEvent, item: Date): void {
@@ -296,8 +299,20 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     _monthsRangeSelectionEnded(e: SyntheticEvent<Event>, start: Date, end: Date): void {
         const endOfMonth: Date = dateUtils.getEndOfMonth(end);
-        this.rangeChanged(start, endOfMonth);
-        this.sendResult(start, endOfMonth);
+        const ranges = this._calculateRangeSelectedCallback(start, endOfMonth);
+        const startValue = ranges[0];
+        const endValue = ranges[1];
+        this.rangeChanged(startValue, endValue);
+        this.sendResult(startValue, endValue);
+    }
+
+    private _calculateRangeSelectedCallback(startValue: Date, endValue: Date): Date[] {
+        if (this._options.rangeSelectedCallback) {
+            const ranges = this._options.rangeSelectedCallback(startValue, endValue);
+            startValue = ranges[0];
+            endValue = ranges[1];
+        }
+        return [startValue, endValue];
     }
 
     _monthRangeMonthClick(e: SyntheticEvent, date: Date): void {

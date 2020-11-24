@@ -31,6 +31,8 @@ export interface IControllerState {
     sorting: QueryOrderSelector;
     filter: QueryWhereExpression<unknown>;
     navigation: INavigationOptionValue<INavigationSourceConfig>;
+
+    parentProperty?: string;
     root?: TKey;
 
     items: RecordSet;
@@ -50,6 +52,7 @@ export interface IControllerOptions extends
     expandedItems?: TKey[];
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
+    navigationParamsChangedCallback?: Function;
 }
 
 type LoadResult = Promise<RecordSet|Error>;
@@ -68,7 +71,7 @@ export default class Controller {
     private _loadPromise: CancelablePromise<LoadResult>;
 
     private _parentProperty: string;
-    private _root: TKey;
+    private _root: TKey = null;
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
@@ -77,7 +80,9 @@ export default class Controller {
         this._options = cfg;
         this._filter = cfg.filter;
 
-        this.setRoot(cfg.root);
+        if (cfg.root !== undefined) {
+            this.setRoot(cfg.root);
+        }
         this.setParentProperty(cfg.parentProperty);
 
         this._collectionChange = this._collectionChange.bind(this);
@@ -90,7 +95,7 @@ export default class Controller {
     }
 
     reload(sourceConfig?: INavigationSourceConfig): LoadResult {
-        this._navigationController = null;
+        this._destroyNavigationController();
         this._deepReload = true;
 
         return this._load(undefined, this._root, sourceConfig).then((result) => {
@@ -112,12 +117,11 @@ export default class Controller {
     }
 
     setItems(items: RecordSet): RecordSet {
-        this._setItems(items);
-
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryProperties(items, this._root);
+            this._destroyNavigationController();
+            this._getNavigationController(this._options).updateQueryProperties(items, this._root);
         }
-
+        this._setItems(items);
         return this._items;
     }
 
@@ -181,7 +185,7 @@ export default class Controller {
                         navigationConfig: newOptions.navigation.sourceConfig
                     });
                 } else {
-                    this._navigationController = this._getNavigationController(newOptions.navigation);
+                    this._navigationController = this._getNavigationController(newOptions);
                 }
             }
 
@@ -209,7 +213,9 @@ export default class Controller {
             filter: this._filter,
             sorting: this._options.sorting,
             navigation: this._options.navigation,
-            root: this._options.root,
+
+            parentProperty: this._parentProperty,
+            root: this._root,
 
             items: this._items,
             // FIXME sourceController не должен создаваться, если нет source
@@ -225,14 +231,14 @@ export default class Controller {
 
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key);
+        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
         let hasMoreData = false;
 
         if (this._hasNavigationBySource()) {
-            hasMoreData = this._getNavigationController(this._options.navigation)
+            hasMoreData = this._getNavigationController(this._options)
                 .hasMoreData(NAVIGATION_DIRECTION_COMPATIBILITY[direction], key);
         }
 
@@ -245,7 +251,7 @@ export default class Controller {
 
     shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            return this._getNavigationController(this._options.navigation)
+            return this._getNavigationController(this._options)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -260,11 +266,7 @@ export default class Controller {
     destroy(): void {
         this.cancelLoading();
         this._unsubscribeItemsCollectionChangeEvent();
-
-        if (this._navigationController) {
-            this._navigationController.destroy();
-            this._navigationController = null;
-        }
+        this._destroyNavigationController();
     }
 
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
@@ -275,12 +277,16 @@ export default class Controller {
     }
 
     private _getNavigationController(
-        navigationOption: INavigationOptionValue<INavigationSourceConfig>
+        {
+            navigation,
+            navigationParamsChangedCallback
+        }: Partial<IControllerOptions>
     ): NavigationController {
         if (!this._navigationController) {
             this._navigationController = new NavigationController({
-                navigationType: navigationOption.source,
-                navigationConfig: navigationOption.sourceConfig
+                navigationType: navigation.source,
+                navigationConfig: navigation.sourceConfig,
+                navigationParamsChangedCallback
             });
         }
 
@@ -294,7 +300,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation)
+            this._getNavigationController(this._options)
                 .updateQueryProperties(list, id, navigationConfig, NAVIGATION_DIRECTION_COMPATIBILITY[direction]);
         }
     }
@@ -305,7 +311,7 @@ export default class Controller {
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
         ): IQueryParams {
-        const navigationController = this._getNavigationController(this._options.navigation);
+        const navigationController = this._getNavigationController(this._options);
         return navigationController.getQueryParams(
             {
                 filter: queryParams.filter,
@@ -450,7 +456,14 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options.navigation).updateQueryRange(this._items, this._root);
+            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
+        }
+    }
+
+    private _destroyNavigationController(): void {
+        if (this._navigationController) {
+            this._navigationController.destroy();
+            this._navigationController = null;
         }
     }
 
@@ -478,11 +491,15 @@ export default class Controller {
         const historyId = hasGrouping ? (options.groupHistoryId || options.historyIdCollapsedGroups) : undefined;
         const collapsedGroups = options.collapsedGroups;
         const getFilterWithCollapsedGroups = (collapsedGroupsIds: TArrayGroupId) => {
-            let modifiedFilter: Record<string, unknown> = {};
+            let modifiedFilter;
+
             if (collapsedGroupsIds && collapsedGroupsIds.length) {
                 modifiedFilter = { ...initialFilter };
                 modifiedFilter.collapsedGroups = collapsedGroupsIds;
+            } else {
+                modifiedFilter = initialFilter;
             }
+
             return modifiedFilter;
         };
         let resultFilterPromise;

@@ -265,7 +265,20 @@ abstract class BaseController {
         const restrictiveContainerNode = document.querySelector(restrictiveContainer);
 
         if (restrictiveContainerNode) {
+            // TODO: В рамках оптимизации нижний попап скрывается через ws-hidden
+            // Нужно это учитывать при расчете размеров https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
+            const popup = restrictiveContainerNode.closest('.controls-Popup');
+            const hiddenClass = 'ws-hidden';
+            const isPopupHidden = popup && popup.classList.contains(hiddenClass);
+            if (isPopupHidden) {
+                popup.classList.remove(hiddenClass);
+            }
+
             const targetCoords = TargetCoords.get(restrictiveContainerNode);
+
+            if (isPopupHidden) {
+                popup.classList.add(hiddenClass);
+            }
             return BaseController.rootContainers[restrictiveContainer] = targetCoords;
         }
     }

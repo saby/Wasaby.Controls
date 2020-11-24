@@ -90,7 +90,7 @@ define(
                let combobox = getCombobox(config);
                combobox._beforeMount(config);
                assert.equal(combobox._value, 'New text');
-               assert.equal(combobox._placeholder, 'This is placeholder'); 
+               assert.equal(combobox._placeholder, 'This is placeholder');
             });
 
             it('beforeMount without source', () => {
@@ -111,12 +111,28 @@ define(
             assert.isTrue(isUpdated);
          });
 
+         it('_beforeUpdate readOnly changes', function() {
+            let combobox = getCombobox(config);
+            let isUpdated = false;
+            combobox._controller = {
+               update: () => {isUpdated = true}
+            };
+            combobox._beforeUpdate({
+               readOnly: true
+            });
+            assert.isTrue(combobox._readOnly);
+         });
+
 
          it('dataLoadCallback option', function() {
+            let isCalled = false;
             let combobox = getCombobox(config);
-            const result = combobox._getControllerOptions({ dataLoadCallback: 'testDataLoadCallback' });
+            combobox._options.dataLoadCallback = () => {
+               isCalled = true;
+            };
+            combobox._dataLoadCallback(itemsRecords);
 
-            assert.equal(result.dataLoadCallback, 'testDataLoadCallback');
+            assert.isTrue(isCalled);
          });
 
          it('_getMenuPopupConfig', () => {
@@ -129,6 +145,75 @@ define(
             combobox._container.offsetWidth = null;
             result = combobox._getMenuPopupConfig();
             assert.equal(result.templateOptions.width, null);
+         });
+
+         it('_afterMount', () => {
+            let combobox = getCombobox(config);
+            let selectedItemIsChanged = false;
+            combobox._selectedItemsChangedHandler = () => {
+               selectedItemIsChanged = true;
+            };
+            combobox._selectedItem = new entity.Model({
+               rawData: {
+                  key: 1
+               }
+            });
+            combobox._countItems = 1;
+            combobox._afterMount({
+               keyProperty: 'key',
+               selectedKey: 1
+            });
+            assert.isFalse(selectedItemIsChanged);
+
+            combobox._afterMount({
+               keyProperty: 'key',
+               selectedKey: 5
+            });
+            assert.isTrue(selectedItemIsChanged);
+         });
+
+         describe('check readOnly state', () => {
+            let combobox;
+            let itemsCallback = new collection.RecordSet({
+               keyProperty: 'key',
+               rawData: [{
+                  key: '2'
+               }]
+            });
+            beforeEach(() => {
+               combobox = getCombobox(config);
+               combobox._controller = {
+                  update: () => {}
+               };
+            });
+
+            it('count of items = 1', () => {
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+               assert.deepEqual(combobox._selectedItem, itemsCallback.at(0));
+            });
+
+            it('count of items = 1, with emptyText', () => {
+               combobox._options.emptyText = 'test';
+               combobox._options.readOnly = false;
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+            });
+
+            it('count of items = 2', () => {
+               itemsCallback.add(new entity.Model({
+                  rawData: { id: '2' }
+               }));
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isFalse(combobox._readOnly);
+               assert.isUndefined(combobox._selectedItem);
+            });
+
+            it('count of items = 2, with options.readOnly', () => {
+               combobox._options.readOnly = true;
+               combobox._dataLoadCallback(itemsCallback);
+               assert.isTrue(combobox._readOnly);
+            });
          });
       });
    }

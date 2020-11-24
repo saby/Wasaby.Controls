@@ -1,6 +1,13 @@
 import {compare} from 'Types/entity';
 import {isValidDateRange} from 'Controls/validate';
 
+/**
+ * Утилиты для работы с периодами дат.
+ * @class Controls/_utils/dateUtils/DateRangeUtil
+ * @public
+ * @author Миронов А.Ю.
+ */
+
 export enum SHIFT_DIRECTION {
     BACK = -1,
     FORWARD = 1
@@ -45,7 +52,7 @@ export const dateMaskConstants = {
  */
 export function shiftPeriod(start: Date, end: Date, direction: number): Date[] {
     let result;
-    if (compare.dateInterval(start, end, compare.DateUnits.Month) > 0) {
+    if (compare.isFullInterval(start, end, compare.DateUnits.Month)) {
         result = shiftPeriodByMonth(start, end, direction * getPeriodLengthInMonths(start, end));
     } else {
         result = shiftPeriodByDays(start, end, direction * getPeriodLengthInDays(start, end));

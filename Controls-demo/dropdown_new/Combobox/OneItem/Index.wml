@@ -1,0 +1,9 @@
+<div class="controlsDemo__wrapper controlsDemo__flexRow">
+    <div class="controlsDemo__mr4">
+        <div class="controls-text-label_theme-{{_options.theme}}">ComboBox с одним элементом</div>
+        <Controls.dropdown:Combobox source="{{_source}}"
+                                    displayProperty="title"
+                                    keyProperty="key"
+                                    bind:selectedKey="_selectedKey"/>
+    </div>
+</div>

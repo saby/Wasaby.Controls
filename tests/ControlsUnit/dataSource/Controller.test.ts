@@ -2,6 +2,9 @@ import {NewSourceController, ISourceControllerOptions} from 'Controls/dataSource
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
+import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
+import {createSandbox, stub} from 'sinon';
+import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
 const filterByEntries = (item, filter): boolean => {
     return filter.entries ? filter.entries.get('marked').includes(String(item.get('key'))) : true;
@@ -58,11 +61,12 @@ const hierarchyItems = [
     }
 ];
 
-function getMemory(): Memory {
-    return new Memory({
+function getMemory(additionalOptions: object = {}): Memory {
+    const options = {
         data: items,
         keyProperty: 'key'
-    });
+    };
+    return new Memory({...options, ...additionalOptions});
 }
 
 function getPrefetchProxy(): PrefetchProxy {
@@ -102,6 +106,17 @@ function getMemoryWithHierarchyItems(): Memory {
     });
 }
 
+function getPagingNavigation(hasMore: boolean = false): INavigationOptionValue<INavigationPageSourceConfig> {
+    return {
+        source: 'page',
+        sourceConfig: {
+            pageSize: 1,
+            page: 0,
+            hasMore
+        }
+    };
+}
+
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
     return new NewSourceController({...getControllerWithHierarchyOptions(), ...additionalOptions});
 }
@@ -111,6 +126,33 @@ function getController(additionalOptions: object = {}): NewSourceController {
 }
 
 describe('Controls/dataSource:SourceController', () => {
+
+    describe('getState', () => {
+        it('getState after create controller', () => {
+            const root = 'testRoot';
+            const parentProperty = 'testParentProperty';
+            let hierarchyOptions;
+            let controller;
+            let controllerState;
+
+            hierarchyOptions = {
+                root,
+                parentProperty
+            };
+            controller = new NewSourceController(hierarchyOptions);
+            controllerState = controller.getState();
+            ok(controllerState.parentProperty === parentProperty);
+            ok(controllerState.root === root);
+
+            hierarchyOptions = {
+                parentProperty
+            };
+            controller = new NewSourceController(hierarchyOptions);
+            controllerState = controller.getState();
+            ok(controllerState.parentProperty === parentProperty);
+            ok(controllerState.root === null);
+        });
+    });
 
     describe('load', () => {
 
@@ -167,6 +209,27 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 2);
             ok((loadedItems as RecordSet).at(0).get('title') === 'Aleksey');
         });
+
+        it('load with collapsedGroups',  async () => {
+            const controller = getController({
+                source: getMemory({
+                    filter: (item, filter) => filter.myFilterField
+                }),
+                filter: {
+                    myFilterField: 'myFilterFieldValue'
+                },
+                groupProperty: 'groupProperty',
+                groupHistoryId: 'groupHistoryId'
+            });
+            const sinonSandbox = createSandbox();
+            sinonSandbox.replace(groupUtil, 'restoreCollapsedGroups', () => {
+                return Promise.resolve([]);
+            });
+
+            const loadedItems = await controller.reload();
+            ok(loadedItems.getCount() === 4);
+            sinonSandbox.restore();
+        });
     });
 
     describe('updateOptions', () => {
@@ -205,5 +268,56 @@ describe('Controls/dataSource:SourceController', () => {
             controller.updateOptions(options);
             deepStrictEqual(controller._expandedItems, ['testRoot']);
         });
+    });
+
+    describe('setItems', () => {
+
+        it('navigationController is recreated on setItems', () => {
+            const controller = getController({
+                navigation: getPagingNavigation(true)
+            });
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            const controllerDestroyStub = stub(controller._navigationController, 'destroy');
+
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            ok(controllerDestroyStub.calledOnce);
+        });
+
+        it('navigation is updated before assign items', () => {
+            const controller = getController({
+                navigation: getPagingNavigation(true)
+            });
+            controller.setItems(new RecordSet({
+                rawData: items,
+                keyProperty: 'key'
+            }));
+            const controllerItems = controller.getItems();
+
+            let hasMoreResult;
+            controllerItems.subscribe('onCollectionChange', () => {
+                hasMoreResult = controller.hasMoreData('down');
+            });
+
+            let newControllerItems = controllerItems.clone();
+            newControllerItems.setMetaData({
+                more: false
+            });
+            controller.setItems(newControllerItems);
+            ok(!hasMoreResult);
+
+            newControllerItems = controllerItems.clone();
+            newControllerItems.setMetaData({
+                more: true
+            });
+            controller.setItems(newControllerItems);
+            ok(hasMoreResult);
+        });
+
     });
 });

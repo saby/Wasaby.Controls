@@ -1,4 +1,4 @@
-import {ControllerClass, Prefetch} from 'Controls/filter';
+import {ControllerClass, Prefetch, IFilterControllerOptions} from 'Controls/filter';
 import {SbisService} from 'Types/source';
 import {assert} from 'chai';
 
@@ -192,29 +192,10 @@ describe('Controls/filter:ControllerClass', () => {
             });
             assert.deepEqual(controller.getFilter(), {});
 
-            controller._options.filter = null;
-            controller.update({
-                filter,
-                selectedKeys: [1, 2],
-                excludedKeys: [3],
-                parentProperty: 'testParentProperty',
-                source: new SbisService({
-                    endpoint: {contract: '123'},
-                    keyProperty: 'id'
-                })
-            });
-            assert.isTrue('entries' in controller.getFilter());
-
-            controller._options.filter = null;
-            controller._options.selectionViewMode = 'selected';
-            controller.update({
-                filter,
-                selectionViewMode: 'selected',
-                source: new SbisService({
-                    endpoint: {contract: '123'},
-                    keyProperty: 'id'
-                })
-            });
+            const controllerOptions = {...controller._options};
+            controllerOptions.selectionViewMode = 'selected';
+            controllerOptions.selectedKeys = [1, 2];
+            controller.update(controllerOptions as IFilterControllerOptions);
             assert.isTrue('SelectionWithPath' in controller.getFilter());
         });
 

@@ -1,5 +1,25 @@
 <ws:template name="imageTpl">
-   <img attr:class="controls-TileView__image {{itemData.imageData.class}}" src="{{itemData.imageData.url}}"/>
+   <ws:if data="{{itemData.imageFit === 'contain'}}">
+      <!--Делаем всегда object-fit: contain(background-size: contain) кроссбраузерно, пока поддерживаем ie11-->
+      <svg role="image"
+           xmlns="http://www.w3.org/2000/svg"
+           height="100%"
+           width="100%"
+           class="controls-TileView__image {{itemData.imageData.class}} controls-TileView__image_align_{{imageAlign || 'center'}}"
+           preserveAspectRatio="xMidYMid meet">
+         <image height="100%" width="100%" xlink:href="{{itemData.imageData.url}}"></image>
+      </svg>
+   </ws:if>
+   <ws:else>
+      <ws:if data="{{imageAlign !== 'top'}}">
+         <img attr:class="controls-TileView__image {{itemData.imageData.class}} controls-TileView__image_align_{{imageAlign || 'center'}}" src="{{itemData.imageData.url}}"/>
+      </ws:if>
+      <ws:else>
+         <div class="controls-TileView__imageAlign_wrapper ws-flexbox ws-justify-content-center ws-align-items-center">
+            <img class="{{itemData.imageData.class}} controls-TileView__image_align_top" src="{{itemData.imageData.url}}"/>
+         </div>
+      </ws:else>
+   </ws:else>
 </ws:template>
 
 <ws:template name="imageWrapperTpl">

@@ -9,12 +9,14 @@ import {tmplNotify} from 'Controls/eventUtils';
  * @remark
  * Подробнее о настройке объединенного фильтра с выбором периода читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 здесь}.
  * @class Controls/_filter/Editors/DateRange
+ * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IDateRange
- * @extends Core/Control
- * @author Герасимов А.М.
- * @see Controls/filter:View
  * @public
+ * @author Герасимов А.М.
+ * 
+ * @see Controls/filter:View
+ * 
  */
 class DateRangeEditor extends Control<IControlOptions> {
     protected _template: TemplateFunction = DateRangeTemplate;
@@ -46,6 +48,7 @@ class DateRangeEditor extends Control<IControlOptions> {
     }
 
     protected _rangeChanged(event: SyntheticEvent<'rangeChanged'>, startValue: Date, endValue: Date): Promise<void> {
+        event.stopPropagation();
         const caption = this.getCaption(startValue, endValue);
         this._notify('textValueChanged', [caption]);
         if (!startValue && !endValue && this._options.resetValue || isEqual([startValue, endValue], this._options.resetValue)) {
@@ -58,7 +61,8 @@ class DateRangeEditor extends Control<IControlOptions> {
     }
 
     private getCaption(startValue, endValue): string {
-        return this._dateRangeModule.Utils.formatDateRangeCaption(startValue, endValue, this._options.emptyCaption);
+        const captionFormatter = this._options.captionFormatter || this._dateRangeModule.Utils.formatDateRangeCaption;
+        return captionFormatter(startValue, endValue, this._options.emptyCaption);
     }
 
     static getDefaultOptions() {

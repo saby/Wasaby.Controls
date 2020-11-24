@@ -24,7 +24,7 @@ define('Controls/Application',
 
    /**
     * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
-    * Подробнее читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
+    * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
     *
     * @class Controls/Application
     * @extends Core/Control
@@ -209,12 +209,6 @@ define('Controls/Application',
           */
          _popupCreatedHandler: function() {
             this._isPopupShow = true;
-
-            // На Ipad необходимо вызывать reflow в момент открытия окон для решения проблем с z-index-ами
-            // https://online.sbis.ru/opendoc.html?guid=3f84a4bc-2973-497c-91ad-0165b5046bbc
-            if (Env.detection.isMobileIOS) {
-               sizeUtils.DOMUtil.reflow();
-            }
 
             this._changeOverflowClass();
          },

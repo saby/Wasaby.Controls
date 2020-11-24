@@ -1,3 +1,4 @@
+import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
@@ -34,6 +35,8 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
+import SearchSeparator from "./SearchSeparator";
+import {INavigationOptionValue} from '../_interface/INavigation';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -97,11 +100,13 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
+    groupTemplate?: TemplateFunction;
     searchValue?: string;
     editingConfig?: any;
     unique?: boolean;
     importantItemProperties?: string[];
     itemActionsProperty?: string;
+    navigation?: INavigationOptionValue;
 }
 
 export interface ICollectionCounters {
@@ -247,7 +252,7 @@ function onCollectionChange<T>(
                 projectionOldItems,
                 0
             );
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
             this._nextVersion();
             return;
 
@@ -578,6 +583,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _$itemTemplateProperty: string;
 
+    protected _$itemsDragNDrop: boolean;
+
     protected _$multiSelectVisibility: string;
 
     protected _$multiSelectPosition: 'default' | 'custom';
@@ -619,6 +626,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$itemActionsProperty: string;
 
     protected _$markerVisibility: string;
+
+    protected _$style: string;
+
+    protected _$navigation: INavigationOptionValue;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -736,6 +747,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         SerializableMixin.call(this);
         EventRaisingMixin.call(this, options);
 
+        this._$navigation = options.navigation;
         this._$filter = this._$filter || [];
         this._$sort = this._$sort || [];
         this._$importantItemProperties = this._$importantItemProperties || [];
@@ -822,7 +834,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             // TODO What's a better way of doing this?
             this.addFilter(
                 (item, index, collectionItem, collectionIndex, hasMembers, groupItem) =>
-                    collectionItem instanceof GroupItem || !groupItem || groupItem.isExpanded()
+                    collectionItem['[Controls/_display/GroupItem]'] || !groupItem || groupItem.isExpanded()
             );
         }
     }
@@ -868,7 +880,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             projectionOldItems,
             0
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     destroy(): void {
@@ -911,6 +923,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     /**
+     * Возвращает парамметры для навигации
+     * @return {INavigationOptionValue}
+     */
+    getNavigation(): INavigationOptionValue {
+        return this._$navigation;
+    }
+    /**
      * Возвращает энумератор для перебора элементов проекции
      * @return {Controls/_display/CollectionEnumerator}
      */
@@ -948,7 +967,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      *         });
      *
      *         display.each(function(item, index) {
-     *             if (item instanceof GroupItem) {
+     *             if (item['[Controls/_display/GroupItem]']) {
      *                 console.log('[' + item.getContents() + ']');
      *             } else {
      *                 console.log(item.getContents().name);
@@ -1049,7 +1068,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let count = 0;
         if (skipGroups && this._isGrouped()) {
             this.each((item) => {
-                if (!(item instanceof GroupItem)) {
+                if (!(item['[Controls/_display/GroupItem]'])) {
                     count++;
                 }
             });
@@ -1209,7 +1228,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 item,
@@ -1232,7 +1251,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setPosition(lastIndex);
         const item = enumerator.getCurrent();
 
-        if (item instanceof GroupItem) {
+        if (item['[Controls/_display/GroupItem]']) {
             return this._getNearbyItem(
                 enumerator,
                 undefined,
@@ -1653,6 +1672,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return this._$groupProperty;
     }
 
+    protected _getGroupItemConstructor(): new() => GroupItem<T> {
+        return GroupItem;
+    }
+
     /**
      * Возвращает метод группировки элементов проекции
      * @see group
@@ -1738,7 +1761,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         const items = [];
         let currentGroupId;
         this.each((item) => {
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
                 return;
             }
@@ -1805,7 +1828,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         let itemIndex = 0;
         while (enumerator.moveNext()) {
             item = enumerator.getCurrent();
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 currentGroupId = item.getContents();
             }
             if (itemIndex === index) {
@@ -2051,6 +2074,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     setKeyProperty(keyProperty: string): void {
         this._$keyProperty = keyProperty;
+        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
         this.nextVersion();
     }
 
@@ -2118,7 +2142,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             items,
             index
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -2197,27 +2221,49 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     // region Drag-N-Drop
 
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        const avatarStartIndex = this.getIndexByKey(avatarItemKey);
+    getItemsDragNDrop(): boolean {
+        return this._$itemsDragNDrop;
+    }
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
+        const draggableItemIndex = this.getIndex(draggableItem);
+        // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
+        const avatarStartIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
 
         this.appendStrategy(this._dragStrategy, {
             draggedItemsKeys,
-            avatarItemKey,
+            draggableItem,
             avatarIndex: avatarStartIndex
         });
+        this._reIndex();
+
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+
+        // если элемент перетащили в другой список, то он в него добавится и нужно пересчитать start/stop индексы
+        if (!this.getItemBySourceItem(draggableItem.getContents())) {
+            this._notifyBeforeCollectionChange();
+            this._notifyCollectionChange(
+                IObservable.ACTION_ADD,
+                [strategy.avatarItem],
+                avatarStartIndex,
+                [],
+                0
+            );
+            this._notifyAfterCollectionChange();
+        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
         if (strategy && position) {
             strategy.setAvatarPosition(position.index, position.position);
+            this._reIndex();
             this.nextVersion();
         }
     }
 
     resetDraggedItems(): void {
-        // TODO нужно у стратегии вызвать метод reset, чтобы задестроить avatarItem и обнулить все ссылки
         this.removeStrategy(this._dragStrategy);
+        this._reIndex();
     }
 
     // endregion
@@ -2269,6 +2315,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         this._$multiSelectVisibility = visibility;
         this._nextVersion();
+        this._updateItemsMultiSelectVisibility(visibility);
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
@@ -2281,6 +2328,14 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getMultiSelectPosition(): 'default' | 'custom' {
         return this._$multiSelectPosition;
+    }
+
+    protected _updateItemsMultiSelectVisibility(visibility: string): void {
+        this.getViewIterator().each((item: CollectionItem<T>) => {
+            if (item.setMultiSelectVisibility) {
+                item.setMultiSelectVisibility(visibility);
+            }
+        });
     }
 
     protected _setItemPadding(itemPadding: IItemPadding): void {
@@ -2304,6 +2359,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     getTheme(): string {
         return this._$theme;
+    }
+
+    getStyle(): string {
+        return this._$style;
     }
 
     getHoverBackgroundStyle(): string {
@@ -2348,7 +2407,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setSearchValue(searchValue: string): void {
-        this._$searchValue = searchValue;
+        if (this._$searchValue !== searchValue) {
+            this._$searchValue = searchValue;
+            this._nextVersion();
+        }
     }
 
     getSearchValue(): string {
@@ -2434,7 +2496,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
         for (let idx = 0; idx < itemsCount; idx++) {
             const item = this.at(idx);
-            if (!(item instanceof GroupItem) || item.isExpanded()) {
+            if (!(item['[Controls/_display/GroupItem]']) || item.isExpanded()) {
                 return false;
             }
         }
@@ -2447,6 +2509,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     setViewIterator(viewIterator: IViewIterator): void {
         this._viewIterator = viewIterator;
+    }
+
+    setIndexes(start: number, stop: number): void {
+        this.getViewIterator().setIndices(start, stop);
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
     getViewIterator(): IViewIterator {
@@ -2565,17 +2632,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }, GroupItemsStrategy);
 
         const itemsForNotify = [item];
-        const addingIndex: number = this.getStrategyInstance(AddStrategy).getAddingItemIndex();
+        let addingIndex: number = this.getItems().indexOf(item);
 
         if (groupMethod) {
             const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-            const itemGroupId = groupMethod(item.contents);
+
+            // Добавление элемента привело к добавлению группы.
+            // Необходимо уведомить о создании двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
             if (groupsBefore.length < groupsAfter.length) {
+                const itemGroupId = groupMethod(item.contents);
+                addingIndex--;
                 itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
             }
         }
 
-        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0);
+        const session = this._startUpdateSession();
+        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0, session);
+        this._finishUpdateSession(session);
     }
 
     resetAddingItem(): void {
@@ -2584,6 +2657,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (addStrategy) {
             const groupMethod = this.getGroup();
             const item = addStrategy?.getAddingItem();
+            let addingIndex: number = this.getItems().indexOf(item);
             let groupsBefore;
 
             if (groupMethod) {
@@ -2596,15 +2670,19 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             if (groupMethod) {
                 const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
+
+                // Отмена добавления элемента привела к удалению его группы.
+                // Необходимо уведомить об удалении двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
                 if (groupsBefore.length > groupsAfter.length) {
                     const itemGroupId = groupMethod(item.contents);
+                    addingIndex--;
                     itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
                 }
             }
 
-            this._notifyCollectionChange(
-                IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addStrategy.getAddingItemIndex()
-            );
+            const session = this._startUpdateSession();
+            this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addingIndex);
+            this._finishUpdateSession(session);
         }
     }
 
@@ -2796,7 +2874,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         super._analizeUpdateSession.call(this, session);
 
         if (session) {
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -2847,7 +2925,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         for (let i = 0; i < max; i++) {
             item = isRemove ? oldItems[i] : newItems[i];
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 notify(notifyIndex, i);
                 notifyIndex = i;
             }
@@ -2970,6 +3048,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _getItemsFactory(): ItemsFactory<T> {
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
+            options.multiSelectVisibility = this._$multiSelectVisibility;
             return create(this._itemModule, options);
         };
     }
@@ -3010,7 +3089,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             handlers: this._$sort
         }).append(GroupItemsStrategy, {
             handler: this._$group,
-            collapsedGroups: this._$collapsedGroups
+            collapsedGroups: this._$collapsedGroups,
+            groupConstructor: this._getGroupItemConstructor()
         });
 
         this._userStrategies.forEach((us) => composer.append(us.strategy, us.options));
@@ -3087,7 +3167,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         enumerator.setCurrent(item);
         while (enumerator[method]()) {
             nearbyItem = enumerator.getCurrent();
-            if (skipGroups && nearbyItem instanceof GroupItem) {
+            if (skipGroups && nearbyItem['[Controls/_display/GroupItem]']) {
                 nearbyItem = undefined;
                 continue;
             }
@@ -3233,7 +3313,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             let filter;
             for (let filterIndex = 0; filterIndex < filtersLength; filterIndex++) {
                 filter = filters[filterIndex];
-                result = filter(
+                const isAddingItem = this.getStrategyInstance(AddStrategy) && this.getStrategyInstance(AddStrategy).getAddingItem() === item;
+                result = isAddingItem || filter(
                     item.getContents(),
                     index,
                     item,
@@ -3274,7 +3355,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             processedIndices.add(index);
             item = items[index];
             match = true;
-            if (item instanceof GroupItem) {
+            if (item['[Controls/_display/GroupItem]']) {
                 // A new group begin, check match for previous
                 if (prevGroup) {
                     match = isMatch(prevGroup, prevGroupIndex, prevGroupPosition, prevGroupHasMembers);
@@ -3286,7 +3367,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else {
+            } else if (!(item instanceof SearchSeparator)) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;
@@ -3587,7 +3668,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                     session
                 );
             });
-            this._notifyAfterCollectionChange();
+            this._handleAfterCollectionChange();
         }
     }
 
@@ -3650,7 +3731,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
                 );
             }
         );
-        this._notifyAfterCollectionChange();
+        this._handleAfterCollectionChange();
     }
 
     /**
@@ -3753,6 +3834,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this._notify('onAfterCollectionChange');
     }
 
+    protected _handleAfterCollectionChange(): void {
+        this._notifyAfterCollectionChange();
+        this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
+    }
+
     // endregion
 
     // endregion
@@ -3768,6 +3854,7 @@ Object.assign(Collection.prototype, {
     _$keyProperty: '',
     _$displayProperty: '',
     _$itemTemplateProperty: '',
+    _$itemsDragNDrop: false,
     _$multiSelectVisibility: 'hidden',
     _$multiSelectPosition: 'default',
     _$leftPadding: 'default',
@@ -3784,6 +3871,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,

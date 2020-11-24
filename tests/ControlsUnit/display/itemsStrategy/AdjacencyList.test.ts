@@ -262,7 +262,7 @@ describe('Controls/_display/itemsStrategy/AdjacencyList', () => {
             assert.deepEqual(givenA, ['a', items[1], 'aa', items[5], 'b', items[3], 'bb', items[7]]);
 
             const givenB = strategy.items.map((item) => {
-                return item instanceof GroupItem ? item.getContents() : item.getParent().getContents();
+                return item['[Controls/_display/GroupItem]'] ? item.getContents() : item.getParent().getContents();
             });
             assert.deepEqual(givenB, ['a', undefined, 'aa', items[1], 'b', undefined, 'bb', items[3]]);
         });

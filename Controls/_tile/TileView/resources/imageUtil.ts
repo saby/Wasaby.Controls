@@ -5,6 +5,11 @@ export interface IImageSize {
     height: number;
 }
 
+export interface IImageRestrictions {
+    width?: boolean,
+    height?: boolean
+}
+
 const DEFAULT_SCALE_COEFFICIENT = 1.5;
 
 export const IMAGE_FIT = {
@@ -61,10 +66,45 @@ export function getImageSize(
     };
 }
 
-export function getImageClasses(imageFit: 'contain' | 'cover'): string {
+export function getImageClasses(imageFit: 'contain' | 'cover', imageRestrictions: IImageRestrictions = {}): string {
     let result = '';
     if (imageFit === IMAGE_FIT.CONTAIN) {
         result = 'controls-TileView__image-contain';
     }
+    if (imageRestrictions.height) {
+        result += ' controls-TileView__image_fullHeight';
+    }
+    if (imageRestrictions.width) {
+        result += ' controls-TileView__image_fullWidth';
+    }
     return result;
+}
+
+export function getImageRestrictions(
+    imageHeight: number,
+    imageWidth: number,
+    tileHeight: number,
+    tileWidth: number
+): IImageRestrictions {
+    const tileDeltaW = Number((tileWidth / tileHeight).toFixed(2));
+    const imageDeltaW = Number((imageWidth / imageHeight).toFixed(2));
+    const imageDeltaH = Number((imageHeight / imageWidth).toFixed(2));
+    const tileDeltaH = Number((tileHeight / tileWidth).toFixed(2));
+    const restrictions = {
+        width: false,
+        height: false
+    };
+    if (tileDeltaW === imageDeltaW && tileDeltaH === imageDeltaH) {
+        restrictions.width = true;
+    } else if (imageDeltaW > tileDeltaW) {
+        restrictions.width = true;
+        if (imageDeltaH >= tileDeltaH) {
+            restrictions.height = true;
+        }
+    } else if (tileDeltaH <= imageDeltaH) {
+        restrictions.width = true;
+    } else {
+        restrictions.height = true;
+    }
+    return restrictions;
 }

@@ -97,7 +97,7 @@ interface IEditInPlaceCallbacks {
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавлялась.
      * @void
      */
-    onAfterEndEdit?: (item: IEditableCollectionItem, isAdd: boolean) => void;
+    onAfterEndEdit?: (item: IEditableCollectionItem, isAdd: boolean, willSave: boolean) => void;
 }
 
 /**
@@ -168,6 +168,14 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
         return this._collectionEditor.isEditing();
     }
 
+    isBeginEditProcessing(): boolean {
+        return !!this._operationsPromises.begin;
+    }
+
+    isEndEditProcessing(): boolean {
+        return !!this._operationsPromises.end;
+    }
+
     /**
      * Получить редактируемый элемент
      * @method
@@ -232,6 +240,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     /**
      * Завершить редактирование элемента и отменить изменения.
      * @method
+     * @param {Boolean} force Принудительно завершить редактирование, игнорируя результат колбека beforeEndEdit
      * @return {TAsyncOperationResult}
      *
      * @public
@@ -242,8 +251,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      *
      * @remark Завершение редактирования может быть отменено. Для этого из функции обратного вызова IEditInPlaceOptions.onBeforeEndEdit необхобимо вернуть константу отмены.
      */
-    cancel(): TAsyncOperationResult {
-        return this._endEdit(false);
+    cancel(force: boolean = false): TAsyncOperationResult {
+        return this._endEdit(false, 'all', force);
     }
 
     /**
@@ -339,7 +348,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     }
 
     // TODO: Должен возвращать один промис, если вызвали несколько раз подряд
-    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all'): TAsyncOperationResult {
+    private _endEdit(commit: boolean, commitStrategy: 'hasChanges' | 'all' = 'all', force: boolean = false): TAsyncOperationResult {
         const editingCollectionItem = this._getEditingItem();
 
         if (!editingCollectionItem) {
@@ -359,7 +368,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
         this._operationsPromises.end = new Promise((resolve) => {
             if (this._options.onBeforeEndEdit) {
-                resolve(this._options.onBeforeEndEdit(editingItem, commit, isAdd));
+                const result = this._options.onBeforeEndEdit(editingItem, commit, isAdd);
+                resolve(force ? void 0 : result);
             } else {
                 resolve();
             }
@@ -376,7 +386,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-            this._options?.onAfterEndEdit(editingCollectionItem, isAdd);
+            this._options?.onAfterEndEdit(editingCollectionItem, isAdd, commit);
         }).finally(() => {
             this._operationsPromises.end = null;
         }) as TAsyncOperationResult;

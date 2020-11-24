@@ -33,9 +33,9 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * 
  * @public
  * @author Герасимов А.М.
+ * 
  * @example
  * <pre class="brush: js">
  *    var source = new history.Source({
@@ -402,7 +402,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                 return false;
             }
         }
-        this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
+        this._$historySource.saveHistory(this._$historySource.getHistoryIdForStorage(), this._$history);
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(item, meta);
     }
 
@@ -609,7 +609,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
                     if (data[0] && !this._isError(data[0])) {
                         this._initHistory(data[0], this._$oldItems);
                         newItems = this._getItemsWithHistory(this._$history, this._$oldItems);
-                        this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
+                        this._$historySource.saveHistory(this._$historySource.getHistoryIdForStorage(), this._$history);
                     } else {
                         newItems = this._$oldItems;
                     }

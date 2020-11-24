@@ -1,18 +1,21 @@
-import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import isEqualItems from 'Controls/_filter/Utils/isEqualItems';
+import {IFilterItem} from 'Controls/filter';
 
-export default function mergeSource<T, U>(target: T, source: T): T & U {
-    factory(target).each((item) => {
-        factory(source).each((historyItem) => {
+export default function mergeSource(target: IFilterItem[] = [], source: IFilterItem[] = []): IFilterItem[] {
+    target.forEach((item) => {
+        source.forEach((historyItem) => {
             if (isEqualItems(item, historyItem)) {
-                factory(historyItem).each((value, field: string) => {
-                    const allowMerge = field === 'viewMode' ? value !== undefined : historyItem.hasOwnProperty(field);
+                for (const fieldName in historyItem) {
+                    const value = historyItem[fieldName];
+                    const allowMerge = fieldName === 'viewMode' ?
+                        value !== undefined :
+                        historyItem.hasOwnProperty(fieldName);
 
-                    if (item.hasOwnProperty(field) && allowMerge) {
-                        object.setPropertyValue(item, field, value);
+                    if (item.hasOwnProperty(fieldName) && allowMerge) {
+                        object.setPropertyValue(item, fieldName, value);
                     }
-                });
+                }
             }
         });
     });

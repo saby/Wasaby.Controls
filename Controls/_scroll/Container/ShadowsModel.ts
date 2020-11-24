@@ -2,8 +2,9 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {POSITION} from './Type';
 import ShadowModel from './ShadowModel';
-import {IShadowsOptions, IShadowsVisibilityByInnerComponents} from './Interface/IShadows';
+import {IShadowsOptions, IShadowsVisibilityByInnerComponents, SHADOW_VISIBILITY} from './Interface/IShadows';
 import {IScrollState} from "../Utils/ScrollState";
+import {Offsets} from "./ScrollbarModel";
 
 
 export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
@@ -31,32 +32,38 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
-    updateScrollState(scrollState: IScrollState): void {
+    updateScrollState(scrollState: IScrollState, needUpdate: boolean = true): void {
         for (let shadow of Object.keys(this._models)) {
             const isStateChanged = this._models[shadow].updateScrollState(scrollState);
-            if (isStateChanged) {
+            if (isStateChanged && needUpdate) {
                 this._nextVersion();
             }
         }
     }
 
-    updateVisibilityByInnerComponents(shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
+    updateVisibilityByInnerComponents(shadowsVisibility: IShadowsVisibilityByInnerComponents, needUpdate: boolean = true): void {
+        let isChanged: boolean = false;
         for (const shadowPosition of Object.keys(this._models)) {
-            if (shadowsVisibility[shadowPosition]) {
-                this._models[shadowPosition].updateVisibilityByInnerComponents(shadowsVisibility[shadowPosition]);
+            const shadowVisibility: SHADOW_VISIBILITY = shadowsVisibility[shadowPosition];
+            if (shadowVisibility) {
+                isChanged = this._models[shadowPosition].updateVisibilityByInnerComponents(shadowVisibility) || isChanged;
             }
+        }
+        if (isChanged && needUpdate) {
+            this._nextVersion();
         }
     }
 
     setStickyFixed(topFixed: boolean, bottomFixed: boolean): void {
-        let isStateChanged = false;
+        let isTopStateChanged = false;
+        let isBottomStateChanged = false;
         if (this._models.top) {
-            isStateChanged = this._models.top.setStickyFixed(topFixed);
+            isTopStateChanged = this._models.top.setStickyFixed(topFixed);
         }
         if (this._models.bottom) {
-            isStateChanged = this._models.bottom.setStickyFixed(bottomFixed);
+            isBottomStateChanged = this._models.bottom.setStickyFixed(bottomFixed);
         }
-        if (isStateChanged) {
+        if (isTopStateChanged || isBottomStateChanged) {
             this._nextVersion();
         }
     }

@@ -114,6 +114,7 @@
                 on:groupClick="_onGroupClick()"
                 on:editArrowClick="_notifyHandler('editArrowClick')"
                 on:itemContextMenu="_onItemContextMenu()"
+                on:itemLongTap="_onItemLongTap()"
                 on:itemMouseDown="_itemMouseDown()"
                 on:itemMouseUp="_itemMouseUp()"
                 on:itemMouseEnter="_itemMouseEnter()"
@@ -215,7 +216,7 @@
             <div if="{{ _isPagingPadding() }}" name="pagingPaddingContainer"
                  class="controls-BaseControl_paging-Padding_theme-{{_options.theme}}">
             </div>
-            <div class="controls-BaseControl__pagingContainer">
+            <div class="controls-BaseControl__pagingContainer{{!_isPagingPaddingFromOptions() ? ' controls-BaseControl-hide-paging-padding': ''}}">
                 <ws:if data="{{_options.pagingLeftTemplate}}">
                     <ws:partial template="{{_options.pagingLeftTemplate}}"/>
                 </ws:if>

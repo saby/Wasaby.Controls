@@ -383,6 +383,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return ItemsUtil.getLastItem(this._display);
     },
 
+    getLast() {
+        return this._display.getLast();
+    },
+
     getIndexByKey(key: string | number) {
         return this._display.getIndexByKey(key);
     },
@@ -465,13 +469,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // region DnD
 
-    setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-        if (avatarItemKey !== undefined && avatarItemKey !== null) {
-            const dispItem = this.getItemBySourceKey(avatarItemKey);
-            if (dispItem) {
-                const itemData = this.getItemDataByItem(dispItem);
-                this.setDragItemData(itemData);
-            }
+    setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
+        if (draggableItem) {
+            const itemData = this.getItemDataByItem(draggableItem);
+            this.setDragItemData(itemData);
         }
 
         const entity = new ItemsEntity({items: draggedItemsKeys});

@@ -12,8 +12,10 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import {IStickyPopupOptions} from 'Controls/popup';
 import * as Merge from 'Core/core-merge';
-import {isLeftMouseButton} from 'Controls/fastOpenUtils';
+import {isLeftMouseButton} from 'Controls/popup';
 import {generateStates} from 'Controls/input';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions, IBorderStyleOptions,
     IValidationStatusOptions {
@@ -71,36 +73,20 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @demo Controls-demo/dropdown_new/Combobox/Source/Index
  */
 
-/**
- * @event Происходит при изменении отображаемого значения контрола.
- * @name Controls/_dropdown/ComboBox#valueChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {String} value Отображаемое значение контрола.
- * @remark
- * Событие используется в качестве реакции на изменения, вносимые пользователем.
- * @example
- * WML:
- * <pre>
- *     <Controls.dropdown:ComboBox
- *                on:valueChanged="_valueChangedHandler()"
- *                source="{{_source}}"/>
- * </pre>
- * TS:
- *    private _valueChangedHandler(event, value) {
- *        this._text = value;
- *    }
- */
-
 class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = tmplNotify;
    protected _borderStyle: string = '';
+   protected _countItems: number;
+   protected _readOnly: boolean;
+   protected _selectedItem: Model;
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
                 receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
+      this._readOnly = options.readOnly;
       this._setText = this._setText.bind(this);
       this._targetPoint = {
          vertical: 'bottom'
@@ -112,7 +98,18 @@ class ComboBox extends BaseDropdown {
       return loadItems(this._controller, receivedState, options.source);
    }
 
+   protected _afterMount(options: IComboboxOptions): void {
+      if (this._countItems === 1) {
+         if (this._selectedItem.get(options.keyProperty) !== options.selectedKey) {
+            this._selectedItemsChangedHandler([this._selectedItem]);
+         }
+      }
+   }
+
    protected _beforeUpdate(newOptions: IComboboxOptions): void {
+      if (newOptions.readOnly !== this._options.readOnly) {
+         this._readOnly = this._getReadOnly(newOptions.readOnly);
+      }
       this._controller.update(this._getControllerOptions(newOptions));
       this._borderStyle = this._getBorderStyle(newOptions.borderStyle, newOptions.validationStatus);
    }
@@ -122,7 +119,7 @@ class ComboBox extends BaseDropdown {
       return { ...controllerOptions, ...{
             selectedKeys: [options.selectedKey],
             markerVisibility: 'hidden',
-            dataLoadCallback: options.dataLoadCallback,
+            dataLoadCallback: this._dataLoadCallback.bind(this),
             popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
                            + ' controls-ComboBox-popup_theme-' + options.theme,
             typeShadow: 'suggestionsContainer',
@@ -136,7 +133,8 @@ class ComboBox extends BaseDropdown {
                left: 'menu-xs'
             },
             targetPoint: this._targetPoint,
-            openerControl: this
+            openerControl: this,
+            readOnly: this._readOnly
          }
       };
    }
@@ -152,6 +150,29 @@ class ComboBox extends BaseDropdown {
             onResult: this._onResult.bind(this)
          }
       };
+   }
+
+   _dataLoadCallback(items: RecordSet<Model>): void {
+      this._countItems = items.getCount();
+      if (this._countItems === 1) {
+         this._selectedItem = items.at(0);
+      }
+      if (this._options.emptyText) {
+         this._countItems += 1;
+      }
+      const readOnly = this._getReadOnly(this._options.readOnly);
+      if (readOnly !== this._readOnly) {
+         this._readOnly = readOnly;
+         this._controller.update(this._getControllerOptions(this._options));
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
+   }
+
+   _getReadOnly(readOnly: boolean): boolean {
+      return this._countItems < 2 || readOnly;
    }
 
    _selectedItemsChangedHandler(selectedItems): void {
@@ -238,3 +259,24 @@ class ComboBox extends BaseDropdown {
 }
 
 export = ComboBox;
+/**
+ * @event Происходит при изменении отображаемого значения контрола.
+ * @name Controls/_dropdown/ComboBox#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} value Отображаемое значение контрола.
+ * @remark
+ * Событие используется в качестве реакции на изменения, вносимые пользователем.
+ * @example
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:ComboBox
+ *     on:valueChanged="_valueChangedHandler()"
+ *     source="{{_source}}"/>
+ * </pre>
+ * <pre class="brush: js">
+ * // TypeScript
+ * private _valueChangedHandler(event, value) {
+ *     this._text = value;
+ * }
+ * </pre>
+ */

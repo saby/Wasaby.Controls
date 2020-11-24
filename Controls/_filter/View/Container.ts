@@ -3,6 +3,8 @@ import * as template from 'wml!Controls/_filter/View/Container';
 import {default as Store} from 'Controls/Store';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import clone = require('Core/core-clone');
+import {RecordSet} from "Types/collection";
+import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark
@@ -12,7 +14,6 @@ import clone = require('Core/core-clone');
  * @class Controls/_filter/View/Container
  * @extends Core/Control
  * @author Герасимов А.М.
- * 
  * @public
  */
 
@@ -36,24 +37,46 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     _template: template,
 
     _beforeMount(options): void {
-        this._initState(options);
+        if (options.useStore) {
+            this._initState(options.preloadedSources);
+        }
+    },
+
+    _afterMount(options): void {
+        if (options.useStore) {
+            this._sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+                this._source = filterSource;
+            });
+        }
     },
 
     _beforeUpdate(options): void {
-        this._initState(options);
+        if (options.useStore) {
+            this._initState(options.preloadedSources, this._options.preloadedSources);
+        }
     },
 
-    _initState(options): void {
-        if (options.useStore && options.preloadedSources && options.preloadedSources[0]) {
-            const mainSource = options.preloadedSources[0];
-            this._historyId = mainSource.historyId;
-            // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
-            // эта часть аналогична тому что делает _filter/Controller
-            let historyItems = mainSource.historyItems;
-            if (historyItems) {
-                historyItems = historyItems.items || historyItems;
+    _beforeUnmount(): void {
+        if (this._sourceCallbackId) {
+            Store.unsubscribe(this._sourceCallbackId);
+        }
+    },
+
+    _initState(newPreloadedSources, oldPreloadedSources): void {
+        if (newPreloadedSources !== oldPreloadedSources) {
+            if (newPreloadedSources && newPreloadedSources[0]) {
+                const mainSource = newPreloadedSources[0];
+                this._historyId = mainSource.historyId;
+                // если есть предзагруженные данные в истории, то нужно их подмержить в сурс
+                // эта часть аналогична тому что делает _filter/Controller
+                let historyItems = mainSource.historyItems;
+                if (historyItems) {
+                    historyItems = historyItems.items || (Array.isArray(historyItems) ? historyItems : []);
+                }
+                this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
+            } else {
+                this._source = null;
             }
-            this._source = this._getSourceByHistory(mainSource.filterButtonSource, historyItems);
         }
     },
 
@@ -71,17 +94,24 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
         return result;
     },
 
-    _cloneItems(items) {
+    _cloneItems(items: IFilterItem[]|RecordSet<IFilterItem>): IFilterItem[] {
+        let resultItems;
+
         if (items['[Types/_entity/CloneableMixin]']) {
-            return items.clone();
+            resultItems = (items as RecordSet<IFilterItem>).clone();
+        } else {
+            resultItems = [];
+            items.forEach((item) => {
+                resultItems.push({...item});
+            });
         }
-        return clone(items);
+        return resultItems;
     },
 
     _itemsChanged(event: Event, items): void {
        event.stopPropagation();
        if (this._options.useStore) {
-           Store.dispatch('filterSource', items);
+           Store.dispatch('filterSource', items ? [...items] : []);
        } else {
            this._notify('filterItemsChanged', [items], {bubbling: true});
        }

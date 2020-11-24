@@ -120,7 +120,7 @@ const _private = {
 
 /*
  * Container for list inside Suggest.
- * The detailed description and instructions on how to configure the control you can read <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggestPopup/List
  * @extends Core/Control
@@ -199,6 +199,14 @@ const List = Control.extend({
                                    this._suggestListOptions.navigation.view === 'maxCount';
       if (isMaxCountNavigation) {
          this._isSuggestListEmpty = !this._items.getCount();
+      }
+
+      const results = this._items.getMetaData().results;
+      const currentTabMetaKey = results && results.get('tabsSelectedKey');
+
+      if (currentTabMetaKey && currentTabMetaKey !== this._suggestListOptions.tabsSelectedKey) {
+         this._suggestListOptions.tabsSelectedKey = currentTabMetaKey;
+         this._notify('tabsSelectedKeyChanged', [currentTabMetaKey]);
       }
    },
 

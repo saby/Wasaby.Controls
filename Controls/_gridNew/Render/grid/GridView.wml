@@ -1,4 +1,4 @@
-<div class="{{ _getGridViewClasses() }}" style="{{ _getGridViewStyles() }}">
+<div class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
     <!-- Header -->
     <ws:if data="{{ _listModel.getHeader() }}">
         <ws:partial template="wml!Controls/_gridNew/Render/grid/Header"
@@ -24,6 +24,7 @@
                 style="{{ _options.style }}"
                 theme="{{ _options.theme }}"
                 itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+                groupTemplate="{{ _groupTemplate }}"
                 itemActionsPosition="{{ _options.itemActionsPosition }}"
                 itemActionsTemplate="{{ _options.itemActionsTemplate }}"
                 itemActionsClass="{{ _options.itemActionsClass }}"
@@ -36,8 +37,8 @@
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:partial template="{{ _options.emptyTemplate }}"
                     attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
+                    prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
                     prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"
-                    isFullGridSupport="{{ true }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
     </ws:if>
     <!-- Results (bottom) -->

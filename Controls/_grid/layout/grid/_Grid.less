@@ -7,6 +7,7 @@
    position: relative;
 }
 
+.controls-OldGridView__emptyTemplate,
 .controls-GridView__emptyTemplate {
    display: contents;
 }
@@ -269,6 +270,11 @@
    }
 }
 
+// Строка редактирования имеет свой z-index, который вешается на все ячейки.
+// У фиксированных необходимо увеличить для перекрывания скроллируемых.
+.controls-Grid__cell_fixed.controls-Grid__row-cell-background-editing_theme-@{themeName} {
+   z-index: 3;
+}
 
 // In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements.
 // Setting relative position for fixed column makes context-level higher then context-level of transformed column.
@@ -340,7 +346,7 @@
       > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper,
       > .controls-Grid__row-cell .controls-Grid__row-cell__content {
          > .controls-itemActionsV {
-            transition: timeout .5s;
+            animation: timeout .5s;
          }
       }
    }
@@ -390,11 +396,12 @@
       visibility: visible;
       opacity: 1;
    }
-   z-index: 1;
-   
+
    /** При редактировании по месту, переопределяем фон содержимого ячейки */
+   .controls-Grid__row-cell__content_colspaned,
    .controls-Grid__row-cell__content {
       background-color: @item_editing_background-color_list;
+      z-index: 1;
    }
 }
 .controls-Grid__row-cell__content_halign_right .controls-Grid__row-cell__ladder-content_additional-with-main {

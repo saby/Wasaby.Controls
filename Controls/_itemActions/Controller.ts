@@ -258,7 +258,13 @@ export class Controller {
         const target = isContextMenu ? null : this._getFakeMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(isActionMenu, parentAction, menuActions);
-        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item, clickEvent, opener, templateOptions);
+        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item,
+            clickEvent,
+            opener,
+            templateOptions,
+            isActionMenu,
+            isContextMenu
+        );
         if (actionMenuConfig) {
             return actionMenuConfig;
         }
@@ -759,7 +765,7 @@ export class Controller {
     ): boolean {
         const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
         const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
-        return actionMode === 'adaptive' ? isMatchedAll : (isMatchedAll && isMatchedShowed);
+        return isMatchedAll && isMatchedShowed;
     }
 
     private static _calculateSwipeConfig(

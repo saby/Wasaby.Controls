@@ -62,6 +62,15 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    .controls-BaseControl-hide-paging {
       display: none;
    }
+
+   // При отключении отступа под пэйджинг, отсуп все равно остается для ios из-за position: sticky.
+   .controls-BaseControl-hide-paging-padding {
+      padding: 0;
+      > .controls-PagingV {
+         position: absolute;
+         bottom: @scrollpaging_offset-vertical_list;
+      }
+   }
 }
 
 .controls-BaseControl_paging-Padding_theme-@{themeName} {
@@ -100,7 +109,8 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 // Поднимаем индикатор на высоту контейнера с пэйджингом
 .controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
-   margin-bottom: -(@item_height_paging + 2 * @scrollpaging_offset-vertical_list);
+   margin-bottom: -(@item_height_paging + @scrollpaging_offset-vertical_list);
+   bottom: @scrollpaging_offset-vertical_list;
 }
 
 // По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка.
@@ -131,10 +141,6 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl_empty__loadingIndicator__state-down_theme-@{themeName} .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
    top: 0;
-}
-
-.controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
-   margin-bottom: -@item_height_paging;
 }
 
 .controls-BaseControl__loadingIndicator__state-all {

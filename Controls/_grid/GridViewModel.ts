@@ -31,10 +31,9 @@ import * as Grouping from 'Controls/_list/Controllers/Grouping';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from './resources/DragScroll';
 import { shouldAddActionsCell } from 'Controls/_grid/utils/GridColumnScrollUtil';
-import { stickyLadderCellsCount, prepareLadder,  isSupportLadder, getStickyColumn} from 'Controls/_grid/utils/GridLadderUtil';
 import {IHeaderCell} from './interface/IHeaderCell';
-import { IDragPosition } from 'Controls/display';
-import {IPreparedColumn, prepareColumns} from './utils/GridColumnsColspanUtil';
+import { IDragPosition, GridLadderUtil } from 'Controls/display';
+import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspanUtil';
 
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
@@ -368,7 +367,7 @@ var
             if (checkBoxCell) {
                 classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
                 classLists.padding = createClassListCollection('top', 'bottom');
-                classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
+                classLists.padding.top = `controls-OldGrid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
                 classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
             } else {
                 classLists.padding = _private.getPaddingCellClasses(current, theme);
@@ -540,7 +539,7 @@ var
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
             const startIndex = self.getStartIndex();
             const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
-            const newLadder: any = prepareLadder({
+            const newLadder: any = GridLadderUtil.prepareLadder({
                 ladderProperties: self._options.ladderProperties,
                 startIndex,
                 stopIndex,
@@ -580,15 +579,19 @@ var
             return `${addSpace ? ' ' : ''}controls-background-${_private.getStylePrefix(options)}_theme-${options.theme}`;
         },
 
+        getStickyColumn(self): GridLadderUtil.IStickyColumn {
+            return GridLadderUtil.getStickyColumn({
+                stickyColumn: self._options.stickyColumn,
+                columns: self._columns
+            });
+        },
+
         /**
          * Проверяет, присутствует ли "прилипающая" колонка
          * @param self
          */
         hasStickyColumn(self): boolean {
-            return !!getStickyColumn({
-                stickyColumn: self._options.stickyColumn,
-                columns: self._columns
-            });
+            return !!_private.getStickyColumn(self);
         },
 
         // TODO: Исправить по задаче https://online.sbis.ru/opendoc.html?guid=2c5630f6-814a-4284-b3fb-cc7b32a0e245.
@@ -754,12 +757,16 @@ var
             this._onCollectionChangeFn = function(event, action) {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
+            this._onAfterCollectionChangeFn = function() {
+                this._notify('onAfterCollectionChange');
+            }.bind(this);
             // Events will not fired on the PresentationService, which is why setItems will not ladder recalculation.
             // Use callback for fix it. https://online.sbis.ru/opendoc.html?guid=78a1760a-bfcf-4f2c-8b87-7f585ea2707e
             this._model.setUpdateIndexesCallback(this._updateIndexesCallback.bind(this));
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.subscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             const separatorSizes = _private.getSeparatorSizes(this._options);
             this._options.rowSeparatorSize = separatorSizes.row;
             this._options.columnSeparatorSize = separatorSizes.column;
@@ -771,7 +778,7 @@ var
             this._setHeader(this._options.header);
         },
         isSupportLadder(ladderProperties: []): boolean {
-            return isSupportLadder(ladderProperties);
+            return GridLadderUtil.isSupportLadder(ladderProperties);
         },
 
         setTheme(theme: string): void {
@@ -956,7 +963,7 @@ var
          * Проверка необходимости добавлять ячейку для лесенки
          */
         stickyLadderCellsCount(): number {
-            return stickyLadderCellsCount(
+            return GridLadderUtil.stickyLadderCellsCount(
                 this._columns,
                 this._options.stickyColumn,
                 this.getDragItemData());
@@ -1257,7 +1264,7 @@ var
             return this.getColspanStylesFor(
                 'customResults',
                 {
-                    columnIndex: 0,
+                    columnIndex: +this._hasMultiSelectColumn(),
                     columnsLength: this._columns.length
                 });
         },
@@ -1471,6 +1478,9 @@ var
         getLastItem: function() {
             return this._model.getLastItem.apply(this._model, arguments);
         },
+        getLast() {
+            return this._model.getLast();
+        },
         getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
@@ -1596,7 +1606,7 @@ var
                 current._gridViewModelCached = true;
             }
 
-            stickyColumn = getStickyColumn({
+            stickyColumn = GridLadderUtil.getStickyColumn({
                 stickyColumn: this._options.stickyColumn,
                 columns: this._columns
             });
@@ -1692,6 +1702,19 @@ var
             current.getVersion = function() {
                 return self._calcItemVersion(current.item, current.key, current.index);
             };
+            
+            current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
+                if (!self._options.itemsDragNDrop && current.stickyProperties && self._ladder.stickyLadder[current.index]) {
+                    const index = current.stickyProperties.indexOf(stickyProperty);
+                    const hasMainCell = !! (self._ladder.stickyLadder[current.index][current.stickyProperties[0]].ladderLength);
+                    if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+                        index === 1 && !hasMainCell ||
+                        index === 0 && hasMainCell)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
             current.getLadderContentClasses = (stickyProperty, ladderProperty) => {
                 let result = '';
                 if (current.stickyProperties && self._ladder.stickyLadder[current.index]) {
@@ -1773,6 +1796,7 @@ var
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
+                        shouldDrawLadderContent: current.shouldDrawLadderContent,
                         getLadderContentClasses: current.getLadderContentClasses,
                         hoverBackgroundStyle: self._options.hoverBackgroundStyle || 'default',
                         getVersion: function () {
@@ -1958,30 +1982,34 @@ var
                     }
                 }
 
-                // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
-                //  под плашку операций над записью вне строки обеспечивался не только блоком
-                //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
-                //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
-                //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
-                //  Данный код должен быть неактуальным. Если его удаление н вызывает проблем, можно удалить
-                //  в 21.1000
-
                 if (isFullGridSupport) {
                     styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
                 } else {
                     column.colspan = column.endColumn - column.startColumn;
                 }
 
-                column.getWrapperClasses = (backgroundStyle: string = 'default') => {
-                    return `${classes} controls-background-${backgroundStyle}_theme-${theme}`;
+                column.getWrapperClasses = (needBottomPadding: boolean, backgroundStyle: string = 'default') => {
+                    // TODO: Для предотвращения скролла одной записи в таблице с экшнами отступ
+                    //  под плашку операций над записью вне строки обеспечивался не только блоком
+                    //  между записями и подвалом, но и с помощью min-height на подвал. Объяснялось
+                    //  это тем, что _options._needBottomPadding иногда не работает по неясным причинам.
+                    //  https://online.sbis.ru/opendoc.html?guid=3d84bd7a-039d-4a30-915b-41c75ed501cd
+                    const shouldDrawBottomPadding =
+                        (this.getCount() || this.isEditing()) &&
+                        this._options.itemActionsPosition === 'outside' &&
+                        !needBottomPadding &&
+                        this._options.resultsPosition !== 'bottom';
+
+                    return `${classes} controls-background-${backgroundStyle}_theme-${theme} ` +
+                           (shouldDrawBottomPadding ? `controls-GridView__footer__itemActionsV_outside_theme-${theme} ` : '');
                 };
 
                 column.getWrapperStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
-                    if (isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `${styles} width: ${containerSize}px;`;
                     }
-                    return styles
+                    return styles;
                 };
 
                 column.getContentClasses = (containerSize: number) => {
@@ -1993,7 +2021,7 @@ var
                 column.getContentStyles = (containerSize: number) => {
                     // При горизонтальном скролле, растянутый подвал должен растягиваться только на ширину видимой области таблицы.
                     // При табличной верстке выводится td который игнорирует width. Ограничивать необходимо контент
-                    if (!isFullGridSupport && prepared.length === 1 && containerSize) {
+                    if (!isFullGridSupport && prepared.length === 1 && containerSize && this._options.columnScrollVisibility) {
                         return `width: ${containerSize}px;`;
                     }
                     return '';
@@ -2247,8 +2275,8 @@ var
             this._model.setSelectedItems(items, selected);
         },
 
-        setDraggedItems(avatarItemKey: number|string, draggedItemsKeys: Array<number|string>): void {
-            this._model.setDraggedItems(avatarItemKey, draggedItemsKeys);
+        setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
+            this._model.setDraggedItems(draggableItem, draggedItemsKeys);
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
@@ -2323,7 +2351,8 @@ var
                 // активирована колонка для множественного выбора?
                 const offsetForMultiSelect: number = +(this._hasMultiSelectColumn());
                 // к колонкам была добавлена "прилипающая" колонка?
-                const offsetForStickyColumn: number = +(_private.hasStickyColumn(this));
+                const ladderStickyColumn = _private.getStickyColumn(this);
+                const offsetForStickyColumn: number = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
                 // к колонкам была добавлена колонка "Действий"?
                 const offsetForActionCell: number = +(this._shouldAddActionsCell());
                 // В случае, если у нас приходит после поиска пустой массив колонок,
@@ -2369,6 +2398,7 @@ var
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
             this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._model.unsubscribe('onAfterCollectionChange', this._onAfterCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
         },

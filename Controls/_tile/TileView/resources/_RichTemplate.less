@@ -68,7 +68,7 @@
 
 .controls-TileView_richTemplate_image_spacing_viewMode_circle_theme-@{themeName},
 .controls-TileView_richTemplate_image_spacing_viewMode_ellipse_theme-@{themeName} {
-   padding: @offset_m;
+   margin: @offset_m;
 }
 
 .controls-TileView__richTemplate_title_theme-@{themeName} {
@@ -163,10 +163,15 @@ controls-TileView__richTemplate_image_size_m_scale_s_theme-@{themeName} {
 }
 
 .controls-TileView__richTemplate_itemActions_theme-@{themeName} {
-   background-color: @background-color;
+   background-color: rgba(255, 255, 255, 0.75);
    box-shadow: @item_actions_shadow_size_rich_tile @item_actions_shadow_color_rich_tile;
+   height: @item_actions_height_rich_tile;
+   width: @item_actions_width_rich_tile;
+   padding: 0;
 }
 
-.controls-TileView__richTemplate_itemActions .controls-itemActionsV__action_padding_theme-@{themeName} {
-   padding: 0 @item_actions_padding_rich_tile;
+.ws-is-hover {
+   .controls-TileView__richTemplate_itemActions:hover {
+      background-color: @background-color;
+   }
 }

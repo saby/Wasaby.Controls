@@ -50,6 +50,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          var searchClickNotifyed = false;
          var suggestStateChangedNotifyed = false;
          var searchClickResult = true;
+         var isSuggestClosed = false;
 
          searchSuggest._notify = function(eventName) {
             if (eventName === 'searchClick') {
@@ -59,6 +60,13 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
                suggestStateChangedNotifyed = true;
             }
             return searchClickResult;
+         };
+         searchSuggest._children = {
+            suggestController: {
+               closeSuggest: () => {
+                  isSuggestClosed = true;
+               }
+            }
          };
 
          searchSuggest._suggestMarkedKeyChanged(null, 'test');
@@ -75,6 +83,7 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          assert.isTrue(searchClickNotifyed);
          assert.isFalse(searchSuggest._suggestState);
          assert.isTrue(suggestStateChangedNotifyed);
+         assert.isTrue(isSuggestClosed);
 
          searchSuggest._suggestState = true;
          searchClickResult = false;

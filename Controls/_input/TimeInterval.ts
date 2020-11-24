@@ -17,7 +17,6 @@ type IOptions = IModelOptions;
  *
  * @class Controls/_input/TimeInterval
  * @extends Controls/_input/Base
- * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
  * @ignoreOptions Controls/_input/Base#value
  *
  * @mixes Controls/interface/ITimeInterval
@@ -46,6 +45,7 @@ type IOptions = IModelOptions;
  *
  * @author Красильников А.С.
  */
+// TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
 class TimeInterval extends Base {
     protected _autoWidth: boolean = true;

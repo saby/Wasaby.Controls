@@ -65,6 +65,9 @@ define([
          mover._items = cfg.items;
          mover._source = cfg.source;
          mover._keyProperty = cfg.keyProperty;
+         mover._children.dialogOpener = {
+            open: () => {}
+         };
       });
 
       afterEach(function() {
@@ -77,7 +80,8 @@ define([
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption'
+                  testOptions: 'testValueOfOption',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
@@ -88,7 +92,7 @@ define([
          mover._beforeMount(options, contextOptions);
 
          assert.equal(mover._controller._popupOptions.template, 'testTemplateName');
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption', keyProperty: cfg.keyProperty });
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
          assert.equal(mover._source, 'testSource');
 
          stubLogger = sinon.stub(ui.Logger, 'warn');
@@ -98,33 +102,37 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         mover._beforeUpdate({
+         let options = {
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption1'
+                  testOptions: 'testValueOfOption1',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
-         }, {
+         };
+         mover._beforeUpdate(options, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, { testOptions: 'testValueOfOption1', keyProperty: cfg.keyProperty});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
 
-         mover._beforeUpdate({
+         options = {
             moveDialogTemplate: {
                templateName: 'testTemplateName',
                templateOptions: {
-                  testOptions: 'testValueOfOption2'
+                  testOptions: 'testValueOfOption2',
+                  keyProperty: 'moveDialogId'
                }
             },
             keyProperty: 'id'
-         }, {
+         };
+         mover._beforeUpdate(options, {
             dataOptions: {}
          });
 
-         assert.deepEqual(mover._controller._popupOptions.templateOptions, {testOptions: 'testValueOfOption2', keyProperty: cfg.keyProperty});
+         assert.deepEqual(mover._controller._popupOptions.templateOptions, options.moveDialogTemplate.templateOptions);
       });
 
       describe('mover methods', () => {
@@ -146,7 +154,7 @@ define([
 
          it('moveItemsWithDialog', function(done) {
             const items = [1, 2, 3];
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup');
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open');
 
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
@@ -166,7 +174,7 @@ define([
          it('beforeItemsMove first param should be array of item id\'s', function(done) {
             let movedItems;
             let item = recordSet.at(0);
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup')
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open')
                .callsFake((openArgs) => Promise.resolve(openArgs.eventHandlers.onResult(recordSet.at(1))));
             mover._notify = (event, args) => {
                if (event === 'beforeItemsMove') {
@@ -191,7 +199,7 @@ define([
                }
             };
             let moveItemsCalled = false;
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup');
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open');
 
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
@@ -224,7 +232,7 @@ define([
                searchParam: 'searchValue'
             };
             const config = {...cfg, searchParam: 'searchParam', filter};
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup');
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open');
             stubLogger = sinon.stub(ui.Logger, 'warn');
             mover._beforeUpdate(config, { dataOptions: config });
             stubLogger.restore();
@@ -262,7 +270,7 @@ define([
             stubLogger = sinon.stub(ui.Logger, 'warn');
             lists.Mover._private.updateDataOptions(mover, config, config);
             stubLogger.restore();
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup');
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open');
 
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {
@@ -318,7 +326,7 @@ define([
 
          it('moveItemsWithDialog with empty items', (done) => {
             const items = [];
-            const spyOpenPopup = sinon.spy(popup.Dialog, 'openPopup');
+            const spyOpenPopup = sinon.spy(mover._children.dialogOpener, 'open');
             const stubOpenConfirmation = sinon.stub(popup.Confirmation, 'openPopup');
             // @ts-ignore
             stubOpenConfirmation.callsFake((args) => {
@@ -334,7 +342,7 @@ define([
 
          it('moveItemsWithDialog for models', (done) => {
             const movedItems = [1, 2, 3];
-            const stubOpenPopup = sinon.stub(popup.Dialog, 'openPopup');
+            const stubOpenPopup = sinon.stub(mover._children.dialogOpener, 'open');
 
             // @ts-ignore
             stubOpenPopup.callsFake((openArgs) => {

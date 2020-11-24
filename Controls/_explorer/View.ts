@@ -227,6 +227,10 @@ var
                self._itemPadding = self._newItemPadding;
                self._newItemPadding = null;
             }
+            if (self._newItemTemplate) {
+               self._itemTemplate = self._newItemTemplate;
+               self._newItemTemplate = null;
+            }
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -392,7 +396,7 @@ var
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IClickableView
@@ -430,7 +434,7 @@ var
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
-    * @mixes Controls/_list/interface/IVirtualScroll
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
@@ -458,6 +462,7 @@ var
       _navigation: null,
       _resetScrollAfterViewModeChange: false,
       _itemPadding: {},
+      _itemTemplate: undefined,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -466,6 +471,9 @@ var
       _beforeMount: function(cfg) {
          if (cfg.itemPadding) {
             this._itemPadding = cfg.itemPadding;
+         }
+         if (cfg.itemTemplate) {
+            this._itemTemplate = cfg.itemTemplate;
          }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
@@ -485,10 +493,12 @@ var
          }
          const root = _private.getRoot(this, cfg.root);
          this._restoredMarkedKeys = {
-         [root]: {
+            [root]: {
                markedKey: null
             }
          };
+
+         this._headerVisibility = root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
 
          // TODO: для 20.5100. в 20.6000 можно удалить
          if (cfg.displayMode) {
@@ -503,10 +513,20 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
-         const loadedBySourceController = isSearchViewMode && cfg.sourceController;
+         const loadedBySourceController =
+             cfg.sourceController &&
+             ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
+              (cfg.source !== this._options.source && cfg.task1180503140));
+         const isSourceControllerLoading = cfg.sourceController && cfg.sourceController.isLoading();
          this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
+         this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
+
          if (!isEqual(cfg.itemPadding, this._options.itemPadding)) {
             this._newItemPadding = cfg.itemPadding;
+         }
+
+         if (cfg.itemTemplate !== this._options.itemTemplate) {
+            this._newItemTemplate = cfg.itemTemplate;
          }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
@@ -537,13 +557,19 @@ var
             // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
             // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
-            const recreateSource = cfg.source !== this._options.source;
+            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading && cfg.task1180503140);
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
             if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);
             } else {
                _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
             }
+         } else if (!isViewModeChanged &&
+             this._pendingViewMode &&
+             cfg.viewMode === this._pendingViewMode &&
+             loadedBySourceController &&
+             cfg.task1180503140) {
+            _private.setViewModeSync(this, this._pendingViewMode, cfg);
          } else {
             _private.applyNewVisualOptions(this);
          }

@@ -8,47 +8,7 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
 
 
 
-      /**
-       * Поле ввода значения с заданным форматом.
-       *
-       * @remark
-       * Каждый вводимый символ проходит проверку на соответствие формату {@link mask маски}.
-       * Контрол поддерживает возможность показа или скрытия формата маски в незаполненном поле ввода, регулируемую с помощью опции {@link replacer}.
-       * Если {@link replacer символ замены} определен, то поле ввода вычисляет свою ширину автоматически по контенту. При этом во всех режимах поддерживается возможность установки ширины поля ввода через CSS.
-       *
-       * Полезные ссылки:
-       * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
-       * * <a href="/doc/platform/developmentapl/interface-development/controls/input/mask/">руководство разработчика</a>
-       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
-       *
-       * @class Controls/_input/Mask
-       * @extends Controls/_input/Base
-       * // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
-       * @ignoreOptions Controls/_input/Base#value
-       * @ignoreEvents Controls/_input/Base#valueChanged Controls/_input/Base#inputCompleted
-       *
-       * @mixes Controls/interface/IInputMaskValue
-       * @public
-       * @author Красильников А.С.
-       * @demo Controls-demo/Input/Masks/Index
-       */
-
-      /*
-       * A component for entering text in a {@link mask specific format}.
-       * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
-       * If the input character does not fit the format, then character won't be added.
-       * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Демо-пример</a>.
-       * @remark
-       * If the {@link replacer} is not empty and container with width: auto, then the width is determined based on the content.
-       *
-       * @class Controls/_input/Mask
-       * @extends Controls/_input/Base
-       *
-       * @mixes Controls/interface/IInputMaskValue
-       * @public
-       * @author Красильников А.С.
-       * @demo Controls-demo/Input/Masks/Index
-       */
+        // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
       var
          _private = {
@@ -76,6 +36,46 @@ import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
                 return spaceToLongSpace(value);
             }
          },
+      /**
+       * Поле ввода значения с заданным форматом.
+       *
+       * @remark
+       * Каждый вводимый символ проходит проверку на соответствие формату {@link mask маски}.
+       * Контрол поддерживает возможность показа или скрытия формата маски в незаполненном поле ввода, регулируемую с помощью опции {@link replacer}.
+       * Если {@link replacer символ замены} определен, то поле ввода вычисляет свою ширину автоматически по контенту. При этом во всех режимах поддерживается возможность установки ширины поля ввода через CSS.
+       *
+       * Полезные ссылки:
+       * * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">демо-пример</a>
+       * * <a href="/doc/platform/developmentapl/interface-development/controls/input/mask/">руководство разработчика</a>
+       * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+       *
+       * @class Controls/_input/Mask
+       * @extends Controls/_input/Base
+       * @ignoreOptions Controls/_input/Base#value
+       * @ignoreEvents Controls/_input/Base#valueChanged Controls/_input/Base#inputCompleted
+       *
+       * @mixes Controls/interface/IInputMaskValue
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/Input/Masks/Index
+       */
+
+      /*
+       * A component for entering text in a {@link mask specific format}.
+       * Characters that are not yet entered in the field can be replaced by another {@link replacer character}.
+       * If the input character does not fit the format, then character won't be added.
+       * <a href="/materials/Controls-demo/app/Controls-demo%2FExample%2FInput">Демо-пример</a>.
+       * @remark
+       * If the {@link replacer} is not empty and container with width: auto, then the width is determined based on the content.
+       *
+       * @class Controls/_input/Mask
+       * @extends Controls/_input/Base
+       *
+       * @mixes Controls/interface/IInputMaskValue
+       * @public
+       * @author Красильников А.С.
+       * @demo Controls-demo/Input/Masks/Index
+       */
          Mask = Base.extend({
             _viewModel: null,
              _defaultValue: '',

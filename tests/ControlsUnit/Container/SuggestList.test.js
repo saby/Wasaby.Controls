@@ -201,13 +201,23 @@ define(
                   }
                };
                const suggestItems = getSuggestItems();
+               const sandbox = sinon.createSandbox();
+               const notifyStub = sandbox.stub(suggestList, '_notify');
                suggestList._beforeMount({}, suggestContext);
                suggestList._itemsReadyCallback(suggestItems);
                assert.isFalse(suggestList._isSuggestListEmpty);
 
                suggestItems.clear();
+               suggestItems.setMetaData({
+                  results: new entity.Model({
+                     rawData: {tabsSelectedKey: 'test'}
+                  })
+               });
                suggestList._collectionChange();
                assert.isTrue(suggestList._isSuggestListEmpty);
+               assert.isTrue(suggestList._suggestListOptions.tabsSelectedKey === 'test');
+               assert.isTrue(notifyStub.withArgs('tabsSelectedKeyChanged', ['test']).calledOnce);
+               sandbox.restore();
             });
 
          });

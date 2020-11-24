@@ -57,6 +57,49 @@ describe('Controls/browser:Browser', () => {
 
     describe('_beforeMount', () => {
 
+        describe('init states on beforeMount', () => {
+
+            it('root', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._root === null);
+
+                options = {...options};
+                options.root = 'testRoot';
+                await browser._beforeMount(options);
+                ok(browser._root === 'testRoot');
+            });
+
+            it('viewMode', async() => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._viewMode === undefined);
+
+                options = {...options};
+                options.viewMode = 'table';
+                await browser._beforeMount(options);
+                ok(browser._viewMode === 'table');
+            });
+
+            it('searchValue', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+
+                await browser._beforeMount(options);
+                ok(browser._searchValue === '');
+
+                options = {...options};
+                options.searchValue = 'test';
+                await browser._beforeMount(options);
+                ok(browser._searchValue === 'test');
+            });
+
+        });
+
         describe('searchController', () => {
 
             describe('searchValue on _beforeMount', () => {
@@ -145,20 +188,17 @@ describe('Controls/browser:Browser', () => {
                 const newOptions = {
                     ...options,
                     topShadowVisibility: 'auto',
-                    bottomShadowVisibility: 'auto',
-                }
+                    bottomShadowVisibility: 'auto'
+                };
 
-                browser = new Browser(newOptions)
+                browser = new Browser(newOptions);
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
-                equal(browser._topShadowVisibility, 'visible');
-                equal(browser._bottomShadowVisibility, 'visible');
-
-                equal(browser._topShadowVisibilityFromOptions, 'auto');
-                equal(browser._bottomShadowVisibilityFromOptions, 'auto');
+                equal(browser._topShadowVisibility, 'gridauto');
+                equal(browser._bottomShadowVisibility, 'gridauto');
 
                 detection.isMobilePlatform = true;
 
-                browser = new Browser(newOptions)
+                browser = new Browser(newOptions);
                 browser._beforeMount(newOptions, {}, {items: recordSet, filterItems: {} });
                 equal(browser._topShadowVisibility, 'auto');
                 equal(browser._bottomShadowVisibility, 'auto');
@@ -203,6 +243,7 @@ describe('Controls/browser:Browser', () => {
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
 
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._dataOptions.filter, filter);
             });
@@ -215,6 +256,7 @@ describe('Controls/browser:Browser', () => {
                 options.filter = filter;
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
+                browser._createSearchControllerWithContext(options, browser._dataOptionsContext);
 
                 browser._filter = {
                     testField: 'oldFilterValue'
@@ -223,6 +265,23 @@ describe('Controls/browser:Browser', () => {
                 browser._sourceController.updateOptions = () => { return true; };
                 browser._beforeUpdate(options);
                 deepStrictEqual(browser._searchController._options.filter, filter);
+            });
+
+            it('update with searchValue', async () => {
+                let options = getBrowserOptions();
+                const filter = {
+                    testField: 'newFilterValue'
+                };
+                options.filter = filter;
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                options = {...options};
+                options.filter = {};
+                options.searchValue = 'test';
+                browser._beforeUpdate(options);
+                deepStrictEqual(browser._filter.name, 'test');
             });
 
         });

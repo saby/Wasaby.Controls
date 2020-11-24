@@ -119,9 +119,11 @@ export class Controller {
 
    /**
     * Возвращает количество выбранных элементов
+    * @param {ISelection} selection Список выбранных записей, по которому посчитать кол-во выбранных элементов.
+    * Если не передан то будет считать по состоянию контроллера
     */
-   getCountOfSelected(): number|null {
-      return this._strategy.getCount(this._selection, this._model.getHasMoreData(), this._limit);
+   getCountOfSelected(selection?: ISelection): number|null {
+      return this._strategy.getCount(selection || this._selection, this._model.getHasMoreData(), this._limit);
    }
 
    /**
@@ -199,14 +201,19 @@ export class Controller {
     * @return {ISelection}
     */
    onCollectionRemove(removedItems: Array<CollectionItem<Model>>): ISelection {
-      let keys = this._getItemsKeys(removedItems);
-      // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
-      keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
+      if (this._model.getCollection().getCount()) {
+         let keys = this._getItemsKeys(removedItems);
+         // Событие remove еще срабатывает при скрытии элементов, нас интересует именно удаление
+         keys = keys.filter((key) => !this._model.getCollection().getRecordById(key));
 
-      const selected = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
-      const excluded = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
+         const selected = ArraySimpleValuesUtil.removeSubArray(this._selectedKeys.slice(), keys);
+         const excluded = ArraySimpleValuesUtil.removeSubArray(this._excludedKeys.slice(), keys);
 
-      return {selected, excluded};
+         return { selected, excluded };
+      } else {
+         // Если удалили все записи, то и выбирать нечего
+         return { selected: [], excluded: [] };
+      }
    }
 
    /**
@@ -238,6 +245,9 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
+      if (this._limit && this.getCountOfSelected() === this._limit) {
+         return;
+      }
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
    }
 

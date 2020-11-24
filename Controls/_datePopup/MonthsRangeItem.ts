@@ -9,16 +9,6 @@ import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Contr
 import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 
-/**
- * Item for the period selection component of multiple months.
- *
- * @class Controls/_datePopup/MonthsRangeItem
- * @extends Core/Control
- * 
- * @author Красильников А.С.
- * @private
- */
-
 var _private = {},
     SELECTION_VEIW_TYPES = {
         days: 'days',
@@ -26,7 +16,15 @@ var _private = {},
     };
 
 const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
-
+/**
+ * Item for the period selection component of multiple months.
+ *
+ * @class Controls/_datePopup/MonthsRangeItem
+ * @extends Core/Control
+ *
+ * @author Красильников А.С.
+ * @private
+ */
 var Component = BaseControl.extend([EventProxyMixin], {
     _template: componentTmpl,
     _monthViewModel: modelViewModel,
@@ -106,7 +104,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (this._quarterSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfQuarter(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfQuarter(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 
@@ -122,11 +121,21 @@ var Component = BaseControl.extend([EventProxyMixin], {
         }
     },
 
+    _calculateRangeSelectedCallback: function(startValue, endValue) {
+        if (this._options.rangeSelectedCallback) {
+            const ranges = this._options.rangeSelectedCallback(startValue, endValue);
+            startValue = ranges[0];
+            endValue = ranges[1];
+        }
+        return [startValue, endValue];
+    },
+
     _onHalfYearClick: function (e, date) {
         if (this._halfyearSelectionEnabled) {
             this._selectionViewType = SELECTION_VEIW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
-            this._notify('fixedPeriodClick', [date, dateUtils.getEndOfHalfyear(date)]);
+            const ranges = this._calculateRangeSelectedCallback(date, dateUtils.getEndOfHalfyear(date));
+            this._notify('fixedPeriodClick', ranges);
         }
     },
 

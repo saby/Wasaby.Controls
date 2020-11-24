@@ -78,11 +78,12 @@ let _private = {
       self._notify('listExcludedKeysChanged', result, {bubbling: true});
    },
 
-   getItemActions(options) {
+   getItemActions(self, options) {
       let itemActions = options.itemActions || [];
 
       if (options.selectionType !== 'leaf') {
-         itemActions = itemActions.concat(ACTION);
+         const selectAction = {...ACTION, handler: (item) => _private.selectItem(self, item)};
+         itemActions = itemActions.concat(selectAction);
       }
 
       return itemActions;
@@ -171,14 +172,13 @@ let Container = Control.extend({
    _itemsActions: null,
 
    constructor(options) {
-      this._itemActionsClick = this._itemActionsClick.bind(this);
       Container.superclass.constructor.call(this, options);
    },
 
    _beforeMount(options): void {
       this._selectedKeys = _private.getSelectedKeysFromOptions(options);
       this._markedKey = _private.getMarkedKeyBySelectedKeys(options.selectedKeys);
-      this._itemActions = _private.getItemActions(options);
+      this._itemActions = _private.getItemActions(this, options);
       this._itemActionVisibilityCallback = _private.getItemActionVisibilityCallback(options);
    },
 
@@ -195,7 +195,7 @@ let Container = Control.extend({
       }
 
       if (newOptions.itemActions !== this._options.itemActions || selectionTypeChanged) {
-         this._itemActions = _private.getItemActions(newOptions);
+         this._itemActions = _private.getItemActions(this, newOptions);
       }
    },
 
@@ -209,12 +209,6 @@ let Container = Control.extend({
    _itemActivate(event: SyntheticEvent, item: Record): void {
       if (!item.get(this._options.nodeProperty)) {
          _private.itemActivate(this, item);
-      }
-   },
-
-   _itemActionsClick(event: SyntheticEvent, action: IItemAction, item: Record) {
-      if (action.id === SELECT_ACTION_ID) {
-         _private.selectItem(this, item);
       }
    }
 

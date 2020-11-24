@@ -2,14 +2,6 @@ import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
 
-/**
- * Интерфейс для списков.
- *
- * @interface Controls/_list/interface/IList
- * @public
- * @author Авраменко А.С.
- */
-
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
 type TListStyle = 'master'|'default';
@@ -22,6 +14,22 @@ export interface IItemPadding {
     left?: THorizontalItemPadding;
     right?: THorizontalItemPadding;
 }
+
+/**
+ * Интерфейс для списков.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
+
+/*ENG
+ * Interface for lists.
+ *
+ * @interface Controls/_list/interface/IList
+ * @public
+ * @author Авраменко А.С.
+ */
 
 export interface IList extends IItemActionsOptions, IMarkerListOptions {
     attachLoadTopTriggerToNull?: boolean;
@@ -47,14 +55,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
  * @name Controls/_list/interface/IList#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением счетчика непрочитанных сообщений
  * @see pagingMode
- */
-
-/*ENG
- * Interface for lists.
- *
- * @interface Controls/_list/interface/IList
- * @public
- * @author Авраменко А.С.
  */
 
 /**
@@ -651,10 +651,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions {
 
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} Префикс стиля для настройки фона при наведении на внутренние компоненты списочного контрола с фиксированным или абсолютным позиционированием.
+ * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
  * @default default
  * @remark
- * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
+ * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
+ * Подробнее в <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#hover">статье</a>.
+ * @example
+ * <pre>
+ * <Controls.list:View
+ *    keyProperty="id"
+ *    source="{{_viewSource}}"
+ *    hoverBackgroundStyle="primary" />
+ * </pre
  */
 
 /**

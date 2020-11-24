@@ -2,14 +2,14 @@
     <Controls.buttons:Button readOnly="{{false}}" iconSize="s" caption="Run" on:click="_setOpen()"/>
     <ws:if data="{{ _isOpen }}">
         <ws:for data="i in 2">
-            <div class="asyncDemo__row">
-                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Async"/>
-                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync"/>
+            <div class="asyncDemo__row demo-row__{{i+1}}">
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Async" attr:class="demo-Async__column{{i+1}}"/>
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/NotAsync" attr:class="demo-NotAsync__column{{i+1}}"/>
             </div>
         </ws:for>
-        <div class="asyncDemo__row">
+        <div class="asyncDemo__row demo-row__3">
             <ws:for data="i in 2">
-                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Combination" indexOpt="{{i}}"/>
+                <ws:partial template="wml!Controls-demo/AsyncTest/Templates/Combination" indexOpt="{{i}}" attr:class="demo-Combination__column{{i+1}}"/>
             </ws:for>
         </div>
     </ws:if>

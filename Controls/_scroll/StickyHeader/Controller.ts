@@ -115,7 +115,8 @@ class StickyHeaderController {
         for (let headerId of headers[position]) {
             header = this._headers[headerId];
 
-            const ignoreHeight: boolean = (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
+            const ignoreHeight: boolean = (type === TYPE_FIXED_HEADERS.initialFixed && !header.fixedInitially) ||
+                (!header || header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden);
             if (ignoreHeight) {
                 continue;
             }
@@ -192,7 +193,7 @@ class StickyHeaderController {
             this._delayedHeaders.push(data);
 
             this._observeStickyHeader(data);
-            if (!isHidden(data.container) && this._initialized && this._canScroll) {
+            if (!isHidden(data.inst.getHeaderContainer()) && this._initialized && this._canScroll) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
         } else {
@@ -222,10 +223,10 @@ class StickyHeaderController {
             this._stickyHeaderResizeObserver.unobserve(elem);
         });
     }
-    private _deleteElementFromElementsHeightStack(entry): boolean {
-        if (entry.contentRect.height === 0) {
+    private _deleteElementFromElementsHeightStack(element: HTMLElement, height: number): boolean {
+        if (height === 0) {
             this._elementsHeight.forEach((item, index) => {
-                if (item.key === entry.target) {
+                if (item.key === element) {
                     this._elementsHeight.splice(index, 1);
                     return true;
                 }
@@ -233,31 +234,38 @@ class StickyHeaderController {
         }
         return false;
     }
+
+    private _updateElementsHeight(element: HTMLElement, height: number) {
+        let heightChanged: boolean = false;
+        const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
+                return item.key === element;
+        });
+        // Если у элемента высота ровна нулю, то удаляем его из массива высот.
+        // Так мы избавимся от утечки в _elementsHeight.
+        const isElementDeleted = this._deleteElementFromElementsHeightStack(element, height);
+        if (!isElementDeleted) {
+            if (heightEntry) {
+                if (heightEntry.value !== height) {
+                    heightEntry.value = height;
+                    heightChanged = true;
+                }
+            } else {
+                // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
+                // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
+                // этого элемента мы еще не сохранили.
+                this._elementsHeight.push({key: element, value: height});
+            }
+        }
+        return heightChanged;
+    }
+
     private _resizeObserverCallback(entries: any): void {
         if(isHidden(this._container)) {
                 return;
         }
         let heightChanged = false;
         for (const entry of entries) {
-            const heightEntry: IHeightEntry = this._elementsHeight.find((item: IHeightEntry) => {
-                return item.key === entry.target;
-            });
-            // Если у элемента высота ровна нулю, то удаляем его из массива высот.
-            // Так мы избавимся от утечки в _elementsHeight.
-            const isElementDeleted = this._deleteElementFromElementsHeightStack(entry);
-            if (!isElementDeleted) {
-                if (heightEntry) {
-                    if (heightEntry.value !== entry.contentRect.height) {
-                        heightEntry.value = entry.contentRect.height;
-                        heightChanged = true;
-                    }
-                } else {
-                    // ResizeObserver всегда кидает событие сразу после добавления элемента. Не будем генрировать
-                    // событие, а просто сохраним текущую высоту если это первое событие для элемента и высоту
-                    // этого элемента мы еще не сохранили.
-                    this._elementsHeight.push({key: entry.target, value: entry.contentRect.height});
-                }
-            }
+            heightChanged = this._updateElementsHeight(entry.target, entry.contentRect.height) || heightChanged;
         }
         if (heightChanged) {
             this.resizeHandler();
@@ -266,9 +274,9 @@ class StickyHeaderController {
 
     private _getStickyHeaderElements(header: TRegisterEventData): NodeListOf<HTMLElement> {
         if (header.inst.getChildrenHeaders) {
-            return header.inst.getChildrenHeaders().map(h => h.container);
+            return header.inst.getChildrenHeaders().map(h => h.inst.getHeaderContainer());
         } else {
-            return [header.container];
+            return [header.inst.getHeaderContainer()];
         }
     }
 
@@ -294,20 +302,24 @@ class StickyHeaderController {
         if (!isSingleHeader) {
             for (const id in this._headers) {
                 this._headers[id].inst.updateFixed([
-                    this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
-                    this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
-                ]);
-            }
-            for (const id in this._headers) {
-                this._headers[id].inst.updateFixed([
-                    this._fixedHeadersStack.top[this._fixedHeadersStack.top.length - 1],
-                    this._fixedHeadersStack.bottom[this._fixedHeadersStack.bottom.length - 1]
+                    this._getLastFixedHeaderId(POSITION.top),
+                    this._getLastFixedHeaderId(POSITION.bottom)
                 ]);
             }
         }
         this._updateShadowsVisibility();
         // Спилить после того ак удалим старый скролл контейнер. Используется только там.
         this._callFixedCallback(position);
+    }
+
+    _getLastFixedHeaderId(position: POSITION): number {
+        let header: number;
+        for (const headerId of this._headersStack[position]) {
+            if (this._fixedHeadersStack[position].includes(headerId)) {
+                header = headerId;
+            }
+        }
+        return header;
     }
 
     private _callFixedCallback(position: string): void {
@@ -355,7 +367,7 @@ class StickyHeaderController {
 
         return fastUpdate.measure(() => {
             this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
-                if (!isHidden(header.container)) {
+                if (!isHidden(header.inst.getHeaderContainer())) {
                     this._addToHeadersStack(header.id, header.position);
                     return false;
                 }
@@ -433,7 +445,7 @@ class StickyHeaderController {
         const
             headersStack = this._headersStack[position],
             newHeaderOffset = this._getHeaderOffset(id, position),
-            headerContainerHeight = this._headers[id].container.getBoundingClientRect().height;
+            headerContainerHeight = this._headers[id].inst.getHeaderContainer().getBoundingClientRect().height;
 
         // Ищем позицию первого элемента, смещение которого больше текущего.
         // Если смещение у элементов одинаковое, но у добавляемоего заголовка высота равна нулю,
@@ -528,7 +540,7 @@ class StickyHeaderController {
                     header = this._headers[headerId];
                     nextHeader = null;
                     offsets[position][headerId] = offset;
-                    if (header.mode === 'stackable' && !isHidden(header.container)) {
+                    if (header.mode === 'stackable' && !isHidden(header.inst.getHeaderContainer())) {
                         // Проверяем, имеет ли заголовок в родителях прямых родителей предыдущих заголовков.
                         // Если имеет, значит заголовки находятся в одном контейнере -> высчитываем offset.
                         if (!this._isLastIndex(this._headersStack[position], i)) {
@@ -536,13 +548,17 @@ class StickyHeaderController {
                             nextHeader = this._headers[nextHeaderId];
                             for (let j = 0; j <= i; j++) {
                                 prevHeader = this._headers[this._headersStack[position][j]];
-                                parentElementOfPrevHeader = prevHeader.container.parentElement;
-                                parentElementOfNextHeader = nextHeader.container.parentElement;
+                                parentElementOfPrevHeader = prevHeader.inst.getHeaderContainer().parentElement;
+                                parentElementOfNextHeader = nextHeader.inst.getHeaderContainer().parentElement;
                                 while (parentElementOfNextHeader !== parentElementOfPrevHeader && parentElementOfNextHeader !== document.body) {
                                     parentElementOfNextHeader = parentElementOfNextHeader.parentElement;
                                 }
                                 if (parentElementOfNextHeader === parentElementOfPrevHeader) {
-                                    return offset + header.inst.height;
+                                    const height: number = header.inst.height;
+                                    // Сохраним высоты по которым рассчитали позицию заголовков,
+                                    // что бы при последующих изменениях понимать, надо ли пересчитывать их позиции.
+                                    this._updateElementsHeight(header.inst.getHeaderContainer(), height);
+                                    return offset + height;
                                 }
                             }
                             return 0;
@@ -552,7 +568,7 @@ class StickyHeaderController {
                 }, 0);
             }
         });
-        fastUpdate.mutate(() => {
+        const promise = fastUpdate.mutate(() => {
             for (const position of [POSITION.top, POSITION.bottom]) {
                 let positionOffsets = offsets[position];
                 for (const headerId in offsets[position]) {
@@ -562,6 +578,7 @@ class StickyHeaderController {
         });
 
         this._updateTopBottomInitialized = false;
+        return promise;
     }
 }
 

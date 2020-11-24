@@ -2,55 +2,82 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridLayoutUtil } from 'Controls/grid';
-import * as Template from 'wml!Controls/_gridNew/Render/grid/GridView';
-import * as Item from 'wml!Controls/_gridNew/Render/grid/Item';
-import { prepareEmptyEditingColumns } from "../_grid/utils/GridEmptyTemplateUtil";
-
-const _private = {
-    getGridTemplateColumns(self, columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-        if (!columns) {
-            Logger.warn('You must set "columns" option to make grid work correctly!', self);
-            return '';
-        }
-        const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
-        let columnsWidths: string[] = [];
-        columnsWidths = initialWidths;
-        if (hasMultiSelect) {
-            columnsWidths = ['max-content'].concat(columnsWidths);
-        }
-        return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
-    }
-};
+import { GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
+import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
+import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/GridEmptyTemplateUtil';
+import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 
 const GridView = ListView.extend({
-    _template: Template,
+    _template: GridTemplate,
     _hoveredCellIndex: null,
     _hoveredCellItem: null,
 
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
+        this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
         return result;
     },
 
+    _beforeUpdate(newOptions): void {
+        GridView.superclass._beforeUpdate.apply(this, arguments);
+        const columnsChanged = !GridIsEqualUtil.isEqualWithSkip(this._options.columns, newOptions.columns,
+            { template: true, resultTemplate: true });
+        if (columnsChanged) {
+            this._listModel.setColumns(newOptions.columns, false);
+        }
+    },
+
     _resolveItemTemplate(options): TemplateFunction {
-        return options.itemTemplate || this._resolveBaseItemTemplate();
+        return options.itemTemplate || this._resolveBaseItemTemplate(options);
     },
 
-    _resolveBaseItemTemplate(): TemplateFunction {
-        return Item;
+    _resolveBaseItemTemplate(options): TemplateFunction {
+        return GridItem;
     },
 
-    _getGridViewClasses(): string {
-        const classes = `controls-Grid controls-Grid_${this._options.style}_theme-${this._options.theme}`;
+    _getGridTemplateColumns(columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
+        if (!columns) {
+            Logger.warn('You must set "columns" option to make grid work correctly!', this);
+            return '';
+        }
+        const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
+        let columnsWidths: string[] = [];
+        columnsWidths = initialWidths;
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns
+        });
+        if (ladderStickyColumn) {
+            if (ladderStickyColumn.property.length === 2) {
+                columnsWidths.splice(1, 0, '0px');
+            }
+            columnsWidths = ['0px'].concat(columnsWidths);
+        }
+        if (hasMultiSelect) {
+            columnsWidths = ['max-content'].concat(columnsWidths);
+        }
+        return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
+    },
+
+    _getGridViewClasses(options): string {
+        let classes = `controls-Grid controls-Grid_${options.style}_theme-${options.theme}`;
+        if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
+            classes += ' controls-Grid_support-ladder';
+        }
         return classes;
+    },
+
+    _getGridViewStyles(options): string {
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden';
+        return this._getGridTemplateColumns(options.columns, hasMultiSelect);
     },
 
     _onItemMouseMove(event, collectionItem) {
         GridView.superclass._onItemMouseMove.apply(this, arguments);
         this._setHoveredCell(collectionItem.item, event.nativeEvent);
     },
+
     _onItemMouseLeave() {
         GridView.superclass._onItemMouseLeave.apply(this, arguments);
         this._setHoveredCell(null, null);
@@ -100,15 +127,6 @@ const GridView = ListView.extend({
         }
     },
 
-    _getGridViewStyles(): string {
-        let styles = '';
-        if (GridLayoutUtil.isFullGridSupport()) {
-            const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden';
-            styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
-        }
-        return styles;
-    },
-
     // todo Переписать, сделать аналогично Footer/Header/Results
     _prepareColumnsForEmptyEditingTemplate(columns, topSpacing, bottomSpacing) {
         return prepareEmptyEditingColumns({
@@ -117,16 +135,45 @@ const GridView = ListView.extend({
                 top: topSpacing,
                 bottom: bottomSpacing
             },
-            isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
+            isFullGridSupport: this._options.isFullGridSupport,
             hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-            emptyTemplateColumns: columns,
+            colspanColumns: columns,
             itemPadding: this._options.itemPadding || {},
             theme: this._options.theme
         });
+    },
+
+    _prepareColumnsForEmptyTemplate(columns, content, topSpacing, bottomSpacing, theme) {
+        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
+            columns: this._options.columns
+        });
+        let gridColumns;
+        if (ladderStickyColumn) {
+            gridColumns = (ladderStickyColumn.property.length === 2 ? [{}, {}] : [{}]).concat(this._options.columns);
+        } else {
+            gridColumns = this._options.columns;
+        }
+
+        return prepareEmptyColumns({
+            gridColumns,
+            emptyTemplateSpacing: {
+                top: topSpacing,
+                bottom: bottomSpacing
+            },
+            isFullGridSupport: this._options.isFullGridSupport,
+            hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
+            colspanColumns: content ? [{template: content}] : columns,
+            itemPadding: this._options.itemPadding || {},
+            theme: this._options.theme,
+            afterPrepareCallback(column, index, columns): void {
+                column.classes = 'controls-ListView__empty ' +
+                    'controls-ListView__empty_theme-default ' +
+                    `controls-ListView__empty_topSpacing_${topSpacing}_theme-${theme} ` +
+                    `controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
+            }
+        });
     }
 });
-
-GridView._private = _private;
 
 GridView._theme = ['Controls/grid', 'Controls/Classes'];
 

@@ -64,7 +64,33 @@ export function each(
     const startIndex = getStartIndex(collection);
     const stopIndex = getStopIndex(collection);
     const enumerator = collection.getEnumerator();
+    const count = collection.getCount();
 
+    let styckyItemBefore = null;
+    let styckyItemAfter = null;
+    enumerator.setPosition(-1);
+    while (enumerator.moveNext() && enumerator.getCurrentIndex() < startIndex) {
+        let current = enumerator.getCurrent() as any;
+        if (current && current.isSticked && current.isSticked()) {
+            styckyItemBefore = { current, index: enumerator.getCurrentIndex() };
+        }
+    }
+    enumerator.setPosition(stopIndex - 1);
+    while (enumerator.moveNext() && enumerator.getCurrentIndex() < count) {
+        let current = enumerator.getCurrent() as any;
+        if (current && current.isSticked && current.isSticked()) {
+            styckyItemAfter = { current, index: enumerator.getCurrentIndex() };
+            break;
+        }
+    }
+
+    if (styckyItemBefore) {
+        callback.call(
+            context,
+            styckyItemBefore.current,
+            styckyItemBefore.index
+        );
+    }
     enumerator.setPosition(startIndex - 1);
 
     while (enumerator.moveNext() && enumerator.getCurrentIndex() < stopIndex) {
@@ -74,6 +100,14 @@ export function each(
             enumerator.getCurrentIndex()
         );
     }
+
+    if (styckyItemAfter) {
+        callback.call(
+            context,
+            styckyItemAfter.current,
+            styckyItemAfter.index
+        );
+    }
 }
 
 export function getStartIndex(collection: IVirtualScrollCollection): number {
@@ -81,5 +115,9 @@ export function getStartIndex(collection: IVirtualScrollCollection): number {
 }
 
 export function getStopIndex(collection: IVirtualScrollCollection): number {
-    return collection.getViewIterator()?.data?.stopIndex ?? collection.getCount();
+    // todo временный фикс, убрать по подзадаче к
+    // https://online.sbis.ru/opendoc.html?guid=a78388f1-9a73-46e6-aaff-9eb1c9554579
+    const collectionCount = collection.getCount();
+    const iteratorCount = collection.getViewIterator()?.data?.stopIndex;
+    return iteratorCount && iteratorCount <= collectionCount ? iteratorCount : collectionCount;
 }

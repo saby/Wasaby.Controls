@@ -1,13 +1,13 @@
 import { TKey, TPosition } from './interface';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
-import { CollectionItem, IDragPosition } from 'Controls/display';
+import { CollectionItem, GroupItem, IDragPosition } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { ISelectionObject } from 'Controls/interface';
 import {Logger} from 'UI/Utils';
 
 export interface IModel {
-   setDraggedItems(draggedItem: TKey, draggedItems: Array<string | number>): void;
+   setDraggedItems(draggedItem: CollectionItem<Model>, draggedItems: Array<string | number>): void;
    setDragPosition(position: IDragPosition<CollectionItem<Model>>): void;
    resetDraggedItems(): void;
 
@@ -58,16 +58,16 @@ export default class FlatController {
     * Отображает перетаскивание в списке.
     * Позволяет отобразить перетаскиеваемые элементы особым образом, отличным от остальных элементов.
     * @param entity - сущность перемещения, содержит весь список перемещаемых записей
-    * @param draggedItem - запись, за которую осуществляется перетаскивание
+    * @param draggableItem - запись, за которую осуществляется перетаскивание
     */
-   setDraggedItems(entity: ItemsEntity, draggedItem: CollectionItem<Model> = null): void {
+   setDraggedItems(entity: ItemsEntity, draggableItem: CollectionItem<Model> = null): void {
       this._entity = entity;
 
-      this._draggableItem = draggedItem;
-      this._startIndex = this._getIndex(draggedItem);
-
-      const draggableItemKey = !draggedItem ? null : draggedItem.getContents().getKey();
-      this._model.setDraggedItems(draggableItemKey, entity.getItems());
+      if (draggableItem) {
+         this._draggableItem = draggableItem;
+         this._startIndex = this._getIndex(draggableItem);
+         this._model.setDraggedItems(draggableItem, entity.getItems());
+      }
    }
 
    /**
@@ -135,7 +135,8 @@ export default class FlatController {
       }
 
       // If you hover on a record that is being dragged, then the position should not change.
-      if (this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+      if (!(targetItem['[Controls/_display/GroupItem]']) && this._draggableItem &&
+          this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
          return this._dragPosition;
       }
 

@@ -13,18 +13,22 @@ define([
 
    const
       getRegisterObject = function(cfg) {
+         const container = {
+            offsetParent: {},
+            getBoundingClientRect() {
+               return {height: 500};
+            }
+         };
          return {
             id: scroll.getNextStickyId(),
             position: (cfg && cfg.position) || 'top',
-            container: {
-               offsetParent: {},
-               getBoundingClientRect() {
-                  return {height: 500};
-               }
-            },
+            container,
             inst: {
                getOffset: function() {
                   return 0;
+               },
+               getHeaderContainer: function() {
+                  return container;
                },
                height: 10,
                resetSticky: sinon.fake(),
@@ -42,6 +46,15 @@ define([
             inst: {
                getOffset: function() {
                   return 0;
+               },
+               getHeaderContainer: function(){
+                  return {
+                     getBoundingClientRect() {
+                        return {
+                           height: 500
+                        };
+                     }
+                  };
                },
                height: 10,
                resetSticky: sinon.fake(),
@@ -181,8 +194,6 @@ define([
             });
          });
 
-
-
          [{
             position: 'top',
             result: true,
@@ -275,19 +286,23 @@ define([
          it('should insert header in proper position', function() {
             component.init(container);
             return Promise.all([0, 20, 10].map(function(offset, index) {
+               const container = {
+                  parentElement: 1,
+                  getBoundingClientRect() {
+                     return {height: 500};
+                  }
+               };
                const header = {
-                  container: {
-                     parentElement: 1,
-                     getBoundingClientRect() {
-                        return {height: 500};
-                     }
-                  },
+                  container,
                   id: index,
                   position: 'top',
                   mode: 'stackable',
                   inst: {
                      getOffset: function() {
                         return offset;
+                     },
+                     getHeaderContainer: function() {
+                        return container;
                      },
                      resetSticky: sinon.fake(),
                      restoreSticky: sinon.fake(),
@@ -311,10 +326,18 @@ define([
             const header = getRegisterObject();
             header.inst.getChildrenHeaders = function() {
                return [{
-                     container: 'container1'
-                  }, {
-                     container: 'container2'
-                  }]
+                  inst: {
+                     getHeaderContainer: function () {
+                        return 'container1';
+                     }
+                  }
+               }, {
+                  inst: {
+                     getHeaderContainer: function () {
+                        return 'container2';
+                     }
+                  }
+               }];
             };
             component._getStickyHeaderElements(header);
             assert.deepEqual(component._getStickyHeaderElements(header), ['container1', 'container2']);
@@ -541,6 +564,13 @@ define([
                   getOffset: function() {
                      return 10;
                   },
+                  getHeaderContainer: function() {
+                     return {
+                        getBoundingClientRect() {
+                           return {height: 500};
+                        }
+                     };
+                  },
                   height: 10,
                   resetSticky: sinon.fake(),
                   restoreSticky: sinon.fake(),
@@ -756,6 +786,81 @@ define([
                   sinon.assert.calledWith(component._headers['header' + i].inst.updateShadowVisibility, test.resp[i]);
                }
             });
+         });
+      });
+
+      describe('_updateTopBottomDelayed', () => {
+         it('should update height cache', () => {
+            component._headers = {
+               header0: {
+                  mode: 'stackable',
+                  container: {
+                     id: 0,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 20,
+                     resetSticky: () => undefined,
+                     getHeaderContainer: function() {
+                        return {
+                           id: 0,
+                           closest: () => false
+                        };
+                     }
+                  }
+               },
+               header1: {
+                  mode: 'stackable',
+                  container: {
+                     id: 1,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 30,
+                     resetSticky: () => undefined,
+                     getHeaderContainer: function() {
+                        return {
+                           id: 1,
+                           closest: () => false
+                        };
+                     }
+                  }
+               },
+               header2: {
+                  mode: 'stackable',
+                  container: {
+                     id: 2,
+                     closest: () => false
+                  },
+                  inst: {
+                     height: 40,
+                     resetSticky: () => undefined,
+                     getHeaderContainer: function() {
+                        return {
+                           id: 2,
+                           closest: () => false
+                        };
+                     }
+                  }
+               }
+            };
+            component._headersStack.top = ['header0', 'header1', 'header2'];
+            component._fixedHeadersStack.top = ['header0', 'header1', 'header2'];
+            return component._updateTopBottomDelayed().then(() => {
+               for (let headerId of ['header0', 'header1']) {
+                  const heightItem = component._elementsHeight.find((item) => {
+                     return item.key.id === component._headers[headerId].inst.getHeaderContainer().id;
+                  });
+                  assert.strictEqual(heightItem.value, component._headers[headerId].inst.height);
+               }
+            });
+
+            // heightItem = component._elementsHeight.find((item) => {
+            //    return item.key === component._headers.header0.element;
+            // });
+            // assert.isEqual(component)
+            // sinon.assert.calledWith(component._headers['header' + i].inst.updateShadowVisibility, test.resp[i]);
+
          });
       });
    });

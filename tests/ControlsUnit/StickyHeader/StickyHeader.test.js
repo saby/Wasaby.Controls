@@ -110,23 +110,6 @@ define([
          });
       });
 
-      describe('_onScrollStateChangedOld', function() {
-         it('canScroll', function () {
-            const component = createComponent(StickyHeader, {});
-            component._model = {
-               fixedPosition: 'top'
-            };
-            component._onScrollStateChangedOld('canScroll');
-            assert.isTrue(component._canScroll);
-         });
-
-         it('cantScroll', function () {
-            const component = createComponent(StickyHeader, {});
-            component._onScrollStateChangedOld('cantScroll');
-            assert.isFalse(component._canScroll);
-         });
-      });
-
       describe('_observeHandler', function() {
          it('should not update state if control is hidden', function() {
             const component = createComponent(StickyHeader, {});
@@ -136,6 +119,7 @@ define([
             };
             sandbox.stub(component, '_createObserver');
             sandbox.stub(StickyHeaderUtils, 'isHidden').returns(true);
+            sandbox.stub(component, '_updateComputedStyle');
             component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
             sandbox.stub(component._model, 'update');
 
@@ -442,7 +426,11 @@ define([
             component._model = { fixedPosition: 'top' };
             component._isFixed = true;
             component._scrollState = {
-               verticalPosition: 'middle'
+               verticalPosition: 'middle',
+               hasUnrenderedContent: {
+                  top: false,
+                  bottom: false
+              }
             };
             assert.isTrue(component._isShadowVisible('bottom'));
          });
@@ -453,7 +441,11 @@ define([
             component._model = { fixedPosition: 'top' };
             component._isFixed = true;
             component._scrollState = {
-               verticalPosition: 'middle'
+               verticalPosition: 'middle',
+               hasUnrenderedContent: {
+                  top: false,
+                  bottom: false
+              }
             };
             component.updateShadowVisibility(false);
             assert.isFalse(component._isShadowVisible('bottom'));

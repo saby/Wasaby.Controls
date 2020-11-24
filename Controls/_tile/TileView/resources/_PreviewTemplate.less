@@ -5,6 +5,7 @@
    box-sizing: border-box;
    display: flex;
    align-items: center;
+   left: 0;
 }
 
 .controls-TileView__previewTemplate_title_singleLine_theme-@{themeName} {
@@ -24,15 +25,15 @@
 }
 
 .controls-TileView__previewTemplate_gradient_light_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - @gradient_light_height_preview_tile), transparent 100%);
+   background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) calc(100% - @gradient_light_height_preview_tile), rgba(255, 255, 255, 0) 100%);
 }
 
 .controls-TileView__previewTemplate_gradient_dark_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - @gradient_dark_height_preview_tile), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) calc(100% - @gradient_dark_height_preview_tile), rgba(255, 255, 255, 0) 100%);
 }
 
 .ws-is-hover .controls-TileView__previewTemplate_content:hover .controls-TileView__previewTemplate_gradient_dark_theme-@{themeName} {
-   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - @gradient_dark_height_preview_tile), transparent 100%);
+   background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.6) calc(100% - @gradient_dark_height_preview_tile), rgba(255, 255, 255, 0) 100%);
 }
 
 .controls-TileView__previewTemplate_title_text {
@@ -82,9 +83,12 @@
    .controls-BaseControl_showActions_visible .controls-TileView__previewTemplate .controls-ListView__item_showActions .controls-itemActionsV,
    .controls-BaseControl_showActions_delayed .controls-TileView__previewTemplate .controls-ListView__item_showActions:hover .controls-itemActionsV,
    .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate .controls-ListView__item_showActions:hover .controls-itemActionsV,
-   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate:hover .controls-TileView__item_unscaleable .controls-itemActionsV {
+   .controls-BaseControl_showActions_onhover .controls-TileView__previewTemplate:hover .controls-TileView__item_unscaleable .controls-TileView__previewTemplate_canShowActions.controls-itemActionsV {
       opacity: 1;
       visibility: visible;
+   }
+   .controls-TileView__previewTemplate:hover.controls-TileView__previewTemplate_actions_showed.controls-TileView__previewTemplate_node .controls-TileView__previewTemplate_title_text {
+      padding-right: @item_padding_itemActions + @icon-size_m;
    }
    //TODO каскады до выполнения https://online.sbis.ru/opendoc.html?guid=5c209e19-b6b2-47d0-9b8b-c8ab32e133b0 сейчас нельзя обновлять модель, иначе будут жуткие тормоза
 
@@ -106,7 +110,20 @@
    }
 }
 // end TODO
-.controls-TileView__previewTemplate_footer {
-   position: absolute;
-   bottom: 0;
+
+// До решения https://online.sbis.ru/opendoc.html?guid=d7a8a9e3-8e83-442d-bcfb-5743d91db7e4
+.controls-itemActionsV__action_style_tileDark .controls-itemActionsV__action_title {
+   color: @icon_style_color_tile_dark_preview_tile;
+}
+
+.controls-itemActionsV__action_style_tileLight .controls-itemActionsV__action_title {
+   color: @contrast_text-color;
+}
+
+.ws-is-hover .controls-itemActionsV__action.controls-itemActionsV__action_style_tileDark:hover .controls-itemActionsV__action_title {
+   color: @icon_style_color_tile_dark_preview_tile;
+}
+
+.ws-is-hover .controls-itemActionsV__action.controls-itemActionsV__action_style_tileLight:hover .controls-itemActionsV__action_title {
+   color: @contrast_text-color;
 }

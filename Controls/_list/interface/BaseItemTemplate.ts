@@ -28,7 +28,7 @@ export default interface IBaseItemTemplateOptions {
    cursor?: TCursor;
    /**
     * @name Controls/list:BaseItemTemplate#marker
-    * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/select/marker/ маркером}.
+    * @cfg {Boolean} Когда опция установлена в значение true, активный элемент будет выделяться {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
     * @default true
     */
    marker?: boolean;
@@ -39,8 +39,18 @@ export default interface IBaseItemTemplateOptions {
     */
    /**
     * @name Controls/list:BaseItemTemplate#itemActionsClass
-    * @cfg {ItemActionsClass} Расположение панели с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/item-actions/ опциями записи} внутри элемента.
+    * @cfg {ItemActionsClass} Класс, используемый для позиционирования {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} при отображении её внутри элемента списка (опция {@link Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition itemActionsPosition}).
     * @default controls-itemActionsV_position_bottomRight
+    * @remark
+    * Панель опций записи абсолютно позиционируется относительно элемента списка.
+    * 
+    * Опция может использоваться для определения угла элемента списка, к которому прижимается панель опций.
+    * Поддерживаются следующие значения:
+    * * .controls-itemActionsV_position_bottomRight — панель опций записи отображается в правом нижмем углу элемента.
+    * * .controls-itemActionsV_position_topRight — панель опций записи отображается в правом верхнем углу элемента списка.
+    * 
+    * Также можно задавать собственный класс, таким образом управляя местоположением панели опций записи.
+    * @demo Controls-demo/list_new/ItemTemplate/ItemActionsClass/Index
     */
    itemActionsClass?: string;
    /**

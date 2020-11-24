@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-    <Controls.scroll:Container attr:class="controlsDemo__height300">
+    <Controls.scroll:Container attr:class="controlsDemo__height300" shadowMode="js">
         <Controls.list:Mover name="listMover"/>
         <Controls.grid:View
                 keyProperty="id"

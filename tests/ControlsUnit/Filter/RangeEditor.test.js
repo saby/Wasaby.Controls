@@ -79,6 +79,8 @@ define(['Controls/filter', 'Controls/dateRange'],
          });
 
          it('_rangeChanged', () => {
+            let isStopped = false;
+            const event = {stopPropagation: () => { isStopped = true; }};
             var rangeEditor = new filter.DateRangeEditor();
             var textValue;
 
@@ -94,9 +96,10 @@ define(['Controls/filter', 'Controls/dateRange'],
 
             rangeEditor._dateRangeModule = dateRange;
 
-            rangeEditor._rangeChanged({}, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00'));
+            rangeEditor._rangeChanged(event, new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00'));
             assert.equal(textValue, '17.04.95 - 17.05.95');
             assert.isFalse(rangeEditor._reseted);
+            assert.isTrue(isStopped);
          });
 
          it('_rangeChanged resetValue', () => {
@@ -116,9 +119,31 @@ define(['Controls/filter', 'Controls/dateRange'],
                }
             };
 
-            return rangeEditor._rangeChanged({}, null, null);
+            return rangeEditor._rangeChanged({stopPropagation: () => {}}, null, null);
             assert.deepEqual(date, resetValue);
             assert.isTrue(rangeEditor._reseted);
+         });
+
+         it('textValueChanged with captionFormatter', () => {
+            const rangeEditor = new filter.DateRangeEditor();
+            const resetValue = [new Date('April 17, 1995 03:24:00'), new Date('May 17, 1995 03:24:00')];
+            let textValue;
+
+            rangeEditor.saveOptions({
+               resetValue,
+               value: resetValue,
+               captionFormatter: () => 'testTextValue'
+            });
+            rangeEditor._dateRangeModule = dateRange;
+
+            rangeEditor._notify = (event, eventValue) => {
+               if (event === 'textValueChanged') {
+                  textValue = eventValue[0];
+               }
+            };
+
+            rangeEditor._rangeChanged({stopPropagation: () => {}}, null, null);
+            assert.ok(textValue === 'testTextValue');
          });
       });
 });
