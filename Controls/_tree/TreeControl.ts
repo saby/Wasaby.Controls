@@ -522,6 +522,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _beforeMount(options): void {
+        this._initKeyProperty(options);
         if (options.sourceController) {
             // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
             //  и на списке и на Browser'e
@@ -529,10 +530,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
             if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
                 options.root !== undefined && options.root !== sourceControllerState.root) {
-                options.sourceController.updateOptions(options);
+                options.sourceController.updateOptions({...options, keyProperty: this._keyProperty});
             }
         }
-        this._initKeyProperty(options);
     },
 
     _afterMount: function() {

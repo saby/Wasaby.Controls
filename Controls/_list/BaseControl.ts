@@ -2207,8 +2207,8 @@ const _private = {
         });
     },
 
-    checkRequiredOptions(options) {
-        if (!this._keyProperty) {
+    checkRequiredOptions(self, options) {
+        if (!self._keyProperty) {
             Logger.error('IList: Option "keyProperty" is required.');
         }
     },
@@ -3253,7 +3253,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
-        _private.checkRequiredOptions(newOptions);
+        _private.checkRequiredOptions(this, newOptions);
 
         _private.bindHandlers(this);
 
@@ -3320,7 +3320,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
-        let viewModelConfig = {...newOptions};
+        let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
         if (self._sourceController) {
             if (receivedData) {
@@ -3792,7 +3792,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
-                supportVirtualScroll: !!this._needScrollCalculation
+                supportVirtualScroll: !!this._needScrollCalculation,
+                keyProperty: this._keyProperty
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
