@@ -5,12 +5,13 @@
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
                        navigation="{{_navigation}}"
+                       markerVisibility="{{false}}"
                        backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
       <ws:itemTemplate>
-         <ws:partial template="Controls/grid:ItemTemplate" marker="{{false}}"/>
+         <ws:partial template="Controls/grid:ItemTemplate"/>
       </ws:itemTemplate>
       <ws:footerTemplate>
          <ws:if data="{{_needShowMoreButton}}">

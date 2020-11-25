@@ -6,7 +6,7 @@ import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
 
 /**
- * Контрол "Панель фильтра с набираемыми параметрами ".
+ * Контрол "Панель фильтра с набираемыми параметрами".
  *
  * @class Controls/_filter/ViewPanel
  * @extends Core/Control
