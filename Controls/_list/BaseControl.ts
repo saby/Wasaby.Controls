@@ -1713,6 +1713,7 @@ const _private = {
             if (self._scrollController) {
                 if (action) {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
+                    const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
                     switch (action) {
                         case IObservable.ACTION_ADD:
@@ -1722,7 +1723,8 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
                         case IObservable.ACTION_MOVE:
