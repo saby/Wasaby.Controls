@@ -42,7 +42,8 @@
     </ws:if>
     <ws:else>
         <div class="controls-Search__expandable-button-container_theme-{{_options.theme}}">
-            <div class="controls-Search__expandable-button controls-Search__expandable-button_theme-{{_options.theme}}
+            <div class="controls-Search__expandable-button
+                    {{_needShowButtonAnimation ? 'controls-Search__expandable-button-animation_theme-' + _options.theme}}
                     controls-Search__button_{{_options.readOnly ? 'readOnly' : 'enabled'}}
                     controls-Search__searchButton_theme_{{_options.theme}}_color icon-Search2
                     controls-icon_size-m_theme-{{_options.theme}}"
