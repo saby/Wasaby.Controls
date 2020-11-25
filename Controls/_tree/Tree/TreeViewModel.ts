@@ -153,11 +153,13 @@ var
         shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
 
+            // Hide expander icon if it is equal 'none' or render leafs
             if (expanderIcon === 'none' || itemData.item.get(itemData.nodeProperty) === null) {
                 return false;
             }
 
-            // Show expander icon if it is not equal 'none' or render leafs
+            // For cases when expanderVisibility equal 'visible' or 'hasChildrenOrHover' always show the expander icon
+            // For case when expanderVisibility equal 'hasChildren' show the expander icon if node has leafs
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
         shouldDrawExpanderPadding(itemData, tmplExpanderIcon, tmplExpanderSize): boolean {
@@ -182,6 +184,7 @@ var
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
             const expanderPosition = itemData.getExpanderPosition();
             const theme = itemData.theme;
+            const isExpanded = itemData.isExpanded;
             const style = itemData.style || 'default';
             const itemType = itemData.item.get(itemData.nodeProperty);
 
@@ -207,16 +210,25 @@ var
                     expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
                 }
             } else {
-                expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemType === true ? 'node_' : 'hiddenNode_')
-                + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
+                const needEmptyFolderIcon = itemData.expanderVisibility === 'hasChildrenOrHover' && !itemData.hasChildItem;
+                if (needEmptyFolderIcon && !isExpanded) {
+                    expanderIconClass = ' controls-TreeGrid__row-expander_visibility_hover';
+                }
+
+                // В случае если expanderVisibility === 'hasChildrenOrHover' и у узла нет дочерних элементов, то
+                // рисуем иконку пустого узла. Во всех остальных случаях рисуем иконку в зависимости от типа узла.
+                const iconType = needEmptyFolderIcon ? 'emptyNode' : itemType === true ? 'node' : 'hiddenNode';
+                const iconStyle = itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default';
+
+                expanderIconClass += ` controls-TreeGrid__row-expander_${iconType}_${iconStyle}`;
             }
 
             expanderClasses += expanderIconClass + `_theme-${theme}`;
 
             // добавляем класс свертнутости развернутости для тестов
-            expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
+            expanderClasses += ' controls-TreeGrid__row-expander' + (isExpanded ? '_expanded' : '_collapsed');
             // добавляем класс свертнутости развернутости стилевой
-            expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
+            expanderClasses += expanderIconClass + (isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
 
             return expanderClasses;
         },
