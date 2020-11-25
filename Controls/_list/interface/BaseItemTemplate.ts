@@ -1,13 +1,14 @@
 /**
- * @typedef {String} TCursor
- * @description Значения для типа курсора, отображаемого при наведении на элемент списка.
+ * @typedef {String} Controls/_list/interface/IBaseItemTemplateOptions/TCursor
+ * @description Значения, с помощью которых задается вид курсора мыши.
  * @variant default Стандартный указатель (стрелка).
  * @variant pointer Указатель.
  */
 export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
- * @typedef {String} TMarkerClassName
+ * @typedef {String} Controls/_list/interface/IBaseItemTemplateOptions/TMarkerClassName
+ * @description Значения, с помощью которых задается размер маркера.
  * @variant default Маркер по высоте растягивается на весь контейнер записи.
  * @variant image-l Используется для размещения маркера рядом с изображением размера "l".
  * @variant image-m Используется для размещения маркера рядом с изображением размера "m".
@@ -52,13 +53,14 @@ export default interface IBaseItemTemplateOptions {
     */
    marker?: boolean;
    /**
-    * @typedef {String} ItemActionsClass
+    * @typedef {String} Controls/_list/interface/IBaseItemTemplateOptions/ItemActionsClass
+    * @description Классы, с помощью которых задается позиционирование панели опций записи внутри элемента.
     * @variant controls-itemActionsV_position_bottomRight В правом нижнем углу элемента.
     * @variant controls-itemActionsV_position_topRight В правом верхнем углу элемента.
     */
    /**
-    * @name Controls/list:BaseItemTemplate#itemActionsClass
-    * @cfg {ItemActionsClass} Класс, используемый для позиционирования {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} при отображении её внутри элемента списка (опция {@link Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition itemActionsPosition}).
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#itemActionsClass
+    * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/ItemActionsClass.typedef} Класс, используемый для позиционирования {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ панели опций записи} при отображении её внутри элемента списка (опция {@link Controls/_itemActions/interface/IItemActionsOptions#itemActionsPosition itemActionsPosition}).
     * @default controls-itemActionsV_position_bottomRight
     * @remark
     * Панель опций записи абсолютно позиционируется относительно элемента списка.
@@ -73,20 +75,21 @@ export default interface IBaseItemTemplateOptions {
     */
    itemActionsClass?: string;
    /**
-    * @name Controls/interface/IItemTemplate#checkboxReadOnly
-    * @cfg {boolean} Флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#checkboxReadOnly
+    * @cfg {Boolean} Флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
     * @remark
     * В значении true режим "только для чтения" включен.
     * @default false
     */
    /*
-    * @name Controls/interface/IItemTemplate#checkboxReadOnly
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#checkboxReadOnly
     * @cfg {boolean} Flag, allowing to set "readonly" state for checkbox within multiSelect.
     * @default false
     */
    checkboxReadOnly?: boolean;
    /**
-    * @typedef {String} BackgroundColorStyle
+    * @typedef {String} Controls/_list/interface/IBaseItemTemplateOptions/BackgroundColorStyle
+    * @description Значения, с помощью которых задается фон строки.
     * @variant danger
     * @variant success
     * @variant warning
@@ -96,7 +99,7 @@ export default interface IBaseItemTemplateOptions {
     * @variant readonly
     */
    /**
-    * @name Controls/interface/IItemTemplate#backgroundColorStyle
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#backgroundColorStyle
     * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/BackgroundColorStyle.typedef} Настройка фона строки.
     * @remark 
     * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight">руководство разработчика</a>.
@@ -105,7 +108,7 @@ export default interface IBaseItemTemplateOptions {
    backgroundColorStyle?: string;
 
    /**
-    * @name Controls/interface/IItemTemplate#markerClassName
+    * @name Controls/_list/interface/IBaseItemTemplateOptions#markerClassName
     * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/TMarkerClassName.typedef} Размер маркера.
     * @default default
     */
