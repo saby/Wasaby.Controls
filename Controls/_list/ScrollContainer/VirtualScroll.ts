@@ -154,8 +154,12 @@ export default class VirtualScroll {
             this._savedDirection = predicatedDirection;
         }
 
-        if (direction === 'down' && triggerState[direction]) {
-            return this.shiftRange(direction);
+        if (direction === 'down') {
+            if (!predicatedDirection && triggerState[direction]) {
+                return this.shiftRange(direction);
+            } else {
+                return this._setRange(this._shiftRangeBySegment(direction, count));
+            }
         } else {
             return this._setRange(this._shiftRangeBySegment(direction, count));
         }

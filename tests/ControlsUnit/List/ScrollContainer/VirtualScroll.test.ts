@@ -117,7 +117,7 @@ describe('Controls/_list/ScrollContainer/VirtualScroll', () => {
                 instance.addItems(3, 1, {up: false, down: false}, 'down'));
         });
         it('with predictive direction and trigger visibility', () => {
-                assert.deepEqual({range: {start: 0, stop: 6}, placeholders: {top: 0, bottom: 0}},
+                assert.deepEqual({range: {start: 0, stop: 5}, placeholders: {top: 0, bottom: 60}},
                     instance.addItems(3, 1, {up: false, down: true}, 'down'));
         });
         it('lack of items, direction up', () => {
