@@ -266,11 +266,12 @@ const _private = {
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
         }
 
-        if (!(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll)) {
-            if (baseControl) {
-                baseControl.getSourceController().setExpandedItems([]);
-            }
+        if (!(_private.isDeepReload(cfg, self._deepReload) || expandedItemsKeys.length || !isExpandAll)) {
             _private.clearNodesSourceControllers(self);
+        }
+
+        if (baseControl && self._needResetExpandedItems) {
+            baseControl.getSourceController().setExpandedItems([]);
         }
     },
 
@@ -631,7 +632,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             // При смене корне, не надо запрашивать все открытые папки,
             // т.к. их может не быть и мы загрузим много лишних данных.
             // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
-            if (!isEqual(oldOptions.expandedItems, this._options.expandedItems)) {
+            if (isEqual(oldOptions.expandedItems, this._options.expandedItems)) {
                 this._needResetExpandedItems = true;
             }
             // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
