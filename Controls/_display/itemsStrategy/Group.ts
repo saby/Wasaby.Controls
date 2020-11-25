@@ -8,7 +8,7 @@ import {
     ISerializableState as IDefaultSerializableState
 } from 'Types/entity';
 import {mixin} from 'Types/util';
-import { groupConstants } from 'Controls/list';
+import { groupConstants } from 'Controls/_list/Controllers/Grouping';
 
 type IGroup = string | number;
 type IGroups = IGroup[];
