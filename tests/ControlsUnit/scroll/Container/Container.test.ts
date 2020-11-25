@@ -52,7 +52,9 @@ describe('Controls/scroll:Container', () => {
     describe('_beforeUnmount', () => {
         it('should call beforeUnmount in ContainerBase', () => {
             const component = createComponent(Container);
-            const state = component._state;
+            const state = component._scrollModel = {
+                scrollTop: 200
+            };
             component._beforeUnmount();
 
             assert.notEqual(state, component._state);
@@ -222,8 +224,15 @@ describe('Controls/scroll:Container', () => {
     });
 
     describe('_keydownHandler', () => {
+        let component: Container;
+        beforeEach(() => {
+            component = createComponent(Container, {});
+            sinon.stub(component._stickyHeaderController, 'init');
+        });
+        afterEach(() => {
+            sinon.restore();
+        });
         it('should scroll top 40px when key up', () => {
-            const component = createComponent(Container, {});
             const result = 960;
             component._topPlaceholderSize = 0;
             component._state = {
@@ -231,7 +240,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._children = {
                 content: {
-                    scrollTop : 1000
+                    scrollTop : 1000,
+                    children: []
                 }
             };
             const event = {
@@ -247,7 +257,6 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should scroll down 40px when key down', () => {
-            const component = createComponent(Container, {});
             const result = 1040;
             component._topPlaceholderSize = 0;
             component._state = {
@@ -257,7 +266,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._children = {
                 content: {
-                    scrollTop: 1000
+                    scrollTop: 1000,
+                    children: []
                 }
             };
             const event = {
@@ -273,7 +283,6 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll down 40px when key down', () => {
-            const component = createComponent(Container, {});
             const result = 1000;
             component._topPlaceholderSize = 0;
             component._state = {
@@ -283,7 +292,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._children = {
                 content: {
-                    scrollTop: 1000
+                    scrollTop: 1000,
+                    children: []
                 }
             };
             const event = {
@@ -299,7 +309,6 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll down 40px when key up', () => {
-            const component = createComponent(Container, {});
             const result = 0;
             component._topPlaceholderSize = 0;
             component._state = {
@@ -307,7 +316,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._children = {
                 content: {
-                    scrollTop: 0
+                    scrollTop: 0,
+                    children: []
                 }
             };
             const event = {
@@ -323,7 +333,6 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll anywhere if not native keydown', () => {
-            const component = createComponent(Container, {});
             const result = 0;
             component._topPlaceholderSize = 0;
             component._state = {
@@ -331,7 +340,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._children = {
                 content: {
-                    scrollTop: 0
+                    scrollTop: 0,
+                    children: []
                 }
             };
             const event = {

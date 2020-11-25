@@ -41,7 +41,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _state: ScrollState;
     private _oldScrollState: ScrollState;
     private _scrollModel: ScrollModel;
-    private _oldScrollState: ScrollModel;
 
     protected _tmplNotify: Function = tmplNotify;
 
