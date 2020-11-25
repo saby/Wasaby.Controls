@@ -803,6 +803,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
      */
     setBackgroundStyle(backgroundStyle) {
         this._options.backgroundStyle = backgroundStyle;
+        this._nextVersion();
     }
 });
 

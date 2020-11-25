@@ -2524,8 +2524,10 @@ var
          * Обновляет стиль фона фиксированных элемекнтов
          * @param backgroundStyle
          */
-        setBackgroundStyle(backgroundStyle) {
-            this._options.backgroundStyle = backgroundStyle;
+        setBackgroundStyle(backgroundStyle): void {
+            if (this._model) {
+                this._model.setBackgroundStyle(backgroundStyle);
+            }
         }
 
     });
