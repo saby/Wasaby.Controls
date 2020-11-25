@@ -366,9 +366,7 @@ var _private = {
                             _private.getConfigByItem(self, item);
                         }
                     } else {
-                        if (!self._configs?.[item.name]) {
-                            self._configs[item.name] = {};
-                        }
+                        _private.getConfigByItem(self, item);
                         pDef.push(_private.loadSelectedItems([item], self._configs));
                     }
                 }
