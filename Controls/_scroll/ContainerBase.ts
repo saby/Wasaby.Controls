@@ -26,7 +26,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
-    protected _isStateInitialized: boolean = false;
 
     private _registrars: any = [];
 
@@ -70,8 +69,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     _afterMount(): void {
-        const scrollState = this._getFullStateFromDOM();
-        this._scrollModel = new ScrollModel(this._children.content, scrollState);
+        if (!this._scrollModel) {
+            const scrollState = this._getFullStateFromDOM();
+            this._scrollModel = new ScrollModel(this._children.content, scrollState);
+        }
         if (!this._resizeObserver.isResizeObserverSupported()) {
             RegisterUtil(this, 'controlResize', this._controlResizeHandler, { listenAll: true });
             // ResizeObserver при инициализации контрола стрелнет событием ресайза.
@@ -329,7 +330,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _onRegisterNewComponent(component: Control): void {
         // Если состояние еще не инициализировано, то компонент получит его после инициализации.
-        if (this._isStateInitialized) {
+        if (this._scrollModel) {
             const scrollState = this._scrollModel.clone();
             const oldScrollState = this._oldScrollState.clone();
             this._registrars.scrollStateChanged.startOnceTarget(component, scrollState, oldScrollState);
@@ -492,7 +493,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _updateState(newState: IScrollState): boolean {
         this._oldScrollState = this._scrollModel.clone();
         const isScrollStateUpdated = this._scrollModel.updateState(newState);
-        this._isStateInitialized = true;
         return isScrollStateUpdated;
     }
 
@@ -604,8 +604,10 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     _onRegisterNewListScrollComponent(component: any): void {
         // Списку нужны события canScroll и cantScroll в момент инициализации до того,
         // как у нас отработают обработчики и инициализируются состояние.
-        if (!this._isStateInitialized) {
-            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
+        if (!this._scrollModel) {
+            const scrollState = this._getFullStateFromDOM();
+            this._scrollModel = new ScrollModel(this._children.content, scrollState);
+            this._updateStateAndGenerateEvents(scrollState);
         }
         this._sendByListScrollRegistrarToComponent(
             component,
