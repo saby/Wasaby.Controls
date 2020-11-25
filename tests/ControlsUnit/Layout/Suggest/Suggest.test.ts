@@ -362,6 +362,17 @@ describe('Controls/suggest', () => {
          assert.isFalse(inputContainer._loading);
       });
 
+      it('Suggest::_searchErrback without suggestTemplate', () => {
+         const inputContainer = getComponentObject();
+         let suggestOpened = false;
+         inputContainer._options.suggestTemplate = null;
+         inputContainer._open = () => {
+            suggestOpened = true;
+         };
+         inputContainer._searchErrback({canceled: false});
+         assert.isFalse(suggestOpened);
+      });
+
       it('Suggest::searchErrback', () => {
          const suggest = new _InputController({});
          suggest._loading = true;

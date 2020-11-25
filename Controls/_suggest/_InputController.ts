@@ -313,7 +313,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
             this._pendingErrorConfig = errorConfig;
-            this._open();
+            if (this._options.suggestTemplate) {
+               this._open();
+            }
          });
       }
    }
