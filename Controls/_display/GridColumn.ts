@@ -165,6 +165,12 @@ export default class GridColumn<T> extends mixin<
             contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
         }
 
+        // todo Чтобы работало многоточие - нужна ещё одна обертка над contentTemplate. Задача пересекается с настройкой
+        //      шаблона колонки (например, cursor на демо CellNoClickable)
+        if (this._$column.textOverflow) {
+            contentClasses += ` controls-Grid__cell_${this._$column.textOverflow}`;
+        }
+
         if (this._$hiddenForLadder) {
             contentClasses += ' controls-Grid__row-cell__content_hiddenForLadder';
             contentClasses += ` controls-Grid__row-cell__content_hiddenForLadder_theme-${theme}`;
@@ -260,7 +266,7 @@ export default class GridColumn<T> extends mixin<
         const isEditing = this._$owner.isEditing();
         const isDragged = this._$owner.isDragged();
         const preparedStyle = style === 'masterClassic' ? 'default' : style;
-        const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
+        const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
 
         classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
         classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
