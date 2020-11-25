@@ -18,6 +18,26 @@ export interface ISearchResolverOptions {
    minSearchLength?: number;
    searchCallback: (value: string) => void;
    searchResetCallback: () => void;
+
+   /**
+    * @name Controls/_search/interface/ISearchResolverOptions#delayTime
+    * @cfg {number|null} Время задержки перед поиском
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchResolverOptions#minSearchLength
+    * @cfg {number} Минимальная длина значения для начала поиска
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchResolverOptions#searchCallback
+    * @cfg {Function} Функция, которая будет вызвана если поиск будет разрешен
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchResolverOptions#searchResetCallback
+    * @cfg {Function} Функция, которая будет вызвана если поиск был сброшен
+    */
 }
 
 /**
@@ -32,6 +52,26 @@ export interface ISearchInputContainerOptions extends IControlOptions {
    minSearchLength?: number;
    inputSearchValue?: string;
    useStore?: boolean;
+
+   /**
+    * @name Controls/_search/interface/ISearchInputContainerOptions#searchDelay
+    * @cfg {number|null} Время задержки перед поиском
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchInputContainerOptions#minSearchLength
+    * @cfg {number} Минимальная длина значения для начала поиска
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchInputContainerOptions#inputSearchValue
+    * @cfg {string} Значение строки ввода
+    */
+
+   /**
+    * @name Controls/_search/interface/ISearchInputContainerOptions#useStore
+    * @cfg {boolean} Использовать ли хранилище Store вместо отправки события при разрешении на поиск
+    */
 }
 
 /**

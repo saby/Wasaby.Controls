@@ -11,6 +11,21 @@ const SERVICE_FILTERS = {
    }
 };
 
+/**
+ * Класс контроллер, реализующий поиск по заданному значению, либо сброс поиска.
+ * Имеется возможность поиска в дереве и плоском списке.
+ * @example
+ * <pre>
+ *
+ * </pre>
+ *
+ * @class Controls/_search/ControllerClass
+ * @implements Controls/_search/interface/ISearchController
+ * @author Крюков Н.Ю.
+ *
+ * @public
+ */
+
 export default class ControllerClass implements ISearchController {
    protected _options: ISearchControllerOptions = null;
 
@@ -26,6 +41,12 @@ export default class ControllerClass implements ISearchController {
       }
    }
 
+   /**
+    * Сброс поиска.
+    * Производит очистку фильтра, затем загрузку в sourceController с обновленными параметрами.
+    * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
+    * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
+    */
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       const filter = {...this._options.sourceController.getFilter()};
       filter[this._options.searchParam] = this._searchValue = '';
@@ -47,6 +68,10 @@ export default class ControllerClass implements ISearchController {
       return filter;
    }
 
+   /**
+    * Произвести поиск по значению.
+    * @param {string} value
+    */
    search(value: string): Promise<RecordSet | Error> {
       const filter: QueryWhereExpression<unknown> = {...this._options.sourceController.getFilter()};
 
@@ -72,6 +97,10 @@ export default class ControllerClass implements ISearchController {
       return this._updateFilterAndLoad(filter);
    }
 
+   /**
+    * Обновить опции контроллера.
+    * @param {Partial<ISearchControllerOptions>} options Новые опции
+    */
    update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
       const needUpdateRoot = this._options.root !== options.root;
       let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
@@ -98,14 +127,24 @@ export default class ControllerClass implements ISearchController {
       return updateResult;
    }
 
+   /**
+    * Установить корень для поиска в иерархическом списке.
+    * @param {string|number|null} value Ключ
+    */
    setRoot(value: Key): void {
       this._root = value;
    }
 
+   /**
+    * Получить корень поиска по иерархическому списку.
+    */
    getRoot(): Key {
       return this._root;
    }
 
+   /**
+    * Получить значение поиска
+    */
    getSearchValue(): string {
       return this._searchValue;
    }

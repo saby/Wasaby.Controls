@@ -6,6 +6,35 @@ import {ISearchInputContainerOptions} from '../interface';
 import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
 
+/**
+ * Контрол обертка для отлавливания событий обернутого поля ввода поиска.
+ * @remark
+ * Контрол принимает решение по событию valueChanged, должно ли сработать событие search или нет,
+ * в зависимости от заданных параметров поиска - минимальной длины для начала поиска и времени задержки.
+ *
+ * Если задана опция useStore, то вместо использования события, будет отправлено значение свойства searchValue в Store.
+ *
+ * @example
+ * <pre>
+ *    <Controls.ExampleControl on:search="_search()">
+ *       <Controls.search:InputContainer>
+ *          <Controls.search:Input/>
+ *       </Controls.search:InputContainer>
+ *    </Controls.ExampleControl>
+ * </pre>
+ * <pre>
+ *    class ExampleControl extends Control {
+ *       ...
+ *       protected _search(event: SyntheticEvent, value: string) {
+ *          // Поиск разрешен
+ *       }
+ *       ...
+ *    }
+ * </pre>
+ * @class Controls/_search/Input/Container
+ * @author Крюков Н.Ю.
+ * @public
+ */
 export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
@@ -46,7 +75,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       }
    }
 
-   protected _getSearchDelayController(): SearchResolver {
+   protected _getSearchResolverController(): SearchResolver {
       if (!this._searchResolverController) {
          this._searchResolverController = new SearchResolver({
             delayTime: this._options.searchDelay,
@@ -77,7 +106,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _searchClick(event: SyntheticEvent): void {
       if (this._value) {
-         this._getSearchDelayController().setSearchStarted(true);
+         this._getSearchResolverController().setSearchStarted(true);
          this._resolve(this._value);
       }
    }
@@ -85,7 +114,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _valueChanged(event: SyntheticEvent, value: string): void {
       if (this._value !== value) {
          this._value = value;
-         this._getSearchDelayController().resolve(value);
+         this._getSearchResolverController().resolve(value);
       }
    }
 
