@@ -96,7 +96,9 @@ var _private = {
                 loadPromises.push(_private.loadItems(self, item));
             }
         });
-        return Promise.all(loadPromises);
+        return Promise.all(loadPromises).then(() => {
+            return _private.loadSelectedItems(self._source, self._configs);
+        });
     },
 
     getPopupConfig: function(self, configs, items) {
