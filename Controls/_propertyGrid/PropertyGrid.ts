@@ -60,7 +60,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             parentProperty,
             editingObject,
             source,
-            collapsedGroups
+            collapsedGroups,
+            itemActions
         }: IPropertyGridOptions
     ): void {
         this._collapsedGroups = this._getCollapsedGroups(collapsedGroups);
@@ -188,7 +189,14 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _mouseEnterHandler(): void {
-        this._updateItemActions(this._listModel, this._options);
+        if (!this._itemActionsController) {
+            import('Controls/itemActions').then(({Controller}) => {
+                this._itemActionsController = new Controller();
+                this._updateItemActions(this._listModel, this._options);
+            });
+        } else {
+            this._updateItemActions(this._listModel, this._options);
+        }
     }
 
     protected _itemActionMouseDown(event: SyntheticEvent<MouseEvent>,
@@ -244,9 +252,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             return;
         }
 
-        if (!this._itemActionsController) {
-            this._itemActionsController = new ItemActionsController();
-        }
         const editingConfig = listModel.getEditingConfig();
         this._itemActionsController.update({
             collection: listModel,
@@ -257,7 +262,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             theme: options.theme,
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            // itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
             iconSize: editingConfig ? 's' : 'm'
         });
     }

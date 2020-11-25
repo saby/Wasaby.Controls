@@ -9,6 +9,5 @@
     on:propertyValueChanged="_propertyValueChanged()"
 
     on:mouseenter="_mouseEnterHandler()"
-    on:itemSwipe="_itemSwipe()"
     on:itemActionMouseDown="_itemActionMouseDown()"
 />

@@ -1,15 +1,17 @@
 define([
-    'Controls/_propertyGrid/PropertyGrid',
-    'Controls/_propertyGrid/Constants',
-    'Controls/display',
-    'Types/entity',
-    'Types/collection'
-], function (
-    PropertyGrid,
-    Constants,
-    display,
-    entity,
-    collection
+   'Controls/_propertyGrid/PropertyGrid',
+   'Controls/_propertyGrid/Constants',
+   'Controls/display',
+   'Types/entity',
+   'Types/collection',
+   'Controls/itemActions'
+], function(
+   PropertyGrid,
+   Constants,
+   display,
+   entity,
+   collection,
+   itemActions
 ) {
     describe('Controls/_propertyGrid/PropertyGrid', () => {
         const ViewInstance = new PropertyGrid.default();
@@ -131,6 +133,10 @@ define([
         });
 
       describe('itemActions', () => {
+         before(() => {
+            ViewInstance._itemActionsController = new itemActions.Controller();
+         });
+
          it('_updateItemActions', () => {
             const collection = ViewInstance._getCollection('', '', editingObject, source);
             ViewInstance._updateItemActions(collection, {
