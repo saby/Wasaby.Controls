@@ -566,7 +566,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (this._items) {
             const count = this._items.getCount();
             for (let i = 0; i < count; i++) {
-                const item = this._items.at(0) as TItem;
+                const item = this._items.at(i) as TItem;
                 const isToolbarItem = this._isShowToolbar(item, this._parentProperty);
                 if (isToolbarItem) {
                     return item;
