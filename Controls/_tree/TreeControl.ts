@@ -240,7 +240,12 @@ const _private = {
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
         }
 
-        if (baseControl && self._needResetExpandedItems) {
+        const needResetExpandedItems = !(_private.isDeepReload(cfg, self._deepReload) &&
+                                         expandedItemsKeys.length &&
+                                         !isExpandAll);
+        // состояние _needResetExpandedItems устанавливается при смене корня
+        // переменная needResetExpandedItems вычисляется по опциям и состояниям
+        if (baseControl && (needResetExpandedItems || self._needResetExpandedItems)) {
             baseControl.getSourceController().setExpandedItems([]);
         }
     },
