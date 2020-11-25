@@ -520,6 +520,7 @@ define([
                viewName: 'Controls/List/ListView',
                source: new sourceLib.Memory({}),
                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
                dataLoadCallback: function() {
                   dataLoadCallbackCalled = true;
                },
@@ -564,6 +565,7 @@ define([
                 viewName: 'Controls/List/ListView',
                 source: new sourceLib.Memory({}),
                 viewModelConstructor: lists.ListViewModel,
+                 keyProperty: 'id'
              },
              loadedItems = new collection.RecordSet({
                 keyProperty: 'id',
@@ -6897,6 +6899,7 @@ define([
                   }
                },
                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id'
             };
 
             it('call check', async function() {

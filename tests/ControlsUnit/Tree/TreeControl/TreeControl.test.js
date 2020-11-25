@@ -1096,7 +1096,8 @@ define([
                columns: [],
                source,
                sourceController,
-               root: 'test'
+               root: 'test',
+                keyProperty: 'id'
             };
             let afterReloadCallbackCalled = false;
             const treeCreateObject = correctCreateTreeControl(cfg, true);
@@ -1236,7 +1237,8 @@ define([
                       rawData: [],
                       idProperty: 'id'
                    }),
-                   root: 'test'
+                   root: 'test',
+                    keyProperty: 'id'
                 },
                treeControl = correctCreateTreeControl(cfg),
                cancelEditCalled = false;
@@ -1268,7 +1270,8 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   keyProperty: 'id'
-               })
+               }),
+                keyProperty: 'id'
             });
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl._children.baseControl.getViewModel().getExpandedItems());
@@ -1855,7 +1858,7 @@ define([
          let isEventRaised = false;
          let isParentEventStopped = false;
 
-         const treeControl = correctCreateTreeControl({ readOnly: true });
+         const treeControl = correctCreateTreeControl({ readOnly: true, keyProperty: 'id' });
          const item = {};
          const nativeEvent = {};
          const event = {

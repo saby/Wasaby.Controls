@@ -280,7 +280,7 @@ const _private = {
                 if (_private.isExpandAll(modelExpandedItems) && options.nodeProperty) {
                     loadedList.each((item) => {
                         if (item.get(options.nodeProperty)) {
-                            expandedItems.push(item.get(options.keyProperty));
+                            expandedItems.push(item.get(self._keyProperty));
                         }
                     });
                 }
@@ -370,13 +370,12 @@ const _private = {
         const filter = cClone(self._options.filter);
         const nodes = [key !== undefined ? key : null];
         const nodeProperty = self._options.nodeProperty;
-        const keyProperty = self._options.keyProperty;
 
         filter[self._options.parentProperty] =
-            nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
+            nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
 
         return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
+            _private.applyReloadedNodes(viewModel, key, self._keyProperty, nodeProperty, result);
             viewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
             );
@@ -505,6 +504,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
+    _keyProperty: null,
 
     constructor: function(cfg) {
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
@@ -522,6 +522,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _beforeMount(options): void {
+        this._initKeyProperty(options);
         if (options.sourceController) {
             // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
             //  и на списке и на Browser'e
@@ -529,7 +530,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
             if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
                 options.root !== undefined && options.root !== sourceControllerState.root) {
-                options.sourceController.updateOptions(options);
+                options.sourceController.updateOptions({...options, keyProperty: this._keyProperty});
             }
         }
     },
@@ -543,6 +544,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const sourceController = baseControl.getSourceController();
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let updateSourceController = false;
+
+        if ((this._options.keyProperty !== newOptions.keyProperty) || (newOptions.source !== this._options.source)) {
+            this._initKeyProperty(newOptions);
+            updateSourceController = true;
+        }
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             const sourceControllerRoot = sourceController.getState().root;
@@ -605,7 +611,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         if (sourceController && updateSourceController) {
-            sourceController.updateOptions(newOptions);
+            sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
     _afterUpdate: function(oldOptions) {
@@ -634,11 +640,24 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         return afterUpdateResult;
     },
+
+    _initKeyProperty(options) {
+        let keyProperty = options.keyProperty;
+        if (keyProperty === undefined) {
+            if (options.source && options.source.getKeyProperty) {
+                keyProperty = options.source.getKeyProperty();
+            }
+        }
+        if (keyProperty !== undefined) {
+            this._keyProperty = keyProperty;
+        }
+    },
+
     resetExpandedItems(): void {
         _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
-        const item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
+        const item = this._children.baseControl.getViewModel().getItemById(key, this._keyProperty);
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
