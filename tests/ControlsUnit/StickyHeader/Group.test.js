@@ -82,6 +82,9 @@ define([
             component._fixedHandler(event,
                {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
+            assert.isTrue(component._isFixed);
+            assert.isTrue(component._fixed);
+
             sinon.assert.calledWith(
                component._notify,
                'fixed',
@@ -203,7 +206,7 @@ define([
       });
 
       describe('set top', function() {
-         it('should update top on internal headers', function() {
+         it('should\'t update top on internal headers if headers does not initialized', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
@@ -212,11 +215,34 @@ define([
                top: 0
             };
             component.top = 20;
+            assert.strictEqual(component._headers[0].inst.top, 0);
+         });
+         it('should update top on internal headers', function() {
+            const component = createComponent(scroll.Group, {});
+            component._headers[0] = {
+               inst: {
+                  top: 0
+               },
+               top: 0
+            };
+            component._initialized = true;
+            component.top = 20;
             assert.strictEqual(component._headers[0].inst.top, 20);
          });
       });
 
       describe('set bottom', function() {
+         it('should\'t update top on internal headers if headers does not initialized', function() {
+            const component = createComponent(scroll.Group, {});
+            component._headers[0] = {
+               inst: {
+                  bottom: 0
+               },
+               bottom: 0
+            };
+            component.bottom = 20;
+            assert.strictEqual(component._headers[0].inst.bottom, 0);
+         });
          it('should update bottom on internal headers', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
@@ -225,6 +251,7 @@ define([
                },
                bottom: 0
             };
+            component._initialized = true;
             component.bottom = 20;
             assert.strictEqual(component._headers[0].inst.bottom, 20);
          });

@@ -150,6 +150,13 @@ describe('Controls/_multiselection/Controller', () => {
 
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
       assert.isTrue(model.getItemBySourceKey(2).isSelected());
+
+      // проверяем что не проставим селекшин для новых элементов, если уперлись в лимит
+      controller.setLimit(2);
+      controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+
+      assert.isTrue(model.getItemBySourceKey(3).isSelected());
+      assert.isTrue(model.getItemBySourceKey(4).isSelected());
    });
 
    describe('onCollectionRemove', () => {
@@ -218,6 +225,13 @@ describe('Controls/_multiselection/Controller', () => {
 
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
       assert.isNull(model.getItemBySourceKey(6).isSelected());
+   });
+
+   it ('getCountOfSelected', () => {
+      const result = controller.toggleItem(3);
+      assert.equal(controller.getCountOfSelected(result), 1);
+      controller.setSelection(result);
+      assert.equal(controller.getCountOfSelected(), 1);
    });
 
    it('with limit', () => {

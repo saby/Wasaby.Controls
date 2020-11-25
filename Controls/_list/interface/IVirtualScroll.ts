@@ -23,14 +23,14 @@ export interface IVirtualScrollConfig {
 }
 
 /**
- * @typedef {String} IVirtualScrollMode
+ * @typedef {String} Controls/_list/interface/IVirtualScrollConfig/IVirtualScrollMode
  * @variant remove Скрытые элементы удаляются из DOM.
  * @variant hide Скрытые элементы скрываются из DOM с помощью ws-hidden.
  */
 export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
- * @typedef {object} VirtualScrollConfig
+ * @typedef {Object} Controls/_list/interface/IVirtualScrollConfig/VirtualScrollConfig
  * @property {number} pageSize Размер виртуальной страницы указывает максимальное количество одновременно отображаемых элементов в списке.
  * @property {IVirtualScrollMode} [mode=remove] Режим скрытия элементов в виртуальном скроллинге.
  * @property {number} [viewportHeight=undefined] Высота вьюпорта контейнера, в котором лежит список.
@@ -40,7 +40,7 @@ export type IVirtualScrollMode = 'remove' | 'hide';
 
 /**
  * @name Controls/_list/interface/IVirtualScrollConfig#virtualScrollConfig
- * @cfg {VirtualScrollConfig} Конфигурация виртуального скроллинга.
+ * @cfg {Controls/_list/interface/IVirtualScrollConfig/VirtualScrollConfig.typedef} Конфигурация виртуального скроллинга.
  * Виртуальный скроллинг работает только при включенной <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/">навигации</a>.
  * @remark Подробнее о конфигурации виртуального скролла читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/performance-optimization/virtual-scroll/">здесь</a>.
  * @example

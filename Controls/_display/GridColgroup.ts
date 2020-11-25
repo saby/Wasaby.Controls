@@ -1,5 +1,5 @@
 import { mixin } from 'Types/util';
-import { OptionsToPropertyMixin } from 'Types/entity';
+import { OptionsToPropertyMixin, VersionableMixin } from 'Types/entity';
 import GridCollection from './GridCollection';
 import { TColumns } from '../_grid/interface/IColumn';
 import GridColgroupCell from './GridColgroupCell';
@@ -10,7 +10,13 @@ export interface IOptions<T> {
     owner: GridCollection<T>;
 }
 
-export default class GridColgroup<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
+export default class GridColgroup<T> extends mixin<
+    OptionsToPropertyMixin,
+    VersionableMixin
+>(
+    OptionsToPropertyMixin,
+    VersionableMixin
+) {
     protected _$owner: GridCollection<T>;
     protected _$cells: TColgroupCells<T>;
 
@@ -34,6 +40,11 @@ export default class GridColgroup<T> extends mixin<OptionsToPropertyMixin>(Optio
 
     getMultiSelectVisibility(): string {
         return this._$owner.getMultiSelectVisibility();
+    }
+
+    reBuild(): void {
+        this._$cells = this._prepareCells(this._$owner.getColumns());
+        this._nextVersion();
     }
 
     protected _prepareCells(columns: TColumns): TColgroupCells<T> {

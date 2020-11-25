@@ -2,7 +2,8 @@ import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
-import {Logger, Library} from 'UI/Utils';
+import {Logger} from 'UI/Utils';
+import * as Library from 'WasabyLoader/Library';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import {goUpByControlTree} from 'UI/Focus';
@@ -222,8 +223,17 @@ class Manager {
 
     isDestroying(id: string): boolean {
         const item = this.find(id);
-        return item &&
-            (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
+        if (!item) {
+            // Элемент может быть удален с состояния ( что вызывает непорсдетсвенно анмаунт окна), но
+            // цикла синхронизации еще могло не произойти. Если окно ожидает синхронизации на разрушение, тоже учитываю.
+            const removedItems = ManagerController.getContainer().getRemovingItems();
+            for (const removeData of removedItems) {
+                if (removeData.removedItem.id === id) {
+                    return true;
+                }
+            }
+        }
+        return item && (item.popupState === item.controller.POPUP_STATE_START_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYING ||
              item.popupState === item.controller.POPUP_STATE_DESTROYED);
     }

@@ -4,6 +4,7 @@ import {IEditableListOption} from 'Controls/_list/interface/IEditableList';
 import {RecordSet} from 'Types/collection';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {NewSourceController} from 'Controls/dataSource';
+import * as sinon from 'sinon';
 
 const getData = (dataCount: number = 0) => {
     const data = [];
@@ -112,6 +113,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -128,6 +130,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 0;
@@ -141,6 +144,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -162,6 +166,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._afterMount();
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
+            baseControl._beforePaint();
             baseControl._container = {
                 clientHeight: 1000,
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
@@ -767,6 +772,46 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(baseControlOptions);
             assert.isTrue(loadStarted);
         });
+
+        it('search returns empty recordSet with iterative in meta', async () => {
+            let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            let loadStarted = false;
+            const navigation = {
+                view: 'infinity',
+                source: 'page',
+                sourceConfig: {
+                    pageSize: 10,
+                    page: 0,
+                    hasMore: false
+                }
+            };
+
+            baseControlOptions.navigation = navigation;
+            baseControlOptions.sourceController = new NewSourceController({
+                source: new Memory(),
+                navigation,
+                keyProperty: 'key'
+            });
+            baseControlOptions.sourceController.hasMoreData = () => true;
+            baseControlOptions.sourceController.load = () => {
+                loadStarted = true;
+                return Promise.reject();
+            };
+            baseControlOptions.sourceController.getItems = () => {
+                const rs = new RecordSet();
+                rs.setMetaData({iterative: true});
+                return rs;
+            };
+            baseControlOptions.searchValue = 'test';
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            baseControl.saveOptions(baseControlOptions);
+
+            loadStarted = false;
+            baseControlOptions = {...baseControlOptions};
+            baseControl._beforeUpdate(baseControlOptions);
+            assert.isTrue(loadStarted);
+        });
     });
 
     describe('_beforeMount', () => {
@@ -781,7 +826,22 @@ describe('Controls/list_clean/BaseControl', () => {
             const baseControl = new BaseControl(baseControlOptions);
             const mountResult = await baseControl._beforeMount(baseControlOptions);
             assert.isTrue(!mountResult);
-        })
+        });
+        it('_beforeMount keyProperty', async () => {
+            const baseControlOptions = {
+                source: new Memory({
+                    keyProperty: 'keyProperty',
+                    data: []
+                })
+            };
+            const baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyProperty');
+            baseControlOptions.keyProperty = 'keyPropertyOptions';
+            baseControlOptions.source = null;
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
+        });
     });
 
     describe('Edit in place', () => {
@@ -818,10 +878,15 @@ describe('Controls/list_clean/BaseControl', () => {
                 isEditing() {
                     return true;
                 },
-                updateOptions() {}
+                updateOptions() {
+                }
             };
 
-            return baseControl._beforeUpdate({...baseControlCfg, filter: {field: 'ASC'}, useNewModel: true}).then(() => {
+            return baseControl._beforeUpdate({
+                ...baseControlCfg,
+                filter: {field: 'ASC'},
+                useNewModel: true
+            }).then(() => {
                 assert.isTrue(isEditingCancelled);
             });
         });
@@ -943,6 +1008,45 @@ describe('Controls/list_clean/BaseControl', () => {
             });
             return baseControl.commitEdit().then(() => {
                 assert.isFalse(isCommitCalled);
+            });
+        });
+
+        describe('should force cancel editing on reload from parent (by API)', () => {
+            let stubReload;
+            let isCancelCalled = false;
+
+            beforeEach(() => {
+                stubReload = sinon.stub(BaseControl._private, 'reload').callsFake(() => Promise.resolve());
+                baseControl._editInPlaceController = {
+                    isEditing: () => true
+                };
+                baseControl._cancelEdit = (force) => {
+                    isCancelCalled = true;
+                    assert.isTrue(force);
+                    return Promise.resolve();
+                };
+            });
+            afterEach(() => {
+                stubReload.restore();
+                isCancelCalled = false;
+            });
+
+            it('should cancel if reload called not on beforeBeginEdit', () => {
+                baseControl._editInPlaceController.isEndEditProcessing = () => false;
+
+                return baseControl.reload().then(() => {
+                    assert.isTrue(isCancelCalled);
+                    assert.isTrue(stubReload.calledOnce);
+                });
+            });
+
+            it('should not cancel if reload called  on beforeBeginEdit', () => {
+                baseControl._editInPlaceController.isEndEditProcessing = () => true;
+
+                return baseControl.reload().then(() => {
+                    assert.isFalse(isCancelCalled);
+                    assert.isTrue(stubReload.called);
+                });
             });
         });
     });

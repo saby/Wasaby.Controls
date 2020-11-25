@@ -54,8 +54,11 @@ export default abstract class
 
         if (updateResult instanceof Promise) {
             updateResult.then((items) => {
-                this._lookupController.setItems(items);
-                updateResultCallback();
+                // Проверка items.getCount() удалена в 21.1000 https://online.sbis.ru/opendoc.html?guid=c193438b-54d5-4e13-83d3-5edde27abe84
+                if (items.getCount()) {
+                    this._lookupController.setItems(items);
+                    updateResultCallback();
+                }
             });
         } else if (updateResult) {
             updateResultCallback();
@@ -82,7 +85,7 @@ export default abstract class
     }
 
     protected _showSelector(event: SyntheticEvent, popupOptions?: IStackPopupOptions): void|boolean {
-        if (this._notify('showSelector') !== false) {
+        if (this._notify('showSelector', [event]) !== false) {
             return this.showSelector(popupOptions);
         }
 

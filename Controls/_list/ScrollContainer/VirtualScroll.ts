@@ -172,13 +172,11 @@ export default class VirtualScroll {
      * @param forcedShift Принудительный сдвиг. В таком случае игнорируется состояние rangeChanged.
      */
     removeItems(removeIndex: number, count: number, forcedShift?: boolean): IRangeShiftResult {
-        const direction = removeIndex < this._range.start ? 'up' : 'down';
+        const direction = removeIndex <= this._range.start ? 'up' : 'down';
         this._itemsCount -= count;
         this._removeItemHeights(removeIndex, count);
 
-        return this._setRange(
-            this.rangeChanged && !forcedShift ? this._range : this._shiftRangeBySegment(direction, count)
-        );
+        return this._setRange(this._shiftRangeBySegment(direction, count));
     }
 
     /**
@@ -370,8 +368,10 @@ export default class VirtualScroll {
      * @param itemsHeights
      */
     updateItemsHeights(itemsHeights: IItemsHeights): void {
-        this._updateItemsHeights(itemsHeights);
-        this.rangeChanged = false;
+        if (itemsHeights.itemsHeights.length === this._range.stop - this._range.start) {
+            this._updateItemsHeights(itemsHeights);
+            this.rangeChanged = false;
+        }
     }
 
     /**
@@ -498,7 +498,7 @@ export default class VirtualScroll {
             stop = itemsCount;
         } else if (direction === 'up') {
             start = Math.max(0, start - fixedSegmentSize);
-            if (start > itemsCount) {
+            if (start >= itemsCount) {
                 start = Math.max(0, itemsCount - this._options.pageSize);
             }
             stop = Math.min(itemsCount, Math.max(this._range.stop, start + this._options.pageSize));

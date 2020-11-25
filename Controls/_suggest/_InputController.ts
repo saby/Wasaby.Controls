@@ -91,7 +91,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * 
+ *
  * @private
  */
 
@@ -105,7 +105,7 @@ type TSuggestDirection = 'up' | 'down';
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * 
+ *
  * @private
  */
 export default class InputContainer extends Control<IInputControllerOptions> {
@@ -273,14 +273,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             !this._getSourceController().isLoading() && (!this._historyLoad || this._historyLoad.isReady())) {
 
             if (this._options.historyId) {
-
-               return this._loadHistoryKeys().then(() => this._performLoad(this._options, true))
-                  .catch((error) => this._searchErrback(error));
+               return this._loadHistoryKeys().then(() => this._performLoad(this._options));
             }
 
-            return this._performLoad(this._options, true).catch((error) => {
-               this._searchErrback(error);
-            }).then();
+            return this._performLoad(this._options).then();
          }
       }
       return Promise.resolve();
@@ -340,7 +336,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return !!(hasItems ||
          (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
          this._options.emptyTemplate &&
-         searchResult !== null) && !!this._options.suggestTemplate;
+         searchResult) && !!this._options.suggestTemplate;
    }
 
    private _processResultData(data: RecordSet): void {
@@ -425,17 +421,18 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    private _updateSuggestState(): boolean {
       const shouldSearch = this._shouldSearch(this._searchValue);
+      const shouldShowSuggest = this._shouldShowSuggest(this._getSourceController().getItems());
       let state = false;
 
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
          state = true;
       } else if ((shouldSearch || this._options.autoDropDown && !this._options.suggestState)
-         && this._shouldShowSuggest(this._getSourceController().getItems())) {
+         && shouldShowSuggest) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
-      } else if (!this._options.autoDropDown) {
+      } else if (!this._options.autoDropDown && (!shouldShowSuggest || !this._searchValue)) {
          // autoDropDown - close only on Esc key or deactivate
          this._close();
       }
@@ -752,12 +749,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    private async _setFilterAndLoad(filter: QueryWhereExpression<unknown>,
                                    options: IInputControllerOptions,
-                                   tabId?: Key): Promise<RecordSet> {
+                                   tabId?: Key): Promise<RecordSet | void> {
       this._setFilter(filter, options, tabId);
       return this._resolveLoad();
    }
 
-   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet> {
+   private async _resolveLoad(value?: string, options?: IInputControllerOptions): Promise<RecordSet | void> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
@@ -784,7 +781,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
    }
 
-   private _performLoad(options?: IInputControllerOptions, openWithChecks?: boolean): Promise<RecordSet> {
+   private _performLoad(options?: IInputControllerOptions): Promise<RecordSet | void> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
@@ -795,15 +792,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             }
             this._loadEnd(recordSet);
 
-            if (openWithChecks) {
-               this._updateSuggestState();
-            } else {
-               this._open();
-            }
+            this._updateSuggestState();
 
             return recordSet as RecordSet;
          }
-      });
+      }).catch((e) => this._searchErrback(e));
    }
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {
@@ -867,7 +860,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
    }
 
-   protected _inputActivatedHandler(event: SyntheticEvent): Promise<void> {
+   protected _inputActivatedHandler(event: SyntheticEvent): Promise<void | RecordSet> {
       this._inputActive = true;
       if (!this._isInvalidValidationStatus(this._options)) {
          return this._inputActivated();

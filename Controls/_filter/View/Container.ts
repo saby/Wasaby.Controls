@@ -9,7 +9,7 @@ import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
  * Контрол используют в качестве контейнера для {@link Controls/filter:View}. Он обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filter:View}.
  * @remark
  * Подробнее об организации поиска и фильтрации в реестре читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/ здесь}.
- * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/component-kinds/ здесь}.
+ * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ здесь}.
  *
  * @class Controls/_filter/View/Container
  * @extends Core/Control
@@ -44,10 +44,21 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
 
     _afterMount(options): void {
         if (options.useStore) {
-            this._sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
-                this._source = filterSource;
-            });
+            this._createNewStoreObserver();
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
+                this._createNewStoreObserver();
+            }, true);
         }
+    },
+
+    _createNewStoreObserver(): void {
+        if (this._sourceChangedCallbackId) {
+            Store.unsubscribe(this._sourceChangedCallbackId);
+        }
+
+        this._sourceChangedCallbackId = Store.onPropertyChanged('filterSource', (filterSource) => {
+            this._source = filterSource;
+        });
     },
 
     _beforeUpdate(options): void {
@@ -57,8 +68,11 @@ var Container = Control.extend(/** @lends Controls/_filter/View/Container.protot
     },
 
     _beforeUnmount(): void {
-        if (this._sourceCallbackId) {
-            Store.unsubscribe(this._sourceCallbackId);
+        if (this._sourceChangedCallbackId) {
+            Store.unsubscribe(this._sourceChangedCallbackId);
+        }
+        if (this._storeCtxCallbackId) {
+            Store.unsubscribe(this._storeCtxCallbackId);
         }
     },
 

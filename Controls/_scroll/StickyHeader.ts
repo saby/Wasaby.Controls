@@ -116,7 +116,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _canScroll: boolean = false;
     private _scrollState: IScrollState = {
         canVerticalScroll: false,
-        verticalPosition: detection.isMobileIOS ? SCROLL_POSITION.START : null
+        verticalPosition: detection.isMobileIOS ? SCROLL_POSITION.START : null,
+        hasUnrenderedContent: {
+            top: false,
+            bottom: false
+        }
     };
     private _negativeScrollTop: boolean = false;
 
@@ -144,6 +148,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _scroll: HTMLElement;
 
     private _needUpdateObserver: boolean = false;
+
+    // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
+    // До этого не синхронизируем дом дерево при изменении состояния.
+    private _initialized: boolean = false;
 
     protected _beforeMount(options: IStickyHeaderOptions, context): void {
         if (!this._isStickySupport) {
@@ -281,6 +289,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set top(value: number) {
         if (this._stickyHeadersHeight.top !== value) {
             this._stickyHeadersHeight.top = value;
+            this._initialized = true;
             // При установке top'а учитываем gap
             const offset = getGapFixSize();
             const topValue = value - offset;
@@ -299,6 +308,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     set bottom(value: number) {
         if (this._stickyHeadersHeight.bottom !== value) {
             this._stickyHeadersHeight.bottom = value;
+            this._initialized = true;
             // При установке bottom учитываем gap
             const offset = getGapFixSize();
             const bottomValue = value - offset;
@@ -327,13 +337,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._canScroll = scrollState.canVerticalScroll;
         this._negativeScrollTop = scrollState.scrollTop < 0;
 
-        if (this._scrollState.verticalPosition !== scrollState.verticalPosition) {
+        if (this._scrollState.verticalPosition !== scrollState.verticalPosition ||
+            this._scrollState.hasUnrenderedContent.top !== scrollState.hasUnrenderedContent.top ||
+            this._scrollState.hasUnrenderedContent.bottom !== scrollState.hasUnrenderedContent.bottom) {
             changed = true;
         }
 
         this._scrollState = scrollState;
 
-        if (changed) {
+        if (changed && this._initialized) {
             this._updateStyles(this._options);
         }
     }
@@ -422,7 +434,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
-            if (this._canScroll) {
+            if (this._canScroll && this._initialized) {
                 this._updateStyles(this._options);
             }
         }
@@ -490,7 +502,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
          * In this way, the content of the header does not change visually, and the free space disappears.
          * The offset must be at least as large as the free space. Take the nearest integer equal to one.
          */
-        offset = getGapFixSize();
+        // Этот костыль нужен, чтобы убрать щели между заголовками. Для прозрачных заголовков он не нужен.
+        offset = this._options.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
@@ -646,6 +659,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _isShadowVisibleByScrollState(shadowPosition: POSITION): boolean {
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
 
+        if (this._scrollState.hasUnrenderedContent[fixedPosition]) {
+            return true;
+        }
+
         const shadowVisible: boolean = !!(this._scrollState.verticalPosition &&
             (shadowPosition === POSITION.bottom && this._scrollState.verticalPosition !== SCROLL_POSITION.START ||
                 shadowPosition === POSITION.top && this._scrollState.verticalPosition !== SCROLL_POSITION.END));
@@ -686,7 +703,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStylesIfCanScroll(): void {
-        if (this._canScroll) {
+        if (this._canScroll && this._initialized) {
             this._updateStyles(this._options);
         }
     }

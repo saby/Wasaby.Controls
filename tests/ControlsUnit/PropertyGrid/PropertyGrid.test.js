@@ -1,11 +1,17 @@
 define([
-    'Controls/_propertyGrid/PropertyGrid',
-    'Controls/_propertyGrid/Constants',
-    'Controls/display'
-], function (
-    PropertyGrid,
-    Constants,
-    display
+   'Controls/_propertyGrid/PropertyGrid',
+   'Controls/_propertyGrid/Constants',
+   'Controls/display',
+   'Types/entity',
+   'Types/collection',
+   'Controls/itemActions'
+], function(
+   PropertyGrid,
+   Constants,
+   display,
+   entity,
+   collection,
+   itemActions
 ) {
     describe('Controls/_propertyGrid/PropertyGrid', () => {
         const ViewInstance = new PropertyGrid.default();
@@ -33,6 +39,21 @@ define([
                 const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
                 assert.isTrue(propertyValueMerged);
             });
+
+            it('RecordSet and Model case: returns merged editingObject and source items', () => {
+                const modelEditingObject = new entity.Model({
+                    rawData: editingObject
+                });
+                const recordSetSource = new collection.RecordSet({
+                    rawData: source
+                });
+
+                const itemsRS = ViewInstance._getPropertyGridItems(recordSetSource, modelEditingObject);
+                const items = itemsRS.getRawData();
+                const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
+                assert.isTrue(propertyValueMerged);
+            });
+
             it('returns editor templates by value type', () => {
                 const itemsRS = ViewInstance._getPropertyGridItems(source, editingObject);
                 let result = false;
@@ -87,7 +108,17 @@ define([
             it('toggle expand state on group item', () => {
                 const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
                 collection.moveToFirst();
-                const groupItem = collection.getCurrent();
+                const getGroup = (collection) => {
+                    let groupItem = null;
+                    collection.each((item) => {
+                        if (!groupItem && item['[Controls/_display/GroupItem]']) {
+                            groupItem = item;
+                        }
+                    });
+                    return groupItem;
+                }
+                const groupItem = getGroup(collection);
+                assert.isTrue(!!groupItem);
                 const expandedState = groupItem.isExpanded();
                 const clickEvent = {
                     target: {
@@ -100,5 +131,61 @@ define([
                 assert.isTrue(expandedState !== groupItem.isExpanded());
             });
         });
-    });
+
+      describe('itemActions', () => {
+         before(() => {
+            ViewInstance._itemActionsController = new itemActions.Controller();
+         });
+
+         it('_updateItemActions', () => {
+            const collection = ViewInstance._getCollection('', '', editingObject, source);
+            ViewInstance._updateItemActions(collection, {
+               itemActions: []
+            });
+
+            assert.isOk(ViewInstance._itemActionsController);
+         });
+
+         it('_onItemActionsMenuResult', () => {
+            let isApplyAction = false;
+            let isClosed = false;
+            const propertyGrid = new PropertyGrid.default({});
+            propertyGrid._itemActionsController = {
+               getActiveItem: () => ({
+                  getContents: () => {}
+               })
+            };
+            propertyGrid._itemActionSticky = {
+               close: () => {isClosed = true;}
+            };
+            propertyGrid._onItemActionsMenuResult('itemClick', new entity.Model({
+               rawData: {
+                  handler: () => {isApplyAction = true;}
+               }
+            }));
+
+            assert.isTrue(isApplyAction);
+            assert.isTrue(isClosed);
+         });
+
+         it('_openItemActionMenu', () => {
+            let isOpened = false;
+            let actualConfig;
+            const propertyGrid = new PropertyGrid.default({});
+            propertyGrid._itemActionsController = {
+               prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
+               setActiveItem: () => {}
+            };
+            propertyGrid._itemActionSticky = {
+               open: (menuConfig) => {
+                  actualConfig = menuConfig;
+                  isOpened = true;
+               }
+            };
+            propertyGrid._openItemActionMenu('item', {}, null);
+            assert.isTrue(isOpened);
+            assert.isOk(actualConfig.eventHandlers);
+         });
+      });
+   });
 });

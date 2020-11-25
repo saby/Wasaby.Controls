@@ -630,6 +630,32 @@ define([
          });
       });
 
+      it('TreeControl._afterUpdate', function() {
+         const source = new sourceLib.Memory({
+            data: [],
+            keyProperty: 'id'
+         });
+         const sourceController = new dataSource.NewSourceController({
+            source
+         });
+         const treeControlConfig = {
+            columns: [],
+            root: 1,
+            parentProperty: 'testParentProperty',
+            source: source,
+            sourceController
+         };
+         const treeControl = correctCreateTreeControl(treeControlConfig);
+         const stub = sinon.stub(treeControl._children.baseControl, 'reload');
+
+         treeControl._updateRoot = true;
+         sourceController.isLoading = () => true;
+         treeControl._afterUpdate(treeControlConfig);
+         assert.isTrue(stub.notCalled);
+         stub.restore();
+
+      });
+
 
       it('TreeControl.afterReloadCallback resets expanded items and hasMoreStorage on set root', function () {
          const source = new sourceLib.Memory({
@@ -1037,6 +1063,7 @@ define([
 
                   let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
                   treeControl._children.baseControl._afterUpdate({});
+                  treeControl._children.baseControl._beforePaint();
                   afterUpdatePromise.then(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
@@ -1069,7 +1096,8 @@ define([
                columns: [],
                source,
                sourceController,
-               root: 'test'
+               root: 'test',
+                keyProperty: 'id'
             };
             let afterReloadCallbackCalled = false;
             const treeCreateObject = correctCreateTreeControl(cfg, true);
@@ -1209,7 +1237,8 @@ define([
                       rawData: [],
                       idProperty: 'id'
                    }),
-                   root: 'test'
+                   root: 'test',
+                    keyProperty: 'id'
                 },
                treeControl = correctCreateTreeControl(cfg),
                cancelEditCalled = false;
@@ -1241,7 +1270,8 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   keyProperty: 'id'
-               })
+               }),
+                keyProperty: 'id'
             });
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl._children.baseControl.getViewModel().getExpandedItems());
@@ -1828,7 +1858,7 @@ define([
          let isEventRaised = false;
          let isParentEventStopped = false;
 
-         const treeControl = correctCreateTreeControl({ readOnly: true });
+         const treeControl = correctCreateTreeControl({ readOnly: true, keyProperty: 'id' });
          const item = {};
          const nativeEvent = {};
          const event = {

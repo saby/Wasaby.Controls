@@ -5,6 +5,15 @@
             collectionItem="{{item}}"
             item="{{item.getContents()}}"
             collapsedGroups="{{collapsedGroups}}"
+
             on:propertyValueChanged="_propertyValueChanged(item.getContents())"
-            on:click="_itemClick(item)"/>
+            on:click="_itemClick(item)">
+        <ws:itemActionsTemplate>
+            <Controls.Container.Async templateName="Controls/list:ItemActionsTemplate">
+                <ws:partial template="{{content.resolvedTemplate}}"
+                            itemData="{{item}}"
+                            scope="{{itemsViewModel.getActionsTemplateConfig()}}" />
+            </Controls.Container.Async>
+        </ws:itemActionsTemplate>
+    </ws:partial>
 </ws:for>

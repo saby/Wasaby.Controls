@@ -119,33 +119,6 @@ export class Controller {
       return nextMarkedKey === null ? this._markedKey : nextMarkedKey;
    }
 
-   // TODO это нужно только для дерева, возможно стоит применить наследование и вынести,
-   //  после того как будет выполнено наследование TreeControl <- BaseControl
-   getMarkedKeyAfterCollapseItems(collapsedItems: Array<TreeItem<Model>>): CrudEntityKey {
-      // не нужно высчитывать маркер если он не был проставлен
-      if (collapsedItems.length === 0 || this._markedKey === null || this._markedKey === undefined) {
-         return this._markedKey;
-      }
-
-      const markedItem = this._model.getItemBySourceKey(this._markedKey);
-      if (markedItem) {
-         // проверяем был ли внутри свернутых узлов маркированный элемент
-         let parent = markedItem.getParent(),
-             parentOfMarkedItem;
-         while (parent) {
-            if (collapsedItems.indexOf(parent) > -1) {
-               parentOfMarkedItem = parent;
-               break;
-            }
-            parent = parent.getParent();
-         }
-
-         return parentOfMarkedItem ? parentOfMarkedItem.getContents().getKey() : this._markedKey;
-      } else {
-         return this._markedKey;
-      }
-   }
-
    /**
     * Обрабатывает удаления элементов из коллекции
     * @remark Возвращает ключ следующего элемента, при его отустствии предыдущего, иначе null
@@ -160,7 +133,25 @@ export class Controller {
       // поэтому на скрытых элементах нужно сбросить состояние marked
       removedItems.forEach((item) => item.setMarked(false, true));
 
-      return this._getMarkedKeyAfterRemove(removedItemsIndex);
+      let markedKeyAfterRemove = this._getMarkedKeyAfterRemove(removedItemsIndex);
+
+      // Если свернули узел внутри которого есть маркер, то маркер нужно поставить на узел
+      // TODO нужно только для дерева, можно подумать над наследованием
+      if (removedItems[0] instanceof TreeItem && this._markedKey !== undefined && this._markedKey !== null) {
+         const removeMarkedItem = !!removedItems.find((it) => it.getContents().getKey() === this._markedKey);
+         if (removeMarkedItem) {
+            const parent = removedItems[0].getParent();
+            // На корневой узел ставить маркер нет смысла, т.к. в этом случае должно отработать именно удаление элементов, а не скрытие
+            if (parent && parent !== this._model.getRoot()) {
+               const parentItem = parent.getContents();
+               if (parentItem) {
+                  markedKeyAfterRemove = parentItem.getKey();
+               }
+            }
+         }
+      }
+
+      return markedKeyAfterRemove;
    }
 
    /**

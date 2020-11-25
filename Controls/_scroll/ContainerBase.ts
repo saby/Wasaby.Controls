@@ -142,6 +142,13 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         return this._observedElements.includes(element);
     }
 
+    protected _getScrollNotifyConfig(): any[] {
+        return [
+            this._state.scrollTop,
+            this._state.scrollLeft
+        ];
+    }
+
     _resizeHandler(e: SyntheticEvent): void {
         this._onResizeContainer(this._getFullStateFromDOM());
     }
@@ -245,7 +252,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     /**
      * Скроллит к верху контейнера.
      * @name Controls/_scroll/Container#scrollToTop
-     * @function 
+     * @function
      * @see scrollToBottom
      * @see scrollToLeft
      * @see scrollToRight
@@ -334,7 +341,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         }
     }
 
-    _updateStateAndGenerateEvents(newState: IScrollState): void {
+    protected _updateStateAndGenerateEvents(newState: IScrollState): void {
         const isStateUpdated = this._updateState(newState);
         if (isStateUpdated) {
             // Новое событие
@@ -375,7 +382,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
                             _bubbling: false
                         }),
                         this._state.scrollTop
-                    ], [ this._state.scrollTop ]);
+                    ], this._getScrollNotifyConfig());
             }
 
             this._generateCompatibleEvents();

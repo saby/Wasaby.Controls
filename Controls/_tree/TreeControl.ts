@@ -12,7 +12,7 @@ import { MouseButtons, MouseUp } from 'Controls/popup';
 import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
-import { TreeItem } from 'Controls/display';
+import { Collection, TreeItem } from 'Controls/display';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
@@ -69,47 +69,6 @@ const _private = {
             self.toggleExpanded(markedItemKey);
         }
     },
-    changeMarkedKeyOnCollapseItemIfNeed(self: typeof TreeControl, collapsedItems: Array<TreeItem<Model>>, newExpandedState: boolean): void {
-        // TODO исправить когда будет наследование TreeControl <- BaseControl
-        const baseControl = self._children.baseControl;
-        // не нужно устанаваливать маркер, если узел развернули, или маркер не нужно отображать, или нет свернутых узлов
-        if (collapsedItems.length === 0 || newExpandedState === true || baseControl._options.markerVisibility === 'hidden' || !baseControl._markerController) {
-            return;
-        }
-
-        const markerController = baseControl._markerController;
-        const newMarkedKey = markerController.getMarkedKeyAfterCollapseItems(collapsedItems);
-        baseControl.setMarkedKey(newMarkedKey);
-    },
-    getCollapsedItemsByOptions(
-        self: typeof TreeControl,
-        oldExpandedItems: [] = [],
-        newExpandedItems: [] = [],
-        oldCollapsedItems: [] = [],
-        newCollapsedItems: [] = []
-    ): Array<TreeItem<Model>> {
-        // TODO исправить когда будет наследование TreeControl <- BaseControl
-        const model = self._children.baseControl.getViewModel();
-        const collapsedItems = [];
-
-        if (!isEqual(oldExpandedItems, newExpandedItems)) {
-            const expandedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldExpandedItems, newExpandedItems);
-            if (expandedItemsDiff.removed) {
-                const removedExpandedItems = expandedItemsDiff.removed.map((key) => model.getItemBySourceKey(key));
-                collapsedItems.push(...removedExpandedItems);
-            }
-        }
-
-        if (!isEqual(oldCollapsedItems, newCollapsedItems)) {
-            const collapsedItemsDiff = ArraySimpleValuesUtil.getArrayDifference(oldCollapsedItems, newCollapsedItems);
-            if (collapsedItemsDiff.added) {
-                const addedCollapsedItems = collapsedItemsDiff.added.map((key) => model.getItemBySourceKey(key));
-                collapsedItems.push(...addedCollapsedItems);
-            }
-        }
-
-        return collapsedItems;
-    },
     toggleExpanded: function(self, dispItem) {
         const listViewModel = self._children.baseControl.getViewModel();
         const item = dispItem.getContents();
@@ -136,8 +95,6 @@ const _private = {
                     } else {
                         listViewModel.appendItems(list);
                     }
-                    // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
-                    _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     listViewModel.setHasMoreStorage(
                         _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -154,10 +111,43 @@ const _private = {
                     self._children.baseControl.hideIndicator();
                 });
         } else {
-            // маркер нужно менять до изменения модели, т.к. после маркер уже пересчитается на другой элемент
-            _private.changeMarkedKeyOnCollapseItemIfNeed(self, [dispItem], expanded);
-            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+            // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
+            let shouldCancelEditing = false;
+            if (self._editingItem) {
+                shouldCancelEditing = _private.hasInParents(
+                    self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
+                    self._editingItem.getKey(),
+                    dispItem.contents.getKey()
+                );
+            }
+
+            // TODO: Переписать
+            //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
+            if (shouldCancelEditing) {
+                return self.cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
+                        _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                    }
+                    return result;
+                });
+            } else {
+                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+            }
         }
+    },
+    hasInParents(collection: Collection, childKey, stepParentKey): boolean {
+        const child = collection.getItemBySourceKey(childKey);
+        const targetParent = collection.getItemBySourceKey(stepParentKey);
+
+        let current = child;
+        do {
+            current = current.getParent();
+            if (!current.isRoot() && current === targetParent) {
+                return true;
+            }
+        } while (!current.isRoot());
+        return false;
     },
     shouldLoadChildren: function(self, nodeKey): boolean {
         // загружаем узел только если:
@@ -290,7 +280,7 @@ const _private = {
                 if (_private.isExpandAll(modelExpandedItems) && options.nodeProperty) {
                     loadedList.each((item) => {
                         if (item.get(options.nodeProperty)) {
-                            expandedItems.push(item.get(options.keyProperty));
+                            expandedItems.push(item.get(self._keyProperty));
                         }
                     });
                 }
@@ -329,12 +319,34 @@ const _private = {
 
     resetExpandedItems(self): void {
         const viewModel = self._children.baseControl.getViewModel();
+        let shouldCancelEditing = false;
 
-        const collapsedItems = _private.getCollapsedItemsByOptions(self, viewModel.getExpandedItems(), [], [], []);
-        _private.changeMarkedKeyOnCollapseItemIfNeed(self, collapsedItems, false);
+        if (self._editingItem) {
+            const editingKey = self._editingItem.getKey();
+            viewModel.getExpandedItems().forEach((itemKey) => {
+                shouldCancelEditing = shouldCancelEditing || _private.hasInParents(
+                    self._options.useNewModel ? viewModel : viewModel.getDisplay(),
+                    editingKey,
+                    itemKey
+                );
+            });
+        }
 
-        viewModel.resetExpandedItems();
-        viewModel.setHasMoreStorage({});
+        const reset = () => {
+            viewModel.resetExpandedItems();
+            viewModel.setHasMoreStorage({});
+        };
+
+        if (shouldCancelEditing) {
+            self.cancelEdit().then((result) => {
+                if (!(result && result.canceled)) {
+                    reset();
+                }
+                return result;
+            });
+        } else {
+            reset();
+        }
     },
 
     getHasMoreData(self, sourceController, direction, key) {
@@ -358,13 +370,12 @@ const _private = {
         const filter = cClone(self._options.filter);
         const nodes = [key !== undefined ? key : null];
         const nodeProperty = self._options.nodeProperty;
-        const keyProperty = self._options.keyProperty;
 
         filter[self._options.parentProperty] =
-            nodes.concat(_private.getReloadableNodes(viewModel, key, keyProperty, nodeProperty));
+            nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
 
         return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(viewModel, key, keyProperty, nodeProperty, result);
+            _private.applyReloadedNodes(viewModel, key, self._keyProperty, nodeProperty, result);
             viewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
             );
@@ -489,9 +500,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _notifyHandler: tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
+    _editingItem: null,
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
+    _keyProperty: null,
 
     constructor: function(cfg) {
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
@@ -509,6 +522,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _beforeMount(options): void {
+        this._initKeyProperty(options);
         if (options.sourceController) {
             // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
             //  и на списке и на Browser'e
@@ -516,7 +530,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
             if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
                 options.root !== undefined && options.root !== sourceControllerState.root) {
-                options.sourceController.updateOptions(options);
+                options.sourceController.updateOptions({...options, keyProperty: this._keyProperty});
             }
         }
     },
@@ -530,6 +544,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const sourceController = baseControl.getSourceController();
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let updateSourceController = false;
+
+        if ((this._options.keyProperty !== newOptions.keyProperty) || (newOptions.source !== this._options.source)) {
+            this._initKeyProperty(newOptions);
+            updateSourceController = true;
+        }
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             const sourceControllerRoot = sourceController.getState().root;
@@ -552,9 +571,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
             _private.resetExpandedItems(this);
-        } else {
-            const collapsedItems = _private.getCollapsedItemsByOptions(this, this._options.expandedItems, newOptions.expandedItems, this._options.collapsedItems, newOptions.collapsedItems);
-            _private.changeMarkedKeyOnCollapseItemIfNeed(this, collapsedItems, false);
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
@@ -595,13 +611,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         if (sourceController && updateSourceController) {
-            sourceController.updateOptions(newOptions);
+            sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
     _afterUpdate: function(oldOptions) {
         let afterUpdateResult;
 
         if (this._updatedRoot) {
+            const sourceController = this._options.sourceController;
+            const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
             this._updatedRoot = false;
             // При смене корне, не надо запрашивать все открытые папки,
             // т.к. их может не быть и мы загрузим много лишних данных.
@@ -610,7 +628,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._needResetExpandedItems = true;
             }
             // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter) && this._options.source === oldOptions.source) {
+            if (isEqual(this._options.filter, oldOptions.filter) &&
+                this._options.source === oldOptions.source &&
+                !isSourceControllerLoadingNewData) {
                 afterUpdateResult = this._children.baseControl.reload();
             }
         }
@@ -620,11 +640,24 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         return afterUpdateResult;
     },
+
+    _initKeyProperty(options) {
+        let keyProperty = options.keyProperty;
+        if (keyProperty === undefined) {
+            if (options.source && options.source.getKeyProperty) {
+                keyProperty = options.source.getKeyProperty();
+            }
+        }
+        if (keyProperty !== undefined) {
+            this._keyProperty = keyProperty;
+        }
+    },
+
     resetExpandedItems(): void {
         _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
-        const item = this._children.baseControl.getViewModel().getItemById(key, this._options.keyProperty);
+        const item = this._children.baseControl.getViewModel().getItemById(key, this._keyProperty);
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
@@ -814,6 +847,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
         return eventResult;
+    },
+
+    _onAfterBeginEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterBeginEdit', [item, isAdd]);
+        this._editingItem = item;
+    },
+
+    _onAfterEndEdit(e, item, isAdd) {
+        e.stopPropagation();
+        this._notify('afterEndEdit', [item, isAdd]);
+        this._editingItem = null;
     },
 
     handleKeyDown(event): void {
