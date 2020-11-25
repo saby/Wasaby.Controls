@@ -188,8 +188,8 @@ define(
                   verticalPosition: 'start'
                });
 
-               assert.equal(scroll._paging._stateUp, false);
-               assert.equal(scroll._paging._stateDown, true);
+               assert.equal(scroll._paging._arrowState.begin, 'readonly');
+               assert.equal(scroll._paging._arrowState.next, 'visible');
             });
             it('Content at the middle', function() {
                scroll._paging = new PagingModel.default();
@@ -197,8 +197,8 @@ define(
                   verticalPosition: 'middle'
                });
 
-               assert.equal(scroll._paging._stateUp, true);
-               assert.equal(scroll._paging._stateDown, true);
+               assert.equal(scroll._paging._arrowState.begin, 'visible');
+               assert.equal(scroll._paging._arrowState.next, 'visible');
             });
             it('Content at the bottom', function() {
                scroll._paging = new PagingModel.default();
@@ -206,8 +206,8 @@ define(
                   verticalPosition: 'end'
                });
 
-               assert.equal(scroll._paging._stateUp, true);
-               assert.equal(scroll._paging._stateDown, false);
+               assert.equal(scroll._paging._arrowState.begin, 'visible');
+               assert.equal(scroll._paging._arrowState.next, 'readonly');
             });
          });
 
