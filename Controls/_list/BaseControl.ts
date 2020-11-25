@@ -2380,13 +2380,13 @@ const _private = {
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
         if (self._jumpToEndOnDrawItems) {
-            
-            // Если для подскролла в конец делали reload, то индексы виртуального скролла 
+
+            // Если для подскролла в конец делали reload, то индексы виртуального скролла
             // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
             _private.updateScrollPagingButtons(self, self._getScrollParams());
         } else {
-           
+
             // Последняя страница уже загружена но конец списка не обязательно отображается,
             // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
             _private.scrollToItem(self, lastItemKey, true, true).then(() => {
@@ -2397,7 +2397,7 @@ const _private = {
                 self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
 
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
-            }); 
+            });
         }
     },
 
@@ -3796,6 +3796,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
         } else {
+            if (!newOptions.useNewModel) {
+                this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
+            }
             this._updateScrollController(newOptions);
         }
 
