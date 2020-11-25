@@ -82,7 +82,7 @@ interface IEditInPlaceCallbacks {
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавляется.
      * @void
      */
-    onAfterBeginEdit?: (item: IEditableCollectionItem, isAdd: boolean) => void;
+    onAfterBeginEdit?: (item: IEditableCollectionItem, isAdd: boolean) => Promise<void> | void;
 
     /**
      * @name Controls/_editInPlace/IEditInPlaceCallbacks#onBeforeEndEdit
@@ -97,7 +97,7 @@ interface IEditInPlaceCallbacks {
      * @param {Boolean} isAdd Флаг, принимает значение true, если запись добавлялась.
      * @void
      */
-    onAfterEndEdit?: (item: IEditableCollectionItem, isAdd: boolean, willSave: boolean) => void;
+    onAfterEndEdit?: (item: IEditableCollectionItem, isAdd: boolean, willSave: boolean) => Promise<void> | void;
 }
 
 /**
@@ -336,10 +336,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             // к сохранению при наличие изменений).
             model.acceptChanges();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-
-            if (this._options.onAfterBeginEdit) {
-                this._options.onAfterBeginEdit(this._getEditingItem(), isAdd);
-            }
+            return this._options?.onAfterBeginEdit(this._getEditingItem(), isAdd);
         }).finally(() => {
             this._operationsPromises.begin = null;
         }) as TAsyncOperationResult;
@@ -386,7 +383,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-            this._options?.onAfterEndEdit(editingCollectionItem, isAdd, commit);
+            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, commit);
         }).finally(() => {
             this._operationsPromises.end = null;
         }) as TAsyncOperationResult;
