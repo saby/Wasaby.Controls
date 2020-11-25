@@ -243,9 +243,9 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._notify('closeInfoBox');
     }
 
-    private _onMouseDownShowSelector(): void {
+    private _onMouseDownShowSelector(event: SyntheticEvent<MouseEvent>): void {
         this.closeSuggest();
-        this._showSelector(null);
+        this._showSelector(event);
     }
 
     private _loadDependencies(): Promise<unknown> {

@@ -1713,6 +1713,7 @@ const _private = {
             if (self._scrollController) {
                 if (action) {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
+                    const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
                     switch (action) {
                         case IObservable.ACTION_ADD:
@@ -1722,7 +1723,8 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
                         case IObservable.ACTION_MOVE:
@@ -2259,7 +2261,11 @@ const _private = {
 
     updatePagingDataByItemsChanged(self, newItems, removedItems) {
         const countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-        const itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        let totalItemsCount = 0;
+        if (self._pagingLabelData) {
+            totalItemsCount = self._pagingLabelData.totalItemsCount || 0;
+        }
+        const itemsCount = totalItemsCount + countDifferece;
         _private.updatePagingData(self, itemsCount);
     },
 

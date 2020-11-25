@@ -2,6 +2,7 @@ import IPropertyGridProperty from './IProperty';
 import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
+import {IItemAction} from 'Controls/itemActions';
 
 export interface IPropertyGridOptions extends IControlOptions {
     editingObject: Object | Model | Record<string, any>;
@@ -11,6 +12,7 @@ export interface IPropertyGridOptions extends IControlOptions {
     nodeProperty?: string;
     parentProperty?: string;
     render?: Control<IPropertyGridOptions>;
+    itemActions: IItemAction[];
 }
 
 /**
