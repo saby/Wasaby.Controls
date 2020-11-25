@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper spoiler__listCut-containerWidth ws-flexbox">
-   <div class="controlsDemo__cell poiler__listCut-width">
+   <div class="controlsDemo__cell spoiler__listCut-width">
       <div class="spoiler__column-header">ListCut</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
@@ -15,7 +15,7 @@
             </Controls.list:View>
       </Controls.spoiler:ListCut>
    </div>
-   <div class="controlsDemo__cell poiler__listCut-width">
+   <div class="controlsDemo__cell spoiler__listCut-width">
       <div class="spoiler__column-header">ListCut (readonly)</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
                      readOnly="{{true}}"
@@ -32,7 +32,7 @@
             </Controls.list:View>
       </Controls.spoiler:ListCut>
    </div>
-   <div class="controlsDemo__cell poiler__listCut-width">
+   <div class="controlsDemo__cell spoiler__listCut-width">
       <div class="spoiler__column-header">ListCut (size)</div>
       <div class="spoiler__margin">Size s</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
