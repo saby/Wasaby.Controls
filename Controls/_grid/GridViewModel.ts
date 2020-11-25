@@ -997,8 +997,7 @@ var
         },
 
         isGridListNotEmpty(): boolean {
-            const items = this.getItems();
-            return !!items && items.getCount() > 0;
+            return !!(this.getDisplay()?.getCount());
         },
 
         getCurrentHeaderRow: function() {
