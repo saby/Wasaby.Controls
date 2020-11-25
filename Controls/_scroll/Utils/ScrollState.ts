@@ -64,7 +64,7 @@ export default class ScrollState implements IScrollState {
         return this._scrollLeft;
     }
 
-    set scrollTop(value: number): void {
+    set scrollLeft(value: number): void {
         this._scrollLeft = value;
     }
 
@@ -72,7 +72,7 @@ export default class ScrollState implements IScrollState {
         return this._clientHeight;
     }
 
-    set scrollTop(value: number): void {
+    set clientHeight(value: number): void {
         this._clientHeight = value;
     }
 
@@ -80,7 +80,7 @@ export default class ScrollState implements IScrollState {
         return this._clientWidth;
     }
 
-    set scrollTop(value: number): void {
+    set clientWidth(value: number): void {
         this._clientWidth = value;
     }
 
@@ -88,7 +88,7 @@ export default class ScrollState implements IScrollState {
         return this._scrollHeight;
     }
 
-    set scrollTop(value: number): void {
+    set scrollHeight(value: number): void {
         this._scrollHeight = value;
     }
 
@@ -96,7 +96,7 @@ export default class ScrollState implements IScrollState {
         return this._scrollWidth;
     }
 
-    set scrollTop(value: number): void {
+    set scrollWidth(value: number): void {
         this._scrollWidth = value;
     }
 

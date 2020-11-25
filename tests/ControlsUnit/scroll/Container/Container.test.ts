@@ -198,7 +198,8 @@ describe('Controls/scroll:Container', () => {
                     },
                     updateState: () => {
                         return true;
-                    }
+                    },
+                    canVerticalScroll: true
                 };
                 sinon.stub(component._stickyHeaderController, 'hasFixed').returns(true);
 
@@ -230,7 +231,10 @@ describe('Controls/scroll:Container', () => {
                     },
                     updateState: () => {
                         return true;
-                    }
+                    },
+                    canVerticalScroll: true,
+                    clientHeight: 1000,
+                    scrollHeight: 2000
                 };
                 component._updateState(state);
                 assert.isFalse(component._scrollbars.vertical.isVisible);
@@ -255,7 +259,10 @@ describe('Controls/scroll:Container', () => {
                     },
                     updateState: () => {
                         return true;
-                    }
+                    },
+                    canVerticalScroll: true,
+                    clientHeight: 1000,
+                    scrollHeight: 2000
                 };
                 component._scrollModel.canVerticalScroll = true;
 
