@@ -2240,7 +2240,11 @@ const _private = {
 
     updatePagingDataByItemsChanged(self, newItems, removedItems) {
         const countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-        const itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        let totalItemsCount = 0;
+        if (self._pagingLabelData) {
+            totalItemsCount = self._pagingLabelData.totalItemsCount || 0;
+        }
+        const itemsCount = totalItemsCount + countDifferece;
         _private.updatePagingData(self, itemsCount);
     },
 
