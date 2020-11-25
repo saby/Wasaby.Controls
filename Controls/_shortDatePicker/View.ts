@@ -199,7 +199,7 @@ class View extends Control<IDateLitePopupOptions> {
                 // Вычисляем смещения попапа влево, т.к окно выравнивается по центру открывающего элемента
                 const popupOffset = (options.stickyPosition.sizes.width - options.stickyPosition.targetPosition.width) / 2;
                 const isReverted = (popupLeft + popupOffset) !== openerLeft;
-                const isOutside = popupLeft + options.stickyPosition.sizes.width > window.innerWidth - MIN_RIGHT_OFFSET;
+                const isOutside = popupLeft + options.stickyPosition.sizes.width > window?.innerWidth - MIN_RIGHT_OFFSET;
                 this._closeBtnPosition = isReverted || isOutside ? POSITION.LEFT : POSITION.RIGHT;
             }
         }
