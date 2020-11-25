@@ -160,7 +160,8 @@ var TileViewModel = ListViewModel.extend({
             imageWidthProperty: this._options.imageWidthProperty,
             imageFit: this._options.imageFit,
             imageUrlResolver: this._options.imageUrlResolver,
-            itemClasses: this.getItemPaddingClasses()
+            itemClasses: this.getItemPaddingClasses(),
+            itemContentClasses: this.getRoundBorderClasses()
         };
         if (this._options.tileSize) {
             resultData.getTileSizes = this.getTileSizes;
@@ -177,6 +178,11 @@ var TileViewModel = ListViewModel.extend({
 
     setTileMode: function (tileMode) {
         this._tileMode = tileMode;
+        this._nextModelVersion();
+    },
+
+    setRoundBorder(value): void {
+        this._options.roundBorder = value;
         this._nextModelVersion();
     },
 
@@ -389,6 +395,20 @@ var TileViewModel = ListViewModel.extend({
         } else {
             return null;
         }
+    },
+
+    getRoundBorderClasses(): string {
+        const theme = `_theme-${this._options.theme}`;
+        const topLeftBorder = this._options.roundBorder?.tl || 'default';
+        const topRightBorder = this._options.roundBorder?.tr || 'default';
+        const bottomLeftBorder = this._options.roundBorder?.bl || 'default';
+        const bottomRightBorder = this._options.roundBorder?.br || 'default';
+        const topLeftClass = `controls-TileView__item_roundBorder_topLeft_${topLeftBorder}${theme}`;
+        const topRightClass = `controls-TileView__item_roundBorder_topRight_${topRightBorder}${theme}`;
+        const bottomLeftClass = `controls-TileView__item_roundBorder_bottomLeft_${bottomLeftBorder}${theme}`;
+        const bottomRightClass = `controls-TileView__item_roundBorder_bottomRight_${bottomRightBorder}${theme}`;
+
+        return `${topLeftClass} ${topRightClass} ${bottomLeftClass} ${bottomRightClass}`;
     }
 });
 
