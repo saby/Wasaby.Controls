@@ -57,8 +57,8 @@ describe('Controls/scroll:Container', () => {
             };
             component._beforeUnmount();
 
-            assert.notEqual(state, component._state);
-            assert.isNull(component._state);
+            assert.notEqual(state, component._scrollModel);
+            assert.isNull(component._scrollModel);
         });
     });
 
@@ -111,7 +111,9 @@ describe('Controls/scroll:Container', () => {
             optimizeShadowClassAfterMouseEnter: 'controls-Scroll__backgroundShadow controls-Scroll__background-Shadow_style-default_theme-default controls-Scroll__background-Shadow_top-auto_bottom-auto_style-default_theme-default'
         }].forEach((test) => {
             it(test.shadowMode, () => {
-                const component = createComponent(Container, {shadowMode: test.shadowMode});
+                const component = createComponent(Container, {shadowMode: test.shadowMode})
+                component._isStateInitialized = true;
+                component._scrollModel = {};
                 assert.strictEqual(component._isOptimizeShadowEnabled, test.isOptimizeShadowEnabled);
                 assert.strictEqual(component._optimizeShadowClass, test.optimizeShadowClass);
 
@@ -147,6 +149,14 @@ describe('Controls/scroll:Container', () => {
                 offsetHeight: 100
             };
             component._scrollbars._scrollContainerStyles = '';
+            component._scrollModel = {
+                clone: () => {
+                    return 0;
+                },
+                updateState: () => {
+                    return true;
+                }
+            };
             component._updateState(state);
             assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_vertical');
         });
@@ -160,7 +170,15 @@ describe('Controls/scroll:Container', () => {
             component._container = {
                 offsetHeight: 100
             };
-            component._scrollbars._scrollContainerStyles = '';
+            component._scrollbars._scrollContainerStyles = ''
+            component._scrollModel = {
+                clone: () => {
+                    return 0;
+                },
+                updateState: () => {
+                    return true;
+                }
+            };
             component._updateState(state);
             assert.strictEqual(component._scrollCssClass, ' controls-Scroll__content_hideNativeScrollbar controls-Scroll-ContainerBase__scroll_verticalHorizontal');
         });
@@ -172,6 +190,14 @@ describe('Controls/scroll:Container', () => {
                 component._children = {
                     content: {
                         getBoundingClientRect: () => undefined
+                    }
+                };
+                component._scrollModel = {
+                    clone: () => {
+                        return 0;
+                    },
+                    updateState: () => {
+                        return true;
                     }
                 };
                 sinon.stub(component._stickyHeaderController, 'hasFixed').returns(true);
@@ -198,6 +224,14 @@ describe('Controls/scroll:Container', () => {
                 component._container = {
                     offsetHeight: 100
                 };
+                component._scrollModel = {
+                    clone: () => {
+                        return 0;
+                    },
+                    updateState: () => {
+                        return true;
+                    }
+                };
                 component._updateState(state);
                 assert.isFalse(component._scrollbars.vertical.isVisible);
                 component._mouseenterHandler();
@@ -215,6 +249,16 @@ describe('Controls/scroll:Container', () => {
                     offsetHeight: 100
                 };
 
+                component._scrollModel = {
+                    clone: () => {
+                        return 0;
+                    },
+                    updateState: () => {
+                        return true;
+                    }
+                };
+                component._scrollModel.canVerticalScroll = true;
+
                 component._mouseenterHandler();
                 assert.isFalse(component._scrollbars.vertical.isVisible);
                 component._updateState(state);
@@ -224,18 +268,11 @@ describe('Controls/scroll:Container', () => {
     });
 
     describe('_keydownHandler', () => {
-        let component: Container;
-        beforeEach(() => {
-            component = createComponent(Container, {});
-            sinon.stub(component._stickyHeaderController, 'init');
-        });
-        afterEach(() => {
-            sinon.restore();
-        });
         it('should scroll top 40px when key up', () => {
+            const component = createComponent(Container, {});
             const result = 960;
             component._topPlaceholderSize = 0;
-            component._state = {
+            component._scrollModel = {
                 scrollTop: 1000
             };
             component._children = {
@@ -257,9 +294,10 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should scroll down 40px when key down', () => {
+            const component = createComponent(Container, {});
             const result = 1040;
             component._topPlaceholderSize = 0;
-            component._state = {
+            component._scrollModel = {
                 scrollTop: 1000,
                 scrollHeight: 2000,
                 clientHeight: 600
@@ -283,9 +321,10 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll down 40px when key down', () => {
+            const component = createComponent(Container, {});
             const result = 1000;
             component._topPlaceholderSize = 0;
-            component._state = {
+            component._scrollModel = {
                 scrollTop: 1000,
                 scrollHeight: 2000,
                 clientHeight: 1000
@@ -309,9 +348,10 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll down 40px when key up', () => {
+            const component = createComponent(Container, {});
             const result = 0;
             component._topPlaceholderSize = 0;
-            component._state = {
+            component._scrollModel = {
                 scrollTop: 0
             };
             component._children = {
@@ -333,9 +373,10 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._children.content.scrollTop, result);
         });
         it('should not scroll anywhere if not native keydown', () => {
+            const component = createComponent(Container, {});
             const result = 0;
             component._topPlaceholderSize = 0;
-            component._state = {
+            component._scrollModel = {
                 scrollTop: 0
             };
             component._children = {
@@ -444,6 +485,7 @@ describe('Controls/scroll:Container', () => {
             component._container = {
                 offsetHeight: 100
             };
+            sinon.stub(component, '_updateStateAndGenerateEvents');
             component._positionChangedHandler({}, SCROLL_DIRECTION.VERTICAL, 10);
             assert.strictEqual(component._children.content.scrollTop, 10);
         });
