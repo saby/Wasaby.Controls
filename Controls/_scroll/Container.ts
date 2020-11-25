@@ -8,7 +8,7 @@ import template = require('wml!Controls/_scroll/Container/Container');
 import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import ShadowsModel from './Container/ShadowsModel';
 import ScrollbarsModel from './Container/ScrollbarsModel';
-import PagingModel from './Container/PagingModel';
+import PagingModel, {TPagingModeScroll} from './Container/PagingModel';
 import {
     IScrollbars,
     IScrollbarsOptions,
@@ -28,12 +28,10 @@ import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyH
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
-import {TNavigationPagingMode} from "../_interface/INavigation";
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
-    pagingMode?: TNavigationPagingMode;
-    pagingVisible?: boolean;
+    pagingMode?: TPagingModeScroll;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -140,8 +138,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _isPagingVisible(options: IContainerOptions, context): boolean {
-        if (typeof options.pagingVisible !== 'undefined') {
-            return options.pagingVisible;
+        if (typeof options.pagingMode !== 'undefined') {
+            return options.pagingMode !== 'hidden';
         }
         return context.ScrollData?.pagingVisible;
     }
@@ -542,5 +540,5 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 /**
  * @name Controls/_scroll/Container#pagingMode
  * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
- * @default basic
+ * @default hidden
  */
