@@ -848,6 +848,7 @@ const _private = {
                 self._listViewModel.prependItems(addedItems);
             }
             afterAddItems(countCurrentItems, addedItems);
+            self._needScrollToFirstItem = false;
             self._attachLoadTopTriggerToNull = false;
         };
 
@@ -2243,7 +2244,11 @@ const _private = {
 
     updatePagingDataByItemsChanged(self, newItems, removedItems) {
         const countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-        const itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        let totalItemsCount = 0;
+        if (self._pagingLabelData) {
+            totalItemsCount = self._pagingLabelData.totalItemsCount || 0;
+        }
+        const itemsCount = totalItemsCount + countDifferece;
         _private.updatePagingData(self, itemsCount);
     },
 
@@ -3485,6 +3490,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+        }
+        if (this._pagingVisible && this._scrollPagingCtr) {
+            this._scrollPagingCtr.viewPortResize(viewportHeight);
+            _private.updateScrollPagingButtons(this, this._getScrollParams());
         }
         if (this._recalcPagingVisible) {
             if (!this._pagingVisible) {

@@ -131,7 +131,13 @@ class Manager {
         const defaultConfigResult: null | Promise<void> = controller.getDefaultConfig(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
-                this._addElement(item);
+                // Если за время выполнения промиса еще раз позвали открытие, то не нужно второй раз создавать окно
+                // нужно обновить уже существующее. иначе упадет синхронизатор, т.к. у окна задублируются ключи
+                if (this.find(options.id)) {
+                    this.update(options.id, options);
+                } else {
+                    this._addElement(item);
+                }
                 this._redrawItems();
             });
         } else {
