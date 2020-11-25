@@ -105,6 +105,22 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
 }
 
 /**
+ * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
+ * @param {TreeItem<T>} item
+ */
+function itemIsVisible<T>(item: TreeItem<T>): boolean  {
+    const parent = item.getParent();
+    // корневой узел не может быть свернут
+    if (!parent || parent.isRoot()) {
+        return true;
+    } else if (!parent.isExpanded()) {
+        return false;
+    }
+
+    return itemIsVisible(parent);
+}
+
+/**
  * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную
  * коллекцию.
  * @remark
@@ -221,6 +237,8 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
             this._setImportantProperty(this._$childrenProperty);
         }
         this._$hasMoreStorage = options.hasMoreStorage || {};
+
+        this.addFilter((record, index, item, collectionIndex) => itemIsVisible(item));
     }
 
     destroy(): void {
@@ -479,8 +497,13 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
     }
 
+    toggleExpanded(item: TreeItem<T>): void {
+        const newExpandedState = !item.isExpanded();
+        item.setExpanded(newExpandedState);
+        this._reFilter();
+    }
+
     // TODO от этого наверное нужно избавляться вообще и использовать SourceController или просто перенести в item
-    //  как я понял хранит hasMore для каждого узла
     setHasMoreStorage(storage: Record<string, boolean>): void {
         this._$hasMoreStorage = storage;
         this._nextVersion();
@@ -488,10 +511,6 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
     getHasMoreStorage(): Record<string, boolean> {
         return this._$hasMoreStorage;
-    }
-
-    getItemsFactory(): ItemsFactory<T> {
-        return this._getItemsFactory();
     }
 
     // endregion
@@ -739,7 +758,7 @@ Object.assign(Tree.prototype, {
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
     _$expanderTemplate: null,
-    _$expanderIcon: '',
+    _$expanderIcon: undefined,
     _$expanderSize: 's',
     _$expanderPosition: 'default',
     _$root: undefined,

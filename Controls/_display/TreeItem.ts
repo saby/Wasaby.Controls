@@ -8,6 +8,7 @@ import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'wasaby-cli/store/_repos/saby-ui/UI/Base';
+import { IItemPadding } from 'Controls/_list/interface/IList';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -78,6 +79,11 @@ export default class TreeItem<T> extends mixin<
      * Позиция экспандера
      */
     protected _$expanderPosition: string;
+
+    /**
+     * Видимость экспандера
+     */
+    protected _$expanderVisibility: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -200,36 +206,78 @@ export default class TreeItem<T> extends mixin<
         return this.getOwner().getChildren(this, withFilter);
     }
 
-    // TODO удалить
-    isDrawExpander() {
-        return true;
-    }
+    // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести
+    //  он используется для группы, но можно от него унаследоваться и расширить вот этим кодом
+    // region Expandable
 
-    // TODO удалить
-    shouldDrawExpanderPadding() {
-        return false;
-    }
-
-    getExpanderTemplate(expanderTemplate: TemplateFunction): TemplateFunction {
+    getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
         return expanderTemplate || this._$expanderTemplate;
     }
 
-    getExpanderIcon(expanderIcon: string): string {
+    getExpanderIcon(expanderIcon?: string): string {
         return expanderIcon || this._$expanderIcon;
     }
 
-    getExpanderSize(expanderSize: string): string {
+    getExpanderSize(expanderSize?: string): string {
         return expanderSize || this._$expanderSize;
     }
 
+    // TODO должно быть в Tree
     getExpanderPosition(): string {
         return this._$expanderPosition;
     }
 
-    getExpanderClasses(itemData: TreeItem<T>, tmplExpanderIcon: string, tmplExpanderSize: string, theme: string, style: string = 'default'): string {
-        const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
-        const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
-        const expanderPosition = itemData.getExpanderPosition();
+    // TODO должно быть в Tree
+    getExpanderVisibility(): string {
+        return this._$expanderVisibility;
+    }
+
+    shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
+        const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
+        const expanderPosition = this.getExpanderPosition();
+        const expanderSize = this.getExpanderSize(tmplExpanderSize);
+
+        if (this.getExpanderVisibility() === 'hasChildren') {
+            return this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
+        } else {
+            return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
+        }
+    }
+
+    getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {
+        // TODO поддержать параметр isNodeFooter
+        const isNodeFooter = false;
+        const expanderSize = this.getExpanderSize(tmplExpanderSize);
+        let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding` + `_theme-${theme}`;
+        expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
+        expanderPaddingClasses += ' js-controls-ListView__notEditable';
+        return expanderPaddingClasses;
+    }
+
+    getLevelIndentClasses(theme: string = 'default', expanderSize: string = 's', levelIndentSize: string = 's'): string {
+        // TODO нужно поддержать expanderSize и levelIndentSize, они не передаются в темплейт сейчас
+        const sizes = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
+        let resultLevelIndentSize;
+
+        if (expanderSize && levelIndentSize) {
+            if (sizes.indexOf(expanderSize) >= sizes.indexOf(levelIndentSize)) {
+                resultLevelIndentSize = expanderSize;
+            } else {
+                resultLevelIndentSize = levelIndentSize;
+            }
+        } else if (!expanderSize && !levelIndentSize) {
+            resultLevelIndentSize = 'default';
+        } else {
+            resultLevelIndentSize = expanderSize || levelIndentSize;
+        }
+
+        return `controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_${resultLevelIndentSize}_theme-${theme}`;
+    }
+
+    getExpanderClasses(tmplExpanderIcon: string, tmplExpanderSize: string, theme: string = 'default', style: string = 'default'): string {
+        const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
+        const expanderSize = this.getExpanderSize(tmplExpanderSize);
+        const expanderPosition = this.getExpanderPosition();
 
         let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
         let expanderIconClass = '';
@@ -241,9 +289,8 @@ export default class TreeItem<T> extends mixin<
         }
         expanderClasses += 'js-controls-ListView__notEditable';
 
-        // TODO взять откуда-то отступы
-/*        expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
-        expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;*/
+        expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${this.getOwner().getTopPadding()}_theme-${theme}`;
+        expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${this.getOwner().getBottomPadding()}_theme-${theme}`;
 
         expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_default_theme-${theme}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_default_theme-${theme}`;
@@ -257,19 +304,21 @@ export default class TreeItem<T> extends mixin<
                 expanderIconClass += '_' + (style === 'master' || style === 'masterClassic' ? 'master' : 'default');
             }
         } else {
-            expanderIconClass = ' controls-TreeGrid__row-expander_' + (itemData.isNode() ? 'node_' : 'hiddenNode_')
+            expanderIconClass = ' controls-TreeGrid__row-expander_' + (this.isNode() ? 'node_' : 'hiddenNode_')
                 + (style === 'master' || style === 'masterClassic' ? 'master' : 'default');
         }
 
         expanderClasses += expanderIconClass + `_theme-${theme}`;
 
         // добавляем класс свертнутости развернутости для тестов
-        expanderClasses += ' controls-TreeGrid__row-expander' + (itemData.isExpanded ? '_expanded' : '_collapsed');
+        expanderClasses += ' controls-TreeGrid__row-expander' + (this.isExpanded() ? '_expanded' : '_collapsed');
         // добавляем класс свертнутости развернутости стилевой
-        expanderClasses += expanderIconClass + (itemData.isExpanded ? '_expanded' : '_collapsed') + `_theme-${theme}`;
+        expanderClasses += expanderIconClass + (this.isExpanded() ? '_expanded' : '_collapsed') + `_theme-${theme}`;
 
         return expanderClasses;
     }
+
+    // endregion Expandable
 
     // region SerializableMixin
 
@@ -323,8 +372,9 @@ Object.assign(TreeItem.prototype, {
     _$hasChildren: false,
     _$childrenProperty: '',
     _$expanderTemplate: null,
-    _$expanderIcon: '',
+    _$expanderIcon: undefined,
     _$expanderSize: 's',
     _$expanderPosition: 'default',
+    _$expanderVisibility: 'visible',
     _instancePrefix: 'tree-item-'
 });

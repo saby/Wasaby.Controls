@@ -225,12 +225,19 @@ export default class GridColumn<T> extends mixin<
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
     }
 
+    getOwner(): GridCollectionItem<T> {
+        return this._$owner;
+    }
+
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
             return marker !== false && this._$owner.isMarked() && this.isLastColumn();
         } else {
-            return marker !== false && this._$owner.isMarked() &&
-                   this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
+            const firstColumn = this._$owner.getColumns()[0];
+            const firstColumnIsCheckboxOrExpander = firstColumn['[Controls/_display/ExpanderColumn]']
+                || firstColumn['[Controls/_display/GridCheckboxColumn]'];
+            return marker !== false && this._$owner.isMarked()
+                && !firstColumnIsCheckboxOrExpander && this.isFirstColumn();
         }
     }
 
@@ -267,14 +274,12 @@ export default class GridColumn<T> extends mixin<
         const isEditing = this._$owner.isEditing();
         const isDragged = this._$owner.isDragged();
         const preparedStyle = style === 'masterClassic' ? 'default' : style;
-        const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
 
         classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
         classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
 
         if (isEditing) {
             classes += ` controls-ListView__item_editing_theme-${theme}`;
-            classes += ` controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
         }
 
         if (isDragged) {
@@ -336,7 +341,10 @@ export default class GridColumn<T> extends mixin<
         // left <-> right
         const cellPadding = this._$column.cellPadding;
 
-        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
+        const firstColumn = this._$owner.getColumns()[0];
+        const firstColumnIsCheckboxOrExpander = firstColumn['[Controls/_display/ExpanderColumn]']
+            || firstColumn['[Controls/_display/GridCheckboxColumn]'];
+        if (firstColumnIsCheckboxOrExpander && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
         } else if (!this.isFirstColumn()) {
             classes += ' controls-Grid__cell_spacingLeft';

@@ -74,7 +74,7 @@ const _private = {
         const item = dispItem.getContents();
         const nodeKey = item.getId();
         const baseSourceController = self._children.baseControl.getSourceController();
-        const expanded = !listViewModel.isExpanded(dispItem);
+        const expanded = !dispItem.isExpanded();
         const options = self._options;
         self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
@@ -90,11 +90,25 @@ const _private = {
             return baseSourceController
                 .load(undefined, nodeKey)
                 .addCallbacks((list) => {
-                    if (options.uniqueKeys) {
-                        listViewModel.mergeItems(list);
-                    } else {
-                        listViewModel.appendItems(list);
+                    // TODO нужно с этим разобраться, добавление записей в рекордсет, много где похожая логика используется
+                    if (expanded) {
+                        if (options.useNewModel) {
+                            const collection = listViewModel.getCollection();
+                            if (options.uniqueKeys) {
+                                collection.merge(list, { remove: false });
+                            } else {
+                                collection.setMetaData(list.getMetaData());
+                                collection.append(list);
+                            }
+                        } else {
+                            if (options.uniqueKeys) {
+                                listViewModel.mergeItems(list);
+                            } else {
+                                listViewModel.appendItems(list);
+                            }
+                        }
                     }
+
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     listViewModel.setHasMoreStorage(
                         _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -306,7 +320,7 @@ const _private = {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
                         const dispItem = viewModel.getItemBySourceKey(itemKey);
-                        if (viewModel.getChildren(dispItem, loadedList).length) {
+                        if (dispItem && viewModel.getChildren(dispItem, loadedList).length) {
                             modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
                         }
                     }
@@ -765,9 +779,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     _draggingItemMouseMove(e, itemData, nativeEvent): void {
         e.stopPropagation();
-        if (itemData.dispItem.isNode()) {
+        const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        if (dispItem.isNode()) {
             const dndListController = this._children.baseControl.getDndListController();
-            const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             const targetElement = _private.getTargetRow(nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
@@ -775,10 +789,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 mouseOffsetInTargetItem
             });
 
-        if (dragTargetPosition) {
-            if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
-                dndListController.setDragPosition(dragTargetPosition);
-            }
+            if (dragTargetPosition) {
+                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
+                    dndListController.setDragPosition(dragTargetPosition);
+                }
 
                 /*
                     Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
@@ -789,7 +803,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!itemData.isExpanded && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!itemData.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }

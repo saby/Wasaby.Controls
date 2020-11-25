@@ -1,39 +1,93 @@
 import { mixin } from 'Types/util';
-import GridCollectionItem from './GridCollectionItem';
 import TreeItem from './TreeItem';
-import { TemplateFunction } from 'UI/Base';
+import GridItemMixin from './GridItemMixin';
+import GridColumn from './GridColumn';
 
 export default class TreeGridCollectionItem<T>
-    extends mixin<GridCollectionItem<any>, TreeItem<any>>(GridCollectionItem, TreeItem) {
-
-    private _treeItem: TreeItem<T>;
+    extends mixin<TreeItem<any>, GridItemMixin<any>>(TreeItem, GridItemMixin) {
+    readonly '[Controls/_display/TreeGridCollectionItem]': boolean;
 
     constructor(options: any) {
         super(options);
-        this._treeItem = new TreeItem<T>(options);
+        GridItemMixin.call(this, options);
     }
 
-    isExpanded(): boolean {
-        return this._treeItem.isExpanded();
+    // TODO
+    // region Expander
+
+    shouldDisplayExpanderBlock(column: GridColumn<T>): boolean {
+        const columnIndex = column.getColumnIndex();
+        return columnIndex === 0;
     }
 
-    isDrawExpander(): boolean {
-        return this._treeItem.isDrawExpander();
+    shouldDisplayExpander(expanderIcon: string): boolean {
+        if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === false) {
+            return false;
+        }
+
+        return (this._$expanderVisibility === 'visible' || this.isHasChildren());
     }
 
-    shouldDrawExpanderPadding(): boolean {
-        return this._treeItem.shouldDrawExpanderPadding();
+    // endregion
+
+    // TODO дублирование кода с GridCollectionItem
+    // region overrides
+
+    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
+        const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility);
+        if (isChangedMultiSelectVisibility) {
+            this._reinitializeColumns();
+        }
+        return isChangedMultiSelectVisibility;
     }
 
-    getExpanderTemplate(expanderTemplate: TemplateFunction): TemplateFunction {
-        return this._treeItem.getExpanderTemplate(expanderTemplate);
+    setMarked(marked: boolean, silent?: boolean): void {
+        const changed = marked !== this.isMarked();
+        super.setMarked(marked, silent);
+        if (changed) {
+            this._redrawColumns('first');
+        }
     }
 
-    getExpanderIcon(expanderIcon: string): string {
-        return this._treeItem.getExpanderIcon(expanderIcon);
+    setSelected(selected: boolean|null, silent?: boolean): void {
+        const changed = this._$selected !== selected;
+        super.setSelected(selected, silent);
+        if (changed) {
+            this._redrawColumns('first');
+        }
     }
 
-    getExpanderSize(expanderSize: string): string {
-        return this._treeItem.getExpanderSize(expanderSize);
+    setActive(active: boolean, silent?: boolean): void {
+        const changed = active !== this.isActive();
+        super.setActive(active, silent);
+        if (changed) {
+            this._redrawColumns('all');
+        }
     }
+
+    // endregion
+/*
+    protected _initializeColumns(): void {
+        super._initializeColumns();
+
+        if (this._$columns) {
+            const hasMultiSelectColumn = this._$columnItems[0] instanceof GridCheckboxColumn;
+            const expanderColumnIndex = hasMultiSelectColumn ? 1 : 0;
+            const expanderColumn = new ExpanderColumn({
+                column: {} as IColumn,
+                owner: this,
+                expanderTemplate: this.getExpanderTemplate(),
+                expanderIcon: this.getExpanderIcon(),
+                expanderSize: this.getExpanderSize(),
+                expanderPosition: this.getExpanderPosition(),
+                expanderVisibility: this.getExpanderVisibility()
+            });
+            this._$columnItems.splice(expanderColumnIndex, 0, expanderColumn);
+        }
+    }*/
 }
+
+Object.assign(TreeGridCollectionItem.prototype, {
+    '[Controls/_display/TreeGridCollectionItem]': true,
+    _moduleName: 'Controls/display:TreeGridCollectionItem'
+});

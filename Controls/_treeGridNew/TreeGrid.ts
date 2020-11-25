@@ -6,8 +6,14 @@ import { CrudEntityKey } from 'Types/source';
 import TreeGridView from 'Controls/_treeGridNew/TreeGridView';
 
 export default class TreeGrid extends Grid {
-    protected _viewName: TemplateFunction = TreeGridView;
+    protected _viewName: TemplateFunction = null;
     protected _viewTemplate: TemplateFunction = TreeControl;
+
+    _beforeMount(options: any): Promise<void> {
+        const superResult = super._beforeMount(options);
+        this._viewName = TreeGridView;
+        return superResult;
+    }
 
     _getModelConstructor(): string {
         return 'Controls/display:TreeGridCollection';

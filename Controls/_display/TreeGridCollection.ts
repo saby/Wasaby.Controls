@@ -1,51 +1,67 @@
-import TreeGridCollectionItem from 'Controls/_display/TreeGridCollectionItem';
-import GridCollection from './GridCollection';
 import Tree from './Tree';
+import { mixin } from 'Types/util';
+import GridMixin from './GridMixin';
+import TreeGridCollectionItem from './TreeGridCollectionItem';
+import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
 import { ItemsFactory } from 'Controls/_display/Collection';
-import IItemsStrategy from 'Controls/_display/IItemsStrategy';
+import { IOptions as IGridCollectionItemOptions } from 'Controls/_display/GridCollectionItem';
+import GridGroupItem from 'Controls/_display/GridGroupItem';
 
 export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> = TreeGridCollectionItem<S>>
-    extends GridCollection<S, T> {
-
-    private _tree: Tree<S, T>;
+    extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
+    readonly '[Controls/_display/TreeGridCollection]': boolean;
 
     constructor(options: any) {
         super(options);
-        this._tree = new Tree(options);
-        // TODO в super уже был такой вызов, нужно сделать один, иначе 2 раза все элементы пересоздаются
-        this._reBuild(true);
+        GridMixin.call(this, options);
     }
 
-    getExpandedItems(): string[] {
-        return this._tree.getExpandedItems();
+    // TODO duplicate code with GridCollection
+    // region override
+
+    setMultiSelectVisibility(visibility: string): void {
+        super.setMultiSelectVisibility(visibility);
+        this._$colgroup?.reBuild();
     }
 
-    getRoot(): any {
-        return this._tree.getRoot();
+    protected _reBuild(reset?: boolean): void {
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties) && !!this._$ladder) {
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+        }
+        super._reBuild(reset);
+        this._$colgroup?.reBuild();
     }
 
-    resetExpandedItems(): void {
-        return this._tree.resetExpandedItems();
+    setIndexes(start: number, stop: number): void {
+        super.setIndexes(start, stop);
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+            this._updateItemsLadder();
+        }
+        this._updateItemsColumns();
     }
 
-    setHasMoreStorage(): void {
-        return this._tree.setHasMoreStorage();
-    }
-
-    getChildren(): [] {
-        return [];
+    protected _handleAfterCollectionChange(): void {
+        super._handleAfterCollectionChange();
+        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+            this._prepareLadder(this._$ladderProperties, this._$columns);
+            this._updateItemsLadder();
+        }
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
-        const gridFactory = super._getItemsFactory();
-        // TODO указать тип опций
-        return (options: any) => {
-            if (this._tree) {
-                this._tree.getItemsFactory().call(this, options);
-            }
-            return gridFactory.call(this, options);
+        const superFactory = super._getItemsFactory();
+        return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
+            options.columns = this._$columns;
+            return superFactory.call(this, options);
         };
     }
+
+    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
+        return GridGroupItem;
+    }
+
+    // endregion
 }
 
 Object.assign(TreeGridCollection.prototype, {
