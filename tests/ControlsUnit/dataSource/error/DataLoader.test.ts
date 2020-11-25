@@ -31,7 +31,8 @@ describe('Controls/_dataSource/_error/DataLoader', () => {
             keyProperty: 'id'
         });
 
-        // only require props
+        // Минимальный набор параметров
+        // Только обязательные поля
         const defaultSourcesProp = [
             {
                 source: memory
@@ -45,6 +46,7 @@ describe('Controls/_dataSource/_error/DataLoader', () => {
             }
         );
 
+        //  Ошибка 504 в ответе
         it(
             'wrongResponse',
             async () => {
