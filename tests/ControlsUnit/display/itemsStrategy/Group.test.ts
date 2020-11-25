@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import Group from 'Controls/_display/itemsStrategy/Group';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
-import { view } from 'Controls/Constants';
+import { groupConstants } from 'Controls/list';
 
 import {
     GroupItem,
@@ -493,7 +493,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
                         contents: { 
-                            group: group || view.hiddenGroup,
+                            group: group || groupConstants.hiddenGroup,
                             id
                         },
                         multiSelectVisibility: 'hidden'
@@ -517,7 +517,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                     handler: (item) => item.group
                 };
                 const expected = [0, 2, 3, 1, 4, 5];
-                const expectedGroups = [view.hiddenGroup, 'one'];
+                const expectedGroups = [groupConstants.hiddenGroup, 'one'];
                 const given = Group.sortItems(items, options);
     
                 assert.deepEqual(given, expected);
@@ -532,7 +532,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
                         contents: { 
-                            group: group || view.hiddenGroup,
+                            group: group || groupConstants.hiddenGroup,
                             id
                         },
                         multiSelectVisibility: 'hidden'
@@ -556,7 +556,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                     handler: (item) => item.group
                 };
                 const expected = [1, 3, 4, 0, 2, 5];
-                const expectedGroups = ['one', view.hiddenGroup];
+                const expectedGroups = ['one', groupConstants.hiddenGroup];
                 const given = Group.sortItems(items, options);
     
                 assert.deepEqual(given, expected);
