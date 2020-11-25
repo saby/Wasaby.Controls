@@ -245,7 +245,7 @@ describe('Controls/list_clean/ScrollController', () => {
                 done();
             });
             assert.isFalse(scrollCallbackCalled, 'should not scroll if rangeChanged');
-            controller.updateItemsHeights({itemsHeights: [1, 1], itemsOffsets: [0, 1]});
+            controller.updateItemsHeights({itemsHeights: [1], itemsOffsets: [0]});
             controller.continueScrollToItemIfNeed();
 
         });
@@ -265,8 +265,8 @@ describe('Controls/list_clean/ScrollController', () => {
             };
             const controller = new ScrollController(options);
             controller.handleResetItems();
-            assert.isTrue(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
-            assert.isFalse(controller.updateItemsHeights({itemsHeights: [], itemsOffsets: []}));
+            assert.isTrue(controller.updateItemsHeights({itemsHeights: [1], itemsOffsets: [1]}));
+            assert.isFalse(controller.updateItemsHeights({itemsHeights: [1], itemsOffsets: [1]}));
 
         });
     });
