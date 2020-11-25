@@ -11,7 +11,7 @@ export function calculateViewData(data: IDiagramCategory[]): number[] {
 
     for (let i = 0; i < result.length; i++) {
         let curValue: number;
-        curValue = result[i] / sum * PERCENTS;
+        curValue = Math.round(result[i] / sum * PERCENTS);
         result[i] = curValue;
     }
 

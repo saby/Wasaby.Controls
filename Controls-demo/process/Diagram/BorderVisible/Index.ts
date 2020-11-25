@@ -13,12 +13,12 @@ class Diagram extends Control<IControlOptions> {
                 value: 30
             },
             {
-                name: 'error',
-                value: 10
-            },
-            {
                 name: 'inprocess',
                 value: 60
+            },
+            {
+                name: 'error',
+                value: 10
             }
         ];
     }

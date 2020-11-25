@@ -4,21 +4,32 @@ import controlTemplate = require('wml!Controls-demo/process/Diagram/Base/Templat
 
 class Diagram extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
-    protected _data: IDiagramCategory[] = [];
+    protected _data2: IDiagramCategory[] = [];
+    protected _data3: IDiagramCategory[] = [];
 
     protected _beforeMount(): void {
-        this._data = [
+        this._data2 = [
             {
                 name : 'done',
                 value: 30
             },
             {
-                name: 'error',
-                value: 10
+                name: 'inprocess',
+                value: 60
+            }
+        ];
+        this._data3 = [
+            {
+                name : 'done',
+                value: 30
             },
             {
                 name: 'inprocess',
                 value: 60
+            },
+            {
+                name: 'error',
+                value: 10
             }
         ];
     }
