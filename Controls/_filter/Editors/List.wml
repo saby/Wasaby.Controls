@@ -10,9 +10,6 @@
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
-      <ws:itemTemplate>
-         <ws:partial template="Controls/grid:ItemTemplate"/>
-      </ws:itemTemplate>
       <ws:footerTemplate>
          <ws:if data="{{_needShowMoreButton}}">
             <Controls.buttons:Button viewMode="linkButton"
