@@ -36,6 +36,10 @@ export default class GridGroupItem<T> extends mixin<
         ExpandableMixin.call(this);
     }
 
+    get key(): T {
+        return this._$contents;
+    }
+
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }

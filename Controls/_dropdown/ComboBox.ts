@@ -100,7 +100,9 @@ class ComboBox extends BaseDropdown {
 
    protected _afterMount(options: IComboboxOptions): void {
       if (this._countItems === 1) {
-         this._selectedItemsChangedHandler([this._selectedItem]);
+         if (this._selectedItem.get(options.keyProperty) !== options.selectedKey) {
+            this._selectedItemsChangedHandler([this._selectedItem]);
+         }
       }
    }
 

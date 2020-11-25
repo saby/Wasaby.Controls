@@ -1148,6 +1148,7 @@ const _private = {
             // к началу или концу, от этого прыжка его состояние не может
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
+            self._scrollController.setResetInEnd(direction === 'down');
             _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
@@ -1163,7 +1164,7 @@ const _private = {
                         self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
                         self._notify('doScroll', ['top'], { bubbling: true });
                     } else {
-                        _private.jumpToEnd(self);
+                        self._jumpToEndOnDrawItems = () => { _private.jumpToEnd(self) };
                     }
                 }
             });
@@ -1697,7 +1698,7 @@ const _private = {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
                     let result = null;
                     switch (action) {
-                        case IObservable.ACTION_ADD: 
+                        case IObservable.ACTION_ADD:
                             // TODO: this._batcher.addItems(newItemsIndex, newItems)
                             if (self._addItemsDirection) {
                                 self._addItems.push(...newItems);
@@ -1708,13 +1709,13 @@ const _private = {
                             }
                             break;
                         case IObservable.ACTION_MOVE:
-                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems, 
+                            result = self._scrollController.handleMoveItems(newItemsIndex, newItems, removedItemsIndex, removedItems,
                                 newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
                             break;
-                        case IObservable.ACTION_REMOVE: 
+                        case IObservable.ACTION_REMOVE:
                             result = self._scrollController.handleRemoveItems(removedItemsIndex, removedItems);
                             break;
-                        case IObservable.ACTION_RESET: 
+                        case IObservable.ACTION_RESET:
                             result = self._scrollController.handleResetItems();
                             break;
                     }
@@ -2358,25 +2359,33 @@ const _private = {
         self._wasScrollToEnd = true;
 
         const hasMoreData = {
-            up: _private.hasMoreData(this, this._sourceController, 'up'),
-            down: _private.hasMoreData(this, this._sourceController, 'down')
+            up: _private.hasMoreData(self, self._sourceController, 'up'),
+            down: _private.hasMoreData(self, self._sourceController, 'down')
         };
-        if (this._scrollPagingCtr) {
-            this._currentPage = this._pagingCfg.pagesCount;
-            this._scrollPagingCtr.shiftToEdge('down', hasMoreData);
+        if (self._scrollPagingCtr) {
+            self._currentPage = self._pagingCfg.pagesCount;
+            self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
+        if (self._jumpToEndOnDrawItems) {
 
-        // Последняя страница уже загружена но конец списка не обязательно отображается,
-        // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
-        _private.scrollToItem(self, lastItemKey, true, true).then(() => {
-
-            // После того как последний item гарантированно отобразился,
-            // нужно попросить ScrollWatcher прокрутить вниз, чтобы
-            // прокрутить отступ пейджинга и скрыть тень
+            // Если для подскролла в конец делали reload, то индексы виртуального скролла
+            // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
-
             _private.updateScrollPagingButtons(self, self._getScrollParams());
-        });
+        } else {
+
+            // Последняя страница уже загружена но конец списка не обязательно отображается,
+            // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
+            _private.scrollToItem(self, lastItemKey, true, true).then(() => {
+
+                // После того как последний item гарантированно отобразился,
+                // нужно попросить ScrollWatcher прокрутить вниз, чтобы
+                // прокрутить отступ пейджинга и скрыть тень
+                self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
+
+                _private.updateScrollPagingButtons(self, self._getScrollParams());
+            });
+        }
     },
 
     // region Multiselection
@@ -2516,8 +2525,8 @@ const _private = {
             _private.notifySelection(self, selection);
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
-                self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
             }
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected()], {bubbling: true});
         };
 
         if (result instanceof Promise) {
@@ -2744,21 +2753,27 @@ const _private = {
                 }
             };
         }
+        let style;
+        if (options.itemActionsVisibility === 'visible') {
+            style = 'transparent';
+        } else {
+            style = options.hoverBackgroundStyle || options.style
+        }
         const itemActionsChangeResult = itemActionsController.update({
-                editingItem: editingCollectionItem as CollectionItem<Model>,
-                collection: self._listViewModel,
-                itemActions: options.itemActions,
-                itemActionsProperty: options.itemActionsProperty,
-                visibilityCallback: options.itemActionVisibilityCallback,
-                itemActionsPosition: options.itemActionsPosition,
-                style: options.hoverBackgroundStyle || options.style,
-                theme: options.theme,
-                actionMode: options.actionMode,
-                actionAlignment: options.actionAlignment,
-                actionCaptionPosition: options.actionCaptionPosition,
-                itemActionsClass: options.itemActionsClass,
-                iconSize: editingConfig ? 's' : 'm',
-                editingToolbarVisible: editingConfig?.toolbarVisibility,
+            editingItem: editingCollectionItem as CollectionItem<Model>,
+            collection: self._listViewModel,
+            itemActions: options.itemActions,
+            itemActionsProperty: options.itemActionsProperty,
+            visibilityCallback: options.itemActionVisibilityCallback,
+            itemActionsPosition: options.itemActionsPosition,
+            style,
+            theme: options.theme,
+            actionMode: options.actionMode,
+            actionAlignment: options.actionAlignment,
+            actionCaptionPosition: options.actionCaptionPosition,
+            itemActionsClass: options.itemActionsClass,
+            iconSize: editingConfig ? 's' : 'm',
+            editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
             contextMenuConfig: options.contextMenuConfig
@@ -3573,7 +3588,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _getScrollParams(): IScrollParams {
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this),
+            scrollHeight: _private.getViewSize(this, true),
             clientHeight: this._viewportSize
         };
         /**
@@ -3659,11 +3674,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasSelectionController(this)) {
             const controller = _private.getSelectionController(this);
             _private.changeSelection(this, controller.getSelection());
-            if (this._options.hasOwnProperty('selectedKeys')) {
-                // changeSelection отправит это событие, только после того как проставится selection,
-                // но в afterMount он не будет проставлен
-                this._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(), controller.isAllSelected()], {bubbling: true});
-            }
         }
 
         if (!this._items || !this._items.getCount()) {
@@ -3770,6 +3780,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
         } else {
+            if (!newOptions.useNewModel) {
+                this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
+            }
             this._updateScrollController(newOptions);
         }
 
@@ -3948,8 +3961,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }, INDICATOR_DELAY);
         }
 
-        if (searchValueChanged || this._loadedBySourceController && _private.isPortionedLoad(this)) {
-            _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
+        if (newOptions.searchValue || this._loadedBySourceController) {
+            const isPortionedLoad = _private.isPortionedLoad(this);
+            const hasMoreData = _private.hasMoreData(this, this._sourceController, 'down');
+            const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
+            const needCheckLoadToDirection = hasMoreData && isSearchReturnsEmptyResult && !this._sourceController.isLoading();
+
+            // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
+            // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
+            // onCollectionChange у рекордсета не стрельнёт, и не сработает код,
+            // запускающий подгрузку по скролу (в навигации more: true)
+            if (searchValueChanged ||
+                (isPortionedLoad && (this._loadedBySourceController || needCheckLoadToDirection))) {
+                _private.resetPortionedSearchAndCheckLoadToDirection(this, newOptions);
+            }
         }
 
         if (needReload) {
@@ -4308,6 +4333,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         this._updateInProgress = false;
+        if (this._jumpToEndOnDrawItems && this._shouldNotifyOnDrawItems) {
+            this._jumpToEndOnDrawItems();
+            this._jumpToEndOnDrawItems = null;
+        }
         this._notifyOnDrawItems();
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
@@ -4391,6 +4420,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _scrollToFirstItemIfNeed(): void {
         if (this._needScrollToFirstItem) {
             this._needScrollToFirstItem = false;
+
+            if (this._jumpToEndOnDrawItems) {
+                return;
+            }
             // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
             // реальную запись и скролим именно к ней.
             // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
@@ -4487,7 +4520,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!canScroll && allDataLoaded && direction === 'up' && startIndex === 0) {
             scrollTop = 0;
             page = 1;
-        } 
+        }
         if (!canScroll && allDataLoaded && direction === 'down' && stopIndex === this._listViewModel.getCount()) {
             page = this._pagingCfg.pagesCount;
         }

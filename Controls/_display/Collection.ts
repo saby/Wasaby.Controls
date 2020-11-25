@@ -2238,8 +2238,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
 
-        // если элемент перетащили в другой список, то он в него добавится и нужно пересчитать start/stop индексы
-        if (!this.getItemBySourceItem(draggableItem.getContents())) {
+        if (!this.getItemBySourceKey(draggableItem.getContents().getKey())) {
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
                 IObservable.ACTION_ADD,
@@ -2262,8 +2261,23 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     resetDraggedItems(): void {
-        this.removeStrategy(this._dragStrategy);
-        this._reIndex();
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        if (strategy) {
+            const avatarIndex = this.getIndex(strategy.avatarItem as T);
+
+            this.removeStrategy(this._dragStrategy);
+            this._reIndex();
+
+            this._notifyBeforeCollectionChange();
+            this._notifyCollectionChange(
+               IObservable.ACTION_REMOVE,
+               [],
+               0,
+               [strategy.avatarItem],
+               avatarIndex
+            );
+            this._notifyAfterCollectionChange();
+        }
     }
 
     // endregion

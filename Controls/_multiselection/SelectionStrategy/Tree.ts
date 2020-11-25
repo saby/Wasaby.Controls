@@ -15,7 +15,7 @@ const LEAF = null;
 /**
  * Стратегия выбора для иерархического списка.
  * @class Controls/_multiselection/SelectionStrategy/Tree
- * 
+ *
  * @public
  * @author Панихин К.А.
  */
@@ -62,7 +62,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       const item = this._getItem(key);
 
       const cloneSelection = clone(selection);
-      if (!item || this._isNode(item)) {
+      if (!item) {
+         ArraySimpleValuesUtil.removeSubArray(cloneSelection.selected, [key]);
+         if (this._isAllSelectedInRoot(selection)) {
+            ArraySimpleValuesUtil.addSubArray(cloneSelection.excluded, [key]);
+         }
+      } else if (this._isNode(item)) {
          this._unselectNode(cloneSelection, item);
       } else {
          this._unselectLeaf(cloneSelection, item);
