@@ -2525,6 +2525,22 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
 
             assert.equal(gridModel.getCurrent().stickyLadder.prop.headingStyle, '123');
          });
+
+         it('isGridListNotEmpty', function() {
+            let gridModel = new gridMod.GridViewModel({
+               ...cfg,
+               items: new collection.RecordSet({
+                  rawData: [],
+                  keyProperty: 'id'
+               })
+            });
+
+            assert.isFalse(gridModel.isGridListNotEmpty());
+
+            gridModel.getDisplay().getCount = () => 1;
+
+            assert.isTrue(gridModel.isGridListNotEmpty());
+         });
       });
 
       describe('no grid support', () => {
