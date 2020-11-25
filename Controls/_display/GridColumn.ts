@@ -49,8 +49,10 @@ export default class GridColumn<T> extends mixin<
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = '';
         const hasColumnScroll = false;
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+
+        let wrapperClasses = '';
 
         wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
@@ -60,33 +62,20 @@ export default class GridColumn<T> extends mixin<
             wrapperClasses += ' controls-Grid__cell_fit';
         }
 
+        if (this._$owner.isEditing()) {
+            const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
+            wrapperClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
+            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+        } else if (templateHighlightOnHover !== false) {
+            wrapperClasses += ` controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+        }
+
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
         const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
-+++     let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
         const backgroundStyle = current.backgroundStyle || current.style || 'default';
         const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
-+++     // Стиль колонки
-+++     if (current.itemPadding.top === 'null' && current.itemPadding.bottom === 'null') {
-+++         classLists.base += `controls-Grid__row-cell_small_min_height-theme-${theme} `;
-+++     } else {
-+++         classLists.base += `controls-Grid__row-cell_default_min_height-theme-${theme} `;
-+++     }
-+++     classLists.base += `controls-Grid__row-cell controls-Grid__cell_${style} controls-Grid__row-cell_${style}_theme-${theme}`;
         _private.prepareSeparatorClasses(current, classLists, theme);
-
-        if (backgroundColorStyle) {
-            classLists.base += _private.getBackgroundStyle({backgroundStyle, theme, backgroundColorStyle}, true);
-        }
-
-        if (self._options.columnScroll) {
-            classLists.columnScroll += _private.getColumnScrollCalculationCellClasses(current, theme);
-            if (self._options.columnScrollVisibility) {
-                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
-            }
-+++     } else if (!checkBoxCell) {
-+++         classLists.base += ' controls-Grid__cell_fit';
-+++     }
 
         if (current.isEditing()) {
             classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
@@ -153,7 +142,12 @@ export default class GridColumn<T> extends mixin<
         return '';
     }
 
-    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getContentClasses(theme: string,
+                      backgroundColorStyle: string,
+                      cursor: string = 'pointer',
+                      templateHighlightOnHover: boolean = true): string {
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+
         let contentClasses = 'controls-Grid__row-cell__content';
 
         contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
@@ -171,20 +165,19 @@ export default class GridColumn<T> extends mixin<
             contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
         }
 
-        // todo {{backgroundColorStyle ? 'controls-Grid__row-cell__content_background_' + backgroundColorStyle + '_theme-' + _options.theme}}
-
         if (this._$hiddenForLadder) {
             contentClasses += ' controls-Grid__row-cell__content_hiddenForLadder';
             contentClasses += ` controls-Grid__row-cell__content_hiddenForLadder_theme-${theme}`;
         }
 
-        if (this._$owner.isEditing()) {
-            const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
-            contentClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
-            contentClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
-        } else if (templateHighlightOnHover !== false) {
-            contentClasses += ` controls-Grid__row-cell-background-hover-default_theme-${theme}`;
+        if (backgroundColorStyle) {
+            contentClasses += ` controls-Grid__row-cell__content_background_${backgroundColorStyle}_theme-${theme}`;
         }
+
+        if (templateHighlightOnHover !== false) {
+            contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
+        }
+
         return contentClasses;
     }
 

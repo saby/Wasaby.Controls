@@ -91,6 +91,14 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         };
     }
 
+    getHoverBackgroundStyle(): string {
+        return this._$owner.getHoverBackgroundStyle();
+    }
+
+    getEditingBackgroundStyle(): string {
+        return this._$owner.getEditingBackgroundStyle();
+    }
+
     getHeader(): GridHeader<T> {
         return this._$owner.getHeader();
     }

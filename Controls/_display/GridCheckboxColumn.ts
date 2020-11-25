@@ -3,9 +3,10 @@ import { TemplateFunction } from 'UI/Base';
 
 export default class GridCheckboxColumn<T> extends GridColumn<T> {
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = '';
-
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
         const topPadding = this._$owner.getTopPadding();
+
+        let wrapperClasses = '';
 
         wrapperClasses += this._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
         wrapperClasses += this._getWrapperSeparatorClasses(theme);
@@ -13,20 +14,31 @@ export default class GridCheckboxColumn<T> extends GridColumn<T> {
             ' js-controls-ColumnScroll__notDraggable' +
             ` controls-GridView__checkbox_theme-${theme}` +
             ` controls-GridView__checkbox_position-default_theme-${theme}` +
-            ` controls-Grid__row-cell-background-hover-default_theme-${theme}` +
             ` controls-Grid__row-checkboxCell_rowSpacingTop_${topPadding}_theme-${theme}`;
+
+        if (this._$owner.isEditing()) {
+            const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
+            wrapperClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
+            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+        } else if (templateHighlightOnHover !== false) {
+            wrapperClasses += ` controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+        }
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getContentClasses(theme: string,
+                      backgroundColorStyle: string,
+                      cursor: string = 'pointer',
+                      templateHighlightOnHover: boolean = true): string {
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+
         let contentClasses = '';
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
             contentClasses += ' controls-ListView__checkbox-onhover';
         }
-        if (this._$owner.isEditing()) {
-            const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
-            contentClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
-            contentClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+
+        if (templateHighlightOnHover !== false) {
+            contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
         }
         return contentClasses;
     }
