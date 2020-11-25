@@ -7,4 +7,10 @@
         <span class="controls-PropertyGrid__editor-caption_theme-{{theme}}">{{item.caption || item.name}}</span>
     </ws:else>
     <Controls.Container.Async templateName="{{item.editorTemplateName}}" templateOptions="{{item.editorOptions}}" class="{{item.editorClass}}"/>
+
+    <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
+        <ws:if data="{{ !collectionItem.isSwiped() }}">
+            <ws:partial template="{{ itemActionsTemplate }}" />
+        </ws:if>
+    </ws:if>
 </div>
