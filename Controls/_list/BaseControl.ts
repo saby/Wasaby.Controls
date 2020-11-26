@@ -3491,6 +3491,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
+        if (this._viewportSize < this._viewSize) {
+            this._pagingVisible = false;
+        }
         if (this._pagingVisible && this._scrollPagingCtr) {
             this._scrollPagingCtr.viewPortResize(viewportHeight);
             _private.updateScrollPagingButtons(this, this._getScrollParams());
