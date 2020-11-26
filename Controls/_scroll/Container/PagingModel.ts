@@ -99,11 +99,11 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
         return this._showEndButton;
     }
 
-    set pagingMode(pagingMode: TNavigationPagingMode): void {
+    set pagingMode(pagingMode: TPagingModeScroll): void {
         this._pagingMode = pagingMode;
     }
 
-    get pagingMode(): TNavigationPagingMode {
+    get pagingMode(): TPagingModeScroll {
         return this._pagingMode || 'basic';
     }
 }
