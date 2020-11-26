@@ -285,12 +285,20 @@ const _private = {
     // https://online.sbis.ru/opendoc.html?guid=dbaaabae-fcca-4c79-9c92-0f7fa2e70184
     // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
     // p.s. в первой ошибке также прикреплены скрины консоли.
-    doAfterUpdate(self, callback): void {
+    doAfterUpdate(self, callback, beforePaint = true): void {
         if (self._updateInProgress) {
-            if (self._callbackAfterUpdate) {
-                self._callbackAfterUpdate.push(callback);
+            if (!beforePaint) {
+                if (self._callbackAfterUpdate) {
+                    self._callbackAfterUpdate.push(callback);
+                } else {
+                    self._callbackAfterUpdate = [callback];
+                }
             } else {
-                self._callbackAfterUpdate = [callback];
+                if (self._callbackBeforePaint) {
+                    self._callbackBeforePaint.push(callback);
+                } else {
+                    self._callbackBeforePaint = [callback];
+                }
             }
         } else {
             callback();
@@ -1275,6 +1283,8 @@ const _private = {
                 // Если пэйджинг был показан из-за hasMore, то запоминаем это,
                 // чтобы не скрыть после полной загрузки, даже если не набралось на две страницы.
                 self._cachedPagingState = true;
+            } else if (hasMoreData.up || hasMoreData.down) {
+                self._recalcPagingVisible = true;
             }
             if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self, scrollParams, hasMoreData);
@@ -1724,7 +1734,7 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
                                     : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
@@ -3069,11 +3079,11 @@ const _private = {
         return !!self._editInPlaceController && self._editInPlaceController.isEditing();
     },
 
-    activateEditingRow(self): void {
+    activateEditingRow(self, enableScrollToElement: boolean = true): void {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
-            const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView);
+            const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
     },
@@ -3235,7 +3245,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _endDragNDropTimer: null, // для IE
     _draggedKey: null,
     _validateController: null,
-    _isEditingRowScrollToElement: true,
 
     // Контроллер для перемещения элементов из источника
     _moveController: null,
@@ -3525,6 +3534,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
+        if (this._viewportSize < this._viewSize) {
+            this._pagingVisible = false;
+        }
         if (this._pagingVisible && this._scrollPagingCtr) {
             this._scrollPagingCtr.viewPortResize(viewportHeight);
             _private.updateScrollPagingButtons(this, this._getScrollParams());
@@ -3681,7 +3693,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._editInPlaceController) {
             _private.registerFormOperation(this);
             if (this._editInPlaceController.isEditing()) {
-                _private.activateEditingRow(this);
+                _private.activateEditingRow(this, false);
             }
         }
 
@@ -4367,6 +4379,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._updateShadowModeBeforePaint = null;
         }
 
+        if (this._resolveAfterBeginEdit) {
+            this._resolveAfterBeginEdit();
+        }
+
         if (this._editInPlaceController && this._editInPlaceController.isEditing()) {
             _private.activateEditingRow(this);
         }
@@ -4377,11 +4393,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._jumpToEndOnDrawItems = null;
         }
         this._notifyOnDrawItems();
-        if (this._callbackAfterUpdate) {
-            this._callbackAfterUpdate.forEach((callback) => {
+        if (this._callbackBeforePaint) {
+            this._callbackBeforePaint.forEach((callback) => {
                 callback();
             });
-            this._callbackAfterUpdate = null;
+            this._callbackBeforePaint = null;
         }
     },
 
@@ -4400,7 +4416,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
-                });
+                }, false);
             }, CHECK_TRIGGERS_DELAY_IF_NEED);
         });
     },
@@ -4512,7 +4528,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
-        this._modelRecreated = false;
+        this._modelRecreated = false; 
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate.forEach((callback) => {
+                callback();
+            });
+            this._callbackAfterUpdate = null;
+        }
     },
 
     __onPagingArrowClick(e, arrow) {
@@ -4820,29 +4842,45 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): void {
-        // Редактирование может запуститься при построении.
-        if (this._isMounted) {
-            this._notify('afterBeginEdit', [item.contents, isAdd]);
-
-            if (this._listViewModel.getCount() > 1 && !isAdd) {
-                this.setMarkedKey(item.contents.getKey());
+    _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
+        // Завершение запуска редактирования по месту проиходит после построения редактора.
+        // Исключение - запуск редактирования при построении списка. В таком случае, уведомлений о запуске редактирования
+        // происходить не должно, а дождаться построение редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
+        return new Promise((resolve) => {
+            if (this._isMounted) {
+                this._resolveAfterBeginEdit = resolve;
+            } else {
+                resolve()
             }
-        }
+        }).then(() => {
+            // Редактирование может запуститься при построении.
+            if (this._isMounted) {
+                this._notify('afterBeginEdit', [item.contents, isAdd]);
 
-        if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
-            this._pagingVisible = false;
-        }
+                if (this._listViewModel.getCount() > 1 && !isAdd) {
+                    this.setMarkedKey(item.contents.getKey());
+                }
+            }
 
-        item.contents.subscribe('onPropertyChange', this._resetValidation);
-        /*
-         * TODO: KINGO
-         * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-         * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-         * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-         * _canUpdateItemsActions приведет к показу неактуальных операций.
-         */
-        _private.updateItemActions(this, this._options, item);
+            if (this._pagingVisible && this._options.navigation.viewConfig.pagingMode === 'edge') {
+                this._pagingVisible = false;
+            }
+
+            item.contents.subscribe('onPropertyChange', this._resetValidation);
+            /*
+             * TODO: KINGO
+             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+             * _canUpdateItemsActions приведет к показу неактуальных операций.
+             */
+            _private.updateItemActions(this, this._options, item);
+        }).then(() => {
+            // Подскролл к редактору
+            if (this._isMounted) {
+                return this.scrollToItem(item.contents.getKey(), false, true);
+            }
+        })
     },
 
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
@@ -4940,14 +4978,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition, false);
+            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
         } else {
             return this._beginEdit({ item: editingConfig.item });
         }
     },
 
     _beginEdit(options) {
-        this._isEditingRowScrollToElement = true;
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().edit(options && options.item).then((result) => {
@@ -4960,8 +4997,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _beginAdd(options, addPosition, isScroll: boolean = true) {
-        this._isEditingRowScrollToElement = isScroll;
+    _beginAdd(options, addPosition) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options && options.item, addPosition).then((addResult) => {
@@ -4976,18 +5012,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (_private.hasSelectionController(this)) {
                 const controller = _private.getSelectionController(this);
                 controller.setSelection(controller.getSelection());
-            }
-
-            // TODO: https://online.sbis.ru/opendoc.html?guid=b8a501c1-6148-4b6a-aba8-2b2e4365ec3a
-            const addingPosition = addPosition === 'top' ? 0 : (this.getViewModel().getCount() - 1);
-            const isPositionInRange = addingPosition >= this.getViewModel().getStartIndex() && addingPosition < this.getViewModel().getStopIndex();
-            const targetDispItem = this.getViewModel().at(addingPosition);
-            const targetItem = targetDispItem && targetDispItem.getContents();
-            const targetItemKey = targetItem && targetItem.getKey ? targetItem.getKey() : null;
-            if (!isPositionInRange && targetItemKey !== null) {
-                return _private.scrollToItem(this, targetItemKey, false, true).then(() => addResult);
-            } else {
-                return addResult;
             }
         }).finally(() => {
             this.hideIndicator();
@@ -5674,8 +5698,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
-        const itemActionsController = _private.getItemActionsController(this);
-        itemActionsController.updateItemActions(itemKey, itemWidth);
+        if (this._listViewModel.isActionsAssigned()) {
+            const itemActionsController = _private.getItemActionsController(this);
+            itemActionsController.updateItemActions(itemKey, itemWidth);
+        }
     },
 
     /**

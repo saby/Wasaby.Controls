@@ -11,11 +11,6 @@ interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
 /**
  * Контрол, который открывает всплывающее окно с {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/ диалогом редактирования записи}.
  * @remark
- * В зависимости от значения опции 'mode':
- * * 'stack' — используйте опции {@link Controls/popup:Stack}
- * * 'dialog' — используйте опции {@link Controls/popup:Dialog}
- * * 'sticky' — используйте опции {@link Controls/popup:Sticky}
- * 
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener">демо-пример</a>
  * * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4">руководство разработчика</a>
