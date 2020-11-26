@@ -5,7 +5,7 @@ import { IColumn, TColumns } from 'Controls/grid';
 import GridCheckboxCell from './GridCheckboxCell';
 import GridHeader from './GridHeader';
 import { TResultsPosition } from './GridResults';
-import GridStickyLadderColumn from './GridStickyLadderColumn';
+import GridStickyLadderCell from './GridStickyLadderCell';
 import {create} from 'Types/di';
 import {TemplateFunction} from "UI/_base/Control";
 import isFullGridSupport from './utils/GridSupportUtil';
@@ -127,7 +127,7 @@ export default class GridRow<T> extends CollectionItem<T> {
             }
 
             if (stickyLadderStyleForSecondProperty) {
-                this._$columnItems.splice(1,0,new GridStickyLadderColumn({
+                this._$columnItems.splice(1,0,new GridStickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
                     wrapperStyle: stickyLadderStyleForSecondProperty,
@@ -139,7 +139,7 @@ export default class GridRow<T> extends CollectionItem<T> {
 
             if (stickyLadderStyleForFirstProperty) {
                 this._$columnItems = ([
-                    new GridStickyLadderColumn({
+                    new GridStickyLadderCell({
                         column: this._$columns[0],
                         owner: this,
                         wrapperStyle: stickyLadderStyleForFirstProperty,

@@ -98,7 +98,6 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     // endregion
 
-
     // region Аспект "Лесенка"
     setHiddenForLadder(value: boolean) {
         this._$hiddenForLadder = value;
@@ -395,29 +394,17 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // endregion
 
     // region Аспект "Маркер"
+
+    // По умолчанию для абстрактной ячейки маркер отключен.
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
-        if (markerPosition === 'right') {
-            return marker !== false && this._$owner.isMarked() && this.isLastColumn();
-        } else {
-            return marker !== false && this._$owner.isMarked() &&
-                this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
-        }
+        return false;
     }
-    getMarkerClasses(theme: string, style: string = 'default',
-                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
+    getMarkerClasses(theme: string,
+                     style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default',
+                     itemPadding: IItemPadding = {},
                      markerPosition: 'left' | 'right' = 'left'): string {
-        let markerClass = 'controls-ListView__itemV_marker_';
-        if (markerClassName === 'default') {
-            markerClass += 'default';
-        } else {
-            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
-        }
-        return `
-            controls-ListView__itemV_marker-${markerPosition}
-            controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
-            controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
-            ${markerClass}
-        `;
+        return this._$owner.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition);
     }
     // endregion
 }

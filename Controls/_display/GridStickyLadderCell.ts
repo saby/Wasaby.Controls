@@ -11,7 +11,7 @@ export interface IOptions<T> extends IGridCellOptions<T> {
     stickyHeaderZIndex: number;
 }
 
-export default class GridStickyLadderColumn<T> extends GridCell<T> {
+export default class GridStickyLadderCell<T> extends GridCell<T> {
     protected _$wrapperStyle: string;
     protected _$contentStyle: string;
     protected _$stickyProperty: string;
@@ -78,19 +78,15 @@ export default class GridStickyLadderColumn<T> extends GridCell<T> {
         return super.getTemplate();
     }
 
-    shouldDisplayMarker(): boolean {
-        return false;
-    }
-
     shouldDisplayItemActions(): boolean {
         return false;
     }
 }
 
-Object.assign(GridStickyLadderColumn.prototype, {
-    '[Controls/_display/GridStickyLadderColumn]': true,
-    _moduleName: 'Controls/display:GridStickyLadderColumn',
-    _instancePrefix: 'grid-ladder-column-',
+Object.assign(GridStickyLadderCell.prototype, {
+    '[Controls/_display/GridStickyLadderCell]': true,
+    _moduleName: 'Controls/display:GridStickyLadderCell',
+    _instancePrefix: 'grid-ladder-cell-',
     _$wrapperStyle: '',
     _$contentStyle: '',
     _$stickyProperty: '',

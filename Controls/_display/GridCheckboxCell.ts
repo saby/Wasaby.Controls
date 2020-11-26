@@ -1,7 +1,8 @@
 import GridCell from './GridCell';
 import { TemplateFunction } from 'UI/Base';
+import GridRow from './GridDataRow';
 
-export default class GridCheckboxCell<T> extends GridCell<T> {
+export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
