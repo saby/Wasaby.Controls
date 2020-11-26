@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection, compatibility} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -2361,13 +2361,13 @@ const _private = {
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
         if (self._jumpToEndOnDrawItems) {
-            
-            // Если для подскролла в конец делали reload, то индексы виртуального скролла 
+
+            // Если для подскролла в конец делали reload, то индексы виртуального скролла
             // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
             _private.updateScrollPagingButtons(self, self._getScrollParams());
         } else {
-           
+
             // Последняя страница уже загружена но конец списка не обязательно отображается,
             // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
             _private.scrollToItem(self, lastItemKey, true, true).then(() => {
@@ -2378,7 +2378,7 @@ const _private = {
                 self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
 
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
-            }); 
+            });
         }
     },
 
@@ -2837,7 +2837,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!compatibility.touch)
+            && DndFlatController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!self._context?.isTouch?.isTouch)
         ) {
             const key = item.getContents().getKey();
 
