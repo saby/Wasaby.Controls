@@ -1,14 +1,14 @@
 import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
 import GridCollection from './GridCollection';
 import GridCell, { IOptions as IGridCellOptions } from './GridCell';
-import { IColumn, TColumns } from 'Controls/grid';
+import { IColumn, TColumns, IColspanParams } from 'Controls/grid';
 import GridCheckboxCell from './GridCheckboxCell';
 import GridHeader from './GridHeader';
-import { TResultsPosition } from './GridResults';
+import { TResultsPosition } from './GridResultsRow';
 import GridStickyLadderCell from './GridStickyLadderCell';
 import {create} from 'Types/di';
 import {TemplateFunction} from "UI/_base/Control";
-import isFullGridSupport from './utils/GridSupportUtil';
+import prepareColumns from './utils/GridColspanUtil';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
@@ -24,6 +24,10 @@ export default class GridRow<T> extends CollectionItem<T> {
     protected _$ladder: {};
 
     readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
+
+    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироватьс.
+    // Данная возможность доступна только строке с данными.
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -176,6 +180,15 @@ export default class GridRow<T> extends CollectionItem<T> {
             }
         }
     }
+
+    prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
+        return prepareColumns({
+            columns,
+            hasMultiSelect: this.getMultiSelectVisibility() !== 'hidden',
+            gridColumnsCount: this._$owner.getColumnsConfig().length
+        });
+    }
+
     // endregion
 
     // region Аспект "Отступы вокруг строки"

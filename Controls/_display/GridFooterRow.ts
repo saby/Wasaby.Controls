@@ -1,19 +1,16 @@
 import { TemplateFunction } from 'UI/Base';
 import GridRow, {IOptions as IGridRowOptions} from './GridRow';
 import GridCollection from './GridCollection';
-import { TColumns } from 'Controls/grid';
-import GridFooterCell from './GridFooterCell';
-
-type TFooterCells<T> = Array<GridFooterCell<T>>;
 
 export interface IOptions<T> extends IGridRowOptions<T> {
     owner: GridCollection<T>;
-    footerTemplate: TemplateFunction;
+    footer?: TFooter;
+    footerTemplate?: TemplateFunction;
 }
 
 export default class GridFooterRow<T> extends GridRow<T> {
-    protected _$owner: GridCollection<T>;
-    protected _$template: TemplateFunction;
+    protected _$footerTemplate: TemplateFunction;
+    protected _$footer: TFooter;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -24,7 +21,11 @@ export default class GridFooterRow<T> extends GridRow<T> {
     }
 
     // TODO: Переделать параметры на объект
-    getWrapperClasses(theme: string): string {
+    getWrapperClasses(templateHighlightOnHover: boolean = true,
+                      theme?: string,
+                      cursor: string = 'pointer',
+                      backgroundColorStyle?: string,
+                      style: string = 'default'): string {
         /* todo
         // Для предотвращения скролла одной записи в таблице с экшнами.
         // _options._needBottomPadding почему-то иногда не работает.
@@ -41,13 +42,28 @@ export default class GridFooterRow<T> extends GridRow<T> {
         if (this._$columns) {
             const factory = this._getColumnsFactory();
             this._$columnItems = [];
-            if (this._$owner.getMultiSelectVisibility()) {
-                this._$columnItems.push(factory({}));
+
+            if (this._$footerTemplate) {
+                if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+                    this._$columnItems.push(factory({
+                        column: {}
+                    }));
+                }
+                this._$columnItems.push(factory({
+                    column: {
+                        template: this._$footerTemplate,
+                    },
+                    colspan: this._$owner.getColumnsConfig().length
+                }));
+            } else {
+                this._$columnItems = this.prepareColspanedColumns(this._$footer).map((footerColumn) => factory({
+                    column: {
+                        template: footerColumn.template,
+                    },
+                    startColumn: footerColumn.startColumn,
+                    endColumn: footerColumn.endColumn
+                }));
             }
-            this._$columnItems.push(factory({
-                template: this._$template,
-                colspan: this._$owner.getColumnsConfig().length
-            }));
         }
     }
 }
@@ -56,6 +72,6 @@ Object.assign(GridFooterRow.prototype, {
     _moduleName: 'Controls/display:GridFooterRow',
     _instancePrefix: 'grid-footer-row-',
     _cellModule: 'Controls/display:GridFooterCell',
-    _$owner: null,
-    _$template: null
+    _$footerTemplate: null,
+    _$footer: null
 });
