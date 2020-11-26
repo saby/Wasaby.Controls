@@ -173,6 +173,8 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
                     this._debouncedAction('_open', [event]);
                 }
             }, CALM_DELAY);
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 
