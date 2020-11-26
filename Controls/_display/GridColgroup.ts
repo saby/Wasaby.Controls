@@ -23,7 +23,7 @@ export default class GridColgroup<T> extends mixin<
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
-        this._$cells = this._prepareCells(this._$owner.getColumns());
+        this._$cells = this._prepareCells(this._$owner.getColumnsConfig());
     }
 
     getBodyClasses(): string {
@@ -70,5 +70,6 @@ export default class GridColgroup<T> extends mixin<
 
 Object.assign(GridColgroup.prototype, {
     _moduleName: 'Controls/display:GridColgroup',
+    _instancePrefix: 'grid-colgroup',
     _$owner: null
 });

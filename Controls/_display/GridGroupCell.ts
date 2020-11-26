@@ -1,4 +1,4 @@
-import GridColumn from './GridColumn';
+import GridCell from './GridCell';
 import {OptionsToPropertyMixin} from 'Types/entity';
 import GridGroupItem from './GridGroupItem';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
@@ -9,7 +9,7 @@ export interface IOptions<T> {
     columns: IColumn[];
 }
 
-export default class GridGroupCell<T> extends GridColumn<T> {
+export default class GridGroupCell<T> extends GridCell<T> {
     protected _$columns: IColumn[];
 
     constructor(options?: IOptions<T>) {
