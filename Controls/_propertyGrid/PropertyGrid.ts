@@ -10,7 +10,7 @@ import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import {default as IPropertyGridItem} from './IProperty';
 import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD, PROPERTY_VALUE_FIELD} from './Constants';
 import {groupConstants as constView} from '../list';
-import PropertyGridItem from './PropertyGridItem';
+import PropertyGridCollection from './PropertyGridCollection';
 import { factory } from 'Types/chain';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {StickyOpener} from 'Controls/popup';
@@ -48,7 +48,7 @@ import {StickyOpener} from 'Controls/popup';
 
 export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _template: TemplateFunction = template;
-    protected _listModel: Tree<PropertyGridItem> | Collection<PropertyGridItem>;
+    protected _listModel: Tree<Model> | Collection<Model>;
     protected _render: Control = renderTemplate;
     protected _collapsedGroups: Record<string, boolean> = {};
     private _itemActionsController: ItemActionsController;
@@ -88,35 +88,25 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         parentProperty: string,
         editingObject: Record<string, any>,
         source: IPropertyGridItem[] | RecordSet<IPropertyGridItem>
-    ): Tree<PropertyGridItem> | Collection<PropertyGridItem> {
+    ): Tree<Model> | Collection<Model> {
         const propertyGridItems = this._getPropertyGridItems(source, editingObject);
-
-        if (nodeProperty && parentProperty) {
-            return new Tree({
-                collection: propertyGridItems,
-                parentProperty,
-                nodeProperty,
-                keyProperty: PROPERTY_NAME_FIELD,
-                root: null,
-                group: this._groupCallback,
-                filter: this._displayFilter.bind(this)
-            });
-        } else {
-            return new Collection({
-                collection: propertyGridItems,
-                group: this._groupCallback,
-                keyProperty: PROPERTY_NAME_FIELD,
-                filter: this._displayFilter.bind(this)
-            });
-        }
+        return new PropertyGridCollection({
+            collection: propertyGridItems,
+            parentProperty,
+            nodeProperty,
+            keyProperty: PROPERTY_NAME_FIELD,
+            root: null,
+            group: this._groupCallback,
+            filter: this._displayFilter.bind(this)
+        });
     }
 
-    private _groupCallback(item: PropertyGridItem): string {
+    private _groupCallback(item: Model): string {
         return item.get(PROPERTY_GROUP_FIELD);
     }
 
-    private _displayFilter(itemContents: PropertyGridItem | string): boolean {
-        if (itemContents instanceof PropertyGridItem) {
+    private _displayFilter(itemContents: Model | string): boolean {
+        if (itemContents instanceof Model) {
             const group = itemContents.get(PROPERTY_GROUP_FIELD);
             return !this._collapsedGroups[group];
         }
@@ -133,33 +123,33 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _getPropertyGridItems(
         items: IPropertyGridItem[] | RecordSet<IPropertyGridItem>,
         editingObject: Record<string, any> | Model
-    ): RecordSet<PropertyGridItem> {
+    ): RecordSet<Model> {
         const itemsWithPropertyValue = [];
+        if (items instanceof RecordSet) {
+            items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
+                const sourceItem = object.clone(item);
+                const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
+                const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
+                defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
 
-        items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
-            const sourceItem = object.clone(item);
-            const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
-            const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
-            defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
+                factory(sourceItem).each((key: string, value: unknown) => {
+                    defaultItem[key] = value;
+                });
 
-            factory(sourceItem).each((key: string, value: unknown) => {
-                defaultItem[key] = value;
+                itemsWithPropertyValue.push({
+                    ...defaultItem,
+                    ...(sourceItem instanceof Model ? {} : sourceItem)
+                });
             });
-
-            itemsWithPropertyValue.push({
-                ...defaultItem,
-                ...(sourceItem instanceof Model ? {} : sourceItem)
+            return new RecordSet({
+                rawData: itemsWithPropertyValue,
+                keyProperty: PROPERTY_NAME_FIELD
             });
-        });
-
-        return new RecordSet({
-            rawData: itemsWithPropertyValue,
-            keyProperty: PROPERTY_NAME_FIELD,
-            model: PropertyGridItem
-        });
+        }
+        return items;
     }
 
-    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: PropertyGridItem, value: any): void {
+    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
         const name = item.get(PROPERTY_NAME_FIELD);
         const editingObjectClone = this._options.editingObject instanceof Model ?
            this._options.editingObject : object.clone(this._options.editingObject);
@@ -173,7 +163,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     protected _itemClick(
         event: SyntheticEvent<Event>,
-        displayItem: GroupItem<PropertyGridItem> | TreeItem<PropertyGridItem>,
+        displayItem: GroupItem<Model> | TreeItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         if (displayItem['[Controls/_display/GroupItem]']) {
@@ -185,6 +175,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._collapsedGroups[groupName] = !collapsed;
                 this._listModel.setFilter(this._displayFilter.bind(this));
             }
+        } else {
+            this._notify('itemClick', [displayItem]);
         }
     }
 

@@ -1,0 +1,21 @@
+<div class="controls-Demo__propertyGrid">
+    <Controls.propertyGrid:PropertyGrid
+            bind:editingObject="_editingObject"
+            itemActions="{{_itemActions}}"
+            source="{{_source}}">
+        <ws:groupTemplate>
+            <ws:partial template="Controls/propertyGrid:GroupTemplate">
+                <ws:contentTemplate>
+                    <div class="controls-demo-group-title">Заголовок группы</div>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:groupTemplate>
+        <ws:itemTemplate>
+            <ws:partial template="Controls/propertyGrid:ItemTemplate"
+                        class="controls-demo-pg-highlightOnHover-editor-padding"
+                        highlightOnHover="{{true}}"
+            />
+        </ws:itemTemplate>
+    </Controls.propertyGrid:PropertyGrid>
+    <Controls.list:Remover source="{{_source}}" name="listRemover"/>
+</div>
