@@ -7,7 +7,6 @@ import Collection, {
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
-import GroupItem from './GroupItem';
 import TreeItem from './TreeItem';
 import TreeChildren from './TreeChildren';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -19,6 +18,7 @@ import RootStrategy from './itemsStrategy/Root';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
 import { TemplateFunction } from 'UI/Base';
+import { CrudEntityKey } from 'Types/source';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -109,7 +109,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @param {TreeItem<T>} item
  */
 function itemIsVisible<T>(item: TreeItem<T>): boolean  {
-    if (!item.isParent) {
+    if (!item.getParent) {
         return true;
     }
 
@@ -186,19 +186,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _$expanderTemplate: TemplateFunction;
 
     /**
-     * Иконка экспандера
-     */
-    protected _$expanderIcon: string;
-
-    /**
-     * Размер экспандера
-     */
-    protected _$expanderSize: string;
-
-    /**
      * Позиция экспандера
      */
     protected _$expanderPosition: string;
+
+    /**
+     * Видимость экспандера
+     */
+    protected _$expanderVisibility: string;
 
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов
@@ -243,6 +238,13 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         this._$hasMoreStorage = options.hasMoreStorage || {};
 
         this.addFilter((record, index, item, collectionIndex) => itemIsVisible(item));
+
+        if (options.expandedItems instanceof Array) {
+            this.setExpandedItems(options.expandedItems);
+        }
+        if (options.collapsedItems instanceof Array) {
+            this.setCollapsedItems(options.collapsedItems);
+        }
     }
 
     destroy(): void {
@@ -272,6 +274,22 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     // region Collection
+
+    // region Expander
+
+    getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
+        return expanderTemplate || this._$expanderTemplate;
+    }
+
+    getExpanderPosition(): string {
+        return this._$expanderPosition;
+    }
+
+    getExpanderVisibility(): string {
+        return this._$expanderVisibility;
+    }
+
+    // endregion Expander
 
     getIndexBySourceItem(item: any): number {
         if (this._$rootEnumerable && this.getRoot().getContents() === item) {
@@ -493,8 +511,34 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
-    getExpandedItems(): string[] {
+    getExpandedItems(): CrudEntityKey[] {
         return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+    }
+
+    setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        if (expandedKeys[0] === null) {
+            // TODO длжно быть silent и отправить сразу всю пачку элементов
+            // TODO надо рекурсивно раскрывать узлы, сейчас расскрывается только первый уровень
+            this.each((it) => it.setExpanded(true));
+        } else {
+            expandedKeys.forEach((key) => {
+                const item = this.getItemBySourceKey(key);
+                if (item) {
+                    // TODO длжно быть silent и отправить сразу всю пачку элементов
+                    item.setExpanded(true);
+                }
+            });
+        }
+    }
+
+    setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        collapsedKeys.forEach((key) => {
+            const item = this.getItemBySourceKey(key);
+            if (item) {
+                // TODO длжно быть silent и отправить сразу всю пачку элементов
+                item.setExpanded(false);
+            }
+        });
     }
 
     resetExpandedItems(): void {
@@ -504,7 +548,6 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     toggleExpanded(item: TreeItem<T>): void {
         const newExpandedState = !item.isExpanded();
         item.setExpanded(newExpandedState);
-        this._reFilter();
     }
 
     // TODO от этого наверное нужно избавляться вообще и использовать SourceController или просто перенести в item
@@ -762,9 +805,8 @@ Object.assign(Tree.prototype, {
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
     _$expanderTemplate: null,
-    _$expanderIcon: undefined,
-    _$expanderSize: undefined,
     _$expanderPosition: 'default',
+    _$expanderVisibility: 'visible',
     _$root: undefined,
     _$rootEnumerable: false,
     _root: null

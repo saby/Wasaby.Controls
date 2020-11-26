@@ -850,7 +850,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
-            const display = this._children.baseControl.getViewModel().getDisplay();
+            const display = this._options.useNewModel ? this._children.baseControl.getViewModel() : this._children.baseControl.getViewModel().getDisplay();
             const dispItem = display.getItemBySourceItem(item);
 
             // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.

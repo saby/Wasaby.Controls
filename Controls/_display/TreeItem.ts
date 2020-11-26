@@ -62,11 +62,6 @@ export default class TreeItem<T> extends mixin<
     protected _$childrenProperty: string;
 
     /**
-     * Шаблон экспандера
-     */
-    protected _$expanderTemplate: TemplateFunction;
-
-    /**
      * Иконка экспандера
      */
     protected _$expanderIcon: string;
@@ -75,16 +70,6 @@ export default class TreeItem<T> extends mixin<
      * Размер экспандера
      */
     protected _$expanderSize: string;
-
-    /**
-     * Позиция экспандера
-     */
-    protected _$expanderPosition: string;
-
-    /**
-     * Видимость экспандера
-     */
-    protected _$expanderVisibility: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -97,7 +82,7 @@ export default class TreeItem<T> extends mixin<
         if (this._$node) {
             this._$hasChildren = true;
         }
-        if (options && options.hasChildren !== undefined) {
+        if (options) {
             this._$hasChildren = !!options.hasChildren;
         }
     }
@@ -219,11 +204,11 @@ export default class TreeItem<T> extends mixin<
             return false;
         }
 
-        return (this._$expanderVisibility === 'visible' || this.isHasChildren());
+        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
     }
 
     getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
-        return expanderTemplate || this._$expanderTemplate;
+        return this._$owner.getExpanderTemplate(expanderTemplate);
     }
 
     getExpanderIcon(expanderIcon?: string): string {
@@ -234,23 +219,13 @@ export default class TreeItem<T> extends mixin<
         return expanderSize || this._$expanderSize;
     }
 
-    // TODO должно быть в Tree
-    getExpanderPosition(): string {
-        return this._$expanderPosition;
-    }
-
-    // TODO должно быть в Tree
-    getExpanderVisibility(): string {
-        return this._$expanderVisibility;
-    }
-
     shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
-        const expanderPosition = this.getExpanderPosition();
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
+        const expanderPosition = this._$owner.getExpanderPosition();
 
-        if (this.getExpanderVisibility() === 'hasChildren') {
-            return this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
+        if (this._$owner.getExpanderVisibility() === 'hasChildren') {
+            return !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
         } else {
             // TODO по идее в expanderSize должно быть дефолтное значение 's' и тогда проверка !expanderSize неправильная
             return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
@@ -290,7 +265,7 @@ export default class TreeItem<T> extends mixin<
     getExpanderClasses(tmplExpanderIcon: string, tmplExpanderSize: string, theme: string = 'default', style: string = 'default'): string {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
-        const expanderPosition = this.getExpanderPosition();
+        const expanderPosition = this._$owner.getExpanderPosition();
 
         let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
         let expanderIconClass = '';
@@ -384,10 +359,7 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
-    _$expanderTemplate: null,
     _$expanderIcon: undefined,
     _$expanderSize: undefined,
-    _$expanderPosition: 'default',
-    _$expanderVisibility: 'visible',
     _instancePrefix: 'tree-item-'
 });
