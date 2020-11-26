@@ -28,18 +28,16 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
         this._updateValues(options.propertyValue);
     }
 
-    protected _beforeUpdate(newOptions?: INumberRangeOptions): void {
-        if (this._options.propertyValue !== newOptions.propertyValue) {
-            this._updateValues(newOptions.propertyValue);
-        }
-    }
-
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
-        this._notifyExtendedValue([value, this._options.propertyValue[1]]);
+        this._minValue = value !== undefined ? value : null;
     }
 
     protected _handleMaxValueChanged(event: SyntheticEvent, value: number): void {
-        this._notifyExtendedValue([this._options.propertyValue[0], value]);
+        this._maxValue = value !== undefined ? value : null;
+    }
+
+    protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
+        this._notifyExtendedValue([this._minValue, this._maxValue]);
     }
 
     private _updateValues(newValue: number[]): void {

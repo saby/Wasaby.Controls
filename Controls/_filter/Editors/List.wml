@@ -4,16 +4,16 @@
                        markedKey="{{_options.propertyValue}}"
                        keyProperty="{{_options.keyProperty}}"
                        scope="{{_options}}"
-                       navigation="{{_navigation}}"
+                       navigation="{{_options.navigation}}"
                        markerVisibility="{{false}}"
                        backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
       <ws:footerTemplate>
-         <ws:if data="{{_needShowMoreButton}}">
+         <ws:if data="{{_options.selectorTemplate}}">
             <Controls.buttons:Button viewMode="linkButton"
-                                     caption="{{_options.buttonMoreCaption}}"
+                                     caption="{{_options.showSelectorCaption}}"
                                      fontColorStyle="label"
                                      on:click="_handleFooterClick()"/>
          </ws:if>

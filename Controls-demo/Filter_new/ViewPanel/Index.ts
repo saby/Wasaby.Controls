@@ -60,7 +60,6 @@ export default class extends Control {
             {
                 group: 'Количество сотрудников',
                 name: 'amount',
-                itemTemplate: 'Controls/filter:NumberRangeEditor',
                 editorTemplateName: 'Controls/filter:NumberRangeEditor',
                 resetValue: [],
                 caption: '',
@@ -79,6 +78,15 @@ export default class extends Control {
                 value: null,
                 editorTemplateName: 'Controls/filter:ListEditor',
                 editorOptions: {
+                    navigation: {
+                        source: 'page',
+                        view: 'page',
+                        sourceConfig: {
+                            pageSize: 3,
+                            page: 0,
+                            hasMore: false
+                        }
+                    },
                     keyProperty: 'owner',
                     columns: [{displayProperty: 'title', width: 'auto'}, {align: 'right', displayProperty: 'id'}],
                     displayProperty: 'title',

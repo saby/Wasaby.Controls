@@ -3,8 +3,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filter/Editors/List';
 import * as ColumnTemplate from 'wml!Controls/_filter/Editors/resources/ColumnTemplate';
-import * as clone from 'Core/core-clone';
-import {isEqual} from 'Types/object';
 import {StackOpener} from 'Controls/popup';
 import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
@@ -12,20 +10,14 @@ import {object} from 'Types/util';
 import {IFilterOptions, ISourceOptions, INavigationOptions, IItemActionsOptions, ISelectorDialogOptions} from 'Controls/interface';
 import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
-import {IPopupOptions} from 'Controls/popup';
 
 interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
     IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
-    columns: object[];
     propertyValue: number|string;
-    buttonMoreCaption?: string;
-    pageSize?: number;
-    popupOptions?: IPopupOptions;
+    showSelectorCaption?: string;
+    additionalData: string;
 }
 
-interface IListEditor {
-    readonly '[Controls/_filter/Editors/List]': boolean;
-}
 /**
  * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
  * @class Controls/_filter/Editors/List
@@ -33,41 +25,23 @@ interface IListEditor {
  * @author Мельникова Е.А.
  * @public
  */
-class ListEditor extends Control<IListEditorOptions> implements IListEditor {
-    readonly '[Controls/_filter/Editors/List]': boolean = true;
+class ListEditor extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
     protected _columns: object[] = null;
-    protected _navigation: object = null;
     protected _stackOpener: StackOpener = null;
-    protected _needShowMoreButton: boolean = false;
 
     protected _beforeMount(options: IListEditorOptions): void {
-        this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
-        this._navigation = {
-            source: 'page',
-            view: 'page',
-            sourceConfig: {
-                pageSize: options.pageSize,
-                page: 0,
-                hasMore: false
-            }
-        };
-        this._needShowMoreButton = options.selectorTemplate && options.source.data.length > options.pageSize;
+        this._setColumns(options.displayProperty, options.propertyValue, options.additionalData);
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
-        const columnsChanged = isEqual(options.columns, this._options.columns);
         const valueChanged = options.propertyValue !== this._options.propertyValue;
         const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
-        const sourceItemsHidden = options.source.data.length > options.pageSize;
+        const additionalDataChanged = options.additionalData !== this._options.additionalData;
 
-        if (columnsChanged || valueChanged || displayPropertyChanged) {
-            this._columns = this._getColumns(options.columns, options.displayProperty, options.propertyValue);
+        if (additionalDataChanged || valueChanged || displayPropertyChanged) {
+            this._setColumns(options.displayProperty, options.propertyValue, options.additionalData);
         }
-        if (options.pageSize !== this._options.pageSize) {
-            this._navigation.sourceConfig.pageSize = options.pageSize;
-        }
-        this._needShowMoreButton = options.selectorTemplate && sourceItemsHidden;
     }
 
     protected _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
@@ -126,20 +100,18 @@ class ListEditor extends Control<IListEditorOptions> implements IListEditor {
         return item[this._options.displayProperty];
     }
 
-    private _getColumns(columns: object[], displayProperty: string, propertyValue: number|string|unknown[]): object[] {
-        const customColumns = clone(columns);
-        const firstColumn = columns.length ? customColumns.shift() : {displayProperty};
-        customColumns.unshift({...{template: ColumnTemplate, selected: propertyValue}, ...firstColumn});
-        return customColumns;
+    private _setColumns(displayProperty: string, propertyValue: number|string|unknown[], additionalData: string): object[] {
+        this._columns = [{template: ColumnTemplate, selected: propertyValue, displayProperty}]
+        if (additionalData) {
+            this._columns.push({align: 'right', displayProperty: additionalData});
+        }
     }
 
     static _theme: string[] = ['Controls/filter', 'Controls/toggle'];
 
     static getDefaultOptions(): object {
         return {
-            buttonMoreCaption: rk('Другие'),
-            columns: [],
-            pageSize: 3
+            showSelectorCaption: rk('Другие')
         };
     }
 }

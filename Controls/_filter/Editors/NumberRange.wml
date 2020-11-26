@@ -4,14 +4,16 @@
                           borderVisibility='partial'
                           placeholder="{{_options.minValueTitle}}"
                           value="{{_minValue}}"
-                          on:valueChanged="_handleMinValueChanged()"/>
+                          on:valueChanged="_handleMinValueChanged()"
+                          on:inputCompleted="_handleInputCompleted()"/>
    <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
    <Controls.input:Number scope="{{_options}}"
                           borderVisibility='partial'
                           contrastBackground="{{false}}"
                           placeholder="{{_options.maxValueTitle}}"
                           value="{{_maxValue}}"
-                          on:valueChanged="_handleMaxValueChanged()"/>
+                          on:valueChanged="_handleMaxValueChanged()"
+                          on:inputCompleted="_handleInputCompleted()"/>
 
    <ws:if data="{{_options.afterEditorTemplate}}">
       <Controls.Container.Async templateName="{{_options.afterEditorTemplate}}">
