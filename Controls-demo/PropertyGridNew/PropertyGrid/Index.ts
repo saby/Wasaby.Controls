@@ -24,34 +24,44 @@ export default class Demo extends Control<IControlOptions> {
         this._itemActions = [
             {
                 id: 1,
-                icon: 'icon-Edit',
-                iconStyle: 'secondary',
-                title: 'edit',
-                showType: showType.MENU,
-                handler: (item) => alert(`Edit clicked at ${item.getId()}`)
-            },
-            {
-                id: 3,
                 icon: 'icon-Erase',
                 iconStyle: 'danger',
-                showType: 2,
-                title: 'Remove',
+                showType: showType.MENU,
+                title: 'Удалить',
                 handler: (item: Model) => {
                     const key = item.getKey();
                     source.remove(source.getRecordById(key));
                 }
             },
             {
-                id: 4,
+                id: 2,
                 icon: 'icon-ArrowUp',
-                iconStyle: 'danger',
-                showType: 2,
+                iconStyle: 'secondary',
+                showType: showType.MENU,
                 title: 'Вверх',
                 handler: (item: Model) => {
-                    // source.move(1, 0);
+                    const sourceItemIndex = this._getSourceItemIndex(source, item);
+                    source.move(sourceItemIndex, sourceItemIndex - 1);
+                }
+            },
+            {
+                id: 3,
+                icon: 'icon-ArrowDown',
+                iconStyle: 'secondary',
+                showType: showType.MENU,
+                title: 'Вниз',
+                handler: (item: Model) => {
+                    const sourceItemIndex = this._getSourceItemIndex(source, item);
+                    source.move(sourceItemIndex, sourceItemIndex + 1);
                 }
             }
         ];
+    }
+
+    private _getSourceItemIndex(source: RecordSet, item: Model): number {
+        const key = item.getKey();
+        const sourceItem = source.getRecordById(key);
+        return source.getIndex(sourceItem);
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/Editors/HighlightOnHover/Index',
