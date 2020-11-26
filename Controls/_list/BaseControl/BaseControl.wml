@@ -46,6 +46,7 @@
         showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
         pagesCount = "{{_knownPagesCount}}"
         selectedPage = "{{_currentPage}}"
+        arrowState="{{_pagingCfg.arrowState}}"
         on:selectedPageChanged="__pagingChangePage()" />
 </ws:template>
 

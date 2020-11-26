@@ -2249,8 +2249,17 @@ const _private = {
          */
         if (self._options.navigation && self._options.navigation.viewConfig &&
             self._options.navigation.viewConfig.totalInfo === 'extended') {
+            self._pagingCfg = {
+                arrowState: {
+                    begin: 'visible',
+                    prev: 'visible',
+                    next: 'visible',
+                    end: self._options.navigation.viewConfig.showEndButton ? 'visible' : 'hidden'
+                }
+            };
             return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
         }
+
         return hasMoreData === true || self._knownPagesCount > 1;
     },
 
@@ -2295,6 +2304,12 @@ const _private = {
             }
         }
         if (self._pagingNavigation) {
+            self._pagingCfg = {
+                arrowState: {
+
+                    end: 'hidden'
+                }
+            };
             _private.resetPagingNavigation(self, cfg.navigation);
             self._pageSizeSource = new Memory({
                 keyProperty: 'id',
