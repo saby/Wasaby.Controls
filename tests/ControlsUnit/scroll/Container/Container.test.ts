@@ -253,6 +253,9 @@ describe('Controls/scroll:Container', () => {
                     offsetHeight: 100
                 };
 
+                component._mouseenterHandler();
+                assert.isFalse(component._scrollbars.vertical.isVisible);
+
                 component._scrollModel = {
                     clone: () => {
                         return 0;
@@ -266,8 +269,6 @@ describe('Controls/scroll:Container', () => {
                 };
                 component._scrollModel.canVerticalScroll = true;
 
-                component._mouseenterHandler();
-                assert.isFalse(component._scrollbars.vertical.isVisible);
                 component._updateState(state);
                 assert.isTrue(component._scrollbars.vertical.isVisible);
             });

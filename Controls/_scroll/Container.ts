@@ -225,7 +225,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             }
 
             // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
-            if (this._isStateInitialized && this._isScrollbarsInitialized) {
+            if (this._scrollModel && this._isScrollbarsInitialized) {
                 this._scrollbars.updateScrollState(this._scrollModel, this._container);
             }
 
@@ -381,7 +381,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
             // В этом случае не обновляем скролбары, а просто делаем _isScrollbarsInitialized = true выше.
             // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
-            if (this._isStateInitialized) {
+            if (this._scrollModel) {
                 this._scrollbars.updateScrollState(this._scrollModel, this._container);
                 this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
                 this._updateShadows();
