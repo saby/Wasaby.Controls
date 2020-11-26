@@ -1,20 +1,20 @@
 /**
  * Интерфейс для шаблона отображения заголовка {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
- * @interface Controls/_list/interface/BaseGroupTemplate
+ * @interface Controls/_list/interface/IBaseGroupTemplateOptions
  * @author Авраменко А.С.
  * @public
  */
 export default interface IBaseGroupTemplateOptions {
    /**
-    * @typedef {String} ExpanderAlign
+    * @typedef {String} Controls/_list/interface/IBaseGroupTemplateOption/ExpanderAlign
     * @description Расположение кнопки-экспандера относительно названия группы.
     * @variant left Слева от названия группы.
     * @variant right Справа от названия группы.
     */
 
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#expanderAlign
-    * @cfg {ExpanderAlign} Расположение кнопки-экспандера относительно названия группы.
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#expanderAlign
+    * @cfg {Controls/_list/interface/IBaseGroupTemplateOption/ExpanderAlign.typedef} Расположение кнопки-экспандера относительно названия группы.
     * @default left
     * @remark
     * Кнопка-экспандер позволяет сворачивать/разворачивать группу.
@@ -22,13 +22,13 @@ export default interface IBaseGroupTemplateOptions {
     */
    expanderAlign?: string;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#separatorVisibility
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#separatorVisibility
     * @cfg {Boolean} Когда опция установлена в значение false, горизонтальная линия-разделитель будет скрыта.
     * @default true
     */
    separatorVisibility?: boolean;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#expanderVisible
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#expanderVisible
     * @cfg {Boolean} Когда опция установлена в значение false, кнопка-экспандер будет скрыта.
     * @default true
     * @remark
@@ -37,7 +37,7 @@ export default interface IBaseGroupTemplateOptions {
     */
    expanderVisible?: boolean;
    /**
-    * @typedef {String} TextAlign
+    * @typedef {String} Controls/_list/interface/IBaseGroupTemplateOption/TextAlign
     * @description Горизонтальное выравнивание названия группы.
     * @variant right По правому краю.
     * @variant left По левому краю.
@@ -45,13 +45,13 @@ export default interface IBaseGroupTemplateOptions {
     */
 
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#textAlign
-    * @cfg {TextAlign} Горизонтальное выравнивание названия группы.
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#textAlign
+    * @cfg {Controls/_list/interface/IBaseGroupTemplateOption/TextAlign.typedef} Горизонтальное выравнивание названия группы.
     * @default center
     */
    textAlign?: string;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#rightTemplate
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#rightTemplate
     * @cfg {String|Function|undefined} Пользовательский шаблон, отображаемый на горизонтальной линии-разделителе в правой части.
     * @default undefined
     * @remark
@@ -119,7 +119,7 @@ export default interface IBaseGroupTemplateOptions {
     */
    rightTemplate?: string;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#contentTemplate
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#contentTemplate
     * @cfg {String|Function|undefined} Пользовательский шаблон, описывающий заголовок группы.
     * @remark
     * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
@@ -192,15 +192,15 @@ export default interface IBaseGroupTemplateOptions {
     */
    contentTemplate?: string;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#fontSize
-    * @cfg {string} Размер текста в названии группы/шаблоне
-    * @default 'xs'
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#fontSize
+    * @cfg {String} Размер текста в названии группы/шаблоне.
+    * @default xs
     */
-   fontSize?: boolean;
+   fontSize?: string;
    /**
-    * @name Controls/_list/interface/BaseGroupTemplate#iconSize
-    * @cfg {string} Размер экспандера в названии группы/шаблоне
-    * @default 's'
+    * @name Controls/_list/interface/IBaseGroupTemplateOptions#iconSize
+    * @cfg {String} Размер экспандера в названии группы/шаблоне.
+    * @default s
     */
-   iconSize?: boolean;
+   iconSize?: string;
 }
