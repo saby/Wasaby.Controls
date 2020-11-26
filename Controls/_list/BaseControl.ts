@@ -285,12 +285,20 @@ const _private = {
     // https://online.sbis.ru/opendoc.html?guid=dbaaabae-fcca-4c79-9c92-0f7fa2e70184
     // https://online.sbis.ru/opendoc.html?guid=b6715c2a-704a-414b-b764-ea2aa4b9776b
     // p.s. в первой ошибке также прикреплены скрины консоли.
-    doAfterUpdate(self, callback): void {
+    doAfterUpdate(self, callback, beforePaint = true): void {
         if (self._updateInProgress) {
-            if (self._callbackAfterUpdate) {
-                self._callbackAfterUpdate.push(callback);
+            if (!beforePaint) {
+                if (self._callbackAfterUpdate) {
+                    self._callbackAfterUpdate.push(callback);
+                } else {
+                    self._callbackAfterUpdate = [callback];
+                }
             } else {
-                self._callbackAfterUpdate = [callback];
+                if (self._callbackBeforePaint) {
+                    self._callbackBeforePaint.push(callback);
+                } else {
+                    self._callbackBeforePaint = [callback];
+                }
             }
         } else {
             callback();
@@ -4385,11 +4393,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._jumpToEndOnDrawItems = null;
         }
         this._notifyOnDrawItems();
-        if (this._callbackAfterUpdate) {
-            this._callbackAfterUpdate.forEach((callback) => {
+        if (this._callbackBeforePaint) {
+            this._callbackBeforePaint.forEach((callback) => {
                 callback();
             });
-            this._callbackAfterUpdate = null;
+            this._callbackBeforePaint = null;
         }
     },
 
@@ -4408,7 +4416,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
-                });
+                }, false);
             }, CHECK_TRIGGERS_DELAY_IF_NEED);
         });
     },
@@ -4520,7 +4528,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
-        this._modelRecreated = false;
+        this._modelRecreated = false; 
+        if (this._callbackAfterUpdate) {
+            this._callbackAfterUpdate.forEach((callback) => {
+                callback();
+            });
+            this._callbackAfterUpdate = null;
+        }
     },
 
     __onPagingArrowClick(e, arrow) {
