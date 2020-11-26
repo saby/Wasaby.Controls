@@ -173,7 +173,6 @@ export default class SearchControllerClass {
         if (this._storeCallbackId) {
             Store.unsubscribe(this._storeCallbackId);
             Store.unsubscribe(this._storeCtxCallbackId);
-            Store.dispatch('searchValue', undefined);
         }
     }
 
