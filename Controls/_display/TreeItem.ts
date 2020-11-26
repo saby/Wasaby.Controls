@@ -47,8 +47,9 @@ export default class TreeItem<T> extends mixin<
 
     /**
      * Является узлом
+     * @remark true - узел, false - 'скрытый' узел, null - лист
      */
-    protected _$node: boolean;
+    protected _$node: boolean|null;
 
     /**
      * Есть ли дети у узла.
@@ -89,7 +90,6 @@ export default class TreeItem<T> extends mixin<
         super(options);
         ExpandableMixin.call(this);
 
-        this._$node = !!this._$node;
         if (this._$node) {
             this._$hasChildren = true;
         }
@@ -165,7 +165,7 @@ export default class TreeItem<T> extends mixin<
     /**
      * Возвращает признак, является ли элемент узлом
      */
-    isNode(): boolean {
+    isNode(): boolean|null {
         return this._$node;
     }
 
@@ -173,7 +173,7 @@ export default class TreeItem<T> extends mixin<
      * Устанавливает признак, является ли элемент узлом
      * @param node Является ли элемент узлом
      */
-    setNode(node: boolean): void {
+    setNode(node: boolean|null): void {
         this._$node = node;
     }
 
@@ -210,6 +210,14 @@ export default class TreeItem<T> extends mixin<
     //  он используется для группы, но можно от него унаследоваться и расширить вот этим кодом
     // region Expandable
 
+    shouldDisplayExpander(expanderIcon: string): boolean {
+        if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
+            return false;
+        }
+
+        return (this._$expanderVisibility === 'visible' || this.isHasChildren());
+    }
+
     getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
         return expanderTemplate || this._$expanderTemplate;
     }
@@ -240,6 +248,7 @@ export default class TreeItem<T> extends mixin<
         if (this.getExpanderVisibility() === 'hasChildren') {
             return this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
         } else {
+            // TODO по идее в expanderSize должно быть дефолтное значение 's' и тогда проверка !expanderSize неправильная
             return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
         }
     }
@@ -373,7 +382,7 @@ Object.assign(TreeItem.prototype, {
     _$childrenProperty: '',
     _$expanderTemplate: null,
     _$expanderIcon: undefined,
-    _$expanderSize: 's',
+    _$expanderSize: undefined,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
     _instancePrefix: 'tree-item-'

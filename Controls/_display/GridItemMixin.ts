@@ -244,10 +244,15 @@ export default abstract class GridItemMixin<T> {
         }
     }
 
+    protected _getGridColumnConstructor(): new (options: any) => GridColumn<T> {
+        return GridColumn;
+    }
+
     protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
         return (options) => {
             options.owner = this;
-            return new GridColumn(options as IGridColumnOptions<T>);
+            const columnConstructor = this._getGridColumnConstructor();
+            return new columnConstructor(options as IGridColumnOptions<T>);
         };
     }
 

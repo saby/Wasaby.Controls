@@ -2,6 +2,7 @@ import { mixin } from 'Types/util';
 import TreeItem from './TreeItem';
 import GridItemMixin from './GridItemMixin';
 import GridColumn from './GridColumn';
+import TreeGridColumn from 'Controls/_display/TreeGridColumn';
 
 export default class TreeGridCollectionItem<T>
     extends mixin<TreeItem<any>, GridItemMixin<any>>(TreeItem, GridItemMixin) {
@@ -12,7 +13,6 @@ export default class TreeGridCollectionItem<T>
         GridItemMixin.call(this, options);
     }
 
-    // TODO
     // region Expander
 
     shouldDisplayExpanderBlock(column: GridColumn<T>): boolean {
@@ -20,12 +20,8 @@ export default class TreeGridCollectionItem<T>
         return columnIndex === 0;
     }
 
-    shouldDisplayExpander(expanderIcon: string): boolean {
-        if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === false) {
-            return false;
-        }
-
-        return (this._$expanderVisibility === 'visible' || this.isHasChildren());
+    protected _getGridColumnConstructor(): new (options: any) => TreeGridColumn<T> {
+        return TreeGridColumn;
     }
 
     // endregion
@@ -66,25 +62,6 @@ export default class TreeGridCollectionItem<T>
     }
 
     // endregion
-/*
-    protected _initializeColumns(): void {
-        super._initializeColumns();
-
-        if (this._$columns) {
-            const hasMultiSelectColumn = this._$columnItems[0] instanceof GridCheckboxColumn;
-            const expanderColumnIndex = hasMultiSelectColumn ? 1 : 0;
-            const expanderColumn = new ExpanderColumn({
-                column: {} as IColumn,
-                owner: this,
-                expanderTemplate: this.getExpanderTemplate(),
-                expanderIcon: this.getExpanderIcon(),
-                expanderSize: this.getExpanderSize(),
-                expanderPosition: this.getExpanderPosition(),
-                expanderVisibility: this.getExpanderVisibility()
-            });
-            this._$columnItems.splice(expanderColumnIndex, 0, expanderColumn);
-        }
-    }*/
 }
 
 Object.assign(TreeGridCollectionItem.prototype, {

@@ -21,6 +21,7 @@
                <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
             </ws:else>
          </ws:if>
+
          <div attr:class="{{ gridColumn.getContentClasses(theme, cursor, highlightOnHover) }}"
               attr:style="{{ gridColumn.getContentStyles() }}">
             <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl, expanderTemplate) }}"

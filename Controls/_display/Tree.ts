@@ -759,7 +759,7 @@ Object.assign(Tree.prototype, {
     _$hasChildrenProperty: '',
     _$expanderTemplate: null,
     _$expanderIcon: undefined,
-    _$expanderSize: 's',
+    _$expanderSize: undefined,
     _$expanderPosition: 'default',
     _$root: undefined,
     _$rootEnumerable: false,

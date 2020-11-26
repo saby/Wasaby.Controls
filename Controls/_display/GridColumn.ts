@@ -225,19 +225,12 @@ export default class GridColumn<T> extends mixin<
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
     }
 
-    getOwner(): GridCollectionItem<T> {
-        return this._$owner;
-    }
-
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
             return marker !== false && this._$owner.isMarked() && this.isLastColumn();
         } else {
-            const firstColumn = this._$owner.getColumns()[0];
-            const firstColumnIsCheckboxOrExpander = firstColumn['[Controls/_display/ExpanderColumn]']
-                || firstColumn['[Controls/_display/GridCheckboxColumn]'];
             return marker !== false && this._$owner.isMarked()
-                && !firstColumnIsCheckboxOrExpander && this.isFirstColumn();
+                && this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
         }
     }
 
@@ -311,6 +304,12 @@ export default class GridColumn<T> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
+        // TODO нужно разобраться почему есть такой же отступ в _getContentPaddingClasses,
+        //  судя по тригрид все отступы должны быть во wrapper
+        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
+            classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme}`;
+        }
+
         /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
             const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
 
@@ -341,10 +340,7 @@ export default class GridColumn<T> extends mixin<
         // left <-> right
         const cellPadding = this._$column.cellPadding;
 
-        const firstColumn = this._$owner.getColumns()[0];
-        const firstColumnIsCheckboxOrExpander = firstColumn['[Controls/_display/ExpanderColumn]']
-            || firstColumn['[Controls/_display/GridCheckboxColumn]'];
-        if (firstColumnIsCheckboxOrExpander && this.isFirstColumn()) {
+        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
         } else if (!this.isFirstColumn()) {
             classes += ' controls-Grid__cell_spacingLeft';
