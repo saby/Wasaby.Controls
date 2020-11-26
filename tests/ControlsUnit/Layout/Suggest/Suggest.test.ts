@@ -1383,6 +1383,20 @@ describe('Controls/suggest', () => {
          assert.strictEqual(suggestComponent._filter.testSearchParam, '');
       });
 
+      it('changeValueHandler without suggestTemplate', async () => {
+         let searchResolved = false;
+         const suggestComponent = getComponentObject({});
+
+         suggestComponent._resolveSearch = () => {
+            searchResolved = true;
+            return Promise.resolve();
+         };
+         suggestComponent._options.suggestTemplate = null;
+
+         suggestComponent._changeValueHandler({}, '');
+         assert.isFalse(searchResolved);
+      });
+
       describe('_beforeUnmount', () => {
 
          it('_beforeUnmount while load dependencies', () => {
