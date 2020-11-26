@@ -250,16 +250,15 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.deepEqual(
                 {
                     begin: 'visible',
-                    end: 'visible',
+                    end: 'hidden',
                     next: 'visible',
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
-            assert.isFalse(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 600});
             assert.deepEqual({
                 begin: 'visible',
-                end: 'readonly',
+                end: 'hidden',
                 next: 'readonly',
                 prev: 'visible'
             }, baseControl._pagingCfg.arrowState);
@@ -296,7 +295,6 @@ describe('Controls/list_clean/BaseControl', () => {
                     next: 'visible',
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
         });
 
         it('paging mode is edge', async () => {
@@ -329,7 +327,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
@@ -370,7 +367,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
@@ -497,7 +493,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             assert.equal(baseControl._currentPage, 1);
             expectedScrollTop = 400;

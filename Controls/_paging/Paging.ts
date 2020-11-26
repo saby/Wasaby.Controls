@@ -22,7 +22,6 @@ export interface IPagingOptions extends IControlOptions {
     elementsCount?: number;
     arrowState: IArrowState;
     pagingMode: TNavigationPagingMode;
-    showEndButton?: boolean;
 }
 
 /**
@@ -229,9 +228,4 @@ export default Paging;
 /**
  * @name Controls/_paging/Paging#elementsCount
  * @cfg {Number} Опция управляет возможностью показа количества элементов, если их количество больше 0.
- */
-
-/**
- * @name Controls/_paging/Paging#showEndButton
- * @cfg {Boolean} Опция управляет возможностью показа/скрытия кнопки в конец.
  */

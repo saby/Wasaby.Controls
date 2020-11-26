@@ -44,7 +44,6 @@
     <Controls.paging:Paging
         attr:class="controls-BaseControl__footerPaging_theme-{{_options.theme}}"
         showDigits = "{{!_options.navigation.sourceConfig.hasMore}}"
-        showEndButton="{{_options.navigation.viewConfig.showEndButton}}"
         pagesCount = "{{_knownPagesCount}}"
         selectedPage = "{{_currentPage}}"
         on:selectedPageChanged="__pagingChangePage()" />
@@ -225,7 +224,6 @@
                         attr:class="controls-BaseControl__scrollPaging_theme-{{_options.theme}}"
                         contrastBackground="{{true}}"
                         pagingMode="{{_options.navigation.viewConfig.pagingMode}}"
-                        showEndButton="{{_options.navigation.viewConfig.showEndButton || _pagingCfg.showEndButton}}"
                         scope="{{_pagingCfg}}"
                         contentTemplate="{{_options.pagingContentTemplate}}"
                         on:onArrowClick="__onPagingArrowClick()"

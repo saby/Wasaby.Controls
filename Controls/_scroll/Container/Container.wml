@@ -61,7 +61,6 @@
                 <ws:partial template="{{content.resolvedTemplate}}"
                             class="controls-Scroll__paging"
                             pagingMode="{{_paging.pagingMode}}"
-                            showEndButton="{{_paging.showEndButton}}"
                             contrastBackground="{{true}}"
                             arrowState="{{_paging.arrowState}}"
                             on:onArrowClick="_arrowClickHandler()"/>

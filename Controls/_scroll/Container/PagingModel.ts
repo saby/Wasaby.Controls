@@ -19,7 +19,6 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
     private _isVisible: boolean = false;
     private _position: SCROLL_POSITION;
     private _pagingMode: TPagingModeScroll = 'hidden';
-    private _showEndButton: boolean = false;
 
     update(scrollState: IScrollState): void {
         if (this._position !== scrollState.verticalPosition) {
@@ -29,28 +28,24 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
                     begin: 'readonly',
                     prev: 'readonly',
                     next: 'visible',
-                    end: 'visible'
+                    end: 'hidden'
                 };
             } else if (scrollState.verticalPosition === SCROLL_POSITION.END) {
                 this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
                     next: 'readonly',
-                    end: 'readonly'
+                    end: 'hidden'
                 };
             } else {
                 this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
                     next: 'visible',
-                    end: 'visible'
+                    end: 'hidden'
                 };
             }
-            if (this.pagingMode === 'numbers') {
-                this._arrowState.prev = 'hidden';
-                this._arrowState.next = 'hidden';
-                this._showEndButton = true;
-            }
+
             if (this._isVisible) {
                 this._nextVersion();
             }
@@ -71,32 +66,28 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
     get arrowState(): IArrowState {
         switch (this.pagingMode) {
             case 'edge':
-                this. _arrowState.prev = 'hidden';
-                this._arrowState.next = 'hidden';
-                if (this._arrowState.end === 'visible') {
+                if (this._arrowState.next === 'visible') {
                     this._arrowState.begin = 'hidden';
-                    this._showEndButton = true;
+                    this._arrowState.end = 'visible';
                 } else if (this._arrowState.begin === 'visible') {
                     this._arrowState.end = 'hidden';
                 }
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
                 break;
 
             case 'end':
-                this._arrowState.prev = 'hidden';
-                this._arrowState.next = 'hidden';
-                this._arrowState.begin = 'hidden';
-                if (this._arrowState.end === 'visible') {
-                    this._showEndButton = true;
+                if (this._arrowState.next === 'visible') {
+                    this._arrowState.end = 'visible';
                 } else {
                     this._arrowState.end = 'hidden';
                 }
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                this._arrowState.begin = 'hidden';
                 break;
         }
         return this._arrowState;
-    }
-
-    get showEndButton(): boolean {
-        return this._showEndButton;
     }
 
     set pagingMode(pagingMode: TPagingModeScroll): void {

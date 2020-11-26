@@ -2019,14 +2019,15 @@ define([
                   view: 'infinity',
                   source: 'page',
                   viewConfig: {
-                     pagingMode: 'direct'
+                     pagingMode: 'direct',
+                     showEndButton: true
                   },
                   sourceConfig: {
                      pageSize: 3,
                      page: 0,
                      hasMore: false
                   }
-               },
+               }
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
