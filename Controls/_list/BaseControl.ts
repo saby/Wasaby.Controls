@@ -2243,20 +2243,20 @@ const _private = {
     },
 
     isPagingNavigationVisible(self, hasMoreData) {
+        self._pagingCfg = {
+            arrowState: {
+                begin: 'visible',
+                prev: 'visible',
+                next: 'visible',
+                end: self._options.navigation?.viewConfig?.showEndButton ? 'visible' : 'hidden'
+            }
+        };
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
          */
         if (self._options.navigation && self._options.navigation.viewConfig &&
             self._options.navigation.viewConfig.totalInfo === 'extended') {
-            self._pagingCfg = {
-                arrowState: {
-                    begin: 'visible',
-                    prev: 'visible',
-                    next: 'visible',
-                    end: self._options.navigation.viewConfig.showEndButton ? 'visible' : 'hidden'
-                }
-            };
             return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
         }
 
