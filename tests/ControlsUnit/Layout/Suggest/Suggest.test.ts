@@ -230,6 +230,14 @@ describe('Controls/suggest', () => {
          assert.isTrue(!!inputContainer._shouldShowSuggest(result));
       });
 
+      it('_suggestDirectionChangedCallback', () => {
+         const inputController = getComponentObject();
+
+         inputController._suggestOpened = false;
+         inputController._suggestDirectionChangedCallback('up');
+         assert.isNull(inputController._suggestDirection);
+      });
+
       it('Suggest::_prepareFilter', () => {
          const inputContainer = getComponentObject();
          const resultFilter = {
