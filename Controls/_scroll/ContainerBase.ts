@@ -70,8 +70,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _afterMount(): void {
         if (!this._scrollModel) {
-            const scrollState = this._getFullStateFromDOM();
-            this._scrollModel = new ScrollModel(this._children.content, scrollState);
+            this._createScrollModel();
         }
         if (!this._resizeObserver.isResizeObserverSupported()) {
             RegisterUtil(this, 'controlResize', this._controlResizeHandler, { listenAll: true });
@@ -490,7 +489,15 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         return newState;
     }
 
+    private _createScrollModel(): void {
+        const scrollState = this._getFullStateFromDOM();
+        this._scrollModel = new ScrollModel(this._children.content, scrollState);
+    }
+
     _updateState(newState: IScrollState): boolean {
+        if (!this._scrollModel) {
+            this._createScrollModel();
+        }
         this._oldScrollState = this._scrollModel.clone();
         const isScrollStateUpdated = this._scrollModel.updateState(newState);
         return isScrollStateUpdated;
@@ -605,9 +612,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Списку нужны события canScroll и cantScroll в момент инициализации до того,
         // как у нас отработают обработчики и инициализируются состояние.
         if (!this._scrollModel) {
-            const scrollState = this._getFullStateFromDOM();
-            this._scrollModel = new ScrollModel(this._children.content, scrollState);
-            this._updateStateAndGenerateEvents(scrollState);
+            this._createScrollModel();
+            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
         }
         this._sendByListScrollRegistrarToComponent(
             component,
