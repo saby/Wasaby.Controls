@@ -41,6 +41,7 @@ var
                  nodeProperty: cfg.nodeProperty,
                  collapsedGroups: cfg.collapsedGroups,
                  groupProperty: cfg.groupProperty,
+                 dedicatedItemProperty: cfg.dedicatedItemProperty,
                  theme: cfg.theme,
                  loadedProperty: '!' + cfg.parentProperty + '$',
                  // todo to support merge strategy replace this code on "unique: cfg.loadItemsStrategy === 'merge'".
