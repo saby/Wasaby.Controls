@@ -24,11 +24,12 @@
 import {Controller as SourceController} from 'Controls/source';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {RecordSet} from 'Types/collection';
-import {SbisService} from 'Types/source';
+import {ICrud, PrefetchProxy} from 'Types/source';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
 import {IFilterItem} from 'Controls/filter';
+import {INavigationOptionValue} from 'Controls/interface';
 
 interface IHistoryItems {
    items: IFilterItem[];
@@ -53,10 +54,10 @@ export interface IRequestDataResult {
 }
 
 export interface ISourceConfig {
-   source: SbisService;
-   filterButtonSource?: object[];
+   source: ICrud | PrefetchProxy;
+   filterButtonSource?: IFilterItem[];
    fastFilterSource?: object[];
-   navigation?: object;
+   navigation?: INavigationOptionValue<unknown>;
    historyId?: string;
    groupHistoryId?: string;
    filter?: FilterObject;
@@ -85,9 +86,13 @@ export default function requestDataUtil(cfg: ISourceConfig): Promise<IRequestDat
    if (cfg.historyId && cfg.filterHistoryLoader instanceof Function) {
       filterPromise = cfg.filterHistoryLoader(cfg.filterButtonSource, cfg.historyId);
    } else if (cfg.historyId && cfg.filterButtonSource && cfg.filter) {
-      filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
-         return filterLib.Controller.getCalculatedFilter(cfg);
-      });
+      if (requirejs.defined('Controls/filter')) {
+         filterPromise = requirejs('Controls/filter').Controller.getCalculatedFilter(cfg);
+      } else {
+         filterPromise = import('Controls/filter').then((filterLib): Promise<IFilter> => {
+            return filterLib.Controller.getCalculatedFilter(cfg);
+         });
+      }
       filterPromise = wrapTimeout(filterPromise, HISTORY_FILTER_TIMEOUT).catch(() => {
          Logger.info('Controls.dataSource:requestDataUtil: Данные фильтрации не загрузились за 1 секунду');
       });
