@@ -5,21 +5,13 @@ import {IItemAction} from 'Controls/itemActions';
 import {Enum, RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
+import {getEditingObject} from 'Controls-demo/PropertyGridNew/resources/Data';
 import * as CaptionTemplate from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/CaptionTemplate';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: Model = new Model<IPropertyGridItem>({
-        rawData: {
-            tileView: true,
-            showBackgroundImage: true,
-            siteUrl: 'http://mysite.com',
-            videoSource: 'http://youtube.com/video',
-            backgroundType: new Enum({
-                dictionary: ['Фоновое изображение', 'Заливка цветом'],
-                index: 0
-            })
-        }
+        rawData: getEditingObject()
     });
     protected _source: RecordSet = new RecordSet<IPropertyGridItem>({
         rawData: [

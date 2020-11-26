@@ -1,12 +1,12 @@
 define([
-   'Controls/_propertyGrid/PropertyGrid',
+   'Controls/propertyGrid',
    'Controls/_propertyGrid/Constants',
    'Controls/display',
    'Types/entity',
    'Types/collection',
    'Controls/itemActions'
 ], function(
-   PropertyGrid,
+   propertyGridLib,
    Constants,
    display,
    entity,
@@ -14,7 +14,7 @@ define([
    itemActions
 ) {
     describe('Controls/_propertyGrid/PropertyGrid', () => {
-        const ViewInstance = new PropertyGrid.default();
+        const ViewInstance = new propertyGridLib.PropertyGrid();
         let source, editingObject, editors;
         beforeEach(() => {
             source = [
@@ -52,15 +52,6 @@ define([
                 const items = itemsRS.getRawData();
                 const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
                 assert.isTrue(propertyValueMerged);
-            });
-
-            it('returns editor templates by value type', () => {
-                const itemsRS = ViewInstance._getPropertyGridItems(source, editingObject);
-                let result = false;
-                itemsRS.each((item) => {
-                    result = item.get('editorTemplateName') === editors[item.get('name')];
-                });
-                assert.isTrue(result);
             });
         });
 
@@ -149,7 +140,7 @@ define([
          it('_onItemActionsMenuResult', () => {
             let isApplyAction = false;
             let isClosed = false;
-            const propertyGrid = new PropertyGrid.default({});
+            const propertyGrid = new propertyGridLib.PropertyGrid({});
             propertyGrid._itemActionsController = {
                getActiveItem: () => ({
                   getContents: () => {}
@@ -171,7 +162,7 @@ define([
          it('_openItemActionMenu', () => {
             let isOpened = false;
             let actualConfig;
-            const propertyGrid = new PropertyGrid.default({});
+            const propertyGrid = new propertyGridLib.PropertyGrid({});
             propertyGrid._itemActionsController = {
                prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
                setActiveItem: () => {}
