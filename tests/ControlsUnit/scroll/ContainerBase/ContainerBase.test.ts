@@ -539,7 +539,6 @@ describe('Controls/scroll:ContainerBase', () => {
           control._afterMount();
 
          sinon.stub(control._registrars.listScroll, 'startOnceTarget');
-         assert.isFalse(control._isStateInitialized);
          control._onRegisterNewListScrollComponent(registeredControl);
          sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'cantScroll');
          sinon.assert.calledWith(control._registrars.listScroll.startOnceTarget, registeredControl, 'viewportResize');
