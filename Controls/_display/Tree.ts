@@ -109,6 +109,10 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @param {TreeItem<T>} item
  */
 function itemIsVisible<T>(item: TreeItem<T>): boolean  {
+    if (!item.isParent) {
+        return true;
+    }
+
     const parent = item.getParent();
     // корневой узел не может быть свернут
     if (!parent || parent.isRoot()) {

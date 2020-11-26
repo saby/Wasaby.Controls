@@ -228,7 +228,8 @@ define([
             },
             isRoot: function() {
                return false;
-            }
+            },
+            isExpanded: () => false
          });
          assert.isFalse(isSourceControllerUsed);
          assert.isFalse(nodeLoadCallbackCalled);
@@ -243,7 +244,8 @@ define([
             },
             isRoot: function() {
                return false;
-            }
+            },
+            isExpanded: () => false
          });
          assert.isTrue(isSourceControllerUsed);
          assert.isTrue(nodeLoadCallbackCalled);
@@ -458,7 +460,8 @@ define([
                },
                isRoot: function() {
                   return false;
-               }
+               },
+               isExpanded: () => false
             };
 
          let
@@ -1342,7 +1345,7 @@ define([
             treeControl1.toggleExpanded(1);
             treeControl1._beforeUpdate(_cfg);
             setTimeout(()=>{
-               assert.deepEqual([], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
+               assert.deepEqual([1], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
                done();
             }, 10);
          });

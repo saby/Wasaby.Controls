@@ -90,6 +90,10 @@ export default class TreeItem<T> extends mixin<
         super(options);
         ExpandableMixin.call(this);
 
+        if (this._$node === undefined) {
+            this._$node = false;
+        }
+
         if (this._$node) {
             this._$hasChildren = true;
         }
