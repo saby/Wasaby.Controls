@@ -125,28 +125,31 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         editingObject: Record<string, any> | Model
     ): RecordSet<Model> {
         const itemsWithPropertyValue = [];
+        items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
+            const sourceItem = object.clone(item);
+            const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
+            const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
+            defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
+
+            factory(sourceItem).each((key: string, value: unknown) => {
+                defaultItem[key] = value;
+            });
+
+            itemsWithPropertyValue.push({
+                ...defaultItem,
+                ...(sourceItem instanceof Model ? {} : sourceItem)
+            });
+        });
+
         if (items instanceof RecordSet) {
-            items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
-                const sourceItem = object.clone(item);
-                const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
-                const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
-                defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
-
-                factory(sourceItem).each((key: string, value: unknown) => {
-                    defaultItem[key] = value;
-                });
-
-                itemsWithPropertyValue.push({
-                    ...defaultItem,
-                    ...(sourceItem instanceof Model ? {} : sourceItem)
-                });
-            });
-            return new RecordSet({
-                rawData: itemsWithPropertyValue,
-                keyProperty: PROPERTY_NAME_FIELD
-            });
+            items.setRawData(itemsWithPropertyValue);
+            return items;
         }
-        return items;
+
+        return new RecordSet({
+            rawData: itemsWithPropertyValue,
+            keyProperty: PROPERTY_NAME_FIELD
+        });
     }
 
     protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
