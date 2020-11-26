@@ -2,19 +2,58 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/Index';
 import {showType} from 'Controls/Utils/Toolbar';
 import {IItemAction} from 'Controls/itemActions';
-import { RecordSet } from 'Types/collection';
+import {Enum, RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
-import {getEditingObject, getSource} from '../resources/Data';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
-import 'wml!Controls-demo/PropertyGridNew/ItemActions/ItemTemplate';
+import * as CaptionTemplate from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/CaptionTemplate';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: Model = new Model<IPropertyGridItem>({
-        rawData: getEditingObject()
+        rawData: {
+            tileView: true,
+            showBackgroundImage: true,
+            siteUrl: 'http://mysite.com',
+            videoSource: 'http://youtube.com/video',
+            backgroundType: new Enum({
+                dictionary: ['Фоновое изображение', 'Заливка цветом'],
+                index: 0
+            })
+        }
     });
     protected _source: RecordSet = new RecordSet<IPropertyGridItem>({
-        rawData: getSource(),
+        rawData: [
+            {
+                name: 'tileView',
+                caption: 'Список плиткой',
+                group: 'boolean',
+                captionTemplate: CaptionTemplate
+            },
+            {
+                name: 'showBackgroundImage',
+                caption: 'Показывать изображение',
+                group: 'boolean',
+                captionTemplate: CaptionTemplate
+            },
+            {
+                caption: 'URL',
+                name: 'siteUrl',
+                group: 'string',
+                captionTemplate: CaptionTemplate
+            },
+            {
+                caption: 'Источник видео',
+                name: 'videoSource',
+                group: 'string',
+                captionTemplate: CaptionTemplate
+            },
+            {
+                caption: 'Тип фона',
+                name: 'backgroundType',
+                group: 'enum',
+                editorClass: 'controls-demo-pg-enum-editor',
+                captionTemplate: CaptionTemplate
+            }],
         keyProperty: 'name'
     });
     protected _itemActions: IItemAction[];
@@ -23,22 +62,11 @@ export default class Demo extends Control<IControlOptions> {
         const source = this._source;
         this._itemActions = [
             {
-                id: 1,
-                icon: 'icon-Erase',
-                iconStyle: 'danger',
-                showType: showType.MENU,
-                title: 'Удалить',
-                handler: (item: Model) => {
-                    const key = item.getKey();
-                    source.remove(source.getRecordById(key));
-                }
-            },
-            {
                 id: 2,
                 icon: 'icon-ArrowUp',
                 iconStyle: 'secondary',
                 showType: showType.MENU,
-                title: 'Вверх',
+                title: 'Переместить вверх',
                 handler: (item: Model) => {
                     const sourceItemIndex = this._getSourceItemIndex(source, item);
                     source.move(sourceItemIndex, sourceItemIndex - 1);
@@ -49,10 +77,21 @@ export default class Demo extends Control<IControlOptions> {
                 icon: 'icon-ArrowDown',
                 iconStyle: 'secondary',
                 showType: showType.MENU,
-                title: 'Вниз',
+                title: 'Переместить вниз',
                 handler: (item: Model) => {
                     const sourceItemIndex = this._getSourceItemIndex(source, item);
                     source.move(sourceItemIndex, sourceItemIndex + 1);
+                }
+            },
+            {
+                id: 1,
+                icon: 'icon-Erase',
+                iconStyle: 'danger',
+                showType: showType.MENU,
+                title: 'Удалить',
+                handler: (item: Model) => {
+                    const key = item.getKey();
+                    source.remove(source.getRecordById(key));
                 }
             }
         ];
