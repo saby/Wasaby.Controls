@@ -66,4 +66,11 @@ export default class ListCut extends Control<IListCutOptions> implements IExpand
       this._notify('expandedChanged', [expanded]);
    }
 
+   static _theme: string[] = ['Controls/Classes', 'Controls/spoiler'];
+
+   static getDefaultOptions(): object {
+      return {
+         iconSize: 'm'
+      };
+   }
 }
