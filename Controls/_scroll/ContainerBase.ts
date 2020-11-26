@@ -2,7 +2,7 @@ import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import {detection} from 'Env/Env';
 import {Bus} from 'Env/Event';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {RegisterClass, RegisterUtil, Registrar, UnregisterUtil} from 'Controls/event';
+import {RegisterClass, RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import {canScrollByState, getContentSizeByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from './Utils/Scroll';
@@ -68,6 +68,11 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
         // Регистрар не из watcher а лежал на уровне самомго скролл контейнера. Дублирует подобное событие для списков.
         // Используется как минимум в попапах.
         this._registrars.scroll = new RegisterClass({register: 'scroll'});
+
+        // Не восстанавливаем скролл на то место, на котором он был перед релоадом страницы
+        if (window && window.history && 'scrollRestoration' in window.history) {
+           window.history.scrollRestoration = 'manual';
+        }
     }
 
     _afterMount(): void {

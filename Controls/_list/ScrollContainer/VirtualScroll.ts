@@ -368,8 +368,10 @@ export default class VirtualScroll {
      * @param itemsHeights
      */
     updateItemsHeights(itemsHeights: IItemsHeights): void {
-        this._updateItemsHeights(itemsHeights);
-        this.rangeChanged = false;
+        if (itemsHeights.itemsHeights.length === this._range.stop - this._range.start) {
+            this._updateItemsHeights(itemsHeights);
+            this.rangeChanged = false;
+        }
     }
 
     /**

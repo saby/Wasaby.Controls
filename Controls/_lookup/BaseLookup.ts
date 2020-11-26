@@ -85,7 +85,7 @@ export default abstract class
     }
 
     protected _showSelector(event: SyntheticEvent, popupOptions?: IStackPopupOptions): void|boolean {
-        if (this._notify('showSelector') !== false) {
+        if (this._notify('showSelector', [event]) !== false) {
             return this.showSelector(popupOptions);
         }
 

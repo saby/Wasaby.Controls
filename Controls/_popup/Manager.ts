@@ -2,7 +2,8 @@ import {Control, IControlOptions} from 'UI/Base';
 import Popup from 'Controls/_popup/Manager/Popup';
 import Container from 'Controls/_popup/Manager/Container';
 import ManagerController from 'Controls/_popup/Manager/ManagerController';
-import {Logger, Library} from 'UI/Utils';
+import {Logger} from 'UI/Utils';
+import * as Library from 'WasabyLoader/Library';
 import {IPopupItem, IPopupOptions, IPopupController, IPopupItemInfo} from 'Controls/_popup/interface/IPopup';
 import {getModuleByName} from 'Controls/_popup/utils/moduleHelper';
 import {goUpByControlTree} from 'UI/Focus';
@@ -131,7 +132,13 @@ class Manager {
         const defaultConfigResult: null | Promise<void> = controller.getDefaultConfig(item);
         if (defaultConfigResult instanceof Promise) {
             defaultConfigResult.then(() => {
-                this._addElement(item);
+                // Если за время выполнения промиса еще раз позвали открытие, то не нужно второй раз создавать окно
+                // нужно обновить уже существующее. иначе упадет синхронизатор, т.к. у окна задублируются ключи
+                if (this.find(options.id)) {
+                    this.update(options.id, options);
+                } else {
+                    this._addElement(item);
+                }
                 this._redrawItems();
             });
         } else {

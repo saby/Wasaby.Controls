@@ -130,18 +130,18 @@ export interface IEditOpener {
  */
 
 /**
- * @typedef {Object} additionalData
- * @property {Boolean} isNewRecord Flag that determines what record is it.
- * @property {String} key Key of record
+ * @typedef {Object} Controls/_popup/interface/IEditOptions/AdditionalData
+ * @property {Boolean} isNewRecord Принимает значение true, когда редактируемая запись отсутствует в источнике данных.
+ * @property {String} key Идентификатор редактируемой записи.
  */
 
 /**
- * @event The event is called before the synchronization with the recordset.
+ * @event Происходит перед синхронизацией с recordset.
  * @name Controls/_popup/interface/IEditOptions#beforeItemEndEdit
- * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
- * @param {String} formControllerEvent Name of event from formController(update, create, delete)
- * @param {Object} record Data from formController
- * @param {additionalData} additionalData Additional data from formController
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} formControllerEvent Действие над записью, которое выполняется через formController: обновление существующей записи("update"), создание новой записи ("create") или удаление записи ("delete").
+ * @param {Object} record Редактируемая записи.
+ * @param {Controls/_popup/interface/IEditOptions/AdditionalData.typedef} additionalData Дополнительные данные, переданные из formController.
  */
 
 /**

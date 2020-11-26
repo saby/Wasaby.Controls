@@ -725,6 +725,30 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
             // <--
             describe('left swipe', () => {
+               let isNode;
+               before(() => {
+                  isNode = typeof document === 'undefined';
+                  if (isNode) {
+                     global.document = {
+                        body: {
+                           appendChild: () => {},
+                           removeChild: () => {}
+                        },
+                        createElement: () => {}
+                     };
+                     global.window = {
+                        getComputedStyle: () => {}
+                     };
+                  }
+               });
+
+               after(() => {
+                  if (isNode) {
+                     global.document = undefined;
+                     global.window = undefined;
+                  }
+               });
+
                it('on fixed area', () => {
                   gridView._startDragScrolling(createTouchStartEvent([30]), 'touch');
                   gridView._onItemSwipe(createSwipeEvent('left', true));
@@ -867,54 +891,6 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                    `Wrong column scroll visibility with params[${index}]: {hasItemsRecordSet: ${params[0]}, itemsCount: ${params[1]}, needScrollBySize: ${params[2]}, hasEditing: ${params[3]}, headerInEmptyListVisible: ${params[4]}.}`
                );
             });
-         });
-
-         it('update column scroll shadow classes should not leads to forceUpdate (const classes object)', () => {
-            gridView.saveOptions(cfg);
-            gridView._afterMount();
-
-            const oldClasses = gridView._columnScrollShadowClasses;
-            assert.equal(
-                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow_without-bottom-padding_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default controls-ColumnScroll__shadow_invisible',
-                oldClasses.start
-            );
-            assert.equal(
-                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow_without-bottom-padding_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
-                oldClasses.end
-            );
-            gridView._columnScrollController._shadowState.start = true;
-            gridView._updateColumnScrollShadowClasses();
-
-            const newClasses = gridView._columnScrollShadowClasses;
-            assert.equal(
-                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow_without-bottom-padding_theme-default controls-ColumnScroll__shadow-start_theme-default controls-horizontal-gradient-default_theme-default',
-                newClasses.start
-            );
-            assert.equal(
-                'controls-ColumnScroll__shadow_theme-default controls-ColumnScroll__shadow_without-bottom-padding_theme-default controls-ColumnScroll__shadow-end_theme-default controls-horizontal-gradient-default_theme-default',
-                newClasses.end
-            );
-
-            assert.notEqual(oldClasses, newClasses);
-         });
-
-         it('update column scroll shadow styles should leads to forceUpdate', () => {
-            gridView.saveOptions(cfg);
-            gridView._afterMount();
-
-            const oldStyles = gridView._columnScrollShadowStyles;
-
-            assert.equal('', oldStyles.start);
-            assert.equal('', oldStyles.end);
-
-            gridView._columnScrollController._shadowState.start = true;
-            gridView._updateColumnScrollShadowStyles();
-
-            const newStyles = gridView._columnScrollShadowStyles;
-            assert.equal('left: 0px;', newStyles.start);
-            assert.equal('', newStyles.end);
-
-            assert.notEqual(oldStyles, newStyles);
          });
 
          it('should call drag scroll methods only if column scroll enabled', () => {

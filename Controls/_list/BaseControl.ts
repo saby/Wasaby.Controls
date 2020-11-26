@@ -865,6 +865,7 @@ const _private = {
                 self._listViewModel.prependItems(addedItems);
             }
             afterAddItems(countCurrentItems, addedItems);
+            self._needScrollToFirstItem = false;
             self._attachLoadTopTriggerToNull = false;
         };
 
@@ -1713,6 +1714,7 @@ const _private = {
             if (self._scrollController) {
                 if (action) {
                     const collectionStartIndex = self._listViewModel.getStartIndex();
+                    const collectionStopIndex = self._listViewModel.getStopIndex();
                     let result = null;
                     switch (action) {
                         case IObservable.ACTION_ADD:
@@ -1722,7 +1724,8 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' : 'down');
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
                         case IObservable.ACTION_MOVE:
@@ -2202,13 +2205,14 @@ const _private = {
     getSourceController(self, options): SourceController {
         return new SourceController({
             ...options,
-            navigationParamsChangedCallback: self._notifyNavigationParamsChanged
+            navigationParamsChangedCallback: self._notifyNavigationParamsChanged,
+            keyProperty: self._keyProperty
         });
     },
 
-    checkRequiredOptions(options) {
-        if (options.keyProperty === undefined) {
-            Logger.warn('BaseControl: Option "keyProperty" is required.');
+    checkRequiredOptions(self, options) {
+        if (!self._keyProperty) {
+            Logger.error('IList: Option "keyProperty" is required.');
         }
     },
 
@@ -2258,7 +2262,11 @@ const _private = {
 
     updatePagingDataByItemsChanged(self, newItems, removedItems) {
         const countDifferece = (newItems?.length) || (- (removedItems?.length)) || 0;
-        const itemsCount = self._pagingLabelData.totalItemsCount + countDifferece;
+        let totalItemsCount = 0;
+        if (self._pagingLabelData) {
+            totalItemsCount = self._pagingLabelData.totalItemsCount || 0;
+        }
+        const itemsCount = totalItemsCount + countDifferece;
         _private.updatePagingData(self, itemsCount);
     },
 
@@ -2367,7 +2375,7 @@ const _private = {
             ? self._listViewModel.getLast()?.getContents()
             : self._listViewModel.getLastItem();
 
-        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._options.keyProperty);
+        const lastItemKey = ItemsUtil.getPropertyValue(lastItem, self._keyProperty);
 
         self._wasScrollToEnd = true;
 
@@ -2380,13 +2388,13 @@ const _private = {
             self._scrollPagingCtr.shiftToEdge('down', hasMoreData);
         }
         if (self._jumpToEndOnDrawItems) {
-            
-            // Если для подскролла в конец делали reload, то индексы виртуального скролла 
+
+            // Если для подскролла в конец делали reload, то индексы виртуального скролла
             // поставили такие, что последниц элемент уже отображается, scrollToItem не нужен.
             self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
             _private.updateScrollPagingButtons(self, self._getScrollParams());
         } else {
-           
+
             // Последняя страница уже загружена но конец списка не обязательно отображается,
             // если включен виртуальный скролл. ScrollContainer учитывает это в scrollToItem
             _private.scrollToItem(self, lastItemKey, true, true).then(() => {
@@ -2397,7 +2405,7 @@ const _private = {
                 self._notify('doScroll', [self._scrollController?.calculateVirtualScrollHeight() || 'down'], { bubbling: true });
 
                 _private.updateScrollPagingButtons(self, self._getScrollParams());
-            }); 
+            });
         }
     },
 
@@ -3014,7 +3022,7 @@ const _private = {
                     template: options.moveDialogTemplate.templateName,
                     templateOptions: {
                         ...options.moveDialogTemplate.templateOptions,
-                        keyProperty: self._options.keyProperty
+                        keyProperty: self._keyProperty
                     } as IMoverDialogTemplateOptions
                 };
             } else {
@@ -3235,6 +3243,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Контроллер для удаления элементов из источника
     _removeController: null,
     _removedItems: [],
+    _keyProperty: null,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3256,12 +3265,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
 
         _private.checkDeprecated(newOptions);
-        _private.checkRequiredOptions(newOptions);
+        this._initKeyProperty(newOptions);
+        _private.checkRequiredOptions(this, newOptions);
 
         _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
-
         this._loadTriggerVisibility = {};
 
         if (newOptions.sourceController) {
@@ -3324,7 +3333,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
-        let viewModelConfig = {...newOptions};
+        let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
         if (self._sourceController) {
             if (receivedData) {
@@ -3416,7 +3425,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
                 const data = result.data || (new RecordSet<Model>({
-                    keyProperty: self._options.keyProperty,
+                    keyProperty: self._keyProperty,
                     rawData: []
                 }));
 
@@ -3472,6 +3481,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _initKeyProperty(options) {
+        let keyProperty = options.keyProperty;
+        if (keyProperty === undefined) {
+            if (options.source && options.source.getKeyProperty) {
+                keyProperty = options.source.getKeyProperty();
+            }
+        }
+        if (keyProperty !== undefined) {
+            this._keyProperty = keyProperty;
+        }
+    },
+
     scrollMoveSyncHandler(params: IScrollParams): void {
 
         _private.handleListScrollSync(this, params.scrollTop);
@@ -3503,6 +3524,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
+        }
+        if (this._pagingVisible && this._scrollPagingCtr) {
+            this._scrollPagingCtr.viewPortResize(viewportHeight);
+            _private.updateScrollPagingButtons(this, this._getScrollParams());
         }
         if (this._recalcPagingVisible) {
             if (!this._pagingVisible) {
@@ -3604,7 +3629,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _getScrollParams(): IScrollParams {
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this),
+            scrollHeight: _private.getViewSize(this, true),
             clientHeight: this._viewportSize
         };
         /**
@@ -3784,7 +3809,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.destroy();
             this._listViewModel = new newOptions.viewModelConstructor(cMerge({...newOptions}, {
                 items,
-                supportVirtualScroll: !!this._needScrollCalculation
+                supportVirtualScroll: !!this._needScrollCalculation,
+                keyProperty: this._keyProperty
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
@@ -3796,6 +3822,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
         } else {
+            if (!newOptions.useNewModel) {
+                this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
+            }
             this._updateScrollController(newOptions);
         }
 
@@ -3824,8 +3853,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
-        if (newOptions.keyProperty !== this._options.keyProperty) {
-            this._listViewModel.setKeyProperty(newOptions.keyProperty);
+        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
+            this._initKeyProperty(newOptions);
+            this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
@@ -4084,7 +4114,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
         const items = this._listViewModel.getCollection();
-        const currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        const currentItemIndex = items.getIndexByValue(this._keyProperty, key);
         const sourceController = _private.getSourceController(this, this._options);
 
         let reloadItemDeferred;
@@ -4114,7 +4144,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (reloadType === 'query') {
             filter = cClone(this._options.filter);
-            filter[this._options.keyProperty] = [key];
+            filter[this._keyProperty] = [key];
             sourceController.setFilter(filter);
             reloadItemDeferred = sourceController.load().then((items) => {
                 if (items instanceof RecordSet) {
