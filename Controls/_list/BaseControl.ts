@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection, compatibility} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -1724,7 +1724,7 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
                                     : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
@@ -2870,7 +2870,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!compatibility.touch)
+            && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!self._context?.isTouch?.isTouch)
         ) {
             const key = item.getContents().getKey();
 
