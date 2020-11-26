@@ -3972,12 +3972,12 @@ define([
             assert.equal(args[1], 2);
          };
 
-         Env.compatibility.touch = 1;
+         self._context = { isTouch: { isTouch: true } };
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isFalse(notifyCalled, 'On touch device can\'t drag');
 
-         Env.compatibility.touch = 0;
+         self._context.isTouch.isTouch = false;
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
