@@ -52,6 +52,7 @@
         </ws:if>
         <ws:else>
             <ws:partial template="{{currentColumn.template}}"
+                        scope="{{currentColumn.column.templateOptions}}"
                         editArrowTemplate="{{editArrowTemplate}}"
                         itemActionsTemplate="{{itemActionsTemplate}}"
                         ladderWrapper="{{currentColumn.ladderWrapper}}"
