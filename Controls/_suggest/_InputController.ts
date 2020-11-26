@@ -313,9 +313,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
             this._pendingErrorConfig = errorConfig;
-            if (this._options.suggestTemplate) {
-               this._open();
-            }
+            this._open();
          });
       }
    }
@@ -703,8 +701,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
       this._loadDependencies(this._options);
-
-      return this._resolveSearch(value);
+      if (this._options.suggestTemplate) {
+         return this._resolveSearch(value);
+      }
+      return Promise.resolve();
    }
 
    private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {

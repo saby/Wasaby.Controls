@@ -362,17 +362,6 @@ describe('Controls/suggest', () => {
          assert.isFalse(inputContainer._loading);
       });
 
-      it('Suggest::_searchErrback without suggestTemplate', () => {
-         const inputContainer = getComponentObject();
-         let suggestOpened = false;
-         inputContainer._options.suggestTemplate = null;
-         inputContainer._open = () => {
-            suggestOpened = true;
-         };
-         inputContainer._searchErrback({canceled: false});
-         assert.isFalse(suggestOpened);
-      });
-
       it('Suggest::searchErrback', () => {
          const suggest = new _InputController({});
          suggest._loading = true;
@@ -1392,6 +1381,20 @@ describe('Controls/suggest', () => {
 
          suggestComponent._changeValueHandler({}, '');
          assert.strictEqual(suggestComponent._filter.testSearchParam, '');
+      });
+
+      it('changeValueHandler without suggestTemplate', async () => {
+         let searchResolved = false;
+         const suggestComponent = getComponentObject({});
+
+         suggestComponent._resolveSearch = () => {
+            searchResolved = true;
+            return Promise.resolve();
+         };
+         suggestComponent._options.suggestTemplate = null;
+
+         suggestComponent._changeValueHandler({}, '');
+         assert.isFalse(searchResolved);
       });
 
       describe('_beforeUnmount', () => {
