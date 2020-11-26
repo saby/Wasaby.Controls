@@ -2304,12 +2304,6 @@ const _private = {
             }
         }
         if (self._pagingNavigation) {
-            self._pagingCfg = {
-                arrowState: {
-
-                    end: 'hidden'
-                }
-            };
             _private.resetPagingNavigation(self, cfg.navigation);
             self._pageSizeSource = new Memory({
                 keyProperty: 'id',
