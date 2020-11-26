@@ -1726,7 +1726,7 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
                                     : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
@@ -5684,8 +5684,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
-        const itemActionsController = _private.getItemActionsController(this);
-        itemActionsController.updateItemActions(itemKey, itemWidth);
+        if (this._listViewModel.isActionsAssigned()) {
+            const itemActionsController = _private.getItemActionsController(this);
+            itemActionsController.updateItemActions(itemKey, itemWidth);
+        }
     },
 
     /**
