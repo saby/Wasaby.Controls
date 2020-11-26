@@ -42,8 +42,3 @@ export function prepareFilterCollapsedGroups(collapsedGroups: TArrayGroupId, fil
     }
     return filter;
 }
-
-const groupConstants = {
-    hiddenGroup: 'CONTROLS_HIDDEN_GROUP'
-};
-export {groupConstants};
