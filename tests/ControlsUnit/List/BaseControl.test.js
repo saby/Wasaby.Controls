@@ -3511,14 +3511,6 @@ define([
             afterEach(() => {
                sandbox.restore();
             });
-            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
-               await ctrl._beforeMount(cfg);
-               ctrl._isMounted = true;
-               ctrl._listViewModel._startIndex = 2;
-               await ctrl.beginAdd({}).then(() => {
-                  assert.isTrue(scrollToItemCalled);
-               });
-            });
             it('scrollToItem not called on beginAdd if adding item is in range', async () => {
                await ctrl._beforeMount(cfg);
                ctrl._isMounted = true;
