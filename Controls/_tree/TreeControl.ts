@@ -682,8 +682,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._mouseDownExpanderKey = key;
         }
     },
-    _onExpanderMouseUp: function(e, key, dispItem) {
+    _onExpanderMouseUp: function(e, key, itemData) {
         if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
+            const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             _private.toggleExpanded(this, dispItem);
             if (this._options.markItemByExpanderClick) {
                 this.setMarkedKey(key);
