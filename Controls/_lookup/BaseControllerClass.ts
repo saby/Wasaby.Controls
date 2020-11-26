@@ -39,8 +39,13 @@ export default class LookupBaseControllerClass {
         let keysChanged;
 
         if (hasSelectedKeysInOptions) {
-            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) ||
-                          !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+            if (newOptions.task1180631048) {
+                keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
+                              !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+            } else {
+                keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) ||
+                              !isEqual(newOptions.selectedKeys, this.getSelectedKeys());
+            }
         }
 
         const sourceIsChanged = newOptions.source !== this._options.source;
