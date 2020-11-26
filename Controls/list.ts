@@ -212,7 +212,7 @@ const editing = {
     CANCEL: 'Cancel'
 };
 
-import {groupConstants} from './_list/Controllers/Grouping';
+import {groupConstants} from './display';
 import {CursorDirection} from './_interface/INavigation';
 
 export {CursorDirection, groupConstants, editing};
