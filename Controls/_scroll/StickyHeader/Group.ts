@@ -52,6 +52,8 @@ interface IStickyHeaderGroupOptions extends IControlOptions {
  */
 export default class Group extends Control<IStickyHeaderGroupOptions> {
     private _index: number = null;
+    // Похоже что не используется, переделали на другой механизм.
+    // https://online.sbis.ru/opendoc.html?guid=08a36766-8ac6-4884-bd3b-c28514c9574c
     private _updateFixedRegister: RegisterClass = new RegisterClass({register: 'updateFixed'});
     protected _template: TemplateFunction = template;
     protected _isStickySupport: boolean = false;
@@ -74,6 +76,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     protected _isRegistry: boolean = false;
 
     private _delayedHeaders: number[] = [];
+
+    // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
+    // До этого не синхронизируем дом дерево при изменении состояния.
+    private _initialized: boolean = false;
 
     protected _beforeMount(options: IControlOptions, context): void {
         this._isStickySupport = isStickySupport();
@@ -134,20 +140,39 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     private _setOffset(value: number, position: POSITION): void {
-        for (let id in this._headers) {
-            const positionValue: number = this._headers[id][position] + value;
-            this._headers[id].inst[position] = positionValue;
-        }
+
         this._offset[position] = value;
+
+        if (this._initialized || !this._options.calculateHeadersOffsets) {
+            for (let id in this._headers) {
+                const positionValue: number = this._headers[id][position] + value;
+                this._headers[id].inst[position] = positionValue;
+            }
+        }
+
+        if (!this._initialized) {
+            this._initialized = true;
+            if (this._delayedHeaders.length && this._options.calculateHeadersOffsets) {
+                Promise.resolve().then(this._updateTopBottomDelayed.bind(this));
+            }
+        }
+
     }
 
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
         if (!fixedHeaderData.isFakeFixed) {
             if (!!fixedHeaderData.fixedPosition) {
-                this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
-                if (this._isFixed === true) {
-                    this._updateFixedRegister.start(event, this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
+                const headersIds: number[] = this._stickyHeadersIds[fixedHeaderData.fixedPosition]
+                headersIds.push(fixedHeaderData.id);
+                // Если это не первый заголовок в группе, то группа уже знает надо ли отображить тень,
+                // сообщим это заголовку.
+                if (headersIds.length > 1) {
+                    if (this._isFixed) {
+                        this._headers[fixedHeaderData.id].inst.updateFixed([fixedHeaderData.id]);
+                    } else {
+                        this._headers[fixedHeaderData.id].inst.updateFixed([]);
+                    }
                 }
             } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
                 this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
@@ -156,7 +181,11 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
         if (!!fixedHeaderData.fixedPosition && !this._fixed) {
             if (!fixedHeaderData.isFakeFixed) {
+                // Эти 2 поля означают одно и то же но со нюансами. _isFixed когда то назывался _shadowVisible.
+                // Свести к одному полю, либо дать адекватные названия.
+                // https://online.sbis.ru/opendoc.html?guid=08a36766-8ac6-4884-bd3b-c28514c9574c
                 this._fixed = true;
+                this._isFixed = true;
             }
             this._notifyFixed(fixedHeaderData);
         } else if (!fixedHeaderData.fixedPosition && this._fixed &&
@@ -245,7 +274,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         // Это приводит к layout. И так для каждой ячейки для заголвков в таблице. Создадим список всех заголовков
         // которые надо обсчитать в этом синхронном участке кода и обсчитаем их за раз в микротаске,
         // один раз сняв со всех загоовков position: sticky.
-        if (!this._delayedHeaders.length) {
+        if (this._initialized && !this._delayedHeaders.length) {
             Promise.resolve().then(this._updateTopBottomDelayed.bind(this));
         }
         this._delayedHeaders.push(data.id);

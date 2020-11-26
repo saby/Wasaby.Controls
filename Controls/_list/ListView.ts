@@ -57,10 +57,18 @@ var ListView = BaseControl.extend(
         constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             this._debouncedSetHoveredItem = cDebounce(_private.setHoveredItem, DEBOUNCE_HOVERED_ITEM_CHANGED);
-            this._onListChangeFnc = (event, changesType, action, newItems) => {
+           // TODO при полном переходе на новую модель нужно переписать, уберется параметр changesType
+           this._onListChangeFnc = (event, changesType, action, newItems) => {
                // todo refactor by task https://online.sbis.ru/opendoc.html?guid=80fbcf1f-5804-4234-b635-a3c1fc8ccc73
                // Из новой коллекции нотифается collectionChanged, в котором тип изменений указан в newItems.properties
-               const itemChangesType = newItems ? newItems.properties : null;
+               let itemChangesType;
+               if (this._options.useNewModel) {
+                  // В событии новой модели нет такого параметра как changesType, из-за этого в action лежит newItems
+                  itemChangesType = action ? action.properties : null;
+               } else {
+                  itemChangesType = newItems ? newItems.properties : null;
+               }
+
                if (changesType !== 'hoveredItemChanged' &&
                   changesType !== 'activeItemChanged' &&
                   changesType !== 'loadingPercentChanged' &&
@@ -213,6 +221,9 @@ var ListView = BaseControl.extend(
         },
 
         _onItemSwipe: function(event, itemData) {
+            if (event.nativeEvent.direction === 'left') {
+                this.activate();
+            }
             this._notify('itemSwipe', [itemData, event]);
             event.stopPropagation();
         },

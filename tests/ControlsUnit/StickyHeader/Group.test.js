@@ -38,6 +38,14 @@ define([
          const
             event = {stopImmediatePropagation: sinon.fake()};
 
+         // beforeEach(() => {
+         //    sinon.stub(Utils, 'getOffset').returns(0);
+         // });
+         //
+         // afterEach(() => {
+         //    sinon.restore();
+         // });
+
          it('should add fixed header to list of fixed headers', function() {
             const
                component = createComponent(scroll.Group, options),
@@ -82,6 +90,9 @@ define([
             component._fixedHandler(event,
                {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
+            assert.isTrue(component._isFixed);
+            assert.isTrue(component._fixed);
+
             sinon.assert.calledWith(
                component._notify,
                'fixed',
@@ -100,7 +111,8 @@ define([
 
          it('should not generate event on second header fixed', function() {
             const
-               component = createComponent(scroll.Group, options);
+               component = createComponent(scroll.Group, options),
+               headerId = scroll.getNextStickyId();
 
             component._fixedHandler(event,
                {
@@ -112,11 +124,15 @@ define([
                });
 
             sinon.stub(component, '_notify');
+            component._headers = {};
+            component._headers[headerId] = {
+              inst: { updateFixed: () => undefined }
+            };
             component._fixedHandler(event,
                {
                   fixedPosition: 'top',
                   prevPosition: '',
-                  id: scroll.getNextStickyId(),
+                  id: headerId,
                   mode: 'replaceable',
                   offsetHeight: 10
                });
@@ -166,6 +182,12 @@ define([
                   mode: 'replaceable',
                   offsetHeight: 10
                });
+
+            component._headers = {};
+            component._headers[headerId] = {
+              inst: { updateFixed: () => undefined }
+            };
+
             component._fixedHandler(event,
                {fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
@@ -174,6 +196,28 @@ define([
                {fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10});
 
             sinon.assert.notCalled(component._notify);
+            sinon.restore();
+         });
+
+         it('should update shadow state on second header fixed', function() {
+            const
+               component = createComponent(scroll.Group, options),
+               firstHeaderId = scroll.getNextStickyId(),
+               secondHeaderId = scroll.getNextStickyId(),
+               updateFixed = sinon.fake();
+
+            component._headers = {};
+            component._headers[secondHeaderId] = {
+              inst: { updateFixed: updateFixed }
+            };
+
+            component._fixedHandler(event,
+               {fixedPosition: 'top', prevPosition: '', id: firstHeaderId, mode: 'replaceable', offsetHeight: 10});
+
+            component._fixedHandler(event,
+               {fixedPosition: 'top', prevPosition: '', id: secondHeaderId, mode: 'replaceable', offsetHeight: 10});
+
+            sinon.assert.called(updateFixed);
             sinon.restore();
          });
       });
@@ -203,7 +247,7 @@ define([
       });
 
       describe('set top', function() {
-         it('should update top on internal headers', function() {
+         it('should\'t update top on internal headers if headers does not initialized', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
                inst: {
@@ -212,11 +256,34 @@ define([
                top: 0
             };
             component.top = 20;
+            assert.strictEqual(component._headers[0].inst.top, 0);
+         });
+         it('should update top on internal headers', function() {
+            const component = createComponent(scroll.Group, {});
+            component._headers[0] = {
+               inst: {
+                  top: 0
+               },
+               top: 0
+            };
+            component._initialized = true;
+            component.top = 20;
             assert.strictEqual(component._headers[0].inst.top, 20);
          });
       });
 
       describe('set bottom', function() {
+         it('should\'t update top on internal headers if headers does not initialized', function() {
+            const component = createComponent(scroll.Group, {});
+            component._headers[0] = {
+               inst: {
+                  bottom: 0
+               },
+               bottom: 0
+            };
+            component.bottom = 20;
+            assert.strictEqual(component._headers[0].inst.bottom, 0);
+         });
          it('should update bottom on internal headers', function() {
             const component = createComponent(scroll.Group, {});
             component._headers[0] = {
@@ -225,6 +292,7 @@ define([
                },
                bottom: 0
             };
+            component._initialized = true;
             component.bottom = 20;
             assert.strictEqual(component._headers[0].inst.bottom, 20);
          });

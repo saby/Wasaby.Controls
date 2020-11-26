@@ -2,6 +2,12 @@ import { Collection, CollectionItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
 
+/**
+ * @typedef {String} Controls/_marker/interface/IMarkerListOptions/TVisibility
+ * @variant visible Маркер отображается всегда, даже если не задан идентификатор элемента в опции {@link markedKey}.
+ * @variant hidden Маркер всегда скрыт.
+ * @variant onactivated Макер отображается при активации списка, например при клике по элементу.
+ */
 export type TVisibility = 'visible' | 'hidden' | 'onactivated';
 export enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactivated'}
 
@@ -22,16 +28,11 @@ export interface IOptions extends IMarkerListOptions {
  * @author Панихин К.А.
  */
 export interface IMarkerListOptions {
-   /**
-    * @typedef {String} TVisibility
-    * @variant visible Маркер отображается всегда, даже если не задан идентификатор элемента в опции {@link markedKey}.
-    * @variant hidden Маркер всегда скрыт.
-    * @variant onactivated Макер отображается при активации списка, например при клике по элементу.
-    */
+
 
    /**
     * @name Controls/_marker/interface/IMarkerListOptions#markerVisibility
-    * @cfg {TVisibility} Режим отображения маркера активного элемента.
+    * @cfg {Controls/_marker/interface/IMarkerListOptions/TVisibility} Режим отображения маркера активного элемента.
     * @remark
     * В следующем примере маркер появляется только при активации списка.
     * @demo Controls-demo/list_new/Marker/OnActivated/Index
@@ -52,7 +53,7 @@ export interface IMarkerListOptions {
 
    /**
     * @name Controls/_marker/interface/IMarkerListOptions#markedKey
-    * @cfg {CrudEntityKey} Идентификатор элемента, который выделен маркером.
+    * @cfg {Types/source:CrudEntityKey} Идентификатор элемента, который выделен маркером.
     * @remark
     * Если сделан bind на эту опцию, но она передана изначально в значении undefined,
     * то установка маркера работает аналогично тому, как если бы bind не был задан (по внутреннему состоянию контрола).
@@ -68,7 +69,7 @@ export interface IMarkerListOptions {
    markedKey?: CrudEntityKey;
 
    /**
-    * @typedef {String} MarkerPosition
+    * @typedef {String} Controls/_marker/interface/IMarkerListOptions/MarkerPosition
     * @variat left Расположение маркера слева
     * @variat right Расположение маркера справа
     */
@@ -77,7 +78,7 @@ export interface IMarkerListOptions {
     * https://online.sbis.ru/opendoc.html?guid=b0bc13cd-986e-44fc-ab6a-93bcd0465ba1
     *
     * @name Controls/_marker/interface/IMarkerListOptions#markerPosition
-    * @cfg {MarkerPosition} Расположение маркера.
+    * @cfg {Controls/_marker/interface/IMarkerListOptions/MarkerPosition} Расположение маркера.
     * @default left
     * @private
     */

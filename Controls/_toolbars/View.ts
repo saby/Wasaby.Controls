@@ -362,10 +362,11 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     private _setStateByItems(items: TItems, source?: ICrudPlus): void {
         this._fullItemsList = items;
-        this._firstItem = null;
         // TODO: Удалить ActualAPI https://online.sbis.ru/opendoc.html?guid=d6fb9444-66f5-481d-8fd3-636b4d4ab676
         this._actualItems = this._options.isNewOptions ? items : ActualAPI.items(items.clone());
         this._items = this._actualItems;
+        // у первой записи тулбара не требуется показывать отступ слева
+        this._firstItem = this._getFirstToolbarItem() as TItem;
         if (source) {
             this._source = this._createPrefetchProxy(source, this._actualItems);
         }
@@ -550,12 +551,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _setFirstItem(item: TItem): void {
-        if (!this._firstItem) {
-            this._firstItem = item;
-        }
-    }
-
     /**
      * Used in template
      */
@@ -568,15 +563,26 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         const itemHasParentProperty = item.has(parentProperty) && item.get(parentProperty) !== null;
         if (itemHasParentProperty) {
             if (itemShowType === showType.MENU_TOOLBAR) {
-                // у первой записи тулбара не требуется показывать отступ слева
-                this._setFirstItem(item);
                 return true;
             }
             return false;
         }
 
-        this._setFirstItem(item);
         return true;
+    }
+
+    private _getFirstToolbarItem(): void | TItem {
+        if (this._items) {
+            const count = this._items.getCount();
+            for (let i = 0; i < count; i++) {
+                const item = this._items.at(i) as TItem;
+                const isToolbarItem = this._isShowToolbar(item, this._parentProperty);
+                if (isToolbarItem) {
+                    return item;
+                }
+            }
+        }
+        return void 0;
     }
 
     static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];

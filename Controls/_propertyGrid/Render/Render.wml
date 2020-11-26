@@ -4,6 +4,5 @@
                 theme="{{_options.theme}}"
                 itemTemplate="{{_options.itemTemplate}}"
                 groupTemplate="{{_options.groupTemplate || _groupTemplate}}"
-                collapsedGroups="{{_options.collapsedGroups}}"
-    />
+                collapsedGroups="{{_options.collapsedGroups}}" />
 </div>

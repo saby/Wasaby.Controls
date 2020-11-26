@@ -121,19 +121,9 @@ import ItemActionsHelpers = require('Controls/_list/ItemActions/Helpers');
 
 // region @deprecated
 
-import _itemActionsForTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsFor');
-import ItemActionsTemplate = require('wml!Controls/_list/ItemActions/resources/ItemActionsTemplate');
-import _swipeActionTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeAction');
-import SwipeTemplate = require('wml!Controls/_list/ItemActions/resources/SwipeTemplate');
 import Remover = require('Controls/_list/Remover');
 import * as Mover from 'Controls/_list/Mover';
 export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Controls/_list/interface/IMoverAndRemover';
-export {
-    _itemActionsForTemplate,
-    ItemActionsTemplate,
-    _swipeActionTemplate,
-    SwipeTemplate
-};
 
 // endregion @deprecated
 
@@ -222,7 +212,7 @@ const editing = {
     CANCEL: 'Cancel'
 };
 
-import {groupConstants} from './_list/Controllers/Grouping';
+import {groupConstants} from './display';
 import {CursorDirection} from './_interface/INavigation';
 
 export {CursorDirection, groupConstants, editing};

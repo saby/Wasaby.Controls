@@ -42,6 +42,7 @@ interface IScrollPagingOptions {
     totalElementsCount: number;
     loadedElementsCount: number;
     showEndButton: boolean;
+
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
 
@@ -80,6 +81,12 @@ export default class ScrollPagingController {
 
     }
 
+    viewPortResize(clientHeight: number): void {
+        var pagesCount = Math.round(this._pagingData.totalHeight / clientHeight);
+        this._pagingData.pagesCount = pagesCount;
+        this._curState = null;
+    };
+
     shiftToEdge(state: 'up' | 'down', hasMoreData: IHasMoreData): void {
         if (this._options.pagingMode === 'numbers') {
             this._numbersState = state;
@@ -110,7 +117,7 @@ export default class ScrollPagingController {
     }
 
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
-        const canScrollForward = scrollParams.clientHeight + scrollParams.scrollTop < scrollParams.scrollHeight;
+        const canScrollForward = Math.ceil(scrollParams.clientHeight + scrollParams.scrollTop) < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle(hasMoreData);
@@ -120,11 +127,13 @@ export default class ScrollPagingController {
             this.handleScrollBottom(hasMoreData);
         }
     }
+
     getItemsCountOnPage() {
         if (this._pagingData.averageElementHeight) {
             return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
         }
     }
+
     protected getNeededItemsCountForPage(page: number) {
         if (this._options.pagingMode === 'numbers') {
             const itemsOnPage = this.getItemsCountOnPage();
