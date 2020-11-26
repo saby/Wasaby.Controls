@@ -1709,7 +1709,7 @@ const _private = {
                                 self._addItemsIndex = newItemsIndex;
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
-                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up' 
+                                    newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
                                     : (newItemsIndex > collectionStartIndex ? 'down' : ''));
                             }
                             break;
@@ -5585,7 +5585,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
         let itemActionsController: ItemActionsController;
 
-        if (swipeEvent.nativeEvent.direction === 'left') {
+        if (swipeEvent.nativeEvent.direction === 'left' && this._options.itemActionsVisibility !== 'visible') {
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
             itemActionsController = _private.getItemActionsController(this, this._options);
