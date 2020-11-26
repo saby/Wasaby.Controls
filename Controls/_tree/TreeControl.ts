@@ -305,7 +305,9 @@ const _private = {
             _private.clearNodesSourceControllers(self);
         }
 
-        if (baseControl && self._needResetExpandedItems) {
+        // в 21.1000 дублрирование проверок на сборс разворота удалено,
+        // сейчас это требуется, т.к. ещё есть nodesSourceController'ы
+        if (baseControl && (self._needResetExpandedItems || !(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll))) {
             baseControl.getSourceController().setExpandedItems([]);
         }
     },
