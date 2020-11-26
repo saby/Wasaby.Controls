@@ -23,7 +23,7 @@ define('ControlsUnit/resources/TemplateUtil',
          clearTemplate: function(template) {
             const self = this;
             return function(inst, callback) {
-               const result = template(inst);
+               const result = template.apply(inst, [inst]);
                if (!callback) {
                   return self.clearMarkup(result);
                }
