@@ -1,4 +1,4 @@
-import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
+import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
 import GridCollection from './GridCollection';
 import { TColumns } from 'Controls/grid';
 import { mixin } from 'Types/util';

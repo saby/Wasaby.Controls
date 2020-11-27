@@ -1,7 +1,9 @@
-import GridColumn from './GridColumn';
+import GridCell from './GridCell';
 import { TemplateFunction } from 'UI/Base';
+import GridRow from './GridDataRow';
 
-export default class GridCheckboxColumn<T> extends GridColumn<T> {
+export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
+
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
         const topPadding = this._$owner.getTopPadding();
@@ -56,9 +58,9 @@ export default class GridCheckboxColumn<T> extends GridColumn<T> {
     }
 }
 
-Object.assign(GridCheckboxColumn.prototype, {
-    '[Controls/_display/GridCheckboxColumn]': true,
-    _moduleName: 'Controls/display:GridCheckboxColumn',
-    _instancePrefix: 'grid-checkbox-column-',
+Object.assign(GridCheckboxCell.prototype, {
+    '[Controls/_display/GridCheckboxCell]': true,
+    _moduleName: 'Controls/display:GridCheckboxCell',
+    _instancePrefix: 'grid-checkbox-cell-',
     _$style: null
 });

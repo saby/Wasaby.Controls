@@ -403,6 +403,14 @@
       color: @master_hidden-node_expander_hover_icon-color_treeGrid;
    }
 
+   .controls-TreeGrid__row-expander_visibility_hover {
+      visibility: hidden;
+   }
+
+   .controls-Grid__row:hover .controls-TreeGrid__row-expander_visibility_hover {
+      visibility: visible;
+   }
+
    .controls-BaseControl_showActions_visible .controls-Grid__row,
    .controls-BaseControl_showActions_onhover .controls-Grid__row:hover,
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {

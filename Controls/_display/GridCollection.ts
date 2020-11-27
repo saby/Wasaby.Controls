@@ -1,5 +1,5 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
-import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
+import GridRow, { IOptions as IGridRowOptions } from './GridRow';
 import GridGroupItem from './GridGroupItem';
 import * as GridLadderUtil from './utils/GridLadderUtil';
 import { mixin } from 'Types/util';
@@ -53,7 +53,7 @@ export default class GridCollection<
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
+        return function CollectionItemsFactory(options?: IGridRowOptions<S>): T {
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };

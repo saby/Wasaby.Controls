@@ -86,10 +86,18 @@ import GridLayoutUtil from './_display/utils/GridLayoutUtil';
 export {GridLayoutUtil};
 import {default as GridCollection} from './_display/GridCollection';
 export {GridCollection};
-import {default as GridCollectionItem} from './_display/GridCollectionItem';
-export {GridCollectionItem};
-import {default as GridColumn} from './_display/GridColumn';
-export {GridColumn};
+import {default as GridRow} from './_display/GridRow';
+export {GridRow};
+import {default as GridDataRow} from './_display/GridDataRow';
+export {GridDataRow};
+import {default as GridCell} from './_display/GridCell';
+export {GridCell};
+import {default as GridDataCell} from './_display/GridDataCell';
+export {GridDataCell};
+import {default as GridFooterCell} from './_display/GridFooterCell';
+export {GridFooterCell};
+import {default as GridResultsCell} from './_display/GridResultsCell';
+export {GridResultsCell};
 
 import TreeGridCollection from './_display/TreeGridCollection';
 import TreeGridCollectionItem from './_display/TreeGridCollectionItem';
@@ -114,9 +122,15 @@ register('Controls/display:ColumnsCollectionItem', ColumnsCollectionItem, {insta
 register('Controls/display:Enum', Enum, {instantiate: false});
 register('Controls/display:Flags', Flags, {instantiate: false});
 register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});
+
 register('Controls/display:GridCollection', GridCollection, {instantiate: false});
-register('Controls/display:GridCollectionItem', GridCollectionItem, {instantiate: false});
-register('Controls/display:GridColumn', GridColumn, {instantiate: false});
+register('Controls/display:GridRow', GridRow, {instantiate: false});
+register('Controls/display:GridCell', GridCell, {instantiate: false});
+register('Controls/display:GridDataRow', GridDataRow, {instantiate: false});
+register('Controls/display:GridDataCell', GridDataCell, {instantiate: false});
+register('Controls/display:GridFooterCell', GridFooterCell, {instantiate: false});
+register('Controls/display:GridResultsCell', GridResultsCell, {instantiate: false});
+
 register('Controls/display:GroupItem', GroupItem, {instantiate: false});
 register('Controls/display:Search', Search, {instantiate: false});
 register('Controls/display:TileCollection', TileCollection, {instantiate: false});

@@ -73,6 +73,12 @@ type TColumnSeparatorSizeConfig = {
     right?: TColumnSeparatorSize;
 };
 
+export interface IColspanParams {
+    startColumn?: number;
+    endColumn?: number;
+    colspan?: number;
+}
+
 /**
  * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
