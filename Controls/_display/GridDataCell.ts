@@ -1,3 +1,5 @@
+import { Model } from 'Types/entity';
+import { ITagColumn } from 'Controls/grid';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 import GridDataRow from './GridDataRow';
 
@@ -16,6 +18,39 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
         }
     }
     // region
+
+    // region Аспект "Тег"
+
+    /**
+     * Возвращает флаг, что надо или не надо показывать тег
+     * @param tagStyle
+     */
+    shouldDisplayTag(tagStyle?: string): boolean {
+        return !!this.getTagStyle(tagStyle);
+    }
+
+    /**
+     * Возвращает tagStyle для текущей колонки
+     * @param tagStyle параметр, переданный напрямую в шаблон прикладниками
+     */
+    getTagStyle(tagStyle?: string): string {
+        if (tagStyle) {
+            return tagStyle;
+        }
+        const contents: Model = this._$owner.getContents() as undefined as Model;
+        return (this._$column as ITagColumn).tagStyleProperty &&
+            contents.get((this._$column as ITagColumn).tagStyleProperty);
+    }
+
+    /**
+     * Возвращает CSS класс для передачи в шаблон tag
+     * @param theme
+     */
+    getTagClasses(theme: string): string {
+        return `controls-Grid__cell_tag_theme-${theme}`;
+    }
+
+    // endregion
 }
 
 Object.assign(GridDataCell.prototype, {

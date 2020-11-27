@@ -14,6 +14,7 @@
                         theme="{{ theme }}"
                         style="{{ style }}"
                         cursor="{{ cursor }}"
+                        tagTemplate="{{ tagTemplate }}"
                         templateHighlightOnHover="{{ templateHighlightOnHover }}">
                <ws:ladderWrapper>
                   <ws:partial template="{{ladderWrapper.content}}"
@@ -24,6 +25,13 @@
                                    key="{{ (item || itemData).key }}"
                                    checkboxReadOnly="{{ checkboxReadOnly }}"/>
             </ws:partial>
+
+            <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
+               <ws:partial template="{{ tagTemplate }}"
+                           tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
+                           dispItem="{{ item || itemData }}"
+                           columnIndex="{{ gridColumn.getColumnIndex() }}"/>
+            </div>
          </div>
          <ws:if data="{{ gridColumn.shouldDisplayItemActions() }}">
             <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
