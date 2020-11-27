@@ -561,7 +561,7 @@ export interface IGridControl extends IList {
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * @remark
  * Чтобы стрелка-шеврон отобразилась в прикладном шаблоне ячейки, необходимо в опции {@link Controls/grid:ColumnTemplate#contentTemplate} явно указать позицию стрелки-шеврона. Для этого используется переменная editArrowTemplate из области видимости самого шаблона. Пример использования посмотрите {@link Controls/grid:ColumnTemplate#contentTemplate тут}.
- * 
+ *
  * **Обратите внимание!** Для отображения стрелки-шеврона по свайпу необходимо всегда указывать опцию showEditArrow=true, вне зависимости от того,
  * используется прикладной шаблон или нет.
  * @demo Controls-demo/grid/ShowEditArrow/Index
@@ -602,7 +602,7 @@ export interface IGridControl extends IList {
  * @event Происходит при клике на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagClick
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
- * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagStyle
  */
 
@@ -610,6 +610,6 @@ export interface IGridControl extends IList {
  * @event Происходит при наведении курсора мыши на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagHover
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
- * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:ITagColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagClick
  */

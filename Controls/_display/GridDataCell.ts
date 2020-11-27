@@ -1,5 +1,4 @@
 import { Model } from 'Types/entity';
-import { ITagColumn } from 'Controls/grid';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 import GridDataRow from './GridDataRow';
 
@@ -38,8 +37,8 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
             return tagStyle;
         }
         const contents: Model = this._$owner.getContents() as undefined as Model;
-        return (this._$column as ITagColumn).tagStyleProperty &&
-            contents.get((this._$column as ITagColumn).tagStyleProperty);
+        return this._$column.tagStyleProperty &&
+            contents.get(this._$column.tagStyleProperty);
     }
 
     /**
