@@ -2251,14 +2251,6 @@ const _private = {
     },
 
     isPagingNavigationVisible(self, hasMoreData) {
-        self._pagingCfg = {
-            arrowState: {
-                begin: 'visible',
-                prev: 'visible',
-                next: 'visible',
-                end: self._options.navigation?.viewConfig?.showEndButton ? 'visible' : 'hidden'
-            }
-        };
         /**
          * Не получится получать количество элементов через _private.getItemsCount,
          * так как функция возвращает количество отображаемых элементов
@@ -2272,6 +2264,14 @@ const _private = {
     },
 
     updatePagingData(self, hasMoreData) {
+        self._pagingCfg = {
+            arrowState: {
+                begin: 'visible',
+                prev: 'visible',
+                next: 'visible',
+                end: self._options.navigation?.viewConfig?.showEndButton ? 'visible' : 'hidden'
+            }
+        };
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
