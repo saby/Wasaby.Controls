@@ -838,9 +838,13 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyProperty');
             baseControlOptions.keyProperty = 'keyPropertyOptions';
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
             baseControlOptions.source = null;
             baseControl._initKeyProperty(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
+            baseControlOptions.keyProperty = undefined;
+            assert.isFalse(baseControl._initKeyProperty(baseControlOptions));
         });
     });
 

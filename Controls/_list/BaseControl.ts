@@ -2209,10 +2209,7 @@ const _private = {
         });
     },
 
-    checkRequiredOptions(self, options) {
-        if (!self._keyProperty) {
-            Logger.error('IList: Option "keyProperty" is required.');
-        }
+    checkRequiredOptions(options) {
     },
 
     needBottomPadding(options, listViewModel) {
@@ -3265,7 +3262,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
-        _private.checkRequiredOptions(this, newOptions);
+        _private.checkRequiredOptions(newOptions);
 
         _private.bindHandlers(this);
 
@@ -3480,16 +3477,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _initKeyProperty(options) {
+    _initKeyProperty(options): boolean {
         let keyProperty = options.keyProperty;
         if (keyProperty === undefined) {
             if (options.source && options.source.getKeyProperty) {
                 keyProperty = options.source.getKeyProperty();
             }
         }
-        if (keyProperty !== undefined) {
+        if (keyProperty) {
             this._keyProperty = keyProperty;
+            return true;
         }
+        Logger.error('IList: Option "keyProperty" is required.');
+        return false;
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
