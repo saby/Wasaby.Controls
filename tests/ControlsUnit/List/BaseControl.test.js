@@ -2033,6 +2033,7 @@ define([
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
             ctrl._container = {
+               clientHeight: 1000,
                getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
                getBoundingClientRect: function() { return {}; }
             };
@@ -2062,8 +2063,8 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
                     begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
+                    end: "visible",
+                    next: "visible",
                     prev: "visible"
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
