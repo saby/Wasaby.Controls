@@ -181,11 +181,20 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
-    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+    private _updateShadowMode(options?: IContainerOptions): boolean {
+        let changed: boolean = false;
         const isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options || this._options);
         if (this._isOptimizeShadowEnabled !== isOptimizeShadowEnabled) {
             this._isOptimizeShadowEnabled = isOptimizeShadowEnabled;
             this._optimizeShadowClass = this._getOptimizeShadowClass();
+            changed = true;
+        }
+        return changed;
+    }
+
+    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+        const changed: boolean = this._updateShadowMode(options);
+        if (changed) {
             this._shadows.updateScrollState(sate || this._state);
         }
     }
@@ -215,6 +224,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     _updateState(...args) {
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
+            if (this._wasMouseEnter && this._state.canVerticalScroll && !this._oldState.canVerticalScroll) {
+                this._updateShadowMode();
+            }
 
             // Если включены тени через стили, то нам все равно надо посчитать состояние теней
             // для фиксированных заголовков если они есть.
@@ -372,7 +384,14 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
-        this._wasMouseEnter = true;
+        if (!this._wasMouseEnter) {
+            this._wasMouseEnter = true;
+
+            if (this._state.canVerticalScroll) {
+                this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+                this._updateShadows();
+            }
+        }
 
         // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
         if (!this._isScrollbarsInitialized) {
@@ -384,8 +403,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (this._isStateInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
-            this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
-            this._updateShadows();
+
             if (!compatibility.touch) {
                 this._initHeaderController();
             }
@@ -475,9 +493,11 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
             this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.setStickyFixed(
             this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
-            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM));
+            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM),
+            needUpdate);
 
         const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.fixed);
         const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
