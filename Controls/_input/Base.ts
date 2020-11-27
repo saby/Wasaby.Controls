@@ -298,7 +298,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         // redefinition
     }
 
-    protected _keyUpHandler(): void {
+    protected _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
         // redefinition
     }
 
@@ -475,7 +475,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         return this._children[this._fieldName] as Field<String, IViewModelOptions>;
     }
 
-    private _getReadOnlyField(): HTMLElement {
+    protected _getReadOnlyField(): HTMLElement {
         return this._children.readOnlyField;
     }
 

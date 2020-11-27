@@ -4,21 +4,20 @@ import {generateStates, Base, TextViewModel as ViewModel} from 'Controls/input';
 import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
-import {SyntheticEvent} from "Vdom/Vdom";
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
 const SEARCH_BY_CLICK_THROTTLE = 300;
 
+let _private = {
+    isVisibleResetButton() {
+        return !!this._viewModel.displayValue && !this._options.readOnly;
+    },
 
-var _private = {
-   isVisibleResetButton: function() {
-      return !!this._viewModel.displayValue && !this._options.readOnly;
-   },
-
-   calculateStateButton: function() {
-      return this._options.readOnly ? '_readOnly' : '';
-   }
+    calculateStateButton() {
+        return this._options.readOnly ? '_readOnly' : '';
+    }
 };
 
 /**
@@ -38,7 +37,7 @@ var _private = {
  *
  * @ignoreOptions style
  *
- * 
+ *
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
@@ -61,147 +60,147 @@ var _private = {
  *
  * @ignoreOptions style
  *
- * 
+ *
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
  * @author Золотова Э.Е.
  */
-var Search = Base.extend({
-   _wasActionUser: false,
+class Search extends Base {
+    protected _wasActionUser: boolean = false;
 
-   _beforeMount(options): void {
-      this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
-      generateStates(this, options);
-      return Search.superclass._beforeMount.apply(this, arguments);
-   },
+    protected _beforeMount(options): void {
+        this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
+        generateStates(this, options);
+        return super._beforeMount.apply(this, arguments);
+    }
 
-   _renderStyle() {
-      let style: string;
-      if (this._options.contrastBackground) {
-         style = 'searchContrast';
-      } else {
-         style = 'search';
-      }
-      return style;
-   },
+    protected _renderStyle(): string {
+        let style: string;
+        if (this._options.contrastBackground) {
+            style = 'searchContrast';
+        } else {
+            style = 'search';
+        }
+        return style;
+    }
 
-   _getViewModelOptions: function(options) {
-      return {
-         maxLength: options.maxLength,
-         constraint: options.constraint
-      };
-   },
+    protected _getViewModelOptions(options) {
+        return {
+            maxLength: options.maxLength,
+            constraint: options.constraint
+        };
+    }
 
-   _getViewModelConstructor: function() {
-      return ViewModel;
-   },
+    protected _getViewModelConstructor() {
+        return ViewModel;
+    }
 
-   _initProperties: function() {
-      Search.superclass._initProperties.apply(this, arguments);
+    protected _initProperties(): void {
+        super._initProperties.apply(this, arguments);
 
-      var CONTROL_NAME = 'Search';
-      this._field.scope.controlName = CONTROL_NAME;
-      this._readOnlyField.scope.controlName = CONTROL_NAME;
+        let CONTROL_NAME = 'Search';
+        this._field.scope.controlName = CONTROL_NAME;
+        this._readOnlyField.scope.controlName = CONTROL_NAME;
 
-      this._rightFieldWrapper.template = buttonsTemplate;
-      this._rightFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
-      this._rightFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
-   },
+        this._rightFieldWrapper.template = buttonsTemplate;
+        this._rightFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
+        this._rightFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
+    }
 
-   _notifyInputCompleted: function() {
-      if (this._options.trim) {
-         var trimmedValue = this._viewModel.displayValue.trim();
+    protected _notifyInputCompleted(): void {
+        if (this._options.trim) {
+            let trimmedValue = this._viewModel.displayValue.trim();
 
-         if (trimmedValue !== this._viewModel.displayValue) {
-            this._viewModel.displayValue = trimmedValue;
-            this._notifyValueChanged();
-         }
-      }
+            if (trimmedValue !== this._viewModel.displayValue) {
+                this._viewModel.displayValue = trimmedValue;
+                this._notifyValueChanged();
+            }
+        }
 
-      Search.superclass._notifyInputCompleted.apply(this, arguments);
-   },
+        super._notifyInputCompleted.apply(this, arguments);
+    }
 
-   _resetClick: function() {
-      if (this._options.readOnly) {
-         return;
-      }
+    protected _resetClick(): void {
+        if (this._options.readOnly) {
+            return;
+        }
 
-      this._notify('resetClick');
+        this._notify('resetClick');
 
-      this._viewModel.displayValue = '';
-      this._notifyValueChanged();
+        this._viewModel.displayValue = '';
+        this._notifyValueChanged();
 
-      // move focus from clear button to input
-      this.activate();
-   },
+        // move focus from clear button to input
+        this.activate();
+    }
 
-   _resetMousedown(event): void {
-      event.stopPropagation();
-      event.preventDefault();
-   },
+    protected _resetMousedown(event): void {
+        event.stopPropagation();
+        event.preventDefault();
+    }
 
-   _searchClick(event: SyntheticEvent): void {
-      if (this._options.readOnly) {
-         return;
-      }
+    protected _searchClick(event: SyntheticEvent): void {
+        if (this._options.readOnly) {
+            return;
+        }
 
-      this._notifySearchClick(event);
+        this._notifySearchClick(event);
 
-      // move focus from search button to input
-      this.activate();
-   },
+        // move focus from search button to input
+        this.activate();
+    }
 
-   _notifySearchClick(event): void {
-      this._notify('searchClick', [event.nativeEvent]);
-   },
+    protected _notifySearchClick(event): void {
+        this._notify('searchClick', [event.nativeEvent]);
+    }
 
-   _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
-      if (event.nativeEvent.which === constants.key.enter) {
-         this._searchClick(event);
-      }
+    protected _keyUpHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        if (event.nativeEvent.which === constants.key.enter) {
+            this._searchClick(event);
+        }
 
-      Search.superclass._keyUpHandler.apply(this, arguments);
-   },
+        super._keyUpHandler.apply(this, arguments);
+    }
 
-   _inputHandler: function() {
-      Search.superclass._inputHandler.apply(this, arguments);
+    protected _inputHandler(): void {
+        super._inputHandler.apply(this, arguments);
 
-      this._wasActionUser = true;
-   },
+        this._wasActionUser = true;
+    }
 
-   _clickHandler: function() {
-      Search.superclass._clickHandler.apply(this, arguments);
+    protected _clickHandler(): void {
+        super._clickHandler.apply(this, arguments);
 
-      this._wasActionUser = true;
-   }
-});
+        this._wasActionUser = true;
+    }
 
-Search._theme = Base._theme.concat(['Controls/search']);
+    static _theme: string[] = Base._theme.concat(['Controls/search']);
 
-Search.getOptionTypes = function getOptionsTypes() {
-   var optionTypes = Base.getOptionTypes();
+    static _private = _private;
 
-   optionTypes.maxLength = descriptor(Number, null);
-   optionTypes.trim = descriptor(Boolean);
-   optionTypes.constraint = descriptor(String);
+    static getDefaultOptions(): object {
+       let defaultOptions = Base.getDefaultOptions();
+       defaultOptions.contrastBackground = false;
+       defaultOptions.trim = false;
+       defaultOptions.placeholder = rk('Найти') + '...';
+       defaultOptions.searchButtonVisible = true;
+       defaultOptions.validationStatus = 'valid';
+       defaultOptions.spellcheck = false;
 
-   return optionTypes;
-};
+       return defaultOptions;
+    }
 
-Search.getDefaultOptions = function getDefaultOptions() {
-   var defaultOptions = Base.getDefaultOptions();
-   defaultOptions.contrastBackground = false;
-   defaultOptions.trim = false;
-   defaultOptions.placeholder = rk('Найти') + '...';
-   defaultOptions.searchButtonVisible = true;
-   defaultOptions.validationStatus = 'valid';
-   defaultOptions.spellcheck = false;
+    static getOptionTypes(): object {
+       let optionTypes = Base.getOptionTypes();
 
-   return defaultOptions;
-};
+       optionTypes.maxLength = descriptor(Number, null);
+       optionTypes.trim = descriptor(Boolean);
+       optionTypes.constraint = descriptor(String);
 
-Search._private = _private;
+       return optionTypes;
+    }
+}
 
 /**
  * @event Происходит при нажатии на иконку поиска (лупы).
@@ -270,7 +269,7 @@ Search._private = _private;
  * @name Controls/_search/Input/Search#resetClick
  */
 
- /**
+/**
  * @name Controls/_search/Input/Search#searchButtonVisible
  * @cfg {Boolean} Определяет отображение иконки лупы внутри поля поиска, клик по которой запускает поиск.
  * @default true
@@ -297,5 +296,4 @@ Search._private = _private;
  * @see style
  */
 
-export = Search;
-
+export default Search;
