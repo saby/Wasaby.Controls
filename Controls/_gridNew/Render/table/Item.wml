@@ -15,7 +15,6 @@
                            itemData="{{ (item || itemData) }}"
                            theme="{{ theme }}"
                            cursor="{{ cursor }}"
-                           tagTemplate="{{ tagTemplate }}"
                            templateHighlightOnHover="{{ templateHighlightOnHover }}">
                   <ws:ladderWrapper>
                      <ws:partial template="{{ladderWrapper.content}}"
