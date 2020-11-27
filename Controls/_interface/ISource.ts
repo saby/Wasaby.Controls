@@ -137,7 +137,7 @@ export default interface ISource {
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
  * @remark Например, идентификатор может быть первичным ключом записи в базе данных.
  * Если keyProperty не задан, то значение будет взято из source.
- * @demo Controls-demo/list_new/Source/Index
+ * @demo Controls-demo/list_new/KeyPropertySource/Index
  * @example
  * <pre class="brush: html">
  *     <Controls.list:View

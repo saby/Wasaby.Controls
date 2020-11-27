@@ -3493,7 +3493,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _initKeyProperty(options): boolean {
+    _initKeyProperty(options) {
         let keyProperty = options.keyProperty;
         if (keyProperty === undefined) {
             if (options.source && options.source.getKeyProperty) {
