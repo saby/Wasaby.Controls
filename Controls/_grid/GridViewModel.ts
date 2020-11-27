@@ -324,7 +324,7 @@ var
             const isRootItemsSeparator = current.dispItem && current.dispItem['[Controls/_display/SearchSeparator]'];
             const checkBoxCell = current.hasMultiSelectColumn && current.columnIndex === 0;
             const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
-            let style = current.style === 'masterClassic' || !current.style ? 'default' : current.style;
+            let style = !current.style ? 'default' : current.style;
             const backgroundStyle = current.backgroundStyle || current.style || 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
