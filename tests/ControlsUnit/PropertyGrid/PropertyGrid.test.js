@@ -32,39 +32,6 @@ define([
                 stringField1: Constants.DEFAULT_EDITORS.string
             };
         });
-        describe('getPropertyGridItems', () => {
-            it('returns merged editingObject and source items', () => {
-                const itemsRS = ViewInstance._getPropertyGridItems(source, editingObject);
-                const items = itemsRS.getRawData();
-                const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
-                assert.isTrue(propertyValueMerged);
-            });
-
-            it('RecordSet and Model case: returns merged editingObject and source items', () => {
-                const modelEditingObject = new entity.Model({
-                    rawData: editingObject
-                });
-                const recordSetSource = new collection.RecordSet({
-                    rawData: source
-                });
-
-                const itemsRS = ViewInstance._getPropertyGridItems(recordSetSource, modelEditingObject);
-                const items = itemsRS.getRawData();
-                const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
-                assert.isTrue(propertyValueMerged);
-            });
-        });
-
-        describe('getCollection', () => {
-            it('returns flat collection', () => {
-                const collection = ViewInstance._getCollection(null, null, editingObject, source);
-                assert.isTrue(collection instanceof display.Collection);
-            });
-            it('returns tree Collection', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
-                assert.isTrue(collection instanceof display.Tree);
-            });
-        });
 
         describe('_getCollapsedGroups', () => {
             const groups = [1, 2, 3];
