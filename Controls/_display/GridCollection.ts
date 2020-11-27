@@ -1,5 +1,5 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
-import GridCollectionItem, { IOptions as IGridCollectionItemOptions } from './GridCollectionItem';
+import GridRow, { IOptions as IGridRowOptions } from './GridRow';
 import GridGroupItem from './GridGroupItem';
 import { TemplateFunction } from 'UI/Base';
 import { TColumns, THeader } from 'Controls/grid';
@@ -7,11 +7,11 @@ import * as GridLadderUtil from './utils/GridLadderUtil';
 import GridColgroup from './GridColgroup';
 import GridHeader from './GridHeader';
 import GridResults, { TResultsPosition } from './GridResults';
-import GridFooter from './GridFooter';
+import GridFooterRow from './GridFooterRow';
 
 export interface IOptions<
     S,
-    T extends GridCollectionItem<S> = GridCollectionItem<S>
+    T extends GridRow<S> = GridRow<S>
 > extends IBaseOptions<S, T> {
     columns: TColumns;
     footerTemplate?: TemplateFunction;
@@ -25,12 +25,12 @@ export interface IOptions<
 
 export default class GridCollection<
     S,
-    T extends GridCollectionItem<S> = GridCollectionItem<S>
+    T extends GridRow<S> = GridRow<S>
 > extends Collection<S, T> {
     protected _$columns: TColumns;
     protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
-    protected _$footer: GridFooter<S>;
+    protected _$footer: GridFooterRow<S>;
     protected _$results: GridResults<S>;
     protected _$ladder: {};
     protected _$ladderProperties: string[];
@@ -65,6 +65,10 @@ export default class GridCollection<
     }
 
     getColumns(): TColumns {
+        throw Error('GridCollection.getColumns is deprecated. Use GridCollection.getColumnsConfig');
+    }
+
+    getColumnsConfig(): TColumns {
         return this._$columns;
     }
 
@@ -76,7 +80,7 @@ export default class GridCollection<
         return this._$header;
     }
 
-    getFooter(): GridFooter<S> {
+    getFooter(): GridFooterRow<S> {
         return this._$footer;
     }
 
@@ -151,7 +155,7 @@ export default class GridCollection<
     }
 
     protected _updateItemsLadder(): void {
-        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+        this.getViewIterator().each((item: GridRow<T>) => {
             if (item['[Controls/_display/ILadderedCollectionItem]']) {
                 item.setLadder(this._$ladder);
             }
@@ -159,7 +163,7 @@ export default class GridCollection<
     }
 
     protected _updateItemsColumns(): void {
-        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+        this.getViewIterator().each((item: GridRow<T>) => {
             if (item['[Controls/_display/ILadderedCollectionItem]']) {
                 item.setColumns(this._$columns);
             }
@@ -184,10 +188,11 @@ export default class GridCollection<
         });
     }
 
-    protected _initializeFooter(options: IOptions<S>): GridFooter<S> {
-        return new GridFooter({
+    protected _initializeFooter(options: IOptions<S>): GridFooterRow<S> {
+        return new GridFooterRow({
+            ...options,
             owner: this,
-            footerTemplate: options.footerTemplate
+            template: options.footerTemplate
         });
     }
 
@@ -207,7 +212,7 @@ export default class GridCollection<
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
+        return function CollectionItemsFactory(options?: IGridRowOptions<S>): T {
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
@@ -221,7 +226,7 @@ export default class GridCollection<
 Object.assign(GridCollection.prototype, {
     '[Controls/_display/GridCollection]': true,
     _moduleName: 'Controls/display:GridCollection',
-    _itemModule: 'Controls/display:GridCollectionItem',
+    _itemModule: 'Controls/display:GridDataRow',
     _$columns: null,
     _$headerInEmptyListVisible: false,
     _$resultsPosition: null,
