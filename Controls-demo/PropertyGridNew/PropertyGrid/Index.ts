@@ -2,11 +2,10 @@ import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/Index';
 import {showType} from 'Controls/Utils/Toolbar';
 import {IItemAction} from 'Controls/itemActions';
-import {Enum, RecordSet} from 'Types/collection';
+import {RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
-import {getEditingObject} from 'Controls-demo/PropertyGridNew/resources/Data';
-import * as CaptionTemplate from 'wml!Controls-demo/PropertyGridNew/PropertyGrid/CaptionTemplate';
+import {getEditingObject, getSource} from 'Controls-demo/PropertyGridNew/resources/Data';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -14,38 +13,7 @@ export default class Demo extends Control<IControlOptions> {
         rawData: getEditingObject()
     });
     protected _source: RecordSet = new RecordSet<IPropertyGridItem>({
-        rawData: [
-            {
-                name: 'tileView',
-                caption: 'Список плиткой',
-                group: 'boolean',
-                captionTemplate: CaptionTemplate
-            },
-            {
-                name: 'showBackgroundImage',
-                caption: 'Показывать изображение',
-                group: 'boolean',
-                captionTemplate: CaptionTemplate
-            },
-            {
-                caption: 'URL',
-                name: 'siteUrl',
-                group: 'string',
-                captionTemplate: CaptionTemplate
-            },
-            {
-                caption: 'Источник видео',
-                name: 'videoSource',
-                group: 'string',
-                captionTemplate: CaptionTemplate
-            },
-            {
-                caption: 'Тип фона',
-                name: 'backgroundType',
-                group: 'enum',
-                editorClass: 'controls-demo-pg-enum-editor',
-                captionTemplate: CaptionTemplate
-            }],
+        rawData: getSource(),
         keyProperty: 'name'
     });
     protected _itemActions: IItemAction[];
@@ -93,6 +61,10 @@ export default class Demo extends Control<IControlOptions> {
         const key = item.getKey();
         const sourceItem = source.getRecordById(key);
         return source.getIndex(sourceItem);
+    }
+
+    protected _handleItemClick(event, item) {
+        alert(`Clicked at ${item.getContents().getId()}`);
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/Editors/HighlightOnHover/Index',

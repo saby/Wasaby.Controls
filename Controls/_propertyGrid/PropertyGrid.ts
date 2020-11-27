@@ -48,7 +48,7 @@ import {StickyOpener} from 'Controls/popup';
 
 export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _template: TemplateFunction = template;
-    protected _listModel: Tree<Model> | Collection<Model>;
+    protected _listModel: PropertyGridCollection<Model>;
     protected _render: Control = renderTemplate;
     protected _collapsedGroups: Record<string, boolean> = {};
     private _itemActionsController: ItemActionsController;
@@ -73,7 +73,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
             this._listModel.setFilter(this._displayFilter.bind(this));
         }
-        if (newOptions.editingObject !== this._options.editingObject || newOptions.source !== this._options.source) {
+
+        if (newOptions.editingObject !== this._options.editingObject) {
+            this._listModel.setEditingObject(newOptions.editingObject);
+        }
+        if (newOptions.source !== this._options.source) {
             this._listModel = this._getCollection(
                 newOptions.nodeProperty,
                 newOptions.parentProperty,
@@ -92,6 +96,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const propertyGridItems = this._getPropertyGridItems(source, editingObject);
         return new PropertyGridCollection({
             collection: propertyGridItems,
+            editingObject: editingObject,
             parentProperty,
             nodeProperty,
             keyProperty: PROPERTY_NAME_FIELD,
@@ -124,6 +129,9 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         items: IPropertyGridItem[] | RecordSet<IPropertyGridItem>,
         editingObject: Record<string, any> | Model
     ): RecordSet<Model> {
+        if (items instanceof RecordSet) {
+            return items;
+        }
         const itemsWithPropertyValue = [];
         items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
             const sourceItem = object.clone(item);
@@ -141,11 +149,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             });
         });
 
-        if (items instanceof RecordSet) {
-            items.setRawData(itemsWithPropertyValue);
-            return items;
-        }
-
         return new RecordSet({
             rawData: itemsWithPropertyValue,
             keyProperty: PROPERTY_NAME_FIELD
@@ -154,13 +157,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
         const name = item.get(PROPERTY_NAME_FIELD);
-        const editingObjectClone = this._options.editingObject instanceof Model ?
-           this._options.editingObject : object.clone(this._options.editingObject);
-        const itemClone = item.clone(true);
+        const editingObjectClone = object.clone(this._options.editingObject);
         object.setPropertyValue(editingObjectClone, name, value);
-        itemClone.set(PROPERTY_VALUE_FIELD, value);
-
-        (this._listModel.getCollection().getRecordById(name) as Model).set(PROPERTY_VALUE_FIELD, value);
         this._notify('editingObjectChanged', [editingObjectClone]);
     }
 
@@ -178,8 +176,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._collapsedGroups[groupName] = !collapsed;
                 this._listModel.setFilter(this._displayFilter.bind(this));
             }
-        } else {
-            this._notify('itemClick', [displayItem]);
         }
     }
 

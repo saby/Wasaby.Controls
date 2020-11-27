@@ -1,1 +1,0 @@
-<span class="controls-demo-caption-tmpl">{{item.caption || item.name}}</span>

@@ -1,8 +1,9 @@
-<div class="controls-Demo__propertyGrid">
+<div class="controls-Demo__wide-propertyGrid">
     <Controls.propertyGrid:PropertyGrid
             bind:editingObject="_editingObject"
             itemActions="{{_itemActions}}"
-            source="{{_source}}">
+            source="{{_source}}"
+            on:itemClick="_handleItemClick()">
         <ws:groupTemplate>
             <ws:partial template="Controls/propertyGrid:GroupTemplate">
                 <ws:contentTemplate>
