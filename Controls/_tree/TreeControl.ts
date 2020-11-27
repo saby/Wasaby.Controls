@@ -74,7 +74,7 @@ const _private = {
         const item = dispItem.getContents();
         const nodeKey = item.getId();
         const baseSourceController = self._children.baseControl.getSourceController();
-        const expanded = !dispItem.isExpanded();
+        const expanded = self._options.useNewModel ? !dispItem.isExpanded() : !listViewModel.isExpanded(dispItem);
         const options = self._options;
         self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
