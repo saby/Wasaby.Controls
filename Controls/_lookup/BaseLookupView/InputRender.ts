@@ -8,7 +8,7 @@ class InputRenderLookup extends Text {
 
     protected _beforeMount(options): void {
         super._beforeMount.apply(this, arguments);
-        input.generateStates(this, options);
+        generateStates(this, options);
     }
 
    protected _beforeUpdate(options): void {

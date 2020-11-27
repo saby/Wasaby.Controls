@@ -52,7 +52,7 @@ class DateTime extends Control {
     protected _proxyEvent: Function = tmplNotify;
     protected _dateConstructor: Date | WSDate;
 
-    protected _formatMaskChars: {
+    protected _formatMaskChars = {
         'D': '[0-9]',
         'M': '[0-9]',
         'Y': '[0-9]',
