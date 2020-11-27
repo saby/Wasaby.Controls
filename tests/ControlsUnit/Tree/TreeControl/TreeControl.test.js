@@ -618,6 +618,7 @@ define([
                treeControl._options.root = undefined;
                treeControl._root = 12;
                treeControl._afterUpdate({filter: {}, source: source});
+               assert.isTrue(treeControl._needResetExpandedItems);
                setTimeout(function() {
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(12, treeControl._root);

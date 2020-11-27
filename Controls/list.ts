@@ -135,6 +135,7 @@ export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {BaseGroupTemplate} from 'Controls/_list/interface/BaseGroupTemplate';
 export {IContentTemplate} from 'Controls/_list/interface/IContentTemplate';
 export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
+export {IClickableView} from 'Controls/_list/interface/IClickableView';
 
 export {
     AddButton,
@@ -212,7 +213,7 @@ const editing = {
     CANCEL: 'Cancel'
 };
 
-import {groupConstants} from './_list/Controllers/Grouping';
+import {groupConstants} from './display';
 import {CursorDirection} from './_interface/INavigation';
 
 export {CursorDirection, groupConstants, editing};

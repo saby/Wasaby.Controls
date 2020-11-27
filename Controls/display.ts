@@ -102,6 +102,7 @@ export { VirtualScrollHideController };
 
 import {IDragPosition} from './_display/interface/IDragPosition';
 export {IDragPosition};
+export {groupConstants} from './_display/itemsStrategy/Group';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});

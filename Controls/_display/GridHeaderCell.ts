@@ -21,10 +21,12 @@ import { IHeaderCell } from 'Controls/grid';
 import GridHeader from './GridHeader';
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
+import { IItemPadding } from "./Collection";
 
 export interface IOptions<T> {
     owner: GridHeader<T>;
     headerCell: IHeaderCell;
+    cellPadding?: IItemPadding;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -32,6 +34,7 @@ const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
     protected _$owner: GridHeader<T>;
     protected _$headerCell: IHeaderCell;
+    protected _$cellPadding: IItemPadding;
 
     constructor(options?: IOptions<T>) {
         super();
@@ -143,14 +146,17 @@ export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(Opt
         const isMultiSelectColumn = this.isMultiSelectColumn();
         const isFirstColumn = this.isFirstColumn();
         const isLastColumn = this.isLastColumn();
+        const cellPadding = this._$cellPadding;
+        const cellLeftPadding = cellPadding && cellPadding.left;
+        const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = leftPadding === 'default' ? '' : leftPadding;
-        const compatibleRightPadding = rightPadding === 'default' ? '' : rightPadding;
+        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding}` : (leftPadding === 'default' ? '' : leftPadding);
+        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding}` : (rightPadding === 'default' ? '' : rightPadding);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {
-            if (!this.isFirstColumn()) {
+            if (!isFirstColumn) {
                 if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getCellIndex() > 1) {
                     paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
                 }
@@ -174,5 +180,6 @@ Object.assign(GridHeaderCell.prototype, {
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
     _$owner: null,
-    _$headerCell: null
+    _$headerCell: null,
+    _$cellPadding: null
 });
