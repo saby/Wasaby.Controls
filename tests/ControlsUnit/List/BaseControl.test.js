@@ -6922,6 +6922,7 @@ define([
                      }
                   },
                   viewModelConstructor: lists.ListViewModel,
+                  keyProperty: 'id'
                };
                await bc._beforeUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
