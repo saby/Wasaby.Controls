@@ -33,18 +33,18 @@ interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions {
  * @author Красильников А.С.
  */
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
-class Number extends Base<INumberInputOptions> {
+class NumberInput extends Base<INumberInputOptions> {
     _defaultValue: number = 0;
     _inputMode: string = 'decimal';
 
     protected _getViewModelOptions(options: INumberInputOptions): object {
-        Number._validateOptions(options);
+        NumberInput._validateOptions(options);
 
         return {
-            precision: Number._convertToNumber(options.precision),
+            precision: NumberInput._convertToNumber(options.precision),
             useGrouping: options.useGrouping,
             onlyPositive: options.onlyPositive,
-            integersLength: Number._convertToNumber(options.integersLength),
+            integersLength: NumberInput._convertToNumber(options.integersLength),
             showEmptyDecimals: options.showEmptyDecimals,
             useAdditionToMaxPrecision: options.showEmptyDecimals
         };
@@ -255,4 +255,4 @@ class Number extends Base<INumberInputOptions> {
  * </pre>
  * @see value
  */
-export default Number;
+export default NumberInput;
