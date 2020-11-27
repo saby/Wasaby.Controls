@@ -135,7 +135,6 @@ export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 export {BaseGroupTemplate} from 'Controls/_list/interface/BaseGroupTemplate';
 export {IContentTemplate} from 'Controls/_list/interface/IContentTemplate';
 export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
-export {IClickableView} from 'Controls/_list/interface/IClickableView';
 
 export {
     AddButton,
