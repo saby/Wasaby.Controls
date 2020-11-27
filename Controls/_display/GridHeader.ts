@@ -63,16 +63,18 @@ export default class GridHeader<T> extends mixin<OptionsToPropertyMixin>(Options
 
     protected _prepareCells(header: THeader): THeaderCells<T> {
         const cells = [];
-        if (this._$owner.getMultiSelectVisibility()) {
+        const columns = this._$owner.getColumns();
+        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
             cells.push(new GridHeaderCell({
                 headerCell: {},
                 owner: this
             }));
         }
-        header.forEach((elem) => {
+        header.forEach((elem, index) => {
             const cell = new GridHeaderCell({
                 headerCell: elem,
-                owner: this
+                owner: this,
+                cellPadding: columns[index].cellPadding
             });
             cells.push(cell);
         });
