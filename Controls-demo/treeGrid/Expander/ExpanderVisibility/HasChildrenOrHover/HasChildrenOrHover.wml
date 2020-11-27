@@ -7,7 +7,7 @@
       -->
       <div
          if="{{itemData.item.get('Раздел@') && !itemData.item.hasChild && itemData.isExpanded}}"
-         style="font: 12px gray;"
+         style="font-size: 12px; color: gray;"
       >
          <ws:if data="{{ itemData.item.id === 11 }}">
             Тут один контент
