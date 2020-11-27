@@ -843,14 +843,9 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControlOptions.source = null;
             baseControl._initKeyProperty(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
-            let isInitKeyProperty = true;
-            try {
-                baseControlOptions.keyProperty = undefined;
-                isInitKeyProperty = baseControl._initKeyProperty(baseControlOptions);
-            } catch (e) {
-                isInitKeyProperty = false;
-            }
-            assert.isFalse(isInitKeyProperty);
+            baseControlOptions.keyProperty = undefined;
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.isFalse(!!baseControl._keyProperty);
         });
     });
 
