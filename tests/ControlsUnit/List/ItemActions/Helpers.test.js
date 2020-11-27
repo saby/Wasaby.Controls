@@ -8,7 +8,7 @@ define([
 ], function(lists, entity, collection) {
 
    describe('Controls.List.ItemActions.Helpers', function() {
-      /*describe('reorderMoveActionsVisibility', function() {
+      describe('reorderMoveActionsVisibility', function() {
          var data, rs;
          beforeEach(function() {
             data = [{
@@ -146,6 +146,6 @@ define([
             assert.isFalse(lists.ItemActionsHelpers.reorderMoveActionsVisibility('down', rs.getRecordById(3), rs, 'parent', '', root));
             assert.isTrue(lists.ItemActionsHelpers.reorderMoveActionsVisibility('up', rs.getRecordById(3), rs, 'parent', '', root));
          });
-      });*/
+      });
    });
 });

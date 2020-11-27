@@ -1,5 +1,4 @@
-/*
-/!* tslint:disable:object-literal-key-quotes no-string-literal *!/
+/* tslint:disable:object-literal-key-quotes no-string-literal */
 // tslint:disable:no-magic-numbers
 
 import { assert } from 'chai';
@@ -494,4 +493,3 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       });
    });
 });
-*/

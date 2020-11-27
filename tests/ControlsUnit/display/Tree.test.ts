@@ -1,4 +1,3 @@
-/*
 import { assert } from 'chai';
 
 import {
@@ -1343,7 +1342,7 @@ describe('Controls/_display/Tree', () => {
                 });
                 const tree = getObservableTree(list);
 
-                /!*
+                /*
                    0  +-a
                    1  | +-aa
                    2  |   +-aaa
@@ -1362,7 +1361,7 @@ describe('Controls/_display/Tree', () => {
                    8    +-aa       2nd event
                    9      +-aaa    2nd event
                    10       +-aa1  2nd event
-                *!/
+                */
                 const expected = [{
                     action: IBindCollectionDisplay.ACTION_ADD,
                     newItems: ['aa1'],
@@ -1842,4 +1841,3 @@ describe('Controls/_display/Tree', () => {
         });
     });
 });
-*/
