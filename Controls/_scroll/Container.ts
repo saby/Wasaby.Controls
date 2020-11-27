@@ -8,7 +8,7 @@ import template = require('wml!Controls/_scroll/Container/Container');
 import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import ShadowsModel from './Container/ShadowsModel';
 import ScrollbarsModel from './Container/ScrollbarsModel';
-import PagingModel from './Container/PagingModel';
+import PagingModel, {TPagingModeScroll} from './Container/PagingModel';
 import {
     IScrollbars,
     IScrollbarsOptions,
@@ -31,6 +31,7 @@ import {IScrollState} from './Utils/ScrollState';
 
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
+    pagingMode?: TPagingModeScroll;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -111,9 +112,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     _afterMount(options: IContainerOptions, context) {
 
-        if (context.ScrollData?.pagingVisible) {
+        if (this._isPagingVisible(this._options, context)) {
             this._paging = new PagingModel();
             this._scrollCssClass = this._getScrollContainerCssClass(options);
+            this._paging.pagingMode = this._options.pagingMode;
         }
 
         super._afterMount();
@@ -135,13 +137,23 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
     }
 
+    protected _isPagingVisible(options: IContainerOptions, context): boolean {
+        if (typeof options.pagingMode !== 'undefined') {
+            return options.pagingMode !== 'hidden';
+        }
+        return context.ScrollData?.pagingVisible;
+    }
+
     protected _beforeUpdate(options: IContainerOptions, context) {
         super._beforeUpdate(...arguments);
-        if (context.ScrollData?.pagingVisible) {
+        if (this._isPagingVisible(options, context)) {
             if (!this._paging) {
                 this._paging = new PagingModel();
             }
             this._paging.isVisible = this._state.canVerticalScroll;
+            if (this._options.pagingMode !== options.pagingMode) {
+                this._paging.pagingMode = options.pagingMode;
+            }
         } else if (this._paging) {
             this._paging = null;
         }
@@ -552,4 +564,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingMode
+ * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
+ * @default hidden
  */

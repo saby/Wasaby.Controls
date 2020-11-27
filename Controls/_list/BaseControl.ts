@@ -2262,10 +2262,19 @@ const _private = {
             self._options.navigation.viewConfig.totalInfo === 'extended') {
             return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
         }
+
         return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
+        self._pagingCfg = {
+            arrowState: {
+                begin: 'visible',
+                prev: 'visible',
+                next: 'visible',
+                end: self._options.navigation?.viewConfig?.showEndButton ? 'visible' : 'hidden'
+            }
+        };
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
