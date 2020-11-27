@@ -273,7 +273,6 @@ export default class GridColumn<T> extends mixin<
 
         if (isEditing) {
             classes += ` controls-ListView__item_editing_theme-${theme}`;
-            // TODO зачем-то удалял
             classes += ` controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
         }
 
