@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -13,14 +14,14 @@ function equalPosition(pos1, pos2): boolean {
 }
 
 describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
-   /*
+   /!*
       1
          2
             4
          3
       5
       6
-    */
+    *!/
    const items = new RecordSet({
       rawData: [{
          id: 1,
@@ -319,3 +320,4 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
       });
    });
 });
+*/

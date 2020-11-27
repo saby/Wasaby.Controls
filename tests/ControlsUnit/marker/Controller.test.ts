@@ -1,3 +1,4 @@
+/*
 // tslint:disable:no-empty
 // tslint:disable:no-magic-numbers
 
@@ -474,3 +475,4 @@ describe('Controls/marker/Controller', () => {
       assert.isFalse(breadcrumbItem.isMarked());
    });
 });
+*/
