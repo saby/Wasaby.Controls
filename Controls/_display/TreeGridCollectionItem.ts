@@ -24,9 +24,10 @@ export default class TreeGridCollectionItem<T>
         return TreeGridColumn;
     }
 
-    // endregion
+    // endregion Expander
 
-    // TODO дублирование кода с GridCollectionItem
+    // TODO duplicate code with GridCollectionItem. Нужно придумать как от него избавиться.
+    //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region overrides
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {

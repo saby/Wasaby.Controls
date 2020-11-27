@@ -41,7 +41,8 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
         this.addFilter((contents, index, item, collectionIndex) => itemIsVisible(item));
     }
 
-    // TODO duplicate code with GridCollection
+    // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.
+    //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region override
 
     setMultiSelectVisibility(visibility: string): void {

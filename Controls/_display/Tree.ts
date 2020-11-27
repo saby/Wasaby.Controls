@@ -49,6 +49,8 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     root?: T | any;
     rootEnumerable?: boolean;
     hasMoreStorage?: Record<string, boolean>;
+    expandedItems: CrudEntityKey[];
+    collapsedItems: CrudEntityKey[];
 }
 
 /**
@@ -501,7 +503,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                     return;
                 }
 
-                // TODO должно быть silent и отправить сразу всю пачку элементов
+                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                 parent.setExpanded(true);
                 if (parent.isNode()) {
                     const childes = this.getChildren(parent);
@@ -514,7 +516,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
             expandedKeys.forEach((key) => {
                 const item = this.getItemBySourceKey(key);
                 if (item) {
-                    // TODO должно быть silent и отправить сразу всю пачку элементов
+                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                     item.setExpanded(true);
                 }
             });
@@ -525,7 +527,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item) {
-                // TODO должно быть silent и отправить сразу всю пачку элементов
+                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                 item.setExpanded(false);
             }
         });
