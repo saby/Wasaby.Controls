@@ -75,6 +75,7 @@ export default class TreeItem<T> extends mixin<
         super(options);
         ExpandableMixin.call(this);
 
+        // node может быть равен null, поэтому его не задали, только когда undefined
         if (this._$node === undefined) {
             this._$node = false;
         }
@@ -83,7 +84,12 @@ export default class TreeItem<T> extends mixin<
             this._$hasChildren = true;
         }
         if (options) {
-            this._$hasChildren = !!options.hasChildren;
+            // Если hasChildren не задали, то для узла по дефолту есть дети
+            if (options.hasChildren === undefined) {
+                this._$hasChildren = this._$node || this._$node === false;
+            } else {
+                this._$hasChildren = !!options.hasChildren;
+            }
         }
     }
 

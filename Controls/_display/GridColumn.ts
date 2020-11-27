@@ -289,6 +289,13 @@ export default class GridColumn<T> extends mixin<
         } else {
             classes += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
         }
+
+        // TODO нужно разобраться почему есть такой же отступ в _getContentPaddingClasses,
+        //  судя по тригрид все отступы должны быть во wrapper. В treeGrid в content отступ убирается
+        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
+            classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme}`;
+        }
+
         return classes;
     }
 
@@ -303,12 +310,6 @@ export default class GridColumn<T> extends mixin<
             // Вспомогательные классы, вешаются на ячейку. Обеспечивают отсутствие "скачков" при смене rowSeparatorSize.
             classes += ' controls-Grid__no-rowSeparator';
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
-        }
-
-        // TODO нужно разобраться почему есть такой же отступ в _getContentPaddingClasses,
-        //  судя по тригрид все отступы должны быть во wrapper
-        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
-            classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
         /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
