@@ -830,7 +830,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!itemData.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!dispItem.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }

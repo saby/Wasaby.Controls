@@ -6,6 +6,27 @@ import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
 import { ItemsFactory } from 'Controls/_display/Collection';
 import { IOptions as IGridCollectionItemOptions } from 'Controls/_display/GridCollectionItem';
 import GridGroupItem from 'Controls/_display/GridGroupItem';
+import TreeItem from 'Controls/_display/TreeItem';
+
+/**
+ * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
+ * @param {TreeItem<T>} item
+ */
+function itemIsVisible<T>(item: TreeItem<T>): boolean  {
+    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
+        return true;
+    }
+
+    const parent = item.getParent();
+    // корневой узел не может быть свернут
+    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
+        return true;
+    } else if (!parent.isExpanded()) {
+        return false;
+    }
+
+    return itemIsVisible(parent);
+}
 
 export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> = TreeGridCollectionItem<S>>
     extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
@@ -14,6 +35,10 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
     constructor(options: any) {
         super(options);
         GridMixin.call(this, options);
+
+        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую стратегии TreeGrid.
+        //  Если сразу в Tree положим, то все разломаем
+        this.addFilter((contents, index, item, collectionIndex) => itemIsVisible(item));
     }
 
     // TODO duplicate code with GridCollection

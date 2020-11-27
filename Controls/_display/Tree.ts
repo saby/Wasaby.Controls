@@ -105,26 +105,6 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
 }
 
 /**
- * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
- * @param {TreeItem<T>} item
- */
-function itemIsVisible<T>(item: TreeItem<T>): boolean  {
-    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
-        return true;
-    }
-
-    const parent = item.getParent();
-    // корневой узел не может быть свернут
-    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
-        return true;
-    } else if (!parent.isExpanded()) {
-        return false;
-    }
-
-    return itemIsVisible(parent);
-}
-
-/**
  * Проекция в виде дерева - предоставляет методы навигации, фильтрации и сортировки, не меняя при этом оригинальную
  * коллекцию.
  * @remark
@@ -237,11 +217,10 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         }
         this._$hasMoreStorage = options.hasMoreStorage || {};
 
-        this.addFilter((contents, index, item, collectionIndex) => itemIsVisible(item));
-
         if (options.expandedItems instanceof Array) {
             this.setExpandedItems(options.expandedItems);
         }
+
         if (options.collapsedItems instanceof Array) {
             this.setCollapsedItems(options.collapsedItems);
         }
@@ -517,14 +496,25 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
         if (expandedKeys[0] === null) {
-            // TODO длжно быть silent и отправить сразу всю пачку элементов
-            // TODO надо рекурсивно раскрывать узлы, сейчас расскрывается только первый уровень
-            this.each((it) => it.setExpanded(true));
+            const expandAllChildesNodes = (parent) => {
+                if (!parent['[Controls/_display/TreeItem]']) {
+                    return;
+                }
+
+                // TODO должно быть silent и отправить сразу всю пачку элементов
+                parent.setExpanded(true);
+                if (parent.isNode()) {
+                    const childes = this.getChildren(parent);
+                    childes.forEach((it) => expandAllChildesNodes(it));
+                }
+            };
+
+            this.each((it) => expandAllChildesNodes(it));
         } else {
             expandedKeys.forEach((key) => {
                 const item = this.getItemBySourceKey(key);
                 if (item) {
-                    // TODO длжно быть silent и отправить сразу всю пачку элементов
+                    // TODO должно быть silent и отправить сразу всю пачку элементов
                     item.setExpanded(true);
                 }
             });
@@ -535,7 +525,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item) {
-                // TODO длжно быть silent и отправить сразу всю пачку элементов
+                // TODO должно быть silent и отправить сразу всю пачку элементов
                 item.setExpanded(false);
             }
         });
@@ -550,7 +540,6 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         item.setExpanded(newExpandedState);
     }
 
-    // TODO от этого наверное нужно избавляться вообще и использовать SourceController или просто перенести в item
     setHasMoreStorage(storage: Record<string, boolean>): void {
         this._$hasMoreStorage = storage;
         this._nextVersion();
