@@ -425,12 +425,12 @@ describe('Controls/scroll:ContainerBase', () => {
             sinon.stub(control, '_observeContentSize');
             control._afterMount();
 
-            control._scrollModel.scrollTop = control._children.content.scrollTop;
-            control._scrollModel.scrollHeight = control._children.content.scrollHeight;
-            control._scrollModel.clientHeight = control._children.content.clientHeight;
-            control._scrollModel.scrollLeft = control._children.content.scrollLeft;
-            control._scrollModel.scrollWidth = control._children.content.scrollWidth;
-            control._scrollModel.clientWidth = control._children.content.clientWidth;
+            control._scrollModel._scrollTop = control._children.content.scrollTop;
+            control._scrollModel._scrollHeight = control._children.content.scrollHeight;
+            control._scrollModel._clientHeight = control._children.content.clientHeight;
+            control._scrollModel._scrollLeft = control._children.content.scrollLeft;
+            control._scrollModel._scrollWidth = control._children.content.scrollWidth;
+            control._scrollModel._clientWidth = control._children.content.clientWidth;
 
             control[`scrollTo${test.position}`]();
 
@@ -491,7 +491,10 @@ describe('Controls/scroll:ContainerBase', () => {
          const inst = new ContainerBase();
          inst._children = {
             content: {
-               scrollTop: 0
+               scrollTop: 0,
+               getBoundingClientRect: () => {
+                  return {};
+               }
             }
          };
          inst._resizeObserver = {

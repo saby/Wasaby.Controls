@@ -26,21 +26,20 @@ interface IHasUnrenderedContent {
 
 export default class ScrollState implements IScrollState {
 
-    protected _content: HTMLElement;
-    private _scrollTop?: number;
-    private _scrollLeft?: number;
-    private _clientHeight?: number;
-    private _scrollHeight?: number;
-    private _clientWidth?: number;
-    private _scrollWidth?: number;
+    private _content: HTMLElement;
+    protected _scrollTop?: number;
+    protected _scrollLeft?: number;
+    protected _clientHeight?: number;
+    protected _scrollHeight?: number;
+    protected _clientWidth?: number;
+    protected _scrollWidth?: number;
     private _hasUnrenderedContent: IHasUnrenderedContent;
-    protected _canVerticalScroll: boolean;
-    protected _canHorizontalScroll: boolean;
-    protected _verticalPosition: SCROLL_POSITION;
-    protected _horizontalPosition: SCROLL_POSITION;
-    protected _viewPortRect: ClientRect;
+    private _canVerticalScroll: boolean;
+    private _canHorizontalScroll: boolean;
+    private _verticalPosition: SCROLL_POSITION;
+    private _horizontalPosition: SCROLL_POSITION;
 
-    constructor(content: HTMLElement, scrollState: IScrollState, lastCalculatedState?: IScrollState) {
+    constructor(content: HTMLElement, scrollState: IScrollState, calculatedState?: IScrollState) {
         this._content = content;
         this._scrollTop = scrollState.scrollTop;
         this._scrollLeft = scrollState.scrollLeft;
@@ -52,89 +51,86 @@ export default class ScrollState implements IScrollState {
             top: false,
             bottom: false
         };
-        if (lastCalculatedState) {
-            this._canVerticalScroll = lastCalculatedState.canVerticalScroll;
-            this._canHorizontalScroll = lastCalculatedState.canHorizontalScroll;
-            this._verticalPosition = lastCalculatedState.verticalPosition;
-            this._horizontalPosition = lastCalculatedState.horizontalPosition;
-            this._viewPortRect = lastCalculatedState.viewPortRect;
+        if (calculatedState) {
+            this._canVerticalScroll = calculatedState.canVerticalScroll;
+            this._canHorizontalScroll = calculatedState.canHorizontalScroll;
+            this._verticalPosition = calculatedState.verticalPosition;
+            this._horizontalPosition = calculatedState.horizontalPosition;
+
+        } else {
+            this._updateCalculatedState();
         }
+    }
+
+    protected _updateCalculatedState(): void {
+        this._canVerticalScroll = canScrollByState(this, SCROLL_DIRECTION.VERTICAL);
+        this._canHorizontalScroll = canScrollByState(this, SCROLL_DIRECTION.HORIZONTAL);
+        this._verticalPosition = getScrollPositionTypeByState(this, SCROLL_DIRECTION.VERTICAL);
+        this._horizontalPosition = getScrollPositionTypeByState(this, SCROLL_DIRECTION.HORIZONTAL);
+    }
+
+    private _isUndefined(value): boolean {
+        return typeof value === 'undefined';
     }
 
     get hasUnrenderedContent(): IHasUnrenderedContent {
         return this._hasUnrenderedContent;
     }
 
-    set hasUnrenderedContent(value): void {
-        this._hasUnrenderedContent = value;
-    }
-
     get scrollTop(): number {
         return this._scrollTop;
-    }
-
-    set scrollTop(value: number): void {
-        this._scrollTop = value;
     }
 
     get scrollLeft(): number {
         return this._scrollLeft;
     }
 
-    set scrollLeft(value: number): void {
-        this._scrollLeft = value;
-    }
-
     get clientHeight(): number {
         return this._clientHeight;
-    }
-
-    set clientHeight(value: number): void {
-        this._clientHeight = value;
     }
 
     get clientWidth(): number {
         return this._clientWidth;
     }
 
-    set clientWidth(value: number): void {
-        this._clientWidth = value;
-    }
-
     get scrollHeight(): number {
         return this._scrollHeight;
-    }
-
-    set scrollHeight(value: number): void {
-        this._scrollHeight = value;
     }
 
     get scrollWidth(): number {
         return this._scrollWidth;
     }
 
-    set scrollWidth(value: number): void {
-        this._scrollWidth = value;
-    }
-
     get canVerticalScroll(): boolean {
+        if (this._isUndefined(this._canVerticalScroll)) {
+            this._canVerticalScroll = this._canVerticalScroll = canScrollByState(this, SCROLL_DIRECTION.VERTICAL);
+        }
         return this._canVerticalScroll;
     }
 
     get canHorizontalScroll(): boolean {
+        if (this._isUndefined(this._canHorizontalScroll)) {
+            this._canHorizontalScroll = canScrollByState(this, SCROLL_DIRECTION.HORIZONTAL);
+        }
         return this._canHorizontalScroll;
     }
 
     get verticalPosition(): string {
+        if (this._isUndefined(this._verticalPosition)) {
+            this._verticalPosition = getScrollPositionTypeByState(this, SCROLL_DIRECTION.VERTICAL);
+        }
         return this._verticalPosition;
     }
 
     get horizontalPosition(): string {
+        if (this._isUndefined(this._horizontalPosition)) {
+            this._verticalPosition = getScrollPositionTypeByState(this, SCROLL_DIRECTION.HORIZONTAL);
+        }
         return this._horizontalPosition;
     }
 
     get viewPortRect(): ClientRect {
-        return this._viewPortRect;
+        return this._content.getBoundingClientRect();
     }
 
     clone(): ScrollState {
@@ -146,13 +142,12 @@ export default class ScrollState implements IScrollState {
             clientWidth: this._clientWidth,
             scrollWidth: this._scrollWidth
         };
-        const lastCalculatedState = {
+        const calculatedState = {
             canVerticalScroll: this._canVerticalScroll,
             canHorizontalScroll: this._canHorizontalScroll,
             verticalPosition: this._verticalPosition,
-            horizontalPosition: this._horizontalPosition,
-            viewPortRect: this._viewPortRect
+            horizontalPosition: this._horizontalPosition
         };
-        return new ScrollState(this._content, scrollState, lastCalculatedState);
+        return new ScrollState(this._content, scrollState, calculatedState);
     }
 }
