@@ -1,6 +1,7 @@
 import GridCell, { IOptions as IGridCellOptions } from './GridCell';
 import { OptionsToPropertyMixin }  from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
+import GridRow from 'Controls/_display/GridDataRow';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:StickyLadderColumnTemplate';
 
@@ -11,7 +12,7 @@ export interface IOptions<T> extends IGridCellOptions<T> {
     stickyHeaderZIndex: number;
 }
 
-export default class GridStickyLadderCell<T> extends GridCell<T> {
+export default class GridStickyLadderCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
     protected _$wrapperStyle: string;
     protected _$contentStyle: string;
     protected _$stickyProperty: string;

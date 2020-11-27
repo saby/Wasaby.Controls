@@ -100,7 +100,7 @@ import {default as GridResultsCell} from './_display/GridResultsCell';
 export {GridResultsCell};
 
 import TreeGridCollection from './_display/TreeGridCollection';
-import TreeGridCollectionItem from './_display/TreeGridCollectionItem';
+import TreeGridRow from './_display/TreeGridRow';
 
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 
@@ -112,6 +112,7 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
+import TreeGridCell from 'Controls/_display/TreeGridCell';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 
@@ -139,4 +140,5 @@ register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
 register('Controls/display:TreeGridCollection', TreeGridCollection, {instantiate: false});
-register('Controls/display:TreeGridCollectionItem', TreeGridCollectionItem, {instantiate: false});
+register('Controls/display:TreeGridRow', TreeGridRow, {instantiate: false});
+register('Controls/display:TreeGridCell', TreeGridCell, {instantiate: false});

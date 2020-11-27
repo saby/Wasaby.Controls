@@ -1,19 +1,38 @@
-import GridColumn, { IOptions as IGridColumnOptions } from 'Controls/_display/GridColumn';
-import { IColumn, TColumns } from 'Controls/_grid/interface/IColumn';
-import GridHeader from 'Controls/_display/GridHeader';
-import { TResultsPosition } from 'Controls/_display/GridResults';
-import GridStickyLadderColumn from 'Controls/_display/GridStickyLadderColumn';
-import GridCheckboxColumn from 'Controls/_display/GridCheckboxColumn';
-import GridCollection from 'Controls/_display/GridCollection';
+import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
+import GridHeader from './GridHeader';
+import GridCollection from './GridCollection';
+import { TemplateFunction } from 'UI/Base';
+import GridCell, { IOptions as IGridCellOptions } from './GridCell';
+import { TResultsPosition } from './GridResultsRow';
+import GridStickyLadderCell from './GridStickyLadderCell';
+import { create } from 'Types/di';
+import prepareColumns from './utils/GridColspanUtil';
+import GridCheckboxCell from './GridCheckboxCell';
+import GridRow from './GridRow';
+import { IOptions as IBaseOptions } from './CollectionItem';
 
-export default abstract class GridItemMixin<T> {
-    readonly '[Controls/_display/GridItemMixin]': boolean;
+export interface IOptions<T> extends IBaseOptions<T> {
+    columns: TColumns;
+}
+
+export default abstract class GridRowMixin<T> {
+    readonly '[Controls/_display/GridRowMixin]': boolean;
     readonly '[Controls/_display/ILadderedCollectionItem]': boolean;
 
+    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
+    // Данная возможность доступна только строке с данными.
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
+
     protected _$owner: GridCollection<T>;
+    protected _cellModule: string;
+
     protected _$columns: TColumns;
-    protected _$columnItems: Array<GridColumn<T>>;
+    protected _$columnItems: Array<GridCell<T, GridRow<T>>>;
     protected _$ladder: {};
+
+    getTemplate(): TemplateFunction|string {
+        return 'Controls/gridNew:ItemTemplate';
+    }
 
     getItemClasses(templateHighlightOnHover: boolean = true,
                    theme: string = 'default',
@@ -42,7 +61,7 @@ export default abstract class GridItemMixin<T> {
         return (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
     }
 
-    getColumns(): Array<GridColumn<T>> {
+    getColumns(): Array<GridCell<T, GridRow<T>>> {
         if (!this._$columnItems) {
             this._initializeColumns();
         }
@@ -50,11 +69,11 @@ export default abstract class GridItemMixin<T> {
     }
 
     getColumnsCount(): number {
-        return this._$columns.length;
+        return this.getColumns().length;
     }
 
-    getColumnIndex(column: IColumn): number {
-        return this._$columns.indexOf(column);
+    getColumnIndex(column: GridCell<T, GridRow<T>>): number {
+        return this.getColumns().indexOf(column);
     }
 
     getTopPadding(): string {
@@ -148,7 +167,7 @@ export default abstract class GridItemMixin<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: {}) {
+    setLadder(ladder: {}): void {
         if (this._$ladder !== ladder) {
             this._$ladder = ladder;
             this._reinitializeColumns();
@@ -204,7 +223,7 @@ export default abstract class GridItemMixin<T> {
             }
 
             if (stickyLadderStyleForSecondProperty) {
-                this._$columnItems.splice(1,0,new GridStickyLadderColumn({
+                this._$columnItems.splice(1, 0, new GridStickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
                     wrapperStyle: stickyLadderStyleForSecondProperty,
@@ -216,7 +235,7 @@ export default abstract class GridItemMixin<T> {
 
             if (stickyLadderStyleForFirstProperty) {
                 this._$columnItems = ([
-                    new GridStickyLadderColumn({
+                    new GridStickyLadderCell({
                         column: this._$columns[0],
                         owner: this,
                         wrapperStyle: stickyLadderStyleForFirstProperty,
@@ -224,16 +243,16 @@ export default abstract class GridItemMixin<T> {
                         stickyProperty: stickyLadderProperties[0],
                         stickyHeaderZIndex: 2
                     })
-                ] as Array<GridColumn<T>>).concat(this._$columnItems);
+                ] as Array<GridCell<T, GridRow<T>>>).concat(this._$columnItems);
             }
 
             if (createMultiSelectColumn) {
                 this._$columnItems = ([
-                    new GridCheckboxColumn({
+                    new GridCheckboxCell({
                         column: {} as IColumn,
                         owner: this
                     })
-                ] as Array<GridColumn<T>>).concat(this._$columnItems);
+                ] as Array<GridCell<T, GridRow<T>>>).concat(this._$columnItems);
             }
         }
     }
@@ -259,15 +278,21 @@ export default abstract class GridItemMixin<T> {
         }
     }
 
-    protected _getGridColumnConstructor(): new (options: any) => GridColumn<T> {
-        return GridColumn;
+    prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
+        return prepareColumns({
+            columns,
+            hasMultiSelect: this.getMultiSelectVisibility() !== 'hidden',
+            gridColumnsCount: this._$owner.getColumnsConfig().length
+        });
     }
 
-    protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
+    protected _getColumnsFactory(): (options: Partial<IGridCellOptions<T>>) => GridCell<T, GridRow<T>> {
+        if (!this._cellModule) {
+            throw new Error('Controls/_display/GridRow:_getColumnsFactory can not resolve cell module!');
+        }
         return (options) => {
             options.owner = this;
-            const columnConstructor = this._getGridColumnConstructor();
-            return new columnConstructor(options as IGridColumnOptions<T>);
+            return create(this._cellModule, options as IGridCellOptions<T>);
         };
     }
 
@@ -278,9 +303,11 @@ export default abstract class GridItemMixin<T> {
     protected abstract _nextVersion(): void;
 }
 
-Object.assign(GridItemMixin.prototype, {
-    '[Controls/_display/GridItemMixin]': true,
+Object.assign(GridRowMixin.prototype, {
+    '[Controls/_display/GridRowMixin]': true,
     '[Controls/_display/ILadderedCollectionItem]': true,
+    '[Controls/_display/IEditableCollectionItem]': false,
+    _cellModule: null,
     _$columns: null,
     _$columnItems: null
 });

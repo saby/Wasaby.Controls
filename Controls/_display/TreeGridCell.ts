@@ -1,11 +1,13 @@
-import GridColumn from './GridColumn';
-import TreeGridCollectionItem from 'Controls/_display/TreeGridCollectionItem';
-import GridItemMixin from 'Controls/_display/GridItemMixin';
+import TreeGridRow from 'Controls/_display/TreeGridRow';
+import GridRowMixin from 'Controls/_display/GridRowMixin';
+import GridCell from 'Controls/_display/GridCell';
+import GridRow from 'Controls/_display/GridRow';
+import GridDataCell from './GridDataCell';
 
-export default class TreeGridColumn<T> extends GridColumn<T> {
-    readonly '[Controls/_display/TreeGridColumn]': boolean;
+export default class TreeGridCell<T> extends GridDataCell<T, GridRow<T>> {
+    readonly '[Controls/_display/TreeGridCell]': boolean;
 
-    protected _$owner: TreeGridCollectionItem<T>;
+    protected _$owner: TreeGridRow<T>;
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = super._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
@@ -34,6 +36,6 @@ export default class TreeGridColumn<T> extends GridColumn<T> {
     }
 }
 
-Object.assign(GridItemMixin.prototype, {
-    '[Controls/_display/TreeGridColumn]': true
+Object.assign(GridRowMixin.prototype, {
+    '[Controls/_display/TreeGridCell]': true
 });

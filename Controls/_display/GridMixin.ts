@@ -1,14 +1,14 @@
 import { TColumns } from 'Controls/_grid/interface/IColumn';
 import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
 import GridHeader from 'Controls/_display/GridHeader';
-import GridFooter from 'Controls/_display/GridFooter';
-import GridResults, { TResultsPosition } from 'Controls/_display/GridResults';
 import GridColgroup from 'Controls/_display/GridColgroup';
 import { Model as EntityModel } from 'Types/entity';
 import { IViewIterator } from 'Controls/_display/Collection';
 import { TemplateFunction } from 'UI/Base';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
-import GridItemMixin from 'Controls/_display/GridItemMixin';
+import GridRowMixin from 'Controls/_display/GridRowMixin';
+import GridFooterRow from 'Controls/_display/GridFooterRow';
+import GridResultsRow, { TResultsPosition } from 'Controls/_display/GridResultsRow';
 
 export interface IGridMixinOptions {
     columns: TColumns;
@@ -21,14 +21,14 @@ export interface IGridMixinOptions {
     stickyColumn?: {};
 }
 
-export default abstract class GridMixin<S, T> {
+export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
     readonly '[Controls/_display/GridMixin]': boolean;
 
     protected _$columns: TColumns;
     protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
-    protected _$footer: GridFooter<S>;
-    protected _$results: GridResults<S>;
+    protected _$footer: GridFooterRow<S>;
+    protected _$results: GridResultsRow<S>;
     protected _$ladder: {};
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
@@ -60,6 +60,10 @@ export default abstract class GridMixin<S, T> {
     }
 
     getColumns(): TColumns {
+        throw Error('GridCollection.getColumns is deprecated. Use GridCollection.getColumnsConfig');
+    }
+
+    getColumnsConfig(): TColumns {
         return this._$columns;
     }
 
@@ -71,11 +75,11 @@ export default abstract class GridMixin<S, T> {
         return this._$header;
     }
 
-    getFooter(): GridFooter<S> {
+    getFooter(): GridFooterRow<S> {
         return this._$footer;
     }
 
-    getResults(): GridResults<S> {
+    getResults(): GridResultsRow<S> {
         return this._$results;
     }
 
@@ -116,7 +120,7 @@ export default abstract class GridMixin<S, T> {
     }
 
     protected _updateItemsLadder(): void {
-        this.getViewIterator().each((item: GridItemMixin<S>) => {
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item['[Controls/_display/ILadderedCollectionItem]']) {
                 item.setLadder(this._$ladder);
             }
@@ -124,7 +128,7 @@ export default abstract class GridMixin<S, T> {
     }
 
     protected _updateItemsColumns(): void {
-        this.getViewIterator().each((item: GridItemMixin<S>) => {
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item['[Controls/_display/ILadderedCollectionItem]']) {
                 item.setColumns(this._$columns);
             }
@@ -149,15 +153,15 @@ export default abstract class GridMixin<S, T> {
         });
     }
 
-    protected _initializeFooter(options: IGridMixinOptions): GridFooter<S> {
-        return new GridFooter({
+    protected _initializeFooter(options: IGridMixinOptions): GridFooterRow<S> {
+        return new GridFooterRow({
             owner: this,
             footerTemplate: options.footerTemplate
         });
     }
 
-    protected _initializeResults(options: IGridMixinOptions): GridResults<S> {
-        return new GridResults({
+    protected _initializeResults(options: IGridMixinOptions): GridResultsRow<S> {
+        return new GridResultsRow({
             owner: this,
             results: this.getMetaResults(),
             resultsTemplate: options.resultsTemplate

@@ -1,32 +1,34 @@
 import { mixin } from 'Types/util';
-import TreeItem from './TreeItem';
-import GridItemMixin from './GridItemMixin';
-import GridColumn from './GridColumn';
-import TreeGridColumn from 'Controls/_display/TreeGridColumn';
+import TreeItem, { IOptions as ITreeItemOptions } from './TreeItem';
+import TreeGridCell from './TreeGridCell';
+import GridRowMixin from './GridRowMixin';
+import GridCell from './GridCell';
+import { IOptions as IGridRowOptions } from './GridRow';
+import TreeGridCollection from './TreeGridCollection';
 
-export default class TreeGridCollectionItem<T>
-    extends mixin<TreeItem<any>, GridItemMixin<any>>(TreeItem, GridItemMixin) {
-    readonly '[Controls/_display/TreeGridCollectionItem]': boolean;
+export interface IOptions<T> extends IGridRowOptions<T>, ITreeItemOptions<T> {
+    owner: TreeGridCollection<T>;
+}
 
-    constructor(options: any) {
+export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
+    readonly '[Controls/_display/GridRow]': boolean;
+    readonly '[Controls/_display/TreeGridRow]': boolean;
+
+    constructor(options: IOptions<T>) {
         super(options);
-        GridItemMixin.call(this, options);
+        GridRowMixin.call(this, options);
     }
 
     // region Expander
 
-    shouldDisplayExpanderBlock(column: GridColumn<T>): boolean {
+    shouldDisplayExpanderBlock(column: GridCell<T, TreeGridRow<T>>): boolean {
         const columnIndex = column.getColumnIndex();
         return columnIndex === 0;
     }
 
-    protected _getGridColumnConstructor(): new (options: any) => TreeGridColumn<T> {
-        return TreeGridColumn;
-    }
-
     // endregion Expander
 
-    // TODO duplicate code with GridCollectionItem. Нужно придумать как от него избавиться.
+    // TODO duplicate code with GridRow. Нужно придумать как от него избавиться.
     //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region overrides
 
@@ -62,10 +64,12 @@ export default class TreeGridCollectionItem<T>
         }
     }
 
-    // endregion
+    // endregion overrides
 }
 
-Object.assign(TreeGridCollectionItem.prototype, {
-    '[Controls/_display/TreeGridCollectionItem]': true,
-    _moduleName: 'Controls/display:TreeGridCollectionItem'
+Object.assign(TreeGridRow.prototype, {
+    '[Controls/_display/TreeGridRow]': true,
+    '[Controls/_display/GridRow]': true,
+    _cellModule: 'Controls/display:TreeGridCell',
+    _moduleName: 'Controls/display:TreeGridRow'
 });

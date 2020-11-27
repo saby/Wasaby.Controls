@@ -7,8 +7,7 @@ import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
-import { TemplateFunction } from 'wasaby-cli/store/_repos/saby-ui/UI/Base';
-import { IItemPadding } from 'Controls/_list/interface/IList';
+import { TemplateFunction } from 'UI/Base';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;

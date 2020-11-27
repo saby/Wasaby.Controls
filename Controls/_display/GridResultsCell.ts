@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 import GridResultsRow from './GridResultsRow';
-import GridCell from "Controls/_display/GridCell";
+import GridCell from 'Controls/_display/GridCell';
 
 export interface IOptions<T> {
     owner: GridResultsRow<T>;

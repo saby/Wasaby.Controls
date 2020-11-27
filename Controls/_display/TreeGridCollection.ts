@@ -1,12 +1,11 @@
 import Tree from './Tree';
 import { mixin } from 'Types/util';
 import GridMixin from './GridMixin';
-import TreeGridCollectionItem from './TreeGridCollectionItem';
-import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
-import { ItemsFactory } from 'Controls/_display/Collection';
-import { IOptions as IGridCollectionItemOptions } from 'Controls/_display/GridCollectionItem';
-import GridGroupItem from 'Controls/_display/GridGroupItem';
-import TreeItem from 'Controls/_display/TreeItem';
+import TreeGridRow, {IOptions as ITreeGridRowOptions} from './TreeGridRow';
+import * as GridLadderUtil from './utils/GridLadderUtil';
+import { ItemsFactory } from './Collection';
+import GridGroupItem from './GridGroupItem';
+import TreeItem from './TreeItem';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -28,8 +27,10 @@ function itemIsVisible<T>(item: TreeItem<T>): boolean  {
     return itemIsVisible(parent);
 }
 
-export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> = TreeGridCollectionItem<S>>
-    extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
+export default class TreeGridCollection<
+    S,
+    T extends TreeGridRow<S> = TreeGridRow<S>
+> extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/_display/TreeGridCollection]': boolean;
 
     constructor(options: any) {
@@ -38,7 +39,9 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
 
         // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую стратегии TreeGrid.
         //  Если сразу в Tree положим, то все разломаем
-        this.addFilter((contents, index, item, collectionIndex) => itemIsVisible(item));
+        this.addFilter(
+            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
+        );
     }
 
     // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.
@@ -77,7 +80,7 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: IGridCollectionItemOptions<S>): T {
+        return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
@@ -93,5 +96,5 @@ export default class TreeGridCollection<S, T extends TreeGridCollectionItem<S> =
 Object.assign(TreeGridCollection.prototype, {
     '[Controls/_display/TreeGridCollection]': true,
     _moduleName: 'Controls/display:TreeGridCollection',
-    _itemModule: 'Controls/display:TreeGridCollectionItem'
+    _itemModule: 'Controls/display:TreeGridRow'
 });

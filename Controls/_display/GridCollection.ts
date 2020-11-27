@@ -1,18 +1,18 @@
 import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
-import GridRow, { IOptions as IGridRowOptions } from './GridRow';
 import GridGroupItem from './GridGroupItem';
 import * as GridLadderUtil from './utils/GridLadderUtil';
 import { mixin } from 'Types/util';
 import GridMixin, { IGridMixinOptions } from 'Controls/_display/GridMixin';
+import GridRow, {IOptions as IGridRowOptions} from 'Controls/_display/GridRow';
 
 export interface IOptions<
     S,
-    T extends GridCollectionItem<S> = GridCollectionItem<S>
+    T extends GridRow<S> = GridRow<S>
 > extends IBaseOptions<S, T>, IGridMixinOptions { }
 
 export default class GridCollection<
     S,
-    T extends GridCollectionItem<S> = GridCollectionItem<S>
+    T extends GridRow<S> = GridRow<S>
 > extends mixin<Collection<any>, GridMixin<any, any>>(Collection, GridMixin) {
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -69,5 +69,5 @@ export default class GridCollection<
 Object.assign(GridCollection.prototype, {
     '[Controls/_display/GridCollection]': true,
     _moduleName: 'Controls/display:GridCollection',
-    _itemModule: 'Controls/display:GridCollectionItem'
+    _itemModule: 'Controls/display:GridDataRow'
 });

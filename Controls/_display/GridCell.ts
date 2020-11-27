@@ -78,7 +78,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
             startColumn,
             endColumn,
             colspan: endColumn - startColumn
-        }
+        };
     }
 
     getColspan(): number {
@@ -93,7 +93,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // endregion
 
     // region Аспект "Лесенка"
-    setHiddenForLadder(value: boolean) {
+    setHiddenForLadder(value: boolean): void {
         this._$hiddenForLadder = value;
     }
     // endregion
@@ -252,7 +252,6 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         return contentClasses;
     }
 
-
     getContentStyles(): string {
         return '';
     }
@@ -398,6 +397,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         return false;
     }
+
     getMarkerClasses(theme: string,
                      style: string = 'default',
                      markerClassName: TMarkerClassName = 'default',

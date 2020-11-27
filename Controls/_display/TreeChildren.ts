@@ -1,7 +1,7 @@
 import TreeItem from './TreeItem';
 import {List, IListOptions} from 'Types/collection';
 import BreadcrumbsItem from './BreadcrumbsItem';
-import TreeGridCollectionItem from './TreeGridCollectionItem';
+import TreeGridRow from './TreeGridRow';
 
 export interface IOptions<T> extends IListOptions<T> {
     owner?: T;
@@ -26,7 +26,7 @@ export default class TreeChildren<S, T = TreeItem<S>> extends List<T> {
         if (!(this._$owner instanceof Object)) {
             throw new TypeError('Tree children owner should be an object');
         }
-        if (!(this._$owner instanceof TreeItem) && !(this._$owner instanceof BreadcrumbsItem) && !(this._$owner instanceof TreeGridCollectionItem)) {
+        if (!(this._$owner instanceof TreeItem) && !(this._$owner instanceof BreadcrumbsItem) && !(this._$owner instanceof TreeGridRow)) {
             throw new TypeError('Tree children owner should be an instance of Controls/display:TreeItem or Controls/display:BreadcrumbsItem');
         }
     }

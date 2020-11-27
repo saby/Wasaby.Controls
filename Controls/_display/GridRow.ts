@@ -1,21 +1,19 @@
-import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
+import CollectionItem from './CollectionItem';
 import GridCollection from './GridCollection';
-import { TColumns } from 'Controls/grid';
 import { mixin } from 'Types/util';
-import GridItemMixin from 'Controls/_display/GridItemMixin';
+import GridRowMixin, { IOptions as IGridRowMixinOptions } from './GridRowMixin';
 
-export interface IOptions<T> extends IBaseOptions<T> {
+export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: GridCollection<T>;
-    columns: TColumns;
 }
 
-export default class GridCollectionItem<T>
-    extends mixin<CollectionItem<any>, GridItemMixin<any>>(CollectionItem, GridItemMixin) {
-    readonly '[Controls/_display/GridCollectionItem]': boolean;
+export default class GridRow<T>
+    extends mixin<CollectionItem<any>, GridRowMixin<any>>(CollectionItem, GridRowMixin) {
+    readonly '[Controls/_display/GridRow]': boolean;
 
     constructor(options?: IOptions<T>) {
         super(options);
-        GridItemMixin.call(this, options);
+        GridRowMixin.call(this, options);
     }
 
     // region overrides
@@ -55,8 +53,8 @@ export default class GridCollectionItem<T>
     // endregion
 }
 
-Object.assign(GridCollectionItem.prototype, {
-    '[Controls/_display/GridCollectionItem]': true,
-    _moduleName: 'Controls/display:GridCollectionItem',
-    _instancePrefix: 'grid-item-'
+Object.assign(GridRow.prototype, {
+    '[Controls/_display/GridRow]': true,
+    _moduleName: 'Controls/display:GridRow',
+    _instancePrefix: 'grid-row-'
 });
