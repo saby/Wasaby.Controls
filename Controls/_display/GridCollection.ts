@@ -6,7 +6,7 @@ import { TColumns, THeader } from 'Controls/grid';
 import * as GridLadderUtil from './utils/GridLadderUtil';
 import GridColgroup from './GridColgroup';
 import GridHeader from './GridHeader';
-import GridResults, { TResultsPosition } from './GridResults';
+import GridResultsRow, { TResultsPosition } from './GridResultsRow';
 import GridFooterRow from './GridFooterRow';
 
 export interface IOptions<
@@ -15,6 +15,8 @@ export interface IOptions<
 > extends IBaseOptions<S, T> {
     columns: TColumns;
     footerTemplate?: TemplateFunction;
+    // TODO: Написать интерфейс и доку для TFooter
+    footer?: TFooter;
     header?: THeader;
     resultsTemplate?: TemplateFunction;
     resultsPosition?: TResultsPosition;
@@ -31,7 +33,7 @@ export default class GridCollection<
     protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
     protected _$footer: GridFooterRow<S>;
-    protected _$results: GridResults<S>;
+    protected _$results: GridResultsRow<S>;
     protected _$ladder: {};
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
@@ -53,7 +55,7 @@ export default class GridCollection<
         if (this._headerIsVisible(options)) {
             this._$header = this._initializeHeader(options);
         }
-        if (options.footerTemplate) {
+        if (options.footerTemplate || options.footer) {
             this._$footer = this._initializeFooter(options);
         }
         if (this._resultsIsVisible()) {
@@ -84,7 +86,7 @@ export default class GridCollection<
         return this._$footer;
     }
 
-    getResults(): GridResults<S> {
+    getResults(): GridResultsRow<S> {
         return this._$results;
     }
 
@@ -192,15 +194,17 @@ export default class GridCollection<
         return new GridFooterRow({
             ...options,
             owner: this,
-            template: options.footerTemplate
+            footerTemplate: options.footerTemplate,
+            footer: options.footer
         });
     }
 
-    protected _initializeResults(options: IOptions<S>): GridResults<S> {
-        return new GridResults({
+    protected _initializeResults(options: IOptions<S>): GridResultsRow<S> {
+        return new GridResultsRow({
+            ...options,
             owner: this,
             results: this.getMetaResults(),
-            resultsTemplate: options.resultsTemplate
+            resultsTemplate: options.resultsTemplate,
         });
     }
 

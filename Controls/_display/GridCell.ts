@@ -9,19 +9,13 @@ import {
 } from 'Types/entity';
 import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn } from 'Controls/grid';
+import { IColumn, IColspanParams } from 'Controls/grid';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
-interface IColspanParams {
-    startColumn: number;
-    endColumn: number;
-    colspan: number;
-}
-
-export interface IOptions<T> extends Partial<IColspanParams> {
+export interface IOptions<T> extends IColspanParams {
     owner: GridRow<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
@@ -68,7 +62,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     // region Аспект "Объединение колонок"
 
-    _getColspanParams(): IColspanParams {
+    _getColspanParams(): Required<IColspanParams> {
         const startColumn = typeof this._$startColumn == 'number' ? this._$startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 

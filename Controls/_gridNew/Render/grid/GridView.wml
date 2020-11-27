@@ -8,9 +8,9 @@
     </ws:if>
     <!-- Results (top) -->
     <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}">
-        <ws:partial template="wml!Controls/_gridNew/Render/grid/Header"
+        <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
                     attr:name="results"
-                    header="{{ _listModel.getResults() }}"
+                    item="{{ _listModel.getResults() }}"
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
     </ws:if>
     <!-- Items -->
@@ -43,9 +43,9 @@
     </ws:if>
     <!-- Results (bottom) -->
     <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}">
-        <ws:partial template="wml!Controls/_gridNew/Render/grid/Header"
+        <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
                     attr:name="results"
-                    header="{{ _listModel.getResults() }}"
+                    item="{{ _listModel.getResults() }}"
                     backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
     </ws:if>
     <!-- Footer -->

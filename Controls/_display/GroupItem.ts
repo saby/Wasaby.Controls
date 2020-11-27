@@ -14,8 +14,10 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
  * @public
  * @author Мальцев А.А.
  */
-export default class GroupItem<T> extends mixin<CollectionItem<any>,
-    ExpandableMixin>(
+export default class GroupItem<T> extends mixin<
+    CollectionItem<any>,
+    ExpandableMixin
+>(
     CollectionItem,
     ExpandableMixin
 ) {

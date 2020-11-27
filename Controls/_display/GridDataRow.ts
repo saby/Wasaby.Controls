@@ -7,6 +7,8 @@ export interface IOptions<T> extends IGridRowOptions<T> {
 export default class GridDataRow<T> extends GridRow<T> {
     protected _$columnItems: Array<GridDataCell<T, this>>;
 
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+
     constructor(options?: IOptions<T>) {
         super(options);
     }
