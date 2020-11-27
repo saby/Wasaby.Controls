@@ -37,7 +37,7 @@
     <!-- emptyTemplate -->
     <ws:if data="{{_options.emptyTemplate}}">
         <ws:partial template="{{ _options.emptyTemplate }}"
-                    class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
+                    attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
                     prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
                     prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"
                     hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>

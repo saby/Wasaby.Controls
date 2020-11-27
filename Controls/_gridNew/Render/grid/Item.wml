@@ -1,5 +1,5 @@
 <ws:template name="COLUMN">
-   <div if="{{ gridColumn.shouldDisplayMarker(marker) }}" class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition) }}"></div>
+      <div if="{{ gridColumn.shouldDisplayMarker(marker) }}" class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition) }}"></div>
    <div class="{{ gridColumn.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
         style="{{ gridColumn.getContentStyles() }}">
       <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl) }}"
