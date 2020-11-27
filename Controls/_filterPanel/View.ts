@@ -1,16 +1,15 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_filter/ViewPanel/ViewPanel');
-import {resetFilter} from 'Controls/_filter/resetFilterUtils';
+import template = require('wml!Controls/_filterPanel/View/View');
+import {FilterUtils} from 'Controls/filter';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
+import {IFilterItem} from 'Controls/filter';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
  *
- * @class Controls/_filter/ViewPanel
+ * @class Controls/_filterPanel/View
  * @extends Core/Control
- * @mixes Controls/_filter/ViewPanel/interface/IFilterViewPanel
  *
  * @public
  * @author Мельникова Е.А.
@@ -21,7 +20,7 @@ interface IViewPanelOptions {
     source: IFilterItem[];
 }
 
-export default class ViewPanel extends Control<IControlOptions> {
+export default class View extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _source: IFilterItem[] = null;
     protected _editingObject: object = {};
@@ -41,7 +40,7 @@ export default class ViewPanel extends Control<IControlOptions> {
     }
 
     protected _resetFilter(): void {
-        resetFilter(this._source);
+        FilterUtils.resetFilter(this._source);
         this._updateFilterParams();
         this._notifyChanges();
     }
@@ -70,7 +69,7 @@ export default class ViewPanel extends Control<IControlOptions> {
     private _resetFilterItem(item: unknown): void {
         const itemContent = item.getContents();
         this._source.forEach((item) => {
-            if (item.group === itemContent || item.name === itemContent) {
+            if (item.group === itemContent) {
                 item.value = item.resetValue;
                 item.textValue = null;
             }
@@ -114,5 +113,5 @@ export default class ViewPanel extends Control<IControlOptions> {
         this._notify('sourceChanged', [this._source]);
     }
 
-    static _theme: string[] = ['Controls/filter', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/filterPanel', 'Controls/Classes'];
 }

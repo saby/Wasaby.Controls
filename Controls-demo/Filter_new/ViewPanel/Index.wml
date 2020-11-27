@@ -2,9 +2,9 @@
     <Controls.filter:Controller filterButtonSource="{{_filterButtonData}}">
         <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
             <div class="controlsDemo__flexRow">
-                <Controls.filter:ViewPanelContainer>
-                    <Controls.filter:ViewPanel attr:class="controls-demo__filterButton"/>
-                </Controls.filter:ViewPanelContainer>
+                <Controls.filterPanel:Container>
+                    <Controls.filterPanel:View attr:class="controls-demo__filterButton"/>
+                </Controls.filterPanel:Container>
                 <Controls.list:Container>
                     <Controls.list:View emptyTemplate="Не найдено">
                         <ws:itemTemplate>

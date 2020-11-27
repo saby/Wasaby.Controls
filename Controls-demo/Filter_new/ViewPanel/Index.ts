@@ -60,7 +60,7 @@ export default class extends Control {
             {
                 group: 'Количество сотрудников',
                 name: 'amount',
-                editorTemplateName: 'Controls/filter:NumberRangeEditor',
+                editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
                 resetValue: [],
                 caption: '',
                 value: [],
@@ -76,7 +76,7 @@ export default class extends Control {
                 resetValue: null,
                 caption: '',
                 value: null,
-                editorTemplateName: 'Controls/filter:ListEditor',
+                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
                 editorOptions: {
                     navigation: {
                         source: 'page',

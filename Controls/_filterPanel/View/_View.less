@@ -110,14 +110,14 @@
    padding-right: @padding-right_filterViewPanel;
 }
 
-.controls-FilterViewPanel__svg {
+.controls-EnumList_Editor__svg {
    z-index: 2;
    display: inline-block;
    flex-shrink: 0;
    pointer-events: none;
 }
 
-.controls-FilterViewPanel__svg_theme-@{themeName} {
+.controls-EnumList_Editor__svg_theme-@{themeName} {
    width: @circle_size_filterViewPanel;
    height: @circle_size_filterViewPanel;
    position: absolute;
@@ -125,30 +125,30 @@
    top: (@cell_min-height_grid - @circle_size_filterViewPanel) / 2;
 }
 
-.controls-FilterViewPanel__borderCircle {
+.controls-EnumList_Editor__borderCircle {
    fill: transparent;
 }
 
-.controls-FilterViewPanel__borderCircle_theme-@{themeName} {
+.controls-EnumList_Editor__borderCircle_theme-@{themeName} {
    stroke-width: @border-circle_thickness_filterViewPanel;
    stroke: @background-color_filterViewPanel;
 }
 
-.controls-FilterViewPanel__columns {
+.controls-EnumList__columns {
    position: relative;
 }
 
-.controls-FilterViewPanel__columns:hover {
-   .controls-FilterViewPanel__borderCircle_theme-@{themeName} {
+.controls-EnumList__columns:hover {
+   .controls-EnumList_Editor__borderCircle_theme-@{themeName} {
       stroke: @border-circle_color_filterViewPanel;
    }
 }
 
-.controls-FilterViewPanel__innerCircle_selected_theme-@{themeName} {
+.controls-EnumList_Editor__innerCircle_selected_theme-@{themeName} {
    fill: @inner-circle_color_filterViewPanel;
 }
 
-.controls-FilterViewPanel__innerCircle_unselected_theme-@{themeName} {
+.controls-EnumList_Editor__innerCircle_unselected_theme-@{themeName} {
    fill: none;
 }
 
@@ -156,6 +156,6 @@
    background: transparent;
 }
 
-.controls-FilterViewPanel__column_unselected-title_theme-@{themeName} {
+.controls-EnumList__column_unselected-title_theme-@{themeName} {
    color: @item_color_filterViewPanel;
 }
