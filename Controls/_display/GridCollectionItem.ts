@@ -18,6 +18,83 @@ export default class GridCollectionItem<T>
         GridItemMixin.call(this, options);
     }
 
+    getRightPadding(): string {
+        return this._$owner.getRightPadding().toLowerCase();
+    }
+
+    getItemSpacing(): { left: string, right: string, row: string } {
+        return {
+            left: this._$owner.getLeftPadding().toLowerCase(),
+            right: this._$owner.getRightPadding().toLowerCase(),
+            row: this._$owner.getTopPadding().toLowerCase()
+        };
+    }
+
+    getHoverBackgroundStyle(): string {
+        return this._$owner.getHoverBackgroundStyle();
+    }
+
+    getEditingBackgroundStyle(): string {
+        return this._$owner.getEditingBackgroundStyle();
+    }
+
+    getHeader(): GridHeader<T> {
+        return this._$owner.getHeader();
+    }
+
+    getResultsPosition(): TResultsPosition {
+        return this._$owner.getResultsPosition();
+    }
+
+    getStickyLadderProperties(column: IColumn): string[] {
+        let stickyProperties = column && column.stickyProperty;
+        if (stickyProperties && !(stickyProperties instanceof Array)) {
+            stickyProperties = [stickyProperties];
+        }
+        return stickyProperties as string[];
+    }
+    shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
+        const stickyLadder = this.getStickyLadder();
+        const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
+
+        if (!stickyLadder) {
+            return true;
+        }
+
+        const index = stickyProperties.indexOf(stickyProperty);
+        const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
+
+        if (!this.getOwner().getItemsDragNDrop() && stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+            index === 1 && !hasMainCell || index === 0 && hasMainCell)) {
+            return false;
+        }
+        return true;
+    }
+    getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
+        let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
+        const ladder = this.getLadder();
+        const stickyLadder = this.getStickyLadder();
+        const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const index = stickyProperties?.indexOf(stickyProperty);
+        const hasMainCell = stickyLadder && !!(stickyLadder[stickyProperties[0]].ladderLength);
+
+        if (stickyProperty && ladderProperty && stickyProperty !== ladderProperty && (
+            index === 1 && !hasMainCell || index === 0 && hasMainCell)) {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_displayNoneForLadder';
+        }
+
+        if (stickyProperty === ladderProperty && index === 1 && hasMainCell) {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_additional-with-main';
+        }
+
+        if (!ladder || !ladder[ladderProperty] || (stickyProperty === ladderProperty || !stickyProperty) && ladder[ladderProperty].ladderLength >= 1) {
+
+        } else {
+            ladderWrapperClasses += ' controls-Grid__row-cell__ladder-content_hiddenForLadder';
+        }
+        return ladderWrapperClasses;
+    }
+
     // region overrides
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {

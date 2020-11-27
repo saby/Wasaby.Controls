@@ -53,4 +53,5 @@ export interface ICollection<S, T> extends IBaseCollection<T> {
     getRowSeparatorSize(): string;
     getItemsDragNDrop(): boolean;
     notifyItemChange(item: T, properties?: object): void;
+    getEditingBackgroundStyle(): string;
 }

@@ -16,6 +16,8 @@ export interface IData {
    isDocument?: Boolean;
    code?: string;
    image?: string;
+   // Специальное свойство для того, чтобы вывести в поиске хлебные крошки в несколько строк
+   SearchResult?: boolean;
 }
 
 export const DataWithLongFolderName = {
@@ -419,10 +421,10 @@ export const Gadgets = {
             id: 3111, parent: 311, 'parent@': true, code: null, price: null, title: 'Жесткие диски SATA'
          },
          {
-            id: 4, parent: null, 'parent@': true, code: null, price: null, title: 'Цифровое фото и видео'
+            id: 4, parent: null, 'parent@': true, code: null, price: null, title: 'Цифровое фото и видео', SearchResult: true
          },
          {
-            id: 41, parent: 4, 'parent@': true, code: null, price: null, title: 'Фотоаппараты'
+            id: 41, parent: 4, 'parent@': true, code: null, price: null, title: 'Фотоаппараты', SearchResult: true
          },
          {
             id: 411, parent: 41, 'parent@': true, code: null, price: null, title: 'Canon'

@@ -2035,6 +2035,7 @@ define([
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
             ctrl._container = {
+               clientHeight: 1000,
                getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
                getBoundingClientRect: function() { return {}; }
             };
@@ -2064,8 +2065,8 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
                     begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
+                    end: "visible",
+                    next: "visible",
                     prev: "visible"
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
@@ -3511,14 +3512,6 @@ define([
             afterEach(() => {
                sandbox.restore();
             });
-            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
-               await ctrl._beforeMount(cfg);
-               ctrl._isMounted = true;
-               ctrl._listViewModel._startIndex = 2;
-               await ctrl.beginAdd({}).then(() => {
-                  assert.isTrue(scrollToItemCalled);
-               });
-            });
             it('scrollToItem not called on beginAdd if adding item is in range', async () => {
                await ctrl._beforeMount(cfg);
                ctrl._isMounted = true;
@@ -3973,12 +3966,12 @@ define([
             assert.equal(args[1], 2);
          };
 
-         Env.compatibility.touch = 1;
+         self._context = { isTouch: { isTouch: true } };
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isFalse(notifyCalled, 'On touch device can\'t drag');
 
-         Env.compatibility.touch = 0;
+         self._context.isTouch.isTouch = false;
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
