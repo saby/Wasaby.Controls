@@ -2002,7 +2002,7 @@ var
                 }
 
                 if (isFullGridSupport) {
-                    styles += `grid-column: ${column.startColumn} / ${column.endColumn};`;
+                    styles += `grid-column: ${column.startColumn} / ${column.endColumn + 1};`;
                 } else {
                     column.colspan = column.endColumn - column.startColumn;
                 }
