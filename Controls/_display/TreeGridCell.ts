@@ -1,10 +1,13 @@
 import TreeGridRow from 'Controls/_display/TreeGridRow';
 import GridRowMixin from 'Controls/_display/GridRowMixin';
-import GridCell from 'Controls/_display/GridCell';
-import GridRow from 'Controls/_display/GridRow';
 import GridDataCell from './GridDataCell';
+import GridDataRow from './GridDataRow';
 
-export default class TreeGridCell<T> extends GridDataCell<T, GridRow<T>> {
+// TODO нужно выделить архитектуру строк и ячеек как в Grid(dataRow, footerRow).
+//  Наверное придется переписать на миксины все. Т.к. не понятно как нследоваться в следующем случае:
+//  TreeGridCell <- GridCell; GridDataCell < GridCell; TreeGridDataCell <- ???.
+//  TreeGridDataCell должен унаследовать TreeGridCell и GridDataCell
+export default class TreeGridCell<T> extends GridDataCell<T, GridDataRow<T>> {
     readonly '[Controls/_display/TreeGridCell]': boolean;
 
     protected _$owner: TreeGridRow<T>;

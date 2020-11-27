@@ -1,6 +1,5 @@
 import { mixin } from 'Types/util';
 import TreeItem, { IOptions as ITreeItemOptions } from './TreeItem';
-import TreeGridCell from './TreeGridCell';
 import GridRowMixin from './GridRowMixin';
 import GridCell from './GridCell';
 import { IOptions as IGridRowOptions } from './GridRow';
@@ -23,7 +22,8 @@ export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<an
 
     shouldDisplayExpanderBlock(column: GridCell<T, TreeGridRow<T>>): boolean {
         const columnIndex = column.getColumnIndex();
-        return columnIndex === 0;
+        const hasMultiSelect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        return columnIndex === 0 && !hasMultiSelect || columnIndex === 1 && hasMultiSelect;
     }
 
     // endregion Expander
