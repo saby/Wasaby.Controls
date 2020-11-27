@@ -12,6 +12,8 @@ import {IBaseOptions} from 'Controls/_input/interface/IBase';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
+import Field from 'Controls/_input/resources/Field';
+import {IViewModelOptions} from 'Controls/_input/Text/ViewModel';
 
 import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
 
@@ -292,7 +294,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         // redefinition
     }
 
-    protected _copyHandler(event: SyntheticEvent<KeyboardEvent>): void {
+    protected _copyHandler(event: SyntheticEvent<ClipboardEvent>): void {
         // redefinition
     }
 
@@ -320,7 +322,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * Event handler click in native field.
      * @private
      */
-    protected _clickHandler(): void {
+    protected _clickHandler(event: SyntheticEvent<MouseEvent>): void {
         this._firstClick = false;
     }
 
@@ -469,8 +471,8 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * @return {Node}
      * @private
      */
-    protected _getField(): HTMLInputElement {
-        return this._children[this._fieldName];
+    protected _getField(): Field<String, IViewModelOptions> {
+        return this._children[this._fieldName] as Field<String, IViewModelOptions>;
     }
 
     private _getReadOnlyField(): HTMLElement {
@@ -642,7 +644,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     static _theme: string[] = ['Controls/input'];
 
-    static getDefaultOptions(): IBaseInputOptions {
+    static getDefaultOptions(): object {
         return {
             ...getDefaultPaddingOptions(),
             tooltip: '',
