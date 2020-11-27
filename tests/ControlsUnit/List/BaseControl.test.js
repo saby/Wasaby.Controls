@@ -2019,14 +2019,15 @@ define([
                   view: 'infinity',
                   source: 'page',
                   viewConfig: {
-                     pagingMode: 'direct'
+                     pagingMode: 'direct',
+                     showEndButton: true
                   },
                   sourceConfig: {
                      pageSize: 3,
                      page: 0,
                      hasMore: false
                   }
-               },
+               }
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
@@ -6922,6 +6923,7 @@ define([
                      }
                   },
                   viewModelConstructor: lists.ListViewModel,
+                  keyProperty: 'id'
                };
                await bc._beforeUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {

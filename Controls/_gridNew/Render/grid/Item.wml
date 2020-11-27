@@ -1,7 +1,4 @@
-<div class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
-   <ws:for data="gridColumn in item.getColumns()">
-      <div class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
-           style="{{ gridColumn.getWrapperStyles() }}">
+<ws:template name="COLUMN">
          <div if="{{ gridColumn.shouldDisplayMarker(marker) }}" class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition) }}"></div>
          <div class="{{ gridColumn.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
               style="{{ gridColumn.getContentStyles() }}">
@@ -45,6 +42,30 @@
                            highlightOnHover="{{ highlightOnHover }}"/>
             </ws:else>
          </ws:if>
+</ws:template>
+
+
+<ws:if data="{{ item.isSticked() }}">
+   <Controls.scroll:Group>
+      <div class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
+         <ws:for data="column in item.getColumns()">
+            <Controls.scroll:StickyHeader position="topbottom"
+                                          mode="stackable"
+                                          attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
+                                          attr:style="{{ column.getWrapperStyles() }}">
+               <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
+            </Controls.scroll:StickyHeader>
+         </ws:for>
       </div>
+   </Controls.scroll:Group>
+</ws:if>
+<ws:else>
+   <div class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
+      <ws:for data="column in item.getColumns()">
+         <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
+              style="{{ column.getWrapperStyles() }}">
+            <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
+         </div>
    </ws:for>
 </div>
+</ws:else>

@@ -72,6 +72,7 @@ export {
 export {
     TColumns,
     IColumn,
+    IColspanParams,
     ICellPadding,
     TCellAlign,
     TCellPaddingVariant,

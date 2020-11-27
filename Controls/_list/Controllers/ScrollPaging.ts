@@ -29,7 +29,6 @@ interface IArrowState {
 interface IPagingCfg {
     arrowState?: IArrowState;
     showDigits?: boolean;
-    showEndButton?: boolean;
     pagingMode?: string;
     pagesCount?: number;
     selectedPage?: number;
@@ -151,38 +150,35 @@ export default class ScrollPagingController {
         const pagingCfg: IPagingCfg = {};
         switch (this._options.pagingMode) {
             case 'basic':
-                pagingCfg.showEndButton = this._options.showEndButton;
                 break;
 
             case 'edge':
-                arrowState.prev = 'hidden';
-                arrowState.next = 'hidden';
-                if (arrowState.end === 'visible') {
+                if (arrowState.next === 'visible') {
                     arrowState.begin = 'hidden';
                     arrowState.end = 'visible';
-                    pagingCfg.showEndButton = true;
                 } else if (arrowState.begin === 'visible') {
                     arrowState.begin = 'visible';
                     arrowState.end = 'hidden';
                 }
+                arrowState.prev = 'hidden';
+                arrowState.next = 'hidden';
                 break;
 
             case 'end':
-                arrowState.prev = 'hidden';
-                arrowState.next = 'hidden';
-                arrowState.begin = 'hidden';
-
-                if (arrowState.end === 'visible') {
-                    pagingCfg.showEndButton = true;
+                if (arrowState.next === 'visible') {
+                    arrowState.end = 'visible';
                 } else {
                     arrowState.end = 'hidden';
                 }
+                arrowState.prev = 'hidden';
+                arrowState.next = 'hidden';
+                arrowState.begin = 'hidden';
                 break;
 
             case 'numbers':
                 arrowState.prev = 'hidden';
+                arrowState.end = arrowState.next;
                 arrowState.next = 'hidden';
-                pagingCfg.showEndButton = true;
 
                 pagingCfg.pagesCount = this._pagingData.pagesCount;
                 if (this._numbersState === 'up') {
@@ -234,7 +230,7 @@ export default class ScrollPagingController {
                 begin: 'visible',
                 prev: 'visible',
                 next: 'visible',
-                end: 'visible'
+                end: this._options.showEndButton ? 'visible' : 'hidden'
             }, hasMoreData));
             this._curState = 'middle';
         }
@@ -246,7 +242,7 @@ export default class ScrollPagingController {
                 begin: 'readonly',
                 prev: 'readonly',
                 next: 'visible',
-                end: 'visible'
+                end: this._options.showEndButton ? 'visible' : 'hidden'
             }, hasMoreData));
             this._curState = 'top';
         }
@@ -258,7 +254,7 @@ export default class ScrollPagingController {
                 begin: 'visible',
                 prev: 'visible',
                 next: 'readonly',
-                end: 'readonly'
+                end: this._options.showEndButton ? 'readonly' : 'hidden'
             }, hasMoreData));
             this._curState = 'bottom';
         }
