@@ -1,4 +1,4 @@
-import Base = require('Controls/_input/Base');
+import Base from 'Controls/_input/Base';
 
 import {descriptor, TimeInterval} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
