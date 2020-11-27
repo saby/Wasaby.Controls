@@ -13,7 +13,7 @@ interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOpt
     IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
     propertyValue: number|string;
     showSelectorCaption?: string;
-    additionalData: string;
+    additionalData: object;
 }
 
 abstract class ListEditorBase extends Control<IListEditorOptions> {
@@ -69,10 +69,10 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         return this._stackOpener;
     }
 
-    private _setColumns(displayProperty: string, propertyValue: number|string|unknown[], additionalData: string): object[] {
-        this._columns = [{template: ColumnTemplate, selected: propertyValue, displayProperty}]
+    private _setColumns(displayProperty: string, propertyValue: number|string|unknown[], additionalData: object): object[] {
+        this._columns = [{template: ColumnTemplate, selected: propertyValue, displayProperty}];
         if (additionalData) {
-            this._columns.push({align: 'right', displayProperty: additionalData});
+            this._columns.push({ ...{align: 'right'}, ...additionalData});
         }
     }
 
