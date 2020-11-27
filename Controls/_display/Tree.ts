@@ -109,13 +109,13 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @param {TreeItem<T>} item
  */
 function itemIsVisible<T>(item: TreeItem<T>): boolean  {
-    if (!item.getParent) {
+    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
         return true;
     }
 
     const parent = item.getParent();
     // корневой узел не может быть свернут
-    if (!parent || parent.isRoot()) {
+    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
         return true;
     } else if (!parent.isExpanded()) {
         return false;
@@ -237,7 +237,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         }
         this._$hasMoreStorage = options.hasMoreStorage || {};
 
-        this.addFilter((record, index, item, collectionIndex) => itemIsVisible(item));
+        this.addFilter((contents, index, item, collectionIndex) => itemIsVisible(item));
 
         if (options.expandedItems instanceof Array) {
             this.setExpandedItems(options.expandedItems);
@@ -569,7 +569,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _getItemsFactory(): ItemsFactory<T> {
         const parent = super._getItemsFactory();
 
-        return (options: IItemsFactoryOptions<S>) => {
+        return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             options.expanderTemplate = this._$expanderTemplate;
             if (!('node' in options)) {
