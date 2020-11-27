@@ -86,3 +86,8 @@ export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
  * @default
  * false
  */
+
+/**
+ * @name Controls/_explorer/interface/IExplorer#dedicatedItemProperty
+ * @cfg {String} Имя свойства узла дерева, которое определяет, что при поиске этот узел должен быть показан отдельной хлебной крошкой.
+ */

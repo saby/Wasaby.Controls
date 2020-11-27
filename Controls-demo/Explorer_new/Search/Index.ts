@@ -18,6 +18,7 @@ export default class extends Control {
     private _multiselect: 'visible' | 'hidden' = 'hidden';
     // tslint:disable-next-line
     protected _filter: object = {demo: 123};
+    protected _dedicatedItemProperty: string;
 
     protected _itemActions: IItemAction[] = [
         {
@@ -52,6 +53,10 @@ export default class extends Control {
 
     protected _onToggle(): void {
         this._multiselect = this._multiselect === 'visible' ? 'hidden' : 'visible';
+    }
+
+    protected _onToggleDedicatedItemProperty(): void {
+        this._dedicatedItemProperty = !this._dedicatedItemProperty ? 'SearchResult' : undefined;
     }
 
     protected _updateStartingWith(): void {

@@ -77,7 +77,7 @@ export default class GridResults<T> extends mixin<OptionsToPropertyMixin>(Option
 
     protected _prepareCells(columns: TColumns, resultsTemplate: TemplateFunction): TResultsCells<T> {
         const cells = [];
-        if (this._$owner.getMultiSelectVisibility()) {
+        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
             cells.push(new GridResultsCell({
                 owner: this
             }));
