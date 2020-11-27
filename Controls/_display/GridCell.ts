@@ -7,7 +7,7 @@ import {
     IInstantiable,
     IVersionable
 } from 'Types/entity';
-import GridCollectionItem from './GridCollectionItem';
+import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn } from 'Controls/grid';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
@@ -15,13 +15,19 @@ import {IItemPadding} from '../_list/interface/IList';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
-export interface IOptions<T> {
-    owner: GridCollectionItem<T>;
+interface IColspanParams {
+    startColumn: number;
+    endColumn: number;
+    colspan: number;
+}
+
+export interface IOptions<T> extends Partial<IColspanParams> {
+    owner: GridRow<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
 }
 
-export default class GridColumn<T> extends mixin<
+export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -33,9 +39,13 @@ export default class GridColumn<T> extends mixin<
     VersionableMixin
 ) implements IInstantiable, IVersionable {
     readonly '[Types/_entity/IInstantiable]': boolean;
-    protected _$owner: GridCollectionItem<T>;
+    protected _$owner: TOwner;
     protected _$column: IColumn;
     protected _$hiddenForLadder: boolean;
+
+    protected _$startColumn: number;
+    protected _$endColumn: number;
+    protected _$colspan: number;
 
     getInstanceId: () => string;
 
@@ -44,10 +54,71 @@ export default class GridColumn<T> extends mixin<
         OptionsToPropertyMixin.call(this, options);
     }
 
+    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
+        return this._$column.template || DEFAULT_CELL_TEMPLATE;
+    }
+
+    shouldDisplayItemActions(): boolean {
+        return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
+    }
+
+    nextVersion(): void {
+        this._nextVersion();
+    }
+
+    // region Аспект "Объединение колонок"
+
+    _getColspanParams(): IColspanParams {
+        const startColumn = typeof this._$startColumn == 'number' ? this._$startColumn : (this.getColumnIndex() + 1);
+        let endColumn;
+
+        if (typeof this._$endColumn == 'number') {
+            endColumn = this._$endColumn;
+        } else if (typeof this._$colspan == 'number') {
+            endColumn = startColumn + this._$colspan;
+        } else {
+            endColumn = startColumn + 1;
+        }
+
+        return {
+            startColumn,
+            endColumn,
+            colspan: endColumn - startColumn
+        }
+    }
+
+    getColspan(): number {
+        return this._getColspanParams().colspan;
+    }
+
+    getColspanStyles(): string {
+        const {startColumn, endColumn} = this._getColspanParams();
+        return `grid-column: ${startColumn} / ${endColumn}`;
+    }
+
+    // endregion
+
+    // region Аспект "Лесенка"
     setHiddenForLadder(value: boolean) {
         this._$hiddenForLadder = value;
     }
+    // endregion
 
+    // region Аспект "Отображение данных"
+    getDisplayProperty(): string {
+        return this._$column.displayProperty;
+    }
+
+    getContents(): T {
+        return this._$owner.getContents();
+    }
+
+    get contents(): T {
+        return this._$owner.getContents();
+    }
+    // endregion
+
+    // region Аспект "Стилевое оформление"
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hasColumnScroll = false;
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
@@ -134,12 +205,12 @@ export default class GridColumn<T> extends mixin<
         const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.getMultiSelectVisibility() !== 'hidden' ? 2 : 1);
 
         return 'controls-Grid__table__relative-cell-wrapper ' +
-               `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
-               (shouldFixAlignment ? 'controls-Grid__table__relative-cell-wrapper_singleCell' : '');
+            `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
+            (shouldFixAlignment ? 'controls-Grid__table__relative-cell-wrapper_singleCell' : '');
     }
 
     getWrapperStyles(): string {
-        return '';
+        return this.getColspanStyles();
     }
 
     getContentClasses(theme: string,
@@ -190,72 +261,6 @@ export default class GridColumn<T> extends mixin<
 
     getContentStyles(): string {
         return '';
-    }
-
-    getColumnConfig(): IColumn {
-        return this._$column;
-    }
-
-    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
-        return this._$column.template || DEFAULT_CELL_TEMPLATE;
-    }
-
-    getDisplayProperty(): string {
-        return this._$column.displayProperty;
-    }
-
-    getContents(): T {
-        return this._$owner.getContents();
-    }
-
-    get contents(): T {
-        return this._$owner.getContents();
-    }
-
-    getColumnIndex(): number {
-        return this._$owner.getColumnIndex(this._$column);
-    }
-
-    isFirstColumn(): boolean {
-        return this.getColumnIndex() === 0;
-    }
-
-    isLastColumn(): boolean {
-        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
-    }
-
-    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
-        if (markerPosition === 'right') {
-            return marker !== false && this._$owner.isMarked() && this.isLastColumn();
-        } else {
-            return marker !== false && this._$owner.isMarked() &&
-                   this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
-        }
-    }
-
-    shouldDisplayItemActions(): boolean {
-        return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
-    }
-
-    getMarkerClasses(theme: string, style: string = 'default',
-                     markerClassName: TMarkerClassName = 'default', itemPadding: IItemPadding = {},
-                     markerPosition: 'left' | 'right' = 'left'): string {
-        let markerClass = 'controls-ListView__itemV_marker_';
-        if (markerClassName === 'default') {
-            markerClass += 'default';
-        } else {
-            markerClass += `padding-${(itemPadding.top || 'l')}_${markerClassName})`;
-        }
-        return `
-            controls-ListView__itemV_marker-${markerPosition}
-            controls-ListView__itemV_marker controls-ListView__itemV_marker-${style}_theme-${theme}
-            controls-GridView__itemV_marker controls-GridView__itemV_marker-${style}_theme-${theme}
-            ${markerClass}
-        `;
-    }
-
-    nextVersion(): void {
-        this._nextVersion();
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
@@ -361,18 +366,57 @@ export default class GridColumn<T> extends mixin<
 
         return classes;
     }
-    getColspan(): number {
-        // TODO: Полный колспан будет реализован в 21.1000 по плановой задаче
-        //  https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
-        return 1;
+    // endregion
+
+    // region Аспект "Ячейка"
+    getColumnConfig(): IColumn {
+        return this._$column;
     }
+
+    getColumnIndex(): number {
+        return this._$owner.getColumnIndex(this);
+    }
+
+    isFirstColumn(): boolean {
+        return this.getColumnIndex() === 0;
+    }
+
+    isLastColumn(): boolean {
+        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
+    }
+
+    // endregion
+
+    // region Аспект "Множественный выбор"
+    isMultiSelectColumn(): boolean {
+        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
+    }
+    // endregion
+
+    // region Аспект "Маркер"
+
+    // По умолчанию для абстрактной ячейки маркер отключен.
+    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
+        return false;
+    }
+    getMarkerClasses(theme: string,
+                     style: string = 'default',
+                     markerClassName: TMarkerClassName = 'default',
+                     itemPadding: IItemPadding = {},
+                     markerPosition: 'left' | 'right' = 'left'): string {
+        return this._$owner.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition);
+    }
+    // endregion
 }
 
-Object.assign(GridColumn.prototype, {
-    '[Controls/_display/GridColumn]': true,
-    _moduleName: 'Controls/display:GridColumn',
-    _instancePrefix: 'grid-column-',
+Object.assign(GridCell.prototype, {
+    '[Controls/_display/GridCell]': true,
+    _moduleName: 'Controls/display:GridCell',
+    _instancePrefix: 'grid-cell-',
     _$owner: null,
     _$column: null,
-    _$hiddenForLadder: null
+    _$hiddenForLadder: null,
+    _$startColumn: null,
+    _$endColumn: null,
+    _$colspan: null
 });
