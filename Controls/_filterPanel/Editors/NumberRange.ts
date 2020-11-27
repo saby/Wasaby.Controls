@@ -29,11 +29,11 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     }
 
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
-        this._minValue = value !== undefined ? value : null;
+        this._minValue = value;
     }
 
     protected _handleMaxValueChanged(event: SyntheticEvent, value: number): void {
-        this._maxValue = value !== undefined ? value : null;
+        this._maxValue = value;
     }
 
     protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
@@ -48,9 +48,13 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     private _notifyExtendedValue(value: number[]): void {
         const extendedValue = {
             value,
-            textValue: value[0] + ' - ' + value[1]
+            textValue: this._getTextValue(value[0]) + ' - ' + this._getTextValue(value[1])
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _getTextValue(value: number): string|number {
+        return value || '';
     }
 }
 export default NumberRangeEditor;
