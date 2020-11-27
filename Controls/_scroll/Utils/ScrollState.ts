@@ -1,4 +1,9 @@
-import {canScrollByState, getScrollPositionTypeByState, SCROLL_DIRECTION} from 'Controls/_scroll/Utils/Scroll';
+import {
+    canScrollByState,
+    getScrollPositionTypeByState,
+    SCROLL_DIRECTION,
+    SCROLL_POSITION
+} from 'Controls/_scroll/Utils/Scroll';
 
 export interface IScrollState {
     scrollTop?: number;
@@ -7,8 +12,8 @@ export interface IScrollState {
     scrollHeight?: number;
     clientWidth?: number;
     scrollWidth?: number;
-    verticalPosition?: string;
-    horizontalPosition?: string;
+    verticalPosition?: SCROLL_POSITION;
+    horizontalPosition?: SCROLL_POSITION;
     canVerticalScroll?: boolean;
     canHorizontalScroll?: boolean;
     viewPortRect?: ClientRect;
@@ -21,7 +26,7 @@ interface IHasUnrenderedContent {
 
 export default class ScrollState implements IScrollState {
 
-    private _content: HTMLElement;
+    protected _content: HTMLElement;
     private _scrollTop?: number;
     private _scrollLeft?: number;
     private _clientHeight?: number;
@@ -29,8 +34,13 @@ export default class ScrollState implements IScrollState {
     private _clientWidth?: number;
     private _scrollWidth?: number;
     private _hasUnrenderedContent: IHasUnrenderedContent;
+    protected _canVerticalScroll: boolean;
+    protected _canHorizontalScroll: boolean;
+    protected _verticalPosition: SCROLL_POSITION;
+    protected _horizontalPosition: SCROLL_POSITION;
+    protected _viewPortRect: ClientRect;
 
-    constructor(content: HTMLElement, scrollState: IScrollState) {
+    constructor(content: HTMLElement, scrollState: IScrollState, lastCalculatedState?: IScrollState) {
         this._content = content;
         this._scrollTop = scrollState.scrollTop;
         this._scrollLeft = scrollState.scrollLeft;
@@ -42,6 +52,13 @@ export default class ScrollState implements IScrollState {
             top: false,
             bottom: false
         };
+        if (lastCalculatedState) {
+            this._canVerticalScroll = lastCalculatedState.canVerticalScroll;
+            this._canHorizontalScroll = lastCalculatedState.canHorizontalScroll;
+            this._verticalPosition = lastCalculatedState.verticalPosition;
+            this._horizontalPosition = lastCalculatedState.horizontalPosition;
+            this._viewPortRect = lastCalculatedState.viewPortRect;
+        }
     }
 
     get hasUnrenderedContent(): IHasUnrenderedContent {
@@ -101,23 +118,23 @@ export default class ScrollState implements IScrollState {
     }
 
     get canVerticalScroll(): boolean {
-        return canScrollByState(this, SCROLL_DIRECTION.VERTICAL);
+        return this._canVerticalScroll;
     }
 
     get canHorizontalScroll(): boolean {
-        return canScrollByState(this, SCROLL_DIRECTION.HORIZONTAL);
+        return this._canHorizontalScroll;
     }
 
     get verticalPosition(): string {
-        return getScrollPositionTypeByState(this, SCROLL_DIRECTION.VERTICAL);
+        return this._verticalPosition;
     }
 
     get horizontalPosition(): string {
-        return getScrollPositionTypeByState(this, SCROLL_DIRECTION.HORIZONTAL);
+        return this._horizontalPosition;
     }
 
     get viewPortRect(): ClientRect {
-        return this._content.getBoundingClientRect();
+        return this._viewPortRect;
     }
 
     clone(): ScrollState {
@@ -129,6 +146,13 @@ export default class ScrollState implements IScrollState {
             clientWidth: this._clientWidth,
             scrollWidth: this._scrollWidth
         };
-        return new ScrollState(this._content, scrollState);
+        const lastCalculatedState = {
+            canVerticalScroll: this._canVerticalScroll,
+            canHorizontalScroll: this._canHorizontalScroll,
+            verticalPosition: this._verticalPosition,
+            horizontalPosition: this._horizontalPosition,
+            viewPortRect: this._viewPortRect
+        };
+        return new ScrollState(this._content, scrollState, lastCalculatedState);
     }
 }
