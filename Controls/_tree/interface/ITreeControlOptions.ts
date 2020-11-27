@@ -30,7 +30,7 @@ export interface ITreeControlOptions extends IControlOptions {
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
     hasChildrenProperty?: string;
     searchBreadCrumbsItemTemplate?: TemplateFunction;
-    expanderVisibility?: 'visible'|'hasChildren';
+    expanderVisibility?: 'visible'|'hasChildren'|'hasChildrenOrHover';
     nodeLoadCallback?: TNodeLoadCallback;
     deepReload?: boolean;
     selectAncestors?: boolean;
@@ -108,7 +108,7 @@ export interface ITreeControlOptions extends IControlOptions {
  * @remark
  * Этот параметр используется, когда {@link Controls/_treeGrid/interface/ITreeControlOptions#expandedItems expandedItems} установлена в значение [null].
  * @see expandedItems
- * 
+ *
  */
 
 /*
@@ -129,7 +129,7 @@ export interface ITreeControlOptions extends IControlOptions {
 /**
  * @name Controls/_tree/interface/ITreeControlOptions#nodeFooterTemplate
  * @cfg {Function} Шаблон подвала раскрытого узла в {@link Controls/treeGrid:View дереве}.
- * @remark 
+ * @remark
  * В области видимости шаблона доступен объект itemData, внутри доступно свойство item - запись, под которой отрисовывается шаблон.
  * @demo Controls-demo/treeGrid/NodeFooter/NodeFooterTemplate/Index
  * @see nodeFooterVisibilityCallback
@@ -147,9 +147,9 @@ export interface ITreeControlOptions extends IControlOptions {
  * @cfg {Function} Функция обратного вызова для определения видимости шаблона подвала раскрытого узла в {@link Controls/treeGrid:View дереве}.
  * @remark
  * Функция принимает единственный аргумент:
- * 
+ *
  * * item — модель (см. {@link Types/entity:Model}), содержащая данные узла, для которого определяется видимость шаблона подвала.
- * 
+ *
  * Для видимости шаблона подвала, из функции следует вернуть true.
  * @example
  * Шаблон подвал скрыт для узлов, у которых свойство footerVisible === false.
@@ -189,7 +189,7 @@ export interface ITreeControlOptions extends IControlOptions {
  * @cfg {TemplateFunction} Шаблон отображения элемента с хлебными крошками в {@link Controls/treeGrid:View дереве} при {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/search/mode/ режиме поиска}.
  * @remark
  * По умолчанию используется базовый шаблон "Controls/treeGrid:SearchBreadCrumbsItemTemplate", который поддерживает следующий параметр:
- * 
+ *
  * * checkboxReadOnly {Boolean} — флаг, позволяющий установить у checkbox в multiSelect режим "только для чтения".
  */
 
@@ -207,6 +207,11 @@ export interface ITreeControlOptions extends IControlOptions {
  * @typedef {String} ExpanderVisibility
  * @variant visible Всегда показывать экспандер для узлов и отступ для листьев.
  * @variant hasChildren Показывать экспандер только для узлов с дочерними элементами. В этом значении опция, также, отключает отступ для листьев, если в текущей папке нет записей с дочерними элементами.
+ * @variant hasChildrenOrHover Работает аналогично hasChildren, но в дополнение для узлов без дочерних элементов:
+ * <ul>
+ *     <li>показывает контурный экспандер если такой узел является развернутым</li>
+ *     <li>показывает контурный экспандер при наведении на свернутый узел</li>
+ * </ul>
  */
 
 /**
@@ -214,7 +219,8 @@ export interface ITreeControlOptions extends IControlOptions {
  * @cfg {ExpanderVisibility} Режим отображения экспандера в {@link Controls/treeGrid:View дереве}.
  * @default visible
  * @demo Controls-demo/treeGrid/Expander/ExpanderIcon/Node/Index В следующем примере для контрола опция expanderVisibility установлена в значение visible.
- * @demo Controls-demo/treeGrid/Expander/HasChildren/Index В следующем примере для контрола опция expanderVisibility установлена в значение hasChildren.
+ * @demo Controls-demo/treeGrid/Expander/ExpanderVisibility/HasChildren/Index В следующем примере для контрола опция expanderVisibility установлена в значение hasChildren.
+ * @demo Controls-demo/treeGrid/Expander/ExpanderVisibility/HasChildrenOrHover/Index В следующем примере для контрола опция expanderVisibility установлена в значение hasChildrenOrHover.
  * @see expanderIcon
  * @see expanderSize
  */
@@ -224,6 +230,11 @@ export interface ITreeControlOptions extends IControlOptions {
  * @cfg {String} Mode displaying expander indent.
  * @variant visible Always show expander for nodes and indentation for leaves.
  * @variant hasChildren Show expander only for nodes with children.
+ * @variant hasChildrenOrHover Works similar to hasChildren. But in addition for nodes with no children:
+ * <ul>
+ *     <li>shows an outline expander if such a node is expanded</li>
+ *     <li>shows an outline expander when hovering over a collapsed node</li>
+ * </ul>
  * @default visible
  */
 

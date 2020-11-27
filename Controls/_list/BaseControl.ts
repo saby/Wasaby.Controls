@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection, compatibility} from 'Env/Env';
+import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -1276,8 +1276,8 @@ const _private = {
             // след. запрос не вернет данные, а скажет ЕстьЕще: false тогда решать будет условие ниже, по высоте
             const visibilityTriggerUp = self._loadTriggerVisibility.up;
             const visibilityTriggerDown = self._loadTriggerVisibility.down;
-
-            if ((hasMoreData.up && !visibilityTriggerUp) || (hasMoreData.down && !visibilityTriggerDown)) {
+            const triggersReady = visibilityTriggerUp !== undefined;
+            if (triggersReady && ((hasMoreData.up && !visibilityTriggerUp) || (hasMoreData.down && !visibilityTriggerDown))) {
                 result = true;
 
                 // Если пэйджинг был показан из-за hasMore, то запоминаем это,
@@ -1503,6 +1503,9 @@ const _private = {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+                if (detection.isMobilePlatform) {
+                    self._recalcPagingVisible = !self._pagingVisible;
+                }
             } else {
                 self._recalcPagingVisible = true;
             }
@@ -1735,7 +1738,7 @@ const _private = {
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
                                     newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex > collectionStartIndex ? 'down' : ''));
+                                    : (newItemsIndex > collectionStopIndex ? 'down' : ''));
                             }
                             break;
                         case IObservable.ACTION_MOVE:
@@ -2880,7 +2883,7 @@ const _private = {
     startDragNDrop(self, domEvent, item): void {
         if (
             !self._options.readOnly && self._options.itemsDragNDrop
-            && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!compatibility.touch)
+            && DndController.canStartDragNDrop(self._options.canStartDragNDrop, domEvent, !!self._context?.isTouch?.isTouch)
         ) {
             const key = item.getContents().getKey();
 
@@ -3619,6 +3622,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._pagingVisible) {
                 this._cachedPagingState = false;
                 _private.initPaging(this);
+            } else if (detection.isMobilePlatform) {
+                this._recalcPagingVisible = true;
             }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
@@ -4288,6 +4293,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
         if (this._container) {
             this._viewSize = _private.getViewSize(this, true);
+        }
+        if (this._recalcPagingVisible) {
+            if (!this._pagingVisible) {
+                _private.initPaging(this);
+            }
         }
 
         if (this._pagingVisible) {
