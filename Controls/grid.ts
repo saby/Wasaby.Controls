@@ -13,7 +13,6 @@
  * @includes EditingEmptyTemplate Controls/grid:EditingEmptyTemplate
  * @includes IGridControl Controls/_grid/interface/IGridControl
  * @includes IColumn Controls/_grid/interface/IColumn
- * @includes ITagColumn Controls/_grid/interface/ITagColumn
  * @includes IHeaderCell Controls/_grid/interface/IHeaderCell
  * @includes IPropStorage Controls/_grid/interface/IPropStorage
  * @includes SortingSelector Controls/grid:SortingSelector
@@ -79,8 +78,6 @@ export {
     TCellVerticalAlign,
     TOverflow
 } from './_grid/interface/IColumn';
-
-export {ITagColumn} from './_grid/interface/ITagColumn';
 
 export {IGridControl} from './_grid/interface/IGridControl';
 

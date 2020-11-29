@@ -13,6 +13,7 @@
            style="{{ _options.style }}"
            theme="{{ _options.theme }}"
            multiSelectTpl="{{ multiSelectTpl }}"
+           tagTemplate="{{ tagTemplate }}"
 
            attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"

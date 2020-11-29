@@ -9,7 +9,7 @@
             on:propertyValueChanged="_propertyValueChanged(item.getContents())"
             on:click="_itemClick(item)">
         <ws:itemActionsTemplate>
-            <Controls.Container.Async templateName="Controls/list:ItemActionsTemplate">
+            <Controls.Container.Async templateName="Controls/itemActions:ItemActionsTemplate">
                 <ws:partial template="{{content.resolvedTemplate}}"
                             itemData="{{item}}"
                             scope="{{itemsViewModel.getActionsTemplateConfig()}}" />
