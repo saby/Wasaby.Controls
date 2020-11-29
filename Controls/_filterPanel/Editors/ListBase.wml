@@ -7,6 +7,7 @@
                        navigation="{{_options.navigation}}"
                        backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
+                       itemsReadyCallback="{{_itemsReadyCallback}}"
                        on:markedKeyChanged="_handleMarkedKeyChanged()">
       <ws:itemPadding left="xxl" right="m"/>
       <ws:footerTemplate>

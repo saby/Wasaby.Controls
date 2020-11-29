@@ -15,33 +15,27 @@ import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
 class ListEditor extends ListEditorBase {
     protected _columns: object[] = null;
 
-    protected async _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
-        const extendedValue = {
-            value,
-            textValue: await this._getTextValue(value),
-            needColapse: true
-        };
-        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    protected _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
+        this._notifyPropertyValueChanged(value, this._getTextValue(value));
     }
 
     protected _handleSelectorResult(result: Model[]): void {
-        this._handleMarkedKeyChanged(null, this._getSelectedKey(result, this._options.keyProperty));
+        const item = result.at(0);
+        this._notifyPropertyValueChanged(item.get(this._options.keyProperty), item.get(this._options.displayProperty));
     }
 
-    private _getSelectedKey(items: Model[], keyProperty: string): string|number {
-        let key;
-        factory(items).each((item) => {
-            key = object.getPropertyValue(item, keyProperty);
-        });
-        return key;
+    protected _notifyPropertyValueChanged(value: string|number, textValue: string): void {
+        const extendedValue = {
+            value,
+            textValue,
+            needColapse: true
+        };
+        this._notify('propertyValueChanged', [extendedValue]);
     }
 
-    protected _getTextValue(value: string|number): Promise<string> {
-        let textValue = '';
-        return this._options.source.read(value).then((item) => {
-            textValue = item.get(this._options.displayProperty);
-            return textValue;
-        });
+    protected _getTextValue(value: string|number): string {
+        const record = this._items.getRecordById(value);
+        return record.get(this._options.displayProperty);
     }
 
     static getDefaultOptions(): object {

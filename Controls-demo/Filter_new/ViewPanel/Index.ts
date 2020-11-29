@@ -88,7 +88,7 @@ export default class extends Control {
                         }
                     },
                     keyProperty: 'owner',
-                    additionalData: {displayProperty: 'id'},
+                    additionalTextProperty: 'id',
                     displayProperty: 'title',
                     selectorTemplate: {
                         templateName: 'Controls-demo/Filter_new/ViewPanel/stackTemplate/StackTemplate',
