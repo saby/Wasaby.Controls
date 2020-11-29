@@ -1,5 +1,5 @@
 import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
-import GridHeader from './GridHeader';
+import GridHeaderRow from './GridHeaderRow';
 import GridCollection from './GridCollection';
 import { TemplateFunction } from 'UI/Base';
 import GridCell, { IOptions as IGridCellOptions } from './GridCell';
@@ -108,7 +108,7 @@ export default abstract class GridRowMixin<T> {
         return this._$owner.getEditingBackgroundStyle();
     }
 
-    getHeader(): GridHeader<T> {
+    getHeader(): GridHeaderRow<T> {
         return this._$owner.getHeader();
     }
 
