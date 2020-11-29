@@ -1,12 +1,12 @@
 define([
-   'Controls/_propertyGrid/PropertyGrid',
+   'Controls/propertyGrid',
    'Controls/_propertyGrid/Constants',
    'Controls/display',
    'Types/entity',
    'Types/collection',
    'Controls/itemActions'
 ], function(
-   PropertyGrid,
+   propertyGridLib,
    Constants,
    display,
    entity,
@@ -14,7 +14,7 @@ define([
    itemActions
 ) {
     describe('Controls/_propertyGrid/PropertyGrid', () => {
-        const ViewInstance = new PropertyGrid.default();
+        const ViewInstance = new propertyGridLib.PropertyGrid();
         let source, editingObject, editors;
         beforeEach(() => {
             source = [
@@ -31,48 +31,6 @@ define([
                 booleanField: Constants.DEFAULT_EDITORS.boolean,
                 stringField1: Constants.DEFAULT_EDITORS.string
             };
-        });
-        describe('getPropertyGridItems', () => {
-            it('returns merged editingObject and source items', () => {
-                const itemsRS = ViewInstance._getPropertyGridItems(source, editingObject);
-                const items = itemsRS.getRawData();
-                const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
-                assert.isTrue(propertyValueMerged);
-            });
-
-            it('RecordSet and Model case: returns merged editingObject and source items', () => {
-                const modelEditingObject = new entity.Model({
-                    rawData: editingObject
-                });
-                const recordSetSource = new collection.RecordSet({
-                    rawData: source
-                });
-
-                const itemsRS = ViewInstance._getPropertyGridItems(recordSetSource, modelEditingObject);
-                const items = itemsRS.getRawData();
-                const propertyValueMerged = items.every((item => item.propertyValue === editingObject[item.name]));
-                assert.isTrue(propertyValueMerged);
-            });
-
-            it('returns editor templates by value type', () => {
-                const itemsRS = ViewInstance._getPropertyGridItems(source, editingObject);
-                let result = false;
-                itemsRS.each((item) => {
-                    result = item.get('editorTemplateName') === editors[item.get('name')];
-                });
-                assert.isTrue(result);
-            });
-        });
-
-        describe('getCollection', () => {
-            it('returns flat collection', () => {
-                const collection = ViewInstance._getCollection(null, null, editingObject, source);
-                assert.isTrue(collection instanceof display.Collection);
-            });
-            it('returns tree Collection', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
-                assert.isTrue(collection instanceof display.Tree);
-            });
         });
 
         describe('_getCollapsedGroups', () => {
@@ -149,7 +107,7 @@ define([
          it('_onItemActionsMenuResult', () => {
             let isApplyAction = false;
             let isClosed = false;
-            const propertyGrid = new PropertyGrid.default({});
+            const propertyGrid = new propertyGridLib.PropertyGrid({});
             propertyGrid._itemActionsController = {
                getActiveItem: () => ({
                   getContents: () => {}
@@ -171,7 +129,7 @@ define([
          it('_openItemActionMenu', () => {
             let isOpened = false;
             let actualConfig;
-            const propertyGrid = new PropertyGrid.default({});
+            const propertyGrid = new propertyGridLib.PropertyGrid({});
             propertyGrid._itemActionsController = {
                prepareActionsMenuConfig: () => ({ param: 'menuConfig' }),
                setActiveItem: () => {}

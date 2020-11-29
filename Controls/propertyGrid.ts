@@ -35,6 +35,8 @@
  */
 
 import {default as PropertyGrid} from 'Controls/_propertyGrid/PropertyGrid';
+import {default as PropertyGridCollectionItem} from 'Controls/_propertyGrid/PropertyGridCollectionItem';
+import {default as PropertyGridCollection} from 'Controls/_propertyGrid/PropertyGridCollection';
 import BooleanEditor = require("Controls/_propertyGrid/defaultEditors/Boolean");
 import StringEditor = require("Controls/_propertyGrid/defaultEditors/String");
 import TextEditor = require("Controls/_propertyGrid/defaultEditors/Text");
@@ -48,6 +50,7 @@ import IEditor = require("Controls/_propertyGrid/IEditor");
 import {default as IProperty} from 'Controls/_propertyGrid/IProperty';
 import GroupTemplate = require("wml!Controls/_propertyGrid/Render/resources/groupTemplate");
 import * as ItemTemplate from 'wml!Controls/_propertyGrid/Render/resources/itemTemplate';
+import {register} from 'Types/di';
 
 export {
     PropertyGrid,
@@ -62,5 +65,10 @@ export {
     IEditor,
     IProperty,
     GroupTemplate,
-    ItemTemplate
+    ItemTemplate,
+    PropertyGridCollectionItem,
+    PropertyGridCollection
 };
+
+register('Controls/propertyGrid:PropertyGridCollectionItem', PropertyGridCollectionItem, {instantiate: false});
+register('Controls/propertyGrid:PropertyGridCollection', PropertyGridCollection, {instantiate: false});
