@@ -2,49 +2,54 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_POSITION} from '../Utils/Scroll';
 import {IScrollState} from '../Utils/ScrollState';
-
+import {IArrowState} from '../../_paging/Paging';
+/**
+ * @typedef {String} TPagingModeScroll
+ * @variant hidden Предназначен для отключения отображения пейджинга в реестре.
+ * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
+ * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
+ * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
+ */
+export type TPagingModeScroll = 'hidden' | 'basic' | 'edge' | 'end';
 
 export default class PagingModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
     readonly '[Types/_entity/VersionableMixin]': true;
 
-    private _stateUp: boolean = false;
-    private _stateDown: boolean = true;
-    private _arrowState = {};
+    private _arrowState: IArrowState = {};
     private _isVisible: boolean = false;
     private _position: SCROLL_POSITION;
+    private _pagingMode: TPagingModeScroll = 'hidden';
 
     update(scrollState: IScrollState): void {
-         if (this._position !== scrollState.verticalPosition) {
-             this._position = scrollState.verticalPosition;
+        if (this._position !== scrollState.verticalPosition) {
+            this._position = scrollState.verticalPosition;
             if (scrollState.verticalPosition === SCROLL_POSITION.START) {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'readonly',
                     prev: 'readonly',
-                    next: 'visible'
-               };
-               this._stateUp = false;
-               this._stateDown = true;
+                    next: 'visible',
+                    end: 'hidden'
+                };
             } else if (scrollState.verticalPosition === SCROLL_POSITION.END) {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
-                    next: 'readonly'
-               };
-               this._stateUp = true;
-               this._stateDown = false;
+                    next: 'readonly',
+                    end: 'hidden'
+                };
             } else {
-               this._arrowState = {
+                this._arrowState = {
                     begin: 'visible',
                     prev: 'visible',
-                    next: 'visible'
-               };
-               this._stateUp = true;
-               this._stateDown = true;
+                    next: 'visible',
+                    end: 'hidden'
+                };
             }
+
             if (this._isVisible) {
                 this._nextVersion();
             }
-         }
+        }
     }
 
     set isVisible(value: boolean) {
@@ -58,15 +63,38 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
         return this._isVisible;
     }
 
-    get stateUp(): boolean {
-        return this._stateUp;
-    }
+    get arrowState(): IArrowState {
+        switch (this.pagingMode) {
+            case 'edge':
+                if (this._arrowState.next === 'visible') {
+                    this._arrowState.begin = 'hidden';
+                    this._arrowState.end = 'visible';
+                } else if (this._arrowState.begin === 'visible') {
+                    this._arrowState.end = 'hidden';
+                }
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                break;
 
-    get stateDown(): boolean {
-        return this._stateDown;
-    }
-
-    get arrowState() {
+            case 'end':
+                if (this._arrowState.next === 'visible') {
+                    this._arrowState.end = 'visible';
+                } else {
+                    this._arrowState.end = 'hidden';
+                }
+                this._arrowState.prev = 'hidden';
+                this._arrowState.next = 'hidden';
+                this._arrowState.begin = 'hidden';
+                break;
+        }
         return this._arrowState;
+    }
+
+    set pagingMode(pagingMode: TPagingModeScroll): void {
+        this._pagingMode = pagingMode;
+    }
+
+    get pagingMode(): TPagingModeScroll {
+        return this._pagingMode || 'basic';
     }
 }

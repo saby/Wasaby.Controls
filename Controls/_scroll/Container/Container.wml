@@ -60,9 +60,8 @@
             <Controls.Container.Async templateName="Controls/paging:Paging">
                 <ws:partial template="{{content.resolvedTemplate}}"
                             class="controls-Scroll__paging"
+                            pagingMode="{{_paging.pagingMode}}"
                             contrastBackground="{{true}}"
-                            backwardEnabled="{{_paging.stateUp}}"
-                            forwardEnabled="{{_paging.stateDown}}"
                             arrowState="{{_paging.arrowState}}"
                             on:onArrowClick="_arrowClickHandler()"/>
             </Controls.Container.Async>
