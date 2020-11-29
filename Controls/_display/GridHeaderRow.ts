@@ -31,12 +31,8 @@ export default class GridHeaderRow<T> extends GridRow<T> {
         return 'header' as unknown as T
     }
 
-    getItemClasses(templateHighlightOnHover: boolean = true,
-                   theme: string = 'default',
-                   style: string = 'default',
-                   cursor: string = 'pointer',
-                   clickable: boolean = true): string {
-        return `controls-Grid__header controls-Grid__header_theme-${theme}`;
+    getItemClasses(): string {
+        return `controls-Grid__header controls-Grid__header_theme-${this._$templateParams.theme}`;
     }
 
     protected _initializeColumns(): void {
