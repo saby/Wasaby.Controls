@@ -184,4 +184,4 @@ GridView.contextTypes = () => {
     };
 };
 
-export = GridView;
+export default GridView;

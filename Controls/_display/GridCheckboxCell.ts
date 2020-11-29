@@ -1,6 +1,7 @@
 import GridCell from './GridCell';
 import { TemplateFunction } from 'UI/Base';
 import GridRow from './GridDataRow';
+import GridRowMixin from 'Controls/_display/GridRowMixin';
 
 export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
 

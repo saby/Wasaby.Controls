@@ -74,7 +74,7 @@ const _private = {
         const item = dispItem.getContents();
         const nodeKey = item.getId();
         const baseSourceController = self._children.baseControl.getSourceController();
-        const expanded = !listViewModel.isExpanded(dispItem);
+        const expanded = self._options.useNewModel ? !dispItem.isExpanded() : !listViewModel.isExpanded(dispItem);
         const options = self._options;
         self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
@@ -90,11 +90,25 @@ const _private = {
             return baseSourceController
                 .load(undefined, nodeKey)
                 .addCallbacks((list) => {
-                    if (options.uniqueKeys) {
-                        listViewModel.mergeItems(list);
-                    } else {
-                        listViewModel.appendItems(list);
+                    // TODO нужно с этим разобраться, добавление записей в рекордсет, много где похожая логика используется
+                    if (expanded) {
+                        if (options.useNewModel) {
+                            const collection = listViewModel.getCollection();
+                            if (options.uniqueKeys) {
+                                collection.merge(list, { remove: false });
+                            } else {
+                                collection.setMetaData(list.getMetaData());
+                                collection.append(list);
+                            }
+                        } else {
+                            if (options.uniqueKeys) {
+                                listViewModel.mergeItems(list);
+                            } else {
+                                listViewModel.appendItems(list);
+                            }
+                        }
                     }
+
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                     listViewModel.setHasMoreStorage(
                         _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -308,8 +322,8 @@ const _private = {
                 loadedList.each((item) => {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
-
-                        if (viewModel.getChildren(itemKey, loadedList).length) {
+                        const dispItem = viewModel.getItemBySourceKey(itemKey);
+                        if (dispItem && viewModel.getChildren(dispItem, loadedList).length) {
                             modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
                         }
                     }
@@ -668,8 +682,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._mouseDownExpanderKey = key;
         }
     },
-    _onExpanderMouseUp: function(e, key, dispItem) {
+    _onExpanderMouseUp: function(e, key, itemData) {
         if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
+            const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             _private.toggleExpanded(this, dispItem);
             if (this._options.markItemByExpanderClick) {
                 this.setMarkedKey(key);
@@ -791,9 +806,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     _draggingItemMouseMove(e, itemData, nativeEvent): void {
         e.stopPropagation();
-        if (itemData.dispItem.isNode()) {
+        const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        if (dispItem.isNode()) {
             const dndListController = this._children.baseControl.getDndListController();
-            const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             const targetElement = _private.getTargetRow(nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
@@ -801,10 +816,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 mouseOffsetInTargetItem
             });
 
-        if (dragTargetPosition) {
-            if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
-                dndListController.setDragPosition(dragTargetPosition);
-            }
+            if (dragTargetPosition) {
+                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
+                    dndListController.setDragPosition(dragTargetPosition);
+                }
 
                 /*
                     Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
@@ -815,7 +830,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!itemData.isExpanded && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!dispItem.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }
@@ -835,7 +850,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], { bubbling: true });
         if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
-            const display = this._children.baseControl.getViewModel().getDisplay();
+            const display = this._options.useNewModel ? this._children.baseControl.getViewModel() : this._children.baseControl.getViewModel().getDisplay();
             const dispItem = display.getItemBySourceItem(item);
 
             // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.

@@ -18,13 +18,13 @@
 
 import { TemplateFunction } from 'UI/Base';
 import { IHeaderCell } from 'Controls/grid';
-import GridHeader from './GridHeader';
+import GridHeaderRow from './GridHeaderRow';
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import { IItemPadding } from "./Collection";
+import { IItemPadding } from './Collection';
 
 export interface IOptions<T> {
-    owner: GridHeader<T>;
+    owner: GridHeaderRow<T>;
     headerCell: IHeaderCell;
     cellPadding?: IItemPadding;
 }
@@ -32,7 +32,7 @@ export interface IOptions<T> {
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
 
 export default class GridHeaderCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
-    protected _$owner: GridHeader<T>;
+    protected _$owner: GridHeaderRow<T>;
     protected _$headerCell: IHeaderCell;
     protected _$cellPadding: IItemPadding;
 

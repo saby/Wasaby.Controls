@@ -1,5 +1,6 @@
 import { isFullGridSupport } from 'Controls/display';
 import { default as View } from 'Controls/_gridNew/Grid';
+import GridView from 'Controls/_gridNew/GridView';
 
 import * as GridItemTemplate from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_gridNew/Render/table/Item';
@@ -17,6 +18,7 @@ import * as EmptyTemplate from 'wml!Controls/_gridNew/Render/EmptyTemplate';
 
 export {
     View,
+    GridView,
     ItemTemplate,
     ResultsTemplate,
     ResultColumnTemplate,
