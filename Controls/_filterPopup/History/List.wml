@@ -11,7 +11,7 @@
 <ws:template name="itemContent">
    <div on:swipe="_itemSwipe(item)"
       class="controls-HistoryList__itemWrapper controls-HistoryList__itemWrapper_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__itemWrapper_theme-{{_options.theme}}">
-      <div class="controls-HistoryList__item_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__item_theme-{{_options.theme}} {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
+      <div class="controls-HistoryList__item controls-HistoryList__item_theme-{{_options.theme}} controls-HistoryList_{{_options.orientation}}__item_theme-{{_options.theme}} {{item.get('pinned') || item.get('client') ? 'controls-HistoryList__item_pinned'}}"
            on:click="_clickHandler(item)" title="{{text}}">{{text}}</div>
       <ws:partial
          attr:class="{{item === _swipeItem ? 'controls-HistoryList__iconSwipe'}}"
