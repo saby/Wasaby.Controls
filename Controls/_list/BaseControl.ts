@@ -426,13 +426,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
-                        // При полной перезагрузке данных нужно сбросить состояние скролла
-                        // и вернуться к началу списка, иначе браузер будет пытаться восстановить
-                        // scrollTop, догружая новые записи после сброса.
-                        self._resetScrollAfterReload = !self._keepScrollAfterReload;
-                        self._keepScrollAfterReload = false;
-                    }
+                    _private.resetScrollAfterLoad(self);
 
                     // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
@@ -543,6 +537,16 @@ const _private = {
 
         if (options.serviceDataLoadCallback instanceof Function) {
             options.serviceDataLoadCallback(self._items, loadedList);
+        }
+    },
+
+    resetScrollAfterLoad(self): void {
+        if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
+            // При полной перезагрузке данных нужно сбросить состояние скролла
+            // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+            // scrollTop, догружая новые записи после сброса.
+            self._resetScrollAfterReload = !self._keepScrollAfterReload;
+            self._keepScrollAfterReload = false;
         }
     },
 
@@ -3877,6 +3881,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
+                _private.resetScrollAfterLoad(self);
             }
         }
 
