@@ -36,21 +36,21 @@
       <div class="spoiler__column-header">ListCut (size)</div>
       <div class="spoiler__margin">Size s</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
-                     iconSize="s"
+                     separatorSize="s"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
                      expandedNavigation="{{_expandedNavigation}}">
             <invisible-node/>
       </Controls.spoiler:ListCut>
       <div>Size m</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
-                     iconSize="m"
+                     separatorSize="m"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
                      expandedNavigation="{{_expandedNavigation}}">
             <invisible-node/>
       </Controls.spoiler:ListCut>
       <div>Size l</div>
       <Controls.spoiler:ListCut bind:extended="_extended"
-                     iconSize="l"
+                     separatorSize="l"
                      collapsedNavigation="{{_collapsedNavigation}}" 		
                      expandedNavigation="{{_expandedNavigation}}">
             <invisible-node/>

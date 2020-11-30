@@ -44,7 +44,6 @@ export interface IListCutOptions extends IControlOptions, IExpandableOptions, II
 export default class ListCut extends Control<IListCutOptions> implements IExpandable, IIconSize {
    protected _template: TemplateFunction = template;
    protected _expanded: boolean;
-   protected _iconSize: IIconSizeOptions;
 
    readonly '[Controls/_toggle/interface/IExpandable]': boolean = true;
    readonly '[Controls/_interface/IIconSize]': boolean;
@@ -70,7 +69,7 @@ export default class ListCut extends Control<IListCutOptions> implements IExpand
 
    static getDefaultOptions(): object {
       return {
-         iconSize: 'm'
+         separatorSize: 'm'
       };
    }
 }
