@@ -30,7 +30,7 @@ class ListEditor extends ListEditorBase {
             textValue,
             needColapse: true
         };
-        this._notify('propertyValueChanged', [extendedValue]);
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
     protected _getTextValue(value: string|number): string {
