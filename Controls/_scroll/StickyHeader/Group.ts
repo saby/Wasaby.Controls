@@ -261,6 +261,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             }
         } else {
             delete this._headers[data.id];
+            const index = this._delayedHeaders.indexOf(data.id);
+            if (index > -1) {
+                this._delayedHeaders.splice(index, 1);
+            }
 
             // Unregister group after last header is unregistered
             if (!Object.keys(this._headers).length) {
