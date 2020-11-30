@@ -3,7 +3,7 @@
  * 
  * @class Controls/_list/interface/ItemTemplate
  * @mixes Controls/_list/interface/IBaseItemTemplateOptions
- * @mixes Controls/_list/interface/IContentTemplate
+ * @mixes Controls/_list/interface/IContentTemplateOptions
  * @author Авраменко А.С.
  * @see Controls/interface/IItemTemplate#itemTemplate
  * @see Controls/interface/IItemTemplate#itemTemplateProperty
