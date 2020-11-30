@@ -301,7 +301,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            if (!direction) {
+            if (this._deepReload) {
                 this._destroyNavigationController();
             }
             this._getNavigationController(this._options)
