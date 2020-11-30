@@ -158,6 +158,7 @@ export default class TreeItem<T> extends mixin<
 
     /**
      * Возвращает признак, является ли элемент узлом
+     * TODO нужен параметр или метод, который будет возвращать для узлов и скрытых узлов true, а для листьев false. Сейчас листья это null
      */
     isNode(): boolean|null {
         return this._$node;
@@ -198,6 +199,11 @@ export default class TreeItem<T> extends mixin<
      */
     getChildren(withFilter: boolean = true): TreeChildren<T> {
         return this.getOwner().getChildren(this, withFilter);
+    }
+
+    hasMoreStorage(): boolean {
+        const hasMoreStorage = this._$owner.getHasMoreStorage();
+        return !!hasMoreStorage[this.getContents().getKey()];
     }
 
     // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести

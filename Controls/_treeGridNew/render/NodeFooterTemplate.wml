@@ -1,0 +1,57 @@
+<ws:template name="footer_content">
+    <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
+        <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
+            <ws:for data="i in item.getLevel() - 1">
+                <div class="{{item.getLevelIndentClasses(theme, expanderSize, levelIndentSize)}}"></div>
+            </ws:for>
+        </ws:if>
+        <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon, expanderSize)}}">
+            <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
+        </ws:if>
+    </ws:if>
+
+    <ws:if data="{{ item.getNode().hasMoreStorage() }}">
+        <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"
+                                 fontSize="xs"
+                                 viewMode="link"
+                                 fontColorStyle="{{moreFontColorStyle}}"
+                                 caption="{{rk('Еще') + '...'}}"
+                                 readOnly="{{false}}"/>
+    </ws:if>
+    <ws:else data="{{ content }}">
+        <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{ content }}" itemData="{{footer}}"/>
+    </ws:else>
+</ws:template>
+
+<ws:template name="footer_colspan">
+    <div class="{{ item.getColumns()[0].getContentClasses(theme, cursor, highlightOnHover)  }} {{ cellClassName || '' }}" style="{{ item.getColumns()[0].getColspanStyles()  }}">
+        <ws:partial template="footer_content" column="{{item.getColumns()[0]}}"/>
+    </div>
+</ws:template>
+
+<ws:template name="footer_separated">
+    <ws:for data="index,column in item.getColumns()">
+        <div class="{{ column.getContentClasses(theme, cursor, highlightOnHover) }} {{ cellClassName || '' }}" attr:key="{{item.key}}_column_{{index}}">
+            <ws:partial template="footer_content" if="{{ index === 0 }}" column="{{column}}"/>
+        </div>
+    </ws:for>
+</ws:template>
+
+<ws:template name="footer">
+    <!-- Подвал во всю строку -->
+    <ws:if data="{{ colspan !== false }}">
+        <ws:partial template="footer_colspan" scope="{{_options}}"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="footer_separated" scope="{{_options}}"/>
+    </ws:else>
+</ws:template>
+
+<!-- Не выводим подвал, если это не кнопка еще и при этом не был переопределен контент. -->
+<!-- В таком случае подвал просто не ожидается прикладным разработчиком. -->
+<ws:if data="{{ !(!item.getNode().hasMoreStorage() && !content) }}">
+    <div class="{{item.getItemClasses()}}" attr:key="{{item.key}}">
+        <ws:partial template="footer" scope="{{_options}}"/>
+    </div>
+</ws:if>
+

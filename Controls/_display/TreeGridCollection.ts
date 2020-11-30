@@ -6,6 +6,8 @@ import * as GridLadderUtil from './utils/GridLadderUtil';
 import { ItemsFactory } from './Collection';
 import GridGroupItem from './GridGroupItem';
 import TreeItem from './TreeItem';
+import { Composer } from './itemsStrategy';
+import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -88,6 +90,17 @@ export default class TreeGridCollection<
 
     protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
         return GridGroupItem;
+    }
+
+    // TODO по идее нужно это добавлять в Tree,
+    //  но т.к. Tree используется в старой модели, чтобы ничего не сломать, добавляю здесь
+    protected _createComposer(): Composer<any, TreeItem<any>> {
+        const composer = super._createComposer();
+        composer.append(NodeFooter, {
+            display: this,
+            footerVisibilityCallback: this._$footerVisibilityCallback
+        });
+        return composer;
     }
 
     // endregion

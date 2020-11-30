@@ -117,6 +117,8 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
 import TreeGridCell from 'Controls/_display/TreeGridCell';
+import TreeGridNodeFooterRow from 'Controls/_display/TreeGridNodeFooterRow';
+import TreeGridNodeFooterCell from 'Controls/_display/TreeGridNodeFooterCell';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 
@@ -148,3 +150,5 @@ register('Controls/display:TreeItem', TreeItem, {instantiate: false});
 register('Controls/display:TreeGridCollection', TreeGridCollection, {instantiate: false});
 register('Controls/display:TreeGridRow', TreeGridRow, {instantiate: false});
 register('Controls/display:TreeGridCell', TreeGridCell, {instantiate: false});
+register('Controls/display:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {instantiate: false});
+register('Controls/display:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});

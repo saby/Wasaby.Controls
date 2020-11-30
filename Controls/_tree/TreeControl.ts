@@ -674,7 +674,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
-        const item = this._children.baseControl.getViewModel().getItemById(key, this._keyProperty);
+        const item = this._children.baseControl.getViewModel().getItemBySourceKey(key);
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
