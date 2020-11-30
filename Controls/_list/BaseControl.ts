@@ -3830,7 +3830,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
 
-        if ((oldViewModelConstructorChanged || needReload) && this.isEditing()) {
+        if (this.isEditing() && (!!newOptions.searchValue || oldViewModelConstructorChanged || needReload)) {
             // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
             // без возможности отменить закрытие из вне.
             this._cancelEdit(true);
@@ -4395,7 +4395,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
-            // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize' 
+            // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
             // срабатывали синхронно. Иначе ползунок скачет.
             if (this._notifyPlaceholdersChanged) {
                 this._notifyPlaceholdersChanged();
@@ -4567,7 +4567,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
-        this._modelRecreated = false; 
+        this._modelRecreated = false;
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();
