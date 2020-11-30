@@ -4341,14 +4341,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
-                if (this._notifyPlaceholdersChanged) {
-                    this._notifyPlaceholdersChanged();
-                    this._notifyPlaceholdersChanged = null;
-                }
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
+            }
+            if (this._notifyPlaceholdersChanged) {
+                this._notifyPlaceholdersChanged();
+                this._notifyPlaceholdersChanged = null;
             }
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
