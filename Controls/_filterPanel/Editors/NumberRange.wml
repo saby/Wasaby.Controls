@@ -2,7 +2,7 @@
    <Controls.input:Number scope="{{_options}}"
                           contrastBackground="{{false}}"
                           borderVisibility='partial'
-                          placeholder="{{_options.minValueTitle}}"
+                          placeholder="{{_options.minValueInputPlaceholder}}"
                           value="{{_minValue}}"
                           on:valueChanged="_handleMinValueChanged()"
                           on:inputCompleted="_handleInputCompleted()"/>
@@ -10,7 +10,7 @@
    <Controls.input:Number scope="{{_options}}"
                           borderVisibility='partial'
                           contrastBackground="{{false}}"
-                          placeholder="{{_options.maxValueTitle}}"
+                          placeholder="{{_options.maxValueInputPlaceholder}}"
                           value="{{_maxValue}}"
                           on:valueChanged="_handleMaxValueChanged()"
                           on:inputCompleted="_handleInputCompleted()"/>

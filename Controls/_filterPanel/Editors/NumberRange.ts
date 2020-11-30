@@ -5,6 +5,8 @@ import DateRangeTemplate = require('wml!Controls/_filterPanel/Editors/NumberRang
 interface INumberRangeOptions extends IControlOptions {
     propertyValue: number[];
     afterEditorTemplate: TemplateFunction;
+    minValueInputPlaceholder: string;
+    maxValueInputPlaceholder: string;
 }
 
 interface INumberRange {

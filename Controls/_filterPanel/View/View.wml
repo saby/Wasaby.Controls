@@ -12,7 +12,7 @@
       </Controls.scroll:StickyHeader>
       <Controls.propertyGrid:PropertyGrid
               editingObject="{{_editingObject}}"
-              source="{{_source}}"
+              source="{{_options.source}}"
               collapsedGroups="{{_collapsedGroups}}"
               on:editingObjectChanged="_editingObjectChanged()"
               on:itemClick="_itemClick()"

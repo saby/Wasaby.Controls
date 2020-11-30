@@ -64,10 +64,11 @@ export default class extends Control {
                 resetValue: [],
                 caption: '',
                 value: [],
+                textValue: '',
                 editorOptions: {
                     afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate',
-                    minValueTitle: '0',
-                    maxValueTitle: '1 000 000'
+                    minValueInputPlaceholder: '0',
+                    maxValueInputPlaceholder: '1 000 000'
                 }
             },
             {
@@ -76,6 +77,7 @@ export default class extends Control {
                 resetValue: null,
                 caption: '',
                 value: null,
+                textValue: '',
                 editorTemplateName: 'Controls/filterPanel:EnumListEditor',
                 editorOptions: {
                     navigation: {

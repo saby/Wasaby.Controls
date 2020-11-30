@@ -4,6 +4,7 @@ import {FilterUtils} from 'Controls/filter';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
+import * as clone from 'Core/core-clone';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
@@ -28,13 +29,13 @@ export default class View extends Control<IControlOptions> {
     protected _collapsedGroups: unknown[] = [];
 
     protected _beforeMount(options: IViewPanelOptions): void {
-        this._source = options.source;
+        this._source = clone(options.source);
         this._updateFilterParams();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
-            this._source = newOptions.source;
+            this._source = clone(newOptions.source);
             this._updateFilterParams();
         }
     }
