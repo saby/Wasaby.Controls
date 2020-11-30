@@ -231,7 +231,9 @@ import { _FocusAttrs } from 'UI/Focus';
       } catch (e) {
           Logger.error('UI/Executor:TClosure: ' + e.message, undefined, e);
       } finally {
-         markupGenerator.escape = oldEscape;
+         if (!isVdom) {
+            markupGenerator.escape = oldEscape;
+         }
       }
 
       if (!elements.length) {
