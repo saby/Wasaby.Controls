@@ -11,9 +11,20 @@ export interface IOptions<T> {
 
 export default class GridHeaderRow<T> extends GridRow<T> {
     protected _$header: THeader;
+    protected _$hasRowspan: boolean;
 
     constructor(options?: IOptions<T>) {
         super(options);
+        this._$hasRowspan = !!options.header.find((c) => c.startRow > 1 || c.endColumn > 2 || c.rowSpan > 1);
+    }
+
+
+    isSticked(): boolean {
+        return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
+    }
+
+    hasRowspan(): boolean {
+        return this._$hasRowspan;
     }
 
     getContents(): T {
@@ -64,6 +75,7 @@ export default class GridHeaderRow<T> extends GridRow<T> {
 Object.assign(GridHeaderRow.prototype, {
     _moduleName: 'Controls/display:GridHeader',
     _instancePrefix: 'grid-header-row-',
-    _cellModule: 'Controls/display:GridFooterCell',
-    _$header: null
+    _cellModule: 'Controls/display:GridHeaderCell',
+    _$header: null,
+    _$hasRowspan: false
 });
