@@ -37,7 +37,6 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;
-    private _state: ScrollState;
     private _oldScrollState: ScrollState;
     private _scrollModel: ScrollModel;
 
