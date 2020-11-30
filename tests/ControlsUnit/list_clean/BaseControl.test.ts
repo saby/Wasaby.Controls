@@ -1004,6 +1004,21 @@ describe('Controls/list_clean/BaseControl', () => {
                 assert.isFalse(loadStarted);
             });
 
+            it('_beforeUpdate with new source should reset scroll', async () => {
+                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
+
+                const baseControl = new BaseControl(baseControlOptions);
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl.saveOptions(baseControlOptions);
+
+                const newSourceControllerOptions = {...baseControlOptions};
+                newSourceControllerOptions.source = new Memory();
+
+                baseControl._beforeUpdate(newSourceControllerOptions);
+                assert.isFalse(baseControl._resetScrollAfterReload);
+            });
+
         });
 
         it('should immediately resolve promise if commit edit called without eipController', () => {
