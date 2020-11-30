@@ -238,8 +238,7 @@ describe('Controls/scroll:Container', () => {
                     scrollHeight: 2000
                 };
                 // В реальнности метод задебоунсен, в тестах выключаем дебоунс.
-                component._scrollbars.vertical._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
-
+                component._scrollbars._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
                 component._updateState(state);
                 assert.isFalse(component._scrollbars.vertical.isVisible);
                 component._mouseenterHandler();
@@ -256,6 +255,9 @@ describe('Controls/scroll:Container', () => {
                 component._container = {
                     offsetHeight: 100
                 };
+
+                // В реальнности метод задебоунсен, в тестах выключаем дебоунс.
+                component._scrollbars._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
 
                 component._mouseenterHandler();
                 assert.isFalse(component._scrollbars.vertical.isVisible);
