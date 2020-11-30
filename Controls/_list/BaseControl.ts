@@ -4346,6 +4346,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                              {bubbling: true});
                 needCheckTriggers = true;
             }
+
+            // Для корректного отображения скроллбара во время использования виртуального скролла
+            // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize' 
+            // срабатывали синхронно. Иначе ползунок скачет.
             if (this._notifyPlaceholdersChanged) {
                 this._notifyPlaceholdersChanged();
                 this._notifyPlaceholdersChanged = null;
