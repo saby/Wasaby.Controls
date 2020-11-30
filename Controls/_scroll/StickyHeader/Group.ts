@@ -261,6 +261,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             }
         } else {
             delete this._headers[data.id];
+            const index = this._delayedHeaders.indexOf(data.id);
+            if (index > -1) {
+                this._delayedHeaders.splice(index, 1);
+            }
 
             // Unregister group after last header is unregistered
             if (!Object.keys(this._headers).length) {
@@ -296,6 +300,7 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             for (const id of this._delayedHeaders) {
                 data = this._headers[id];
                 for (const position of [POSITION.top, POSITION.bottom]) {
+                    // Во время ожидания _delayedHeaders таблица может перестроиться и
                     if (data.inst._options.position.indexOf(position) !== -1) {
                         offset = data.inst.getOffset(this._container, position);
                         this._headers[data.id][position] = offset;
