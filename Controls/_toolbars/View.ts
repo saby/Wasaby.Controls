@@ -351,10 +351,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _setStateByItems(items: TItems, source?: ICrudPlus): void {
+    private _setStateByItems(items: TItems, isNewOptions: boolean, source?: ICrudPlus,): void {
         this._fullItemsList = items;
         // TODO: Удалить ActualAPI https://online.sbis.ru/opendoc.html?guid=d6fb9444-66f5-481d-8fd3-636b4d4ab676
-        this._actualItems = this._options.isNewOptions ? items : ActualAPI.items(items.clone());
+        this._actualItems = isNewOptions ? items : ActualAPI.items(items.clone());
         this._items = this._actualItems;
         // у первой записи тулбара не требуется показывать отступ слева
         this._firstItem = this._getFirstToolbarItem() as TItem;
@@ -396,12 +396,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
         if (options.source) {
             if (receivedItems) {
-                this._setStateByItems(receivedItems, options.source);
+                this._setStateByItems(receivedItems, options.isNewOptions, options.source);
             } else {
-                return this.setStateBySource(options.source);
+                return this.setStateBySource(options.source, options.isNewOptions);
             }
         } else if (options.items) {
-            this._setStateByItems(options.items);
+            this._setStateByItems(options.items, options.isNewOptions);
         }
     }
 
@@ -412,12 +412,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._isLoadMenuItems = false;
             this._sticky?.close();
-            this.setStateBySource(newOptions.source);
+            this.setStateBySource(newOptions.source, newOptions.isNewOptions);
         }
         if (this._options.items !== newOptions.items) {
             this._isLoadMenuItems = false;
             this._sourceByItems = null;
-            this._setStateByItems(newOptions.items);
+            this._setStateByItems(newOptions.items, newOptions.isNewOptions);
         }
         if (this._options.menuSource !== newOptions.menuSource) {
             this._menuItems = {};
@@ -445,16 +445,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
+    protected setStateBySource(source: ICrudPlus, isNewOptions: boolean): Promise<TItems> {
         return loadItems(source).then((items) => {
-            this._setStateByItems(items, source);
+            this._setStateByItems(items, isNewOptions, source);
             return items;
         });
     }
 
     protected _closeHandler(): void {
         this._notify('menuClosed', [], {bubbling: true});
-        this._setStateByItems(this._fullItemsList, this._options.source);
+        this._setStateByItems(this._fullItemsList, this._options.isNewOptions, this._options.source);
         this._setMenuSource();
     }
 
