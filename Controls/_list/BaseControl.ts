@@ -5262,7 +5262,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemMouseDown(event, itemData, domEvent) {
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
-        if (!!event.target.closest(ITEM_ACTION_SELECTOR)) {
+        if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
             event.stopPropagation();
             return;
         }
