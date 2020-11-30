@@ -2570,8 +2570,9 @@ const _private = {
                 }
             });
             if (result.placeholders) {
-                self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
-
+                self._notifyPlaceholdersChanged = () => {
+                    self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+                }
                 if (result.placeholders.top > 0) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
@@ -3158,6 +3159,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
     _checkTriggerVisibilityTimeout: null,
+    _notifyPlaceholdersChanged: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -4196,6 +4198,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._sourceController.destroy();
         }
 
+        if (this._notifyPlaceholdersChanged) {
+            this._notifyPlaceholdersChanged = null;
+        }
+
         if (this._groupingLoader) {
             this._groupingLoader.destroy();
         }
@@ -4335,12 +4341,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
                 this._scrollController.beforeRestoreScrollPosition();
+                if (this._notifyPlaceholdersChanged) {
+                    this._notifyPlaceholdersChanged();
+                    this._notifyPlaceholdersChanged = null;
+                }
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
                 needCheckTriggers = true;
             }
-
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
