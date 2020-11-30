@@ -143,7 +143,8 @@
    // CSS cascade is needed because you can move mouse to any place of toggle, and internal part of it must be highlighted.
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
-      .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
+      .controls-SwitchCircle__borderCircle_selected_theme-@{themeName},
+      .controls-SwitchCircle__borderCircle_unselected_theme-@{themeName} {
          stroke: @marker-box_hover_border-color_switcher;
       }
    }
@@ -151,7 +152,8 @@
 
 //touch on switcher
 .controls-DoubleSwitch:active {
-   .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
+   .controls-SwitchCircle__borderCircle_selected_theme-@{themeName},
+   .controls-SwitchCircle__borderCircle_unselected_theme-@{themeName} {
       stroke: @marker-box_hover_border-color_switcher;
    }
 }
