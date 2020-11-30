@@ -65,26 +65,35 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     }
 
     protected _onStartDragHandler(): void {
+        this.startDrag();
+    }
+
+    protected _onDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
+        const offset = this._options.orientation === ORIENTATION.HORIZONTAL ? dragObject.offset.x : dragObject.offset.y;
+        this.drag(offset);
+        dragObject.entity.offset = offset.value;
+    }
+
+    startDrag(): void {
         this._dragging = true;
         this._notify('dragStart');
     }
 
-    protected _onDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
-        let dragObjectOffset;
-        let styleSizeName;
-        if (this._options.orientation === ORIENTATION.HORIZONTAL) {
-            dragObjectOffset = dragObject.offset.x;
-            styleSizeName = 'width';
-        } else {
-            dragObjectOffset = dragObject.offset.y;
-            styleSizeName = 'height';
-        }
+    drag(dragObjectOffset: number): void {
+        const styleSizeName = this._options.orientation === ORIENTATION.HORIZONTAL ? 'width' : 'height';
 
         const offset = this._offset(dragObjectOffset);
         const sizeValue = `${Math.abs(offset.value)}px`;
 
-        dragObject.entity.offset = offset.value;
         this._styleArea = `${styleSizeName}:${sizeValue};${offset.style};`;
+    }
+
+    endDrag(offset: number): void {
+        if (this._dragging) {
+            this._styleArea = '';
+            this._dragging = false;
+            this._notify('offset', [offset]);
+        }
     }
 
     private _offset(x: number): IOffset {
@@ -128,11 +137,7 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     }
 
     protected _onEndDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
-        if (this._dragging) {
-            this._styleArea = '';
-            this._dragging = false;
-            this._notify('offset', [dragObject.entity.offset]);
-        }
+        this.endDrag(dragObject.entity.offset);
     }
 
     // Use in template.
