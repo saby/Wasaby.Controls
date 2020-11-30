@@ -2,6 +2,7 @@ import {Container} from 'Controls/scroll';
 import {compatibility, constants} from 'Env/Env';
 import {SHADOW_VISIBILITY, SHADOW_MODE} from 'Controls/_scroll/Container/Interface/IShadows';
 import {SCROLL_DIRECTION, SCROLL_POSITION} from 'Controls/_scroll/Utils/Scroll';
+import ScrollbarsModel from 'Controls/_scroll/Container/ScrollbarsModel';
 
 function createComponent(Component, cfg) {
     let cmp;
@@ -196,6 +197,8 @@ describe('Controls/scroll:Container', () => {
                 component._container = {
                     offsetHeight: 100
                 };
+                // В реальнности метод задебоунсен, в тестах выключаем дебоунс.
+                component._scrollbars.vertical._updateContainerSizes = ScrollbarsModel.prototype._updateContainerSizes;
                 component._updateState(state);
                 assert.isFalse(component._scrollbars.vertical.isVisible);
                 component._mouseenterHandler();

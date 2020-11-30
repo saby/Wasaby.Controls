@@ -116,7 +116,7 @@ define(
             });
          });
 
-         describe('_afterUpdate', function () {
+         describe('_beforeUpdate', function () {
             it('Should update scroll position', function () {
                let
                   sandbox = sinon.sandbox.create(),
@@ -127,7 +127,7 @@ define(
                };
                sandbox.stub(component, '_setSizes');
                sandbox.stub(component, '_setPosition');
-               component._afterUpdate({contentSize: 200, position: 10});
+               component._beforeUpdate({contentSize: 200, position: 10});
                sinon.assert.called(component._setPosition);
                sandbox.restore();
             });

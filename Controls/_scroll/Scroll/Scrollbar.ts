@@ -86,13 +86,11 @@ class Scrollbar extends Control<IScrollBarOptions> {
     protected _beforeUpdate(options: IScrollBarOptions): void {
         this._thumbStyle = this._getThumbStyle(options);
         this._thumbThickness = this._getThumbThickness(options);
-    }
 
-    protected _afterUpdate(oldOptions: IScrollBarOptions): void {
         // TODO: Позиция сейчас принимается и через опции и через сеттер. чтобы не было лишних обновлений нужно оставить только сеттер
-        const position = this._scrollPosition || this._options.position || 0;
+        const position = this._scrollPosition || options.position || 0;
         let shouldUpdatePosition = !this._dragging && this._position !== position;
-        if (oldOptions.contentSize !== this._options.contentSize) {
+        if (options.contentSize !== this._options.contentSize) {
             this._setSizes(this._options.contentSize);
             shouldUpdatePosition = true;
         }
