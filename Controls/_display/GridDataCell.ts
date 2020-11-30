@@ -5,6 +5,14 @@ import GridDataRow from './GridDataRow';
 export interface IOptions<T> extends IGridCellOptions<T> {
 }
 
+/**
+ * @typedef {Function} TEditArrowVisibilityCallback
+ * @description
+ * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
+ * @param item Model
+ */
+export type TEditArrowVisibilityCallback = (item: Model) => boolean;
+
 export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends GridCell<T, TOwner> {
 
     // region Аспект "Маркер"
@@ -47,6 +55,21 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
      */
     getTagClasses(theme: string): string {
         return `controls-Grid__cell_tag_theme-${theme}`;
+    }
+
+    // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        let contents: Model = this._$owner.getContents() as undefined as Model;
+        if (this._$editArrowVisibilityCallback === undefined) {
+            return this._$showEditArrow;
+        }
+        if (this._$owner['[Controls/_display/BreadcrumbsItem]']) {
+            contents = contents[(contents as any).length - 1];
+        }
+        return this.getColumnIndex() === 0 && this._$showEditArrow && this._$editArrowVisibilityCallback(contents);
     }
 
     // endregion

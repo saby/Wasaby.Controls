@@ -43,6 +43,10 @@
                                    key="{{ (item || itemData).getContents().getKey && (item || itemData).getContents().getKey() }}"
                                    checkboxReadOnly="{{ checkboxReadOnly }}"/>
             </ws:partial>
+
+            <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
+               <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
+            </ws:if>
          </div>
          <ws:if data="{{ gridColumn.shouldDisplayItemActions() }}">
             <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">

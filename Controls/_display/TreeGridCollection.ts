@@ -6,6 +6,7 @@ import * as GridLadderUtil from './utils/GridLadderUtil';
 import { ItemsFactory } from './Collection';
 import GridGroupItem from './GridGroupItem';
 import TreeItem from './TreeItem';
+import {TEditArrowVisibilityCallback} from 'Controls/_display/GridDataCell';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -32,6 +33,9 @@ export default class TreeGridCollection<
     T extends TreeGridRow<S> = TreeGridRow<S>
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/_display/TreeGridCollection]': boolean;
+
+    protected _$showEditArrow: boolean;
+    protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
 
     constructor(options: any) {
         super(options);
@@ -96,5 +100,7 @@ export default class TreeGridCollection<
 Object.assign(TreeGridCollection.prototype, {
     '[Controls/_display/TreeGridCollection]': true,
     _moduleName: 'Controls/display:TreeGridCollection',
-    _itemModule: 'Controls/display:TreeGridRow'
+    _itemModule: 'Controls/display:TreeGridRow',
+    _$showEditArrow: false,
+    _$editArrowVisibilityCallback: undefined
 });
