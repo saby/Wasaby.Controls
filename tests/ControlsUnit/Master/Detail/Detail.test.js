@@ -230,6 +230,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
                }
             };
          };
+         control._needHandleTouch = () => false;
          control._touchstartHandler(getFakeEvent(1, 2, 3));
          control._touchendHandler(getFakeEvent());
          assert.equal(methodData, undefined);
@@ -238,6 +239,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          control._touchendHandler(getFakeEvent(10, 'body', 'body'));
          assert.equal(methodData, undefined);
 
+         control._needHandleTouch = () => true;
          control._touchstartHandler(getFakeEvent(10, 'body', 'body'));
          control._touchendHandler(getFakeEvent(50, 'body', 'body'));
          assert.equal(methodData, 100);
