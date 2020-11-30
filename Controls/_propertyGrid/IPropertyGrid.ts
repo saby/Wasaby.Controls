@@ -2,10 +2,10 @@ import IPropertyGridProperty from './IProperty';
 import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import {IItemAction} from 'Controls/itemActions';
+import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
 export interface IPropertyGridOptions extends IControlOptions {
-    editingObject: Object | Model | Record<string, any>;
+    editingObject: Object | Model | Record<string, unknown>;
     source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     groupTemplate?: Function;
     collapsedGroups?: Array<string|number>;
@@ -13,6 +13,7 @@ export interface IPropertyGridOptions extends IControlOptions {
     parentProperty?: string;
     render?: Control<IPropertyGridOptions>;
     itemActions: IItemAction[];
+    itemActionVisibilityCallback?: TItemActionVisibilityCallback;
 }
 
 /**
