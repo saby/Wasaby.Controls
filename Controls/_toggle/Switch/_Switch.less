@@ -17,7 +17,7 @@
 
 .controls-Switch__toggle__wrapper_theme-@{themeName} {
    width: @width_switcher;
-   height: @height_switcher;
+   height: @height_horizontal-switcher;
    border-width: @border-thickness_switcher;
    border-color: @border-color_switcher;
    border-radius: @border-radius_switcher;
@@ -97,6 +97,6 @@
 }
 
 .controls_Switch_SwitchCircle_theme-@{themeName} {
-   margin-right: @marker-circle_margin_switcher - @border-thickness_switcher; // 3px - 1px бордера
-   margin-left: @marker-circle_margin_switcher - @border-thickness_switcher; // выше
+   margin-right: @marker_border-offset_switcher - @border-thickness_switcher;
+   margin-left: @marker_border-offset_switcher - @border-thickness_switcher;
 }

@@ -29,7 +29,7 @@
 .controls-DoubleSwitch__toggle_horizontal_theme-@{themeName} {
    margin: 0 @text_offset_switcher;
    width: @width_switcher;
-   height: @height_switcher;
+   height: @height_horizontal-switcher;
 }
 
 .controls-DoubleSwitch__toggle_vertical {
@@ -38,7 +38,7 @@
 }
 
 .controls-DoubleSwitch__toggle_vertical_theme-@{themeName} {
-   width: @height_switcher;
+   width: @height_horizontal-switcher;
    height: @height_vertical-switcher;
    &:before {
       height: 0;
@@ -71,7 +71,7 @@
 }
 
 .controls-DoubleSwitch__fake-element {
-   height: @height_vertical-switcher - @marker-circle_height_switcher - @marker-circle_margin_switcher;
+   height: @height_vertical-switcher - @marker_height_switcher - @marker_border-offset_switcher;
 }
 
 .controls-DoubleSwitch__fake-element_active {
@@ -141,11 +141,11 @@
 }
 
 .controls_DoubleSwitch_SwitchCircle_vertical_theme-@{themeName} {
-   margin-top: @marker-circle_margin_switcher - @border-thickness_switcher;
-   margin-bottom: @marker-circle_margin_switcher - @border-thickness_switcher;
+   margin-top: @marker_border-offset_switcher - @border-thickness_switcher;
+   margin-bottom: @marker_border-offset_switcher - @border-thickness_switcher;
 }
 
 .controls_DoubleSwitch_SwitchCircle_horizontal_theme-@{themeName} {
-   margin-right: @marker-circle_margin_switcher - @border-thickness_switcher;
-   margin-left: @marker-circle_margin_switcher - @border-thickness_switcher;
+   margin-right: @marker_border-offset_switcher - @border-thickness_switcher;
+   margin-left: @marker_border-offset_switcher - @border-thickness_switcher;
 }
