@@ -706,6 +706,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      value = value || '';
       this._searchValue = value;
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */

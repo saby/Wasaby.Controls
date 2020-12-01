@@ -132,7 +132,8 @@
 }
 
 .controls-Switch:active {
-   .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
+   .controls-SwitchCircle__borderCircle_selected_theme-@{themeName},
+   .controls-SwitchCircle__borderCircle_unselected_theme-@{themeName} {
       stroke: @marker-box_hover_border-color_switcher;
    }
 }
@@ -153,7 +154,8 @@
       text-decoration: none;
    }
    .controls-Switch:hover {
-      .controls-SwitchCircle__borderCircle_enabled_theme-@{themeName} {
+      .controls-SwitchCircle__borderCircle_selected_theme-@{themeName},
+      .controls-SwitchCircle__borderCircle_unselected_theme-@{themeName} {
          stroke: @marker-box_hover_border-color_switcher;
       }
    }

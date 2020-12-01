@@ -235,6 +235,17 @@ class Base extends Control<IMasterDetail> {
         if (needHandleTouch) {
             this._touchstartPosition = this._getTouchPageXCoord(e);
             this._beginResize();
+            this._children.resizingLine.startDrag();
+        }
+    }
+
+    protected _touchMoveHandler(e: SyntheticEvent<TouchEvent>): void {
+        if (this._touchstartPosition) {
+            const touchendPosition: number = this._getTouchPageXCoord(e);
+            const touchOffset: number = touchendPosition - this._touchstartPosition;
+            if (touchOffset !== 0) {
+                this._children.resizingLine.drag(touchOffset);
+            }
         }
     }
 
@@ -257,13 +268,9 @@ class Base extends Control<IMasterDetail> {
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
         if (this._touchstartPosition) {
             const touchendPosition: number = this._getTouchPageXCoord(e);
-            const hasTouchOffset: boolean = this._touchstartPosition - touchendPosition !== 0;
-            if (hasTouchOffset) {
-                const direction: string = (this._touchstartPosition - touchendPosition > 0) ? 'left' : 'right';
-                const offset: number = direction === 'left' ? -TOUCH_RESIZE_MASTER_OFFSET : TOUCH_RESIZE_MASTER_OFFSET;
-                this._changeOffset(offset);
-            }
+            const touchOffset: number = touchendPosition - this._touchstartPosition;
             this._touchstartPosition = null;
+            this._children.resizingLine.endDrag(touchOffset);
         }
     }
 
