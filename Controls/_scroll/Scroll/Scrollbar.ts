@@ -76,7 +76,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         this._forceUpdate();
         const position = this._scrollPosition || this._options.position || 0;
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, position);
+            this._thumbSize, position, this._options.contentSize);
 
         if (!newEnv() && window) {
             window.addEventListener('resize', this._resizeHandler);
@@ -97,7 +97,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (shouldUpdatePosition) {
             this._setPosition(position);
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-                                                                this._thumbSize, position);
+                                                                this._thumbSize, position, options.contentSize);
         }
     }
 
@@ -122,7 +122,8 @@ class Scrollbar extends Control<IScrollBarOptions> {
         return (options.direction === 'vertical' ? 'l' : 's');
     }
 
-    private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number): number {
+    private _getThumbCoordByScroll(scrollbarSize: number, thumbSize: number, scrollPosition: number,
+                                   contentSize: number): number {
         let thumbCoord: number;
         let availableScale: number;
         let availableScroll: number;
@@ -131,7 +132,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         availableScale = scrollbarSize - thumbSize;
 
         // скроллить можно на высоту контента, за вычетом высоты контейнера = высоте скроллбара
-        availableScroll = this._options.contentSize - scrollbarSize;
+        availableScroll = contentSize - scrollbarSize;
 
         // решаем пропорцию, известна координата ползунка, высота его перемещения и величину скроллящегося контента
         thumbCoord = (scrollPosition * availableScale) / availableScroll;
@@ -331,7 +332,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
         this._setPosition(newPosition, true);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, newPosition);
+            this._thumbSize, newPosition, this._options.contentSize);
         event.preventDefault();
     }
 
@@ -347,7 +348,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         const position = this._scrollPosition || this._options.position || 0;
         this._setPosition(position);
         this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
-            this._thumbSize, position);
+            this._thumbSize, position, this._options.contentSize);
     }
 
     private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
