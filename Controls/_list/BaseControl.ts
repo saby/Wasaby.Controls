@@ -2578,7 +2578,7 @@ const _private = {
             });
             if (result.placeholders) {
                 self._notifyPlaceholdersChanged = () => {
-                self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+                    self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
                 }
                 if (result.placeholders.top > 0) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
