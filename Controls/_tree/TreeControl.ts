@@ -212,10 +212,20 @@ const _private = {
             listViewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
             );
-            if (self._options.uniqueKeys) {
-                listViewModel.mergeItems(list);
+            if (self._options.useNewModel) {
+                const collection = listViewModel.getCollection();
+                if (self._options.uniqueKeys) {
+                    collection.merge(list, { remove: false });
+                } else {
+                    collection.setMetaData(list.getMetaData());
+                    collection.append(list);
+                }
             } else {
-                listViewModel.appendItems(list);
+                if (self._options.uniqueKeys) {
+                    listViewModel.mergeItems(list);
+                } else {
+                    listViewModel.appendItems(list);
+                }
             }
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);

@@ -11,15 +11,10 @@
     </ws:if>
 
     <ws:if data="{{ item.getNode().hasMoreStorage() }}">
-        <Controls.buttons:Button attr:class="controls-TreeGrid__nodeFooterLoadMore js-controls-TreeGrid__nodeFooter__LoadMoreButton"
-                                 fontSize="xs"
-                                 viewMode="link"
-                                 fontColorStyle="{{moreFontColorStyle}}"
-                                 caption="{{rk('Еще') + '...'}}"
-                                 readOnly="{{false}}"/>
+        <ws:partial template="{{item.getNodeFooterTemplateMoreButton()}}" item="{{item}}"/>
     </ws:if>
     <ws:else data="{{ content }}">
-        <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{ content }}" itemData="{{footer}}"/>
+        <ws:partial attr:class="controls-TreeGrid__nodeFooterCustomTemplate" template="{{ content }}" itemData="{{item}}"/>
     </ws:else>
 </ws:template>
 

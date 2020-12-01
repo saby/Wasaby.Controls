@@ -9,8 +9,7 @@ export default class TreeGridNodeFooterCell<T> extends TreeGridCell<T> {
         cursor: string = 'pointer',
         templateHighlightOnHover: boolean = true
     ): string {
-        // TODO
-        const rowSeparatorSize = null;
+        const rowSeparatorSize = this._$owner.getRowSeparatorSize() || 'null';
 
         let classes =
             'controls-TreeGrid__nodeFooterContent ' +

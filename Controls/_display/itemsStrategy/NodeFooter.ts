@@ -161,14 +161,9 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
                 continue;
             }
 
-            // TODO подумать что должно быть в contents
-            const nodeFooterKey = 'nodeFooter_' + item.getContents().getKey();
             const nodeFooter = new TreeGridNodeFooterRow({
                 owner: options.display,
-                contents: new Model({
-                    rawData: { key: nodeFooterKey },
-                    keyProperty: 'key'
-                }),
+                contents: 'nodeFooter_' + item.getContents().getKey(),
                 parent: item,
                 columns: options.display.getColumnsConfig(),
                 multiSelectVisibility: options.display.getMultiSelectVisibility()

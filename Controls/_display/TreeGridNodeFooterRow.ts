@@ -19,6 +19,10 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
         return this._$owner.getNodeFooterTemplate() || 'Controls/treeGridNew:NodeFooterTemplate';
     }
 
+    getNodeFooterTemplateMoreButton(): TemplateFunction {
+        return this._$owner.getNodeFooterTemplateMoreButton();
+    }
+
     getItemClasses(
         templateHighlightOnHover: boolean = true,
         theme: string = 'default',

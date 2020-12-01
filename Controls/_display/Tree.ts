@@ -178,6 +178,8 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$expanderVisibility: string;
 
+    protected _$nodeFooterTemplateMoreButton: TemplateFunction;
+
     /**
      * @cfg {Boolean} Включать корневой узел в список элементов
      * @name Controls/_display/Tree#rootEnumerable
@@ -268,6 +270,10 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     // region Collection
+
+    getNodeFooterTemplateMoreButton(): TemplateFunction {
+        return this._$nodeFooterTemplateMoreButton;
+    }
 
     // region Expander
 
@@ -834,5 +840,6 @@ Object.assign(Tree.prototype, {
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,
     _$footerVisibilityCallback: null,
+    _$nodeFooterTemplateMoreButton: null,
     _root: null
 });
