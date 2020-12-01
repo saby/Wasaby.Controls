@@ -8,8 +8,7 @@ import {tmplNotify} from 'Controls/eventUtils';
 import {CollectionItem} from 'Controls/display';
 import 'wml!Controls/_propertyGrid/Render/resources/for';
 import PropertyGridCollection from 'Controls/_propertyGrid/PropertyGridCollection';
-import PropertyGridCollectionItem from 'Controls/_propertyGrid/PropertyGridCollectionItem';
-import {Model} from 'Types/source';
+import PropertyGridCollectionItem, {default as PropertyGridItem} from 'Controls/_propertyGrid/PropertyGridCollectionItem';
 
 interface IPropertyGridRenderOptions extends IControlOptions {
     itemTemplate: TemplateFunction;
@@ -23,11 +22,15 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
     protected _groupTemplate: TemplateFunction = groupTemplate;
     protected _toggleEditorsTemplate: TemplateFunction = toggleEditorsTemplate;
 
-    protected _handleMenuActionMouseEnter(): void {
-        //
+    protected _handleMenuActionMouseEnter(): void {/**/}
+    protected _handleMenuActionMouseLeave(): void {/**/}
+
+    protected _mouseEnterHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._notify('hoveredItemChanged', [item]);
     }
-    protected _handleMenuActionMouseLeave(): void {
-        //
+
+    protected _mouseLeaveHandler(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._notify('hoveredItemChanged', [null]);
     }
 
     protected _onItemActionMouseDown(e: SyntheticEvent<MouseEvent>,
