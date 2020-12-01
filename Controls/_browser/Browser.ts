@@ -183,7 +183,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _getSourceController(options?: IBrowserOptions): SourceController {
         if (!this._sourceController) {
             this._sourceController = new SourceController(options ?? this._options);
-        }
+        }//
 
         return this._sourceController;
     }
