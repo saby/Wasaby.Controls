@@ -71,7 +71,7 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     protected _onDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
         const offset = this._options.orientation === ORIENTATION.HORIZONTAL ? dragObject.offset.x : dragObject.offset.y;
         this.drag(offset);
-        dragObject.entity.offset = offset;
+        dragObject.entity.offset = this._offset(offset);
     }
 
     startDrag(): void {
@@ -137,7 +137,7 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     }
 
     protected _onEndDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
-        this.endDrag(dragObject.entity.offset);
+        this.endDrag(dragObject.entity.offset.value);
     }
 
     // Use in template.
