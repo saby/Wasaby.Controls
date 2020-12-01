@@ -80,6 +80,7 @@ define([
          'www.ya.ru'
       ],
       decoratedLinkService,
+      decoratedLinkHost,
       currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
