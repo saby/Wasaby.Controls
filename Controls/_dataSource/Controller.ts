@@ -129,18 +129,7 @@ export default class Controller {
     }
 
     update(item: Model): Promise<void> {
-        return (this._options.source as ICrud)
-            .update(item)
-            .then((result) => {
-                const keyProperty = this._options.keyProperty;
-
-                if (this._items.getIndexByValue(keyProperty, item.get(keyProperty)) === -1) {
-                    this._items.append([item]);
-                }
-
-                return result;
-            })
-            .catch((error) => error);
+        return (this._options.source as ICrud).update(item);
     }
 
     create(meta?: object): Promise<EntityRecord> {
