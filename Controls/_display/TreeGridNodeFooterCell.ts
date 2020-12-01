@@ -37,7 +37,7 @@ export default class TreeGridNodeFooterCell<T> extends TreeGridCell<T> {
                 classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme}`;
             }
             classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme}`;
-            // classes += ` ${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} ${DRAG_SCROLL_JS_SELECTORS.NOT_DRAG_SCROLLABLE}`;
+            classes += ' controls-Grid_columnScroll__fixed js-controls-ColumnScroll__notDraggable';
         }
 
         return classes;
