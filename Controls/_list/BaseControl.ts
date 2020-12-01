@@ -3830,7 +3830,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
 
-        if (this.isEditing() && (!!newOptions.searchValue || oldViewModelConstructorChanged || needReload)) {
+        if (this.isEditing() && (oldViewModelConstructorChanged || needReload)) {
             // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
             // без возможности отменить закрытие из вне.
             this._cancelEdit(true);
