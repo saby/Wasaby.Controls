@@ -1,6 +1,7 @@
 import TreeGridRow from 'Controls/_display/TreeGridRow';
 import { TemplateFunction } from 'UI/Base';
 import TreeItem from 'Controls/_display/TreeItem';
+import TreeGridNodeFooterCell from 'Controls/_display/TreeGridNodeFooterCell';
 
 export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
     readonly MarkableItem: boolean = false;
@@ -9,6 +10,11 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
 
     getNode(): TreeItem<S> {
         return this.getParent();
+    }
+
+    getColumns(colspan: boolean|undefined): Array<TreeGridNodeFooterCell<any, TreeGridNodeFooterRow<any>>> {
+        const columns = super.getColumns();
+        return colspan !== false ? [columns[0]] : columns;
     }
 
     hasMoreStorage(): boolean {

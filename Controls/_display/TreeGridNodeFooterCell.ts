@@ -1,7 +1,12 @@
 import TreeGridCell from 'Controls/_display/TreeGridCell';
+import { TemplateFunction } from 'UI/Base';
 
 export default class TreeGridNodeFooterCell<T> extends TreeGridCell<T> {
     readonly '[Controls/_display/TreeGridCell]': boolean;
+
+    getTemplate(content?: TemplateFunction): TemplateFunction|string {
+        return this._$owner.getNode().hasMoreStorage() ? this._$owner.getNodeFooterTemplateMoreButton() : content;
+    }
 
     getContentClasses(
         theme: string,
@@ -38,8 +43,8 @@ export default class TreeGridNodeFooterCell<T> extends TreeGridCell<T> {
         return classes;
     }
 
-    getColspanStyles(): string {
-        return 'grid-column: 1 / ' + (this._$owner.getColumns().length + 1);
+    getColspanStyles(colspan: boolean): string {
+        return colspan !== false ? 'grid-column: 1 / ' + (this._$owner.getColumnsConfig().length + 1) : '';
     }
 }
 
