@@ -2862,7 +2862,7 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (options.itemActionsVisibility === 'visible') {
+        if (!self._context?.isTouch?.isTouch && options.itemActionsVisibility === 'visible') {
             _private.showActions(this);
             _private.updateItemActions(self, options);
         }
