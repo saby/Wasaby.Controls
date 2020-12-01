@@ -276,7 +276,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                     .then((result) => {
                         this._searchDataLoad(result, newOptions.searchValue);
                     })
-                    .catch(() => {});
+                    .catch((error) => error);
             }
         });
     }
