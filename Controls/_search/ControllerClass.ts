@@ -149,7 +149,9 @@ export default class SearchControllerClass {
         const isNewSourceController = this._startSearchWithNewSourceController(searchValue, needRecreateSearchController);
 
         if (this._needStartSearchBySearchValueChanged(newOptions, searchValue) || isNewSourceController) {
-            if (!needUpdateRoot || isNewSourceController) {
+            if (!needUpdateRoot || isNewSourceController ||
+                // Временное решение для 20.7204. Уже поправлено в 21.1000, эта правка удалена.
+                (newOptions.task1180659786 && this._options.searchValue !== newOptions.searchValue && this._isSearchValueShort(searchValue, newOptions.minSearchLength))) {
                 updateResult = this._startSearch(searchValue);
             }
             if (needUpdateRoot && searchValue !== undefined) {
@@ -173,7 +175,6 @@ export default class SearchControllerClass {
         if (this._storeCallbackId) {
             Store.unsubscribe(this._storeCallbackId);
             Store.unsubscribe(this._storeCtxCallbackId);
-            Store.dispatch('searchValue', undefined);
         }
     }
 
@@ -273,7 +274,9 @@ export default class SearchControllerClass {
         return Store.onPropertyChanged('searchValue', (searchValue: unknown) => {
             // фикс нажатия лупы в .7200, в .1000 это будет неактульно и снова будет просто текст
             const searchStoreData = SearchControllerClass._convertStoreSearchValue(searchValue);
-            this.search(searchStoreData.text, searchStoreData.force);
+            if (searchStoreData) {
+                this.search(searchStoreData.text, searchStoreData.force);
+            }
         });
     }
 

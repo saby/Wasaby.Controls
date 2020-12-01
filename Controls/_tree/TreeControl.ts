@@ -301,7 +301,7 @@ const _private = {
             isExpandAll = _private.isExpandAll(expandedItemsKeys);
         }
 
-        if (!(_private.isDeepReload(cfg, self._deepReload) || expandedItemsKeys.length || !isExpandAll)) {
+        if (!(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll)) {
             _private.clearNodesSourceControllers(self);
         }
 

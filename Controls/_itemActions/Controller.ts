@@ -445,7 +445,7 @@ export class Controller {
             // см. https://online.sbis.ru/opendoc.html?guid=b5751217-3833-441f-9eb6-53526625bc0c
             if (item.isSwiped() && parentAction.isMenu) {
                 return allActions.filter((action) => (
-                    actions.showed.indexOf(action) === -1 || action.showType !== TItemActionShowType.TOOLBAR)
+                    !this._hasActionInArray(action, actions.showed) || action.showType !== TItemActionShowType.TOOLBAR)
                 );
             }
             return allActions.filter((action) => (
@@ -454,6 +454,10 @@ export class Controller {
             ));
         }
         return [];
+    }
+
+    private _hasActionInArray(action: IItemAction, actions: IItemAction[]): boolean {
+        return actions.some((item) => item.id === action.id);
     }
 
     /**
@@ -751,7 +755,7 @@ export class Controller {
         actionMode: string
     ): boolean {
         const oldActions = item.getActions();
-        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions, actionMode))) {
+        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions, actionMode, item.isSwiped()))) {
             item.setActions(actions, true);
             return true;
         }
@@ -761,11 +765,12 @@ export class Controller {
     private static _isMatchingActions(
         oldContainer: IItemActionsContainer,
         newContainer: IItemActionsContainer,
-        actionMode: string
+        actionMode: string,
+        isSwipedItem: boolean
     ): boolean {
         const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
         const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
-        return isMatchedAll && isMatchedShowed;
+        return actionMode === 'adaptive' && !isSwipedItem ? isMatchedAll : (isMatchedAll && isMatchedShowed);
     }
 
     private static _calculateSwipeConfig(
