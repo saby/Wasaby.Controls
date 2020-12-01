@@ -212,10 +212,20 @@ const _private = {
             listViewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
             );
-            if (self._options.uniqueKeys) {
-                listViewModel.mergeItems(list);
+            if (self._options.useNewModel) {
+                const collection = listViewModel.getCollection();
+                if (self._options.uniqueKeys) {
+                    collection.merge(list, { remove: false });
+                } else {
+                    collection.setMetaData(list.getMetaData());
+                    collection.append(list);
+                }
             } else {
-                listViewModel.appendItems(list);
+                if (self._options.uniqueKeys) {
+                    listViewModel.mergeItems(list);
+                } else {
+                    listViewModel.appendItems(list);
+                }
             }
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
@@ -674,7 +684,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         _private.resetExpandedItems(this);
     },
     toggleExpanded: function(key) {
-        const item = this._children.baseControl.getViewModel().getItemById(key, this._keyProperty);
+        const item = this._children.baseControl.getViewModel().getItemBySourceKey(key);
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
