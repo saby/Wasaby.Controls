@@ -62,6 +62,20 @@ interface IDataChildContext {
 type IFilterControllerOptions = Pick<IBrowserOptions,
    'filter' | 'minSearchLength' | 'filterButtonSource' | 'parentProperty' | 'searchParam' | 'searchValue'>;
 
+/**
+ * Контрол "Браузер" предназначен для организации реестра. Он обеспечивает компоновку для списка и контролов его окружения, таких как {@link Controls/search:Input Строка поиска}, {@link Controls/breadcrumbs:Path Хлебные крошки}, {@link Controls/operations:Panel Панель действий} и [@link Controls/filter:View Объединенный фильтр}.
+ * @class Controls/browser:Browser
+ * @author Герасимов А.М.
+ * @mixes Controls/_browser/interface/IBrowser
+ * @mixes Controls/_filter/IPrefetch
+ * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/interface/IHierarchySearch
+ */   
 export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
