@@ -23,10 +23,10 @@ define(
 
          it('_getThumbCoordByScroll', function () {
             var component = createComponent(Scrollbar.default, {contentSize: 1000});
-            result = component._getThumbCoordByScroll(100, 10, 400);
+            result = component._getThumbCoordByScroll(100, 10, 400, 1000);
             assert.equal(40, result);
 
-            result = component._getThumbCoordByScroll(100, 10, 0);
+            result = component._getThumbCoordByScroll(100, 10, 0, 1000);
             assert.equal(0, result);
          });
 
