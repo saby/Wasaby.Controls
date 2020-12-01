@@ -3004,10 +3004,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             }
         }
         if (items.length > 0 && !silent) {
+            items.properties = 'selected';
             const index = this.getIndex(items[0]);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
-                IObservable.ACTION_REPLACE,
+                IObservable.ACTION_CHANGE,
                 items,
                 index,
                 items,
