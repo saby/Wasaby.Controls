@@ -5670,8 +5670,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
         event.stopImmediatePropagation();
         if (this._listViewModel.isActionsAssigned()) {
-        const itemActionsController = _private.getItemActionsController(this);
-        itemActionsController.updateItemActions(itemKey, itemWidth);
+            const itemActionsController = _private.getItemActionsController(this);
+            itemActionsController.updateItemActions(itemKey, itemWidth);
         }
     },
 
