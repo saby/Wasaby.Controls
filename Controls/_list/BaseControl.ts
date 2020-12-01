@@ -1991,6 +1991,7 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
+        clickEvent.stopImmediatePropagation();
         clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
@@ -5326,7 +5327,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
-            event.stopImmediatePropagation();
+            event.stopPropagation();
             return;
         }
         let hasDragScrolling = false;
