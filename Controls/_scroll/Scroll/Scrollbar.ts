@@ -91,7 +91,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
         const position = this._scrollPosition || options.position || 0;
         let shouldUpdatePosition = !this._dragging && this._position !== position;
         if (options.contentSize !== this._options.contentSize) {
-            this._setSizes(this._options.contentSize);
+            this._setSizes(options.contentSize);
             shouldUpdatePosition = true;
         }
         if (shouldUpdatePosition) {
