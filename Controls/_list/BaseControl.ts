@@ -7,7 +7,7 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import Deferred = require('Core/Deferred');
 
-import {constants, detection} from 'Env/Env';
+import {constants, compatibility, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
@@ -2862,7 +2862,7 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (!self._context?.isTouch?.isTouch && options.itemActionsVisibility === 'visible') {
+        if (!self._context?.isTouch?.isTouch && !compatibility.touch && options.itemActionsVisibility === 'visible') {
             _private.showActions(this);
             _private.updateItemActions(self, options);
         }
