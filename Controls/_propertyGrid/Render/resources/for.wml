@@ -1,10 +1,11 @@
 <ws:for data="index, item in itemsViewModel.getViewIterator()">
     <ws:partial
-            template="{{item.getItemTemplate(itemTemplateProperty, itemTemplate, groupTemplate)}}"
+            template="{{item.getItemTemplate(itemTemplateProperty, itemTemplate, groupTemplate, toggleEditorsTemplate)}}"
             theme="{{theme}}"
             collectionItem="{{item}}"
             item="{{item.getContents()}}"
             collapsedGroups="{{collapsedGroups}}"
+            toggledEditors="{{itemsViewModel.getToggledEditors()}}"
 
             on:propertyValueChanged="_propertyValueChanged(item.getContents())"
             on:click="_itemClick(item)">

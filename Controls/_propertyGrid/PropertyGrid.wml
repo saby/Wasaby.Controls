@@ -9,6 +9,7 @@
     editingObject="{{_options.editingObject}}"
     on:itemClick="_itemClick()"
     on:propertyValueChanged="_propertyValueChanged()"
+    on:toggleEditor="_toggleEditor()"
     on:hoveredItemChanged="_hoveredItemChanged()"
     on:mouseenter="_mouseEnterHandler()"
     on:itemActionMouseDown="_itemActionMouseDown()"

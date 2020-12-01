@@ -90,6 +90,19 @@ define([
             });
         });
 
+       describe('toggledEditors', () => {
+
+           it('collection filtered by toggled editors', () => {
+               source[0].toggleEditorButtonIcon = 'testIcon';
+               ViewInstance._beforeMount({
+                   source,
+                   editingObject
+               });
+               assert.deepEqual(ViewInstance._toggledEditors, {stringField: false});
+           });
+
+       });
+
       describe('itemActions', () => {
          before(() => {
             ViewInstance._itemActionsController = new itemActions.Controller();
