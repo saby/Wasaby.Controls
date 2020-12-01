@@ -62,7 +62,7 @@ define([
                 assert.isTrue(resultDisplay);
             });
         });
-        describe('itemClick', () => {
+        describe('groupClick', () => {
             it('toggle expand state on group item', () => {
                 const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
                 collection.moveToFirst();
@@ -85,7 +85,7 @@ define([
                 };
                 ViewInstance._collapsedGroups = {};
                 ViewInstance._listModel = collection;
-                ViewInstance._itemClick(null, groupItem, clickEvent);
+                ViewInstance._groupClick(null, groupItem, clickEvent);
                 assert.isTrue(expandedState !== groupItem.isExpanded());
             });
         });
