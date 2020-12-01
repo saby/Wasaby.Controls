@@ -266,6 +266,7 @@ describe('Controls/browser:Browser', () => {
                 browser._beforeUpdate(options);
                 assert.deepStrictEqual(browser._filter.name, 'test');
             });
+
         });
 
         describe('operationsController', () => {
@@ -358,7 +359,9 @@ describe('Controls/browser:Browser', () => {
             const options = getBrowserOptions();
 
             const browser = getBrowser(options);
-
+            browser._options.dataLoadCallback = (items, direction) => {
+                actualDirection = direction;
+            };
             browser._filterController = {
                 handleDataLoad: () => {}
             };
