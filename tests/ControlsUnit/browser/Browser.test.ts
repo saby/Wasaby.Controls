@@ -377,7 +377,7 @@ describe('Controls/browser:Browser', () => {
     describe('_afterSearch', () => {
         it('filter updated', async () => {
             const filter = {
-                title: test
+                title: 'test'
             };
             const options = getBrowserOptions();
             const browser = getBrowser(options);
