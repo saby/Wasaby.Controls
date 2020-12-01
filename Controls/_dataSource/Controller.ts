@@ -16,7 +16,7 @@ import {INavigationOptionValue,
         INavigationOptions} from 'Controls/interface';
 import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
-import {Record as EntityRecord, CancelablePromise} from 'Types/entity';
+import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
@@ -49,6 +49,7 @@ export interface IControllerOptions extends
     IPromiseSelectableOptions,
     INavigationOptions<INavigationSourceConfig> {
     dataLoadErrback?: Function;
+    dataLoadCallback?: Function;
     root?: string;
     expandedItems?: TKey[];
     deepReload?: boolean;
@@ -64,7 +65,8 @@ interface ILoadConfig {
     direction?: Direction;
 }
 
-type LoadResult = Promise<RecordSet|Error>;
+type LoadPromiseResult = RecordSet|Error;
+type LoadResult = Promise<LoadPromiseResult>;
 
 enum NAVIGATION_DIRECTION_COMPATIBILITY {
     up = 'backward',
@@ -75,7 +77,8 @@ export default class Controller {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
-    private _loadPromise: CancelablePromise<LoadResult>;
+    private _loadPromise: CancelablePromise<RecordSet|Error>;
+    private _dataLoadCallback: Function;
 
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
@@ -101,7 +104,7 @@ export default class Controller {
     load(direction?: Direction,
          key: TKey = this._root,
          filter?: QueryWhereExpression<unknown>
-    ): Promise<LoadResult> {
+    ): LoadResult {
         return this._load({
             direction,
             key,
@@ -125,8 +128,19 @@ export default class Controller {
         return (this._options.source as ICrud).read(key, meta);
     }
 
-    update(item: EntityRecord): Promise<void> {
-        return (this._options.source as ICrud).update(item);
+    update(item: Model): Promise<void> {
+        return (this._options.source as ICrud)
+            .update(item)
+            .then((result) => {
+                const keyProperty = this._options.keyProperty;
+
+                if (this._items.getIndexByValue(keyProperty, item.get(keyProperty)) === -1) {
+                    this._items.append([item]);
+                }
+
+                return result;
+            })
+            .catch((error) => error);
     }
 
     create(meta?: object): Promise<EntityRecord> {
@@ -260,6 +274,10 @@ export default class Controller {
         return hasMoreData;
     }
 
+    setDataLoadCallback(callback: Function): void {
+        this._dataLoadCallback = callback;
+    }
+
     hasLoaded(key: TKey): boolean {
         let loadedResult = false;
 
@@ -352,14 +370,51 @@ export default class Controller {
         );
     }
 
+    private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {
+        if (this._items) {
+            this._items.setMetaData(items.getMetaData());
+        }
+
+        if (direction === 'up') {
+            this._prependItems(items);
+        } else if (direction === 'down') {
+            this._appendItems(items);
+        } else if (key !== this._root && this._items) {
+            this._mergeItems(items);
+        } else {
+            this._setItems(items);
+        }
+
+        return items;
+    }
+
     private _setItems(items: RecordSet): void {
         if (this._items && Controller._isEqualItems(this._items, items)) {
-            this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
         } else {
             this._subscribeItemsCollectionChangeEvent(items);
             this._items = items;
         }
+    }
+
+    private _appendItems(items: RecordSet): void {
+        if (this._shouldAddItems(items)) {
+            this._items.append(items);
+        }
+    }
+
+    private _prependItems(items: RecordSet): void {
+        if (this._shouldAddItems(items)) {
+            this._items.prepend(items);
+        }
+    }
+
+    private _mergeItems(items: RecordSet): void {
+        this._items.merge(items, { remove: false, inject: true });
+    }
+
+    private _shouldAddItems(items: RecordSet): boolean {
+        return items.getCount() > 0 || this._items.getCount() === 0;
     }
 
     private _resolveNavigationParamsChangedCallback(cfg: IControllerOptions): void {
@@ -368,7 +423,7 @@ export default class Controller {
         }
     }
 
-    private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): Promise<LoadResult> {
+    private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): LoadResult {
         if (this._options.source) {
             const filterPromise = filter ? Promise.resolve(filter) : this._prepareFilterForQuery(this._filter, key);
             this.cancelLoading();
@@ -393,7 +448,7 @@ export default class Controller {
                 }));
 
             this._loadPromise.promise
-                .then((result) => {
+                .then((result: RecordSet) => {
                     this._loadPromise = null;
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
@@ -461,18 +516,34 @@ export default class Controller {
     }
 
     private _processQueryResult(
-        result: LoadResult,
+        result: RecordSet,
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
-        direction: Direction): LoadResult {
+        direction: Direction): LoadPromiseResult {
+        let methodResult;
+        let dataLoadCallbackResult;
+
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
-        return result;
+
+        if (this._dataLoadCallback) {
+            dataLoadCallbackResult = this._dataLoadCallback(result, direction);
+        }
+
+        if (dataLoadCallbackResult instanceof Promise) {
+            methodResult = dataLoadCallbackResult.then(() => {
+                return this._addItems(result, key, direction);
+            });
+        } else {
+            methodResult = this._addItems(result, key, direction);
+        }
+
+        return methodResult;
     }
 
     private _processQueryError(
         result: LoadResult
     ): LoadResult {
-        if (this._options.dataLoadErrback instanceof Function) {
+        if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(result);
         }
         return result;

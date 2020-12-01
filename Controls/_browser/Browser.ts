@@ -234,13 +234,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._loading = true;
             methodResult = sourceController.reload()
                .then((items) => {
-                   // для того чтобы мог посчитаться новый prefetch Source внутри
-                   if (items instanceof RecordSet) {
-                       if (newOptions.dataLoadCallback instanceof Function) {
-                           newOptions.dataLoadCallback(items);
-                       }
-                       this._items = sourceController.setItems(items);
+                   if (newOptions.dataLoadCallback instanceof Function) {
+                       newOptions.dataLoadCallback(items);
                    }
+                   this._items = sourceController.getItems();
 
                    this._afterSourceLoad(sourceController, newOptions);
 

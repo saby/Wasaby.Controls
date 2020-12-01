@@ -519,23 +519,14 @@ const _private = {
         // todo task1179709412 https://online.sbis.ru/opendoc.html?guid=43f508a9-c08b-4938-b0e8-6cfa6abaff21
         if (self._options.useNewModel) {
             // TODO restore marker + maybe should recreate the model completely
-            // instead of assigning items
-            // https://online.sbis.ru/opendoc.html?guid=ed57a662-7a73-4f11-b7d4-b09b622b328e
-            const currentItems = listModel.getCollection();
             // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
-            if (_private.isEqualItemsFormat(currentItems, items)) {
-                listModel.setCompatibleReset(true);
-                currentItems.setMetaData(items.getMetaData());
-                currentItems.assign(items);
-                listModel.setCompatibleReset(false);
-            } else {
+            if (!_private.isEqualItemsFormat(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
                 if (self._options.itemsReadyCallback) {
                     self._options.itemsReadyCallback(listModel.getCollection());
                 }
             }
-            self._items = listModel.getCollection();
         } else {
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
@@ -547,6 +538,7 @@ const _private = {
                 self._markedKeyForRestoredScroll = _private.getMarkerController(self).getMarkedKey();
             }
         }
+        self._items = listModel.getCollection();
     },
 
     executeAfterReloadCallbacks(self, loadedList, options): void {
@@ -808,99 +800,6 @@ const _private = {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
         const isPortionedLoad = _private.isPortionedLoad(self);
-        const beforeAddItems = (addedItems) => {
-            if (addedItems.getCount()) {
-                self._loadedItems = addedItems;
-            }
-            _private.setHasMoreData(
-                self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController)
-            );
-            if (self._options.serviceDataLoadCallback instanceof Function) {
-                self._options.serviceDataLoadCallback(self._items, addedItems);
-            }
-            if (userCallback && userCallback instanceof Function) {
-                userCallback(addedItems, direction);
-            }
-
-            if (
-                self._loadingState === 'all' ||
-                !_private.needScrollCalculation(navigation) ||
-                !self._loadTriggerVisibility[self._loadingState] ||
-                !_private.hasMoreData(self, self._sourceController, self._loadingState)
-            ) {
-                _private.resolveIndicatorStateAfterReload(self, addedItems, navigation);
-            } else {
-                // If we are loading to a specific direction with scroll calculation enabled,
-                // we should only hide indicator if there are enough items to "push" the load
-                // trigger off the screen.
-                self._hideIndicatorOnTriggerHideDirection = self._loadingState;
-            }
-
-            if (isPortionedLoad) {
-                _private.loadToDirectionWithSearchValueEnded(self, addedItems);
-            }
-        };
-
-        const afterAddItems = (countCurrentItems, addedItems) => {
-            const cnt2 = self._listViewModel.getCount();
-            // If received list is empty, make another request.
-            // If it’s not empty, the following page will be requested in resize event
-            // handler after current items are rendered on the page.
-            if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
-                (self._options.task1176625749 && countCurrentItems === cnt2) ||
-                _private.isPortionedLoad(self, addedItems)) {
-                _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
-            }
-            if (self._isMounted && self._scrollController) {
-                self.stopBatchAdding();
-            }
-
-            _private.prepareFooter(self, self._options, self._sourceController);
-
-            // После выполнения поиска мы должны поставить маркер.
-            // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
-            // то на событие reset список будет пустой и нам некуда будет ставить маркер.
-            if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
-                const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
-                _private.changeMarkedKey(self, newMarkedKey);
-            }
-        };
-
-        const drawItemsUp = (countCurrentItems, addedItems) => {
-            beforeAddItems(addedItems);
-            if (self._options.useNewModel) {
-                const collection = self._listViewModel.getCollection();
-                const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
-                collection.prepend(addedItems);
-                collection.setMetaData(newMetaData);
-            } else {
-                self._listViewModel.prependItems(addedItems);
-            }
-            afterAddItems(countCurrentItems, addedItems);
-            self._needScrollToFirstItem = false;
-            self._attachLoadTopTriggerToNull = false;
-        };
-
-        const loadCallback = (addedItems, countCurrentItems) => {
-            if (direction === 'down') {
-                beforeAddItems(addedItems);
-                if (self._options.useNewModel) {
-                    const collection = self._listViewModel.getCollection();
-                    const newMetaData = _private.getUpdatedMetaData(collection.getMetaData(), addedItems.getMetaData(), self._options.navigation, direction);
-                    collection.append(addedItems);
-                    collection.setMetaData(newMetaData);
-                } else {
-                    self._listViewModel.appendItems(addedItems);
-                }
-                afterAddItems(countCurrentItems, addedItems);
-            } else if (direction === 'up') {
-                drawItemsUp(countCurrentItems, addedItems);
-            }
-
-            if (!_private.hasMoreData(self, self._sourceController, direction)) {
-                self._updateShadowModeHandler(self._shadowVisibility);
-            }
-        };
 
         _private.showIndicator(self, direction);
 
@@ -912,21 +811,45 @@ const _private = {
             if (self._options.groupProperty) {
                 GroupingController.prepareFilterCollapsedGroups(self._listViewModel.getCollapsedGroups(), filter);
             }
-            return self._sourceController.load(direction, self._options.root).addCallback((addedItems) => {
-                // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
-                // до реализации функционала и проблемы из новости делаем решение по месту:
-                // посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
-                // надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
-                // Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
-                const countCurrentItems = self._listViewModel.getCount();
+            // TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
+            // до реализации функционала и проблемы из новости делаем решение по месту:
+            // посчитаем число отображаемых записей до и после добавления,
+            // если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
+            // надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
+            // Под опцией, потому что в другом месте это приведет к ошибке.
+            // Хорошее решение будет в задаче ссылка на которую приведена
+            const itemsCountBeforeLoad = self._listViewModel.getCount();
 
+            return self._sourceController.load(direction, self._options.root, filter).addCallback((addedItems) => {
+                const itemsCountAfterLoad = self._listViewModel.getCount();
+                // If received list is empty, make another request.
+                // If it’s not empty, the following page will be requested in resize event
+                // handler after current items are rendered on the page.
+                if (_private.needLoadNextPageAfterLoad(addedItems, listViewModel, navigation) ||
+                    (self._options.task1176625749 && itemsCountBeforeLoad === itemsCountAfterLoad) ||
+                    _private.isPortionedLoad(self, addedItems)) {
+                    _private.checkLoadToDirectionCapability(self, self._options.filter, navigation);
+                }
                 if (self._isMounted && self._scrollController) {
-                    self.startBatchAdding(direction);
-                    self._scrollController.callAfterScrollStopped(() => {
-                        loadCallback(addedItems, countCurrentItems);
-                    });
-                } else {
-                    loadCallback(addedItems, countCurrentItems);
+                    self.stopBatchAdding();
+                }
+
+                _private.prepareFooter(self, self._options, self._sourceController);
+
+                // После выполнения поиска мы должны поставить маркер.
+                // Если выполняется порционный поиск и первый запрос не вернул ни одной записи,
+                // то на событие reset список будет пустой и нам некуда будет ставить маркер.
+                if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
+                    const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
+                    _private.changeMarkedKey(self, newMarkedKey);
+                }
+                self._needScrollToFirstItem = false;
+                if (!_private.hasMoreData(self, self._sourceController, direction)) {
+                    self._updateShadowModeHandler(self._shadowVisibility);
+                }
+
+                if (direction === 'up') {
+                    self._attachLoadTopTriggerToNull = false;
                 }
 
                 // Скрываем ошибку после успешной загрузки данных
@@ -2256,7 +2179,55 @@ const _private = {
         }
     },
 
-    isPagingNavigation(navigation) {
+    dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void>|void {
+        if (!direction) {
+            return;
+        }
+
+        const navigation = this._options.navigation;
+
+        if (items.getCount()) {
+            this._loadedItems = items;
+        }
+        _private.setHasMoreData(
+            this._listViewModel, _private.hasMoreDataInAnyDirection(this, this._sourceController)
+        );
+        if (this._options.serviceDataLoadCallback instanceof Function) {
+            this._options.serviceDataLoadCallback(this._items, items);
+        }
+        if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(items, direction);
+        }
+
+        if (
+            this._loadingState === 'all' ||
+            !_private.needScrollCalculation(navigation) ||
+            !this._loadTriggerVisibility[this._loadingState] ||
+            !_private.hasMoreData(this, this._sourceController, this._loadingState)
+        ) {
+            _private.resolveIndicatorStateAfterReload(this, items, navigation);
+        } else {
+            // If we are loading to a specific direction with scroll calculation enabled,
+            // we should only hide indicator if there are enough items to "push" the load
+            // trigger off the screen.
+            this._hideIndicatorOnTriggerHideDirection = this._loadingState;
+        }
+
+        if (_private.isPortionedLoad(this)) {
+            _private.loadToDirectionWithSearchValueEnded(this, items);
+        }
+
+        if (this._isMounted && this._scrollController) {
+            this.startBatchAdding(direction);
+            return new Promise((resolve) => {
+                this._scrollController.callAfterScrollStopped(() => {
+                    resolve();
+                });
+            });
+        }
+    },
+
+    isPagingNavigation(navigation): boolean {
         return navigation && navigation.view === 'pages';
     },
 
@@ -3275,6 +3246,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _removedItems: [],
     _keyProperty: null,
 
+    // callback'ки передаваемые в sourceController
+    _notifyNavigationParamsChanged: null,
+    _dataLoadCallback: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3293,6 +3268,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      */
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
+        this._dataLoadCallback = _private.dataLoadCallback.bind(this);
 
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
@@ -3308,6 +3284,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.validateSourceControllerOptions(this, newOptions);
         } else if (newOptions.source) {
             this._sourceController = _private.getSourceController(this, newOptions);
+        }
+
+        if (this._sourceController) {
+            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
         }
 
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -5168,15 +5148,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _saveEditingInSource(item: Model, isAdd: boolean): Promise<void> {
-        return this.getSourceController().update(item).then(() => {
-            // После выделения слоя логики работы с источником данных в отдельный контроллер,
-            // код ниже должен переехать в него.
-            if (isAdd) {
-                this._items.append([item]);
-            }
-        }).catch((error: Error) => {
-            return this._processEditInPlaceError(error);
-        });
+        return this.getSourceController()
+            .update(item)
+            .catch((error: Error) => {
+                return this._processEditInPlaceError(error);
+            });
     },
 
     _getEditingConfig(options = this._options): Required<IEditableListOption['editingConfig']> {
