@@ -12,7 +12,6 @@ import {default as IPropertyGridItem} from './IProperty';
 import {
     PROPERTY_GROUP_FIELD,
     PROPERTY_NAME_FIELD,
-    PROPERTY_VALUE_FIELD,
     PROPERTY_TOGGLE_BUTTON_ICON_FIELD
 } from './Constants';
 import {groupConstants as constView} from '../list';
@@ -180,24 +179,22 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         this._notify('editingObjectChanged', [editingObjectClone]);
     }
 
-    protected _itemClick(
+    protected _groupClick(
         event: SyntheticEvent<Event>,
         displayItem: GroupItem<Model> | PropertyGridCollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        if (displayItem['[Controls/_display/GroupItem]']) {
-            const isExpandClick = clickEvent?.target.closest('.controls-PropertyGrid__groupExpander');
-            if (isExpandClick) {
-                const groupName = displayItem.getContents();
-                const collapsed = this._collapsedGroups[groupName];
-                displayItem.toggleExpanded();
-                this._collapsedGroups[groupName] = !collapsed;
-                this._listModel.setFilter(this._displayFilter.bind(this));
-            }
+        const isExpandClick = clickEvent?.target.closest('.controls-PropertyGrid__groupExpander');
+        if (isExpandClick) {
+            const groupName = displayItem.getContents();
+            const collapsed = this._collapsedGroups[groupName];
+            displayItem.toggleExpanded();
+            this._collapsedGroups[groupName] = !collapsed;
+            this._listModel.setFilter(this._displayFilter.bind(this));
         }
     }
 
-    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridCollectionItem<Model>): void {
         this._listModel.setHoveredItem(item);
     }
 

@@ -9,6 +9,7 @@ import {CollectionItem} from 'Controls/display';
 import 'wml!Controls/_propertyGrid/Render/resources/for';
 import PropertyGridCollection from 'Controls/_propertyGrid/PropertyGridCollection';
 import PropertyGridCollectionItem, {default as PropertyGridItem} from 'Controls/_propertyGrid/PropertyGridCollectionItem';
+import {Model} from 'Types/entity';
 
 interface IPropertyGridRenderOptions extends IControlOptions {
     itemTemplate: TemplateFunction;
@@ -45,7 +46,9 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridCollectionItem<Model>): void {
-        if (!item['[Controls/_display/GroupItem]']) {
+        if (item['[Controls/_display/GroupItem]']) {
+            this._notify('groupClick', [item, e]);
+        } else {
             this._notify('itemClick', [item, e]);
         }
     }

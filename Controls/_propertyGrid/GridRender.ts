@@ -91,7 +91,9 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _itemClick(e: SyntheticEvent<MouseEvent>, item: PropertyGridItem<Model>): void {
-        if (!item['[Controls/_display/GroupItem]']) {
+        if (item['[Controls/_display/GroupItem]']) {
+            this._notify('groupClick', [item, e]);
+        } else {
             this._notify('itemClick', [item, e]);
         }
     }
