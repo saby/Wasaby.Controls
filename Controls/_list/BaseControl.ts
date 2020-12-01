@@ -269,12 +269,12 @@ const _private = {
     doAfterUpdate(self, callback, beforePaint = true): void {
         if (self._updateInProgress) {
             if (!beforePaint) {
-            if (self._callbackAfterUpdate) {
-                self._callbackAfterUpdate.push(callback);
+                if (self._callbackAfterUpdate) {
+                    self._callbackAfterUpdate.push(callback);
+                } else {
+                    self._callbackAfterUpdate = [callback];
+                }
             } else {
-                self._callbackAfterUpdate = [callback];
-            }
-        } else {
                 if (self._callbackBeforePaint) {
                     self._callbackBeforePaint.push(callback);
                 } else {
@@ -5630,7 +5630,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
         let itemActionsController: ItemActionsController;
 
-        if (swipeEvent.nativeEvent.direction === 'left' && this._options.itemActionsVisibility !== 'visible') {
+        if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
             itemActionsController = _private.getItemActionsController(this, this._options);
