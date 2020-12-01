@@ -256,7 +256,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (this._searchController) {
+        if (newOptions.searchValue !== undefined) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
@@ -272,9 +272,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
             if (updateResult instanceof Promise) {
                 this._loading = true;
-                updateResult.then((result) => {
-                    this._searchDataLoad(result, newOptions.searchValue);
-                });
+                updateResult
+                    .then((result) => {
+                        this._searchDataLoad(result, newOptions.searchValue);
+                    })
+                    .catch(() => {});
             }
         });
     }
@@ -642,6 +644,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _afterSearch(recordSet: RecordSet, value: string): void {
         this._updateParams(value);
+        this._afterSourceLoad(this._sourceController, this._options);
 
         if (this._options.dataLoadCallback instanceof Function) {
             this._options.dataLoadCallback(recordSet);
