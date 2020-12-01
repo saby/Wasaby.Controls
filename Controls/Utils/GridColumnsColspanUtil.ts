@@ -53,7 +53,7 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
             // Если не задали индкс конца колонки, то утанавливаем его либо как индекс последней границы грида,
             // либо как стартовый индекс колонки + 1(по умолчанию, колонка не будет растянута)
             if (index === params.colspanColumns.length - 1) {
-                newColumn.endColumn = gridColumnsCount + 1;
+                newColumn.endColumn = -1; // gridColumnsCount + 1;
             } else {
                 newColumn.endColumn = newColumn.startColumn + 1;
             }
