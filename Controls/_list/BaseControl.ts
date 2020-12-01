@@ -2219,11 +2219,7 @@ const _private = {
 
         if (this._isMounted && this._scrollController) {
             this.startBatchAdding(direction);
-            return new Promise((resolve) => {
-                this._scrollController.callAfterScrollStopped(() => {
-                    resolve();
-                });
-            });
+            return this._scrollController.getScrollStopPromise();
         }
     },
 
