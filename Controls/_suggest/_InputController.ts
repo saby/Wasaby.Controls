@@ -337,7 +337,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return !!(hasItems ||
          (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
          this._options.emptyTemplate &&
-         searchResult) && !!this._options.suggestTemplate;
+         searchResult) && !!this._options.suggestTemplate && this._inputActive;
    }
 
    private _processResultData(data: RecordSet): void {
@@ -626,7 +626,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
                   this._resolveLoad(this._searchValue, newOptions).then(() => {
-                     this._suggestOpened = newOptions.suggestState;
+                     // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что
+                     // вызывает setCloseState, но загрузка все равно выполняется и появляется невидимый попап.
+                     if (this._inputActive) {
+                        this._suggestOpened = newOptions.suggestState;
+                     }
                   }).catch((error) => {
                      this._searchErrback(error);
                   });
