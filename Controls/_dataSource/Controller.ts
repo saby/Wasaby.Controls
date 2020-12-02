@@ -360,7 +360,7 @@ export default class Controller {
     }
 
     private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {
-        if (this._items) {
+        if (this._items && key === this._root) {
             this._items.setMetaData(items.getMetaData());
         }
 
