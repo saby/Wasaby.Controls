@@ -10,8 +10,8 @@ interface IPrepareColumnsParams<T extends IPreparedColumn> {
     gridColumns: unknown[];
     colspanColumns: IColumn[];
     hasMultiSelect: boolean;
+    hasLadder?: boolean;
     afterPrepareCallback?(column: T, index: number, columns: T[]): void;
-    ladder?: boolean;
 }
 
 function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams<T>): Array<T> {
@@ -91,7 +91,7 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
     result.forEach((resultColumn, index) => {
         resultColumn.startColumn += multiSelectOffset;
         resultColumn.endColumn += multiSelectOffset;
-        if (params.ladder) {
+        if (params.hasLadder) {
             resultColumn.startColumn += 1;
             resultColumn.endColumn += 1;
         }

@@ -1935,7 +1935,7 @@ var
                 gridColumns: this._columns,
                 colspanColumns: footerColumns,
                 hasMultiSelect,
-                ladder: !!this._ladder
+                hasLadder: !!this._ladder
             });
 
             const isMultiColumn = prepared.length > 1;
