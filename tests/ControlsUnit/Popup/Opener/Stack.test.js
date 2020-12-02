@@ -485,19 +485,15 @@ define(
                      {
                         controller: popupTemplate.StickyController,
                         position: defaultPosition
-                     },
-                     {
-                        controller: popupTemplate.StackController,
-                        position: defaultPosition
                      }
                   ],
                   popupOptions: item.popupOptions
                };
             popupTemplate.StackController._elementUpdated(itemConfig, {});
-            const updateItemPositionSpy = sinon.spy(popupTemplate.StackController, '_updateItemPosition');
+            const updateItemPositionSpy = sinon.spy(popupTemplate.StackController, '_update');
 
             popupTemplate.StackController.elementAfterUpdated(itemConfig, {});
-            sinon.assert.callCount(updateItemPositionSpy, 2);
+            sinon.assert.called(updateItemPositionSpy);
          });
 
          it('stack from target container', () => {
