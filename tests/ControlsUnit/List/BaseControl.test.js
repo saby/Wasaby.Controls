@@ -8052,6 +8052,26 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
+
+            it('hide marker and show it with marked key in options', () => {
+               let newCfg = {
+                  ...cfg,
+                  markerVisibility: 'hidden',
+                  markedKey: 2
+               };
+               baseControl.saveOptions(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               newCfg = {
+                  ...cfg,
+                  markerVisibility: 'visible',
+                  markedKey: 2
+               };
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
          });
       });
 
