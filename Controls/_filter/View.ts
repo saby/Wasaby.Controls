@@ -381,12 +381,22 @@ var _private = {
         return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
-
-                // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
-                // history.Source не умеет сериализоваться - удаляем его из receivedState
-                return { configs: deleteHistorySourceFromConfig(self._configs, 'source') };
+                return { configs: force ? deleteHistorySourceFromConfig(self._configs, 'source') : _private.purifyConfigs(self._configs)};
             });
         });
+    },
+
+    deleteFieldFromConfigs(configs: Record<string, any>, fieldName: string): void {
+        factory(configs).each((config) => {
+            if (config[fieldName]) {
+                delete config[fieldName];
+            }
+        });
+    },
+
+    purifyConfigs(configs): Array<Record<string, any>> {
+        _private.deleteFieldFromConfigs(configs, 'sourceController')
+        return deleteHistorySourceFromConfig(configs, '_source')
     },
 
     setValue: function(self, selectedKeys, name) {
