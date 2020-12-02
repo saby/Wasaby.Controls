@@ -89,7 +89,9 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
     // Классы колонок и смещение индексов из за колонки под чекбокс.
     result.forEach((resultColumn, index) => {
         resultColumn.startColumn += multiSelectOffset;
-        resultColumn.endColumn += multiSelectOffset;
+        if (resultColumn.endColumn !== -1) {
+            resultColumn.endColumn += multiSelectOffset;
+        }
         if (params.afterPrepareCallback) {
             params.afterPrepareCallback(resultColumn, index, result);
         }
