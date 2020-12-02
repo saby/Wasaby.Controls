@@ -3,7 +3,8 @@ import TreeGridViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridView
 import entity = require('Types/entity');
 import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
 import { TreeControl } from 'Controls/tree';
-
+import {CrudEntityKey} from 'Types/source';
+import { Model } from 'Types/entity';
 
    /**
     * Контрол "Дерево".
@@ -98,6 +99,13 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
    // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
    toggleExpanded(id) {
       this._children.listControl.toggleExpanded(id);
+   }
+
+   getNextItem(key: CrudEntityKey): Model {
+      return this._children.listControl.getNextItem(key);
+   }
+   getPrevItem(key: CrudEntityKey): Model {
+      return this._children.listControl.getPrevItem(key);
    }
 }
 /**

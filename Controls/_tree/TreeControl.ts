@@ -942,7 +942,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _onTreeViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
-
+    getNextItem(key: CrudEntityKey): Model {
+        const display = this._children.baseControl.getViewModel().getDisplay();
+        const curIndex = display.getIndexByKey(key);
+        const nextItem = display.at(curIndex + 1);
+        return nextItem ? nextItem.getContents() : null;
+    },
+    getPrevItem(key: CrudEntityKey): Model {
+        const display = this._children.baseControl.getViewModel().getDisplay();
+        const curIndex = display.getIndexByKey(key);
+        const prevItem = display.at(curIndex - 1);
+        return prevItem ? prevItem.getContents() : null;
+    },
     _beforeUnmount: function() {
         _private.clearNodesSourceControllers(this);
         TreeControl.superclass._beforeUnmount.apply(this, arguments);
