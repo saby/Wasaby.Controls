@@ -1,7 +1,6 @@
 import {Model} from 'Types/entity';
-import {EventRaisingMixin} from 'Types/collection';
 
-import {IBaseCollection, ISwipeConfig, ANIMATION_STATE} from 'Controls/display';
+import {IBaseCollection, ISwipeConfig} from 'Controls/display';
 import {IItemActionsItem} from './IItemActionsItem';
 import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
 
@@ -18,7 +17,7 @@ import {IItemActionsTemplateConfig} from './IItemActionsTemplateConfig';
  * @public
  * @author Аверкиев П.А.
  */
-export interface IItemActionsCollection extends IBaseCollection<Model, IItemActionsItem>, Partial<EventRaisingMixin> {
+export interface IItemActionsCollection extends IBaseCollection<Model, IItemActionsItem> {
     // '[Controls/_itemActions/interface/IItemActionsCollection]': true;
 
     /**
