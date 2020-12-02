@@ -15,7 +15,7 @@ import {isEqual} from 'Types/object';
 import {tmplNotify} from 'Controls/eventUtils';
 import {ICrudPlus} from 'Types/source';
 import {IHashMap} from 'Types/declarations';
-import InputRenderLookup = require("./BaseLookupView/InputRender");
+import InputRenderLookup from './BaseLookupView/InputRender';
 import {DependencyTimer} from 'Controls/popup';
 import {_InputController as LayoutInputContainer} from 'Controls/suggest';
 

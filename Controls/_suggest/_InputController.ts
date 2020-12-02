@@ -340,7 +340,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return !!(hasItems ||
          (!this._options.historyId || this._searchValue || isSuggestHasTabs) &&
          this._options.emptyTemplate &&
-         searchResult) && !!this._options.suggestTemplate;
+         searchResult) && !!this._options.suggestTemplate && this._inputActive;
    }
 
    private _processResultData(data: RecordSet): void {
@@ -631,7 +631,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
                   this._resolveLoad(this._searchValue, newOptions).then(() => {
-                     this._suggestOpened = newOptions.suggestState;
+                     // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что
+                     // вызывает setCloseState, но загрузка все равно выполняется и появляется невидимый попап.
+                     if (this._inputActive) {
+                        this._suggestOpened = newOptions.suggestState;
+                     }
                   }).catch((error) => {
                      this._searchErrback(error);
                   });
@@ -706,6 +710,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      value = value || '';
       this._searchValue = value;
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
@@ -1017,21 +1022,23 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             event.stopPropagation();
          }
 
-         if (isListKey) {
-            if (this._children.inputKeydown) {
-               this._children.inputKeydown.start(event);
+         if (!this._loading) {
+            if (isListKey) {
+               if (this._children.inputKeydown) {
+                  this._children.inputKeydown.start(event);
 
-               // The container with list takes focus away to catch "enter", return focus to the input field.
-               // toDO https://online.sbis.ru/opendoc.html?guid=66ae5218-b4ba-4d6f-9bfb-a90c1c1a7560
-               if (this._input) {
-                  this._input.activate();
-               } else {
-                  this.activate();
+                  // The container with list takes focus away to catch "enter", return focus to the input field.
+                  // toDO https://online.sbis.ru/opendoc.html?guid=66ae5218-b4ba-4d6f-9bfb-a90c1c1a7560
+                  if (this._input) {
+                     this._input.activate();
+                  } else {
+                     this.activate();
+                  }
                }
-            }
-         } else if (isInputKey) {
-            if (eventKeyCode === Env.constants.key.esc) {
-               this._close();
+            } else if (isInputKey) {
+               if (eventKeyCode === Env.constants.key.esc) {
+                  this._close();
+               }
             }
          }
       }

@@ -9,19 +9,13 @@ import {
 } from 'Types/entity';
 import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn } from 'Controls/grid';
+import { IColumn, IColspanParams } from 'Controls/grid';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
-interface IColspanParams {
-    startColumn: number;
-    endColumn: number;
-    colspan: number;
-}
-
-export interface IOptions<T> extends Partial<IColspanParams> {
+export interface IOptions<T> extends IColspanParams {
     owner: GridRow<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
@@ -42,10 +36,6 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     protected _$owner: TOwner;
     protected _$column: IColumn;
     protected _$hiddenForLadder: boolean;
-
-    protected _$startColumn: number;
-    protected _$endColumn: number;
-    protected _$colspan: number;
 
     getInstanceId: () => string;
 
@@ -68,14 +58,14 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     // region Аспект "Объединение колонок"
 
-    _getColspanParams(): IColspanParams {
-        const startColumn = typeof this._$startColumn == 'number' ? this._$startColumn : (this.getColumnIndex() + 1);
+    _getColspanParams(): Required<IColspanParams> {
+        const startColumn = typeof this._$column.startColumn == 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
-        if (typeof this._$endColumn == 'number') {
-            endColumn = this._$endColumn;
-        } else if (typeof this._$colspan == 'number') {
-            endColumn = startColumn + this._$colspan;
+        if (typeof this._$column.endColumn == 'number') {
+            endColumn = this._$column.endColumn;
+        } else if (typeof this._$column.colspan == 'number') {
+            endColumn = startColumn + this._$column.colspan;
         } else {
             endColumn = startColumn + 1;
         }
@@ -84,7 +74,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
             startColumn,
             endColumn,
             colspan: endColumn - startColumn
-        }
+        };
     }
 
     getColspan(): number {
@@ -99,7 +89,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // endregion
 
     // region Аспект "Лесенка"
-    setHiddenForLadder(value: boolean) {
+    setHiddenForLadder(value: boolean): void {
         this._$hiddenForLadder = value;
     }
     // endregion
@@ -258,7 +248,6 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         return contentClasses;
     }
 
-
     getContentStyles(): string {
         return '';
     }
@@ -294,6 +283,11 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         } else {
             classes += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
         }
+
+        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
+            classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme}`;
+        }
+
         return classes;
     }
 
@@ -399,6 +393,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         return false;
     }
+
     getMarkerClasses(theme: string,
                      style: string = 'default',
                      markerClassName: TMarkerClassName = 'default',
@@ -415,8 +410,5 @@ Object.assign(GridCell.prototype, {
     _instancePrefix: 'grid-cell-',
     _$owner: null,
     _$column: null,
-    _$hiddenForLadder: null,
-    _$startColumn: null,
-    _$endColumn: null,
-    _$colspan: null
+    _$hiddenForLadder: null
 });

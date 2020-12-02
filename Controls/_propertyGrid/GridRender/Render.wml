@@ -1,0 +1,11 @@
+<div class="controls-PropertyGrid controls-PropertyGrid_theme-{{_options.theme}}">
+    <div class="controls-PropertyGrid__gridLayout__itemsContainer" style="{{_getColumnsWidth(_options.captionColumnOptions, _options.editorColumnOptions)}}">
+        <ws:partial template="wml!Controls/_propertyGrid/GridRender/resources/for"
+                    listModel="{{_options.listModel}}"
+                    getItemStyles="{{_getItemStyles}}"
+                    theme="{{_options.theme}}"
+                    groupTemplate="{{_options.groupTemplate}}"
+                    collapsedGroups="{{_options.collapsedGroups}}"
+                    itemTemplate="{{_options.itemTemplate}}"/>
+    </div>
+</div>

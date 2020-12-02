@@ -25,6 +25,7 @@ class StackController extends BaseController {
     _stack: collection.List<IPopupItem> = new collection.List();
 
     private _sideBarVisible: boolean = true;
+    private _positionBeforeUpdate: IPopupPosition;
 
     elementCreated(item: IPopupItem, container: HTMLDivElement): boolean {
         const isSinglePopup = this._stack.getCount() < 2;
@@ -72,8 +73,30 @@ class StackController extends BaseController {
     }
 
     elementUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
+        this._positionBeforeUpdate = item.position;
         this._updatePopup(item, container);
         return true;
+    }
+
+    elementAfterUpdated(item: IPopupItem, container: HTMLDivElement): boolean {
+        let needUpdate = false;
+        if (item.childs.length) {
+            // Если у окна restrictiveContainer лежит на другом окне - то нужно высчитывать позицию только когда
+            // родительское окно ее высчитает. Иначе при ресайзе страницы и родитель и дочернее обновят позицию в
+            // 1 цикл, что приведет к неправильной позиции дочернего.
+            if (JSON.stringify(item.position) !== JSON.stringify(this._positionBeforeUpdate)) {
+                BaseController.resetRootContainerCoords();
+                for (const child of item.childs) {
+                    if (child.controller.TYPE === this.TYPE) {
+                        const updated = this._updateItemPosition(child);
+                        if (updated) {
+                            needUpdate = true;
+                        }
+                    }
+                }
+            }
+        }
+        return needUpdate;
     }
 
     elementDestroyed(item: IPopupItem): Promise<null> {
@@ -240,7 +263,7 @@ class StackController extends BaseController {
             // get size, if it's not percentage value
             if (optionsSet[i][property] &&
                 (typeof optionsSet[i][property] !== 'string' ||
-                !optionsSet[i][property].includes('%'))) {
+                    !optionsSet[i][property].includes('%'))) {
                 return parseInt(optionsSet[i][property], 10);
             }
         }

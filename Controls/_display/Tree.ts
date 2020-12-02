@@ -7,7 +7,6 @@ import Collection, {
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
-import GroupItem from './GroupItem';
 import TreeItem from './TreeItem';
 import TreeChildren from './TreeChildren';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
@@ -18,6 +17,9 @@ import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
+import { TemplateFunction } from 'UI/Base';
+import { CrudEntityKey } from 'Types/source';
+import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -35,6 +37,7 @@ interface IItemsFactoryOptions<S> {
     contents?: S;
     hasChildren?: boolean;
     node?: boolean;
+    expanderTemplate?: TemplateFunction;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -47,6 +50,8 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     root?: T | any;
     rootEnumerable?: boolean;
     hasMoreStorage?: Record<string, boolean>;
+    expandedItems: CrudEntityKey[];
+    collapsedItems: CrudEntityKey[];
 }
 
 /**
@@ -159,6 +164,23 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _$root: T | S;
 
     /**
+     * Шаблон экспандера
+     */
+    protected _$expanderTemplate: TemplateFunction;
+
+    /**
+     * Позиция экспандера
+     */
+    protected _$expanderPosition: string;
+
+    /**
+     * Видимость экспандера
+     */
+    protected _$expanderVisibility: string;
+
+    protected _$nodeFooterTemplateMoreButton: TemplateFunction;
+
+    /**
      * @cfg {Boolean} Включать корневой узел в список элементов
      * @name Controls/_display/Tree#rootEnumerable
      * @example
@@ -189,6 +211,18 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$hasMoreStorage: Record<string, boolean>;
 
+    /**
+     * Темплейт подвала узла
+     * @protected
+     */
+    protected _$nodeFooterTemplate: TemplateFunction;
+
+    /**
+     * Колбэк, определяющий для каких узлов нужен подвал
+     * @protected
+     */
+    protected _$footerVisibilityCallback: (nodeContents: S) => boolean;
+
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
 
@@ -199,6 +233,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
             this._setImportantProperty(this._$childrenProperty);
         }
         this._$hasMoreStorage = options.hasMoreStorage || {};
+
+        if (options.expandedItems instanceof Array) {
+            this.setExpandedItems(options.expandedItems);
+        }
+
+        if (options.collapsedItems instanceof Array) {
+            this.setCollapsedItems(options.collapsedItems);
+        }
     }
 
     destroy(): void {
@@ -228,6 +270,30 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     // region Collection
+
+    getNodeFooterTemplateMoreButton(): TemplateFunction {
+        return this._$nodeFooterTemplateMoreButton;
+    }
+
+    // region Expander
+
+    getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
+        return expanderTemplate || this._$expanderTemplate;
+    }
+
+    getExpanderPosition(): string {
+        return this._$expanderPosition;
+    }
+
+    getExpanderVisibility(): string {
+        return this._$expanderVisibility;
+    }
+
+    // endregion Expander
+
+    getNodeFooterTemplate(): TemplateFunction {
+        return this._$nodeFooterTemplate;
+    }
 
     getIndexBySourceItem(item: any): number {
         if (this._$rootEnumerable && this.getRoot().getContents() === item) {
@@ -448,13 +514,71 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return true;
     }
 
-    getHasMoreStorage(): Record<string, boolean> {
-        return this._$hasMoreStorage;
+    // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
+    getExpandedItems(): CrudEntityKey[] {
+        return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+    }
+
+    setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        if (expandedKeys[0] === null) {
+            const expandAllChildesNodes = (parent) => {
+                if (!parent['[Controls/_display/TreeItem]']) {
+                    return;
+                }
+
+                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
+                parent.setExpanded(true);
+                if (parent.isNode()) {
+                    const childes = this.getChildren(parent);
+                    childes.forEach((it) => expandAllChildesNodes(it));
+                }
+            };
+
+            this.each((it) => expandAllChildesNodes(it));
+        } else {
+            expandedKeys.forEach((key) => {
+                const item = this.getItemBySourceKey(key);
+                if (item) {
+                    // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
+                    item.setExpanded(true);
+                }
+            });
+        }
+
+        this._reCountNodeFooters();
+    }
+
+    setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        collapsedKeys.forEach((key) => {
+            const item = this.getItemBySourceKey(key);
+            if (item) {
+                // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
+                item.setExpanded(false);
+            }
+        });
+
+        this._reCountNodeFooters();
+    }
+
+    resetExpandedItems(): void {
+        this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
+        this._reCountNodeFooters();
+    }
+
+    toggleExpanded(item: TreeItem<T>): void {
+        const newExpandedState = !item.isExpanded();
+        item.setExpanded(newExpandedState);
+
+        this._reCountNodeFooters();
     }
 
     setHasMoreStorage(storage: Record<string, boolean>): void {
         this._$hasMoreStorage = storage;
         this._nextVersion();
+    }
+
+    getHasMoreStorage(): Record<string, boolean> {
+        return this._$hasMoreStorage;
     }
 
     // endregion
@@ -468,6 +592,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
+            options.expanderTemplate = this._$expanderTemplate;
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -518,6 +643,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     protected _reIndex(): void {
         super._reIndex();
         this._childrenMap = {};
+    }
+
+    protected _reCountNodeFooters(): void {
+        const session = this._startUpdateSession();
+        this.getStrategyInstance(NodeFooter)?.invalidate();
+        this._reSort();
+        this._reFilter();
+        this._finishUpdateSession(session, true);
     }
 
     protected _bindHandlers(): void {
@@ -700,7 +833,13 @@ Object.assign(Tree.prototype, {
     _$nodeProperty: '',
     _$childrenProperty: '',
     _$hasChildrenProperty: '',
+    _$expanderTemplate: null,
+    _$expanderPosition: 'default',
+    _$expanderVisibility: 'visible',
     _$root: undefined,
     _$rootEnumerable: false,
+    _$nodeFooterTemplate: null,
+    _$footerVisibilityCallback: null,
+    _$nodeFooterTemplateMoreButton: null,
     _root: null
 });

@@ -128,7 +128,8 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     get shadowVisibility(): SHADOW_VISIBILITY {
         for (let id in this._headers) {
-            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
+            const shadowVisibility = this._headers[id].inst.shadowVisibility;
+            if (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible) {
                 return SHADOW_VISIBILITY.visible;
             }
         }
@@ -260,6 +261,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             }
         } else {
             delete this._headers[data.id];
+            const index = this._delayedHeaders.indexOf(data.id);
+            if (index > -1) {
+                this._delayedHeaders.splice(index, 1);
+            }
 
             // Unregister group after last header is unregistered
             if (!Object.keys(this._headers).length) {

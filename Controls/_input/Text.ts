@@ -1,18 +1,11 @@
-import Base = require('Controls/_input/Base');
-import entity = require('Types/entity');
+import { default as Base, IBaseInputOptions} from 'Controls/_input/Base';
+import {descriptor} from 'Types/entity';
 import ViewModel from 'Controls/_input/Text/ViewModel';
 import {Logger} from 'UI/Utils';
+import {ITextOptions} from 'Controls/_input/interface/IText';
 
-var _private = {
-    validateConstraint: function (constraint) {
-        if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
-            Logger.error('Controls/_input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
-            return false;
-        }
+interface ITextInputOptions extends ITextOptions, IBaseInputOptions {}
 
-        return true;
-    }
-};
 /**
  * Однострочное поле ввода текста.
  * @remark
@@ -31,42 +24,11 @@ var _private = {
  *
  * @author Красильников А.С.
  */
-var Text = Base.extend({
-    _defaultValue: '',
-    _punycodeToUnicode: null,
+class Text extends Base<ITextInputOptions> {
+    _defaultValue: string = '';
+    _punycodeToUnicode: Function;
 
-    _getViewModelOptions: function (options) {
-        return {
-            maxLength: options.maxLength,
-            constraint: options.constraint,
-            punycodeToUnicode: this._punycodeToUnicode
-        };
-    },
-
-    _getViewModelConstructor: function () {
-        return ViewModel;
-    },
-
-    _notifyInputCompleted: function () {
-        if (this._options.trim) {
-            var trimmedValue = this._viewModel.displayValue.trim();
-
-            if (trimmedValue !== this._viewModel.displayValue) {
-                this._viewModel.displayValue = trimmedValue;
-                this._notifyValueChanged();
-            }
-        }
-
-        Text.superclass._notifyInputCompleted.apply(this, arguments);
-    },
-
-    _syncBeforeMount: function(options): void {
-        Text.superclass._beforeMount.call(this, options);
-
-        _private.validateConstraint(options.constraint);
-    },
-
-    _beforeMount: function (options) {
+    protected _beforeMount(options: ITextInputOptions): void | Promise<void> {
         if (options.convertPunycode) {
             return this._loadConverterPunycode().then(() => {
                 this._syncBeforeMount(options);
@@ -74,17 +36,48 @@ var Text = Base.extend({
         }
 
         this._syncBeforeMount(options);
-    },
+    }
 
-    _beforeUpdate: function (newOptions) {
-        Text.superclass._beforeUpdate.apply(this, arguments);
+    protected _beforeUpdate(newOptions: ITextInputOptions): void {
+        super._beforeUpdate(newOptions);
 
         if (this._options.constraint !== newOptions.constraint) {
-            _private.validateConstraint(newOptions.constraint);
+            Text._validateConstraint(newOptions.constraint);
         }
-    },
+    }
 
-    _loadConverterPunycode: function (): Promise<void> {
+    protected _getViewModelOptions(options: ITextInputOptions): object {
+        return {
+            maxLength: options.maxLength,
+            constraint: options.constraint,
+            punycodeToUnicode: this._punycodeToUnicode
+        };
+    }
+
+    protected _getViewModelConstructor(): ViewModel {
+        return ViewModel;
+    }
+
+    protected _notifyInputCompleted(): void {
+        if (this._options.trim) {
+            const trimmedValue = this._viewModel.displayValue.trim();
+
+            if (trimmedValue !== this._viewModel.displayValue) {
+                this._viewModel.displayValue = trimmedValue;
+                this._notifyValueChanged();
+            }
+        }
+
+        super._notifyInputCompleted();
+    }
+
+    private _syncBeforeMount(options: ITextInputOptions): void {
+        super._beforeMount(options);
+
+        Text._validateConstraint(options.constraint);
+    }
+
+    private _loadConverterPunycode(): Promise<void> {
         return new Promise((resolve) => {
             require(['/cdn/Punycode/1.0.0/punycode.js'],
                 () => {
@@ -95,25 +88,34 @@ var Text = Base.extend({
             );
         });
     }
-});
 
-Text.getDefaultOptions = function () {
-    var defaultOptions = Base.getDefaultOptions();
+    private static _validateConstraint(constraint: string): boolean {
+        if (constraint && !/^\[[\s\S]+?\]$/.test(constraint)) {
+            Logger.error('Controls/_input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/_input/Text/options/constraint/');
+            return false;
+        }
 
-    defaultOptions.trim = false;
-    defaultOptions.convertPunycode = false;
+        return true;
+    }
 
-    return defaultOptions;
-};
+    static getDefaultOptions(): ITextInputOptions {
+        const defaultOptions: ITextInputOptions = Base.getDefaultOptions();
 
-Text.getOptionTypes = function () {
-    var optionTypes = Base.getOptionTypes();
+        defaultOptions.trim = false;
+        defaultOptions.convertPunycode = false;
 
-    optionTypes.maxLength = entity.descriptor(Number, null);
-    optionTypes.trim = entity.descriptor(Boolean);
-    optionTypes.constraint = entity.descriptor(String);
+        return defaultOptions;
+    }
 
-    return optionTypes;
-};
+    static getOptionTypes(): object {
+        const optionTypes = Base.getOptionTypes();
 
-export = Text;
+        optionTypes.maxLength = descriptor(Number, null);
+        optionTypes.trim = descriptor(Boolean);
+        optionTypes.constraint = descriptor(String);
+
+        return optionTypes;
+    }
+}
+
+export default Text;

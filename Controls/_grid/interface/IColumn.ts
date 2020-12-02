@@ -73,6 +73,33 @@ type TColumnSeparatorSizeConfig = {
     right?: TColumnSeparatorSize;
 };
 
+export interface IColspanParams {
+    startColumn?: number;
+    endColumn?: number;
+    colspan?: number;
+}
+
+/**
+ * @typedef {String} TActionDisplayMode
+ * @description Стиль тега
+ * @variant info
+ * @variant danger
+ * @variant primary
+ * @variant success
+ * @variant warning
+ * @variant secondary
+ */
+/*
+ * @typedef {String} TActionDisplayMode
+ * @variant info
+ * @variant danger
+ * @variant primary
+ * @variant success
+ * @variant warning
+ * @variant secondary
+ */
+export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 'secondary';
+
 /**
  * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
@@ -335,4 +362,13 @@ export interface IColumn {
      * @see template
      */
     cellPadding?: ICellPadding;
+    /**
+     * @name Controls/_grid/interface/IColumn#tagStyleProperty
+     * @cfg {String} Имя свойства, содержащего стиль тега.
+     */
+    /*
+     * @name Controls/_grid/interface/IColumn#tagStyleProperty
+     * @cfg {String} Name of the property that contains tag style
+     */
+    tagStyleProperty?: string;
 }

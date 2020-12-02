@@ -6,7 +6,7 @@ import {descriptor} from 'Types/entity';
 import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
-import * as Text from 'Controls/_input/Text';
+import Text from 'Controls/_input/Text';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_input/Area/Area');
