@@ -414,7 +414,9 @@ export default class Controller {
 
     private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): LoadResult {
         if (this._options.source) {
-            const filterPromise = filter ? Promise.resolve(filter) : this._prepareFilterForQuery(this._filter, key);
+            const filterPromise = filter && !direction ?
+                Promise.resolve(filter) :
+                this._prepareFilterForQuery(filter || this._filter, key);
             this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 filterPromise.then((preparedFilter: QueryWhereExpression<unknown>) => {
