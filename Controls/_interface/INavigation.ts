@@ -193,8 +193,8 @@ type TNavigationPagingPadding = 'default' | 'null';
 
 /**
  * @typeof {String} TNavigationPagingPosition
- * @variant left Предназначен для отображения пэйджинга слева.
- * @variant right Предназначен для отображения пэйджинга справа.
+ * @variant left Отображения пэйджинга слева.
+ * @variant right Отображения пэйджинга справа.
  */
 type TNavigationPagingPosition= 'left' | 'right';
 

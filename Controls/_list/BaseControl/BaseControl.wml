@@ -217,7 +217,7 @@
                  class="controls-BaseControl_paging-Padding_theme-{{_options.theme}}">
             </div>
             <div class="controls-BaseControl__pagingContainer
-    controls-BaseControl__pagingContainer_position-{{_options.navigation.viewConfig.pagingPosition === 'right' ? 'right' : 'left'}}
+    controls-BaseControl__pagingContainer_position-{{_options.navigation.viewConfig.pagingPosition === 'left' ? 'left' : 'right'}}
     {{!_isPagingPaddingFromOptions() ? ' controls-BaseControl-hide-paging-padding': ''}}">
                 <ws:if data="{{_options.pagingLeftTemplate}}">
                     <ws:partial template="{{_options.pagingLeftTemplate}}"/>
