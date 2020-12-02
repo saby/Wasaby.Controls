@@ -192,6 +192,13 @@ export type TNavigationPagingMode = 'hidden' | 'basic' | 'edge' | 'end' | 'numbe
 type TNavigationPagingPadding = 'default' | 'null';
 
 /**
+ * @typeof {String} TNavigationPagingPosition
+ * @variant left Предназначен для отображения пэйджинга слева.
+ * @variant right Предназначен для отображения пэйджинга справа.
+ */
+type TNavigationPagingPosition= 'left' | 'right';
+
+/**
  * @typedef {Object} INavigationViewConfig
  * @description Конфигурация <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/">визуального представления навигации</a>.
  * @property {TNavigationPagingMode} [pagingMode=hidden] Внешний вид пэйджинга. Позволяет для каждого конкретного реестра задать внешний вид в зависимости от требований к интерфейсу.
@@ -204,6 +211,7 @@ type TNavigationPagingPadding = 'default' | 'null';
  * Когда параметр принимает значение true, кнопка отображается.
  * Пример использования свойства читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/">здесь</a>.
  * @property {TNavigationPagingPadding} [pagingPadding=default] Опция управляет отображением отступа под пэйджинг.
+ * @property {TNavigationPagingPosition} [pagingPosition=right] Опция управляет позицией пэйджинга.
  */
 export interface INavigationViewConfig {
     pagingMode?: TNavigationPagingMode;
@@ -211,6 +219,7 @@ export interface INavigationViewConfig {
     maxCountValue?: number;
     showEndButton?: boolean;
     pagingPadding?: TNavigationPagingPadding;
+    pagingPosition?: TNavigationPagingPosition;
 }
 
 /**
