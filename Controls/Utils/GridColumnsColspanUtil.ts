@@ -11,6 +11,7 @@ interface IPrepareColumnsParams<T extends IPreparedColumn> {
     colspanColumns: IColumn[];
     hasMultiSelect: boolean;
     afterPrepareCallback?(column: T, index: number, columns: T[]): void;
+    ladder?: boolean;
 }
 
 function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams<T>): Array<T> {
@@ -53,7 +54,7 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
             // Если не задали индкс конца колонки, то утанавливаем его либо как индекс последней границы грида,
             // либо как стартовый индекс колонки + 1(по умолчанию, колонка не будет растянута)
             if (index === params.colspanColumns.length - 1) {
-                newColumn.endColumn = -1;
+                newColumn.endColumn = gridColumnsCount + 1;
             } else {
                 newColumn.endColumn = newColumn.startColumn + 1;
             }
@@ -89,8 +90,10 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
     // Классы колонок и смещение индексов из за колонки под чекбокс.
     result.forEach((resultColumn, index) => {
         resultColumn.startColumn += multiSelectOffset;
-        if (resultColumn.endColumn !== -1) {
-            resultColumn.endColumn += multiSelectOffset;
+        resultColumn.endColumn += multiSelectOffset;
+        if (params.ladder) {
+            resultColumn.startColumn += 1;
+            resultColumn.endColumn += 1;
         }
         if (params.afterPrepareCallback) {
             params.afterPrepareCallback(resultColumn, index, result);

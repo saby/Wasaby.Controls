@@ -1934,7 +1934,8 @@ var
             } & IPreparedColumn>({
                 gridColumns: this._columns,
                 colspanColumns: footerColumns,
-                hasMultiSelect
+                hasMultiSelect,
+                ladder: !!this._ladder
             });
 
             const isMultiColumn = prepared.length > 1;
