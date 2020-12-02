@@ -92,7 +92,7 @@ function prepareColumns<T extends IPreparedColumn>(params: IPrepareColumnsParams
         resultColumn.startColumn += multiSelectOffset;
         resultColumn.endColumn += multiSelectOffset;
         if (params.stickyLadderCount) {
-            resultColumn.endColumn += stickyLadderCount;
+            resultColumn.endColumn += params.stickyLadderCount;
         }
         if (params.afterPrepareCallback) {
             params.afterPrepareCallback(resultColumn, index, result);
