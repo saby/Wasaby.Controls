@@ -229,11 +229,6 @@ describe('Controls/suggest', () => {
          inputContainer._options.emptyTemplate = null;
          assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
          assert.isTrue(!!inputContainer._shouldShowSuggest(result));
-
-         // case 7. inputActive is false
-         inputContainer._inputActive = false;
-         assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
-         assert.isFalse(!!inputContainer._shouldShowSuggest(result));
       });
 
       it('_suggestDirectionChangedCallback', () => {
