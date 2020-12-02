@@ -1,9 +1,20 @@
+<ws:template name="ContentTemplate">
+    <ws:if data="{{_options.contentTemplate && _isShowContentTemplate()}}">
+         <span class="controls-Paging__content-Template">
+            <ws:partial template="{{_options.contentTemplate}}"/>
+         </span>
+    </ws:if>
+</ws:template>
+
 <div class="controls-PagingV {{_options.contrastBackground ? 'controls-Paging__contrast_theme-' + _options.theme : ''}}">
     <div class="controls-Paging__wrapper controls-Paging__wrapper_theme-{{_options.theme}}">
         <ws:if data="{{_options.contentTemplate && _isShowContentTemplate()}}">
          <span class="controls-Paging__content-Template">
             <ws:partial template="{{_options.contentTemplate}}"/>
          </span>
+        </ws:if>
+        <ws:if data="{{_options.contentTemplatePosition === 'right'}}">
+            <ws:partial template="ContentTemplate"/>
         </ws:if>
         <ws:if data="{{_options.elementsCount && _options.pagingMode === 'numbers'}}">
             <span class="controls-Paging__btn controls-Paging__btn-elements-count controls-Paging__btn_theme-{{_options.theme}}
@@ -61,6 +72,9 @@
                attr:title="{[В конец]}" on:click="_arrowClick('End', 'Bottom')">
             <i class="controls-Paging_icon-End_{{_isDigit() ? 'digits_'}}theme-{{_options.theme}} controls-Paging__icon_theme-{{_options.theme}}"></i>
          </span>
+        </ws:if>
+        <ws:if data="{{_options.contentTemplatePosition === 'right'}}">
+            <ws:partial template="ContentTemplate"/>
         </ws:if>
     </div>
 </div>

@@ -13,6 +13,8 @@ interface IArrowState {
     end: TArrowStateVisibility;
 }
 
+type TContentTemplatePosition = 'right' | 'left';
+
 export interface IPagingOptions extends IControlOptions {
     showDigits: boolean;
     pagesCount: number;
@@ -21,6 +23,7 @@ export interface IPagingOptions extends IControlOptions {
     forwardEnabled: boolean;
     contrastBackground: boolean;
     contentTemplate?: TemplateFunction;
+    contentTemplatePosition?: TContentTemplatePosition;
     elementsCount?: number;
     arrowState: IArrowState;
     pagingMode: TNavigationPagingMode;
