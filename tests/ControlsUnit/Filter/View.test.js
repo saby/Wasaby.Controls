@@ -136,7 +136,7 @@ define(
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
                assert.isUndefined(view._configs.document);
-               assert.isOk(view._configs.state.sourceController);
+               assert.isOk(!view._configs.state.sourceController);
                done();
             });
          });
@@ -1309,7 +1309,7 @@ define(
 
             it('_private:reload', function(done) {
                view._source[0].editorOptions.source = hSource;
-               filter.View._private.reload(view).addCallback((receivedState) => {
+               filter.View._private.reload(view, false, true, true).addCallback((receivedState) => {
                   assert.isUndefined(receivedState.configs.document.source);
                   assert.isOk(receivedState.configs.state.source);
 
