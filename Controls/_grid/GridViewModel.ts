@@ -1924,6 +1924,10 @@ var
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
+            let hasLadder = false;
+            if (this._ladder.stickyLadder) {
+                hasLadder = !!Object.keys(this._ladder.stickyLadder).length;
+            }
             const prepared = prepareColumns<{
                 isFullGridSupport: boolean;
                 getWrapperClasses(backgroundStyle: string): string;
@@ -1935,7 +1939,7 @@ var
                 gridColumns: this._columns,
                 colspanColumns: footerColumns,
                 hasMultiSelect,
-                hasLadder: !!this._ladder.ladder
+                hasLadder
             });
 
             const isMultiColumn = prepared.length > 1;
