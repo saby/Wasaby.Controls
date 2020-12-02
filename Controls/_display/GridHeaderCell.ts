@@ -23,7 +23,6 @@ import { IItemPadding } from './Collection';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 
 export interface IOptions<T> extends IGridCellOptions<T> {
-    owner: GridHeaderRow<T>;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -72,14 +71,20 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
         }
         if (this._$column.align) {
-            contentClasses += ` controls-Grid__header-cell_justify_content_${this._$headerCell.align}`;
+            contentClasses += ` controls-Grid__header-cell_justify_content_${this._$column.align}`;
         }
         if (isFullGridSupport) {
             if (this._$column.valign) {
-                contentClasses += ` controls-Grid__header-cell_align_items_${this._$headerCell.valign}`;
+                contentClasses += ` controls-Grid__header-cell_align_items_${this._$column.valign}`;
             }
         }
         return contentClasses;
+    }
+
+    getColspanStyles(): string {
+        const superStyles = super.getColspanStyles();
+        const {startRow, endRow} = this.column;
+        return `${superStyles} grid-row: ${startRow} / ${endRow};`;
     }
 
     getTemplate(): TemplateFunction|string {
@@ -109,7 +114,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
 
     // todo <<< START >>> compatible with old gridHeaderModel
     get column(): IHeaderCell {
-        return this._$headerCell;
+        return this._$column;
     }
     // todo <<< END >>>
 

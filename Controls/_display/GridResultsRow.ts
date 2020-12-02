@@ -24,10 +24,6 @@ export default class GridResultsRow<T> extends GridRow<T> {
         return 'results' as unknown as T
     }
 
-    getTemplate(): TemplateFunction | string {
-        return 'Controls/gridNew:ItemTemplate';
-    }
-
     isSticked(): boolean {
         return this.isStickyHeader() && this.getResultsPosition() === 'top';
     }

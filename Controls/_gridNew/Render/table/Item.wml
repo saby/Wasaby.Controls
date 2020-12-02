@@ -3,7 +3,8 @@
       <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
           attr:style="{{ gridColumn.getWrapperStyles() }}"
           attr:colspan="{{ gridColumn.getColspan() }}">
-         <div if="{{ gridColumn.shouldDisplayMarker(marker, markerPosition) }}" attr:class="{{ gridColumn.getMarkerClasses(theme, style, markerPosition) }}"></div>
+         <div if="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayMarker(marker, markerPosition) }}"
+              attr:class="{{ gridColumn.getMarkerClasses(theme, style, markerPosition) }}"></div>
          <div attr:class="{{ gridColumn.getContentClasses(theme, cursor, highlightOnHover) }}"
               attr:style="{{ gridColumn.getContentStyles() }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses(theme) }}">
@@ -26,14 +27,15 @@
                </ws:partial>
             </div>
 
-            <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
+            <div if="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayTag(tagStyle) }}"
+                 class="{{ gridColumn.getTagClasses(theme) }}">
                <ws:partial template="{{ tagTemplate }}"
                            tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
                            dispItem="{{ item || itemData }}"
                            columnIndex="{{ gridColumn.getColumnIndex() }}"/>
             </div>
          </div>
-         <ws:if data="{{ gridColumn.shouldDisplayItemActions() }}">
+         <ws:if data="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayItemActions() }}">
             <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
                <ws:partial template="{{ swipeTemplate }}"
                            highlightOnHover="{{ highlightOnHover }}" />

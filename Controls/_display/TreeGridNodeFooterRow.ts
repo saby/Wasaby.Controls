@@ -21,7 +21,7 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
         return this.getNode().hasMoreStorage();
     }
 
-    getItemTemplate(): TemplateFunction | string {
+    getTemplate(): TemplateFunction | string {
         return this._$owner.getNodeFooterTemplate() || 'Controls/treeGridNew:NodeFooterTemplate';
     }
 

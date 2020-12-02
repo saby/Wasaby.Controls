@@ -1,10 +1,8 @@
-import { THeader} from 'Controls/grid';
-import GridCollection from './GridCollection';
+import {IColspanParams, THeader} from 'Controls/grid';
 import GridRow from './GridRow';
 import GridHeaderCell from './GridHeaderCell';
 
 export interface IOptions<T> {
-    owner: GridCollection<T>;
     header: THeader;
 }
 
@@ -44,9 +42,7 @@ export default class GridHeaderRow<T> extends GridRow<T> {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
             this._$columnItems = this._$header.map((column) => factory({
-                column,
-                startColumn: column.startColumn,
-                endColumn: column.endColumn
+                column
             }));
         }
     }

@@ -83,7 +83,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     getColspanStyles(): string {
         const {startColumn, endColumn} = this._getColspanParams();
-        return `grid-column: ${startColumn} / ${endColumn}`;
+        return `grid-column: ${startColumn} / ${endColumn};`;
     }
 
     // endregion
