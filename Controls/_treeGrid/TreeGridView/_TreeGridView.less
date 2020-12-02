@@ -115,8 +115,7 @@
    padding-left: @expander_width_treeGrid - @node_expander_icon-size_treeGrid;
 }
 
-.controls-TreeGrid__row_expander_position_default_theme-@{themeName},
-.controls-TreeGrid__row_expander_position_custom_theme-@{themeName} {
+.controls-TreeGrid__row-expander_theme-@{themeName}:not(.controls-TreeGrid__row_expander_position_right_theme-@{themeName}) {
    &.controls-TreeGrid__row-expander_hiddenNode_default_theme-@{themeName}:before {
       color: @hidden-node_expander_icon-color_treeGrid;
       font-family: @hidden-node_expander_icon_font-family_treeGrid;
