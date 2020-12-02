@@ -18,7 +18,7 @@
    // and children of these elements can not overlap this pseudo element.
    &:before {
       content: '';
-      z-index: 0;
+      z-index: 1; // Чтобы перекрывать оптимизированную тень от scrollContainer'a, она сделана через background
       height: 100%;
       position: absolute;
       right: 0;
