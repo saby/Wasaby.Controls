@@ -390,8 +390,8 @@ import {Model} from 'Types/entity';
 
          _deleteSourceControllersFromConfigs(configs): void {
             chain.factory(configs).each((config) => {
-               if (config.sourceController) {
-                  config.sourceController = null;
+               if (config._sourceController) {
+                  config._sourceController = null;
                }
             });
          },
