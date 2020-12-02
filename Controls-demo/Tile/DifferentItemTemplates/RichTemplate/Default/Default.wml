@@ -21,6 +21,7 @@
             imageViewMode="{{itemTemplate.itemData.item.imageViewMode}}"
             imagePosition="{{itemTemplate.itemData.item.imagePosition}}"
             description="{{itemTemplate.itemData.item.description}}"
+            imageCompressionCoefficient="{{itemTemplate.itemData.item.imageCompressionCoefficient}}"
             imageEffect="gradient"
             scope="{{itemTemplate}}">
          </ws:partial>
