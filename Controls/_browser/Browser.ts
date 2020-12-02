@@ -46,6 +46,7 @@ export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourc
     useStore?: boolean;
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
+    itemsReadyCallback?: Function;
     viewMode: TViewMode;
     root?: Key;
 }
@@ -394,6 +395,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._items = sourceController.setItems(items);
             this._dataOptionsContext.items = this._items;
             this._dataOptionsContext.updateConsumers();
+        }
+        if (this._options.itemsReadyCallback) {
+            this._options.itemsReadyCallback(items);
         }
     }
 
