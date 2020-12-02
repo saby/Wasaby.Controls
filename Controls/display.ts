@@ -40,8 +40,8 @@ export {default as IBind} from './_display/IBind';
 import {default as TreeChildren} from './_display/TreeChildren';
 export {TreeChildren};
 export {default as Abstract} from './_display/Abstract';
-import {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig} from './_display/Collection';
-export {Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig};
+import {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory} from './_display/Collection';
+export {Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory};
 import {default as CollectionItem} from './_display/CollectionItem';
 export {CollectionItem};
 import {default as Enum} from './_display/Enum';
@@ -61,6 +61,8 @@ import {default as Tree} from './_display/Tree';
 export {Tree};
 import {default as TreeItem} from './_display/TreeItem';
 export {TreeItem};
+import {IOptions as ITreeItemOptions} from './_display/TreeItem';
+export {ITreeItemOptions};
 
 export {ANIMATION_STATE} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
@@ -84,10 +86,16 @@ import isFullGridSupport from './_display/utils/GridSupportUtil';
 export {isFullGridSupport};
 import GridLayoutUtil from './_display/utils/GridLayoutUtil';
 export {GridLayoutUtil};
+import {default as GridMixin} from './_display/GridMixin';
+export {GridMixin};
 import {default as GridCollection} from './_display/GridCollection';
 export {GridCollection};
+import {default as GridRowMixin} from './_display/GridRowMixin';
+export {GridRowMixin};
 import {default as GridRow} from './_display/GridRow';
 export {GridRow};
+import {IOptions as IGridRowOptions} from './_display/GridRow';
+export {IGridRowOptions};
 import {default as GridDataRow} from './_display/GridDataRow';
 export {GridDataRow};
 import {default as GridCell} from './_display/GridCell';
@@ -102,9 +110,8 @@ import {default as GridFooterCell} from './_display/GridFooterCell';
 export {GridFooterCell};
 import {default as GridResultsCell} from './_display/GridResultsCell';
 export {GridResultsCell};
-
-import TreeGridCollection from './_display/TreeGridCollection';
-import TreeGridRow from './_display/TreeGridRow';
+import {default as GridGroupItem} from './_display/GridGroupItem';
+export {GridGroupItem};
 
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
 
@@ -116,9 +123,6 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
-import TreeGridCell from 'Controls/_display/TreeGridCell';
-import TreeGridNodeFooterRow from 'Controls/_display/TreeGridNodeFooterRow';
-import TreeGridNodeFooterCell from 'Controls/_display/TreeGridNodeFooterCell';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 
@@ -147,8 +151,3 @@ register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate
 register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
-register('Controls/display:TreeGridCollection', TreeGridCollection, {instantiate: false});
-register('Controls/display:TreeGridRow', TreeGridRow, {instantiate: false});
-register('Controls/display:TreeGridCell', TreeGridCell, {instantiate: false});
-register('Controls/display:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {instantiate: false});
-register('Controls/display:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});
