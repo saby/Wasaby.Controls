@@ -190,6 +190,7 @@ describe('Controls/suggest', () => {
 
       it('Suggest::_shouldShowSuggest', () => {
          const inputContainer = getComponentObject();
+         inputContainer._inputActive = true;
          const result = new List({items: [1, 2, 3]});
          const emptyResult = new List();
 
@@ -228,6 +229,11 @@ describe('Controls/suggest', () => {
          inputContainer._options.emptyTemplate = null;
          assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
          assert.isTrue(!!inputContainer._shouldShowSuggest(result));
+
+         // case 7. inputActive is false
+         inputContainer._inputActive = false;
+         assert.isFalse(!!inputContainer._shouldShowSuggest(emptyResult));
+         assert.isFalse(!!inputContainer._shouldShowSuggest(result));
       });
 
       it('_suggestDirectionChangedCallback', () => {
@@ -470,6 +476,7 @@ describe('Controls/suggest', () => {
             inputContainer._historyLoad = new Deferred();
             return Promise.resolve();
          });
+         inputContainer._inputActive = true;
 
          inputContainer._inputActivated();
          await inputContainer._inputActivated();
@@ -642,6 +649,7 @@ describe('Controls/suggest', () => {
          after(() => sandbox.restore());
 
          it('value is not specified', async () => {
+            inputContainer._inputActive = true;
             sandbox.stub(SourceController.prototype, 'load')
                .callsFake(() => Promise.resolve(recordSet));
             const result = await inputContainer._resolveLoad();
@@ -655,6 +663,7 @@ describe('Controls/suggest', () => {
 
          it('value is specified', async () => {
             const value = 'test1';
+            inputContainer._inputActive = true;
             sandbox.stub(SearchController.prototype, 'search')
                .callsFake(() => Promise.resolve(recordSet));
 
@@ -799,6 +808,7 @@ describe('Controls/suggest', () => {
 
          inputContainer._notify = () => {};
          inputContainer._searchValue = 'notEmpty';
+         inputContainer._inputActive = true;
 
          queryRecordSet.setMetaData({
             results: new Model({

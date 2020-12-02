@@ -1530,7 +1530,8 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        self._scrollTop = scrollTop;
+        // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным 
+        self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
