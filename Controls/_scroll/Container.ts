@@ -85,9 +85,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
     protected _needUpdateContentSize: boolean = false;
-    protected _isScrollbarsInitialized: boolean = false;
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
+    private _gridAutoShadows: boolean = true;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
@@ -203,10 +203,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const shadowsModel = {...options};
         // gridauto нужно для таблицы
         if (options.topShadowVisibility === 'gridauto') {
-            shadowsModel.topShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+            shadowsModel.topShadowVisibility = this._gridAutoShadows ? 'visible' : 'auto';
         }
         if (options.bottomShadowVisibility === 'gridauto') {
-            shadowsModel.bottomShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+            shadowsModel.bottomShadowVisibility = this._gridAutoShadows ? 'visible' : 'auto';
         }
         return shadowsModel;
     }
@@ -237,7 +237,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             }
 
             // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
-            if (this._isStateInitialized && this._isScrollbarsInitialized) {
+            if (this._isStateInitialized && this._wasMouseEnter) {
                 this._scrollbars.updateScrollState(this._state, this._container);
             }
 
@@ -294,6 +294,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         event.stopImmediatePropagation();
+        if (this._gridAutoShadows) {
+            this._gridAutoShadows = false;
+            this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+        }
         const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
         this._stickyHeaderController.setShadowVisibility(
@@ -384,21 +388,18 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
-        if (!this._wasMouseEnter) {
-            this._wasMouseEnter = true;
-
-            if (this._state.canVerticalScroll) {
-                this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
-                this._updateShadows();
-            }
+        if (this._gridAutoShadows && this._state.canVerticalScroll) {
+            this._gridAutoShadows = false;
+            this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+            this._updateShadows();
         }
 
         // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
-        if (!this._isScrollbarsInitialized) {
-            this._isScrollbarsInitialized = true;
+        if (!this._wasMouseEnter) {
+            this._wasMouseEnter = true;
             // При открытии плавающих панелей, когда курсор находится над скрлл контейнером,
             // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
-            // В этом случае не обновляем скролбары, а просто делаем _isScrollbarsInitialized = true выше.
+            // В этом случае не обновляем скролбары, а просто делаем _wasMouseEnter = true выше.
             // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
             if (this._isStateInitialized) {
                 this._scrollbars.updateScrollState(this._state, this._container);
@@ -511,7 +512,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _headersResizeHandler(): void {
         const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._isScrollbarsInitialized);
+        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._wasMouseEnter);
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {

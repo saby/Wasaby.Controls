@@ -387,6 +387,7 @@ describe('Controls/scroll:Container', () => {
             const version: number = component._shadows.getVersion();
             sinon.stub(component, '_updateStateAndGenerateEvents');
             component._wasMouseEnter = true;
+            component._gridAutoShadows = false;
             component._shadows._models.top._scrollState.canVerticalScroll = true;
             component._shadows._models.bottom._scrollState.canVerticalScroll = true;
             component._shadows._models.top._isVisible = false;
