@@ -87,9 +87,11 @@ class StackController extends BaseController {
             if (JSON.stringify(item.position) !== JSON.stringify(this._positionBeforeUpdate)) {
                 BaseController.resetRootContainerCoords();
                 for (const child of item.childs) {
-                    const updated = this._updateItemPosition(item.childs[0]);
-                    if (updated) {
-                        needUpdate = true;
+                    if (child.controller.TYPE === this.TYPE) {
+                        const updated = this._updateItemPosition(child);
+                        if (updated) {
+                            needUpdate = true;
+                        }
                     }
                 }
             }
@@ -261,7 +263,7 @@ class StackController extends BaseController {
             // get size, if it's not percentage value
             if (optionsSet[i][property] &&
                 (typeof optionsSet[i][property] !== 'string' ||
-                !optionsSet[i][property].includes('%'))) {
+                    !optionsSet[i][property].includes('%'))) {
                 return parseInt(optionsSet[i][property], 10);
             }
         }
