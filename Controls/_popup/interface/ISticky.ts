@@ -35,6 +35,13 @@ export interface IStickyPositionOffset {
     horizontal?: number;
 }
 
+/**
+ * Интерфейс для методов стики окон
+ *
+ * @interface Controls/_popup/interface/IStickyOpener
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IStickyOpener extends IOpener {
     readonly '[Controls/_popup/interface/IStickyOpener]': boolean;
 }

@@ -1,4 +1,4 @@
-import * as GridView from './GridView';
+import GridView from './GridView';
 import { TemplateFunction } from 'UI/Base';
 import * as TableTemplate from 'wml!Controls/_gridNew/Render/table/GridView';
 import * as TableItem from 'wml!Controls/_gridNew/Render/table/Item';

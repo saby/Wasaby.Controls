@@ -86,21 +86,39 @@ import GridLayoutUtil from './_display/utils/GridLayoutUtil';
 export {GridLayoutUtil};
 import {default as GridCollection} from './_display/GridCollection';
 export {GridCollection};
-import {default as GridCollectionItem} from './_display/GridCollectionItem';
-export {GridCollectionItem};
-import {default as GridColumn} from './_display/GridColumn';
-export {GridColumn};
+import {default as GridRow} from './_display/GridRow';
+export {GridRow};
+import {default as GridDataRow} from './_display/GridDataRow';
+export {GridDataRow};
+import {default as GridCell} from './_display/GridCell';
+export {GridCell};
+import {default as GridHeaderRow} from './_display/GridHeaderRow';
+export {GridHeaderRow};
+import {default as GridHeaderCell} from './_display/GridHeaderCell';
+export {GridHeaderCell};
+import {default as GridDataCell} from './_display/GridDataCell';
+export {GridDataCell};
+import {default as GridFooterCell} from './_display/GridFooterCell';
+export {GridFooterCell};
+import {default as GridResultsCell} from './_display/GridResultsCell';
+export {GridResultsCell};
+
+import TreeGridCollection from './_display/TreeGridCollection';
+import TreeGridRow from './_display/TreeGridRow';
 
 import * as EditInPlaceController from './_display/controllers/EditInPlace';
+
 export { EditInPlaceController };
-
 import * as VirtualScrollController from './_display/controllers/VirtualScroll';
+
 export { VirtualScrollController };
-
 import * as VirtualScrollHideController from './_display/controllers/VirtualScrollHide';
-export { VirtualScrollHideController };
 
+export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
+import TreeGridCell from 'Controls/_display/TreeGridCell';
+import TreeGridNodeFooterRow from 'Controls/_display/TreeGridNodeFooterRow';
+import TreeGridNodeFooterCell from 'Controls/_display/TreeGridNodeFooterCell';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 
@@ -111,9 +129,17 @@ register('Controls/display:ColumnsCollectionItem', ColumnsCollectionItem, {insta
 register('Controls/display:Enum', Enum, {instantiate: false});
 register('Controls/display:Flags', Flags, {instantiate: false});
 register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});
+
 register('Controls/display:GridCollection', GridCollection, {instantiate: false});
-register('Controls/display:GridCollectionItem', GridCollectionItem, {instantiate: false});
-register('Controls/display:GridColumn', GridColumn, {instantiate: false});
+register('Controls/display:GridRow', GridRow, {instantiate: false});
+register('Controls/display:GridCell', GridCell, {instantiate: false});
+register('Controls/display:GridHeaderRow', GridHeaderRow, {instantiate: false});
+register('Controls/display:GridHeaderCell', GridHeaderCell, {instantiate: false});
+register('Controls/display:GridDataRow', GridDataRow, {instantiate: false});
+register('Controls/display:GridDataCell', GridDataCell, {instantiate: false});
+register('Controls/display:GridFooterCell', GridFooterCell, {instantiate: false});
+register('Controls/display:GridResultsCell', GridResultsCell, {instantiate: false});
+
 register('Controls/display:GroupItem', GroupItem, {instantiate: false});
 register('Controls/display:Search', Search, {instantiate: false});
 register('Controls/display:TileCollection', TileCollection, {instantiate: false});
@@ -121,3 +147,8 @@ register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate
 register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
+register('Controls/display:TreeGridCollection', TreeGridCollection, {instantiate: false});
+register('Controls/display:TreeGridRow', TreeGridRow, {instantiate: false});
+register('Controls/display:TreeGridCell', TreeGridCell, {instantiate: false});
+register('Controls/display:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {instantiate: false});
+register('Controls/display:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});

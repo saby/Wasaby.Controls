@@ -445,13 +445,7 @@ const _private = {
                         data: list
                     });
 
-                    if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
-                        // При полной перезагрузке данных нужно сбросить состояние скролла
-                        // и вернуться к началу списка, иначе браузер будет пытаться восстановить
-                        // scrollTop, догружая новые записи после сброса.
-                        self._resetScrollAfterReload = !self._keepScrollAfterReload;
-                        self._keepScrollAfterReload = false;
-                    }
+                    _private.resetScrollAfterLoad(self);
 
                     // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
@@ -562,6 +556,16 @@ const _private = {
 
         if (options.serviceDataLoadCallback instanceof Function) {
             options.serviceDataLoadCallback(self._items, loadedList);
+        }
+    },
+
+    resetScrollAfterLoad(self): void {
+        if (self._isMounted && self._isScrollShown && !self._wasScrollToEnd) {
+            // При полной перезагрузке данных нужно сбросить состояние скролла
+            // и вернуться к началу списка, иначе браузер будет пытаться восстановить
+            // scrollTop, догружая новые записи после сброса.
+            self._resetScrollAfterReload = !self._keepScrollAfterReload;
+            self._keepScrollAfterReload = false;
         }
     },
 
@@ -1400,6 +1404,9 @@ const _private = {
     getViewSize(self, update = false): number {
         if (self._container && (!self._viewSize || update)) {
             const container = self._children?.viewContainer || self._container[0] || self._container;
+            if (self._viewSize !== container.clientHeight) {
+                self._notify('controlResize', [], { bubbling: true });
+            }
             self._viewSize = container.clientHeight;
         }
         return self._viewSize;
@@ -1523,7 +1530,8 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        self._scrollTop = scrollTop;
+        // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным 
+        self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
@@ -1738,7 +1746,7 @@ const _private = {
                             } else {
                                 result = self._scrollController.handleAddItems(newItemsIndex, newItems,
                                     newItemsIndex <= collectionStartIndex && self._scrollTop !== 0 ? 'up'
-                                    : (newItemsIndex > collectionStartIndex ? 'down' : ''));
+                                    : (newItemsIndex > collectionStopIndex ? 'down' : ''));
                             }
                             break;
                         case IObservable.ACTION_MOVE:
@@ -2262,10 +2270,19 @@ const _private = {
             self._options.navigation.viewConfig.totalInfo === 'extended') {
             return hasMoreData > PAGING_MIN_ELEMENTS_COUNT || hasMoreData === true;
         }
+
         return hasMoreData === true || self._knownPagesCount > 1;
     },
 
     updatePagingData(self, hasMoreData) {
+        self._pagingCfg = {
+            arrowState: {
+                begin: 'visible',
+                prev: 'visible',
+                next: 'visible',
+                end: self._options.navigation?.viewConfig?.showEndButton ? 'visible' : 'hidden'
+            }
+        };
         self._knownPagesCount = _private.calcPaging(self, hasMoreData, self._currentPageSize);
         self._pagingNavigationVisible = _private.isPagingNavigationVisible(self, hasMoreData);
         self._pagingLabelData = _private.getPagingLabelData(hasMoreData, self._currentPageSize, self._currentPage);
@@ -2588,8 +2605,9 @@ const _private = {
                 }
             });
             if (result.placeholders) {
-                self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
-
+                self._notifyPlaceholdersChanged = () => {
+                    self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
+                }
                 if (result.placeholders.top > 0) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
@@ -3179,6 +3197,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _loadTriggerVisibility: null,
     _hideIndicatorOnTriggerHideDirection: null,
     _checkTriggerVisibilityTimeout: null,
+    _notifyPlaceholdersChanged: null,
     _loadingIndicatorContainerOffsetTop: 0,
     _viewSize: null,
     _viewportSize: null,
@@ -3500,9 +3519,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 keyProperty = options.source.getKeyProperty();
             }
         }
-        if (keyProperty !== undefined) {
-            this._keyProperty = keyProperty;
-        }
+        this._keyProperty = keyProperty;
     },
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -3814,7 +3831,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
 
-        if ((oldViewModelConstructorChanged || needReload) && this.isEditing()) {
+        if (this.isEditing() && (oldViewModelConstructorChanged || needReload)) {
             // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
             // без возможности отменить закрытие из вне.
             this._cancelEdit(true);
@@ -3872,6 +3889,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
             this._initKeyProperty(newOptions);
+            _private.checkRequiredOptions(this, newOptions);
             this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
@@ -3913,6 +3931,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
+                _private.resetScrollAfterLoad(self);
             }
         }
 
@@ -4227,6 +4246,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._sourceController.destroy();
         }
 
+        if (this._notifyPlaceholdersChanged) {
+            this._notifyPlaceholdersChanged = null;
+        }
+
         if (this._groupingLoader) {
             this._groupingLoader.destroy();
         }
@@ -4372,6 +4395,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 needCheckTriggers = true;
             }
 
+            // Для корректного отображения скроллбара во время использования виртуального скролла
+            // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
+            // срабатывали синхронно. Иначе ползунок скачет.
+            if (this._notifyPlaceholdersChanged) {
+                this._notifyPlaceholdersChanged();
+                this._notifyPlaceholdersChanged = null;
+            }
             if (this._loadedBySourceController || needCheckTriggers || itemsUpdated || positionRestored) {
                 this.checkTriggerVisibilityAfterRedraw();
             }
@@ -4538,7 +4568,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._wasScrollToEnd = false;
         this._scrollPageLocked = false;
-        this._modelRecreated = false; 
+        this._modelRecreated = false;
         if (this._callbackAfterUpdate) {
             this._callbackAfterUpdate.forEach((callback) => {
                 callback();

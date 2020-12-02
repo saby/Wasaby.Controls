@@ -250,16 +250,15 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.deepEqual(
                 {
                     begin: 'visible',
-                    end: 'visible',
+                    end: 'hidden',
                     next: 'visible',
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
-            assert.isFalse(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 600});
             assert.deepEqual({
                 begin: 'visible',
-                end: 'readonly',
+                end: 'hidden',
                 next: 'readonly',
                 prev: 'visible'
             }, baseControl._pagingCfg.arrowState);
@@ -296,7 +295,6 @@ describe('Controls/list_clean/BaseControl', () => {
                     next: 'visible',
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
         });
 
         it('paging mode is edge', async () => {
@@ -329,7 +327,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
@@ -370,7 +367,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             baseControl.scrollMoveSyncHandler({scrollTop: 800});
             assert.deepEqual({
@@ -477,9 +473,13 @@ describe('Controls/list_clean/BaseControl', () => {
                 return {children: []};
             };
             baseControl._mouseEnter(null);
+            let doScrollNotified = false;
+            let notifiedScrollTop = null;
             baseControl._notify = (event, args) => {
-                assert.equal(event, 'doScroll');
-                assert.equal(args[0], 400);
+                if (event === 'doScroll') {
+                    doScrollNotified = true;
+                    notifiedScrollTop = args[0];
+                }
             };
 
             // эмулируем появление скролла
@@ -497,12 +497,14 @@ describe('Controls/list_clean/BaseControl', () => {
                 next: 'hidden',
                 prev: 'hidden'
             }, baseControl._pagingCfg.arrowState);
-            assert.isTrue(baseControl._pagingCfg.showEndButton);
 
             assert.equal(baseControl._currentPage, 1);
             expectedScrollTop = 400;
             await baseControl.__selectedPageChanged(null, 2);
             assert.equal(baseControl._currentPage, 2);
+            assert.isTrue(doScrollNotified);
+            doScrollNotified = false;
+            assert.equal(notifiedScrollTop, expectedScrollTop);
             expectedScrollTop = 800;
             assert.isNull(baseControl._applySelectedPage);
             await baseControl.__selectedPageChanged(null, 3);
@@ -838,9 +840,14 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyProperty');
             baseControlOptions.keyProperty = 'keyPropertyOptions';
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
             baseControlOptions.source = null;
             baseControl._initKeyProperty(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
+            baseControlOptions.keyProperty = undefined;
+            baseControl._initKeyProperty(baseControlOptions);
+            assert.isFalse(!!baseControl._keyProperty);
         });
     });
 
@@ -995,6 +1002,21 @@ describe('Controls/list_clean/BaseControl', () => {
                 baseControlOptions.filter = 'testFilter';
                 baseControl._beforeUpdate(baseControlOptions);
                 assert.isFalse(loadStarted);
+            });
+
+            it('_beforeUpdate with new source should reset scroll', async () => {
+                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
+
+                const baseControl = new BaseControl(baseControlOptions);
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl.saveOptions(baseControlOptions);
+
+                const newSourceControllerOptions = {...baseControlOptions};
+                newSourceControllerOptions.source = new Memory();
+
+                baseControl._beforeUpdate(newSourceControllerOptions);
+                assert.isFalse(baseControl._resetScrollAfterReload);
             });
 
         });

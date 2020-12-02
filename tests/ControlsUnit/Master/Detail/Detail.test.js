@@ -215,9 +215,23 @@ define(['Controls/masterDetail'], function (masterDetail) {
 
       it('touch resize', () => {
          const control = new masterDetail.Base();
-         let methodData;
-         control._changeOffset = (offset) => {
-            methodData = offset;
+         let isStartDragCalled = false;
+         let isEndDragCalled = false;
+         let moveOffset = 0;
+         let endMoveOffset = 0;
+         control._children = {
+            resizingLine: {
+               startDrag: () => {
+                  isStartDragCalled = true;
+               },
+               drag: (offset) => {
+                  moveOffset = offset;
+               },
+               endDrag: (offset) => {
+                  isEndDragCalled = true;
+                  endMoveOffset = offset;
+               }
+            }
          };
          const getFakeEvent = (pageX, target, currentTarget) => {
             return {
@@ -230,21 +244,18 @@ define(['Controls/masterDetail'], function (masterDetail) {
                }
             };
          };
+         control._needHandleTouch = () => false;
          control._touchstartHandler(getFakeEvent(1, 2, 3));
          control._touchendHandler(getFakeEvent());
-         assert.equal(methodData, undefined);
+         assert.equal(isStartDragCalled, false);
+         assert.equal(isEndDragCalled, false);
 
+         control._needHandleTouch = () => true;
          control._touchstartHandler(getFakeEvent(10, 'body', 'body'));
-         control._touchendHandler(getFakeEvent(10, 'body', 'body'));
-         assert.equal(methodData, undefined);
-
-         control._touchstartHandler(getFakeEvent(10, 'body', 'body'));
-         control._touchendHandler(getFakeEvent(50, 'body', 'body'));
-         assert.equal(methodData, 100);
-
-         control._touchstartHandler(getFakeEvent(10, 'body', 'body'));
-         control._touchendHandler(getFakeEvent(0, 'body', 'body'));
-         assert.equal(methodData, -100);
+         control._touchMoveHandler(getFakeEvent(20, 'body', 'body'));
+         control._touchendHandler(getFakeEvent(31, 'body', 'body'));
+         assert.equal(moveOffset, 10);
+         assert.equal(endMoveOffset, 21);
 
          control.destroy();
       });

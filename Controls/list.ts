@@ -132,10 +132,9 @@ export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
-export {BaseGroupTemplate} from 'Controls/_list/interface/BaseGroupTemplate';
-export {IContentTemplate} from 'Controls/_list/interface/IContentTemplate';
+export {IBaseGroupTemplateOptions} from 'Controls/_list/interface/BaseGroupTemplate';
+export {IContentTemplateOptions} from 'Controls/_list/interface/IContentTemplate';
 export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
-export {IClickableView} from 'Controls/_list/interface/IClickableView';
 
 export {
     AddButton,

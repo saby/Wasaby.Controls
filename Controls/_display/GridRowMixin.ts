@@ -1,28 +1,37 @@
-import CollectionItem, { IOptions as IBaseOptions } from './CollectionItem';
+import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
+import GridHeaderRow from './GridHeaderRow';
 import GridCollection from './GridCollection';
-import GridColumn, { IOptions as IGridColumnOptions } from './GridColumn';
-import { IColumn, TColumns } from 'Controls/grid';
-import GridCheckboxColumn from './GridCheckboxColumn';
-import GridHeader from './GridHeader';
-import { TResultsPosition } from './GridResults';
-import GridStickyLadderColumn from './GridStickyLadderColumn';
-import {INavigationOptionValue} from 'Controls/_interface/INavigation';
+import { TemplateFunction } from 'UI/Base';
+import GridCell, { IOptions as IGridCellOptions } from './GridCell';
+import { TResultsPosition } from './GridResultsRow';
+import GridStickyLadderCell from './GridStickyLadderCell';
+import { create } from 'Types/di';
+import prepareColumns from './utils/GridColspanUtil';
+import GridCheckboxCell from './GridCheckboxCell';
+import GridRow from './GridRow';
+import { IOptions as IBaseOptions } from './CollectionItem';
 
 export interface IOptions<T> extends IBaseOptions<T> {
-    owner: GridCollection<T>;
     columns: TColumns;
 }
 
-export default class GridCollectionItem<T> extends CollectionItem<T> {
+export default abstract class GridRowMixin<T> {
+    readonly '[Controls/_display/GridRowMixin]': boolean;
+    readonly '[Controls/_display/ILadderedCollectionItem]': boolean;
+
+    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
+    // Данная возможность доступна только строке с данными.
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
+
     protected _$owner: GridCollection<T>;
+    protected _cellModule: string;
+
     protected _$columns: TColumns;
-    protected _$columnItems: GridColumn<T>[];
+    protected _$columnItems: Array<GridCell<T, GridRow<T>>>;
     protected _$ladder: {};
 
-    readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
-
-    constructor(options?: IOptions<T>) {
-        super(options);
+    getTemplate(): TemplateFunction|string {
+        return 'Controls/gridNew:ItemTemplate';
     }
 
     getItemClasses(templateHighlightOnHover: boolean = true,
@@ -52,19 +61,23 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
     }
 
-    getColumns(): Array<GridColumn<T>> {
+    getColumns(): Array<GridCell<T, GridRow<T>>> {
         if (!this._$columnItems) {
             this._initializeColumns();
         }
         return this._$columnItems;
     }
 
-    getColumnsCount(): number {
-        return this._$columns.length;
+    getColumnsConfig(): TColumns {
+        return this._$owner.getColumnsConfig();
     }
 
-    getColumnIndex(column: IColumn): number {
-        return this._$columns.indexOf(column);
+    getColumnsCount(): number {
+        return this.getColumns().length;
+    }
+
+    getColumnIndex(column: GridCell<T, GridRow<T>>): number {
+        return this.getColumns().indexOf(column);
     }
 
     getTopPadding(): string {
@@ -99,7 +112,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return this._$owner.getEditingBackgroundStyle();
     }
 
-    getHeader(): GridHeader<T> {
+    getHeader(): GridHeaderRow<T> {
         return this._$owner.getHeader();
     }
 
@@ -114,6 +127,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
         return stickyProperties as string[];
     }
+
     shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
         const stickyLadder = this.getStickyLadder();
         const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
@@ -131,6 +145,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
         return true;
     }
+
     getLadderWrapperClasses(ladderProperty: string, stickyProperty: string): string {
         let ladderWrapperClasses = 'controls-Grid__row-cell__ladder-content';
         const ladder = this.getLadder();
@@ -156,19 +171,11 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: {}) {
+    setLadder(ladder: {}): void {
         if (this._$ladder !== ladder) {
             this._$ladder = ladder;
             this._reinitializeColumns();
         }
-    }
-
-    setMultiSelectVisibility(multiSelectVisibility: string): boolean {
-        const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility)
-        if (isChangedMultiSelectVisibility) {
-            this._reinitializeColumns();
-        }
-        return isChangedMultiSelectVisibility;
     }
 
     setColumns(newColumns: TColumns): void {
@@ -178,34 +185,6 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             this._reinitializeColumns();
         }
     }
-
-    // region overrides
-
-    setMarked(marked: boolean, silent?: boolean): void {
-        const changed = marked !== this.isMarked();
-        super.setMarked(marked, silent);
-        if (changed) {
-            this._redrawColumns('first');
-        }
-    }
-
-    setSelected(selected: boolean|null, silent?: boolean): void {
-        const changed = this._$selected !== selected;
-        super.setSelected(selected, silent);
-        if (changed) {
-            this._redrawColumns('first');
-        }
-    }
-
-    setActive(active: boolean, silent?: boolean): void {
-        const changed = active !== this.isActive();
-        super.setActive(active, silent);
-        if (changed) {
-            this._redrawColumns('all');
-        }
-    }
-
-    // endregion
 
     getLadder(): {} {
         let result;
@@ -236,9 +215,9 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
             const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
-                                                      this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
+                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
             const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
-                                                       this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
+                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
             const factory = this._getColumnsFactory();
 
             this._$columnItems = this._$columns.map((column) => factory({ column }));
@@ -248,7 +227,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
             }
 
             if (stickyLadderStyleForSecondProperty) {
-                this._$columnItems.splice(1,0,new GridStickyLadderColumn({
+                this._$columnItems.splice(1, 0, new GridStickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
                     wrapperStyle: stickyLadderStyleForSecondProperty,
@@ -260,7 +239,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
             if (stickyLadderStyleForFirstProperty) {
                 this._$columnItems = ([
-                    new GridStickyLadderColumn({
+                    new GridStickyLadderCell({
                         column: this._$columns[0],
                         owner: this,
                         wrapperStyle: stickyLadderStyleForFirstProperty,
@@ -268,16 +247,16 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
                         stickyProperty: stickyLadderProperties[0],
                         stickyHeaderZIndex: 2
                     })
-                ] as GridColumn<T>[]).concat(this._$columnItems);
+                ] as Array<GridCell<T, GridRow<T>>>).concat(this._$columnItems);
             }
 
             if (createMultiSelectColumn) {
                 this._$columnItems = ([
-                    new GridCheckboxColumn({
+                    new GridCheckboxCell({
                         column: {} as IColumn,
                         owner: this
                     })
-                ] as GridColumn<T>[]).concat(this._$columnItems);
+                ] as Array<GridCell<T, GridRow<T>>>).concat(this._$columnItems);
             }
         }
     }
@@ -303,18 +282,36 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         }
     }
 
-    protected _getColumnsFactory(): (options: Partial<IGridColumnOptions<T>>) => GridColumn<T> {
+    prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
+        return prepareColumns({
+            columns,
+            hasMultiSelect: this.getMultiSelectVisibility() !== 'hidden',
+            gridColumnsCount: this._$owner.getColumnsConfig().length
+        });
+    }
+
+    protected _getColumnsFactory(): (options: Partial<IGridCellOptions<T>>) => GridCell<T, GridRow<T>> {
+        if (!this._cellModule) {
+            throw new Error('Controls/_display/GridRow:_getColumnsFactory can not resolve cell module!');
+        }
         return (options) => {
             options.owner = this;
-            return new GridColumn(options as IGridColumnOptions<T>);
+            return create(this._cellModule, options as IGridCellOptions<T>);
         };
     }
+
+    abstract getOwner(): GridCollection<T>;
+    abstract getMultiSelectVisibility(): string;
+    abstract isEditing(): boolean;
+    protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
+    protected abstract _nextVersion(): void;
 }
 
-Object.assign(GridCollectionItem.prototype, {
-    '[Controls/_display/GridCollectionItem]': true,
-    _moduleName: 'Controls/display:GridCollectionItem',
-    _instancePrefix: 'grid-item-',
+Object.assign(GridRowMixin.prototype, {
+    '[Controls/_display/GridRowMixin]': true,
+    '[Controls/_display/ILadderedCollectionItem]': true,
+    '[Controls/_display/IEditableCollectionItem]': false,
+    _cellModule: null,
     _$columns: null,
     _$columnItems: null
 });

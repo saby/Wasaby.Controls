@@ -6,12 +6,13 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
+import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import {default as IPropertyGridItem} from './IProperty';
-import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD, PROPERTY_VALUE_FIELD} from './Constants';
+import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD} from './Constants';
 import {groupConstants as constView} from '../list';
-import PropertyGridItem from './PropertyGridItem';
-import { factory } from 'Types/chain';
+import PropertyGridCollection from './PropertyGridCollection';
+import PropertyGridItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {StickyOpener} from 'Controls/popup';
 
@@ -48,8 +49,8 @@ import {StickyOpener} from 'Controls/popup';
 
 export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _template: TemplateFunction = template;
-    protected _listModel: Tree<PropertyGridItem> | Collection<PropertyGridItem>;
-    protected _render: Control = renderTemplate;
+    protected _listModel: PropertyGridCollection<Model>;
+    protected _render: TemplateFunction = renderTemplate;
     protected _collapsedGroups: Record<string, boolean> = {};
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
@@ -61,11 +62,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             editingObject,
             source,
             collapsedGroups,
-            itemActions
+            itemActions,
+            editorColumnOptions,
+            captionColumnOptions
         }: IPropertyGridOptions
     ): void {
         this._collapsedGroups = this._getCollapsedGroups(collapsedGroups);
         this._listModel = this._getCollection(nodeProperty, parentProperty, editingObject, source);
+        if (captionColumnOptions || editorColumnOptions) {
+            this._render = gridRenderTemplate;
+        }
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
@@ -73,7 +79,11 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
             this._listModel.setFilter(this._displayFilter.bind(this));
         }
-        if (newOptions.editingObject !== this._options.editingObject || newOptions.source !== this._options.source) {
+
+        if (newOptions.editingObject !== this._options.editingObject) {
+            this._listModel.setEditingObject(newOptions.editingObject);
+        }
+        if (newOptions.source !== this._options.source) {
             this._listModel = this._getCollection(
                 newOptions.nodeProperty,
                 newOptions.parentProperty,
@@ -88,35 +98,26 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         parentProperty: string,
         editingObject: Record<string, any>,
         source: IPropertyGridItem[] | RecordSet<IPropertyGridItem>
-    ): Tree<PropertyGridItem> | Collection<PropertyGridItem> {
+    ): Tree<Model> | Collection<Model> {
         const propertyGridItems = this._getPropertyGridItems(source, editingObject);
-
-        if (nodeProperty && parentProperty) {
-            return new Tree({
-                collection: propertyGridItems,
-                parentProperty,
-                nodeProperty,
-                keyProperty: PROPERTY_NAME_FIELD,
-                root: null,
-                group: this._groupCallback,
-                filter: this._displayFilter.bind(this)
-            });
-        } else {
-            return new Collection({
-                collection: propertyGridItems,
-                group: this._groupCallback,
-                keyProperty: PROPERTY_NAME_FIELD,
-                filter: this._displayFilter.bind(this)
-            });
-        }
+        return new PropertyGridCollection({
+            collection: propertyGridItems,
+            editingObject: editingObject,
+            parentProperty,
+            nodeProperty,
+            keyProperty: PROPERTY_NAME_FIELD,
+            root: null,
+            group: this._groupCallback,
+            filter: this._displayFilter.bind(this)
+        });
     }
 
-    private _groupCallback(item: PropertyGridItem): string {
+    private _groupCallback(item: Model): string {
         return item.get(PROPERTY_GROUP_FIELD);
     }
 
-    private _displayFilter(itemContents: PropertyGridItem | string): boolean {
-        if (itemContents instanceof PropertyGridItem) {
+    private _displayFilter(itemContents: Model | string): boolean {
+        if (itemContents instanceof Model) {
             const group = itemContents.get(PROPERTY_GROUP_FIELD);
             return !this._collapsedGroups[group];
         }
@@ -133,47 +134,26 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     private _getPropertyGridItems(
         items: IPropertyGridItem[] | RecordSet<IPropertyGridItem>,
         editingObject: Record<string, any> | Model
-    ): RecordSet<PropertyGridItem> {
-        const itemsWithPropertyValue = [];
-
-        items.forEach((item: IPropertyGridItem | Model<IPropertyGridItem>): IPropertyGridItem => {
-            const sourceItem = object.clone(item);
-            const defaultItem = PropertyGridView.getDefaultPropertyGridItem();
-            const nameProperty: string = object.getPropertyValue(sourceItem, 'name');
-            defaultItem.propertyValue = object.getPropertyValue(editingObject, nameProperty);
-
-            factory(sourceItem).each((key: string, value: unknown) => {
-                defaultItem[key] = value;
-            });
-
-            itemsWithPropertyValue.push({
-                ...defaultItem,
-                ...(sourceItem instanceof Model ? {} : sourceItem)
-            });
-        });
-
+    ): RecordSet<Model> {
+        if (items instanceof RecordSet) {
+            return items;
+        }
         return new RecordSet({
-            rawData: itemsWithPropertyValue,
-            keyProperty: PROPERTY_NAME_FIELD,
-            model: PropertyGridItem
+            rawData: items,
+            keyProperty: PROPERTY_NAME_FIELD
         });
     }
 
-    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: PropertyGridItem, value: any): void {
+    protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
         const name = item.get(PROPERTY_NAME_FIELD);
-        const editingObjectClone = this._options.editingObject instanceof Model ?
-           this._options.editingObject : object.clone(this._options.editingObject);
-        const itemClone = item.clone(true);
+        const editingObjectClone = object.clone(this._options.editingObject);
         object.setPropertyValue(editingObjectClone, name, value);
-        itemClone.set(PROPERTY_VALUE_FIELD, value);
-
-        (this._listModel.getCollection().getRecordById(name) as Model).set(PROPERTY_VALUE_FIELD, value);
         this._notify('editingObjectChanged', [editingObjectClone]);
     }
 
     protected _itemClick(
         event: SyntheticEvent<Event>,
-        displayItem: GroupItem<PropertyGridItem> | TreeItem<PropertyGridItem>,
+        displayItem: GroupItem<Model> | IPropertyGridItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         if (displayItem['[Controls/_display/GroupItem]']) {
@@ -186,6 +166,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._listModel.setFilter(this._displayFilter.bind(this));
             }
         }
+    }
+
+    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._listModel.setHoveredItem(item);
     }
 
     protected _mouseEnterHandler(): void {
@@ -282,8 +266,5 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     static getDefaultOptions(): object {
-        return {
-            render: renderTemplate
-        };
     }
 }

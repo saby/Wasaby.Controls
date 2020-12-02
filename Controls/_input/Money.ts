@@ -1,4 +1,4 @@
-import Base = require('Controls/_input/Base');
+import Base from 'Controls/_input/Base';
 import readOnlyFieldTemplate = require('wml!Controls/_input/Money/ReadOnly');
 
 import {descriptor} from 'Types/entity';

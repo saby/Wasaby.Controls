@@ -228,7 +228,8 @@ define([
             },
             isRoot: function() {
                return false;
-            }
+            },
+            isExpanded: () => false
          });
          assert.isFalse(isSourceControllerUsed);
          assert.isFalse(nodeLoadCallbackCalled);
@@ -243,7 +244,8 @@ define([
             },
             isRoot: function() {
                return false;
-            }
+            },
+            isExpanded: () => false
          });
          assert.isTrue(isSourceControllerUsed);
          assert.isTrue(nodeLoadCallbackCalled);
@@ -458,7 +460,8 @@ define([
                },
                isRoot: function() {
                   return false;
-               }
+               },
+               isExpanded: () => false
             };
 
          let

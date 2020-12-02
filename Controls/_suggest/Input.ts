@@ -27,9 +27,9 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
- * 
+ *
  * @public
- * @demo Controls-demo/Input/Suggest/SuggestPG
+ * @demo Controls-demo/Suggest_new/Input/DisplayProperty/DisplayProperty
  * @author Герасимов А.М.
  */
 
@@ -47,9 +47,9 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IText
- * 
+ *
  * @public
- * @demo Controls-demo/Input/Suggest/SuggestPG
+ * @demo Controls-demo/Suggest_new/Input/DisplayProperty/DisplayProperty
  * @author Gerasimov A.M.
  */
 var Suggest = Control.extend({
