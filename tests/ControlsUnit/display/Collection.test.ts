@@ -4328,17 +4328,36 @@ describe('Controls/_display/Collection', () => {
         assert.strictEqual(collection.getSearchValue(), searchValue);
     });
 
-    it('.getItemBySourceKey()', () => {
-        const list = new RecordSet({
-            rawData: items,
-            keyProperty: 'id'
+    describe('.getItemBySourceKey()', () => {
+        it('.getItemBySourceKey() for item', () => {
+            const list = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            const collection = new CollectionDisplay({
+                collection: list,
+                keyProperty: 'id'
+            });
+            const item = collection.getItemBySourceKey(1);
+            assert.strictEqual(item.getContents().getId(), 1);
         });
-        const collection = new CollectionDisplay({
-            collection: list,
-            keyProperty: 'id'
+        it('.getItemBySourceKey() for group', () => {
+            const list = new RecordSet({
+                items: [
+                    {id: 1, group: '#1'},
+                    {id: 2, group: '#2'},
+                    {id: 3, group: '#1'},
+                    {id: 4, group: '#3'}
+                ]
+            });
+            const collection = new CollectionDisplay({
+                collection: list,
+                keyProperty: 'id',
+                group: (item) => item.group
+            });
+            const item = collection.getItemBySourceKey('#1');
+            assert.strictEqual(item.getContents(), '#1');
         });
-        const item = collection.getItemBySourceKey(1);
-        assert.strictEqual(item.getContents().getId(), 1);
     });
 
     it('.getIndexByKey()', () => {
