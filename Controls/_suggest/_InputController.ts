@@ -766,7 +766,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return (await this._getSearchController()).search(value).then((recordSet) => {
             this._loadEnd(recordSet);
 
-            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && this._inputActive) {
+            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
                this._setItems(recordSet);
                if (this._options.dataLoadCallback) {
                   this._options.dataLoadCallback(recordSet);
@@ -787,7 +787,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
-         if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && this._inputActive) {
+         if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
             this._setItems(recordSet);
             if (scopeOptions.dataLoadCallback) {
                scopeOptions.dataLoadCallback(recordSet);
