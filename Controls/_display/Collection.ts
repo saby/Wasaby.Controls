@@ -2511,9 +2511,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     isAllGroupsCollapsed(): boolean {
         const itemsCount = this.getCount();
-        if (!this.getCollapsedGroups()) {
-            return false;
-        }
         for (let idx = 0; idx < itemsCount; idx++) {
             const item = this.at(idx);
             if (!(item['[Controls/_display/GroupItem]']) || item.isExpanded()) {

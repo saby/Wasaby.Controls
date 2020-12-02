@@ -1825,24 +1825,40 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    describe('.isAllGroupsCollpsed()', () => {
+    describe('.isAllGroupsCollapsed()', () => {
         const list = new List({
             items: [
                 { id: 1, group: 1 },
                 { id: 2, group: 2 }
             ]
         });
-        const display = new CollectionDisplay({
-            collection: list,
-            collapsedGroups: [1, 2],
-            groupingKeyCallback: (item) => {
-                return item.group;
-            }
+
+        it('set by options collapsed groups', () => {
+            const display = new CollectionDisplay({
+                collection: list,
+                collapsedGroups: [1, 2],
+                groupingKeyCallback: (item) => {
+                    return item.group;
+                }
+            });
+
+            assert.isTrue(display.isAllGroupsCollapsed());
+            display.setCollapsedGroups([1]);
+            assert.isFalse(display.isAllGroupsCollapsed());
         });
 
-        assert.isTrue(display.isAllGroupsCollapsed());
-        display.setCollapsedGroups([1]);
-        assert.isFalse(display.isAllGroupsCollapsed());
+        it('set collapsed by group item state', () => {
+            const display = new CollectionDisplay({
+                collection: list,
+                groupingKeyCallback: (item) => {
+                    return item.group;
+                }
+            });
+
+            display.each((it) => it instanceof GroupItem ? it.setExpanded(false) : null);
+
+            assert.isTrue(display.isAllGroupsCollapsed());
+        });
     });
 
     describe('.getGroupByIndex()', () => {
