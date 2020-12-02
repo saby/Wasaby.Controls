@@ -236,7 +236,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     _updateState(...args) {
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
-            if (this._wasMouseEnter && this._state.canVerticalScroll && !this._oldState.canVerticalScroll) {
+            if (this._wasMouseEnter && this._scrollModel?.canVerticalScroll && !this._oldScrollState.canVerticalScroll) {
                 this._updateShadowMode();
             }
 
@@ -400,7 +400,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
-        if (this._gridAutoShadows && this._state.canVerticalScroll) {
+        if (this._gridAutoShadows && this._scrollModel?.canVerticalScroll) {
             this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
             this._updateShadows();
