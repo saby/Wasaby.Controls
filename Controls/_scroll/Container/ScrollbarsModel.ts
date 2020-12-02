@@ -82,8 +82,17 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
     }
 
     _updateContainerSizes(): void {
+        let changed: boolean = false;
+        if (this._newState) {
+            for (let scrollbar of Object.keys(this._models)) {
+                changed = this._models[scrollbar].updatePosition(this._newState) || changed;
+            }
+        }
         this._updateScrollState();
         this._updatePlaceholdersSize();
+        if (changed) {
+            this._nextVersion();
+        }
     }
 
     updateScrollState(scrollState: IScrollState, container: HTMLElement): void {
@@ -91,9 +100,7 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         this._container = container;
 
         let changed: boolean = false;
-        for (let scrollbar of Object.keys(this._models)) {
-            changed = this._models[scrollbar].updatePosition(scrollState) || changed;
-        }
+
         const canScroll = scrollState.canVerticalScroll || scrollState.canHorizontalScroll;
         let canScrollChanged: boolean = false;
         if (canScroll !== this._canScroll) {
