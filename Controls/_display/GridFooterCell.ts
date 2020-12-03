@@ -1,65 +1,40 @@
 import { TemplateFunction } from 'UI/Base';
-import { mixin } from 'Types/util';
-import { OptionsToPropertyMixin } from 'Types/entity';
-import GridFooter from './GridFooter';
+import GridFooterRow from './GridFooterRow';
+import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 
-export interface IOptions<T> {
-    owner: GridFooter<T>;
+export interface IOptions<T> extends IGridCellOptions<T> {
+    owner: GridFooterRow<T>;
     template?: TemplateFunction;
-    // ToDo | Временная опция для обеспечения вывода общего шаблона строки результатов.
-    //      | При разработке мультизаговков colspan будет сделан единообразно и для футера.
-    colspan?: boolean;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:FooterContent';
 
-export default class GridFooterCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
-    protected _$owner: GridFooter<T>;
-    protected _$template: TemplateFunction;
-    protected _$colspan: boolean;
+export default class GridFooterCell<T> extends GridCell<T, GridFooterRow<T>> {
 
     constructor(options?: IOptions<T>) {
-        super();
-        OptionsToPropertyMixin.call(this, options);
+        super(options);
     }
 
-    getCellIndex(): number {
-        return this._$owner.getCellIndex(this);
-    }
+    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
+        let wrapperClasses = `controls-Grid__footer-cell`
+                          + ` controls-BaseControl__footer-content_theme-${theme}`
+                          + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
-    isFirstColumn(): boolean {
-        return this.getCellIndex() === 0;
-    }
-
-    isLastColumn(): boolean {
-        return this.getCellIndex() === this._$owner.getCellsCount() - 1;
-    }
-
-    isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
-    }
-
-    getWrapperClasses(theme: string, style: string = 'default'): string {
-        let wrapperClasses = `controls-Grid__footer-cell`;
-        const leftPadding = this._$owner.getLeftPadding();
-        const isMultiSelectColumn = this.isMultiSelectColumn();
-
-        wrapperClasses += ` controls-BaseControl__footer-content_theme-${theme}`;
-
-        if (isMultiSelectColumn) {
+        if (this.isMultiSelectColumn()) {
             wrapperClasses += ` controls-ListView__footer__paddingLeft_withCheckboxes_theme-${theme}`;
         } else {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_${leftPadding}_theme-${theme}`;
+            wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
+        }
+
+        if (this.isLastColumn()) {
+            wrapperClasses += ` controls-GridView__footer__cell__paddingRight_${this._$owner.getRightPadding()}_theme-${theme}`
         }
 
         return wrapperClasses;
     }
 
     getWrapperStyles(): string {
-        if (this._$colspan) {
-            return `grid-column: 1 / ${this._$owner.getColumnsCount() + 1}`;
-        }
-        return '';
+        return super.getWrapperStyles();
     }
 
     getContentClasses(theme: string): string {
@@ -67,18 +42,11 @@ export default class GridFooterCell<T> extends mixin<OptionsToPropertyMixin>(Opt
     }
 
     getTemplate(): TemplateFunction|string {
-        return this._$template || DEFAULT_CELL_TEMPLATE;
-    }
-
-    getTemplateOptions(): {} {
-        return {};
+        return this._$column.template || DEFAULT_CELL_TEMPLATE;
     }
 }
 
 Object.assign(GridFooterCell.prototype, {
     _moduleName: 'Controls/display:GridFooterCell',
-    _instancePrefix: 'grid-footer-cell-',
-    _$owner: null,
-    _$template: null,
-    _$colspan: null,
+    _instancePrefix: 'grid-footer-cell-'
 });

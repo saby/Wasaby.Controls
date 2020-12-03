@@ -764,7 +764,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             serviceDataLoadCallback: function(currentItems, loadedItems) {
-               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
                setIterativeMetaData(loadedItems);
             },
             source: source,
@@ -785,7 +785,6 @@ define([
                }
             }
          };
-
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
@@ -2019,14 +2018,15 @@ define([
                   view: 'infinity',
                   source: 'page',
                   viewConfig: {
-                     pagingMode: 'direct'
+                     pagingMode: 'direct',
+                     showEndButton: true
                   },
                   sourceConfig: {
                      pageSize: 3,
                      page: 0,
                      hasMore: false
                   }
-               },
+               }
             };
             var ctrl = new lists.BaseControl(cfg);
             ctrl.saveOptions(cfg);
@@ -2035,6 +2035,7 @@ define([
             ctrl._viewSize = 1000;
             ctrl._viewportSize = 400;
             ctrl._container = {
+               clientHeight: 1000,
                getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
                getBoundingClientRect: function() { return {}; }
             };
@@ -2064,8 +2065,8 @@ define([
             lists.BaseControl._private.handleListScrollSync(ctrl, 200);
             assert.deepEqual({
                     begin: "visible",
-                    end: "readonly",
-                    next: "readonly",
+                    end: "visible",
+                    next: "visible",
                     prev: "visible"
             }, ctrl._pagingCfg.arrowState, 'Wrong state of paging arrows after scroll');
 
@@ -3511,14 +3512,6 @@ define([
             afterEach(() => {
                sandbox.restore();
             });
-            it('scrollToItem called on beginAdd if adding item is out of range', async () => {
-               await ctrl._beforeMount(cfg);
-               ctrl._isMounted = true;
-               ctrl._listViewModel._startIndex = 2;
-               await ctrl.beginAdd({}).then(() => {
-                  assert.isTrue(scrollToItemCalled);
-               });
-            });
             it('scrollToItem not called on beginAdd if adding item is in range', async () => {
                await ctrl._beforeMount(cfg);
                ctrl._isMounted = true;
@@ -3973,12 +3966,12 @@ define([
             assert.equal(args[1], 2);
          };
 
-         Env.compatibility.touch = 1;
+         self._context = { isTouch: { isTouch: true } };
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isFalse(notifyCalled, 'On touch device can\'t drag');
 
-         Env.compatibility.touch = 0;
+         self._context.isTouch.isTouch = false;
 
          lists.BaseControl._private.startDragNDrop(self, domEvent, itemData);
          assert.isTrue(notifyCalled);
@@ -6929,6 +6922,7 @@ define([
                      }
                   },
                   viewModelConstructor: lists.ListViewModel,
+                  keyProperty: 'id'
                };
                await bc._beforeUpdate(cfg);
                assert.deepEqual(bc._loadTriggerVisibility, {
@@ -8056,6 +8050,26 @@ define([
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
+
+            it('hide marker and show it with marked key in options', () => {
+               let newCfg = {
+                  ...cfg,
+                  markerVisibility: 'hidden',
+                  markedKey: 2
+               };
+               baseControl.saveOptions(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               newCfg = {
+                  ...cfg,
+                  markerVisibility: 'visible',
+                  markedKey: 2
+               };
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });

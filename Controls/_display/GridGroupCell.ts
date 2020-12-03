@@ -1,7 +1,8 @@
-import GridColumn from './GridColumn';
+import GridCell from './GridCell';
 import {OptionsToPropertyMixin} from 'Types/entity';
 import GridGroupItem from './GridGroupItem';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
+import isFullGridSupport from './utils/GridSupportUtil';
 
 export interface IOptions<T> {
     owner: GridGroupItem<T>;
@@ -9,7 +10,7 @@ export interface IOptions<T> {
     columns: IColumn[];
 }
 
-export default class GridGroupCell<T> extends GridColumn<T> {
+export default class GridGroupCell<T> extends GridCell<T> {
     protected _$columns: IColumn[];
 
     constructor(options?: IOptions<T>) {
@@ -22,7 +23,7 @@ export default class GridGroupCell<T> extends GridColumn<T> {
     }
 
     getWrapperStyles(): string {
-       return 'display: contents; ';
+       return isFullGridSupport() ? 'display: contents; ' : '';
     }
 
     getContentClasses(): string {
@@ -79,6 +80,12 @@ export default class GridGroupCell<T> extends GridColumn<T> {
 
     isExpanded(): boolean {
         return this._$owner.isExpanded();
+    }
+
+    getColspan(): number {
+        const columnsCount = this._$columns.length;
+        const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        return +hasMultiselect + columnsCount;
     }
 }
 

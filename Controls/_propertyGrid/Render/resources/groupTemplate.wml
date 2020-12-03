@@ -1,6 +1,8 @@
 <ws:if data="{{!collectionItem.isHiddenGroup()}}">
     <div attr:class="controls-PropertyGrid__group
-                 controls-PropertyGrid__group_theme-{{theme}}" attr:key="group-{{item}}">
+                {{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover_theme-' + theme}}
+                controls-PropertyGrid__group_theme-{{theme}}" attr:key="group-{{item}}"
+         style="{{isGridLayout ? getItemStyles(collectionItem, 2, true)}}">
         <div class="controls-PropertyGrid__group-content_theme-{{theme}}">
             <ws:if data="{{!!contentTemplate}}">
                 <ws:partial template="{{contentTemplate}}"

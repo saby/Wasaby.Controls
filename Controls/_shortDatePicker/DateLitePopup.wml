@@ -8,7 +8,7 @@
               title="{[Текущий период]}"
               on:click="_onHeaderClick()">{{_caption}}
          </div>
-         <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
+         <div class="controls-PeriodLiteDialog__close controls-PeriodLiteDialog__close_theme-{{_options.theme}}
                      controls-icon controls-icon_size-m_theme-{{_options.theme}}
                      controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}" title="{[Закрыть]}"
               on:click="_onHeaderClick()">
@@ -61,7 +61,7 @@
                  _isFullPicker="{{_isFullPicker}}"
          />
       </div>
-      <div on:click="_expandPopup()" class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}}
+      <div on:click="_expandPopup()" class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}} controls-PeriodLiteDialog__{{_isExpandedPopup ? 'collapseButton' : 'expandButton'}}
                                             controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
          <ws:if data="{{_isExpandButtonVisible && _options.stickyPosition }}">
             <div class="controls-PeriodLiteDialog__footer-points_wrapper  controls-PeriodLiteDialog__footer-points_wrapper_theme-{{_options.theme}}"
@@ -93,7 +93,7 @@
             </svg>
          </div>
       </div>
-      <div class="controls-PeriodLiteDialog__close_theme-{{_options.theme}}
+      <div class="controls-PeriodLiteDialog__close controls-PeriodLiteDialog__close_theme-{{_options.theme}}
                      controls-icon controls-icon_size-m_theme-{{_options.theme}}
                      controls-PeriodLiteDialog__close_position-{{_closeBtnPosition}}_theme-{{_options.theme}}" title="{[Закрыть]}"
            on:click="_onHeaderClick()">

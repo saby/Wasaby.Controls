@@ -6,7 +6,7 @@ import {descriptor} from 'Types/entity';
 import {delay as runDelayed} from 'Types/function';
 
 import {IAreaOptions} from 'Controls/_input/interface/IArea';
-import * as Text from 'Controls/_input/Text';
+import Text from 'Controls/_input/Text';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
 import template = require('wml!Controls/_input/Area/Area');
@@ -30,7 +30,7 @@ import 'Controls/decorator';
  * @mixes Controls/input:INewLineKey
  * @mixes Controls/_input/interface/IAreaOptions
  * @public
- * 
+ *
  * @demo Controls-demo/Input/Area/MinMaxLines/Index
  *
  * @author Красильников А.С.
@@ -86,7 +86,8 @@ export default class Area extends Text<IAreaOptions> {
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        processKeydownEvent(event);
+        const additionalProcessedKeys = ['Up', 'Down'];
+        processKeydownEvent(event, additionalProcessedKeys);
         this._newLineHandler(event, true);
     }
 

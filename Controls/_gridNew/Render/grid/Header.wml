@@ -1,6 +1,6 @@
 <Controls.scroll:Group>
     <div class="{{ header.getBodyClasses(theme) }}">
-        <ws:for data="cell in header.getCells()">
+        <ws:for data="cell in header.getColumns()">
             <Controls.scroll:StickyHeader
                     backgroundStyle="{{ backgroundStyle }}"
                     mode="stackable"

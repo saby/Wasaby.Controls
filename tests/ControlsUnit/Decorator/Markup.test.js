@@ -80,6 +80,7 @@ define([
          'www.ya.ru'
       ],
       decoratedLinkService,
+      decoratedLinkHost,
       currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
@@ -199,10 +200,13 @@ define([
          });
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
             while (errorArray.length) {
                errorFunction.apply(ILogger, errorArray.shift());
             }
@@ -223,8 +227,8 @@ define([
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><&#39;&#'];
             var vdomTemplate = template({ _options: { 'value': json } }, {}, undefined, true);
             equalsHtml(decorator.Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;&amp;#39;&amp;#</p></div>');
-            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><&amp;#39;&amp;#');
-            assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
+            assert.equal(vdomTemplate[0].children[0].children[0].children, '&gt;&lt;><&#39;&#');
+            assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&lt;<>');
          });
          it('without escape', () => {
             const json = ['p', {style: 'background: url("source.com/param1=1&param2=2");'}];
@@ -1112,11 +1116,14 @@ define([
       describe('needDecorate', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
             linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
          });
          it('not a link', function() {
             var parentNode = ['p', ['b',
@@ -1657,11 +1664,14 @@ define([
       describe('decorateLink', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
             linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
          });
          it('decorate a good link', function() {
             assert.deepEqual(linkDecorateUtils.getDecoratedLink(linkNode), ['span',

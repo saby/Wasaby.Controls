@@ -138,13 +138,13 @@ export class Controller {
       // Если свернули узел внутри которого есть маркер, то маркер нужно поставить на узел
       // TODO нужно только для дерева, можно подумать над наследованием
       if (removedItems[0] instanceof TreeItem && this._markedKey !== undefined && this._markedKey !== null) {
-         const removeMarkedItem = !!removedItems.find((it) => it.getContents().getKey() === this._markedKey);
+         const removeMarkedItem = !!removedItems.find((it) => it.MarkableItem && it.getContents().getKey() === this._markedKey);
          if (removeMarkedItem) {
             const parent = removedItems[0].getParent();
             // На корневой узел ставить маркер нет смысла, т.к. в этом случае должно отработать именно удаление элементов, а не скрытие
-            if (parent && parent !== this._model.getRoot()) {
+            if (parent && parent !== this._model.getRoot() && parent.MarkableItem) {
                const parentItem = parent.getContents();
-               if (parentItem) {
+               if (parentItem ) {
                   markedKeyAfterRemove = parentItem.getKey();
                }
             }
@@ -224,7 +224,7 @@ export class Controller {
       }
 
       // Для GroupItem нет ключа, в contents хранится не Model
-      if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+      if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]'] || item['[Controls/display:TreeGridNodeFooterRow]']) {
          return null;
       }
 

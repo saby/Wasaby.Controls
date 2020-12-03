@@ -166,7 +166,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                 if (newOptions.dataLoadCallback instanceof Function) {
                    newOptions.dataLoadCallback(reloadResult);
                 }
-                this._items = this._sourceController.setItems(reloadResult);
+                this._items = this._sourceController.getItems();
 
                 const controllerState = this._sourceController.getState();
                 this._updateContext(controllerState);

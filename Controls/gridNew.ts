@@ -1,6 +1,11 @@
+import { isFullGridSupport } from 'Controls/display';
 import { default as View } from 'Controls/_gridNew/Grid';
+import GridView from 'Controls/_gridNew/GridView';
 
-import * as ItemTemplate from 'wml!Controls/_gridNew/Render/grid/Item';
+import * as GridItemTemplate from 'wml!Controls/_gridNew/Render/grid/Item';
+import * as TableItemTemplate from 'wml!Controls/_gridNew/Render/table/Item';
+const ItemTemplate = isFullGridSupport() ? GridItemTemplate : TableItemTemplate;
+
 import * as ColumnTemplate from 'wml!Controls/_gridNew/Render/grid/Column';
 import * as StickyLadderColumnTemplate from 'wml!Controls/_gridNew/Render/grid/StickyLadderColumn';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -13,6 +18,7 @@ import * as EmptyTemplate from 'wml!Controls/_gridNew/Render/EmptyTemplate';
 
 export {
     View,
+    GridView,
     ItemTemplate,
     ResultsTemplate,
     ResultColumnTemplate,

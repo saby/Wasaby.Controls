@@ -216,6 +216,7 @@ function normalizeHandlers<T>(handlers: T | T[]): T[] {
  * @param newItemsIndex Индекс, в котором появились новые элементы.
  * @param oldItems Удаленные элементы коллекции.
  * @param oldItemsIndex Индекс, в котором удалены элементы.
+ * @param reason Причина перерисовки, в качестве причины передаётся название метода, которым был изменён RecordSet.
  */
 function onCollectionChange<T>(
     event: EventObject,
@@ -223,7 +224,8 @@ function onCollectionChange<T>(
     newItems: T[],
     newItemsIndex: number,
     oldItems: T[],
-    oldItemsIndex: number
+    oldItemsIndex: number,
+    reason: string
 ): void {
     let session;
 
@@ -244,7 +246,7 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
-            this._reBuild(this._$compatibleReset || newItems.length === 0 || !this.isEditing());
+            this._reBuild(this._$compatibleReset || newItems.length === 0 || reason === 'assign');
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -2265,20 +2267,20 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
         if (strategy) {
+            const avatarItem = strategy.avatarItem;
             const avatarIndex = this.getIndex(strategy.avatarItem as T);
+            const avatarKey = avatarItem.getContents().getKey();
 
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
 
-            this._notifyBeforeCollectionChange();
-            this._notifyCollectionChange(
-               IObservable.ACTION_REMOVE,
-               [],
-               0,
-               [strategy.avatarItem],
-               avatarIndex
-            );
-            this._notifyAfterCollectionChange();
+            // Событие remove нужно слать, только когда мы закончили перетаскивание в другом списке,
+            // т.к. только в этом случае мы отправим событие add на начало перетаскивания
+            if (!this.getCollection().getRecordById(avatarKey)) {
+                this._notifyBeforeCollectionChange();
+                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [strategy.avatarItem], avatarIndex);
+                this._notifyAfterCollectionChange();
+            }
         }
     }
 
@@ -2445,12 +2447,18 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
+                if (!record) {   
 
-                // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
-                // Такой записи еще нет в наборе данных.
-                if (!record && this._$isEditing) {
-                    return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
-                } else {
+                    // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
+                    // Такой записи еще нет в наборе данных.
+                    if (this._$isEditing) {
+                        return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
+                    } 
+
+                    // Или требуется найти группу
+                    return this.find((item) => item['[Controls/_display/GroupItem]'] && item.key === key);
+                }
+                else {
                     return this.getItemBySourceItem(record as unknown as S);
                 }
             } else {
@@ -2515,9 +2523,6 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     isAllGroupsCollapsed(): boolean {
         const itemsCount = this.getCount();
-        if (!this.getCollapsedGroups()) {
-            return false;
-        }
         for (let idx = 0; idx < itemsCount; idx++) {
             const item = this.at(idx);
             if (!(item['[Controls/_display/GroupItem]']) || item.isExpanded()) {
@@ -3004,10 +3009,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
             }
         }
         if (items.length > 0 && !silent) {
+            items.properties = 'selected';
             const index = this.getIndex(items[0]);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
-                IObservable.ACTION_REPLACE,
+                IObservable.ACTION_CHANGE,
                 items,
                 index,
                 items,

@@ -14,7 +14,7 @@ export default interface IFilterChanged extends IFilter {
 
 /**
  * @event Происходит при изменении фильтра.
- * @name Controls/_interface/IFilter#filterChanged
+ * @name Controls/_interface/IFilterChanged#filterChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Object} filter Изменённый фильтр.
  * @remark

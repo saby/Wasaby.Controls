@@ -4,9 +4,10 @@ define(
       'Env/Env',
       'ControlsUnit/resources/TemplateUtil',
       'Controls/_scroll/StickyHeader/Utils',
-      'Controls/_scroll/StickyHeader'
+      'Controls/_scroll/StickyHeader',
+      'UI/Base'
    ],
-   function(scroll, Env, TemplateUtil, StickyHeaderUtils, _StickyHeaderLib) {
+   function(scroll, Env, TemplateUtil, StickyHeaderUtils, _StickyHeaderLib, UIBase) {
 
       'use strict';
 
@@ -21,20 +22,19 @@ define(
          });
 
          beforeEach(function() {
-            inst = {
-               _stickyHeadersHeight: {
-                  top: 0,
-                  bottom: 0
-               },
-               _context: {
-                  stickyHeader: new scroll._stickyHeaderContext({shadowPosition: ''})
-               },
-               _options: {
-                  fixedZIndex: 2,
-                  position: 'top'
-               },
-               _model: {}
+            inst = new UIBase.Control();
+            inst._stickyHeadersHeight = {
+               top: 0,
+               bottom: 0
             };
+            inst._context = {
+               stickyHeader: new scroll._stickyHeaderContext({shadowPosition: ''})
+            };
+            inst._options = {
+               fixedZIndex: 2,
+               position: 'top'
+            };
+            inst._model = {};
          });
 
          after(function() {

@@ -230,6 +230,26 @@ describe('Controls/dataSource:SourceController', () => {
             ok(loadedItems.getCount() === 4);
             sinonSandbox.restore();
         });
+
+        it('load call with direction update items',  async () => {
+            const controller = getController({
+                navigation: {
+                    source: 'page',
+                    sourceConfig: {
+                        pageSize: 2,
+                        hasMore: false
+                    }
+                }
+            });
+
+            await controller.load();
+            ok(controller.getItems().getCount() === 2);
+            ok(controller.getItems().at(0).get('title') === 'Sasha');
+
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 4);
+            ok(controller.getItems().at(2).get('title') === 'Aleksey');
+        });
     });
 
     describe('updateOptions', () => {
@@ -287,6 +307,20 @@ describe('Controls/dataSource:SourceController', () => {
             isNavigationParamsChangedCallbackCalled = false;
             await controller.reload();
             ok(isNavigationParamsChangedCallbackCalled);
+        });
+    });
+
+    describe('reload', () => {
+        it('reload should recreate navigation controller',  async () => {
+            const controller = getController({
+                navigation: getPagingNavigation(false)
+            });
+            const items = await controller.reload();
+            controller.setItems(items as RecordSet);
+
+            const controllerDestroyStub = stub(controller._navigationController, 'destroy');
+            await controller.reload();
+            ok(controllerDestroyStub.calledOnce);
         });
     });
 

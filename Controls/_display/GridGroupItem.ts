@@ -1,9 +1,9 @@
 import { TemplateFunction } from 'UI/Base';
 import {mixin} from 'Types/util';
-import GridCollectionItem from './GridCollectionItem';
+import GridRow from './GridRow';
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
 import {IOptions as ICollectionItemOptions} from './CollectionItem';
-import GridColumn from './GridColumn';
+import GridCell from './GridCell';
 import GridCollection from './GridCollection';
 import GridGroupCell from './GridGroupCell';
 import * as GridLadderUtil from './utils/GridLadderUtil';
@@ -15,10 +15,10 @@ interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions
 }
 
 export default class GridGroupItem<T> extends mixin<
-    GridCollectionItem<any>,
+    GridRow<any>,
     ExpandableMixin
     >(
-    GridCollectionItem,
+    GridRow,
     ExpandableMixin
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -28,11 +28,11 @@ export default class GridGroupItem<T> extends mixin<
     readonly SelectableItem: boolean = false;
     readonly '[Controls/_display/GridGroupItem]': true;
 
-    protected _$columnItems: Array<GridColumn<T>>;
+    protected _$columnItems: Array<GridCell<T>>;
     protected _groupTemplate: TemplateFunction|string;
 
     constructor(options?: IOptions<T>) {
-        super({...options, columns: options.owner.getColumns()});
+        super({...options, columns: options.owner.getColumnsConfig()});
         ExpandableMixin.call(this);
     }
 

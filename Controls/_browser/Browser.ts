@@ -46,6 +46,7 @@ export interface IBrowserOptions extends IControlOptions, ISearchOptions, ISourc
     useStore?: boolean;
     dataLoadCallback?: Function;
     dataLoadErrback?: Function;
+    itemsReadyCallback?: Function;
     viewMode: TViewMode;
     root?: Key;
 }
@@ -62,6 +63,20 @@ interface IDataChildContext {
 type IFilterControllerOptions = Pick<IBrowserOptions,
    'filter' | 'minSearchLength' | 'filterButtonSource' | 'parentProperty' | 'searchParam' | 'searchValue'>;
 
+/**
+ * Контрол "Браузер" обеспечивает связь между списком (см. {@link Controls/list:View Плоский список}, {@link Controls/grid:View Таблица}, {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) и контролами его окружения, таких как {@link Controls/search:Input Строка поиска}, {@link Controls/breadcrumbs:Path Хлебные крошки}, {@link Controls/operations:Panel Панель действий} и {@link Controls/filter:View Объединенный фильтр}.
+ * @class Controls/browser:Browser
+ * @author Герасимов А.М.
+ * @mixes Controls/_browser/interface/IBrowser
+ * @mixes Controls/_filter/IPrefetch
+ * @mixes Controls/_interface/IFilter
+ * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/_interface/INavigation
+ * @mixes Controls/_interface/IHierarchy
+ * @mixes Controls/_interface/ISource
+ * @mixes Controls/_interface/ISearch
+ * @mixes Controls/interface/IHierarchySearch
+ */   
 export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
@@ -234,13 +249,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._loading = true;
             methodResult = sourceController.reload()
                .then((items) => {
-                   // для того чтобы мог посчитаться новый prefetch Source внутри
-                   if (items instanceof RecordSet) {
-                       if (newOptions.dataLoadCallback instanceof Function) {
-                           newOptions.dataLoadCallback(items);
-                       }
-                       this._items = sourceController.setItems(items);
+                   if (newOptions.dataLoadCallback instanceof Function) {
+                       newOptions.dataLoadCallback(items);
                    }
+                   this._items = sourceController.getItems();
 
                    this._afterSourceLoad(sourceController, newOptions);
 
@@ -256,7 +268,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (this._searchController) {
+        if (newOptions.searchValue !== undefined) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
@@ -272,9 +284,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
             if (updateResult instanceof Promise) {
                 this._loading = true;
-                updateResult.then((result) => {
-                    this._searchDataLoad(result, newOptions.searchValue);
-                });
+                updateResult
+                    .then((result) => {
+                        this._searchDataLoad(result, newOptions.searchValue);
+                    })
+                    .catch((error) => error);
             }
         });
     }
@@ -378,6 +392,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._items = sourceController.setItems(items);
             this._dataOptionsContext.items = this._items;
             this._dataOptionsContext.updateConsumers();
+        }
+        if (this._options.itemsReadyCallback) {
+            this._options.itemsReadyCallback(items);
         }
     }
 
@@ -642,6 +659,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _afterSearch(recordSet: RecordSet, value: string): void {
         this._updateParams(value);
+        this._afterSourceLoad(this._sourceController, this._options);
 
         if (this._options.dataLoadCallback instanceof Function) {
             this._options.dataLoadCallback(recordSet);

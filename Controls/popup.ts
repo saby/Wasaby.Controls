@@ -95,7 +95,7 @@ export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
 export {IBasePopupOptions} from './_popup/interface/IBaseOpener';
 export {IStackPopupOptions} from './_popup/interface/IStack';
-export {IStickyPopupOptions, IStickyPosition, IStickyPositionOffset} from './_popup/interface/ISticky';
+export {IStickyPopupOptions, IStickyPosition, IStickyPositionOffset, IStickyOpener} from './_popup/interface/ISticky';
 export {IDialogPopupOptions} from './_popup/interface/IDialog';
 export {IConfirmationOptions} from './_popup/interface/IConfirmation';
 export {INotificationPopupOptions} from './_popup/interface/INotification';
