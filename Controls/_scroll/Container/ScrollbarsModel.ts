@@ -62,10 +62,6 @@ export default class ScrollbarsModel extends mixin<VersionableMixin>(Versionable
         if (options.scrollbarVisible && scrollMode.indexOf('horizontal') !== -1) {
             this._models.horizontal = new ScrollbarModel(SCROLL_DIRECTION.HORIZONTAL, options);
         }
-
-        // Размеры обновляются асинхронно по разным событиям.
-        // Рассчитываем состояние скролбара с дебоунсом что бы не было скачков.
-        this._updateContainerSizes = debounce(this._updateContainerSizes.bind(this), UPDATE_CONTAINER_SIZES_DELAY);
     }
 
     serializeState(): ISerializeState {
