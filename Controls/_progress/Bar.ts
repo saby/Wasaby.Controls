@@ -12,6 +12,7 @@ export interface IBarOptions extends IControlOptions {
  * 
  * @remark
  * Полезные ссылки:
+ * * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fBar%2fIndex">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less">переменные тем оформления</a>
  * 
  * @class Controls/_progress/Bar
@@ -20,7 +21,7 @@ export interface IBarOptions extends IControlOptions {
  *
  * @public
  *
- * @demo Controls-demo/progress/Bar/Index
+ * @demo Controls-demo/progress/Bar/Base/Index
  *
  */
 
@@ -37,7 +38,6 @@ export interface IBarOptions extends IControlOptions {
  */
 
 class Bar extends Control<IBarOptions> {
-   // TODO https://online.sbis.ru/opendoc.html?guid=0e449eff-bd1e-4b59-8a48-5038e45cab22
    protected _template: TemplateFunction = barTemplate;
    protected _width: string = '0px';
 
