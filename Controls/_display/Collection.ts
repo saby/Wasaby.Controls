@@ -216,6 +216,7 @@ function normalizeHandlers<T>(handlers: T | T[]): T[] {
  * @param newItemsIndex Индекс, в котором появились новые элементы.
  * @param oldItems Удаленные элементы коллекции.
  * @param oldItemsIndex Индекс, в котором удалены элементы.
+ * @param reason Причина перерисовки, в качестве причины передаётся название метода, которым был изменён RecordSet.
  */
 function onCollectionChange<T>(
     event: EventObject,
@@ -223,7 +224,8 @@ function onCollectionChange<T>(
     newItems: T[],
     newItemsIndex: number,
     oldItems: T[],
-    oldItemsIndex: number
+    oldItemsIndex: number,
+    reason: string
 ): void {
     let session;
 
@@ -244,7 +246,7 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
-            this._reBuild(this._$compatibleReset || newItems.length === 0 || !this.isEditing());
+            this._reBuild(this._$compatibleReset || newItems.length === 0 || reason === 'assign');
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
