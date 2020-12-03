@@ -458,33 +458,6 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             assert.equal(groups[0].getContents(), 'foo');
         });
 
-        it('items without group in start', () => {
-            const items = [
-                new CollectionItem({ contents: {key: 'one', group: '1'} }),
-                new CollectionItem({ contents: {key: 'two', group: '1'} }),
-                new CollectionItem({ contents: {key: 'three', group: 'CONTROLS_HIDDEN_GROUP'} })
-            ];
-            const groups = [];
-            const options: any = {
-                display: {
-                    getMultiSelectVisibility() {
-                        return 'hidden';
-                    }
-                },
-                groups,
-                groupConstructor: GroupItem,
-                handler: (it) => it.group
-            };
-            const expected = [1, 4, 0, 2, 3];
-            const given = Group.sortItems(items, options);
-
-            assert.deepEqual(given, expected);
-
-            assert.equal(groups.length, 2);
-            assert.equal(groups[0].getContents(), '1');
-            assert.equal(groups[1].getContents(), 'CONTROLS_HIDDEN_GROUP');
-        });
-
         it('should create several groups', () => {
             const items = [
                 new CollectionItem({contents: 'one'}),
@@ -519,7 +492,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             it('hidden group is first in items', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
-                        contents: { 
+                        contents: {
                             group: group || groupConstants.hiddenGroup,
                             id
                         },
@@ -546,19 +519,19 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const expected = [0, 2, 3, 1, 4, 5];
                 const expectedGroups = [groupConstants.hiddenGroup, 'one'];
                 const given = Group.sortItems(items, options);
-    
+
                 assert.deepEqual(given, expected);
-    
+
                 assert.equal(groups.length, 2);
                 groups.forEach((group, index) => {
                     assert.equal(group.getContents(), expectedGroups[index]);
                 });
-            });    
-            
+            });
+
             it('hidden group is not first in items', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
-                        contents: { 
+                        contents: {
                             group: group || groupConstants.hiddenGroup,
                             id
                         },
@@ -585,14 +558,14 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const expected = [1, 3, 4, 0, 2, 5];
                 const expectedGroups = ['one', groupConstants.hiddenGroup];
                 const given = Group.sortItems(items, options);
-    
+
                 assert.deepEqual(given, expected);
-    
+
                 assert.equal(groups.length, 2);
                 groups.forEach((group, index) => {
                     assert.equal(group.getContents(), expectedGroups[index]);
                 });
-            });    
+            });
         });
 
         it('should use old groups', () => {
