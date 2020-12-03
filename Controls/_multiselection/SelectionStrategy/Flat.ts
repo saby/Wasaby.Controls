@@ -108,7 +108,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
          }
 
          const itemId = this._getKey(item);
-         const selected = (!limit || selectedItemsCount < resLimit)
+         const selected = (!limit || selectedItemsCount < limit)
              && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
          if (selected) {
