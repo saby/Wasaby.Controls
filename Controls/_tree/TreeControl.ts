@@ -916,6 +916,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         return result;
+    },
+    getNextItem(key: CrudEntityKey): Model {
+        const display = this._children.baseControl.getViewModel().getDisplay();
+        const curIndex = display.getIndexByKey(key);
+        const nextItem = display.at(curIndex + 1);
+        return nextItem ? nextItem.getContents() : null;
+    },
+    getPrevItem(key: CrudEntityKey): Model {
+        const display = this._children.baseControl.getViewModel().getDisplay();
+        const curIndex = display.getIndexByKey(key);
+        const prevItem = display.at(curIndex - 1);
+        return prevItem ? prevItem.getContents() : null;
     }
 });
 TreeControl._theme = ['Controls/treeGrid'];
