@@ -4,7 +4,7 @@ import { TreeItem } from 'Controls/display';
 import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFooterCell';
 
 export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
-    readonly MarkableItem: boolean = false;
+    readonly Markable: boolean = false;
 
     readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
 

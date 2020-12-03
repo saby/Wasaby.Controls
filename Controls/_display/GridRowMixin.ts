@@ -63,6 +63,10 @@ export default abstract class GridRowMixin<T> {
         return (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
     }
 
+    isFullGridSupport(): boolean {
+        return this._$owner.isFullGridSupport();
+    }
+
     getColumns(): Array<GridCell<T, GridRow<T>>> {
         if (!this._$columnItems) {
             this._initializeColumns();

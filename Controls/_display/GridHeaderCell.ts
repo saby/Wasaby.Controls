@@ -40,7 +40,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
                           + ` controls-Grid__header-cell_theme-${theme}`
                           + ` ${this._getWrapperPaddingClasses(theme)}`;
 
-        const isMultiHeader = this._$owner.hasRowspan();
+        const isMultiHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
 
         if (isMultiHeader) {
@@ -82,9 +82,17 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
     }
 
     getColspanStyles(): string {
-        const superStyles = super.getColspanStyles();
-        const {startRow, endRow} = this.column;
-        return `${superStyles} grid-row: ${startRow} / ${endRow};`;
+        if (!this._$owner.isFullGridSupport()) {
+            return '';
+        }
+        let styles = super.getColspanStyles();
+
+        if (this._$owner.isMultiline()) {
+            const {startRow = 1, endRow = 2} = this._$column;
+            styles += ` grid-row: ${startRow} / ${endRow};`;
+        }
+
+        return styles;
     }
 
     getTemplate(): TemplateFunction|string {

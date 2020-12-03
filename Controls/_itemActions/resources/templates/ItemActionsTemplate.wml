@@ -26,7 +26,7 @@
                     <ws:partial template="{{content.resolvedTemplate}}"
                                 attr:class="controls-itemActionsV__wrapper-isEditing_theme-{{theme}}"
                                 on:applyButtonClick="_commitEditActionHandler(itemData.dispItem || itemData)"
-                                on:closeButtonClick="_cancelEditActionHandler(itemData.dispItem || itemDataist/Render/For.wml )"/>
+                                on:closeButtonClick="_cancelEditActionHandler(itemData.dispItem || itemData)"/>
                 </Controls.Container.Async>
             </ws:if>
         </div>

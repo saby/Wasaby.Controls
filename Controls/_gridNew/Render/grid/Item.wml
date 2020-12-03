@@ -1,5 +1,5 @@
 <ws:template name="COLUMN">
-      <div if="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayMarker(marker) }}"
+      <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
            class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition) }}"></div>
       <div class="{{ gridColumn.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
            style="{{ gridColumn.getContentStyles() }}">
@@ -15,7 +15,7 @@
                      templateHighlightOnHover="{{ templateHighlightOnHover }}">
             <ws:ladderWrapper>
                <ws:partial template="{{ladderWrapper.content}}"
-                           if="{{ gridColumn['[Controls/_display/GridDataCell]'] && (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
+                           if="{{ gridColumn.LadderContentCell && (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
                            attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
             </ws:ladderWrapper>
             <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
@@ -23,7 +23,7 @@
                                 checkboxReadOnly="{{ checkboxReadOnly }}"/>
          </ws:partial>
 
-         <div if="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayTag(tagStyle) }}"
+         <div if="{{ gridColumn.TagCell && gridColumn.shouldDisplayTag(tagStyle) }}"
               class="{{ gridColumn.getTagClasses(theme) }}">
             <ws:partial template="{{ tagTemplate }}"
                         tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
@@ -31,7 +31,7 @@
                         columnIndex="{{ gridColumn.getColumnIndex() }}"/>
          </div>
       </div>
-      <ws:if data="{{ gridColumn['[Controls/_display/GridDataCell]'] && gridColumn.shouldDisplayItemActions() }}">
+      <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
          <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}"
                         highlightOnHover="{{ highlightOnHover }}" />

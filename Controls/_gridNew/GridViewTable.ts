@@ -24,4 +24,4 @@ const GridViewTable = GridView.extend({
     }
 });
 
-export = GridViewTable;
+export default GridViewTable;

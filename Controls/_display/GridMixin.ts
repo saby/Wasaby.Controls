@@ -1,6 +1,7 @@
 import { TColumns } from 'Controls/_grid/interface/IColumn';
 import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
-import GridHeaderRow from 'Controls/_display/GridHeaderRow';
+import GridHeader from 'Controls/_display/GridHeader';
+import GridTableHeader from 'Controls/_display/GridTableHeader';
 import GridColgroup from 'Controls/_display/GridColgroup';
 import { Model as EntityModel } from 'Types/entity';
 import { IViewIterator } from 'Controls/_display/Collection';
@@ -32,7 +33,7 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 
     protected _$columns: TColumns;
     protected _$colgroup: GridColgroup<S>;
-    protected _$header: GridHeaderRow<S>;
+    protected _$header: GridHeader<S>;
     protected _$footer: GridFooterRow<S>;
     protected _$results: GridResultsRow<S>;
     protected _$ladder: {};
@@ -78,7 +79,7 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         return this._$colgroup;
     }
 
-    getHeader(): GridHeaderRow<S> {
+    getHeader(): GridHeader<S> {
         return this._$header;
     }
 
@@ -157,12 +158,13 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         return hasResultsPosition && (this._$resultsVisibility === 'visible' || hasMoreData || this.getCollectionCount() > 1);
     }
 
-    protected _initializeHeader(options: IGridMixinOptions): GridHeaderRow<S> {
-        return new GridHeaderRow({
+    protected _initializeHeader(options: IGridMixinOptions): GridHeader<S> {
+        const _options = {
             ...options,
             owner: this,
             header: options.header
-        });
+        };
+        return this._$isFullGridSupport ? new GridHeader(_options) : new GridTableHeader(_options);
     }
 
     protected _initializeFooter(options: IGridMixinOptions): GridFooterRow<S> {
