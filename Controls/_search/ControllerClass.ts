@@ -144,4 +144,72 @@ export default class ControllerClass implements ISearchController {
 
         return root;
     }
+
+    static getStateAndOptionsChangedCallbacks(self): object {
+        return {
+            rootChangedCallback: (root, notifyChanges: boolean) => {
+                self._root = root;
+                if (root !== undefined && self._sourceController) {
+                    self._sourceController.setRoot(root);
+                }
+                if (notifyChanges) {
+                    self._notify('rootChanged', [root]);
+                }
+            },
+            searchValueChangedCallback: (searchValue) => {
+                self._searchValue = searchValue;
+                self._notify('searchValueChanged', [searchValue]);
+            },
+            itemsChangedCallback: (items) => {
+                if (self._itemsChanged) {
+                    self._itemsChanged(null, items);
+                }
+                self._notify('itemsChanged', [items]);
+            },
+            pathChangedCallback: (path) => {
+                self._path = path;
+            },
+            inputSearchValueChangedCallback: (value) => {
+                self._inputSearchValue = value;
+            },
+            viewModeChangedCallback: (viewMode) => {
+                self._viewMode = viewMode;
+            },
+            markedKeyChangedCallback: (markedKey) => {
+                self._notify('markedKeyChanged', [markedKey]);
+            },
+            expandedItemsChangedCallback: (expandedItems) => {
+                self._notify('expandedItemsChanged', [expandedItems]);
+            },
+            loadingChangedCallback: (loading) => {
+                self._loading = loading;
+            },
+            deepReloadChangedCallback: (deepReload) => {
+                self._deepReload = deepReload;
+            },
+            misspellValueChangedCallback: (value) => {
+                self._misspellValue = value;
+            },
+            filterChangedCallback: (filter) => {
+                if (self._filterChanged) {
+                    self._filterChanged(null, filter);
+                } else {
+                    self._notify('filterChanged', [filter]);
+                }
+            },
+            dataLoadErrback: (error: Object|Error) => {
+                if (error instanceof Error) {
+                    if (self._options.dataLoadErrback) {
+                        self._options.dataLoadErrback(error);
+                    }
+                } else {
+                    self._notify('dataError', [error]);
+                    self._onDataError?.call(self, null, error);
+                }
+            },
+            searchStartCallback: (filter) => {
+                self._notify('searchStart', [filter]);
+            }
+        };
+    }
 }
