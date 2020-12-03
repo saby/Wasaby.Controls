@@ -1,0 +1,8 @@
+<ws:partial template="Controls/gridNew:ColumnTemplate" itemData="{{itemData}}">
+    <ws:contentTemplate>
+        <div>
+            {{ contentTemplate.itemData.item.get('title') }}
+            <ws:partial template="{{ multiSelectTemplate }}"/>
+        </div>
+    </ws:contentTemplate>
+</ws:partial>
