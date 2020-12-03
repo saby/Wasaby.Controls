@@ -391,5 +391,20 @@ describe('Controls/_multiselection/Controller', () => {
          assert.isTrue(model.getItemBySourceKey(3).isSelected());
          assert.isFalse(model.getItemBySourceKey(4).isSelected());
       });
+
+      it('getSelectionForModel', () => {
+         controller = new SelectionController({
+            model: model.getDisplay(),
+            strategy,
+            selectedKeys: [],
+            excludedKeys: [],
+            searchValue: 'asdas'
+         });
+         controller.setSelection({ selected: [null], excluded: [null] });
+         assert.isNull(model.getItemBySourceKey(1).isSelected());
+         assert.isTrue(model.getItemBySourceKey(2).isSelected());
+         assert.isNull(model.getItemBySourceKey(3).isSelected());
+         assert.isTrue(model.getItemBySourceKey(4).isSelected());
+      });
    });
 });

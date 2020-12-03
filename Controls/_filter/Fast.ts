@@ -363,7 +363,7 @@ import {Model} from 'Types/entity';
        * @extends Core/Control
        * @mixes Controls/_filter/interface/IFastFilter
        * @demo Controls-demo/FastFilter/fastPG
-       * 
+       *
        * @public
        * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
        * @author Герасимов А.М.
@@ -379,7 +379,7 @@ import {Model} from 'Types/entity';
        * @mixes Controls/_filter/interface/IFastFilter
        * @mixes Controls/_filter/Fast/FastStyles
        * @demo Controls-demo/FastFilter/fastPG
-       * 
+       *
        * @public
        * @author Герасимов А.М.
        */
@@ -387,6 +387,14 @@ import {Model} from 'Types/entity';
          _template: template,
          _configs: null,
          _items: null,
+
+         _deleteSourceControllersFromConfigs(configs): void {
+            chain.factory(configs).each((config) => {
+               if (config._sourceController) {
+                  config._sourceController = null;
+               }
+            });
+         },
 
          _beforeMount: function(options, context, receivedState) {
             this._configs = [];
@@ -396,6 +404,7 @@ import {Model} from 'Types/entity';
             var resultDef;
 
             if (receivedState) {
+               this._deleteSourceControllersFromConfigs(receivedState.configs);
                this._configs = receivedState.configs;
                this._items = receivedState.items;
                if (options.items) {

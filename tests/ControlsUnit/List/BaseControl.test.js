@@ -764,7 +764,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             serviceDataLoadCallback: function(currentItems, loadedItems) {
-               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
                setIterativeMetaData(loadedItems);
             },
             source: source,
@@ -785,7 +785,6 @@ define([
                }
             }
          };
-
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
@@ -8051,6 +8050,26 @@ define([
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
+
+            it('hide marker and show it with marked key in options', () => {
+               let newCfg = {
+                  ...cfg,
+                  markerVisibility: 'hidden',
+                  markedKey: 2
+               };
+               baseControl.saveOptions(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               newCfg = {
+                  ...cfg,
+                  markerVisibility: 'visible',
+                  markedKey: 2
+               };
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });

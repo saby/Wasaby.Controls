@@ -39,6 +39,8 @@ export default class TreeGridCell<T> extends GridDataCell<T, GridDataRow<T>> {
     }
 }
 
-Object.assign(GridRowMixin.prototype, {
-    '[Controls/_display/TreeGridCell]': true
+Object.assign(TreeGridCell.prototype, {
+    '[Controls/_display/TreeGridCell]': true,
+    _moduleName: 'Controls/display:TreeGridCell',
+    _instancePrefix: 'tree-grid-cell'
 });

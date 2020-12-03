@@ -68,6 +68,10 @@ export default abstract class GridRowMixin<T> {
         return this._$columnItems;
     }
 
+    getColumnsConfig(): TColumns {
+        return this._$owner.getColumnsConfig();
+    }
+
     getColumnsCount(): number {
         return this.getColumns().length;
     }
