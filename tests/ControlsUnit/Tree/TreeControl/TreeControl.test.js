@@ -1184,9 +1184,6 @@ define([
                             setHasMoreStorage: function () {
                                setHasMoreCalled = true;
                             },
-                            mergeItems: function () {
-                               mergeItemsCalled = true;
-                            },
                             getExpandedItems: () => []
                          };
                       },
@@ -1224,7 +1221,6 @@ define([
              }, mockedTreeControlInstance._options.filter,
              'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
-         assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(isIndicatorHasBeenShown);
          assert.isTrue(isIndicatorHasBeenHidden);
@@ -2022,7 +2018,7 @@ define([
          }), cfg);
 
          tree.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
-
+         treeGridViewModel.getItems().merge(newItems, {remove: false, inject: true}); // эмуляция работы sourceController'a
          assert.equal(treeGridViewModel.getItems().getCount(), 3);
          assert.deepEqual(treeGridViewModel.getItems().at(0).getRawData(), {id: 0, 'Раздел@': false, "Раздел": null});
       });
