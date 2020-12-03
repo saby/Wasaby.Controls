@@ -32,6 +32,7 @@ import {IScrollState} from './Utils/ScrollState';
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
     pagingMode?: TPagingModeScroll;
+    pagingContentTemplate?: Function | string;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -590,4 +591,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @name Controls/_scroll/Container#pagingMode
  * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
  * @default hidden
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingContentTemplate
+ * @cfg @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
  */

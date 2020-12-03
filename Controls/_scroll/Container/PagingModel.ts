@@ -66,7 +66,7 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
     get arrowState(): IArrowState {
         switch (this.pagingMode) {
             case 'edge':
-                if (this._arrowState.next === 'visible') {
+                if (this._arrowState.next === 'visible' || this._arrowState.end === 'visible') {
                     this._arrowState.begin = 'hidden';
                     this._arrowState.end = 'visible';
                 } else if (this._arrowState.begin === 'visible') {
@@ -77,7 +77,7 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
                 break;
 
             case 'end':
-                if (this._arrowState.next === 'visible') {
+                if (this._arrowState.next === 'visible' || this._arrowState.end === 'visible') {
                     this._arrowState.end = 'visible';
                 } else {
                     this._arrowState.end = 'hidden';
