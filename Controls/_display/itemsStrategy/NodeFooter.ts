@@ -1,18 +1,18 @@
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import TreeItem from '../TreeItem';
 import Tree from '../Tree';
-import TreeGridNodeFooterRow from 'Controls/_display/TreeGridNodeFooterRow';
-import { Model } from 'Types/entity';
 
 interface IOptions<S, T extends TreeItem<S>> {
     source: IItemsStrategy<S, T>;
     display: Tree<S, T>;
+    nodeFooterConstructor: (options: any) => any;
     footerVisibilityCallback?: (nodeItem: S) => boolean;
 }
 
 interface ISortOptions<S, T extends TreeItem<S>> {
     display: Tree<S, T>;
-    nodeFooters: Array<TreeGridNodeFooterRow<S>>;
+    nodeFooters: Array<T>;
+    nodeFooterConstructor: (options: any) => any;
     footerVisibilityCallback?: (nodeItem: S) => boolean;
 }
 
@@ -27,7 +27,7 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
     /**
      * Группы
      */
-    protected _nodeFooters: Array<TreeGridNodeFooterRow<S>> = [];
+    protected _nodeFooters: T[] = [];
 
     /**
      * Индекс в стратегии -> оригинальный индекс
@@ -136,6 +136,7 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
         return NodeFooter.sortItems<S, T>(this.source.items, {
             display: this.options.display,
             nodeFooters: this._nodeFooters,
+            nodeFooterConstructor: this.options.nodeFooterConstructor,
             footerVisibilityCallback: this.options.footerVisibilityCallback
         });
     }
@@ -161,7 +162,7 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
                 continue;
             }
 
-            const nodeFooter = new TreeGridNodeFooterRow({
+            const nodeFooter = new options.nodeFooterConstructor({
                 owner: options.display,
                 contents: 'nodeFooter_' + item.getContents().getKey(),
                 parent: item,
