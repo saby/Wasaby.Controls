@@ -132,7 +132,7 @@ describe('Controls/scroll:Container', () => {
                 assert.strictEqual(component._optimizeShadowClass, test.optimizeShadowClass,
                     '_optimizeShadowClass before _mouseenterHandler');
 
-                component._state.canVerticalScroll = test.canScroll;
+                component._scrollModel.canVerticalScroll = test.canScroll;
                 component._mouseenterHandler();
 
                 assert.strictEqual(component._isOptimizeShadowEnabled, test.isOptimizeShadowEnabledAfterMouseEnter,
