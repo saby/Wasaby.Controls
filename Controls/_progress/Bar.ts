@@ -5,6 +5,7 @@ import barTemplate = require('wml!Controls/_progress/Bar/Bar');
 
 export interface IBarOptions extends IControlOptions {
    value?: number;
+   barStyle: 'primary' | 'success' | 'danger' | 'warning';
 }
 /**
  * Базовый индикатор выполнения процесса.
@@ -62,13 +63,15 @@ class Bar extends Control<IBarOptions> {
    static getDefaultOptions(): object {
       return {
          theme: 'default',
-         value: 0
+         value: 0,
+         barStyle: 'primary'
       };
    }
 
    static getOptionTypes(): object {
       return {
-         value: EntityDescriptor(Number).required()
+         value: EntityDescriptor(Number).required(),
+         barStyle: EntityDescriptor(String)
       };
    }
 }
@@ -85,6 +88,17 @@ class Bar extends Control<IBarOptions> {
  * @cfg {Number} Progress in percents (ratio of the filled part)
  * @remark
  * An integer from 1 to 100.
+ */
+
+/**
+ * @name Controls/_progress/Bar#barStyle
+ * @cfg {Enum} Стиль шкалы прогресс бара.
+ * @variant primary
+ * @variant success
+ * @variant warning
+ * @variant danger
+ * @default primary
+ * @demo Controls-demo/Buttons/IconStyles/Index
  */
 
 export default Bar;
