@@ -358,12 +358,12 @@ var
             return this._model.getDisplayChildrenCount(nodeKey, items);
         },
 
-        _setFooter(footerColumns) {
+        _setFooter(footerColumns): void {
             TreeGridViewModel.superclass._setFooter.apply(this, arguments);
 
-            let shouldDrawExpanderPadding: boolean =
+            const shouldDrawExpanderPadding: boolean =
                 (this._options.expanderIcon !== 'none' && this._options.expanderPosition === 'default') &&
-                (this._options.expanderVisibility === 'hasChildren' ? this._model.thereIsChildItem() : !this._options.expanderSize);
+                (this._options.expanderVisibility === 'hasChildren' ? this._model.thereIsChildItem() : this._options.expanderSize);
 
             if (shouldDrawExpanderPadding) {
                 const expanderColumnIndex = +(this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default');
@@ -372,8 +372,8 @@ var
                 this._footer[expanderColumnIndex].getContentClasses = () => {
                     const expanderSize = this._options.expanderSize || 'default';
                     return superGetter.apply(this, arguments) +
-                        ` controls-TreeGridView__footer__expanderPadding-${expanderSize.toLowerCase()}_theme-${this._options.theme}`
-                }
+                        ` controls-TreeGridView__footer__expanderPadding-${expanderSize.toLowerCase()}_theme-${this._options.theme}`;
+                };
             }
         }
     });
