@@ -107,6 +107,10 @@ export default class ScrollController {
         this._inertialScrolling.callAfterScrollStopped(callback);
     }
 
+    getScrollStopPromise(): Promise<void>|void {
+        return this._inertialScrolling.getScrollStopPromise();
+    }
+
     private updateContainerHeightsData(params: Partial<IScrollParams>): IScrollControllerResult {
         if (this._virtualScroll && params) {
             const newParams: Partial<IContainerHeights> = {};

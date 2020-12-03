@@ -764,7 +764,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             serviceDataLoadCallback: function(currentItems, loadedItems) {
-               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
                setIterativeMetaData(loadedItems);
             },
             source: source,
@@ -785,7 +785,6 @@ define([
                }
             }
          };
-
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
