@@ -4,6 +4,7 @@ import { TemplateFunction } from 'UI/Base';
 import { descriptor } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
 import TreeGridView from 'Controls/_treeGridNew/TreeGridView';
+import { Model } from 'Types/entity';
 
 export default class TreeGrid extends Grid {
     protected _viewName: TemplateFunction = null;
@@ -22,6 +23,14 @@ export default class TreeGrid extends Grid {
     toggleExpanded(key: CrudEntityKey): void {
         // @ts-ignore
         this._children.listControl.toggleExpanded(key);
+    }
+
+    getNextItem(key: CrudEntityKey): Model {
+        return this._children.listControl.getNextItem(key);
+    }
+
+    getPrevItem(key: CrudEntityKey): Model {
+        return this._children.listControl.getPrevItem(key);
     }
 
     static _theme: string[] = ['Controls/treeGrid', 'Controls/grid'];
