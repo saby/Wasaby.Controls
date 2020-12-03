@@ -644,7 +644,7 @@ var
             current.shouldDrawExpander = _private.shouldDrawExpander;
 
             // 2. Классы экспандера.
-            current.getExpanderClasses = () => _private.getExpanderClasses(...arguments);
+            current.getExpanderClasses = _private.getExpanderClasses;
 
             // 3. Нужны ли отступы под экспандер
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
