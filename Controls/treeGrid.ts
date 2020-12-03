@@ -22,7 +22,7 @@ import * as SearchBreadCrumbsItemTemplate from 'wml!Controls/_treeGrid/SearchVie
 import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
 import RowEditor = require('wml!Controls/_treeGrid/TreeGrid/RowEditor');
 
-const ItemTemplate = GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate : TableLayoutItemTemplate;
+const ItemTemplate = () => GridLayoutUtil.isFullGridSupport() ? GridLayoutItemTemplate.apply(this, arguments) : TableLayoutItemTemplate.apply(this, arguments);
 
 export {
     View,
