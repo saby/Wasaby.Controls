@@ -2109,8 +2109,8 @@ const _private = {
         if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
             self._scrollController = null;
             self._observerRegistered = false;
+            self._viewReady = false;
         }
-        self._viewReady = false;
     },
 
     hideError(self: BaseControl): void {
