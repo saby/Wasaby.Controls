@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper  controlsDemo__flexRow">
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyle">
         <div class="controls-text-label_theme-{{_options.theme}}">default</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -12,7 +12,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleLink">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=link</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -26,7 +26,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStylePrimary">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=primary</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -40,7 +40,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleSecondary">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=secondary</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -54,7 +54,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleSuccess">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=success</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -68,7 +68,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleWarning">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=warning</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -82,7 +82,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleDanger">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=danger</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -96,7 +96,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleUnaccented">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=unaccented</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -110,7 +110,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleLabel">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=label</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -124,7 +124,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleInfo">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=info</div>
         <Controls.scroll:Container>
             <Controls.list:View
@@ -138,7 +138,7 @@
             </Controls.list:View>
         </Controls.scroll:Container>
     </div>
-    <div class="controlsDemo__cell controlsDemo_fixedWidth500">
+    <div class="controlsDemo__cell controlsDemo_fixedWidth500 moreFontColorStyleDefault">
         <div class="controls-text-label_theme-{{_options.theme}}">moreFontColorStyle=default</div>
         <Controls.scroll:Container>
             <Controls.list:View
