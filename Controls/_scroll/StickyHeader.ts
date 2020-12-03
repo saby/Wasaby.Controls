@@ -274,8 +274,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // и вызовут полную перерисовку, т.к. контрол посчитает что изменились высоты контента.
             // При след. замерах возьмется актуальная высота и опять начнется перерисовка.
             // Т.к. смещения только на ios добавляем, считаю высоту через clientHeight только для ios.
-            // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели
-            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight - Math.abs(1 - window.devicePixelRatio);
+            if (detection.isMobileIOS) {
+                this._height = container.clientHeight;
+            } else {
+                this._height = container.offsetHeight;
+                if (!detection.isMobileAndroid) {
+                    // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели.
+                    // Такое решение подходит тоько для десктопа, т.к. на мобильных устройствах devicePixelRatio всегда
+                    // равен 2.75
+                    this._height -= Math.abs(1 - window.devicePixelRatio);
+                }
+            }
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
@@ -494,16 +503,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style: string = '',
             minHeight: number;
 
-        /**
-         * On android and ios there is a gap between child elements.
-         * When the header is fixed, there is a space between the container, relative to which it is fixed,
-         * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
-         * https://jsfiddle.net/tz52xr3k/3/
-         *
-         * As a solution, move the header up and increase its size by an offset, using padding.
-         * In this way, the content of the header does not change visually, and the free space disappears.
-         * The offset must be at least as large as the free space. Take the nearest integer equal to one.
-         */
         // Этот костыль нужен, чтобы убрать щели между заголовками. Для прозрачных заголовков он не нужен.
         offset = opts.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
