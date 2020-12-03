@@ -13,6 +13,9 @@
                   on:itemClick="_notifyHandler('itemClick')"
                   on:itemMouseDown="_notifyHandler('itemMouseDown')"/>
    </Controls.Container.Async>
+   <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
+      <ws:partial template="{{_options.afterBreadCrumbsTemplate}}"></ws:partial>
+   </ws:if>
 </ws:template>
 
 <ws:if data="{{_needCrumbs}}">
