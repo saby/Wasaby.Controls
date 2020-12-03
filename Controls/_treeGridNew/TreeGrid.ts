@@ -16,7 +16,7 @@ export default class TreeGrid extends Grid {
     }
 
     _getModelConstructor(): string {
-        return 'Controls/display:TreeGridCollection';
+        return 'Controls/treeGrid:TreeGridCollection';
     }
 
     toggleExpanded(key: CrudEntityKey): void {
