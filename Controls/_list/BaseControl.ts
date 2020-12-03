@@ -1513,7 +1513,8 @@ const _private = {
             _private.delayedSetMarkerAfterScrolling(self, scrollTop);
         }
 
-        self._scrollTop = scrollTop;
+        // на мобильных устройствах с overflow scrolling, scrollTop может быть отрицательным
+        self._scrollTop = scrollTop > 0 ? scrollTop : 0;
         self._scrollPageLocked = false;
         if (_private.needScrollPaging(self._options.navigation)) {
             if (!self._scrollController.getParamsToRestoreScrollPosition()) {
@@ -2168,8 +2169,8 @@ const _private = {
         if (errorConfig && (errorConfig.mode === dataSourceError.Mode.include)) {
             self._scrollController = null;
             self._observerRegistered = false;
+            self._viewReady = false;
         }
-        self._viewReady = false;
     },
 
     hideError(self: BaseControl): void {
@@ -3948,7 +3949,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
         if (shouldProcessMarker && !needReload) {
             const markerController = _private.getMarkerController(this, newOptions);
-            if (this._options.markedKey !== newOptions.markedKey) {
+            // могут скрыть маркер и занового показать, тогда markedKey из опций нужно проставить даже если он не изменился
+            if (this._options.markedKey !== newOptions.markedKey || this._options.markerVisibility === 'hidden' && newOptions.markerVisibility === 'visible' && newOptions.markedKey !== undefined) {
                 markerController.setMarkedKey(newOptions.markedKey);
             } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
                 const newMarkedKey = markerController.calculateMarkedKeyForVisible();
