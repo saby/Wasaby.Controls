@@ -943,15 +943,13 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         keysHandler(event, HOT_KEYS, _private, this);
     },
     getNextItem(key: CrudEntityKey): Model {
-        const display = this._children.baseControl.getViewModel().getDisplay();
-        const curIndex = display.getIndexByKey(key);
-        const nextItem = display.at(curIndex + 1);
+        const listModel = this._children.baseControl.getViewModel();
+        const nextItem = listModel.getNextByKey(key);
         return nextItem ? nextItem.getContents() : null;
     },
     getPrevItem(key: CrudEntityKey): Model {
-        const display = this._children.baseControl.getViewModel().getDisplay();
-        const curIndex = display.getIndexByKey(key);
-        const prevItem = display.at(curIndex - 1);
+        const listModel = this._children.baseControl.getViewModel();
+        const prevItem = listModel.getPrevByKey(key);
         return prevItem ? prevItem.getContents() : null;
     },
     _beforeUnmount: function() {

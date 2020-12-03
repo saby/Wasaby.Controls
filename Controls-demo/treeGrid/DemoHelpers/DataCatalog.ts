@@ -1454,8 +1454,8 @@ export const DemoGetNextGetPrev = {
 
         { id: 12, title: 'Узел 1-2', parent: 1, nodeType: true },
         { id: 121, title: 'Лист 1-2-1', parent: 12, nodeType: null },
-        { id: 2, title: 'Лист 6', parent: null, nodeType: null },
-        { id: 3, title: 'Лист 7', parent: null, nodeType: null },
-        { id: 4, title: 'Лист 8', parent: null, nodeType: null }
+        { id: 2, title: 'Лист 2', parent: null, nodeType: null },
+        { id: 3, title: 'Лист 3', parent: null, nodeType: null },
+        { id: 4, title: 'Лист 4', parent: null, nodeType: null }
     ])
 };
