@@ -59,7 +59,7 @@
         <ws:if data="{{_paging.isVisible}}">
             <Controls.Container.Async templateName="Controls/paging:Paging">
                 <ws:partial template="{{content.resolvedTemplate}}"
-                            class="controls-Scroll__paging"
+                            class="controls-Scroll__paging controls-Scroll__paging{{_options.pagingPosition === 'left' ? 'left' : 'right'}}"
                             pagingMode="{{_paging.pagingMode}}"
                             contentTemplate="{{_options.pagingContentTemplate}}"
                             contrastBackground="{{true}}"
