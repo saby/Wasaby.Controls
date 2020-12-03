@@ -20,12 +20,12 @@ export default class extends Control {
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
         this._viewSourceImage = new Memory({
             keyProperty: 'id',
-            data: getTasks().getData()
+            data: getTasks().getData().slice(0, 1)
         });
 
         this._viewSourceText = new Memory({
             keyProperty: 'id',
-            data: forShowWidths().getData()
+            data: forShowWidths().getData().slice(1)
         });
     }
 
