@@ -1,9 +1,8 @@
 import {constants, detection} from 'Env/Env';
 import { headDataStore } from 'UI/Base';
 import {Logger} from 'UI/Utils';
-import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 
-const moduleLoader = new ModuleLoader();
 const fontConstants = 'Controls/Utils/FontWidthConstants/';
 
 let fonts;
@@ -14,8 +13,8 @@ export const getFontWidth = (text, size) => {
         if (!fonts) {
             const browser = getBrowser();
             const module = fontConstants + browser;
-            if (moduleLoader.isLoaded(module)) {
-                fonts = moduleLoader.loadSync(module)[browser];
+            if (ModulesLoader.isLoaded(module)) {
+                fonts = ModulesLoader.loadSync(module)[browser];
             } else {
                 generateErrorMessage();
             }
