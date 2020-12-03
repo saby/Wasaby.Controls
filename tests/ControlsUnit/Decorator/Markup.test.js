@@ -80,6 +80,7 @@ define([
          'www.ya.ru'
       ],
       decoratedLinkService,
+      decoratedLinkHost,
       currentVersion = '2',
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
@@ -199,10 +200,13 @@ define([
          });
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
             while (errorArray.length) {
                errorFunction.apply(ILogger, errorArray.shift());
             }
@@ -1112,11 +1116,14 @@ define([
       describe('needDecorate', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
             linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
          });
          it('not a link', function() {
             var parentNode = ['p', ['b',
@@ -1657,11 +1664,14 @@ define([
       describe('decorateLink', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;
+            decoratedLinkHost = Env.constants.decoratedLinkHost;
             Env.constants.decoratedLinkService = '/test/';
+            Env.constants.decoratedLinkHost = '';
             linkDecorateUtils.clearNeedDecorateGlobals();
          });
          afterEach(function() {
             Env.constants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkHost = decoratedLinkHost;
          });
          it('decorate a good link', function() {
             assert.deepEqual(linkDecorateUtils.getDecoratedLink(linkNode), ['span',

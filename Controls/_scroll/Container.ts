@@ -598,11 +598,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @name Controls/_scroll/Container#pagingMode
  * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
  * @default hidden
+ * @demo Controls-demo/Scroll/Paging/Basic/Index
+ * @demo Controls-demo/Scroll/Paging/Edge/Index
+ * @demo Controls-demo/Scroll/Paging/End/Index
  */
 
 /**
  * @name Controls/_scroll/Container#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ * @demo Controls-demo/Scroll/Paging/ContentTemplate/Index
  */
 
 /**
