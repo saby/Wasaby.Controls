@@ -413,8 +413,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
             // В этом случае не обновляем скролбары, а просто делаем _wasMouseEnter = true выше.
             // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
-            if (this._isStateInitialized) {
-                this._scrollbars.updateScrollState(this._state, this._container);
+            if (this._scrollModel) {
+                this._scrollbars.updateScrollState(this._scrollModel, this._container);
             }
             if (!compatibility.touch) {
                 this._initHeaderController();
