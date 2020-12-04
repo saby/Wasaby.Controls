@@ -1953,7 +1953,8 @@ var
             } & IPreparedColumn>({
                 gridColumns: this._columns,
                 colspanColumns: footerColumns,
-                hasMultiSelect
+                hasMultiSelect,
+                stickyLadderCount: this.stickyLadderCellsCount()
             });
 
             const isMultiColumn = prepared.length > 1;

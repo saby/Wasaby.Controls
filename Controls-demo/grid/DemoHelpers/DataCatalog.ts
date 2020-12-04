@@ -1548,6 +1548,7 @@ function forShowWidths(): {
     getData(): IDataForShow[];
     getHeader(): IHeader[];
     getColumns1(): IColumn[];
+    getColumns2(): IColumn[];
 } {
     return {
         getData(): IDataForShow[] {
@@ -1614,6 +1615,29 @@ function forShowWidths(): {
                     displayProperty: 'fr2of3',
                     width: '2fr',
                     compatibleWidth: '60%'
+                },
+                {
+                    displayProperty: 'auto',
+                    width: 'auto',
+                    compatibleWidth: '139px'
+                },
+                {
+                    displayProperty: 'minMax',
+                    width: 'minmax(50px, 200px)',
+                    compatibleWidth: '200px'
+                }
+            ];
+        },
+        getColumns2(): IColumn[] {
+            return [
+                {
+                    displayProperty: 'px',
+                    width: '150px'
+                },
+                {
+                    displayProperty: 'maxContent',
+                    width: 'max-content',
+                    compatibleWidth: '147px'
                 },
                 {
                     displayProperty: 'auto',
