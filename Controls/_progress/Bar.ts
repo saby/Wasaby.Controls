@@ -98,7 +98,7 @@ class Bar extends Control<IBarOptions> {
  * @variant warning
  * @variant danger
  * @default primary
- * @demo Controls-demo/Buttons/IconStyles/Index
+ * @demo Controls-demo/progress/Bar/BarStyle/Index
  */
 
 export default Bar;
