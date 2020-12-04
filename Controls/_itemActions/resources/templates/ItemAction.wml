@@ -1,5 +1,5 @@
 <ws:template name="itemAction">
-    <div attr:class="controls-itemActionsV__action
+    <div attr:class="js-controls-ItemActions__ItemAction controls-itemActionsV__action
             {{!action.isMenu ? 'controls-itemActionsV__action_padding' + (actionPadding && '_' + actionPadding || '') + '_theme-' + theme : 'controls-itemActionsV__action_menu_padding' + (actionPadding && '_' + actionPadding || '') + '_theme-' + theme}}
             controls-itemActionsV__action_style_{{actionStyle || action.style || 'secondary'}}
             {{((iconStyle || action.iconStyle || 'secondary') !== 'secondary') ?
