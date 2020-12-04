@@ -310,6 +310,9 @@ const _private = {
         if (baseControl && (self._needResetExpandedItems || !(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll))) {
             baseControl.getSourceController().setExpandedItems([]);
         }
+        if (baseControl && !self._needResetExpandedItems) {
+            baseControl.getSourceController().setExpandedItems(expandedItemsKeys );
+        }
     },
 
     afterReloadCallback: function(self, options, loadedList: RecordSet) {
