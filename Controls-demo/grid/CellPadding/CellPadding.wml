@@ -5,6 +5,8 @@
                     keyProperty="id"
                     source="{{_viewSource}}"
                     header="{{_header}}"
+                    rowSeparatorVisibility="{{true}}"
+                    columnSeparatorSize="{{true}}"
                     columns="{{_columns}}">
             </Controls.grid:View>
         </div>
