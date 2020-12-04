@@ -287,10 +287,6 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
             classes += ` controls-Grid__row-cell_default_min_height-theme-${theme}`;
         }
 
-        if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
-            classes += ` controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme}`;
-        }
-
         return classes;
     }
 
