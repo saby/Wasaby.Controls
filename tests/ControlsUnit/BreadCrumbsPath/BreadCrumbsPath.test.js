@@ -115,7 +115,10 @@ define([
 
    describe('Controls.BreadCrumbs.Path', function() {
 
-      var breadCrumbsPath = new Path.default(),
+      var breadCrumbsPath = new Path.default({
+            displayProperty: 'title',
+            keyProperty: 'id'
+         }),
          items = [
             {
                id: 1,
@@ -138,15 +141,14 @@ define([
          BreadCrumbsUtil.drawBreadCrumbs = function() {
 
          };
-
-      BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
+         breadCrumbsPath.calculateBreadcrumbsUtil =  BreadCrumbsUtil;
 
       it('bread crumbs path update', function() {
-         breadCrumbsPath._calculateBreadCrumbsToDraw(items);
-         assert.isEqual(breadCrumbsPath._visibleItems.length, 2);
          breadCrumbsPath._calculateBreadCrumbsToDraw([]);
-         assert.isEqual(breadCrumbsPath._visibleItems.length, 0);
+         assert.equal(breadCrumbsPath._visibleItems.length, 0);
       });
+
+      BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
    });
    describe('Controls.BreadCrumbs.MultilinePath', function() {
       var MultilinePathCrumbs = new MultilinePath.default();
