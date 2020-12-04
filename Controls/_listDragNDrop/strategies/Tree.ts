@@ -2,7 +2,7 @@ import Flat, { IDraggableFlatCollection} from './Flat';
 import { IDragPosition } from 'Controls/display';
 import { IDraggableItem, IDragStrategyParams, TPosition } from '../interface';
 
-const DRAG_MAX_OFFSET = 10;
+const DRAG_MAX_OFFSET = 0.3;
 
 interface IDraggableTreeItem extends IDraggableItem {
     isNode(): boolean;

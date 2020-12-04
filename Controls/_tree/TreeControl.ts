@@ -913,8 +913,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const dragTargetRect = targetElement.getBoundingClientRect();
 
             result = { top: null, bottom: null };
-            result.top = event.nativeEvent.pageY - dragTargetRect.top;
-            result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
+            } else {
+                result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
+            }
         }
 
         return result;
