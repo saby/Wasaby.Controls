@@ -238,6 +238,7 @@ describe('Controls/_multiselection/Controller', () => {
       controller.setLimit(1);
 
       let result = controller.selectAll();
+      assert.deepEqual(result, {selected: [null], excluded: []});
       controller.setSelection(result);
       assert.equal(controller.getCountOfSelected(), 1);
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
@@ -245,6 +246,7 @@ describe('Controls/_multiselection/Controller', () => {
       assert.isFalse(model.getItemBySourceKey(3).isSelected());
 
       result = controller.toggleItem(3);
+      assert.deepEqual(result, {selected: [null], excluded: [2]});
       controller.setSelection(result);
       assert.equal(controller.getCountOfSelected(), 2);
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
