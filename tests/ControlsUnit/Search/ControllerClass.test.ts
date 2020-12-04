@@ -2,7 +2,7 @@ import {ControllerClass} from 'Controls/search';
 import {assert} from 'chai';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
-import {createSandbox, SinonSpy} from 'sinon';
+import {createSandbox, SinonSpy, stub} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 
 const getMemorySource = (): Memory => {
@@ -170,5 +170,33 @@ describe('Controls/search:ControllerClass', () => {
 
       assert.isTrue(getFilterSpy.withArgs(updatedFilter).called);
       assert.equal(controllerClass._root, 'newRoot');
+   });
+
+   describe('update', () => {
+      it('shouldn\'t call when searchValue is null', () => {
+         const searchStub = stub(controllerClass, 'search');
+         const resetStub = stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = null;
+
+         controllerClass.update({
+            searchValue: null
+         });
+
+         assert.isFalse(searchStub.called);
+         assert.isFalse(resetStub.called);
+      });
+
+      it('shouldn\'t call when searchValue is not in options object', () => {
+         const searchStub = stub(controllerClass, 'search');
+         const resetStub = stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = null;
+
+         controllerClass.update({});
+
+         assert.isFalse(searchStub.called);
+         assert.isFalse(resetStub.called);
+      });
    });
 });
