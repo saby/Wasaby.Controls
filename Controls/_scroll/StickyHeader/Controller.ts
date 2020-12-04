@@ -319,7 +319,8 @@ class StickyHeaderController {
         // Тень рисуем у последнего не заменяемого заголовка, либо у первого заменяемого.
         // Это позволяет не перерисовывать тени при откреплении/зареплении следующих заголовков.
         for (const headerId of this._headersStack[position]) {
-            if (this._fixedHeadersStack[position].includes(headerId)) {
+            if (this._fixedHeadersStack[position].includes(headerId) &&
+                this._headers[headerId].inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                 header = headerId;
                 if (this._headers[header].mode === 'replaceable') {
                     break;
