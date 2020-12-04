@@ -1,5 +1,5 @@
 /// <amd-module name='Controls/Container/Async' />
-import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import * as library from 'Core/library';
 import { IoC, constants } from 'Env/Env';
 import { descriptor } from 'Types/entity';
@@ -7,8 +7,7 @@ import { Control, IControlOptions, TemplateFunction, headDataStore } from 'UI/Ba
 import rk = require('i18n!Controls');
 import template = require('wml!Controls/Container/Async/Async');
 import {ViewConfig} from "../_error/Handler";
-
-const moduleLoader = new ModuleLoader();
+import {Controller, ParkingController} from "Controls/error";
 
 function generateErrorMsg(templateName: string, msg?: string): string {
    const tTemplate = `Ошибка загрузки контрола "${templateName}"`;
@@ -28,6 +27,8 @@ interface IOptions extends IControlOptions {
 }
 
 const SUCCESS_BUILDED = 's';
+const ERROR_NOT_FOUND = 404;
+
 /**
  * Контейнер для асинхронной загрузки контролов.
  * Подробное описание и примеры вы можете найти <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/async-load/'>здесь</a>.
@@ -77,7 +78,7 @@ class Async extends Control<IOptions, TStateRecivied> {
          IoC.resolve('ILogger').error(receivedState);
       }
 
-      if (constants.isBrowserPlatform && (!moduleLoader.isLoaded(options.templateName) ||
+      if (constants.isBrowserPlatform && (!ModulesLoader.isLoaded(options.templateName) ||
          this._isCompat() || !receivedState)) {
          return this._loadContentAsync(options.templateName, options.templateOptions);
       }
@@ -108,7 +109,7 @@ class Async extends Control<IOptions, TStateRecivied> {
          return;
       }
 
-      if (moduleLoader.isLoaded(opts.templateName)) {
+      if (ModulesLoader.isLoaded(opts.templateName)) {
          this._loadContentSync(opts.templateName, opts.templateOptions);
       }
    }
@@ -134,7 +135,7 @@ class Async extends Control<IOptions, TStateRecivied> {
    }
 
    _loadContentSync(name: string, options: IControlOptions): TStateRecivied {
-      const loaded = moduleLoader.loadSync(name);
+      const loaded = this._loadSync(name);
       if (loaded === null) {
          return generateErrorMsg(name);
       }
@@ -144,15 +145,25 @@ class Async extends Control<IOptions, TStateRecivied> {
       return false;
    }
 
-   _loadContentAsync(name: string, options: IControlOptions): Promise<TStateRecivied> {
-      const promise = moduleLoader.loadAsync(name, this.errorCallback);
+   private _loadSync<T = unknown>(name: string): T {
+      try {
+         const loaded = ModulesLoader.loadSync<T>(name);
+         if (loaded) {
+            return loaded;
+         }
+      } catch (err) {
+         IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, err);
+      }
+      return null;
+   }
 
+   _loadContentAsync(name: string, options: IControlOptions): Promise<TStateRecivied> {
       // Need this flag to prevent setting new options for content
       // that wasn't loaded yet
       this.asyncLoading = true;
       this.loadingErrorOccurred = false;
 
-      return promise.then<TStateRecivied, TStateRecivied>((loaded) => {
+      return this._loadAsync(name).then<TStateRecivied, TStateRecivied>((loaded) => {
          this.asyncLoading = false;
          if (!loaded) {
             this.loadingErrorOccurred = true;
@@ -170,6 +181,27 @@ class Async extends Control<IOptions, TStateRecivied> {
          this.error = generateErrorMsg(name);
          this.userErrorMessage = err.message;
          return err;
+      });
+   }
+
+   private _loadAsync<T = unknown>(name: string): Promise<T> {
+      return ModulesLoader.loadAsync<T>(name).catch((error) => {
+         IoC.resolve('ILogger').error(`Couldn't load module "${name}"`, error);
+
+         return new ParkingController(
+             {configField: Controller.CONFIG_FIELD}
+         ).process({error, mode: 'include'}).then((viewConfig: ViewConfig<{message: string}>) => {
+            if (this.errorCallback && typeof this.errorCallback === 'function') {
+               this.errorCallback(viewConfig, error);
+            }
+
+            if (!viewConfig?.status || viewConfig.status !== ERROR_NOT_FOUND) {
+               ModulesLoader.unloadSync(name);
+            }
+
+            const message = viewConfig?.options?.message;
+            throw new Error(message || rk('У СБИС возникла проблема'));
+         });
       });
    }
 

@@ -1,11 +1,9 @@
 define([
    'Controls/Container/Async',
-   'Controls/Container/Async/ModuleLoader',
    'Env/Env',
    'ControlsUnit/Async/TestControlSync'
 ], function(
    Async,
-   ModuleLoader,
    Env,
    TestControlSync
 ) {
