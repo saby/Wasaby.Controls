@@ -40,10 +40,10 @@
 </ws:template>
 
 
-<ws:if data="{{ item.isSticked() }}">
+<ws:if data="{{ (item || itemData).isSticked() }}">
     <Controls.scroll:Group>
-        <div class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
-            <ws:for data="column in item.getColumns()">
+        <div class="{{ (item || itemData).getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
+            <ws:for data="column in (item || itemData).getColumns()">
                 <Controls.scroll:StickyHeader position="topbottom"
                                               mode="stackable"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
@@ -55,8 +55,8 @@
     </Controls.scroll:Group>
 </ws:if>
 <ws:else>
-    <div class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
-        <ws:for data="column in item.getColumns()">
+    <div class="{{ (item || itemData).getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
+        <ws:for data="column in (item || itemData).getColumns()">
             <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                  style="{{ column.getWrapperStyles() }}">
                 <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

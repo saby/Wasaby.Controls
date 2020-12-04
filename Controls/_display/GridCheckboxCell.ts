@@ -1,9 +1,10 @@
 import GridCell from './GridCell';
 import { TemplateFunction } from 'UI/Base';
 import GridRow from './GridDataRow';
-import GridRowMixin from 'Controls/_display/GridRowMixin';
+import IMarkable from './interface/IMarkable';
 
-export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
+export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> implements IMarkable {
+    readonly Markable: boolean = true;
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
