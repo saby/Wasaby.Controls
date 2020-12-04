@@ -17,10 +17,6 @@ const enum POSITION {
     LEFT = 'left'
 }
 
-// В режиме 'Только года' одновременно отобржается 15 элементов.
-// Таким образом последний отображаемый элемент имеет индекс 14.
-const ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX = 14;
-
 // Минимальный отступ справа до края экрана. Если попап ближе чем это значение, то крестик нужно показать слева
 // Когда в контролах будут доступны переменные темы, значение должно браться с алиаса ширины крестика
 const MIN_RIGHT_OFFSET = 30;
@@ -45,6 +41,7 @@ const MIN_RIGHT_OFFSET = 30;
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/ContentTemplate/Index
  * @demo Controls-demo/ShortDatePicker/MonthTemplate/IconTemplate/Index
  */
+
 class View extends Control<IDateLitePopupOptions> {
     protected _template: TemplateFunction = componentTmpl;
     protected _defaultListTemplate: TemplateFunction = listTmpl;
@@ -59,6 +56,8 @@ class View extends Control<IDateLitePopupOptions> {
     protected _emptyCaption: string = '';
     protected _caption: string = '';
     protected _displayedRanges: Date[];
+    protected _prevArrowButtonReadOnly: boolean = false;
+    protected _nextArrowButtonReadOnly: boolean = false;
 
     protected _beforeMount(options: IDateLitePopupOptions): void {
         this._isFullPicker = options.chooseMonths && options.chooseQuarters && options.chooseHalfyears;
@@ -91,18 +90,25 @@ class View extends Control<IDateLitePopupOptions> {
 
         this._position = this._getFirstPositionInMonthList(this._position, options.dateConstructor);
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
+
+        if (options.displayedRanges) {
+            this._updateArrowButtonsState();
+        }
     }
 
     protected _beforeUpdate(options: IDateLitePopupOptions): void {
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
         this._updateCloseBtnPosition(options);
+        if (options.displayedRanges) {
+            this._updateArrowButtonsState();
+        }
     }
 
     /**
      * Sets the current year
      * @param year
      */
-    setYear(year: Date): void {
+    setYear(year: number): void {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
     }
@@ -234,8 +240,7 @@ class View extends Control<IDateLitePopupOptions> {
                 break;
             }
         }
-        // При нажатии кнопки 'Вниз' у типа 'Только года', мы отнимаем ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX,
-        // если мы попали за границы displayedRanges, берем за основу вычислений ближайший элемент снизу.
+        // Если мы попали за границы displayedRanges, берем за основу вычислений ближайший элемент снизу.
         if (index === undefined) {
             for (let i = this._displayedRanges.length - 1; i >= 0; i--) {
                 if (this._displayedRanges[i][1] < new Date(year, 0) && this._displayedRanges[i][1] !== null) {
@@ -265,48 +270,77 @@ class View extends Control<IDateLitePopupOptions> {
 
     protected _changeYear(event: Event, delta: number): void {
         const year = this._position.getFullYear();
-        let yearToSet;
-        let nextElementsAmount;
+        let newYear;
+        if (this._options.displayedRanges) {
+            const amountOfFollowingItems = this._getAmountOfFollowingItems(delta);
+            // Ищем последний видимый элемент
+            // В случае, если мы лисаем 'Вверх', мы просто устаналиваем ближайший доступный год
+            if (this._canChangeYear(year, delta, amountOfFollowingItems) || !amountOfFollowingItems) {
+                newYear = this._getNextDisplayedYear(year, delta);
+            }
+        } else {
+            newYear = year + delta;
+        }
+        if (newYear && newYear !== year) {
+            this.setYear(newYear);
+        }
+    }
 
-        // Проверяем случаи, когда мы листаем 'Вниз'.
+    private _canChangeYear(year: number, delta: number, amountOfFollowingItems: number): boolean {
+        let changedYear = year;
+        const yearsNotEqual = () => {
+            return changedYear !== this._getNextDisplayedYear(changedYear, delta);
+        };
+
+        let index = 0;
+        while (yearsNotEqual() && index < amountOfFollowingItems) {
+            changedYear = this._getNextDisplayedYear(changedYear, delta);
+            index++;
+        }
+        return yearsNotEqual();
+    }
+
+    // Количество элементов, которые нахоятся ниже текущего года, но так же видны
+    private _getAmountOfFollowingItems(delta: number): number {
+        let amountOfFollowingItems = 0;
         // В режиме 'Только года' элементы строются снизу вверх по возрастанию, а во всех остальных типах - сверху вниз,
         // отсюда и разница в дельтах
         if (delta === 1) {
             if (!this._options.chooseHalfyears && this._options.chooseQuarters) {
                 // Помимо текущего года, в режиме 'Только кварталы' отображаются еще 2 года снизу.
-                nextElementsAmount = 2;
+                amountOfFollowingItems = 2;
             } else if (this._options.chooseMonths) {
                 // Помимо текущего года, в режиме 'Только месяцы' и 'Месяцы, кварталы и полугодия'
                 // отображается еще 1 год снизу.
-                nextElementsAmount = 1;
+                amountOfFollowingItems = 1;
             }
         } else {
             if (!this._options.chooseMonths && !this._options.chooseHalfyears && !this._options.chooseQuarters) {
                 // Помимо текущего года, в режиме'Только года' отображаются еще 14 лет снизу.
-                nextElementsAmount = ONLY_YEARS_LAST_ELEMENT_VISIBLE_INDEX;
+                amountOfFollowingItems = 14;
             }
         }
-        if (nextElementsAmount) {
-            // Ищем последний видимый элемент
-            let yearToCheck = year;
-            for (let i = 0; i < nextElementsAmount; i++) {
-                if (yearToCheck !== this._getNextDisplayedYear(yearToCheck, delta)) {
-                    yearToCheck = this._getNextDisplayedYear(yearToCheck, delta);
-                } else {
-                    break;
-                }
-            }
-            // Если после всех видимых элементов есть еще элемент - переключаемся.
-            if (this._getNextDisplayedYear(yearToCheck, delta) !== yearToCheck) {
-                yearToSet = this._getNextDisplayedYear(year, delta);
-            }
-        } else {
-            // В случае, если мы лисаем 'Вверх', мы просто устаналиваем ближайший доступный год
-            yearToSet = this._getNextDisplayedYear(year, delta);
-        }
+        return amountOfFollowingItems;
+    }
 
-        if (yearToSet && yearToSet !== year) {
-            this.setYear(yearToSet);
+    _updateArrowButtonsState(): void {
+        const buttons = {
+            arrowDown: {
+                delta: 1,
+                name: '_nextArrowButtonReadOnly'
+            },
+            arrowUp: {
+                delta: -1,
+                name: '_prevArrowButtonReadOnly'
+            }
+        };
+        for (const i in buttons) {
+            const amountOfFollowingItems = this._getAmountOfFollowingItems(buttons[i].delta);
+            this[buttons[i].name] = !this._canChangeYear(
+                this._position.getFullYear(),
+                buttons[i].delta,
+                amountOfFollowingItems
+            );
         }
     }
 
