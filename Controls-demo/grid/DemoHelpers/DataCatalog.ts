@@ -69,6 +69,53 @@ const resultCellTpl = numberResultTpl;
 
 const getCountriesStats = () => {
     return {
+        getLongCapitalData: (): IData[] => [
+            {
+                id: 0,
+                number: 1,
+                country: 'Россия',
+                capital: 'Москва',
+                population: 143420300,
+                square: 17075200,
+                populationDensity: 8
+            },
+            {
+                id: 1,
+                number: 2,
+                country: 'Соединенные Штаты Америки',
+                capital: 'Вашингтон',
+                population: 295734100,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 2,
+                number: 3,
+                country: 'Доминиканская Республика',
+                capital: 'Санто-Доминго',
+                population: 295734100,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 3,
+                number: 4,
+                country: 'Новая Зеландия',
+                capital: 'Веллингтон',
+                population: 295734100,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 4,
+                number: 5,
+                country: 'Тринидад и Тобаго',
+                capital: 'Порт-оф-Спейн',
+                population: 295734100,
+                square: 9629091,
+                populationDensity: 30.71
+            }
+        ],
         getData: (): IData[] => [
             {
                 id: 0,
