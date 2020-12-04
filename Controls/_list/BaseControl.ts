@@ -144,6 +144,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
+const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -5261,6 +5262,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
+        // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
+        // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
+        // task1180635987 убрано в 21.1000
+        if (this._options.task1180635987 && !!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            event.stopPropagation();
+            return;
+        }
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
