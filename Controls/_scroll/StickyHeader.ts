@@ -755,8 +755,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         };
     }
 
-    static getDevicePixelRatio(): number{
-        return window.devicePixelRatio;
+    static getDevicePixelRatio(): number {
+        if (window?.devicePixelRatio) {
+            return window.devicePixelRatio;
+        }
+        return 1;
     }
 
     static _theme: string[] = ['Controls/scroll'];
