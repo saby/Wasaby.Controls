@@ -2802,7 +2802,8 @@ const _private = {
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
+            contextMenuConfig: options.contextMenuConfig,
+            itemActionsVisibility: options.itemActionsVisibility
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
