@@ -237,6 +237,8 @@ const _private = {
         // переменная needResetExpandedItems вычисляется по опциям и состояниям
         if (baseControl && (needResetExpandedItems || self._needResetExpandedItems)) {
             baseControl.getSourceController().setExpandedItems([]);
+        } else if (baseControl && !self._needResetExpandedItems && expandedItemsKeys.length) {
+            baseControl.getSourceController().setExpandedItems(expandedItemsKeys);
         }
     },
 
