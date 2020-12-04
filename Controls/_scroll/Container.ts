@@ -533,6 +533,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._wasMouseEnter);
+        this._children.scrollBar?.setViewportSize(
+            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
