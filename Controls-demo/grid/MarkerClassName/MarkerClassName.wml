@@ -91,11 +91,11 @@
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
                             ladderProperties="{{_ladderProperties}}">
-                        <ws:itemPadding top="m"/>
+                        <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
                             <ws:partial template="Controls/grid:ItemTemplate"
                                         itemData="{{itemData}}"
-                                        markerClassName="image-l"/>
+                                        markerClassName="image-m"/>
                         </ws:itemTemplate>
                     </Controls.grid:View>
                 </Controls.scroll:Container>
