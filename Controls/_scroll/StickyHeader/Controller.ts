@@ -317,7 +317,8 @@ class StickyHeaderController {
     _getLastFixedHeaderId(position: POSITION): number {
         let header: number;
         for (const headerId of this._headersStack[position]) {
-            if (this._fixedHeadersStack[position].includes(headerId)) {
+            if (this._fixedHeadersStack[position].includes(headerId) &&
+                this._headers[headerId].inst.shadowVisibility !== SHADOW_VISIBILITY.hidden) {
                 header = headerId;
             }
         }
