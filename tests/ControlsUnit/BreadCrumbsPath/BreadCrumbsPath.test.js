@@ -115,7 +115,7 @@ define([
 
    describe('Controls.BreadCrumbs.Path', function() {
 
-      var breadCrumbsPath = new Path().default(),
+      var breadCrumbsPath = new Path.default(),
          items = [
             {
                id: 1,
