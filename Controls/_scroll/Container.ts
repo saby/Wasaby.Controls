@@ -29,10 +29,18 @@ import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 
+/**
+ * @typeof {String} TPagingPosition
+ * @variant left Отображения пэйджинга слева.
+ * @variant right Отображения пэйджинга справа.
+ */
+type TPagingPosition= 'left' | 'right';
+
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
     pagingMode?: TPagingModeScroll;
     pagingContentTemplate?: Function | string;
+    pagingPosition?: TPagingPosition;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -565,7 +573,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {Content} Container contents.
  */
 
-
 /**
  * @name Controls/_scroll/Container#style
  * @cfg {String} Цветовая схема (цвета тени и скролла).
@@ -598,6 +605,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
 /**
  * @name Controls/_scroll/Container#pagingContentTemplate
- * @cfg @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ * @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
  * @demo Controls-demo/Scroll/Paging/ContentTemplate/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingPosition
+ * @property {TPagingPosition} [pagingPosition=right] Опция управляет позицией пэйджинга.
+ * @demo Controls-demo/Scroll/Paging/PositionLeft/Index
  */
