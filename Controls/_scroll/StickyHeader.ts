@@ -586,7 +586,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // The top observer has a height of 1 pixel. In order to track when it is completely hidden
         // beyond the limits of the scrollable container, taking into account round-off errors,
         // it should be located with an offset of -3 pixels from the upper border of the container.
-        let coord: number = this._stickyHeadersHeight[position] + 3;
+        let coord: number = this._stickyHeadersHeight[position] + 2;
+        if (StickyHeader.getDevicePixelRatio() !== 1) {
+            coord += 1;
+        }
         if (position === POSITION.top && this._options.offsetTop && this._options.shadowVisibility === SHADOW_VISIBILITY.visible) {
             coord += this._options.offsetTop;
         }
@@ -751,6 +754,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 'topbottom'
             ])
         };
+    }
+
+    static getDevicePixelRatio(): number{
+        return window.devicePixelRatio;
     }
 
     static _theme: string[] = ['Controls/scroll'];
