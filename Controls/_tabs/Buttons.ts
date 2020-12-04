@@ -132,8 +132,9 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     protected _prepareItemClass(item: Model, index: number): string {
         const order: number = this._itemsOrder[index];
         const options: ITabsButtonsOptions = this._options;
-        const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + options.theme +
-        ' controls-Tabs__item_inlineHeight-' + options.inlineHeight + '_theme-' + options.theme];
+        const theme = options.theme;
+        const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + theme +
+        ' controls-Tabs__item_inlineHeight-' + options.inlineHeight + '_theme-' + theme];
 
         const itemAlign: string = item.get('align');
         const align: string = itemAlign ? itemAlign : 'right';
@@ -141,22 +142,16 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         const isLastItem: boolean = order === this._lastRightOrder;
 
         classes.push(`controls-Tabs__item_align_${align} ` +
-            `controls-Tabs__item_align_${align}_theme_${options.theme}`);
+            `controls-Tabs__item_align_${align}_theme_${theme}`);
         if (order === 1 || isLastItem) {
-            classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + theme);
         }
         if (order === 1) {
-            classes.push('controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_' + theme);
         } else if (isLastItem) {
-            classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + options.theme);
+            classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + theme);
         } else {
-            classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + options.theme);
-        }
-
-        const itemType: string = item.get('type');
-        if (itemType) {
-            classes.push('controls-Tabs__item_type_' + itemType +
-                ' controls-Tabs__item_type_' + itemType + '_theme_' + options.theme);
+            classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + theme);
         }
 
         // TODO: по поручению опишут как и что должно сжиматься.
