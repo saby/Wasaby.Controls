@@ -66,6 +66,7 @@ type IFilterControllerOptions = Pick<IBrowserOptions,
 /**
  * Контрол "Браузер" обеспечивает связь между списком (см. {@link Controls/list:View Плоский список}, {@link Controls/grid:View Таблица}, {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) и контролами его окружения, таких как {@link Controls/search:Input Строка поиска}, {@link Controls/breadcrumbs:Path Хлебные крошки}, {@link Controls/operations:Panel Панель действий} и {@link Controls/filter:View Объединенный фильтр}.
  * @class Controls/browser:Browser
+ * @public
  * @author Герасимов А.М.
  * @mixes Controls/_browser/interface/IBrowser
  * @mixes Controls/_filter/IPrefetch

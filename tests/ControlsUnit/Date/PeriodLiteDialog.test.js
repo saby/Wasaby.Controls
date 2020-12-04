@@ -452,5 +452,47 @@ define([
             });
          });
       });
+
+      describe('_updateArrowButtonsState', () => {
+         [{
+            name: 'should set next arrow to readonly',
+            displayedRanges: [[new Date(2019, 0), new Date(2021, 0)]],
+            startValue: new Date(2019, 0),
+            endValue: new Date(2019, 11, 31),
+            nextArrowResult: true,
+            prevArrowResult: false
+         }, {
+            name: 'should set prev arrow to readonly',
+            displayedRanges: [[new Date(2019, 0), new Date(2021, 0)]],
+            startValue: new Date(2021, 0),
+            endValue: new Date(2021, 11, 31),
+            nextArrowResult: false,
+            prevArrowResult: true
+         }, {
+            name: 'should set prev and next arrows to readonly',
+            displayedRanges: [[new Date(2019, 0), new Date(2019, 0)]],
+            startValue: new Date(2019, 0),
+            endValue: new Date(2019, 11, 31),
+            nextArrowResult: true,
+            prevArrowResult: true
+         }, {
+            name: 'should set prev and next arrows to enable',
+            startValue: new Date(2020, 0),
+            endValue: new Date(2020, 11, 31),
+            nextArrowResult: false,
+            prevArrowResult: false
+         }].forEach((test) => {
+            it(test.name, () => {
+               const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {
+                  displayedRanges: test.displayedRanges,
+                  startValue: test.startValue,
+                  endValue: test.endValue
+               });
+               component._updateArrowButtonsState();
+               assert.equal(test.nextArrowResult, component._nextArrowButtonReadOnly);
+               assert.equal(test.prevArrowResult, component._prevArrowButtonReadOnly);
+            });
+         });
+      });
    });
 });

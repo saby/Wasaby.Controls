@@ -14,10 +14,6 @@ describe('Controls/display/GridCell', () => {
         beforeEach(() => {
             cell = new GridCell();
         });
-
-        it('shouldDisplayTag should not return true by default', () => {
-            assert.isFalse(cell.shouldDisplayTag());
-        });
     });
 
     // endregion

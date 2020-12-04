@@ -101,7 +101,7 @@ class Text extends Base<ITextInputOptions> {
     static getDefaultOptions(): ITextInputOptions {
         const defaultOptions: ITextInputOptions = Base.getDefaultOptions();
 
-        defaultOptions.trim = false;
+        defaultOptions.trim = true;
         defaultOptions.convertPunycode = false;
 
         return defaultOptions;

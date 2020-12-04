@@ -109,7 +109,7 @@
       }
    }
 
-   .controls-PeriodLiteDialog__arrow-wrapper_theme-@{themeName}:hover {
+   .controls-PeriodLiteDialog__arrow-wrapper_active_theme-@{themeName}:hover {
       cursor: pointer;
       border-color: @yearselector_arrow_hover_background-color_shortDatePicker;
       .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
@@ -338,6 +338,13 @@
 .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
    height: @arrow_icon-size_shortDatePicker;
    width: @arrow_icon-size_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__arrow_readOnly_theme-@{themeName} {
+   fill: @readonly_color;
+}
+
+.controls-PeriodLiteDialog__arrow_active_theme-@{themeName} {
    fill: @arrow_icon-color_shortDatePicker;
 }
 

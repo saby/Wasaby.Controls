@@ -176,7 +176,9 @@ export class CrudWrapper {
     }
 
     updateOptions(newOptions: ICrudWrapperOptions): void {
-        this._source = newOptions.source;
+        if (CrudWrapper._isValidCrudSource(newOptions.source)) {
+            this._source = newOptions.source;
+        }
     }
 
     /**
@@ -185,7 +187,7 @@ export class CrudWrapper {
      * @param error
      * @private
      */
-    private _promiseCatchCallback(error: Error): Promise<error> {
+    private _promiseCatchCallback(error: Error): Promise<Error> {
         // TODO добавить обработку ошибок
         return Promise.reject(error);
     }

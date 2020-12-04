@@ -23,7 +23,6 @@ import { IItemPadding } from './Collection';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 
 export interface IOptions<T> extends IGridCellOptions<T> {
-    owner: GridHeaderRow<T>;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -41,7 +40,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
                           + ` controls-Grid__header-cell_theme-${theme}`
                           + ` ${this._getWrapperPaddingClasses(theme)}`;
 
-        const isMultiHeader = this._$owner.hasRowspan();
+        const isMultiHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
 
         if (isMultiHeader) {
@@ -72,14 +71,28 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
         }
         if (this._$column.align) {
-            contentClasses += ` controls-Grid__header-cell_justify_content_${this._$headerCell.align}`;
+            contentClasses += ` controls-Grid__header-cell_justify_content_${this._$column.align}`;
         }
         if (isFullGridSupport) {
             if (this._$column.valign) {
-                contentClasses += ` controls-Grid__header-cell_align_items_${this._$headerCell.valign}`;
+                contentClasses += ` controls-Grid__header-cell_align_items_${this._$column.valign}`;
             }
         }
         return contentClasses;
+    }
+
+    getColspanStyles(): string {
+        if (!this._$owner.isFullGridSupport()) {
+            return '';
+        }
+        let styles = super.getColspanStyles();
+
+        if (this._$owner.isMultiline()) {
+            const {startRow = 1, endRow = 2} = this._$column;
+            styles += ` grid-row: ${startRow} / ${endRow};`;
+        }
+
+        return styles;
     }
 
     getTemplate(): TemplateFunction|string {
@@ -109,7 +122,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
 
     // todo <<< START >>> compatible with old gridHeaderModel
     get column(): IHeaderCell {
-        return this._$headerCell;
+        return this._$column;
     }
     // todo <<< END >>>
 

@@ -2,6 +2,7 @@ import CollectionItem from './CollectionItem';
 import GridCollection from './GridCollection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './GridRowMixin';
+import {TemplateFunction} from 'UI/Base';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: GridCollection<T>;
@@ -11,12 +12,22 @@ export default class GridRow<T>
     extends mixin<CollectionItem<any>, GridRowMixin<any>>(CollectionItem, GridRowMixin) {
     readonly '[Controls/_display/GridRow]': boolean;
 
+    // TODO: Удалить имплементирование после выделения сущностей элементов списка
+    //  (базовый элемент -> элемент данных / элемент группы /...)
+    //  Интерфейс должен имплементироваться только у элементов, которые поддерживает отметку маркером.
+    //  Сейчас, т.к. нет элемента данных, его имплементирует CollectionItem.
+    readonly Markable: boolean = false;
+
     constructor(options?: IOptions<T>) {
         super(options);
         GridRowMixin.call(this, options);
     }
 
     // region overrides
+
+    getTemplate(): TemplateFunction | string {
+        return this.getDefaultTemplate();
+    }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
         const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility);

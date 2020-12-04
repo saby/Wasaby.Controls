@@ -2796,7 +2796,8 @@ const _private = {
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
+            contextMenuConfig: options.contextMenuConfig,
+            itemActionsVisibility: options.itemActionsVisibility
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
@@ -3763,6 +3764,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
+
+        // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
+        if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
+            if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
+                self._hideTopTrigger = true;
+            }
+        }
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController

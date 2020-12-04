@@ -24,7 +24,7 @@ export default class GroupItem<T> extends mixin<
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
     readonly '[Controls/_display/GroupItem]': true;
 
-    readonly MarkableItem: boolean = false;
+    readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
 
     protected _$multiSelectVisibility: string;
@@ -63,7 +63,7 @@ export default class GroupItem<T> extends mixin<
         }
     }
 
-    getItemTemplate(itemTemplateProperty: string,
+    getTemplate(itemTemplateProperty: string,
                     userItemTemplate: TemplateFunction | string,
                     userGroupTemplate?: TemplateFunction | string): TemplateFunction | string {
         return userGroupTemplate || 'Controls/listRender:groupTemplate';
