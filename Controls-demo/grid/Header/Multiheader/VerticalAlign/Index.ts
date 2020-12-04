@@ -9,7 +9,7 @@ import { IHeader } from 'Controls-demo/types';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    private _header: IHeader[] = getCountriesStats().getMultiHeaderVar2();
+    private _header: IHeader[] = getCountriesStats().getMultiHeaderVar3();
     protected _columns: IColumn[] = getCountriesStats().getColumnsWithWidths().slice(1);
 
     protected _beforeMount(): void {

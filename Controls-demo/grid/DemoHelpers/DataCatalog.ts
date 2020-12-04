@@ -811,7 +811,7 @@ const getCountriesStats = () => {
                 endColumn: 6
             }
         ],
-        getMultiHeaderVar2: (): IHeader[] => [
+        getMultiHeaderVar3: (): IHeader[] => [
             {
                 title: 'Географические характеристики стран',
                 startRow: 1,
