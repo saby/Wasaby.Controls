@@ -1,11 +1,19 @@
 import { Model } from 'Types/entity';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
 import GridDataRow from './GridDataRow';
+import IMarkable from './interface/IMarkable';
+import ITagCell from './grid/interface/ITagCell';
+import IItemActionsCell from './grid/interface/IItemActionsCell';
+import ILadderContentCell from './grid/interface/ILadderContentCell';
 
 export interface IOptions<T> extends IGridCellOptions<T> {
 }
 
-export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends GridCell<T, TOwner> {
+export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends GridCell<T, TOwner> implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+    readonly Markable = true;
+    readonly TagCell = true;
+    readonly ItemActionsCell = true;
+    readonly LadderContentCell = true;
 
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {

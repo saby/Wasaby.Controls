@@ -11,6 +11,8 @@ import GridCheckboxCell from './GridCheckboxCell';
 import GridRow from './GridRow';
 import { IOptions as IBaseOptions } from './CollectionItem';
 
+const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
+
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
 }
@@ -30,8 +32,8 @@ export default abstract class GridRowMixin<T> {
     protected _$columnItems: Array<GridCell<T, GridRow<T>>>;
     protected _$ladder: {};
 
-    getTemplate(): TemplateFunction|string {
-        return 'Controls/gridNew:ItemTemplate';
+    getDefaultTemplate(): string {
+        return DEFAULT_GRID_ROW_TEMPLATE;
     }
 
     getItemClasses(templateHighlightOnHover: boolean = true,
@@ -59,6 +61,10 @@ export default abstract class GridRowMixin<T> {
 
     isLastItem(): boolean {
         return (this.getOwner().getItems()[this.getOwner().getCount() - 1] === this);
+    }
+
+    isFullGridSupport(): boolean {
+        return this._$owner.isFullGridSupport();
     }
 
     getColumns(): Array<GridCell<T, GridRow<T>>> {
@@ -302,6 +308,7 @@ export default abstract class GridRowMixin<T> {
 
     abstract getOwner(): GridCollection<T>;
     abstract getMultiSelectVisibility(): string;
+    abstract getTemplate(): TemplateFunction | string;
     abstract isEditing(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;

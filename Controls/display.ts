@@ -102,6 +102,12 @@ import {default as GridCell} from './_display/GridCell';
 export {GridCell};
 import {default as GridHeaderRow} from './_display/GridHeaderRow';
 export {GridHeaderRow};
+import {default as GridTableHeaderRow} from './_display/GridTableHeaderRow';
+export {GridTableHeaderRow};
+import {default as GridHeader} from './_display/GridHeader';
+export {GridHeader};
+import {default as GridTableHeader} from './_display/GridTableHeader';
+export {GridTableHeader};
 import {default as GridHeaderCell} from './_display/GridHeaderCell';
 export {GridHeaderCell};
 import {default as GridDataCell} from './_display/GridDataCell';
@@ -137,10 +143,16 @@ register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});
 register('Controls/display:GridCollection', GridCollection, {instantiate: false});
 register('Controls/display:GridRow', GridRow, {instantiate: false});
 register('Controls/display:GridCell', GridCell, {instantiate: false});
+
+register('Controls/display:GridHeader', GridHeader, {instantiate: false});
+register('Controls/display:GridTableHeader', GridTableHeader, {instantiate: false});
 register('Controls/display:GridHeaderRow', GridHeaderRow, {instantiate: false});
+register('Controls/display:GridTableHeaderRow', GridTableHeaderRow, {instantiate: false});
 register('Controls/display:GridHeaderCell', GridHeaderCell, {instantiate: false});
+
 register('Controls/display:GridDataRow', GridDataRow, {instantiate: false});
 register('Controls/display:GridDataCell', GridDataCell, {instantiate: false});
+
 register('Controls/display:GridFooterCell', GridFooterCell, {instantiate: false});
 register('Controls/display:GridResultsCell', GridResultsCell, {instantiate: false});
 
