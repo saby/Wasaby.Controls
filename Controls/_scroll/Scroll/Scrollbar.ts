@@ -55,6 +55,7 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _dragPointOffset: number | null = null;
     protected _trackVisible: boolean = false;
     private _scrollPosition: number = 0;
+    private _viewportSize: number | null = null;
 
     protected _beforeMount(options: IScrollBarOptions): void {
         //TODO Compatibility на старых страницах нет Register, который скажет controlResize
@@ -99,6 +100,15 @@ class Scrollbar extends Control<IScrollBarOptions> {
             this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
                                                                 this._thumbSize, position, options.contentSize);
         }
+    }
+
+    protected _afterUpdate(oldOptions?: IScrollBarOptions, oldContext?: any) {
+        // Если после перерисовки поменялись размеры скролбара, то обновим его. Сценарий очень редкий,
+        // например после фиксации заголовков надо сдвинуть вершнюю грань скролбара вниз.
+        // Для оптимизации, если родитель заранее знает размер скролбара, можно задать его через метод setViewportSize,
+        // тогда скроллбар заранее правильно рассчитает размеры и положение ползунка и перерисовки не будет.
+        this._setSizes(this._options.contentSize);
+        this._updatePosition();
     }
 
     protected _beforeUnmount(): void {
@@ -200,6 +210,16 @@ class Scrollbar extends Control<IScrollBarOptions> {
         }
     }
 
+    setViewportSize(size: number): void {
+        // В некоторых сценариях заранее известно, какой размер будет у скролбара после обновления.
+        // Его можно задать через сеттер, тогда скролбар правильно расчитаетя на _beforeUpdate, а не на afterUpdate.
+        // Можно переделать через опции, но api бедут не самое производительное.
+        // Например, если задана опция, то используется значение из опции. Тогда родительский контрол
+        // должен всегда отслеживать изменения размеров и сообщать новые размеры через опции. Это приведет к тому,
+        // что при каждом изменении размеров родительскому контролу придется перерисовываться.
+        this._viewportSize = size;
+    }
+
     public recalcSizes(): void {
         this._resizeHandler();
     }
@@ -215,8 +235,16 @@ class Scrollbar extends Control<IScrollBarOptions> {
         if (!Scrollbar._isScrollBarVisible(scrollbar as HTMLElement)) {
             return false;
         }
-        this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
-        const scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
+
+        let scrollbarAvailableSize: number;
+        if (this._viewportSize !== null) {
+            this._scrollBarSize = this._viewportSize;
+            scrollbarAvailableSize = this._viewportSize;
+        } else {
+            this._scrollBarSize = scrollbar[verticalDirection ? 'offsetHeight' : 'offsetWidth'];
+            scrollbarAvailableSize = scrollbar[verticalDirection ? 'clientHeight' : 'clientWidth'];
+        }
+
         let thumbSize: number;
 
         let viewportRatio: number;
@@ -347,8 +375,13 @@ class Scrollbar extends Control<IScrollBarOptions> {
     private _updatePosition(): void {
         const position = this._scrollPosition || this._options.position || 0;
         this._setPosition(position);
-        this._thumbPosition = this._getThumbCoordByScroll(this._scrollBarSize,
+
+        const thumbPosition: number = this._getThumbCoordByScroll(this._scrollBarSize,
             this._thumbSize, position, this._options.contentSize);
+
+        if (thumbPosition !== this._thumbPosition) {
+            this._thumbPosition = thumbPosition;
+        }
     }
 
     private static _isScrollBarVisible(scrollbar: HTMLElement): boolean {
