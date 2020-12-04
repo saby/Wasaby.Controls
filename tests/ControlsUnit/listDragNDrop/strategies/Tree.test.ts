@@ -198,6 +198,22 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
                dispItem: targetNode
             });
          });
+
+         it('drag leaf from bottom node to after this node', () => {
+            model.setExpandedItems([null]);
+
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(3));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'before',
+               dispItem: model.getItemBySourceKey(2)
+            });
+         });
       });
 
       describe('drag tiles', () => {
