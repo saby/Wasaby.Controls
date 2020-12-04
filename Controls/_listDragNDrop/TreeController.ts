@@ -157,8 +157,8 @@ export default class TreeController extends FlatController {
 
          // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
          if (this._model['[Controls/_tile/TreeTileViewModel]']) {
-            result.top = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
-            result.bottom = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+            result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+            result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
          } else {
             result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
             result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
