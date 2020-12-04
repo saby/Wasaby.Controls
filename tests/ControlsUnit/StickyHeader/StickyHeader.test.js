@@ -34,13 +34,6 @@ define([
       };
 
    describe('Controls/_scroll/StickyHeader', function() {
-      beforeEach(() => {
-         sinon.stub(StickyHeader, 'getDevicePixelRatio').returns(1);
-      });
-      afterEach(() => {
-         sinon.restore();
-      });
-
       describe('Initialisation', function() {
          it('should set correct header id', function() {
             const component = createComponent(StickyHeader, options);

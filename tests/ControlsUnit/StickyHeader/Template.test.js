@@ -18,7 +18,6 @@ define(
          before(function() {
             compat = Env.constants.compat;
             Env.constants.compat = true;
-            sinon.stub(scroll.StickyHeader, 'getDevicePixelRatio').returns(1);
          });
 
          beforeEach(function() {
@@ -40,7 +39,6 @@ define(
 
          after(function() {
             Env.constants.compat = compat;
-            sinon.restore();
          });
 
          describe('StickyHeader', function() {
