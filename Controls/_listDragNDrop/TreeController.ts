@@ -4,7 +4,9 @@ import { SyntheticEvent } from 'Vdom/Vdom';
 import { IDragPosition, TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
 
-const DRAG_MAX_OFFSET = 10,
+// оффсет нужно считать в процентах, так как элементы могут быть больших размеров
+// и попасть в 10 пикселей будет очень сложно
+const DRAG_MAX_OFFSET = 0.3,
       EXPAND_ON_DRAG_DELAY = 1000;
 
 export interface ITreeModel extends IModel {
@@ -152,8 +154,15 @@ export default class TreeController extends FlatController {
          const dragTargetRect = targetElement.getBoundingClientRect();
 
          result = { top: null, bottom: null };
-         result.top = event.nativeEvent.pageY - dragTargetRect.top;
-         result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+
+         // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+         if (this._model['[Controls/_tile/TreeTileViewModel]']) {
+            result.top = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
+            result.bottom = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+         } else {
+            result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
+            result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
+         }
       }
 
       return result;
