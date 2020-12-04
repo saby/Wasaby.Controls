@@ -309,6 +309,8 @@ const _private = {
         // сейчас это требуется, т.к. ещё есть nodesSourceController'ы
         if (baseControl && (self._needResetExpandedItems || !(_private.isDeepReload(cfg, self._deepReload) && expandedItemsKeys.length && !isExpandAll))) {
             baseControl.getSourceController().setExpandedItems([]);
+        } else if (baseControl && !self._needResetExpandedItems && expandedItemsKeys.length) {
+            baseControl.getSourceController().setExpandedItems(expandedItemsKeys);
         }
     },
 
