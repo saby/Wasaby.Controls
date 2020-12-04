@@ -92,7 +92,7 @@ class View extends Control<IDateLitePopupOptions> {
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
 
         if (options.displayedRanges) {
-            this._updateArrowButtonsState(options);
+            this._updateArrowButtonsState();
         }
     }
 
@@ -100,7 +100,7 @@ class View extends Control<IDateLitePopupOptions> {
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
         this._updateCloseBtnPosition(options);
         if (options.displayedRanges) {
-            this._updateArrowButtonsState(options);
+            this._updateArrowButtonsState();
         }
     }
 
@@ -229,6 +229,9 @@ class View extends Control<IDateLitePopupOptions> {
     }
 
     protected _getNextDisplayedYear(year: number, delta: number): number {
+        if (!this._displayedRanges) {
+            return year + delta;
+        }
         let index;
         // Ищем массив в котором находится year.
         for (let i = 0; i < this._displayedRanges.length; i++) {
@@ -320,7 +323,7 @@ class View extends Control<IDateLitePopupOptions> {
         return amountOfFollowingItems;
     }
 
-    _updateArrowButtonsState(options: IDateLitePopupOptions): void {
+    _updateArrowButtonsState(): void {
         const buttons = {
             arrowDown: {
                 delta: 1,
