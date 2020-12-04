@@ -328,7 +328,7 @@ describe('Controls/browser:Browser', () => {
             options.source = new Memory();
             options.source.query = () => Promise.reject(new Error('testError'));
             await browser._beforeUpdate(options);
-            ok(browser._errorRegister);
+            assert.ok(browser._errorRegister);
         });
 
     });
