@@ -626,7 +626,7 @@ define([
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
-                  treeControl._beforeUpdate({root: treeControl._root});
+                  treeControl._beforeUpdate({root: treeControl._root, source: source});
                   assert.isTrue(resetExpandedItemsCalled);
                   resolve();
                }, 20);
@@ -922,7 +922,8 @@ define([
                   root: 'testRoot',
                   parentProperty: 'parentKey',
                   nodeProperty: 'itemType',
-                  hasChildrenProperty: 'hasChildren'
+                  hasChildrenProperty: 'hasChildren',
+                  source: source
                });
                try {
                   assert.equal(treeGridViewModel._options.parentProperty, 'parentKey');
