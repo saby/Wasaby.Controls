@@ -110,7 +110,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     _beforeUnmount(): void {
         if (!this._resizeObserver.isResizeObserverSupported()) {
-            UnregisterUtil(this, 'controlResize');
+            UnregisterUtil(this, 'controlResize', {listenAll: true});
         }
         this._resizeObserver.terminate();
         for (const registrar of this._registrars) {
