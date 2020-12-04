@@ -55,8 +55,15 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   selectAll(selection: ISelection): ISelection {
+   selectAll(selection: ISelection, limit?: number): ISelection {
       const newSelection = {selected: [], excluded: []};
+
+      // если задан лимит, то важно сохранить исключенные записи,
+      // чтобы при отметке +10 записей, отметка началась с последней отмеченной записи
+      if (limit) {
+         newSelection.excluded = clone(selection.excluded);
+      }
+
       newSelection.selected.push(ALL_SELECTION_VALUE);
       return newSelection;
    }
@@ -93,11 +100,6 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
       selectedItems.set(false, []);
       selectedItems.set(null, []);
 
-      let resLimit = limit;
-      if (limit > 0) {
-         resLimit -= selection.excluded.length;
-      }
-
       const isAllSelected: boolean = this._isAllSelected(selection);
 
       const handleItem = (item) => {
@@ -106,7 +108,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
          }
 
          const itemId = this._getKey(item);
-         const selected = (!resLimit || selectedItemsCount < resLimit)
+         const selected = (!limit || selectedItemsCount < limit)
              && (selection.selected.includes(itemId) || isAllSelected && !selection.excluded.includes(itemId));
 
          if (selected) {
@@ -133,7 +135,7 @@ export class FlatSelectionStrategy implements ISelectionStrategy {
          if (!hasMoreData && (!limit || itemsCount <= limit)) {
             countItemsSelected = itemsCount - selection.excluded.length;
          } else if (limit) {
-            countItemsSelected = limit - selection.excluded.length;
+            countItemsSelected = limit;
          }
       } else {
          countItemsSelected = selection.selected.length;

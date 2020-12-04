@@ -158,6 +158,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
+const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -1914,8 +1915,8 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        clickEvent.nativeEvent.preventDefault();
         clickEvent.stopImmediatePropagation();
+        clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
@@ -5241,7 +5242,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!isLeftMouseButton(event)) {
             return;
         }
-        event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
         //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
@@ -5302,6 +5302,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
+        // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
+        // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
+        if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            event.stopPropagation();
+            return;
+        }
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {
