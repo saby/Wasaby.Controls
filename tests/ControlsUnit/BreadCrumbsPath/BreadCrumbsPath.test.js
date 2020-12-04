@@ -115,13 +115,38 @@ define([
 
    describe('Controls.BreadCrumbs.Path', function() {
 
-      var drawBreadCrumbs;
+      var breadCrumbsPath = new Path().default(),
+         items = [
+            {
+               id: 1,
+               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+               parent: null
+            },
+            {
+               id: 2,
+               title: 'Notebooks 2',
+               parent: 1
+            },
+            {
+               id: 3,
+               title: 'Smartphones 3',
+               parent: 2
+            }
+         ],
+         drawBreadCrumbs;
          drawBreadCrumbs = BreadCrumbsUtil.drawBreadCrumbs;
          BreadCrumbsUtil.drawBreadCrumbs = function() {
 
          };
 
       BreadCrumbsUtil.drawBreadCrumbs = drawBreadCrumbs;
+
+      it('bread crumbs path update', function() {
+         breadCrumbsPath._calculateBreadCrumbsToDraw(items);
+         assert.isEqual(breadCrumbsPath._visibleItems.length, 2);
+         breadCrumbsPath._calculateBreadCrumbsToDraw([]);
+         assert.isEqual(breadCrumbsPath._visibleItems.length, 0);
+      });
    });
    describe('Controls.BreadCrumbs.MultilinePath', function() {
       var MultilinePathCrumbs = new MultilinePath.default();
