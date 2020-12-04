@@ -14,7 +14,7 @@ export default class extends Control {
     protected _viewSourceImage: Memory;
     protected _viewSourceText: Memory;
     protected _columnsImage: INoStickyLadderColumn[] = getTasks().getColumns();
-    protected _columnsText: IColumn[] = forShowWidths().getColumns1();
+    protected _columnsText: IColumn[] = forShowWidths().getColumns2();
     protected _ladderProperties: string[] = ['photo', 'date'];
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
