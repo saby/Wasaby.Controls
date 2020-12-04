@@ -201,6 +201,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
 
          it('drag leaf from bottom node to after this node', () => {
             model.setExpandedItems([null]);
+            model.getItemBySourceKey(1).setExpanded(true);
 
             strategy = new TreeStrategy(model, model.getItemBySourceKey(3));
 
@@ -209,7 +210,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
-               index: 1,
+               index: 0,
                position: 'before',
                dispItem: model.getItemBySourceKey(2)
             });
