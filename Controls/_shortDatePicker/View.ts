@@ -108,7 +108,7 @@ class View extends Control<IDateLitePopupOptions> {
      * Sets the current year
      * @param year
      */
-    setYear(year: Date): void {
+    setYear(year: number): void {
         this._position = new this._options.dateConstructor(year, 0, 1);
         this._notify('yearChanged', [year]);
     }
@@ -229,9 +229,6 @@ class View extends Control<IDateLitePopupOptions> {
     }
 
     protected _getNextDisplayedYear(year: number, delta: number): number {
-        if (!this._displayedRanges) {
-            return year + delta;
-        }
         let index;
         // Ищем массив в котором находится year.
         for (let i = 0; i < this._displayedRanges.length; i++) {
@@ -270,33 +267,34 @@ class View extends Control<IDateLitePopupOptions> {
 
     protected _changeYear(event: Event, delta: number): void {
         const year = this._position.getFullYear();
-        let yearToSet;
-        const amountOfFollowingItems = this._getAmountOfFollowingItems(delta);
-        // Ищем последний видимый элемент
-        if (amountOfFollowingItems) {
-            if (this._canChangeYear(year, delta, amountOfFollowingItems)) {
-                yearToSet = this._getNextDisplayedYear(year, delta);
+        let newYear;
+        if (this._options.displayedRanges) {
+            const amountOfFollowingItems = this._getAmountOfFollowingItems(delta);
+            // Ищем последний видимый элемент
+            // В случае, если мы лисаем 'Вверх', мы просто устаналиваем ближайший доступный год
+            if (this._canChangeYear(year, delta, amountOfFollowingItems) || !amountOfFollowingItems) {
+                newYear = this._getNextDisplayedYear(year, delta);
             }
         } else {
-            // В случае, если мы лисаем 'Вверх', мы просто устаналиваем ближайший доступный год
-            yearToSet = this._getNextDisplayedYear(year, delta);
+            newYear = year + delta;
         }
-
-        if (yearToSet && yearToSet !== year) {
-            this.setYear(yearToSet);
+        if (newYear && newYear !== year) {
+            this.setYear(newYear);
         }
     }
 
     private _canChangeYear(year: number, delta: number, amountOfFollowingItems: number): boolean {
-        let yearToCheck = year;
-        for (let i = 0; i < amountOfFollowingItems; i++) {
-            if (yearToCheck !== this._getNextDisplayedYear(yearToCheck, delta)) {
-                yearToCheck = this._getNextDisplayedYear(yearToCheck, delta);
-            } else {
-                break;
-            }
+        let changedYear = year;
+        const yearsNotEqual = () => {
+            return changedYear !== this._getNextDisplayedYear(changedYear, delta);
+        };
+
+        let index = 0;
+        while (yearsNotEqual() && index < amountOfFollowingItems) {
+            changedYear = this._getNextDisplayedYear(changedYear, delta);
+            index++;
         }
-        return this._getNextDisplayedYear(yearToCheck, delta) !== yearToCheck;
+        return yearsNotEqual();
     }
 
     // Количество элементов, которые нахоятся ниже текущего года, но так же видны
@@ -323,25 +321,24 @@ class View extends Control<IDateLitePopupOptions> {
     }
 
     _updateArrowButtonsState(options: IDateLitePopupOptions): void {
-        let arrowDownDelta;
-        let arrowUpDelta;
-        // В режиме 'Только года' года строятся по возрастаную снизу вверх, а во всех остальных - сверху вниз. Значит
-        // при нажатии на стрелку вниз, в зависимости от режима мы либо увеличим год, либо уменьшим. От сюда и
-        // разница в дельтах.
-        if (options.chooseMonths && (options.chooseQuarters || options.chooseHalfyears)) {
-            arrowDownDelta = 1;
-            arrowUpDelta = -1;
-        } else {
-            arrowDownDelta = -1;
-            arrowUpDelta = 1;
+        const buttons = {
+            arrowDown: {
+                delta: 1,
+                name: '_nextArrowButtonReadOnly'
+            },
+            arrowUp: {
+                delta: -1,
+                name: '_prevArrowButtonReadOnly'
+            }
+        };
+        for (const i in buttons) {
+            const amountOfFollowingItems = this._getAmountOfFollowingItems(buttons[i].delta);
+            this[buttons[i].name] = !this._canChangeYear(
+                this._position.getFullYear(),
+                buttons[i].delta,
+                amountOfFollowingItems
+            );
         }
-
-        // Проверяем стрелку 'вниз'
-        let amountOfFollowingItems = this._getAmountOfFollowingItems(arrowDownDelta);
-        this._nextArrowButtonReadOnly = !this._canChangeYear(this._position.getFullYear(), arrowDownDelta, amountOfFollowingItems);
-        // Проверяем стрклу 'вверх'.
-        amountOfFollowingItems = 0;
-        this._prevArrowButtonReadOnly = !this._canChangeYear(this._position.getFullYear(), arrowUpDelta, amountOfFollowingItems);
     }
 
     protected _onYearMouseLeave(): void {

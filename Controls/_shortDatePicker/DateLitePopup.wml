@@ -36,7 +36,9 @@
             controls-PeriodLiteDialog__year-prev_theme-{{_options.theme}}"
                  title="{[Предыдущий год]}"
                  on:click="_changeYear (-1)">
-               <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+               <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}
+                           controls-PeriodLiteDialog__arrow_{{_prevArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
                   <path xmlns="http://www.w3.org/2000/svg" d="M8,5l7,5.5h-2L8,6.8l-5,3.7H1L8,5z"/>
                </svg>
             </div>
@@ -45,7 +47,9 @@
             controls-PeriodLiteDialog__year-next_theme-{{_options.theme}}"
                  title="{[Следующий год]}"
                  on:click="_changeYear (1)">
-               <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+               <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}
+                        controls-PeriodLiteDialog__arrow_{{_nextArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}"
+                    viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                   <path xmlns="http://www.w3.org/2000/svg" d="M8,11L1,5.5h2l5,3.7l5-3.7h2L8,11z"/>
                </svg>
             </div>
@@ -93,7 +97,9 @@
          controls-PeriodLiteDialog__arrow-wrapper_{{_nextArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}"
               title="{[Следующий год]}"
               on:click="_changeYear (1)">
-            <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <svg class="controls-PeriodLiteDialog__arrowUp controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}
+                     controls-PeriodLiteDialog__arrow_{{_nextArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}" viewBox="0 0 16 16"
+                 xmlns="http://www.w3.org/2000/svg">
                <path xmlns="http://www.w3.org/2000/svg" d="M8,5l7,5.5h-2L8,6.8l-5,3.7H1L8,5z"/>
             </svg>
          </div>
@@ -135,7 +141,9 @@
          <div class="controls-PeriodLiteDialog__arrow-wrapper_theme-{{_options.theme}}
          controls-PeriodLiteDialog__arrow-wrapper_{{_prevArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}" title="{[Предыдущий год]}"
               on:click="_changeYear (-1)">
-            <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <svg class="controls-PeriodLiteDialog__arrowDown controls-PeriodLiteDialog__arrow_theme-{{_options.theme}}
+                        controls-PeriodLiteDialog__arrow_{{_prevArrowButtonReadOnly ? 'readOnly' : 'active'}}_theme-{{_options.theme}}"
+                 viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                <path xmlns="http://www.w3.org/2000/svg" d="M8,11L1,5.5h2l5,3.7l5-3.7h2L8,11z"/>
             </svg>
          </div>
