@@ -197,7 +197,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _initHeaderController(): void {
         if (!this._isControllerInitialized) {
-            this._stickyHeaderController.init(this._container);
+            this._stickyHeaderController.init(this._children.content);
             this._isControllerInitialized = true;
         }
     }
