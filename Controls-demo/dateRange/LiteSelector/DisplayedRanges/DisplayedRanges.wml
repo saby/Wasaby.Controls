@@ -14,4 +14,14 @@
                 displayedRanges="{{_displayedRanges1}}"
         />
     </div>
+    <div>
+        <Controls.dateRange:RangeShortSelector
+                displayedRanges="{{_displayedRanges3}}"
+                chooseHalfyears="{{false}}"
+                chooseMonths="{{false}}"
+                chooseQuarters="{{false}}"
+                bind:startValue="_startValue3"
+                bind:endValue="_endValue3"
+        />
+    </div>
 </div>
