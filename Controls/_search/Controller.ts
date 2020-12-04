@@ -68,6 +68,7 @@ interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchyS
    dataLoadCallback?: Function;
    viewMode: string;
    root?: Key;
+   searchValue?: string;
 }
 
 type Key = string | number | null;
@@ -118,7 +119,8 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      this._searchController.update({...newOptions, ...context.dataOptions});
+      const mergedOptions = {...newOptions, ...context.dataOptions};
+      this._searchController.update(mergedOptions);
    }
 
    private _setSearchValue(value: string): void {
@@ -307,6 +309,7 @@ export default class Container extends Control<IContainerOptions> {
          keyProperty: undefined,
          searchNavigationMode: undefined,
          searchParam: undefined,
+         searchValue: undefined,
          searchValueTrim: undefined,
          minSearchLength: 3,
          searchDelay: 500,

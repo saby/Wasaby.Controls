@@ -80,8 +80,8 @@ export default class ControllerClass implements ISearchController {
          this.setRoot(options.root);
       }
 
-      if (options.searchValue !== undefined) {
-         if (options?.searchValue !== this._searchValue) {
+      if (options.hasOwnProperty('searchValue')) {
+         if (options.searchValue !== this._options.searchValue) {
             if (options.searchValue) {
                updateResult = this.search(options.searchValue).then();
             } else {
