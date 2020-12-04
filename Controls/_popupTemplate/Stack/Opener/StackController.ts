@@ -88,11 +88,11 @@ class StackController extends BaseController {
                 BaseController.resetRootContainerCoords();
                 for (const child of item.childs) {
                     if (child.controller.TYPE === this.TYPE) {
-                        const updated = this._updateItemPosition(child);
-                        if (updated) {
-                            needUpdate = true;
-                        }
+                        needUpdate = true;
                     }
+                }
+                if (needUpdate) {
+                    this._update();
                 }
             }
         }
