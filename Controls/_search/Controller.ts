@@ -303,14 +303,8 @@ export default class Container extends Control<IContainerOptions> {
       };
    }
 
-   static getDefaultOptions(): IContainerOptions {
+   static getDefaultOptions(): Partial<IContainerOptions> {
       return {
-         viewMode: undefined,
-         keyProperty: undefined,
-         searchNavigationMode: undefined,
-         searchParam: undefined,
-         searchValue: undefined,
-         searchValueTrim: undefined,
          minSearchLength: 3,
          searchDelay: 500,
          startingWith: 'root'
