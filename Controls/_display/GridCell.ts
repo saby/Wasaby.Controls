@@ -9,13 +9,13 @@ import {
 } from 'Types/entity';
 import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams } from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
-export interface IOptions<T> extends IColspanParams {
+export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: GridRow<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
@@ -59,12 +59,12 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
-        const startColumn = typeof this._$column.startColumn == 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
+        const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
-        if (typeof this._$column.endColumn == 'number') {
+        if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
-        } else if (typeof this._$column.colspan == 'number') {
+        } else if (typeof this._$column.colspan === 'number') {
             endColumn = startColumn + this._$column.colspan;
         } else {
             endColumn = startColumn + 1;
@@ -87,6 +87,37 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         }
         const {startColumn, endColumn} = this._getColspanParams();
         return `grid-column: ${startColumn} / ${endColumn};`;
+    }
+
+    _getRowspanParams(): Required<IRowspanParams> {
+        const startRow = typeof this._$column.startRow === 'number' ? this._$column.startRow : (this._$owner.getIndex() + 1);
+        let endRow;
+
+        if (typeof this._$column.endRow === 'number') {
+            endRow = this._$column.endRow;
+        } else if (typeof this._$column.rowspan === 'number') {
+            endRow = startRow + this._$column.rowspan;
+        } else {
+            endRow = startRow + 1;
+        }
+
+        return {
+            startRow,
+            endRow,
+            rowspan: endRow - startRow
+        };
+    }
+
+    getRowspan(): number {
+        return this._getRowspanParams().rowspan;
+    }
+
+    getRowspanStyles(): string {
+        if (!this._$owner.isFullGridSupport()) {
+            return '';
+        }
+        const {startRow, endRow} = this._getRowspanParams();
+        return `grid-row: ${startRow} / ${endRow};`;
     }
 
     // endregion
@@ -203,7 +234,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     }
 
     getWrapperStyles(): string {
-        return this.getColspanStyles();
+        return `${this.getColspanStyles()} ${this.getRowspanStyles()}`;
     }
 
     getContentClasses(theme: string,

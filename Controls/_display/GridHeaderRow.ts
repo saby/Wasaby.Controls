@@ -4,6 +4,7 @@ import GridHeader from './GridHeader';
 
 export interface IOptions<T> extends IGridRowOptions<T> {
     header: THeader;
+    headerModel: GridHeader<T>
 }
 
 
@@ -13,6 +14,10 @@ export default class GridHeaderRow<T> extends GridRow<T> {
 
     constructor(options?: IOptions<T>) {
         super(options);
+    }
+
+    getIndex(): number {
+        return this._$owner.getRowIndex(this);
     }
 
     isSticked(): boolean {

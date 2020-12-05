@@ -78,6 +78,10 @@ export default abstract class GridRowMixin<T> {
         return this._$owner.getColumnsConfig();
     }
 
+    getHeaderConfig(): THeader {
+        return this._$owner.getHeaderConfig();
+    }
+
     getColumnsCount(): number {
         return this.getColumns().length;
     }
@@ -304,6 +308,10 @@ export default abstract class GridRowMixin<T> {
             options.owner = this;
             return create(this._cellModule, options as IGridCellOptions<T>);
         };
+    }
+
+    getIndex(): number {
+        return this._$owner.getRowIndex(this);
     }
 
     abstract getOwner(): GridCollection<T>;
