@@ -4,20 +4,20 @@
     caption Текст заголовка ячейки.
     sortingProperty Свойство, по которому выполняется сортировка.
     template Шаблон заголовка ячейки.
-    templateOptions Опции, передаваемые в шаблон ячейки заголовка.
     textOverflow Поведение текста, если он не умещается в ячейке
     valign Выравнивание содержимого ячейки по вертикали.
-
-    Не сделано:
-    isActionCell Поле, для определения ячейки действий
     startColumn Порядковый номер колонки, на которой начинается ячейка.
     startRow Порядковый номер строки, на которой начинается ячейка.
     endColumn Порядковый номер колонки, на которой заканчивается ячейка.
     endRow Порядковый номер строки, на которой заканчивается ячейка.
+
+    Не сделано:
+    isActionCell Поле, для определения ячейки действий
+    templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 
 import { TemplateFunction } from 'UI/Base';
-import { IHeaderCell } from 'Controls/grid';
+import {IColspanParams, IHeaderCell} from 'Controls/grid';
 import GridHeaderRow from './GridHeaderRow';
 import { IItemPadding } from './Collection';
 import GridCell, {IOptions as IGridCellOptions} from './GridCell';
@@ -35,9 +35,11 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
 
     constructor(options?: IOptions<T>) {
         super(options);
-        const {align, valign} = this.getContentOrientation();
-        this._$align = align;
-        this._$valign = valign;
+        if (!this.isCheckBoxCell()) {
+            const {align, valign} = this.getContentOrientation();
+            this._$align = align;
+            this._$valign = valign;
+        }
     }
 
     getContentOrientation(): {align?: string; valign?: string} {
@@ -75,6 +77,19 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
         }
 
         return { align, valign };
+    }
+
+    isCheckBoxCell(): boolean {
+        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
+    }
+
+    _getColspanParams(): Required<IColspanParams> {
+        const params = super._getColspanParams();
+        if (this.isCheckBoxCell()) {
+            params.endColumn--;
+            params.startColumn--;
+        }
+        return params;
     }
 
     getWrapperClasses(theme: string, style: string = 'default'): string {
@@ -119,20 +134,6 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this._$align}`;
         }
         return contentClasses;
-    }
-
-    getColspanStyles(): string {
-        if (!this._$owner.isFullGridSupport()) {
-            return '';
-        }
-        let styles = super.getColspanStyles();
-
-        if (this._$owner.isMultiline()) {
-            const {startRow = 1, endRow = 2} = this._$column;
-            styles += ` grid-row: ${startRow} / ${endRow};`;
-        }
-
-        return styles;
     }
 
     getTemplate(): TemplateFunction|string {

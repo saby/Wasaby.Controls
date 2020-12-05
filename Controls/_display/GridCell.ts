@@ -62,6 +62,8 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
+        const multiSelectOffset = +(this._$owner.getMultiSelectVisibility() !== 'hidden');
+
         if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
         } else if (typeof this._$column.colspan === 'number') {
@@ -71,8 +73,8 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         }
 
         return {
-            startColumn,
-            endColumn,
+            startColumn: startColumn + multiSelectOffset,
+            endColumn: endColumn + multiSelectOffset,
             colspan: endColumn - startColumn
         };
     }

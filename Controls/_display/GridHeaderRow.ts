@@ -32,25 +32,30 @@ export default class GridHeaderRow<T> extends GridRow<T> {
         return 'header' as unknown as T
     }
 
-    getItemClasses(templateHighlightOnHover: boolean = true,
-                   theme: string = 'default',
-                   style: string = 'default',
-                   cursor: string = 'pointer',
-                   clickable: boolean = true): string {
-        return `controls-Grid__header controls-Grid__header_theme-${theme}`;
+    getItemClasses(params): string {
+        return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
     }
 
     protected _initializeColumns(): void {
         if (this._$header) {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
-            if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
-                this._$columnItems.push(factory({
-                    column: {}
-                }));
-            }
             this._$columnItems = this._$header.map((column) => factory({
                 column
+            }));
+            this._addCheckBoxColumnIfNeed();
+        }
+    }
+
+    protected _addCheckBoxColumnIfNeed(): void {
+        const factory = this._getColumnsFactory();
+        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+            const {start, end} = this._$headerModel.getBounds().row;
+            this._$columnItems.unshift(factory({
+                column: {
+                    startRow: start,
+                    endRow: end
+                }
             }));
         }
     }

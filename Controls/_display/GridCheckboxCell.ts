@@ -58,6 +58,19 @@ export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends Grid
     shouldDisplayItemActions(): boolean {
         return false;
     }
+
+    getColspan() {
+        return undefined;
+    };
+    getRowspan() {
+        return undefined;
+    };
+    getColspanStyles() {
+        return '';
+    };
+    getRowspanStyles() {
+        return '';
+    };
 }
 
 Object.assign(GridCheckboxCell.prototype, {

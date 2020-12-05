@@ -204,8 +204,8 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
     getRowIndex(row: GridRow<T>): number {
         const getHeaderOffset = () => {
             if (this._$header) {
-                const {start, stop} = this._$header.getBounds().row;
-                return stop - start;
+                const {start, end} = this._$header.getBounds().row;
+                return end - start;
             } else {
                 return 0;
             }

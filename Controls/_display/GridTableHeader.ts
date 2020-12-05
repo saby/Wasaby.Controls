@@ -17,7 +17,7 @@ export default class GridTableHeader<T> extends GridHeader<T> {
 
     protected _buildRows(options: IGridHeaderOptions<T>): Array<GridTableHeaderRow<T>> {
         const factory = this._getRowsFactory();
-        const rowsCount = this._$gridHeaderBounds.row.stop - this._$gridHeaderBounds.row.start;
+        const rowsCount = this._$gridHeaderBounds.row.end - this._$gridHeaderBounds.row.start;
         if (rowsCount === 1) {
             return [new factory(options)];
         }

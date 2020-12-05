@@ -5,8 +5,8 @@ import { create } from 'Types/di';
 export interface IOptions<T> extends IGridHeaderRowOptions<T> {}
 
 interface IGridHeaderBounds {
-    row: {start: number, stop: number},
-    column: {start: number, stop: number}
+    row: {start: number, end: number},
+    column: {start: number, end: number}
 }
 
 export default class GridHeader<T> {
@@ -23,6 +23,22 @@ export default class GridHeader<T> {
         return this._$gridHeaderBounds;
     }
 
+    getRow(): GridHeaderRow<T> {
+        return this._$rows[0];
+    }
+
+    getRowIndex(row: GridHeaderRow<T>): number {
+        return this._$rows.indexOf(row);
+    }
+
+    isMultiline(): boolean {
+        return (this._$gridHeaderBounds.row.end - this._$gridHeaderBounds.row.start) > 1;
+    }
+
+    isSticked(): boolean {
+        return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
+    }
+
     protected _initializeRows(options: IOptions<T>): Array<GridHeaderRow<T>> {
         this._$gridHeaderBounds = this._getGridHeaderBounds(options);
         return this._buildRows(options);
@@ -34,9 +50,9 @@ export default class GridHeader<T> {
     }
 
     protected _getGridHeaderBounds(options: IOptions<T>): IGridHeaderBounds {
-        const bounds = {
-            row: {start: Number.MAX_VALUE, stop: Number.MIN_VALUE},
-            column: {start: 1, stop: options.columns.length + 1}
+        const bounds: IGridHeaderBounds = {
+            row: {start: Number.MAX_VALUE, end: Number.MIN_VALUE},
+            column: {start: 1, end: options.columns.length + 1}
         };
 
         for (let i = 0; i < options.header.length; i++) {
@@ -45,32 +61,20 @@ export default class GridHeader<T> {
             } else {
                 // Одноуровневая шапка либо невалидная конфигурация шапки
                 bounds.row.start = 1;
-                bounds.row.stop = 2;
+                bounds.row.end = 2;
                 break;
             }
 
             if (typeof options.header[i].endRow === 'number') {
-                bounds.row.stop = Math.max(options.header[i].endRow, bounds.row.stop);
+                bounds.row.end = Math.max(options.header[i].endRow, bounds.row.end);
             } else {
                 // Одноуровневая шапка либо невалидная конфигурация шапки
                 bounds.row.start = 1;
-                bounds.row.stop = 2;
+                bounds.row.end = 2;
                 break;
             }
         }
         return bounds;
-    }
-
-    getRow(): GridHeaderRow<T> {
-        return this._$rows[0];
-    }
-
-    isMultiline(): boolean {
-        return (this._$gridHeaderBounds.row.stop - this._$gridHeaderBounds.row.start) > 1;
-    }
-
-    isSticked(): boolean {
-        return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
     }
 
     protected _getRowsFactory(): new (options: IOptions<T>) => GridHeaderRow<T> {

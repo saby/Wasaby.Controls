@@ -1,4 +1,10 @@
-<div attr:class="{{ item.getItemClasses(highlightOnHover, theme, style, cursor, clickable) }}">
+<div attr:class="{{ item.getItemClasses({
+        'highlightOnHover': highlightOnHover,
+        'theme': theme,
+        'style': style,
+        'cursor': cursor,
+        'clickable': clickable
+    }) }}">
    <ws:for data="gridColumn in item.getColumns()">
       <div attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
            attr:style="{{ gridColumn.getWrapperStyles() }}">
