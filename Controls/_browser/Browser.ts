@@ -77,7 +77,7 @@ type IFilterControllerOptions = Pick<IBrowserOptions,
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IHierarchySearch
- */   
+ */
 export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
     protected _notifyHandler: Function = tmplNotify;
@@ -182,14 +182,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                         items
                     };
                 }, (error) => {
-                    this._onDataError(
-                       null,
-                       {
-                           error,
-                           mode: dataSourceError.Mode.include
-                       }
-                    );
-
+                    this._processLoadError(error);
                     return error;
                 });
             }, (error) => error);
@@ -259,7 +252,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
                    this._loading = false;
                    return items;
-               }, (error) => error)
+               }, (error) => {
+                   this._processLoadError(error);
+                   return error;
+               })
                .then((result) => {
                    this._updateSearchController(newOptions);
 
@@ -504,6 +500,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._filterButtonItems = this._filterController.getFilterButtonItems();
         this._fastFilterItems = this._filterController.getFastFilterItems();
         this._sourceController.setFilter(this._filter);
+    }
+
+    protected _processLoadError(error: Error): void {
+        this._onDataError(null, {
+            error,
+            mode: dataSourceError.Mode.include
+        });
     }
 
     protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
