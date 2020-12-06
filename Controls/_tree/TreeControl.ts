@@ -535,16 +535,18 @@ const _private = {
         const startTarget = event.target;
         let target = startTarget;
 
-        do {
-            target = target.parentNode;
+        if (!target.classList.contains('controls-ListView__itemV')) {
+            do {
+                target = target.parentNode;
 
-            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
-            if (!target.classList || !target.parentNode || !target.parentNode.classList
-                || target.classList.contains('controls-BaseControl')) {
-                target = startTarget;
-                break;
-            }
-        } while (!target.classList.contains('controls-ListView__itemV'));
+                // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+                if (!target.classList || !target.parentNode || !target.parentNode.classList
+                   || target.classList.contains('controls-BaseControl')) {
+                    target = startTarget;
+                    break;
+                }
+            } while (!target.classList.contains('controls-ListView__itemV'));
+        }
 
         return target;
     }
