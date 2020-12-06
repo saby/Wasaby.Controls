@@ -535,7 +535,7 @@ const _private = {
         const startTarget = event.target;
         let target = startTarget;
 
-        while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
+        do {
             target = target.parentNode;
 
             // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
@@ -544,7 +544,7 @@ const _private = {
                 target = startTarget;
                 break;
             }
-        }
+        } while (!target.classList.contains('controls-ListView__itemV'));
 
         return target;
     }
