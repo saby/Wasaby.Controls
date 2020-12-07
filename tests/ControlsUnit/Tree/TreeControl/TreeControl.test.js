@@ -318,7 +318,16 @@ define([
             }
          };
 
-         const target = tree.TreeControl._private.getTargetRow(event);
+         const treeControl = {
+            _children: {
+               baseControl: {
+                  getViewModel: () => {
+                     return {};
+                  }
+               }
+            }
+         }
+         const target = tree.TreeControl._private.getTargetRow(treeControl, event);
          assert.equal(event.target, target);
       });
 

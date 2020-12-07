@@ -443,7 +443,7 @@ const _private = {
      * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
      *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
      */
-    getTargetRow(event: SyntheticEvent): Element {
+    getTargetRow(self: any, event: SyntheticEvent): Element {
         if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
             return event.target;
         }
@@ -451,17 +451,25 @@ const _private = {
         const startTarget = event.target;
         let target = startTarget;
 
-        if (!target.classList.contains('controls-ListView__itemV')) {
-            do {
-                target = target.parentNode;
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (self._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
 
-                // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
-                if (!target.classList || !target.parentNode || !target.parentNode.classList
-                   || target.classList.contains('controls-BaseControl')) {
-                    target = startTarget;
-                    break;
-                }
-            } while (!target.classList.contains('controls-ListView__itemV'));
+        while (condition()) {
+            target = target.parentNode;
+
+            // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
+            if (!target.classList || !target.parentNode || !target.parentNode.classList
+               || target.classList.contains('controls-BaseControl')) {
+                target = startTarget;
+                break;
+            }
         }
 
         return target;
@@ -785,7 +793,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
         if (dispItem.isNode()) {
             const dndListController = this._children.baseControl.getDndListController();
-            const targetElement = _private.getTargetRow(nativeEvent);
+            const targetElement = _private.getTargetRow(this, nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
                 targetItem: dispItem,
