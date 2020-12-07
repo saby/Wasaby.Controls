@@ -568,7 +568,7 @@ const getCountriesStats = () => {
                 textOverflow
             },
             {
-                title: 'Площадь км2',
+                title: 'Площадь территории км2',
                 textOverflow
             },
             {
