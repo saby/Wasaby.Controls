@@ -1,6 +1,6 @@
 /**
  * Базовый интерфейс действия над записью
- * @interface Controls/_actions/interface/IAction
+ * @interface Controls/_listActions/interface/IAction
  * @public
  * @author Крайнов Д.О.
  */

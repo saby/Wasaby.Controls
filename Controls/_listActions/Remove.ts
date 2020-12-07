@@ -1,14 +1,15 @@
-import IAction, {IActionOptions} from 'Controls/_actions/interface/IAction';
+import IAction from './interface/IAction';
+import IActionOptions from './interface/IActionOptions';
 import {RemoveController} from 'Controls/list';
 
 /**
  * Действие "удаление записи"
  * @class Controls/_actions/Remove
- * @implements Controls/_actions/interface/IAction
+ * @implements Controls/_listActions/interface/IAction
  * @public
  * @author Крайнов Д.О.
  */
-export default class Remove implements IAction<IActionOptions> {
+export default class Remove implements IAction {
     private _removeController: RemoveController;
     private _options: IActionOptions;
 
