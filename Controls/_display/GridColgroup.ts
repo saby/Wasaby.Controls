@@ -42,6 +42,10 @@ export default class GridColgroup<T> extends mixin<
         return this._$owner.getMultiSelectVisibility();
     }
 
+    needMultiSelectColumn(): boolean {
+        return this._$owner.needMultiSelectColumn();
+    }
+
     reBuild(): void {
         this._$cells = this._prepareCells(this._$owner.getColumns());
         this._nextVersion();
@@ -50,7 +54,7 @@ export default class GridColgroup<T> extends mixin<
     protected _prepareCells(columns: TColumns): TColgroupCells<T> {
         const cells = [];
 
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+        if (this._$owner.needMultiSelectColumn()) {
             cells.push(new GridColgroupCell({
                 owner: this
             }));

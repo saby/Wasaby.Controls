@@ -44,7 +44,7 @@ export default class GridFooterRow<T> extends GridRow<T> {
             this._$columnItems = [];
 
             if (this._$footerTemplate) {
-                if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+                if (this._$owner.needMultiSelectColumn()) {
                     this._$columnItems.push(factory({
                         column: {}
                     }));

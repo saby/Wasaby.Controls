@@ -62,7 +62,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
-        const multiSelectOffset = +(this._$owner.getMultiSelectVisibility() !== 'hidden');
+        const multiSelectOffset = +(this._$owner.needMultiSelectColumn());
 
         if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
@@ -228,7 +228,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
         // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
-        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.getMultiSelectVisibility() !== 'hidden' ? 2 : 1);
+        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.needMultiSelectColumn() ? 2 : 1);
 
         return 'controls-Grid__table__relative-cell-wrapper ' +
             `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
@@ -415,7 +415,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     // region Аспект "Множественный выбор"
     isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
+        return this._$owner.needMultiSelectColumn() && this.isFirstColumn();
     }
     // endregion
 

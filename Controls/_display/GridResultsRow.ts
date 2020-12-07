@@ -53,7 +53,7 @@ export default class GridResultsRow<T> extends GridRow<T> {
                 }));
             }
 
-            if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+            if (this._$owner.needMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}
                 }));

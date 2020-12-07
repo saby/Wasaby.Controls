@@ -180,6 +180,16 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$expanderVisibility: string;
 
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
+
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -289,6 +299,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
     getExpanderVisibility(): string {
         return this._$expanderVisibility;
+    }
+
+    getExpanderIcon(): string {
+        return this._$expanderIcon;
+    }
+
+    getExpanderSize(): string {
+        return this._$expanderSize;
     }
 
     // endregion Expander
@@ -847,6 +865,8 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
+    _$expanderSize: undefined,
+    _$expanderIcon: undefined,
     _$root: undefined,
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,

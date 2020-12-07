@@ -35,7 +35,7 @@ export default class GridGroupCell<T> extends GridCell<T> {
     }
 
     getGroupWrapperStyles() {
-        const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const hasMultiselect = this._$owner.needMultiSelectColumn();
         const ladderStickyColumn = this._$owner.getStickyColumn();
         const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const columnStart = hasMultiselect ? 1 : 0;
@@ -84,7 +84,7 @@ export default class GridGroupCell<T> extends GridCell<T> {
 
     getColspan(): number {
         const columnsCount = this._$columns.length;
-        const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const hasMultiselect = this._$owner.needMultiSelectColumn();
         return +hasMultiselect + columnsCount;
     }
 }

@@ -49,7 +49,7 @@ export default class GridHeaderRow<T> extends GridRow<T> {
 
     protected _addCheckBoxColumnIfNeed(): void {
         const factory = this._getColumnsFactory();
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+        if (this._$owner.needMultiSelectColumn()) {
             const {start, end} = this._$headerModel.getBounds().row;
             this._$columnItems.unshift(factory({
                 column: {

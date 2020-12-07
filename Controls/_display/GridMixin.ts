@@ -238,6 +238,10 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         }
     }
 
+    needMultiSelectColumn(): boolean {
+        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
@@ -247,6 +251,8 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
     abstract getStartIndex(): number;
     abstract getStopIndex(): number;
     abstract getRowSeparatorSize(): string;
+    abstract getMultiSelectVisibility(): string;
+    abstract getMultiSelectPosition(): string;
 
     protected abstract _nextVersion(): void;
 

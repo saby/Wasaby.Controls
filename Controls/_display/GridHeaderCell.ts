@@ -80,7 +80,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
     }
 
     isCheckBoxCell(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
+        return this._$owner.needMultiSelectColumn() && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
     }
 
     _getColspanParams(): Required<IColspanParams> {

@@ -17,7 +17,7 @@ export default class GridColgroupCell<T> extends mixin<OptionsToPropertyMixin>(O
     protected _$compatibleWidth?: string;
 
     isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$owner.getCellIndex(this) === 0;
+        return this._$owner.needMultiSelectColumn() && this._$owner.getCellIndex(this) === 0;
     }
 
     getBodyClasses(theme: string): string {
