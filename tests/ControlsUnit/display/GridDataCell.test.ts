@@ -34,7 +34,7 @@ describe('Controls/display/GridDataCell', () => {
                 return columnIndex;
             },
             editArrowIsVisible(): boolean {
-                return ;
+                return editArrowIsVisible;
             },
             getContents(): Model {
                 return {} as undefined as Model;
