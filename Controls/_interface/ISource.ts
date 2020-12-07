@@ -28,7 +28,7 @@ export default interface ISource {
  * @remark
  * Более подробно об источниках данных вы можете почитать <a href='/doc/platform/developmentapl/interface-development/data-sources/'>здесь</a>.
  * @example
- * В приведённом примере для контрола {@link Controls/list:View} в опцию source передаётся {@link Types/source:Memory} источник.
+ * В приведённом примере для контрола {@link Controls/list:View} в опцию source передаётся {@link Types/source:HierarchicalMemory} источник.
  * Контрол получит данные из источника и выведет их.
  *
  * WML:
@@ -50,8 +50,9 @@ export default interface ISource {
  *
  *     _source: null,
  *     _beforeMount: function() {
- *         this._source = new source.HierarchicalMemory({
+ *         this._source = new HierarchicalMemory({
  *             keyProperty: 'key',
+ *             parentProperty: 'parent',
  *             data: [
  *                {
  *                   key: '1',

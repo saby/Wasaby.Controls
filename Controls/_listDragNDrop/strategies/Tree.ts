@@ -1,11 +1,14 @@
 import Flat, { IDraggableFlatCollection} from './Flat';
 import { IDragPosition } from 'Controls/display';
 import { IDraggableItem, IDragStrategyParams, TPosition } from '../interface';
+import { List } from 'Types/collection';
 
 const DRAG_MAX_OFFSET = 10;
 
 interface IDraggableTreeItem extends IDraggableItem {
     isNode(): boolean;
+    isExpanded(): boolean;
+    getChildren(): List<IDraggableTreeItem>;
 }
 
 interface IOffset {
@@ -72,10 +75,22 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
             }
         }
 
-        return {
-            index: this._model.getIndex(targetItem),
-            position: relativePosition,
-            dispItem: targetItem
-        };
+        let newPosition;
+        if (relativePosition === 'after' && targetItem.isExpanded() && targetItem.getChildren().getCount()) {
+            const firstChild = targetItem.getChildren().at(0);
+            newPosition = {
+                index: this._model.getIndex(targetItem),
+                position: 'before',
+                dispItem: firstChild
+            };
+        } else {
+            newPosition = {
+                index: this._model.getIndex(targetItem),
+                position: relativePosition,
+                dispItem: targetItem
+            };
+        }
+
+        return newPosition;
     }
 }

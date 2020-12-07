@@ -401,6 +401,18 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         return this._$owner.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition);
     }
     // endregion
+
+    // region Аспект "Тег"
+
+    /**
+     * Возвращает флаг, что надо или не надо показывать тег
+     * @param tagStyle
+     */
+    shouldDisplayTag(tagStyle?: string): boolean {
+        return false;
+    }
+
+    // endregion
 }
 
 Object.assign(GridCell.prototype, {
