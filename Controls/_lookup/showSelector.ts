@@ -45,12 +45,12 @@ function getTemplateOptions(self, multiSelect) {
  */
 export default function(self, popupOptions, multiSelect) {
     const selectorTemplate = self._options.selectorTemplate;
-    const selectorMode = selectorTemplate.templateOptions?.selectorMode;
+    const selectorMode = selectorTemplate && selectorTemplate.templateOptions?.selectorMode;
+    const stackPopupOptions = getPopupOptions(self);
 
     if (!self._opener) {
         self._opener = selectorMode === 'dialog' ? new DialogOpener() : new StackOpener();
     }
-    const stackPopupOptions = getPopupOptions(self);
 
     if (selectorTemplate && selectorTemplate.popupOptions) {
         merge(stackPopupOptions, selectorTemplate.popupOptions);
