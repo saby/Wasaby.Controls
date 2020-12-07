@@ -1,15 +1,15 @@
 import { TemplateFunction } from 'UI/Base';
-import GridFooterRow from './GridFooterRow';
-import GridCell, {IOptions as IGridCellOptions} from './GridCell';
+import FooterRow from './FooterRow';
+import Cell, {IOptions as ICellOptions} from './Cell';
 
-export interface IOptions<T> extends IGridCellOptions<T> {
-    owner: GridFooterRow<T>;
+export interface IOptions<T> extends ICellOptions<T> {
+    owner: FooterRow<T>;
     template?: TemplateFunction;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:FooterContent';
 
-export default class GridFooterCell<T> extends GridCell<T, GridFooterRow<T>> {
+export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -46,7 +46,8 @@ export default class GridFooterCell<T> extends GridCell<T, GridFooterRow<T>> {
     }
 }
 
-Object.assign(GridFooterCell.prototype, {
+Object.assign(FooterCell.prototype, {
+    '[Controls/_display/grid/FooterCell]': true,
     _moduleName: 'Controls/display:GridFooterCell',
     _instancePrefix: 'grid-footer-cell-'
 });

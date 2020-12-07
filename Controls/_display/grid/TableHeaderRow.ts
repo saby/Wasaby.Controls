@@ -1,6 +1,6 @@
-import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from './GridHeaderRow';
+import HeaderRow from './HeaderRow';
 
-export default class GridTableHeaderRow<T> extends GridHeaderRow<T> {
+export default class TableHeaderRow<T> extends HeaderRow<T> {
     getItemClasses(): string {
         return '';
     }
@@ -18,3 +18,7 @@ export default class GridTableHeaderRow<T> extends GridHeaderRow<T> {
         }
     }
 }
+
+Object.assign(TableHeaderRow.prototype, {
+    '[Controls/_display/grid/TableHeaderRow]': true
+});

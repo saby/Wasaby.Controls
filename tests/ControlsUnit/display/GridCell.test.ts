@@ -3,7 +3,7 @@ import { Model } from 'Types/entity';
 
 import { GridCell, GridRow } from 'Controls/display';
 
-describe('Controls/display/GridCell', () => {
+describe('Controls/display:Cell', () => {
 
     // region Аспект "Тег"
 
