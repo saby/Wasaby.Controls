@@ -85,7 +85,9 @@ export default class ControllerClass implements ISearchController {
             if (options.searchValue) {
                updateResult = this.search(options.searchValue).then();
             } else {
-               updateResult = this.reset();
+               // TODO: Убрать флаг в аргументе после выполнения
+               // https://online.sbis.ru/doc/fe106611-647d-4212-908f-87b81757327b
+               updateResult = this.reset(true);
             }
          }
       }
