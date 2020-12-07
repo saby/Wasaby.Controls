@@ -15,13 +15,6 @@ export interface IBaseDropdownOptions extends IControlOptions, IDropdownSourceOp
     displayProperty: string;
 }
 
-export default interface IBaseDropdown {
-    readonly '[Controls/_dropdown/interface/IBaseDropdown]': boolean;
-    openMenu(popupOptions?: IStickyPopupOptions): void;
-    closeMenu(): void;
-    reload(): void;
-}
-
 /**
  * Базовый интерфейс для выпадающих списков.
  *
@@ -29,6 +22,12 @@ export default interface IBaseDropdown {
  * @public
  * @author Золотова Э.Е.
  */
+export default interface IBaseDropdown {
+    readonly '[Controls/_dropdown/interface/IBaseDropdown]': boolean;
+    openMenu(popupOptions?: IStickyPopupOptions): void;
+    closeMenu(): void;
+    reload(): void;
+}
 
 /**
  * @name Controls/_dropdown/interface/IBaseDropdown#historyId
