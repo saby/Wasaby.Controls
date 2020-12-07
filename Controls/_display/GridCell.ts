@@ -406,11 +406,24 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     }
     // endregion
 
+    // region Аспект "Тег"
+
+    /**
+     * Возвращает флаг, что надо или не надо показывать тег
+     * @param tagStyle
+     */
+    shouldDisplayTag(tagStyle?: string): boolean {
+        return false;
+    }
+
+    // endregion
+
     // region Аспект "Кнопка редактирования"
 
     shouldDisplayEditArrow(): boolean {
         return false;
     }
+
     // endregion
 }
 
