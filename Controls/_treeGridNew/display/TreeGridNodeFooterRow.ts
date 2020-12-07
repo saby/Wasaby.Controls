@@ -44,5 +44,5 @@ Object.assign(TreeGridNodeFooterRow.prototype, {
     '[Controls/treeGrid:TreeGridNodeFooterRow]': true,
     _moduleName: 'Controls/treeGrid:TreeGridNodeFooterRow',
     _cellModule: 'Controls/treeGrid:TreeGridNodeFooterCell',
-    _instancePrefix: 'tree-grid-node-footer-row'
+    _instancePrefix: 'tree-grid-node-footer-row-'
 });
