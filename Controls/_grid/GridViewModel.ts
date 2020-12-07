@@ -877,6 +877,7 @@ var
         _setHeader: function(columns) {
             this._header = columns;
             if (!this.isDrawHeaderWithEmptyList()) {
+                this._headerModel = null;
                 return;
             } else {
                 this._createHeaderModel();
@@ -921,6 +922,9 @@ var
         },
 
         getHeaderModel(): IHeaderModel {
+            if (this.isDrawHeaderWithEmptyList() && !this._headerModel && this._header && this._header.length) {
+                this._createHeaderModel();
+            }
             return this._headerModel;
         },
 
