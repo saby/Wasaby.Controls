@@ -1,6 +1,7 @@
 import {Memory} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Catalog/Index';
+import {CatalogDetailViewMode} from 'Controls/catalog';
 
 const baseSource = new Memory({
     data: [
@@ -21,12 +22,44 @@ const baseSource = new Memory({
 export default class extends Control {
     protected _template: TemplateFunction = Template;
 
+    /**
+     * Источник данных для колонок каталога
+     */
     protected _baseSource: Memory = baseSource;
 
     /**
-     * Флаг, идентифицирующий сколько колонок отображать в каталоге (одну или две)
+     * Источник данных для выбора режима отображения списка в detail-колонке
      */
-    protected _twoColumns: boolean = true;
+    protected _viewModeSource: Memory = new Memory({
+        keyProperty: 'key',
+        data: [
+            {
+                title: 'Список',
+                icon: 'icon-ArrangeList',
+                key: CatalogDetailViewMode.list
+            },
+            {
+                title: 'Плитка',
+                icon: 'icon-ArrangePreview',
+                key: CatalogDetailViewMode.tile
+            },
+            {
+                title: 'Таблица',
+                icon: 'icon-Table',
+                key: CatalogDetailViewMode.table
+            }
+        ]
+    });
+
+    /**
+     * Текущий режим отображения контента в master-колонке
+     */
+    protected _viewMode: CatalogDetailViewMode[] = [CatalogDetailViewMode.list];
+
+    /**
+     * Флаг, идентифицирующий видна или нет master-колонка
+     */
+    protected _isMasterVisible: boolean = true;
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

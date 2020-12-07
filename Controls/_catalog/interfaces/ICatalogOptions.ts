@@ -24,6 +24,20 @@ export interface ICatalogOptions extends IControlOptions {
     listSource?: ICrud;
 
     /**
+     * Имя свойства, содержащего информацию об идентификаторе текущей строки в master и detail колонках.
+     * Значение данной опции передается в одноименную опцию списков, отображаемых в колонках каталога.
+     * Оно так же может быть перекрыто на уровне конкретной колонки каталога.
+     *
+     * @remark
+     * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках
+     * используют один и тот же источник данных или в качестве идентификации записей используют одно и тоже поле.
+     *
+     * @see {@link Controls/_catalog/View/ICatalogMasterOptions#keyProperty|ICatalogMasterOptions#keyProperty}
+     * @see {@link Controls/_catalog/View/ICatalogDetailOptions#keyProperty|ICatalogDetailOptions#keyProperty}
+     */
+    keyProperty?: string;
+
+    /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.
      * Также видимость мастер колонки можно регулировать опцией
      * {@link Controls/_catalog/View/ICatalogMasterOptions#visibility|visibility}

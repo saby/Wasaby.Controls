@@ -1,33 +1,29 @@
 <div>
-   <div>
-      <Controls.toggle:DoubleSwitch bind:value="_twoColumns" captions="{{['2 колонки', '1 колонка']}}"/>
+   <div class="controlDemo__input-row">
+      <Controls.toggle:DoubleSwitch
+         attr:class="controlsDemo_m"
+         bind:value="_isMasterVisible"
+         captions="{{['master on', 'master off']}}"
+      />
+
+      <Controls.dropdown:Input
+         keyProperty="key"
+         displayProperty="title"
+         attr:class="controlsDemo_m"
+         source="{{_viewModeSource}}"
+         bind:selectedKeys="_viewMode"
+         contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon"
+      />
    </div>
 
    <Controls.catalog:View
+      keyProperty="id"
       listSource="{{_baseSource}}"
    >
-
       <ws:master
-         visibility="{{_twoColumns ? 'visible' : 'hidden'}}"
-      >
-<!--         <ws:itemTemplate>
-            <ws:partial template="Controls/list:ItemTemplate">
-               <ws:contentTemplate>
-                  Master row: {{ itemTemplate.itemData.item.name }}
-               </ws:contentTemplate>
-            </ws:partial>
-         </ws:itemTemplate>-->
-      </ws:master>
-
-      <ws:detail>
-<!--         <ws:itemTemplate>
-            <ws:partial template="Controls/list:ItemTemplate">
-               <ws:contentTemplate>
-                  Detail row: {{ itemTemplate.itemData.item.name }}
-               </ws:contentTemplate>
-            </ws:partial>
-         </ws:itemTemplate>-->
-      </ws:detail>
-
+         width="{{300}}"
+         visibility="{{_isMasterVisible ? 'visible' : 'hidden'}}"
+      />
+      <ws:detail viewMode="{{_viewMode[0]}}"/>
    </Controls.catalog:View>
 </div>

@@ -1,19 +1,40 @@
 <Controls.masterDetail:Base
+   masterWidth="{{_options.master ? _options.master.width}}"
+   masterMinWidth="{{_options.master ? _options.master.minWidth}}"
+   masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
    masterVisibility="{{!_options.master ? 'hidden' : _options.master.visibility}}"
 >
 
    <ws:master>
       <Controls.list:View
-         keyProperty="id"
          source="{{_masterSource}}"
+         keyProperty="{{_masterKeyProperty}}"
       />
    </ws:master>
 
    <ws:detail>
-      <Controls.list:View
-         keyProperty="id"
-         source="{{_detailSource}}"
-      />
+      <div class="controls-Catalog__detail">
+         <!-- Список -->
+         <ws:if data="{{_options.detail.viewMode === _viewModeEnum.list}}">
+            <Controls.list:View
+               source="{{_detailSource}}"
+               keyProperty="{{_detailKeyProperty}}"
+            />
+         </ws:if>
+
+         <!-- Плитка -->
+         <ws:if data="{{_options.detail.viewMode === _viewModeEnum.tile}}">
+            <Controls.tile:View
+               source="{{_detailSource}}"
+               keyProperty="{{_detailKeyProperty}}"
+            />
+         </ws:if>
+
+         <!-- Таблица -->
+         <ws:if data="{{_options.detail.viewMode === _viewModeEnum.table}}">
+            Not implemented yet
+         </ws:if>
+      </div>
    </ws:detail>
 
 </Controls.masterDetail:Base>

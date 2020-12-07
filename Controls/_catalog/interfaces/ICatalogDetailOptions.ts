@@ -2,7 +2,16 @@ import {ICrud} from 'Types/source';
 import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
 
 /**
- * Интерфейс описывает структуру настроек detail-колонки компонента {@link Controls/_catalog/View|Control.catalog:View}
+ * Enum со списком доступных вариантов отображения контента в detail-колонке
+ */
+export enum CatalogDetailViewMode {
+    list = 'list',
+    tile = 'tile',
+    table = 'table'
+}
+
+/**
+ * Интерфейс описывает структуру настроек detail-колонки компонента {@link Controls/_catalog/View|Control/catalog:View}
  * @interface Controls/_catalog/interfaces/ICatalogDetailOptions
  * @public
  * @author Уфимцев Д.Ю.
@@ -16,4 +25,10 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
      * @see {@link Controls/_catalog/View/ICatalogOptions#listSource|ICatalogOptions#listSource}
      */
     listSource?: ICrud;
+
+    /**
+     * Режим отображения списка
+     * @default CatalogDetailViewMode.list
+     */
+    viewMode: CatalogDetailViewMode;
 }

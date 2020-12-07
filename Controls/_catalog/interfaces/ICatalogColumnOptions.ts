@@ -20,5 +20,5 @@ export interface ICatalogColumnOptions {
     /**
      * Пользовательский шаблон отображения элемента.
      */
-    itemTemplate: String | Function;
+    itemTemplate?: String | Function;
 }
