@@ -1,4 +1,7 @@
 <div class="root controlsDemo_fixedWidth500 {{_options.theme !== 'default' ? ' root__dark_background'}}">
+    <Controls.buttons:Button
+       on:click="_openTabsPanel()"
+       caption="Открыть панель с влкадками"/>
     <div class="separator">separatorVisible = true</div>
     <div class="demo-TabButtons ControlsDemo-Tabs__rightAlign">
         <Controls.tabs:Buttons
