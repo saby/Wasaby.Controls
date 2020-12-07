@@ -1921,6 +1921,7 @@ var
         },
 
         _setFooter(footerColumns): void {
+            this._footerColumns = footerColumns;
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -2278,12 +2279,22 @@ var
 
         setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
             this._model.setDraggedItems(draggableItem, draggedItemsKeys);
+            // Если есть прилипающая колонка, то нужно пересчитать футер,
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid толбцов уменьшается
+            if (_private.hasStickyColumn(this) && this._footerColumns) {
+                this._setFooter(this._footerColumns);
+            }
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
+            // Если есть прилипающая колонка, то нужно пересчитать футер,
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid толбцов уменьшается
+            if (_private.hasStickyColumn(this) && this._footer) {
+                this._setFooter(this._footer);
+            }
         },
 
         setDragTargetPosition: function(position) {
