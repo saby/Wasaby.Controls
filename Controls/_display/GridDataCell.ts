@@ -9,14 +9,6 @@ import ILadderContentCell from './grid/interface/ILadderContentCell';
 export interface IOptions<T> extends IGridCellOptions<T> {
 }
 
-/**
- * @typedef {Function} TEditArrowVisibilityCallback
- * @description
- * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
- * @param item Model
- */
-export type TEditArrowVisibilityCallback = (item: Model) => boolean;
-
 export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends GridCell<T, TOwner> implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
     readonly Markable = true;
     readonly TagCell = true;
@@ -70,14 +62,14 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
     // region Аспект "Кнопка редактирования"
 
     shouldDisplayEditArrow(): boolean {
-        let contents: Model = this._$owner.getContents() as undefined as Model;
-        if (this._$editArrowVisibilityCallback === undefined) {
-            return this._$showEditArrow;
+        if (this.getColumnIndex() > 0) {
+            return false;
         }
+        let contents: Model = this._$owner.getContents() as undefined as Model;
         if (this._$owner['[Controls/_display/BreadcrumbsItem]']) {
             contents = contents[(contents as any).length - 1];
         }
-        return this.getColumnIndex() === 0 && this._$showEditArrow && this._$editArrowVisibilityCallback(contents);
+        return this._$owner.editArrowIsVisible(contents);
     }
 
     // endregion

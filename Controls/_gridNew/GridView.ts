@@ -2,11 +2,13 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/GridEmptyTemplateUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
+import { Model } from 'Types/entity';
+import { SyntheticEvent } from 'Vdom/Vdom';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -81,6 +83,11 @@ const GridView = ListView.extend({
     _onItemMouseLeave() {
         GridView.superclass._onItemMouseLeave.apply(this, arguments);
         this._setHoveredCell(null, null);
+    },
+
+    _onEditArrowClick(event: SyntheticEvent, row: GridRow<Model>): void {
+        this._notify('editArrowClick', [row]);
+        event.stopPropagation();
     },
 
     _getCellIndexByEventTarget(event): number {

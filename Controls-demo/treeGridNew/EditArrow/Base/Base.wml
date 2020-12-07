@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
-    <Controls.treeGrid:View
+    <Controls.treeGridNew:View
             keyProperty="id"
             parentProperty="parent"
             on:editArrowClick="_editArrowClick()"
@@ -9,5 +9,5 @@
             columns="{{ _columns }}"
             header="{{ _header }}"
             source="{{ _source }}">
-    </Controls.treeGrid:View>
+    </Controls.treeGridNew:View>
 </div>

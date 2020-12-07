@@ -405,6 +405,13 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         return this._$owner.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition);
     }
     // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        return false;
+    }
+    // endregion
 }
 
 Object.assign(GridCell.prototype, {

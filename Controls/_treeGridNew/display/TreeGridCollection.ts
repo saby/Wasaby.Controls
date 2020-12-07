@@ -10,7 +10,6 @@ import {
     itemsStrategy
 } from 'Controls/display';
 import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
-import {TEditArrowVisibilityCallback} from 'Controls/_display/GridDataCell';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -37,9 +36,6 @@ export default class TreeGridCollection<
     T extends TreeGridRow<S> = TreeGridRow<S>
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/_treeGrid/TreeGridCollection]': boolean;
-
-    protected _$showEditArrow: boolean;
-    protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
 
     constructor(options: any) {
         super(options);
@@ -116,7 +112,5 @@ export default class TreeGridCollection<
 Object.assign(TreeGridCollection.prototype, {
     '[Controls/_treeGrid/TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
-    _itemModule: 'Controls/treeGrid:TreeGridRow',
-    _$showEditArrow: false,
-    _$editArrowVisibilityCallback: undefined
+    _itemModule: 'Controls/treeGrid:TreeGridRow'
 });

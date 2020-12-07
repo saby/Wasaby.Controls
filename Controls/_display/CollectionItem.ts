@@ -74,7 +74,7 @@ export default class CollectionItem<T> extends mixin<
     ItemCompatibilityListViewModel
 ) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable {
 
-    // region IInstantiable
+    // region IInstantiableeditA
 
     readonly '[Types/_entity/IInstantiable]': boolean;
     readonly Markable: boolean = true;
