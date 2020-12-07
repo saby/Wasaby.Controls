@@ -1,0 +1,33 @@
+<div>
+   <div>
+      <Controls.toggle:DoubleSwitch bind:value="_twoColumns" captions="{{['2 колонки', '1 колонка']}}"/>
+   </div>
+
+   <Controls.catalog:View
+      listSource="{{_baseSource}}"
+   >
+
+      <ws:master
+         visibility="{{_twoColumns ? 'visible' : 'hidden'}}"
+      >
+<!--         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+               <ws:contentTemplate>
+                  Master row: {{ itemTemplate.itemData.item.name }}
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>-->
+      </ws:master>
+
+      <ws:detail>
+<!--         <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+               <ws:contentTemplate>
+                  Detail row: {{ itemTemplate.itemData.item.name }}
+               </ws:contentTemplate>
+            </ws:partial>
+         </ws:itemTemplate>-->
+      </ws:detail>
+
+   </Controls.catalog:View>
+</div>

@@ -1,0 +1,19 @@
+<Controls.masterDetail:Base
+   masterVisibility="{{!_options.master ? 'hidden' : _options.master.visibility}}"
+>
+
+   <ws:master>
+      <Controls.list:View
+         keyProperty="id"
+         source="{{_masterSource}}"
+      />
+   </ws:master>
+
+   <ws:detail>
+      <Controls.list:View
+         keyProperty="id"
+         source="{{_detailSource}}"
+      />
+   </ws:detail>
+
+</Controls.masterDetail:Base>
