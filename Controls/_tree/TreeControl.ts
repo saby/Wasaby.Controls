@@ -25,7 +25,7 @@ const HOT_KEYS = {
     collapseMarkedItem: Env.constants.key.left
 };
 
-const DRAG_MAX_OFFSET = 10;
+const DRAG_MAX_OFFSET = 0.3;
 const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
 
