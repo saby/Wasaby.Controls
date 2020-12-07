@@ -17,7 +17,7 @@ type TResultsVisibility = 'visible' | 'hasdata';
 /**
  * @typedef {Function} TEditArrowVisibilityCallback
  * @description
- * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
+ * Функция обратного вызова для определения видимости кнопки редактирования
  * @param item Model
  */
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
