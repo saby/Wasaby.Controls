@@ -10,6 +10,7 @@
                      theme="{{ theme }}"
                      style="{{ style }}"
                      cursor="{{ cursor }}"
+                editArrowTemplate="{{ editArrowTemplate }}"
                 backgroundColorStyle="{{ backgroundColorStyle }}"
                 highlightOnHover="{{ highlightOnHover }}"
                 templateHighlightOnHover="{{ templateHighlightOnHover }}"
@@ -24,11 +25,6 @@
                                 key="{{ (item || itemData).key }}"
                                 checkboxReadOnly="{{ checkboxReadOnly }}"/>
          </ws:partial>
-
-         <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
-            <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
-         </ws:if>
-
       <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
          <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
             <ws:partial template="{{ swipeTemplate }}"

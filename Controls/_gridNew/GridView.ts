@@ -88,7 +88,7 @@ const GridView = ListView.extend({
     },
 
     _onEditArrowClick(event: SyntheticEvent, row: GridRow<Model>): void {
-        this._notify('editArrowClick', [row.getContents()];
+        this._notify('editArrowClick', [row.getContents()]);
         event.stopPropagation();
     },
 
