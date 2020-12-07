@@ -18,11 +18,6 @@ export default class GridGroupCell<T> extends GridCell<T> {
         OptionsToPropertyMixin.call(this, options);
     }
 
-    // FiXME: Только в 7200
-    getInstanceId(isNeed: boolean = false): string {
-        return isNeed ? super.getInstanceId() : '123';
-    }
-
     getWrapperClasses(): string {
         return '';
     }
