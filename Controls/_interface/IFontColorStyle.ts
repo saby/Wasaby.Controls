@@ -1,5 +1,18 @@
+const enum FontColorStyle {
+   PRIMARY = 'primary',
+   SECONDARY = 'secondary',
+   SUCCESS = 'success',
+   WARNING = 'warning',
+   DANGER = 'danger',
+   UNACCENTED = 'unaccented',
+   LINK = 'link',
+   LABEL = 'label',
+   INFO = 'info',
+   DEFAULT = 'default'
+}
+
 export interface IFontColorStyleOptions {
-   fontColorStyle?: string;
+   fontColorStyle?: FontColorStyle;
 }
 
 /**
