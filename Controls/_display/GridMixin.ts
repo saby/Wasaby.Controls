@@ -3,7 +3,7 @@ import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
 import GridHeader from 'Controls/_display/GridHeader';
 import GridTableHeader from 'Controls/_display/GridTableHeader';
 import GridColgroup from 'Controls/_display/GridColgroup';
-import {Model, Model as EntityModel} from 'Types/entity';
+import { Model as EntityModel } from 'Types/entity';
 import { IViewIterator } from 'Controls/_display/Collection';
 import { TemplateFunction } from 'UI/Base';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
