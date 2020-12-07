@@ -65,11 +65,7 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
         if (this.getColumnIndex() > 0) {
             return false;
         }
-        let contents: Model = this._$owner.getContents() as undefined as Model;
-        if (this._$owner['[Controls/_display/BreadcrumbsItem]']) {
-            contents = contents[(contents as any).length - 1];
-        }
-        return this._$owner.editArrowIsVisible(contents);
+        return this._$owner.editArrowIsVisible(this._$owner.getContents());
     }
 
     // endregion

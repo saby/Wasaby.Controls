@@ -34,6 +34,8 @@ export interface IGridMixinOptions {
     resultsVisibility?: TResultsVisibility;
     ladderProperties?: string[];
     stickyColumn?: {};
+    showEditArrow?: boolean;
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
 }
 
 export default abstract class GridMixin<S, T extends GridRowMixin<S>> {

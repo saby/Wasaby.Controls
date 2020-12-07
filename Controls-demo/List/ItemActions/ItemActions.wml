@@ -8,6 +8,7 @@
             itemActions="{{_itemActions}}"
             on:actionClick="_onActionClick()"
             itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+            contextMenuConfig="{{ _contextMenuConfig }}"
             class="test_list_1 itemActionsDemo__list itemActionsDemo__marginleft10">
 
         <ws:itemTemplate>
