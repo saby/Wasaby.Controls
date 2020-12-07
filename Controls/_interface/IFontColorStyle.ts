@@ -1,18 +1,7 @@
-const enum FontColorStyle {
-   PRIMARY = 'primary',
-   SECONDARY = 'secondary',
-   SUCCESS = 'success',
-   WARNING = 'warning',
-   DANGER = 'danger',
-   UNACCENTED = 'unaccented',
-   LINK = 'link',
-   LABEL = 'label',
-   INFO = 'info',
-   DEFAULT = 'default'
-}
+type TFontColorStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'unaccented' | 'link' | 'label' | 'info' | 'default';
 
 export interface IFontColorStyleOptions {
-   fontColorStyle?: FontColorStyle;
+   fontColorStyle?: TFontColorStyle;
 }
 
 /**
