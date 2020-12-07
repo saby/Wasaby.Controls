@@ -29,13 +29,7 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
         return this._$owner.getNodeFooterTemplateMoreButton();
     }
 
-    getItemClasses(
-        templateHighlightOnHover: boolean = true,
-        theme: string = 'default',
-        style: string = 'default',
-        cursor: string = 'pointer',
-        clickable: boolean = true
-    ): string {
+    getItemClasses(): string {
         return 'controls-Grid__row controls-TreeGrid__nodeFooter';
     }
 }
