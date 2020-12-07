@@ -764,7 +764,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             serviceDataLoadCallback: function(currentItems, loadedItems) {
-               setIterativeMetaData(currentItems);
+               setIterativeMetaData(loadedItems);
                setIterativeMetaData(loadedItems);
             },
             source: source,
@@ -785,7 +785,6 @@ define([
                }
             }
          };
-
          var ctrl = new lists.BaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
@@ -3879,7 +3878,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
-         ctrl._itemMouseDown({}, {key: 1}, {nativeEvent: {button: 0}});
+         ctrl._itemMouseDown({}, {key: 1}, {target: { closest: () => null }, nativeEvent: {button: 0}});
          assert.isNull(ctrl._draggingItem);
       });
       it('can\'t start drag if canStartDragNDrop return false', function () {
@@ -3916,7 +3915,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
-         ctrl._itemMouseDown({}, { key: 1 }, { nativeEvent: { button: 0 } });
+         ctrl._itemMouseDown({}, { key: 1 }, { target: { closest: () => null }, nativeEvent: { button: 0 } });
          assert.isNull(ctrl._draggingItem);
       });
 
@@ -4137,7 +4136,7 @@ define([
          };
 
          // по mouseDown нельзя вызывать preventDefault, иначе сломается фокусировка
-         ctrl._itemMouseDown({}, itemData, fakeMouseDown);
+         ctrl._itemMouseDown({target: { closest: () => null }}, itemData, fakeMouseDown);
          assert.isFalse(isDefaultPrevented);
 
          // По dragStart нужно вызывать preventDefault
@@ -6980,7 +6979,7 @@ define([
          describe('_onItemMouseDown', () => {
             it('reset _unprocessedDragEnteredItem', () => {
                const originalEvent = {
-                  target: {},
+                  target: { closest: () => null },
                   nativeEvent: {}
                };
                const itemData = { item: {} };
@@ -6991,7 +6990,7 @@ define([
             });
             it('notify parent', () => {
                const originalEvent = {
-                  target: {},
+                  target: { closest: () => null },
                   nativeEvent: {}
                };
                const event = { stopPropagation: () => {} };
@@ -7011,8 +7010,8 @@ define([
             });
 
             it('should not mark item. Marked key changes only on mouse up', function() {
-               const originalEvent = { target: {} };
-               const event = { stopPropagation: () => {} };
+               const originalEvent = { target: { closest: () => null } };
+               const event = { target: { closest: () => null }, stopPropagation: () => {} };
 
                baseControl._itemMouseDown(event, { key: 3 }, originalEvent);
 
@@ -8051,6 +8050,26 @@ define([
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
+
+            it('hide marker and show it with marked key in options', () => {
+               let newCfg = {
+                  ...cfg,
+                  markerVisibility: 'hidden',
+                  markedKey: 2
+               };
+               baseControl.saveOptions(newCfg);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+
+               newCfg = {
+                  ...cfg,
+                  markerVisibility: 'visible',
+                  markedKey: 2
+               };
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });

@@ -7,8 +7,8 @@
     <Controls.list:View
             keyProperty="id"
             source="{{_viewSource}}"
-            navigation="{{_navigation}}">
-
+            navigation="{{_navigation}}"
+            attr:style="position: relative;">
         <ws:emptyTemplate>
             <ws:partial template="Controls/list:EmptyTemplate" topSpacing="xl" bottomSpacing="m">
                 <ws:contentTemplate>No data available!</ws:contentTemplate>

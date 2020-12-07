@@ -29,9 +29,18 @@ import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 
+/**
+ * @typeof {String} TPagingPosition
+ * @variant left Отображения пэйджинга слева.
+ * @variant right Отображения пэйджинга справа.
+ */
+type TPagingPosition= 'left' | 'right';
+
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
     pagingMode?: TPagingModeScroll;
+    pagingContentTemplate?: Function | string;
+    pagingPosition?: TPagingPosition;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -86,9 +95,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _isOptimizeShadowEnabled: boolean;
     protected _optimizeShadowClass: string;
     protected _needUpdateContentSize: boolean = false;
-    protected _isScrollbarsInitialized: boolean = false;
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
+    private _gridAutoShadows: boolean = true;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
@@ -150,7 +159,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             if (!this._paging) {
                 this._paging = new PagingModel();
             }
-            this._paging.isVisible = this._state.canVerticalScroll;
+            this._paging.isVisible = this._scrollModel.canVerticalScroll;
             if (this._options.pagingMode !== options.pagingMode) {
                 this._paging.pagingMode = options.pagingMode;
             }
@@ -158,7 +167,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._paging = null;
         }
 
-        this._updateShadows(this._state, options);
+        this._updateShadows(this._scrollModel, options);
         this._isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options);
         this._optimizeShadowClass = this._getOptimizeShadowClass();
         // TODO: Логика инициализации для поддержки разных браузеров была скопирована почти полностью
@@ -188,17 +197,26 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _initHeaderController(): void {
         if (!this._isControllerInitialized) {
-            this._stickyHeaderController.init(this._container);
+            this._stickyHeaderController.init(this._children.content);
             this._isControllerInitialized = true;
         }
     }
 
-    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+    private _updateShadowMode(options?: IContainerOptions): boolean {
+        let changed: boolean = false;
         const isOptimizeShadowEnabled = this._getIsOptimizeShadowEnabled(options || this._options);
         if (this._isOptimizeShadowEnabled !== isOptimizeShadowEnabled) {
             this._isOptimizeShadowEnabled = isOptimizeShadowEnabled;
             this._optimizeShadowClass = this._getOptimizeShadowClass();
-            this._shadows.updateScrollState(sate || this._state);
+            changed = true;
+        }
+        return changed;
+    }
+
+    _updateShadows(sate?: IScrollState, options?: IContainerOptions): void {
+        const changed: boolean = this._updateShadowMode(options);
+        if (changed) {
+            this._shadows.updateScrollState(sate || this._scrollModel);
         }
     }
 
@@ -206,10 +224,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const shadowsModel = {...options};
         // gridauto нужно для таблицы
         if (options.topShadowVisibility === 'gridauto') {
-            shadowsModel.topShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+            shadowsModel.topShadowVisibility = this._gridAutoShadows ? 'visible' : 'auto';
         }
         if (options.bottomShadowVisibility === 'gridauto') {
-            shadowsModel.bottomShadowVisibility = this._wasMouseEnter ? 'auto' : 'visible';
+            shadowsModel.bottomShadowVisibility = this._gridAutoShadows ? 'visible' : 'auto';
         }
         return shadowsModel;
     }
@@ -227,23 +245,26 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     _updateState(...args) {
         const isUpdated: boolean = super._updateState(...args);
         if (isUpdated) {
+            if (this._wasMouseEnter && this._scrollModel?.canVerticalScroll && !this._oldScrollState.canVerticalScroll) {
+                this._updateShadowMode();
+            }
 
             // Если включены тени через стили, то нам все равно надо посчитать состояние теней
             // для фиксированных заголовков если они есть.
             if (!this._isOptimizeShadowEnabled ||
                     this._stickyHeaderController.hasFixed(POSITION.TOP) ||
                     this._stickyHeaderController.hasFixed(POSITION.BOTTOM)) {
-                this._shadows.updateScrollState(this._state);
+                this._shadows.updateScrollState(this._scrollModel);
             }
 
             // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
-            if (this._isStateInitialized && this._isScrollbarsInitialized) {
-                this._scrollbars.updateScrollState(this._state, this._container);
+            if (this._scrollModel && this._wasMouseEnter) {
+                this._scrollbars.updateScrollState(this._scrollModel, this._container);
             }
 
-            this._paging?.update(this._state);
+            this._paging?.update(this._scrollModel);
 
-            this._stickyHeaderController.setCanScroll(this._state.canVerticalScroll);
+            this._stickyHeaderController.setCanScroll(this._scrollModel.canVerticalScroll);
             this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
@@ -294,12 +315,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _updateShadowVisibility(event: SyntheticEvent, shadowsVisibility: IShadowsVisibilityByInnerComponents): void {
         event.stopImmediatePropagation();
+        if (this._gridAutoShadows) {
+            this._gridAutoShadows = false;
+            this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
+        }
         const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
-        this._updateStateAndGenerateEvents(this._state);
+        this._updateStateAndGenerateEvents(this._scrollModel);
     }
 
     protected _updateStateAndGenerateEvents(newState: IScrollState): void {
@@ -325,17 +350,17 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
         if (!event.nativeEvent.isTrusted) {
             let offset: number;
-            const scrollTop: number = this._state.scrollTop;
-            const scrollContainerHeight: number = this._state.scrollHeight - this._state.clientHeight;
+            const scrollTop: number = this._scrollModel.scrollTop;
+            const scrollContainerHeight: number = this._scrollModel.scrollHeight - this._scrollModel.clientHeight;
 
             if (event.nativeEvent.which === constants.key.pageDown) {
-                offset = scrollTop + this._state.clientHeight;
+                offset = scrollTop + this._scrollModel.clientHeight;
             }
             if (event.nativeEvent.which === constants.key.down) {
                 offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (event.nativeEvent.which === constants.key.pageUp) {
-                offset = scrollTop - this._state.clientHeight;
+                offset = scrollTop - this._scrollModel.clientHeight;
             }
             if (event.nativeEvent.which === constants.key.up) {
                 offset = scrollTop - SCROLL_BY_ARROWS;
@@ -384,20 +409,22 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _mouseenterHandler(event) {
-        this._wasMouseEnter = true;
-
-        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
-        if (!this._isScrollbarsInitialized) {
-            this._isScrollbarsInitialized = true;
-            // При открытии плавающих панелей, когда курсор находится над скрлл контейнером,
-            // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
-            // В этом случае не обновляем скролбары, а просто делаем _isScrollbarsInitialized = true выше.
-            // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
-            if (this._isStateInitialized) {
-                this._scrollbars.updateScrollState(this._state, this._container);
-            }
+        if (this._gridAutoShadows && this._scrollModel?.canVerticalScroll) {
+            this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
             this._updateShadows();
+        }
+
+        // Если до mouseenter не вычисляли скроллбар, сделаем это сейчас.
+        if (!this._wasMouseEnter) {
+            this._wasMouseEnter = true;
+            // При открытии плавающих панелей, когда курсор находится над скрлл контейнером,
+            // иногда события по которым инициализируется состояние скролл контейнера стреляют после mouseenter.
+            // В этом случае не обновляем скролбары, а просто делаем _wasMouseEnter = true выше.
+            // Скроллбары рассчитаются после инициализации состояния скролл контейнера.
+            if (this._scrollModel) {
+                this._scrollbars.updateScrollState(this._scrollModel, this._container);
+            }
             if (!compatibility.touch) {
                 this._initHeaderController();
             }
@@ -482,14 +509,16 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // если нет зафиксированных заголовков. Что бы тени на заголовках отображались правильно, рассчитаем состояние
         // теней в скролл контейнере.
         if (this._isOptimizeShadowEnabled) {
-            this._shadows.updateScrollState(this._state, false);
+            this._shadows.updateScrollState(this._scrollModel, false);
         }
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
             this._shadows.bottom.isStickyHeadersShadowsEnabled());
+        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.setStickyFixed(
             this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
-            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM));
+            this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM),
+            needUpdate);
 
         const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.fixed);
         const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
@@ -503,7 +532,9 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _headersResizeHandler(): void {
         const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._isScrollbarsInitialized);
+        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._wasMouseEnter);
+        this._children.scrollBar?.setViewportSize(
+            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
@@ -544,7 +575,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {Content} Container contents.
  */
 
-
 /**
  * @name Controls/_scroll/Container#style
  * @cfg {String} Цветовая схема (цвета тени и скролла).
@@ -570,4 +600,19 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @name Controls/_scroll/Container#pagingMode
  * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
  * @default hidden
+ * @demo Controls-demo/Scroll/Paging/Basic/Index
+ * @demo Controls-demo/Scroll/Paging/Edge/Index
+ * @demo Controls-demo/Scroll/Paging/End/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingContentTemplate
+ * @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ * @demo Controls-demo/Scroll/Paging/ContentTemplate/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingPosition
+ * @property {TPagingPosition} [pagingPosition=right] Опция управляет позицией пэйджинга.
+ * @demo Controls-demo/Scroll/Paging/PositionLeft/Index
  */

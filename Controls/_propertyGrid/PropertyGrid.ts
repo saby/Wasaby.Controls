@@ -6,12 +6,13 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
+import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
 import {IPropertyGridOptions} from 'Controls/_propertyGrid/IPropertyGrid';
 import {default as IPropertyGridItem} from './IProperty';
-import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD, PROPERTY_VALUE_FIELD} from './Constants';
+import {PROPERTY_GROUP_FIELD, PROPERTY_NAME_FIELD} from './Constants';
 import {groupConstants as constView} from '../list';
 import PropertyGridCollection from './PropertyGridCollection';
-import { factory } from 'Types/chain';
+import PropertyGridItem from './PropertyGridCollectionItem';
 import {IItemAction, Controller as ItemActionsController} from 'Controls/itemActions';
 import {StickyOpener} from 'Controls/popup';
 
@@ -49,7 +50,7 @@ import {StickyOpener} from 'Controls/popup';
 export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _template: TemplateFunction = template;
     protected _listModel: PropertyGridCollection<Model>;
-    protected _render: Control = renderTemplate;
+    protected _render: TemplateFunction = renderTemplate;
     protected _collapsedGroups: Record<string, boolean> = {};
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
@@ -61,11 +62,16 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             editingObject,
             source,
             collapsedGroups,
-            itemActions
+            itemActions,
+            editorColumnOptions,
+            captionColumnOptions
         }: IPropertyGridOptions
     ): void {
         this._collapsedGroups = this._getCollapsedGroups(collapsedGroups);
         this._listModel = this._getCollection(nodeProperty, parentProperty, editingObject, source);
+        if (captionColumnOptions || editorColumnOptions) {
+            this._render = gridRenderTemplate;
+        }
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
@@ -147,7 +153,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     protected _itemClick(
         event: SyntheticEvent<Event>,
-        displayItem: GroupItem<Model> | TreeItem<Model>,
+        displayItem: GroupItem<Model> | IPropertyGridItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
         if (displayItem['[Controls/_display/GroupItem]']) {
@@ -160,6 +166,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
                 this._listModel.setFilter(this._displayFilter.bind(this));
             }
         }
+    }
+
+    _hoveredItemChanged(e: SyntheticEvent<Event>, item: PropertyGridItem<Model>): void {
+        this._listModel.setHoveredItem(item);
     }
 
     protected _mouseEnterHandler(): void {
@@ -256,8 +266,5 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     static getDefaultOptions(): object {
-        return {
-            render: renderTemplate
-        };
     }
 }

@@ -492,7 +492,7 @@ describe('Controls/_display/itemsStrategy/Group', () => {
             it('hidden group is first in items', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
-                        contents: { 
+                        contents: {
                             group: group || groupConstants.hiddenGroup,
                             id
                         },
@@ -519,19 +519,19 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const expected = [0, 2, 3, 1, 4, 5];
                 const expectedGroups = [groupConstants.hiddenGroup, 'one'];
                 const given = Group.sortItems(items, options);
-    
+
                 assert.deepEqual(given, expected);
-    
+
                 assert.equal(groups.length, 2);
                 groups.forEach((group, index) => {
                     assert.equal(group.getContents(), expectedGroups[index]);
                 });
-            });    
-            
+            });
+
             it('hidden group is not first in items', () => {
                 const createItem = (id: number, group?: string) => {
                     return {
-                        contents: { 
+                        contents: {
                             group: group || groupConstants.hiddenGroup,
                             id
                         },
@@ -558,14 +558,14 @@ describe('Controls/_display/itemsStrategy/Group', () => {
                 const expected = [1, 3, 4, 0, 2, 5];
                 const expectedGroups = ['one', groupConstants.hiddenGroup];
                 const given = Group.sortItems(items, options);
-    
+
                 assert.deepEqual(given, expected);
-    
+
                 assert.equal(groups.length, 2);
                 groups.forEach((group, index) => {
                     assert.equal(group.getContents(), expectedGroups[index]);
                 });
-            });    
+            });
         });
 
         it('should use old groups', () => {

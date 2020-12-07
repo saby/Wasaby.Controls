@@ -420,6 +420,7 @@ function generateData<
             } else {
                 item[key] = entityTemplate[key];
             }
+            item[key] = `${items.length + 1}) ${item[key]}`;
         });
 
         return item as TEntityData;

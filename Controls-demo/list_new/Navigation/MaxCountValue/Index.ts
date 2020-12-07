@@ -2,20 +2,20 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Navigation/MaxCountValue/MaxCountValue';
 import {Memory} from 'Types/source';
 import {changeSourceData} from '../../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/grid';
-import { INavigation } from 'Controls-demo/types';
+import {INavigation} from 'Controls-demo/types';
 
-const { data, data2 } = changeSourceData();
+const {data, data2} = changeSourceData();
 
 class DemoSource extends Memory {
     queryNumber: number = 0;
     pending: Promise<any>;
+
     query(): Promise<any> {
         const args = arguments;
         return this.pending.then(() => {
             return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
-                rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
+                rawData.items = data2.filter((cur) => cur.id === this.queryNumber);
                 rawData.meta.more = this.queryNumber < 2;
                 rawData.meta.total = rawData.items.length;
                 items.setRawData(rawData);
@@ -70,12 +70,16 @@ export default class extends Control {
     protected _onPen(): void {
         const self = this;
         this._resolve();
-        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
+        this._viewSource2.pending = new Promise((res) => {
+            self._resolve = res;
+        });
     }
 
     protected _onChangeSource() {
         const self = this;
-        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
+        this._viewSource2.pending = new Promise((res) => {
+            self._resolve = res;
+        });
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }

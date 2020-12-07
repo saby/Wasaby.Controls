@@ -24,7 +24,7 @@ export default class GridGroupItem<T> extends mixin<
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
     readonly '[Controls/_display/GroupItem]': true;
 
-    readonly MarkableItem: boolean = false;
+    readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly '[Controls/_display/GridGroupItem]': true;
 
@@ -44,7 +44,7 @@ export default class GridGroupItem<T> extends mixin<
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }
 
-    getItemTemplate(
+    getTemplate(
         itemTemplateProperty: string,
         userItemTemplate: TemplateFunction|string,
         userGroupTemplate?: TemplateFunction|string

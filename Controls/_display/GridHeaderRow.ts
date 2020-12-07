@@ -1,19 +1,26 @@
-import { THeader} from 'Controls/grid';
-import GridCollection from './GridCollection';
-import GridRow from './GridRow';
-import GridHeaderCell from './GridHeaderCell';
+import {THeader} from 'Controls/grid';
+import GridRow, {IOptions as IGridRowOptions} from './GridRow';
+import GridHeader from './GridHeader';
 
-export interface IOptions<T> {
-    owner: GridCollection<T>;
+export interface IOptions<T> extends IGridRowOptions<T> {
     header: THeader;
 }
 
 
 export default class GridHeaderRow<T> extends GridRow<T> {
     protected _$header: THeader;
+    protected _$headerModel: GridHeader<T>;
 
     constructor(options?: IOptions<T>) {
         super(options);
+    }
+
+    isSticked(): boolean {
+        return this._$headerModel.isSticked();
+    }
+
+    isMultiline(): boolean {
+        return this._$headerModel.isMultiline();
     }
 
     getContents(): T {
@@ -29,41 +36,25 @@ export default class GridHeaderRow<T> extends GridRow<T> {
     }
 
     protected _initializeColumns(): void {
-        if (this._$columns) {
+        if (this._$header) {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
+            if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+                this._$columnItems.push(factory({
+                    column: {}
+                }));
+            }
             this._$columnItems = this._$header.map((column) => factory({
-                column,
-                startColumn: column.startColumn,
-                endColumn: column.endColumn
+                column
             }));
         }
-    }
-
-    protected _prepareCells(header: THeader): THeaderCells<T> {
-        const cells = [];
-        const columns = this._$owner.getColumnsConfig();
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
-            cells.push(new GridHeaderCell({
-                headerCell: {},
-                owner: this
-            }));
-        }
-        header.forEach((elem, index) => {
-            const cell = new GridHeaderCell({
-                headerCell: elem,
-                owner: this,
-                cellPadding: columns[index].cellPadding
-            });
-            cells.push(cell);
-        });
-        return cells;
     }
 }
 
 Object.assign(GridHeaderRow.prototype, {
-    _moduleName: 'Controls/display:GridHeader',
+    _moduleName: 'Controls/display:GridHeaderRow',
     _instancePrefix: 'grid-header-row-',
-    _cellModule: 'Controls/display:GridFooterCell',
-    _$header: null
+    _cellModule: 'Controls/display:GridHeaderCell',
+    _$header: null,
+    _$headerModel: null
 });

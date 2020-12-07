@@ -2,6 +2,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {goUpByControlTree} from 'UI/Focus';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
@@ -230,22 +231,46 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _touchstartHandler(e: SyntheticEvent<TouchEvent>): void {
-        if (e.target === e.currentTarget) {
+        const needHandleTouch: boolean = this._needHandleTouch(e.target as HTMLElement);
+        if (needHandleTouch) {
             this._touchstartPosition = this._getTouchPageXCoord(e);
             this._beginResize();
+            this._children.resizingLine.startDrag();
         }
+    }
+
+    protected _touchMoveHandler(e: SyntheticEvent<TouchEvent>): void {
+        if (this._touchstartPosition) {
+            const touchendPosition: number = this._getTouchPageXCoord(e);
+            const touchOffset: number = touchendPosition - this._touchstartPosition;
+            if (touchOffset !== 0) {
+                this._children.resizingLine.drag(touchOffset);
+            }
+        }
+    }
+
+    private _needHandleTouch(target: HTMLElement): boolean {
+        const controlTree = goUpByControlTree(target);
+        const masterListModuleName: string = 'Controls/masterDetail:List';
+        for (let i = 0; i < controlTree.length; i++) {
+            // Если не встретили список и добрались до контрола, значит можем обрабатывать клик
+            if (controlTree[i]._moduleName === this._moduleName) {
+                return true;
+            }
+            // Если тач пришелся в список, то список обработает тач и ресайзиться не нужно
+            if (controlTree[i]._moduleName === masterListModuleName)  {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
         if (this._touchstartPosition) {
             const touchendPosition: number = this._getTouchPageXCoord(e);
-            const hasTouchOffset: boolean = this._touchstartPosition - touchendPosition !== 0;
-            if (hasTouchOffset) {
-                const direction: string = (this._touchstartPosition - touchendPosition > 0) ? 'left' : 'right';
-                const offset: number = direction === 'left' ? -TOUCH_RESIZE_MASTER_OFFSET : TOUCH_RESIZE_MASTER_OFFSET;
-                this._changeOffset(offset);
-            }
+            const touchOffset: number = touchendPosition - this._touchstartPosition;
             this._touchstartPosition = null;
+            this._children.resizingLine.endDrag(touchOffset);
         }
     }
 

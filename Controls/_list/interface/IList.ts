@@ -83,6 +83,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
     pagingLeftTemplate?: TemplateFunction|string;
+    pagingRightTemplate?: TemplateFunction|string;
     multiSelectVisibility?: TMultiSelectVisibility;
     stickyMarkedItem?: boolean;
     uniqueKeys?: boolean;
@@ -212,6 +213,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#pagingLeftTemplate
  * @cfg {Function} Template to display to the left of page navigation.
  * <a href="/materials/Controls-demo/app/Controls-demo%2Flist_new%2FNavigation%2FPaging%2FLeftTemplate%2FIndex">Example</a>.
+ */
+
+/**
+ * @name Controls/_list/interface/IList#pagingRightTemplate
+ * @cfg {Function} Шаблон для отображения справа от постраничной навигации.
+ * @demo Controls-demo/list_new/Navigation/Paging/Position/RightTemplate/Index
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#pagingRightTemplate
+ * @cfg {Function} Template to display to the right of page navigation.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Flist_new%2FNavigation%2FPaging%2FPosition%2FRightTemplate%2FIndex">Example</a>.
  */
 
 /**

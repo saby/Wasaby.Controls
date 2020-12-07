@@ -246,6 +246,7 @@ describe('Controls/browser:Browser', () => {
                 browser._options.source = options.source;
                 browser._sourceController.updateOptions = () => { return true; };
                 await browser._getSearchController(browser._options);
+                options.searchValue = 'oldFilterValue';
                 await browser._beforeUpdate(options);
                 assert.deepStrictEqual(browser._searchController._options.filter, filter);
             });
@@ -317,6 +318,19 @@ describe('Controls/browser:Browser', () => {
             assert.doesNotThrow(update);
         });
 
+        it('new source in beforeUpdate returns error', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            await browser._beforeMount(options);
+
+            options = {...options};
+            options.source = new Memory();
+            options.source.query = () => Promise.reject(new Error('testError'));
+            await browser._beforeUpdate(options);
+            assert.ok(browser._errorRegister);
+        });
+
     });
 
     describe('_itemsChanged', () => {
@@ -371,6 +385,22 @@ describe('Controls/browser:Browser', () => {
 
             browser._dataLoadCallback(null, 'down');
             assert.equal(actualDirection, 'down');
+        });
+    });
+
+    describe('_afterSearch', () => {
+        it('filter updated', async () => {
+            const filter = {
+                title: 'test'
+            };
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser._sourceController.getState = () => { return {filter}; };
+            browser._itemsChanged = () => {};
+
+            browser._afterSearch(null, 'test');
+            assert.deepEqual(browser._filter, filter);
         });
     });
 

@@ -1,6 +1,7 @@
 import { TColumns } from 'Controls/_grid/interface/IColumn';
 import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
-import GridHeaderRow from 'Controls/_display/GridHeaderRow';
+import GridHeader from 'Controls/_display/GridHeader';
+import GridTableHeader from 'Controls/_display/GridTableHeader';
 import GridColgroup from 'Controls/_display/GridColgroup';
 import { Model as EntityModel } from 'Types/entity';
 import { IViewIterator } from 'Controls/_display/Collection';
@@ -10,6 +11,9 @@ import GridRowMixin from 'Controls/_display/GridRowMixin';
 import GridFooterRow from 'Controls/_display/GridFooterRow';
 import GridResultsRow, { TResultsPosition } from 'Controls/_display/GridResultsRow';
 
+type THeaderVisibility = 'visible' | 'hasdata';
+type TResultsVisibility = 'visible' | 'hasdata';
+
 export interface IGridMixinOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
@@ -18,7 +22,8 @@ export interface IGridMixinOptions {
     header?: THeader;
     resultsTemplate?: TemplateFunction;
     resultsPosition?: TResultsPosition;
-    headerInEmptyListVisible?: boolean;
+    headerVisibility?: THeaderVisibility;
+    resultsVisibility?: TResultsVisibility;
     ladderProperties?: string[];
     stickyColumn?: {};
 }
@@ -28,14 +33,16 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 
     protected _$columns: TColumns;
     protected _$colgroup: GridColgroup<S>;
-    protected _$header: GridHeaderRow<S>;
+    protected _$header: GridHeader<S>;
     protected _$footer: GridFooterRow<S>;
     protected _$results: GridResultsRow<S>;
     protected _$ladder: {};
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
-    protected _$headerInEmptyListVisible: boolean;
+    protected _$headerVisibility: THeaderVisibility;
+    protected _$resultsVisibility: TResultsVisibility;
+
 
     protected _$isFullGridSupport: boolean;
 
@@ -44,7 +51,6 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
-        this._$headerInEmptyListVisible = options.headerInEmptyListVisible;
         this._$resultsPosition = options.resultsPosition;
 
         if (this._headerIsVisible(options)) {
@@ -73,7 +79,7 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         return this._$colgroup;
     }
 
-    getHeader(): GridHeaderRow<S> {
+    getHeader(): GridHeader<S> {
         return this._$header;
     }
 
@@ -87,6 +93,10 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 
     getResultsPosition(): TResultsPosition {
         return this._$resultsPosition;
+    }
+
+    isFullGridSupport(): boolean {
+        return this._$isFullGridSupport;
     }
 
     getEmptyTemplateClasses(theme?: string): string {
@@ -139,20 +149,22 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 
     protected _headerIsVisible(options: IGridMixinOptions): boolean {
         const hasHeader = options.header && options.header.length;
-        return hasHeader && (this._$headerInEmptyListVisible || this.getCollectionCount() > 0);
+        return hasHeader && (this._$headerVisibility === 'visible' || this.getCollectionCount() > 0);
     }
 
     protected _resultsIsVisible(): boolean {
         const hasResultsPosition = !!this._$resultsPosition;
         const hasMoreData = this.getHasMoreData();
-        return hasResultsPosition && (hasMoreData || this.getCollectionCount() > 1);
+        return hasResultsPosition && (this._$resultsVisibility === 'visible' || hasMoreData || this.getCollectionCount() > 1);
     }
 
-    protected _initializeHeader(options: IGridMixinOptions): GridHeaderRow<S> {
-        return new GridHeaderRow({
+    protected _initializeHeader(options: IGridMixinOptions): GridHeader<S> {
+        const _options = {
+            ...options,
             owner: this,
             header: options.header
-        });
+        };
+        return this._$isFullGridSupport ? new GridHeader(_options) : new GridTableHeader(_options);
     }
 
     protected _initializeFooter(options: IGridMixinOptions): GridFooterRow<S> {
@@ -197,7 +209,8 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 Object.assign(GridMixin.prototype, {
     '[Controls/_display/GridMixin]': true,
     _$columns: null,
-    _$headerInEmptyListVisible: false,
+    _$headerVisibility: 'hasdata',
+    _$resultsVisibility: 'hasdata',
     _$resultsPosition: null,
     _$ladderProperties: null,
     _$stickyColumn: null,

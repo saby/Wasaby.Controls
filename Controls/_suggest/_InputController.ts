@@ -21,7 +21,7 @@ import {
 import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
-import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import { error as dataSourceError } from 'Controls/dataSource';
 
 import Env = require('Env/Env');
@@ -33,8 +33,6 @@ import {DependencyTimer} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
-
-const moduleLoader = new ModuleLoader();
 
 /* if suggest is opened and marked key from suggestions list was changed,
    we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -448,7 +446,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
       const templatesToLoad = [];
       templatesToCheck.forEach((tpl) => {
-         if (options[tpl] && options[tpl].templateName && !moduleLoader.isLoaded(options[tpl].templateName)) {
+         if (options[tpl] && options[tpl].templateName && !ModulesLoader.isLoaded(options[tpl].templateName)) {
             templatesToLoad.push(options[tpl].templateName);
          }
       });
@@ -631,7 +629,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
                this._loadDependencies(newOptions).addCallback(() => {
                   this._resolveLoad(this._searchValue, newOptions).then(() => {
-                     this._suggestOpened = newOptions.suggestState;
+                     // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что
+                     // вызывает setCloseState, но загрузка все равно выполняется и появляется невидимый попап.
+                     if (this._inputActive) {
+                        this._suggestOpened = newOptions.suggestState;
+                     }
                   }).catch((error) => {
                      this._searchErrback(error);
                   });
@@ -706,6 +708,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      value = value || '';
       this._searchValue = value;
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
       /* preload suggest dependencies on value changed */
@@ -767,7 +770,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return (await this._getSearchController()).search(value).then((recordSet) => {
             this._loadEnd(recordSet);
 
-            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
+            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
                this._setItems(recordSet);
                if (this._options.dataLoadCallback) {
                   this._options.dataLoadCallback(recordSet);
@@ -791,7 +794,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
-         if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet)) {
+         if (recordSet instanceof RecordSet &&
+            this._shouldShowSuggest(recordSet) &&
+            (this._inputActive || this._tabsSelectedKey !== null)) {
+
             this._setItems(recordSet);
             if (scopeOptions.dataLoadCallback) {
                scopeOptions.dataLoadCallback(recordSet);
@@ -1017,21 +1023,23 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             event.stopPropagation();
          }
 
-         if (isListKey) {
-            if (this._children.inputKeydown) {
-               this._children.inputKeydown.start(event);
+         if (!this._loading) {
+            if (isListKey) {
+               if (this._children.inputKeydown) {
+                  this._children.inputKeydown.start(event);
 
-               // The container with list takes focus away to catch "enter", return focus to the input field.
-               // toDO https://online.sbis.ru/opendoc.html?guid=66ae5218-b4ba-4d6f-9bfb-a90c1c1a7560
-               if (this._input) {
-                  this._input.activate();
-               } else {
-                  this.activate();
+                  // The container with list takes focus away to catch "enter", return focus to the input field.
+                  // toDO https://online.sbis.ru/opendoc.html?guid=66ae5218-b4ba-4d6f-9bfb-a90c1c1a7560
+                  if (this._input) {
+                     this._input.activate();
+                  } else {
+                     this.activate();
+                  }
                }
-            }
-         } else if (isInputKey) {
-            if (eventKeyCode === Env.constants.key.esc) {
-               this._close();
+            } else if (isInputKey) {
+               if (eventKeyCode === Env.constants.key.esc) {
+                  this._close();
+               }
             }
          }
       }

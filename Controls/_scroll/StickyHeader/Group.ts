@@ -127,9 +127,12 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     get shadowVisibility(): SHADOW_VISIBILITY {
+        // TODO: сделать чтобы видимость теней явно задавалась через опцию на группе.
+        // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
         for (let id in this._headers) {
-            if (this._headers[id].inst.shadowVisibility === SHADOW_VISIBILITY.visible) {
-                return SHADOW_VISIBILITY.visible;
+            const shadowVisibility = this._headers[id].inst.shadowVisibility;
+            if (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible) {
+                return shadowVisibility;
             }
         }
         return SHADOW_VISIBILITY.hidden;
@@ -260,6 +263,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
             }
         } else {
             delete this._headers[data.id];
+            const index = this._delayedHeaders.indexOf(data.id);
+            if (index > -1) {
+                this._delayedHeaders.splice(index, 1);
+            }
 
             // Unregister group after last header is unregistered
             if (!Object.keys(this._headers).length) {

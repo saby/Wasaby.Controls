@@ -10,13 +10,9 @@ define(
       'use strict';
 
       describe('Controls.Container.Scroll', function() {
-         var scroll, result;
+         var scroll;
          let event;
-         var context1 = {
-            ScrollData: {
-               pagingVisible: false
-            }
-         };
+
          beforeEach(function() {
             event = {
                stopImmediatePropagation: sinon.fake()
@@ -80,9 +76,7 @@ define(
 
             scroll._children.scrollBar = {
                _position: 0,
-               setScrollPosition: function(value) {
-                  scroll._children.scrollBar._position = value;
-               }
+               setViewportSize: sinon.fake()
             };
          });
 
@@ -136,6 +130,7 @@ define(
                   } else {
                      assert.isTrue(result);
                   }
+                  sinon.assert.called(scroll._children.scrollBar.setViewportSize);
                });
             });
          });
@@ -158,7 +153,7 @@ define(
                result: false
             }].forEach(function(test) {
                it(`should return ${test.result} if offset = ${test.offset},  scrollHeight = ${test.scrollHeight},  clientHeight = ${test.clientHeight}`, function() {
-                  scroll._state = {
+                  scroll._scrollModel = {
                      scrollHeight: test.scrollHeight,
                      clientHeight: test.clientHeight
                   };
@@ -238,10 +233,16 @@ define(
                   clientHeight: 100
                };
                let result;
-               scroll._state = Object.assign({}, oldState);
+               scroll._scrollModel = Object.assign({
+                  clone: () => {
+                     return oldState;
+                  },
+                  updateState: () => {
+                     return false;
+                  }
+               }, oldState);
 
                const sandbox = sinon.createSandbox();
-               sandbox.stub(scroll.__proto__, '_updateCalculatedState');
                scroll._options.optimizeShadow = true;
                scroll._scrollbars = {
                   updateScrollState: sinon.stub().returns(true)

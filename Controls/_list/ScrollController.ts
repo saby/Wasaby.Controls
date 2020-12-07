@@ -107,6 +107,10 @@ export default class ScrollController {
         this._inertialScrolling.callAfterScrollStopped(callback);
     }
 
+    getScrollStopPromise(): Promise<void>|void {
+        return this._inertialScrolling.getScrollStopPromise();
+    }
+
     private updateContainerHeightsData(params: Partial<IScrollParams>): IScrollControllerResult {
         if (this._virtualScroll && params) {
             const newParams: Partial<IContainerHeights> = {};
@@ -652,7 +656,10 @@ export default class ScrollController {
     handleRemoveItems(removeIndex: number, items: object[]): IScrollControllerResult {
         if (this._virtualScroll) {
             const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
-            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
+
+            // todo временный фикс, убрать по 
+            // https://online.sbis.ru/opendoc.html?guid=5c0a021b-38a6-4d28-8c5c-cf9d9f27e651
+            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, true,
                 this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);
             return {

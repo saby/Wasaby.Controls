@@ -14,18 +14,18 @@ export default class extends Control {
     protected _viewSourceImage: Memory;
     protected _viewSourceText: Memory;
     protected _columnsImage: INoStickyLadderColumn[] = getTasks().getColumns();
-    protected _columnsText: IColumn[] = forShowWidths().getColumns1();
+    protected _columnsText: IColumn[] = forShowWidths().getColumns2();
     protected _ladderProperties: string[] = ['photo', 'date'];
 
     protected _beforeMount(options?: {}, contexts?: object, receivedState?: void): Promise<void> | void {
         this._viewSourceImage = new Memory({
             keyProperty: 'id',
-            data: getTasks().getData()
+            data: getTasks().getData().slice(0, 1)
         });
 
         this._viewSourceText = new Memory({
             keyProperty: 'id',
-            data: forShowWidths().getData()
+            data: forShowWidths().getData().slice(1)
         });
     }
 

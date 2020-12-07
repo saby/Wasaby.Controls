@@ -811,6 +811,52 @@ const getCountriesStats = () => {
                 endColumn: 6
             }
         ],
+        getMultiHeaderVar3: (): IHeader[] => [
+            {
+                title: 'Географические характеристики стран',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 1,
+                endColumn: 2,
+                valign: 'bottom'
+            },
+            {
+                title: 'Столица',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 2,
+                endColumn: 3,
+                valign: 'top'
+            },
+            {
+                title: 'Цифры',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 3,
+                endColumn: 6
+            },
+            {
+                title: 'Население',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 3,
+                endColumn: 4
+            },
+            {
+                title: 'Площадь км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 4,
+                endColumn: 5
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 5,
+                endColumn: 6
+            }
+        ],
         getHeaderWithSorting: (textOverflow): IHeader[] => [
             {
                 title: '#'
@@ -1502,6 +1548,7 @@ function forShowWidths(): {
     getData(): IDataForShow[];
     getHeader(): IHeader[];
     getColumns1(): IColumn[];
+    getColumns2(): IColumn[];
 } {
     return {
         getData(): IDataForShow[] {
@@ -1568,6 +1615,29 @@ function forShowWidths(): {
                     displayProperty: 'fr2of3',
                     width: '2fr',
                     compatibleWidth: '60%'
+                },
+                {
+                    displayProperty: 'auto',
+                    width: 'auto',
+                    compatibleWidth: '139px'
+                },
+                {
+                    displayProperty: 'minMax',
+                    width: 'minmax(50px, 200px)',
+                    compatibleWidth: '200px'
+                }
+            ];
+        },
+        getColumns2(): IColumn[] {
+            return [
+                {
+                    displayProperty: 'px',
+                    width: '150px'
+                },
+                {
+                    displayProperty: 'maxContent',
+                    width: 'max-content',
+                    compatibleWidth: '147px'
                 },
                 {
                     displayProperty: 'auto',
