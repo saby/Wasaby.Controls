@@ -203,7 +203,7 @@ class PositionParamsCalculator implements IParamsCalculator {
         return {...navigationQueryConfig, position};
     }
 
-    updateQueryRange(store: PositionNavigationStore, list: RecordSet, firstItem: Model, lastItem: Model): void {
+    updateQueryRange(store: PositionNavigationStore, list: RecordSet, firstItem?: Model, lastItem?: Model): void {
         const metaNextPosition = list.getMetaData().nextPosition;
         const listCount = list.getCount();
 
@@ -214,12 +214,12 @@ class PositionParamsCalculator implements IParamsCalculator {
             // https://online.sbis.ru/opendoc.html?guid=228eaa69-00f6-4ab0-83de-1e6c7fa47817
             const isIterative = storeState.iterative;
 
-            if (!isIterative || storeState.backwardPosition[0] !== null) {
+            if ((!isIterative || storeState.backwardPosition[0] !== null) && firstItem) {
                 store.setBackwardPosition(
                     PositionParamsCalculator._resolvePosition(firstItem, queryField)
                 );
             }
-            if (!isIterative || storeState.forwardPosition[0] !== null) {
+            if ((!isIterative || storeState.forwardPosition[0] !== null) && lastItem) {
                 store.setForwardPosition(
                     PositionParamsCalculator._resolvePosition(lastItem, queryField)
                 );
