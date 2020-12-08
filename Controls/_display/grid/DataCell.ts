@@ -1,3 +1,5 @@
+import {mixin} from 'Types/util';
+import {Record} from 'Types/entity';
 import { Model } from 'Types/entity';
 import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
@@ -5,15 +7,32 @@ import IMarkable from '../interface/IMarkable';
 import ITagCell from './interface/ITagCell';
 import IItemActionsCell from './interface/IItemActionsCell';
 import ILadderContentCell from './interface/ILadderContentCell';
+import DataCellCompatibility from './compatibility/DataCell';
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
 
-export default class DataCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwner> implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
+    Cell<T, TOwner>,
+    DataCellCompatibility<T>
+>(
+    Cell,
+    DataCellCompatibility
+) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+
     readonly Markable = true;
     readonly TagCell = true;
     readonly ItemActionsCell = true;
     readonly LadderContentCell = true;
+
+    getDefaultDisplayValue(): T {
+        const itemModel = this._$owner.getContents();
+        if (itemModel instanceof Record) {
+            return itemModel.get(this.getDisplayProperty());
+        } else {
+            return itemModel[this.getDisplayProperty()];
+        }
+    }
 
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
