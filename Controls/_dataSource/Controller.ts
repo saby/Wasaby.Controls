@@ -555,8 +555,49 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
+            // Навигация при изменении ReocrdSet'a должно обновляться только по записям из корня,
+            // поэтому получение элементов с границ recordSet'a
+            // нельзя делать обычным получением первого и последнего элемента,
+            // надо так же проверять, находится ли элемент в корне
+            this._getNavigationController(this._options)
+                .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
         }
+    }
+
+    private _getFirstItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let firstItem;
+        for (let i = 0; i < itemsCount; i++) {
+            firstItem = this._getItemFromRootByIndex(i);
+            if (firstItem) {
+                break;
+            }
+        }
+        return firstItem;
+    }
+
+    private _getLastItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let lastItem;
+        for (let i = itemsCount - 1; i > 0; i--) {
+            lastItem = this._getItemFromRootByIndex(i);
+            if (lastItem) {
+                break;
+            }
+        }
+        return lastItem;
+    }
+
+    private _getItemFromRootByIndex(index: number): Model|void {
+        let item;
+        if (this._options.parentProperty && this._root !== undefined) {
+            if (this._items.at(index).get(this._options.parentProperty) === this._root) {
+                item = this._items.at(index);
+            }
+        } else {
+            item = this._items.at(index);
+        }
+        return item;
     }
 
     private _destroyNavigationController(): void {
