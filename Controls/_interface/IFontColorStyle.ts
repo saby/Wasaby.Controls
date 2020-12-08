@@ -1,7 +1,7 @@
 type TFontColorStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'unaccented' | 'link' | 'label' | 'info' | 'default';
 
 export interface IFontColorStyleOptions {
-   fontColorStyle?: TFontColorStyle;
+   fontColorStyle?: TFontColorStyle |string;
 }
 
 /**
