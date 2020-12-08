@@ -5,7 +5,6 @@ import {IBasePositionSourceConfig, IBaseSourceConfig, INavigationPositionSourceC
 import {TNavigationDirection, TNavigationPagingMode, CursorDirection} from 'Controls/_interface/INavigation';
 import {RecordSet} from 'Types/collection';
 import {Record, Model} from 'Types/entity';
-import {CursorDirection} from 'Controls/Constants';
 import {Logger} from 'UI/Utils';
 import IParamsCalculator from './interface/IParamsCalculator';
 
