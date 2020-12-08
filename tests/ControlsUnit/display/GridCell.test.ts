@@ -1,20 +1,27 @@
 import { assert } from 'chai';
-import { Model } from 'Types/entity';
 
 import { GridCell, GridRow } from 'Controls/display';
+import GridCollection from 'Controls/_display/GridCollection';
 
 describe('Controls/display/GridCell', () => {
 
-    // region Аспект "Тег"
+    describe('isMultiSelectColumn', () => {
+        const grid = new GridCollection({collection: [{id: 1}], keyProperty: 'id', multiSelectVisibility: 'visible', multiSelectPosition: 'default' });
+        const gridRow = new GridRow({owner: grid});
+        const gridCell = new GridCell({owner: gridRow});
+        gridRow._$columnItems = [gridCell];
 
-    describe('tag', () => {
+        assert.isTrue(gridCell.isMultiSelectColumn());
 
-        let cell: GridCell<Model, GridRow<Model>>;
+        gridRow.getColumns().unshift({});
+        assert.isFalse(gridCell.isMultiSelectColumn());
 
-        beforeEach(() => {
-            cell = new GridCell();
-        });
+        gridRow.getColumns().shift({});
+        grid.setMultiSelectVisibility('hidden');
+        assert.isFalse(gridCell.isMultiSelectColumn());
+
+        gridRow.setMultiSelectVisibility('visible');
+        grid.setMultiSelectPosition('custom');
+        assert.isFalse(gridCell.isMultiSelectColumn());
     });
-
-    // endregion
 });

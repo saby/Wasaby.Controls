@@ -73,11 +73,13 @@ export default class TreeItem<T> extends mixin<
             this._$hasChildren = true;
         }
 
-        // Если hasChildren не задали, то для узла по дефолту есть дети
-        if (options.hasChildren === undefined) {
-            this._$hasChildren = this._$node || this._$node === false;
-        } else {
-            this._$hasChildren = !!options.hasChildren;
+        if (options) {
+            // Если hasChildren не задали, то для узла по дефолту есть дети
+            if (options.hasChildren === undefined) {
+                this._$hasChildren = this._$node || this._$node === false;
+            } else {
+                this._$hasChildren = !!options.hasChildren;
+            }
         }
     }
 
