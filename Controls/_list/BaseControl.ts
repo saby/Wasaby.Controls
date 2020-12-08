@@ -2576,7 +2576,7 @@ const _private = {
                 self._notifyPlaceholdersChanged = () => {
                     self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
                 }
-                if (result.placeholders.top > 0) {
+                if (result.shadowVisibility?.up || result.placeholders.top > 0 || _private.hasMoreData(self, self._sourceController, 'up')) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
@@ -3671,6 +3671,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
+
+        if (_private.hasMoreData(this, this._sourceController, 'up')) {
+            this._notify('enableVirtualNavigation', [], { bubbling: true });
+        } else {
+            this._notify('disableVirtualNavigation', [], { bubbling: true });
+        }
 
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
