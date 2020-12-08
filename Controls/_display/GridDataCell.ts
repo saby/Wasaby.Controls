@@ -26,6 +26,27 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
     }
     // region
 
+    // region Аспект "Объединение ячеек"
+
+    // Объединение ячеек данных должно быть здесь.
+    getColspan() {
+        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
+        return undefined;
+    };
+    getRowspan() {
+        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
+        return undefined;
+    };
+    getColspanStyles() {
+        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
+        return '';
+    };
+    getRowspanStyles() {
+        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
+        return '';
+    };
+    // endregion
+
     // region Аспект "Тег"
 
     /**
@@ -55,6 +76,17 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
      */
     getTagClasses(theme: string): string {
         return `controls-Grid__cell_tag_theme-${theme}`;
+    }
+
+    // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        if (this.getColumnIndex() > 0) {
+            return false;
+        }
+        return this._$owner.editArrowIsVisible(this._$owner.getContents());
     }
 
     // endregion

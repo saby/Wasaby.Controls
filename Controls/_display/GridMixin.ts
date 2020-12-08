@@ -2,17 +2,29 @@ import { TColumns } from 'Controls/_grid/interface/IColumn';
 import * as GridLadderUtil from 'Controls/_display/utils/GridLadderUtil';
 import GridHeader from 'Controls/_display/GridHeader';
 import GridTableHeader from 'Controls/_display/GridTableHeader';
+import GridTableHeaderRow from 'Controls/_display/GridTableHeaderRow';
 import GridColgroup from 'Controls/_display/GridColgroup';
 import { Model as EntityModel } from 'Types/entity';
 import { IViewIterator } from 'Controls/_display/Collection';
 import { TemplateFunction } from 'UI/Base';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
+import GridRow from 'Controls/_display/GridRow';
+import GridHeaderRow from 'Controls/_display/GridHeaderRow';
+import GridDataRow from 'Controls/_display/GridDataRow';
 import GridRowMixin from 'Controls/_display/GridRowMixin';
 import GridFooterRow from 'Controls/_display/GridFooterRow';
 import GridResultsRow, { TResultsPosition } from 'Controls/_display/GridResultsRow';
 
 type THeaderVisibility = 'visible' | 'hasdata';
 type TResultsVisibility = 'visible' | 'hasdata';
+
+/**
+ * @typedef {Function} TEditArrowVisibilityCallback
+ * @description
+ * Функция обратного вызова для определения видимости кнопки редактирования
+ * @param item Model
+ */
+export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
 export interface IGridMixinOptions {
     columns: TColumns;
@@ -26,12 +38,15 @@ export interface IGridMixinOptions {
     resultsVisibility?: TResultsVisibility;
     ladderProperties?: string[];
     stickyColumn?: {};
+    showEditArrow?: boolean;
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
 }
 
 export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
     readonly '[Controls/_display/GridMixin]': boolean;
 
     protected _$columns: TColumns;
+    protected _$headerConfig: THeader;
     protected _$colgroup: GridColgroup<S>;
     protected _$header: GridHeader<S>;
     protected _$footer: GridFooterRow<S>;
@@ -42,8 +57,8 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
     protected _$resultsPosition: TResultsPosition;
     protected _$headerVisibility: THeaderVisibility;
     protected _$resultsVisibility: TResultsVisibility;
-
-
+    protected _$showEditArrow: boolean;
+    protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$isFullGridSupport: boolean;
 
     protected constructor(options: IGridMixinOptions) {
@@ -54,6 +69,7 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         this._$resultsPosition = options.resultsPosition;
 
         if (this._headerIsVisible(options)) {
+            this._$headerConfig = options.header;
             this._$header = this._initializeHeader(options);
         }
         if (options.footerTemplate || options.footer) {
@@ -73,6 +89,10 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
 
     getColumnsConfig(): TColumns {
         return this._$columns;
+    }
+
+    getHeaderConfig(): THeader {
+        return this._$headerConfig;
     }
 
     getColgroup(): GridColgroup<S> {
@@ -119,6 +139,13 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+    }
+
+    editArrowIsVisible(item: EntityModel): boolean {
+        if (this._$editArrowVisibilityCallback === undefined) {
+            return this._$showEditArrow;
+        }
+        return this._$editArrowVisibilityCallback(item);
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
@@ -191,6 +218,43 @@ export default abstract class GridMixin<S, T extends GridRowMixin<S>> {
         });
     }
 
+    getRowIndex(row: GridRow<T>): number {
+        const getHeaderOffset = () => {
+            if (this._$header) {
+                const {start, end} = this._$header.getBounds().row;
+                return end - start;
+            } else {
+                return 0;
+            }
+        };
+
+        if (row instanceof GridTableHeaderRow) {
+            return this._$header.getRows().indexOf(row);
+        } else if (row instanceof GridHeaderRow) {
+            return 0;
+        } else if (row instanceof GridResultsRow) {
+            let index = getHeaderOffset();
+            if (this.getResultsPosition() !== 'top') {
+                index += this.getCount();
+            }
+            return index;
+        } else if (row instanceof GridDataRow) {
+            let index = getHeaderOffset() + this.getItems().indexOf(row);
+            if (this._$results) {
+                index++;
+            }
+            return index;
+        } else if (row instanceof GridFooterRow) {
+            let index = getHeaderOffset() + this.getCount();
+            if (this._$results) {
+                index++;
+            }
+            return index;
+        } else {
+            return -1;
+        }
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
@@ -214,5 +278,7 @@ Object.assign(GridMixin.prototype, {
     _$resultsPosition: null,
     _$ladderProperties: null,
     _$stickyColumn: null,
-    _$isFullGridSupport: true
+    _$isFullGridSupport: true,
+    _$showEditArrow: false,
+    _$editArrowVisibilityCallback: undefined
 });
