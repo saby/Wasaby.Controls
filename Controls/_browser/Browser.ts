@@ -286,6 +286,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                         this._searchDataLoad(result, newOptions.searchValue);
                     })
                     .catch((error) => error);
+            } else if (updateResult) {
+                this._filterChanged(null, updateResult as QueryWhereExpression<unknown>);
             }
         });
     }
