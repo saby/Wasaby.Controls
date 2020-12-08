@@ -19,7 +19,7 @@ export interface IDateLitePopupOptions extends IControlOptions {
    itemTemplate?: TemplateFunction;
    stickyPosition?: object;
 
-   //TODO: устаревшая опция
+   // TODO: устаревшая опция
    range?: Date[];
 }
 
