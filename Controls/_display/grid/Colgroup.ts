@@ -54,7 +54,7 @@ export default class Colgroup<T> extends mixin<
     protected _prepareCells(columns: TColumns): TColgroupCells<T> {
         const cells = [];
 
-        if (this._$owner.needMultiSelectColumn()) {
+        if (this.needMultiSelectColumn()) {
             cells.push(new ColgroupCell({
                 owner: this
             }));
