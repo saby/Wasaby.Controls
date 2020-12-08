@@ -83,22 +83,21 @@
    width: @switcher_size_datePicker;
    height: @switcher_size_datePicker;
    cursor: pointer;
+}
 
-   svg {
-      width: @switcher_size_datePicker;
-      height: @switcher_size_datePicker;
-   }
+.controls-PeriodDialog__stateButton_size_theme-@{themeName} {
+   width: @switcher_size_datePicker;
+   height: @switcher_size_datePicker;
+}
 
-   .controls-icon_style-secondary_theme-@{themeName} {
-      fill: @secondary_color;
-   }
+.controls-PeriodDialog__stateButton_color_theme-@{themeName} {
+   fill: @secondary_color;
 }
 
 .ws-is-hover {
-   .controls-PeriodDialog__stateButton_theme-@{themeName}:hover {
-      .controls-icon_style-secondary_theme-@{themeName} {
-         fill: @link_hover_text-color;
-      }
+   .controls-PeriodDialog__stateButton_theme-@{themeName}:hover
+   .controls-PeriodDialog__stateButton_color_theme-@{themeName} {
+      fill: @link_hover_text-color;
    }
 }
 
