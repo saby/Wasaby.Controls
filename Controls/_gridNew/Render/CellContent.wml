@@ -1,28 +1,29 @@
-<div class="{{ (gridColumn || itemData).getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}" style="{{ (gridColumn || itemData).getContentStyles() }}">
+<div class="{{ (gridColumn || itemData).getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
+     style="{{ (gridColumn || itemData).getContentStyles() }}">
 
     <ws:if data="{{ !!contentTemplate }}">
         <!-- Прикладной контент -->
         <ws:partial
                 template="{{ contentTemplate }}"
-                column="{{ column }}"
-                itemData="{{ (item || itemData) }}"
-                item="{{ (item || itemData) }}"
+                column="{{ (gridColumn || itemData).getColumnConfig() }}"
+                itemData="{{ (gridColumn || itemData) }}"
+                item="{{ (gridColumn || itemData).getOwner() }}"
                 editArrowTemplate="{{ editArrowTemplate }}"/>
     </ws:if>
     <ws:else data="{{ column.textOverflow }}">
         <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
-        <div class="controls-Grid__cell_{{column.textOverflow}}">
-            {{ (item || itemData).getContents()[column.displayProperty] }}
+        <div class="controls-Grid__cell_{{(gridColumn || itemData).getColumnConfig().textOverflow}}">
+            {{ (gridColumn || itemData).getDefaultDisplayValue() }}
         </div>
     </ws:else>
     <ws:else>
         <!-- Контент по умолчанию -->
-        {{ (item || itemData).getContents()[column.displayProperty] }}
+        {{ (gridColumn || itemData).getDefaultDisplayValue() }}
     </ws:else>
 
     <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
-    <ws:if data="{{ !contentTemplate && gridColumn.shouldDisplayEditArrow() }}">
-        <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
+    <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() }}">
+        <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}"/>
     </ws:if>
 
     <!-- Тэг -->
@@ -30,7 +31,7 @@
          class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
         <ws:partial template="{{ tagTemplate }}"
                     tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
-                    dispItem="{{ item || itemData }}"
+                    dispItem="{{ (gridColumn || itemData).getOwner() }}"
                     columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
     </div>
 </div>

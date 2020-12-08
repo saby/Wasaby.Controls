@@ -56,6 +56,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         this._nextVersion();
     }
 
+    getOwner(): TOwner {
+        return this._$owner;
+    }
+
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
