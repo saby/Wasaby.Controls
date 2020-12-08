@@ -3,7 +3,23 @@ import { assert } from 'chai';
 import { GridCell, GridRow } from 'Controls/display';
 import GridCollection from 'Controls/_display/GridCollection';
 
-describe('Controls/display/GridCell', () => {
+describe('Controls/display:Cell', () => {
+
+    // region Аспект "Кнопка редактирования"
+
+    describe('editArrow', () => {
+
+        gridRow.getColumns().unshift({});
+        assert.isFalse(gridCell.isMultiSelectColumn());
+
+        beforeEach(() => {
+            cell = new GridCell();
+        });
+
+        it('shouldDisplayEditArrow', () => {
+            assert.isFalse(cell.shouldDisplayEditArrow());
+        });
+    });
 
     describe('isMultiSelectColumn', () => {
         const grid = new GridCollection({collection: [{id: 1}], keyProperty: 'id', multiSelectVisibility: 'visible', multiSelectPosition: 'default' });

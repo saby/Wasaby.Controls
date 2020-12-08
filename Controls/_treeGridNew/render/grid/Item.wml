@@ -20,38 +20,46 @@
       </ws:else>
    </ws:if>
 
-   <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl) }}"
-               attr:key="{{ gridColumn.getInstanceId() }}"
-               gridColumn="{{ gridColumn }}"
-               column="{{ gridColumn.getColumnConfig() }}"
-               item="{{ (item || itemData) }}"
-               itemData="{{ (item || itemData) }}"
-               theme="{{ theme }}"
-               style="{{ style }}"
-               cursor="{{ cursor }}"
-               templateHighlightOnHover="{{ templateHighlightOnHover }}"
-               tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-               tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
-      <ws:ladderWrapper>
-         <ws:partial template="{{ladderWrapper.content}}"
-                     if="{{ (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
-                     attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
-      </ws:ladderWrapper>
-      <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
-                          key="{{ (item || itemData).key }}"
-                          checkboxReadOnly="{{ checkboxReadOnly }}"/>
-      <ws:multiSelectTemplate>
-         <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
-            <ws:templateOptions multiSelectStatus="{{(item || itemData).isSelected()}}" key="{{(item || itemData).key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
-         </ws:partial>
-      </ws:multiSelectTemplate>
-   </ws:partial>
+   <div class="{{ gridColumn.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
+        style="{{ gridColumn.getContentStyles() }}">
+      <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl) }}"
+                  attr:key="{{ gridColumn.getInstanceId() }}"
+                  gridColumn="{{ gridColumn }}"
+                  column="{{ gridColumn.getColumnConfig() }}"
+                  item="{{ (item || itemData) }}"
+                  itemData="{{ gridColumn }}"
+                  colData="{{ gridColumn }}"
+                  theme="{{ theme }}"
+                  style="{{ style }}"
+                  cursor="{{ cursor }}"
+                  templateHighlightOnHover="{{ templateHighlightOnHover }}"
+                  tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
+                  tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
+         <ws:ladderWrapper>
+            <ws:partial template="{{ladderWrapper.content}}"
+                        if="{{ (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
+                        attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
+         </ws:ladderWrapper>
+         <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
+                             key="{{ (item || itemData).key }}"
+                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
+         <ws:multiSelectTemplate>
+            <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
+               <ws:templateOptions multiSelectStatus="{{(item || itemData).isSelected()}}" key="{{(item || itemData).key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+            </ws:partial>
+         </ws:multiSelectTemplate>
+      </ws:partial>
 
-   <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
-      <ws:partial template="{{ tagTemplate }}"
-                  tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
-                  dispItem="{{ item || itemData }}"
-                  columnIndex="{{ gridColumn.getColumnIndex() }}"/>
+      <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
+         <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
+      </ws:if>
+
+      <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
+         <ws:partial template="{{ tagTemplate }}"
+                     tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
+                     dispItem="{{ item || itemData }}"
+                     columnIndex="{{ gridColumn.getColumnIndex() }}"/>
+      </div>
    </div>
 
    <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">

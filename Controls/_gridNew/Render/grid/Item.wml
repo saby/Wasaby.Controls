@@ -6,7 +6,8 @@
                 gridColumn="{{ gridColumn }}"
                 column="{{ gridColumn.getColumnConfig() }}"
                 item="{{ (item || itemData) }}"
-                itemData="{{ (item || itemData) }}"
+                itemData="{{ gridColumn }}"
+                colData="{{ gridColumn }}"
                 theme="{{ theme }}"
                 style="{{ style }}"
                 cursor="{{ cursor }}"
@@ -14,7 +15,8 @@
                 highlightOnHover="{{ highlightOnHover }}"
                 templateHighlightOnHover="{{ templateHighlightOnHover }}"
                 tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-                tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
+                tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
+                editArrowTemplate="{{ editArrowTemplate }}">
         <ws:ladderWrapper>
             <ws:partial template="{{ladderWrapper.content}}"
                         if="{{ gridColumn.LadderContentCell && (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
