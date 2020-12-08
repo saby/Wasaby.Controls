@@ -45,7 +45,7 @@ function getTemplateOptions(self, multiSelect) {
  */
 export default function(self, popupOptions, multiSelect) {
     const selectorTemplate = self._options.selectorTemplate;
-    const selectorMode = selectorTemplate && selectorTemplate.templateOptions?.selectorMode;
+    const selectorMode = selectorTemplate?.mode;
     const stackPopupOptions = getPopupOptions(self);
 
     if (!self._opener) {
