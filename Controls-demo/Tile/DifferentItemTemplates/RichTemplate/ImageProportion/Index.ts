@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Tile/DifferentItemTemplates/RichTemplate/ImageCompressionCoefficient/ImageCompressionCoefficient';
+import * as Template from 'wml!Controls-demo/Tile/DifferentItemTemplates/RichTemplate/ImageProportion/ImageProportion';
 import {Gadgets} from 'Controls-demo/Tile/DataHelpers/DataCatalog';
 import {HierarchicalMemory} from 'Types/source';
 

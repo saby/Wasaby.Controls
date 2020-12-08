@@ -18,10 +18,10 @@
             titleLines="{{itemTemplate.itemData.item.titleLines}}"
             descriptionLines="{{itemTemplate.itemData.item.titleLines}}"
             imageSize="{{itemTemplate.itemData.item.imageSize}}"
-            imageViewMode="{{itemTemplate.itemData.item.imageViewMode}}"
+            imageViewMode="{{'rectangle'}}"
             imagePosition="{{'top'}}"
             description="{{itemTemplate.itemData.item.description}}"
-            imageCompressionCoefficient="{{itemTemplate.itemData.item.imageCompressionCoefficient}}"
+            imageProportion="{{itemTemplate.itemData.item.imageProportion}}"
             imageEffect="gradient"
             scope="{{itemTemplate}}">
          </ws:partial>

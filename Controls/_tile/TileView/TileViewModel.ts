@@ -15,7 +15,6 @@ const DEFAULT_WIDTH_PROPORTION = 1;
 const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
 const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
 const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
-
 interface IItemPadding {
     left: string;
     right: string;
@@ -113,6 +112,14 @@ var TileViewModel = ListViewModel.extend({
         return tileSizes;
     },
 
+    getImageProportion(proportion: string = '1:1'): number {
+        const [width, height]: string[] = proportion.split(':');
+        if (width && height) {
+            return +(Number(width) / Number(height)).toFixed(2);
+        }
+        return 1;
+    },
+
     getImageData(itemWidth: number,
                  itemData: Record<string, any>,
                  item: Model): {url: string, class: string} {
@@ -166,6 +173,7 @@ var TileViewModel = ListViewModel.extend({
         if (this._options.tileSize) {
             resultData.getTileSizes = this.getTileSizes;
         }
+        resultData.getImageProportion = this.getImageProportion;
         const itemContents = dispItem?.getContents();
         if (itemContents instanceof Model) {
             resultData.itemWidth = this.getTileWidth(

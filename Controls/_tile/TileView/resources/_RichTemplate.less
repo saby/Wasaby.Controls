@@ -51,9 +51,7 @@
 
 .controls-TileView__richTemplate_image {
    width: 100%;
-   background-repeat: no-repeat;
-   background-size: cover;
-   background-position: center;
+   height: 100%;
 }
 
 .controls-TileView__richTemplate_imageWrapper {
@@ -73,6 +71,18 @@
 
 .controls-TileView__richTemplate_title_theme-@{themeName} {
    margin-bottom: @offset_m;
+}
+
+.controls-TileView__richTemplate_image_size_s_position_top_theme-@{themeName} {
+   height: @image_height_s_position_top_rich_tile;
+}
+
+.controls-TileView__richTemplate_image_size_m_position_top_theme-@{themeName} {
+   height: @image_height_m_position_top_rich_tile;
+}
+
+.controls-TileView__richTemplate_image_size_l_position_top_theme-@{themeName} {
+   height: @image_height_l_position_top_rich_tile;
 }
 
 .controls-TileView__richTemplate_image_size_s_position_vertical_theme-@{themeName} {

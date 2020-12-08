@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Tile/DifferentItemTemplates/RichTemplate/Default/Default';
-import {Gadgets} from '../../DataHelpers/DataCatalog';
+import {Gadgets} from 'Controls-demo/Tile/DataHelpers/DataCatalog';
 import {HierarchicalMemory} from 'Types/source';
 
 export default class extends Control {
