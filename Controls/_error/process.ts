@@ -84,7 +84,7 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
         }
 
         if (constants.isServerSide) {
-            logServerSideError(viewConfig);
+            logServerSideError(error, viewConfig);
             return;
         }
 
@@ -96,9 +96,9 @@ export default function process(options: IProcessOptions): Promise<PopupId | voi
     });
 }
 
-function logServerSideError(viewConfig: ViewConfig<{ message?: string; details?: string; }>): void {
+function logServerSideError(error: Error, viewConfig: ViewConfig<{ message?: string; details?: string; }>): void {
     const tabSpace = 4;
-    const errorMessage =
+    let errorMessage =
         'Controls/dataSource:error.process is being called during server-side rendering!\n' +
         'Use Controls/dataSource:error.Container to render an error.\n' +
         'Error config:\n' +
@@ -109,6 +109,13 @@ function logServerSideError(viewConfig: ViewConfig<{ message?: string; details?:
                 details: viewConfig.options?.details
             }
         }, null, tabSpace);
+
+    try {
+        errorMessage += '\nProcessed error:\n' + JSON.stringify(error, null, tabSpace);
+    } catch (e) {
+        // игнорируем ошибку сериализации
+    }
+
     const message = (new Error(errorMessage)).stack || errorMessage;
 
     logger.error(message);
