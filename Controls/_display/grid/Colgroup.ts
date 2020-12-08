@@ -1,23 +1,23 @@
 import { mixin } from 'Types/util';
 import { OptionsToPropertyMixin, VersionableMixin } from 'Types/entity';
-import GridCollection from './GridCollection';
-import { TColumns } from '../_grid/interface/IColumn';
-import GridColgroupCell from './GridColgroupCell';
+import { TColumns } from 'Controls/_grid/interface/IColumn';
+import Collection from './Collection';
+import ColgroupCell from './ColgroupCell';
 
-type TColgroupCells<T> = Array<GridColgroupCell<T>>;
+type TColgroupCells<T> = Array<ColgroupCell<T>>;
 
 export interface IOptions<T> {
-    owner: GridCollection<T>;
+    owner: Collection<T>;
 }
 
-export default class GridColgroup<T> extends mixin<
+export default class Colgroup<T> extends mixin<
     OptionsToPropertyMixin,
     VersionableMixin
 >(
     OptionsToPropertyMixin,
     VersionableMixin
 ) {
-    protected _$owner: GridCollection<T>;
+    protected _$owner: Collection<T>;
     protected _$cells: TColgroupCells<T>;
 
     constructor(options?: IOptions<T>) {
@@ -34,7 +34,7 @@ export default class GridColgroup<T> extends mixin<
         return this._$cells;
     }
 
-    getCellIndex(cell: GridColgroupCell<T>): number {
+    getCellIndex(cell: ColgroupCell<T>): number {
         return this._$cells.indexOf(cell);
     }
 
@@ -51,13 +51,13 @@ export default class GridColgroup<T> extends mixin<
         const cells = [];
 
         if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
-            cells.push(new GridColgroupCell({
+            cells.push(new ColgroupCell({
                 owner: this
             }));
         }
 
         columns.forEach((elem) => {
-            cells.push(new GridColgroupCell({
+            cells.push(new ColgroupCell({
                 owner: this,
                 width: elem.width,
                 compatibleWidth: elem.compatibleWidth
@@ -68,7 +68,8 @@ export default class GridColgroup<T> extends mixin<
     }
 }
 
-Object.assign(GridColgroup.prototype, {
+Object.assign(Colgroup.prototype, {
+    '[Controls/_display/grid/Colgroup]': true,
     _moduleName: 'Controls/display:GridColgroup',
     _instancePrefix: 'grid-colgroup',
     _$owner: null

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { GridHeaderCell } from 'Controls/display';
 
-describe('Controls/_display/GridHeaderCell', () => {
+describe('Controls/display:HeaderCell', () => {
 
     describe('align and valign', () => {
 

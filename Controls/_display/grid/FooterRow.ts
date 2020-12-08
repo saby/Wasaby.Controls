@@ -1,14 +1,14 @@
 import { TemplateFunction } from 'UI/Base';
-import GridRow, {IOptions as IGridRowOptions} from './GridRow';
-import GridCollection from './GridCollection';
+import Row, {IOptions as IRowOptions} from './Row';
+import Collection from './Collection';
 
-export interface IOptions<T> extends IGridRowOptions<T> {
-    owner: GridCollection<T>;
+export interface IOptions<T> extends IRowOptions<T> {
+    owner: Collection<T>;
     footer?: TFooter;
     footerTemplate?: TemplateFunction;
 }
 
-export default class GridFooterRow<T> extends GridRow<T> {
+export default class FooterRow<T> extends Row<T> {
     protected _$footerTemplate: TemplateFunction;
     protected _$footer: TFooter;
 
@@ -64,7 +64,8 @@ export default class GridFooterRow<T> extends GridRow<T> {
     }
 }
 
-Object.assign(GridFooterRow.prototype, {
+Object.assign(FooterRow.prototype, {
+    '[Controls/_display/grid/FooterRow]': true,
     _moduleName: 'Controls/display:GridFooterRow',
     _instancePrefix: 'grid-footer-row-',
     _cellModule: 'Controls/display:GridFooterCell',

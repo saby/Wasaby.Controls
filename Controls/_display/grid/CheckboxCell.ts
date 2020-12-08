@@ -1,9 +1,9 @@
-import GridCell from './GridCell';
 import { TemplateFunction } from 'UI/Base';
-import GridRow from './GridDataRow';
-import IMarkable from './interface/IMarkable';
+import IMarkable from '../interface/IMarkable';
+import Cell from './Cell';
+import DataRow from './DataRow';
 
-export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> implements IMarkable {
+export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwner> implements IMarkable {
     readonly Markable: boolean = true;
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
@@ -73,8 +73,8 @@ export default class GridCheckboxCell<T, TOwner extends GridRow<T>> extends Grid
     };
 }
 
-Object.assign(GridCheckboxCell.prototype, {
-    '[Controls/_display/GridCheckboxCell]': true,
+Object.assign(CheckboxCell.prototype, {
+    '[Controls/_display/grid/CheckboxCell]': true,
     _moduleName: 'Controls/display:GridCheckboxCell',
     _instancePrefix: 'grid-checkbox-cell-',
     _$style: null

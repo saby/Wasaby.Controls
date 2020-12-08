@@ -1,16 +1,16 @@
-import CollectionItem from './CollectionItem';
-import GridCollection from './GridCollection';
+import CollectionItem from '../CollectionItem';
+import Collection from './Collection';
 import { mixin } from 'Types/util';
-import GridRowMixin, { IOptions as IGridRowMixinOptions } from './GridRowMixin';
+import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import {TemplateFunction} from 'UI/Base';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
-    owner: GridCollection<T>;
+    owner: Collection<T>;
 }
 
-export default class GridRow<T>
+export default class Row<T>
     extends mixin<CollectionItem<any>, GridRowMixin<any>>(CollectionItem, GridRowMixin) {
-    readonly '[Controls/_display/GridRow]': boolean;
+    readonly '[Controls/_display/grid/Row]': boolean;
 
     // TODO: Удалить имплементирование после выделения сущностей элементов списка
     //  (базовый элемент -> элемент данных / элемент группы /...)
@@ -64,8 +64,8 @@ export default class GridRow<T>
     // endregion
 }
 
-Object.assign(GridRow.prototype, {
-    '[Controls/_display/GridRow]': true,
+Object.assign(Row.prototype, {
+    '[Controls/_display/grid/Row]': true,
     _moduleName: 'Controls/display:GridRow',
     _instancePrefix: 'grid-row-'
 });

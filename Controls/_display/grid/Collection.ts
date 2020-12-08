@@ -1,19 +1,19 @@
-import Collection, { ItemsFactory, IOptions as IBaseOptions } from './Collection';
-import GridGroupItem from './GridGroupItem';
-import * as GridLadderUtil from './utils/GridLadderUtil';
+import BaseCollection, { ItemsFactory, IOptions as IBaseOptions } from '../Collection';
+import GroupItem from './GroupItem';
+import * as GridLadderUtil from '../utils/GridLadderUtil';
 import { mixin } from 'Types/util';
-import GridMixin, { IGridMixinOptions } from 'Controls/_display/GridMixin';
-import GridRow, {IOptions as IGridRowOptions} from 'Controls/_display/GridRow';
+import GridMixin, { IOptions as IGridMixinOptions } from 'Controls/_display/grid/mixins/Grid';
+import Row, {IOptions as IRowOptions} from 'Controls/_display/grid/Row';
 
 export interface IOptions<
     S,
-    T extends GridRow<S> = GridRow<S>
+    T extends Row<S> = Row<S>
 > extends IBaseOptions<S, T>, IGridMixinOptions { }
 
-export default class GridCollection<
+export default class Collection<
     S,
-    T extends GridRow<S> = GridRow<S>
-> extends mixin<Collection<any>, GridMixin<any, any>>(Collection, GridMixin) {
+    T extends Row<S> = Row<S>
+> extends mixin<BaseCollection<any>, GridMixin<any, any>>(BaseCollection, GridMixin) {
     constructor(options: IOptions<S, T>) {
         super(options);
         GridMixin.call(this, options);
@@ -53,21 +53,21 @@ export default class GridCollection<
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: IGridRowOptions<S>): T {
+        return function CollectionItemsFactory(options?: IRowOptions<S>): T {
             options.columns = this._$columns;
             return superFactory.call(this, options);
         };
     }
 
-    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
-        return GridGroupItem;
+    protected _getGroupItemConstructor(): new() => GroupItem<T> {
+        return GroupItem;
     }
 
     // endregion
 }
 
-Object.assign(GridCollection.prototype, {
-    '[Controls/_display/GridCollection]': true,
+Object.assign(Collection.prototype, {
+    '[Controls/_display/grid/Collection]': true,
     _moduleName: 'Controls/display:GridCollection',
     _itemModule: 'Controls/display:GridDataRow'
 });
