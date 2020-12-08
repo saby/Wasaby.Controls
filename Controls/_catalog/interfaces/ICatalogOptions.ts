@@ -4,8 +4,8 @@ import {ICatalogMasterOptions} from 'Controls/_catalog/interfaces/ICatalogMaster
 import {ICatalogDetailOptions} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
 
 /**
- * Интерфейс описывает структуру настроек компонента Controls/_catalog/View
- * @interface Controls/_catalog/View/ICatalogOptions
+ * Интерфейс описывает структуру настроек компонента {@link Controls/catalog:View}
+ * @interface Controls/catalog:ICatalogOptions
  * @public
  * @author Уфимцев Д.Ю.
  */
@@ -18,8 +18,8 @@ export interface ICatalogOptions extends IControlOptions {
      * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках используют
      * один и тот же источник данных
      *
-     * @see {@link Controls/_catalog/View/ICatalogMasterOptions#listSource|ICatalogMasterOptions#listSource}
-     * @see {@link Controls/_catalog/View/ICatalogDetailOptions#listSource|ICatalogDetailOptions#listSource}
+     * @see ICatalogMasterOptions.listSource
+     * @see ICatalogDetailOptions.listSource
      */
     listSource?: ICrud;
 
@@ -32,17 +32,22 @@ export interface ICatalogOptions extends IControlOptions {
      * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках
      * используют один и тот же источник данных или в качестве идентификации записей используют одно и тоже поле.
      *
-     * @see {@link Controls/_catalog/View/ICatalogMasterOptions#keyProperty|ICatalogMasterOptions#keyProperty}
-     * @see {@link Controls/_catalog/View/ICatalogDetailOptions#keyProperty|ICatalogDetailOptions#keyProperty}
+     * @see ICatalogMasterOptions.keyProperty
+     * @see ICatalogDetailOptions.keyProperty
      */
     keyProperty?: string;
 
     /**
+     * Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
+     */
+    propStorageId?: string;
+
+    /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.
      * Также видимость мастер колонки можно регулировать опцией
-     * {@link Controls/_catalog/View/ICatalogMasterOptions#visibility|visibility}
+     * {@link ICatalogMasterOptions.visibility}
      *
-     * @see {@link Controls/_catalog/View/ICatalogMasterOptions#visibility|ICatalogMasterOptions.visibility}
+     * @see ICatalogMasterOptions.visibility
      */
     master?: ICatalogMasterOptions;
 

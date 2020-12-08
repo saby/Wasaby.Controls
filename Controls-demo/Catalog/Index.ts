@@ -1,22 +1,12 @@
 import {Memory} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Catalog/Index';
 import {CatalogDetailViewMode} from 'Controls/catalog';
+import {Gadgets} from 'Controls-demo/treeGrid/DemoHelpers/DataCatalog';
+import * as Template from 'wml!Controls-demo/Catalog/Index';
 
 const baseSource = new Memory({
-    data: [
-        {id: 1, title: 'Sun', kind: 'Star'},
-        {id: 2, title: 'Mercury', kind: 'Planet'},
-        {id: 3, title: 'Venus', kind: 'Planet'},
-        {id: 4, title: 'Earth', kind: 'Planet'},
-        {id: 5, title: 'Mars', kind: 'Planet'},
-        {id: 6, title: 'Jupiter', kind: 'Planet'},
-        {id: 7, title: 'Saturn', kind: 'Planet'},
-        {id: 8, title: 'Uranus', kind: 'Planet'},
-        {id: 9, title: 'Neptune', kind: 'Planet'},
-        {id: 10, title: 'Pluto', kind: 'Dwarf planet'}
-    ],
-    keyProperty: 'id'
+    keyProperty: 'id',
+    data: Gadgets.getFlatData()
 });
 
 export default class extends Control {
@@ -60,6 +50,21 @@ export default class extends Control {
      * Флаг, идентифицирующий видна или нет master-колонка
      */
     protected _isMasterVisible: boolean = true;
+
+    /**
+     * Набор колонок, отображаемый в master
+     */
+    protected _masterTableColumns: unknown[] = [Gadgets.getGridColumnsForFlat()[0]];
+
+    /**
+     * Фильтр по которому отбираются только узлы в master-колонке
+     */
+    protected _masterFilter: {[key: string]: unknown} = {type: [true, false]};
+
+    /**
+     * Набор колонок, отображаемый в detail
+     */
+    protected _detailTableColumns: unknown[] = Gadgets.getGridColumnsForFlat();
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

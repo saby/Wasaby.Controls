@@ -1,4 +1,5 @@
 <Controls.masterDetail:Base
+   propStorageId="{{_propStorageId + 'masterWidth'}}"
    masterWidth="{{_options.master ? _options.master.width}}"
    masterMinWidth="{{_options.master ? _options.master.minWidth}}"
    masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
@@ -6,10 +7,11 @@
 >
 
    <ws:master>
-      <Controls.list:View
-         source="{{_masterSource}}"
-         keyProperty="{{_masterKeyProperty}}"
-      />
+      <Controls.scroll:Container>
+         <Controls.masterDetail:List>
+            <Controls.treeGrid:View scope="{{_masterTreeOptions}}"/>
+         </Controls.masterDetail:List>
+      </Controls.scroll:Container>
    </ws:master>
 
    <ws:detail>
@@ -17,22 +19,22 @@
          <!-- Список -->
          <ws:if data="{{_options.detail.viewMode === _viewModeEnum.list}}">
             <Controls.list:View
-               source="{{_detailSource}}"
-               keyProperty="{{_detailKeyProperty}}"
+               source="{{_detailTreeOptions.source}}"
+               keyProperty="{{_detailTreeOptions.keyProperty}}"
             />
          </ws:if>
 
          <!-- Плитка -->
          <ws:if data="{{_options.detail.viewMode === _viewModeEnum.tile}}">
             <Controls.tile:View
-               source="{{_detailSource}}"
-               keyProperty="{{_detailKeyProperty}}"
+               source="{{_detailTreeOptions.source}}"
+               keyProperty="{{_detailTreeOptions.keyProperty}}"
             />
          </ws:if>
 
          <!-- Таблица -->
          <ws:if data="{{_options.detail.viewMode === _viewModeEnum.table}}">
-            Not implemented yet
+            <Controls.treeGrid:View scope="{{_detailTreeOptions}}"/>
          </ws:if>
       </div>
    </ws:detail>

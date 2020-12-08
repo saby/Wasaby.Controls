@@ -7,6 +7,7 @@ import {ICrud} from 'Types/source';
  * @author Уфимцев Д.Ю.
  */
 export interface ICatalogColumnOptions {
+    //region source options
     /**
      * Источник данных для списка, расположенного внутри колонки.
      */
@@ -16,9 +17,5 @@ export interface ICatalogColumnOptions {
      * Имя свойства, содержащего информацию об идентификаторе текущей строки.
      */
     keyProperty?: string;
-
-    /**
-     * Пользовательский шаблон отображения элемента.
-     */
-    itemTemplate?: String | Function;
+    //endregion
 }

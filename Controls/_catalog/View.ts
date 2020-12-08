@@ -1,5 +1,4 @@
 import {Logger} from 'UI/Utils';
-import {ICrud} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
 import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
 import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
@@ -7,7 +6,7 @@ import * as ViewTemplate from 'wml!Controls/_catalog/View';
 
 /**
  * Компонент реализует стандартную раскладку двухколоночного реестра с master и detail колонками
- * @class Controls/_catalog/View
+ * @class Controls/catalog:View
  * @extends Core/Control
  * @public
  * @author Уфимцев Д.Ю.
@@ -21,31 +20,24 @@ export default class View extends Control<ICatalogOptions> {
     protected _template: TemplateFunction = ViewTemplate;
 
     /**
+     * Базовая часть уникального идентификатора контрола, по которому хранится конфигурация в хранилище данных.
+     */
+    protected _propStorageId: string;
+
+    /**
      * Enum со списком доступных вариантов отображения контента в detail-колонке
      */
     protected _viewModeEnum: typeof CatalogDetailViewMode = CatalogDetailViewMode;
 
-    //region source fields
     /**
-     * Источник данных для списка, расположенного внутри master-колонки
+     * Опции для списка в master-колонке
      */
-    protected _masterSource: ICrud;
+    protected _masterTreeOptions: unknown;
 
     /**
-     * Имя свойства, содержащего информацию об идентификаторе текущей строки списка колонки master.
+     * Опции для табличного представления списка в detail-колонке
      */
-    protected _masterKeyProperty: string;
-
-    /**
-     * Источник данных для списка, расположенного внутри detail-колонки
-     */
-    protected _detailSource: ICrud;
-
-    /**
-     * Имя свойства, содержащего информацию об идентификаторе текущей строки списка колонки detail.
-     */
-    protected _detailKeyProperty: string;
-    //endregion
+    protected _detailTreeOptions: unknown;
     //endregion
 
     // region life circle hooks
@@ -53,7 +45,7 @@ export default class View extends Control<ICatalogOptions> {
         this.updateState(options);
     }
 
-    protected _beforeUpdate(options?: ICatalogOptions, contexts?: any): void {
+    protected _beforeUpdate(options?: ICatalogOptions, contexts?: unknown): void {
         this.updateState(options);
     }
     //endregion
@@ -64,11 +56,41 @@ export default class View extends Control<ICatalogOptions> {
     private updateState(options: ICatalogOptions = this._options): void {
         View.validateOptions(options);
 
-        this._masterSource = options.master?.listSource || options.listSource;
-        this._masterKeyProperty = options.master?.keyProperty || options.keyProperty;
+        this._masterTreeOptions = this.buildMasterTreeOption(options);
+        this._detailTreeOptions = this.buildDetailTreeOption(options);
 
-        this._detailSource = options.detail.listSource || options.listSource;
-        this._detailKeyProperty = options.detail.keyProperty || options.keyProperty;
+        // Если передан кастомный идентификатор хранилища, то на основании него собираем
+        // базовую часть нашего идентификатора для того, что бы в дальнейшем использовать
+        // её для генерации ключей в которых будем хранить свои настройки
+        if (typeof options.propStorageId === 'string') {
+            this._propStorageId = `Controls/catalog:View_${options.propStorageId}_`;
+        }
+    }
+
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View, расположенном в master-колонке.
+     */
+    private buildMasterTreeOption(options: ICatalogOptions = this._options): unknown {
+        const defaultCfg = {
+            style: 'master',
+            backgroundStyle: 'master',
+            source: options.master?.listSource || options.listSource,
+            keyProperty: options.master?.keyProperty || options.keyProperty
+        };
+
+        return {...defaultCfg, ...options.master.treeGridView};
+    }
+
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View, расположенном в detail-колонке.
+     */
+    private buildDetailTreeOption(options: ICatalogOptions = this._options): unknown {
+        const defaultCfg = {
+            source: options.detail?.listSource || options.listSource,
+            keyProperty: options.detail?.keyProperty || options.keyProperty
+        };
+
+        return {...defaultCfg, ...options.detail.table};
     }
 
     //region static utils
