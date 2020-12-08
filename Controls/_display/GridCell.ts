@@ -446,6 +446,14 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     }
 
     // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        return false;
+    }
+
+    // endregion
 }
 
 Object.assign(GridCell.prototype, {

@@ -79,6 +79,17 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
     }
 
     // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        if (this.getColumnIndex() > 0) {
+            return false;
+        }
+        return this._$owner.editArrowIsVisible(this._$owner.getContents());
+    }
+
+    // endregion
 }
 
 Object.assign(GridDataCell.prototype, {
