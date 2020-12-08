@@ -9,6 +9,7 @@ import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import prepareColumns from '../../utils/GridColspanUtil';
+import {Model as EntityModel} from 'Types/entity';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -215,6 +216,10 @@ export default abstract class Row<T> {
             result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
         }
         return result;
+    }
+
+    editArrowIsVisible(item: EntityModel): boolean {
+        return this._$owner.editArrowIsVisible(item);
     }
 
     protected _reinitializeColumns(): void {

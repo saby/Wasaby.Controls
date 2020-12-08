@@ -21,6 +21,14 @@ import GridRowMixin from './Row';
 type THeaderVisibility = 'visible' | 'hasdata';
 type TResultsVisibility = 'visible' | 'hasdata';
 
+/**
+ * @typedef {Function} TEditArrowVisibilityCallback
+ * @description
+ * Функция обратного вызова для определения видимости кнопки редактирования
+ * @param item Model
+ */
+export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
+
 export interface IOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
@@ -33,6 +41,8 @@ export interface IOptions {
     resultsVisibility?: TResultsVisibility;
     ladderProperties?: string[];
     stickyColumn?: {};
+    showEditArrow?: boolean;
+    editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -50,8 +60,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$resultsPosition: TResultsPosition;
     protected _$headerVisibility: THeaderVisibility;
     protected _$resultsVisibility: TResultsVisibility;
-
-
+    protected _$showEditArrow: boolean;
+    protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$isFullGridSupport: boolean;
 
     protected constructor(options: IOptions) {
@@ -132,6 +142,13 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+    }
+
+    editArrowIsVisible(item: EntityModel): boolean {
+        if (this._$editArrowVisibilityCallback === undefined) {
+            return this._$showEditArrow;
+        }
+        return this._$editArrowVisibilityCallback(item);
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
@@ -264,5 +281,7 @@ Object.assign(Grid.prototype, {
     _$resultsPosition: null,
     _$ladderProperties: null,
     _$stickyColumn: null,
-    _$isFullGridSupport: true
+    _$isFullGridSupport: true,
+    _$showEditArrow: false,
+    _$editArrowVisibilityCallback: null
 });

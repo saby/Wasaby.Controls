@@ -295,7 +295,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         const bottomPadding = this._$owner.getBottomPadding();
         const isEditing = this._$owner.isEditing();
         const isDragged = this._$owner.isDragged();
-        const preparedStyle = style === 'masterClassic' ? 'default' : style;
+        const preparedStyle = style;
         const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
 
         classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
@@ -442,6 +442,14 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
      * @param tagStyle
      */
     shouldDisplayTag(tagStyle?: string): boolean {
+        return false;
+    }
+
+    // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
         return false;
     }
 

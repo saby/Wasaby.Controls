@@ -41,6 +41,10 @@
                              checkboxReadOnly="{{ checkboxReadOnly }}"/>
       </ws:partial>
 
+      <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
+         <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
+      </ws:if>
+
       <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
          <ws:partial template="{{ tagTemplate }}"
                      tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"

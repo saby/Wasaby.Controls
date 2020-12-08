@@ -79,6 +79,17 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwn
     }
 
     // endregion
+
+    // region Аспект "Кнопка редактирования"
+
+    shouldDisplayEditArrow(): boolean {
+        if (this.getColumnIndex() > 0) {
+            return false;
+        }
+        return this._$owner.editArrowIsVisible(this._$owner.getContents());
+    }
+
+    // endregion
 }
 
 Object.assign(DataCell.prototype, {

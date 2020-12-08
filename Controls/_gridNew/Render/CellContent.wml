@@ -6,7 +6,8 @@
                 template="{{ contentTemplate }}"
                 column="{{ column }}"
                 itemData="{{ (item || itemData) }}"
-                item="{{ (item || itemData) }}"/>
+                item="{{ (item || itemData) }}"
+                editArrowTemplate="{{ editArrowTemplate }}"/>
     </ws:if>
     <ws:else data="{{ column.textOverflow }}">
         <!-- Контент по умолчанию, обрезка длинного текста с многоточием -->
@@ -19,6 +20,10 @@
         {{ (item || itemData).getContents()[column.displayProperty] }}
     </ws:else>
 
+    <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
+    <ws:if data="{{ !contentTemplate && gridColumn.shouldDisplayEditArrow() }}">
+        <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
+    </ws:if>
 
     <!-- Тэг -->
     <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
