@@ -559,8 +559,13 @@ export default class Controller {
             // поэтому получение элементов с границ recordSet'a
             // нельзя делать обычным получением первого и последнего элемента,
             // надо так же проверять, находится ли элемент в корне
-            this._getNavigationController(this._options)
-                .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
+            const firstItem = this._getFirstItemFromRoot();
+            const lastItem = this._getLastItemFromRoot();
+
+            if (this._items.getCount() && firstItem && lastItem) {
+                this._getNavigationController(this._options)
+                    .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
+            }
         }
     }
 

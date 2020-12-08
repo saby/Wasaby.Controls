@@ -204,9 +204,8 @@ class PositionParamsCalculator implements IParamsCalculator {
 
     updateQueryRange(store: PositionNavigationStore, list: RecordSet, firstItem: Model, lastItem: Model): void {
         const metaNextPosition = list.getMetaData().nextPosition;
-        const listCount = list.getCount();
 
-        if (!metaNextPosition && listCount) {
+        if (!metaNextPosition) {
             const storeState = store.getState();
             const queryField = PositionParamsCalculator._resolveField(storeState.field);
             // TODO поправить, как будет вынесено добавление данных из BaseControl
