@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { GridHeaderRow } from 'Controls/display';
 
-describe('Controls/_display/GridHeaderRow', () => {
+describe('Controls/_display:GridHeaderRow', () => {
 
     it('.getItemClasses()', () => {
         const headerRow = new GridHeaderRow({});

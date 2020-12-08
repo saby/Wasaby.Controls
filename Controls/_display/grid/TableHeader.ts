@@ -1,23 +1,23 @@
-import GridHeader, {IOptions as IGridHeaderOptions} from './GridHeader';
-import GridTableHeaderRow from './GridHeaderRow';
+import Header, {IOptions as IHeaderOptions} from './Header';
+import TableHeaderRow from './TableHeaderRow';
 
-export default class GridTableHeader<T> extends GridHeader<T> {
+export default class TableHeader<T> extends Header<T> {
 
     getBodyClasses(theme: string = 'default'): string {
         return `controls-Grid__header controls-Grid__header_theme-${theme}`;
     }
 
     getRow(): never {
-        throw Error('Method not implemented in GridTableHeader and shouldn\'t be used!');
+        throw Error('Method not implemented in TableHeader and shouldn\'t be used!');
     }
 
-    getRows(): Array<GridTableHeaderRow<T>> {
+    getRows(): Array<TableHeaderRow<T>> {
         return this._$rows;
     }
 
-    protected _buildRows(options: IGridHeaderOptions<T>): Array<GridTableHeaderRow<T>> {
+    protected _buildRows(options: IHeaderOptions<T>): Array<TableHeaderRow<T>> {
         const factory = this._getRowsFactory();
-        const rowsCount = this._$gridHeaderBounds.row.end - this._$gridHeaderBounds.row.start;
+        const rowsCount = this._$headerBounds.row.end - this._$headerBounds.row.start;
         if (rowsCount === 1) {
             return [new factory(options)];
         }
@@ -30,9 +30,9 @@ export default class GridTableHeader<T> extends GridHeader<T> {
             let rowIndex = column.startRow - 1;
 
             // Если все ячейки в конфигурации начинаются не с первой строки, то мы игнорируем эти пустые строки, удаляя их.
-            // Строки в grid layout начинаются с 1, компенсируем this._$gridHeaderBounds.row.start на 1.
-            if (this._$gridHeaderBounds.row.start - 1 > 0) {
-                rowIndex -= (this._$gridHeaderBounds.row.start - 1);
+            // Строки в grid layout начинаются с 1, компенсируем this._$headerBounds.row.start на 1.
+            if (this._$headerBounds.row.start - 1 > 0) {
+                rowIndex -= (this._$headerBounds.row.start - 1);
             }
 
             // Записываем индекс ячейки в строку.
@@ -49,7 +49,8 @@ export default class GridTableHeader<T> extends GridHeader<T> {
     }
 }
 
-Object.assign(GridTableHeader.prototype, {
+Object.assign(TableHeader.prototype, {
+    '[Controls/_display/grid/TableHeader]': true,
     _moduleName: 'Controls/display:GridTableHeader',
     _instancePrefix: 'grid-table-header-',
     _rowModule: 'Controls/display:GridTableHeaderRow',

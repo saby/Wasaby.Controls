@@ -7,21 +7,21 @@ import {
     IInstantiable,
     IVersionable
 } from 'Types/entity';
-import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
-import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
-import {IItemPadding} from '../_list/interface/IList';
+import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
+import {IItemPadding} from 'Controls/_list/interface/IList';
+import Row from './Row';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
-    owner: GridRow<T>;
+    owner: Row<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
 }
 
-export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
+export default class Cell<T, TOwner extends Row<T>> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -456,8 +456,8 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // endregion
 }
 
-Object.assign(GridCell.prototype, {
-    '[Controls/_display/GridCell]': true,
+Object.assign(Cell.prototype, {
+    '[Controls/_display/grid/Cell]': true,
     _moduleName: 'Controls/display:GridCell',
     _instancePrefix: 'grid-cell-',
     _$owner: null,

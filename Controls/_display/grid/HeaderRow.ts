@@ -1,16 +1,16 @@
 import {THeader} from 'Controls/grid';
-import GridRow, {IOptions as IGridRowOptions} from './GridRow';
-import GridHeader from './GridHeader';
+import Row, {IOptions as IRowOptions} from './Row';
+import Header from './Header';
 
-export interface IOptions<T> extends IGridRowOptions<T> {
+export interface IOptions<T> extends IRowOptions<T> {
     header: THeader;
-    headerModel: GridHeader<T>
+    headerModel: Header<T>
 }
 
 
-export default class GridHeaderRow<T> extends GridRow<T> {
+export default class HeaderRow<T> extends Row<T> {
     protected _$header: THeader;
-    protected _$headerModel: GridHeader<T>;
+    protected _$headerModel: Header<T>;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -61,7 +61,8 @@ export default class GridHeaderRow<T> extends GridRow<T> {
     }
 }
 
-Object.assign(GridHeaderRow.prototype, {
+Object.assign(HeaderRow.prototype, {
+    '[Controls/_display/grid/HeaderRow]': true,
     _moduleName: 'Controls/display:GridHeaderRow',
     _instancePrefix: 'grid-header-row-',
     _cellModule: 'Controls/display:GridHeaderCell',

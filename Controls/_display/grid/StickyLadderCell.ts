@@ -1,18 +1,18 @@
-import GridCell, { IOptions as IGridCellOptions } from './GridCell';
+import Cell, { IOptions as ICellOptions } from './Cell';
 import { OptionsToPropertyMixin }  from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import GridRow from 'Controls/_display/GridDataRow';
+import DataRow from './DataRow';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:StickyLadderColumnTemplate';
 
-export interface IOptions<T> extends IGridCellOptions<T> {
+export interface IOptions<T> extends ICellOptions<T> {
     wrapperStyle: string;
     contentStyle?: string;
     stickyProperty: string;
     stickyHeaderZIndex: number;
 }
 
-export default class GridStickyLadderCell<T, TOwner extends GridRow<T>> extends GridCell<T, TOwner> {
+export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwner> {
     protected _$wrapperStyle: string;
     protected _$contentStyle: string;
     protected _$stickyProperty: string;
@@ -84,8 +84,8 @@ export default class GridStickyLadderCell<T, TOwner extends GridRow<T>> extends 
     }
 }
 
-Object.assign(GridStickyLadderCell.prototype, {
-    '[Controls/_display/GridStickyLadderCell]': true,
+Object.assign(StickyLadderCell.prototype, {
+    '[Controls/_display/StickyLadderCell]': true,
     _moduleName: 'Controls/display:GridStickyLadderCell',
     _instancePrefix: 'grid-ladder-cell-',
     _$wrapperStyle: '',
