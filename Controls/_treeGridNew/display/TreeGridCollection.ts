@@ -115,5 +115,5 @@ export default class TreeGridCollection<
 Object.assign(TreeGridCollection.prototype, {
     '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
-    _itemModule: 'Controls/treeGrid:TreeGridRow'
+    _itemModule: 'Controls/treeGrid:TreeGridDataRow'
 });

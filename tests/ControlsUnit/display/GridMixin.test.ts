@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import GridCollection from 'Controls/_display/GridCollection';
+import { GridCollection } from 'Controls/display';
 
 describe('Controls/_display/GridMixin', () => {
    const grid = new GridCollection({collection: [{id: 1}]});
