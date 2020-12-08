@@ -159,10 +159,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
 
-        if (options.root !== undefined) {
-            this._root = options.root;
-        }
-
         if (receivedState) {
             if ('filterItems' in receivedState && 'items' in receivedState) {
                 this._setFilterItems(receivedState.filterItems as IFilterItem[]);
@@ -233,6 +229,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const sourceChanged = this._options.source !== newOptions.source;
         if (sourceChanged) {
             this._source = newOptions.source;
+        }
+
+        if (newOptions.root !== this._options.root) {
+            this._root = newOptions.root;
         }
 
         const sourceController = this._getSourceController(newOptions);
