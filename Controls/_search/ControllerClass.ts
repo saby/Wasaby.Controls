@@ -72,9 +72,9 @@ export default class ControllerClass implements ISearchController {
       return this._updateFilterAndLoad(filter);
    }
 
-   update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> {
+   update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
       const needUpdateRoot = this._options.root !== options.root;
-      let updateResult;
+      let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
 
       if (needUpdateRoot) {
          this.setRoot(options.root);
