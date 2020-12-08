@@ -1,10 +1,9 @@
-import TreeGridDataCell from 'Controls/_treeGridNew/display/TreeGridDataCell';
 import { TemplateFunction } from 'UI/Base';
 import { GridCell } from 'Controls/display';
 import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
 
 export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeFooterRow<T>> {
-    readonly '[Controls/_treeGrid/TreeGridCell]': boolean;
+    readonly '[Controls/_treeGrid/TreeGridNodeFooterCell]': boolean;
 
     getTemplate(content?: TemplateFunction): TemplateFunction|string {
         return this._$owner.getNode().hasMoreStorage() ? this._$owner.getNodeFooterTemplateMoreButton() : content;
@@ -53,5 +52,5 @@ export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeF
 Object.assign(TreeGridNodeFooterCell.prototype, {
     '[Controls/_treeGrid/TreeGridNodeFooterCell]': true,
     _moduleName: 'Controls/treeGrid:TreeGridNodeFooterCell',
-    _instancePrefix: 'tree-grid-node-footer-cell'
+    _instancePrefix: 'tree-grid-node-footer-cell-'
 });
