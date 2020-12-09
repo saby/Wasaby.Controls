@@ -1,8 +1,6 @@
 import {Control} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {factory} from 'Types/chain';
 import {Model} from 'Types/entity';
-import {object} from 'Types/util';
 import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
 
 /**

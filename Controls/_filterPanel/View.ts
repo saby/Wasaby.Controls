@@ -57,14 +57,17 @@ export default class View extends Control<IControlOptions> {
         this._updateFilterParams();
     }
 
-    protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
+    protected _groupClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
+        if (isResetClick) {
+            this._resetFilterItem(displayItem);
+        }
+    }
+
+    protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         if (displayItem['[Controls/_display/GroupItem]']) {
             const index = this._collapsedGroups.indexOf(displayItem.getContents());
             this._collapsedGroups.splice(index, 1);
-        }
-        if (isResetClick) {
-            this._resetFilterItem(displayItem);
         }
     }
 
