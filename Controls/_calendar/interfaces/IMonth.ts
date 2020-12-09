@@ -30,7 +30,7 @@ export default {
              * @name Controls/_calendar/interfaces/IMonth#showCaption
              * @cfg {Boolean} Видимость заголовка.
              * @remark
-             * Если опция установлена в значение true, то заголовок не отображается.
+             * Если опция установлена в значение true, то заголовок отображается.
              * Формат данных, отображаемых в заголовке, задается в опции {@link captionFormat}.
              * @default false
              * @see captionFormat
