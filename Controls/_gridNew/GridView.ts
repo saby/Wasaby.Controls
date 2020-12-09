@@ -73,8 +73,8 @@ const GridView = ListView.extend({
     },
 
     _getGridViewStyles(options): string {
-        const hasMultiSelect = options.multiSelectVisibility !== 'hidden';
-        return this._getGridTemplateColumns(options.columns, hasMultiSelect);
+        const hasMultiSelectColumn = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+        return this._getGridTemplateColumns(options.columns, hasMultiSelectColumn);
     },
 
     _onItemMouseMove(event, collectionItem) {

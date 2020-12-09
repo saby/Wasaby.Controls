@@ -226,7 +226,7 @@ export default abstract class Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const createMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
+            const createMultiSelectColumn = this.needMultiSelectColumn();
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
             const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
@@ -300,7 +300,7 @@ export default abstract class Row<T> {
     prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
         return prepareColumns({
             columns,
-            hasMultiSelect: this.getMultiSelectVisibility() !== 'hidden',
+            hasMultiSelect: this.needMultiSelectColumn(),
             gridColumnsCount: this._$owner.getColumnsConfig().length
         });
     }
@@ -313,6 +313,10 @@ export default abstract class Row<T> {
             options.owner = this;
             return create(this._cellModule, options as ICellOptions<T>);
         };
+    }
+
+    needMultiSelectColumn(): boolean {
+        return this._$owner.needMultiSelectColumn();
     }
 
     getIndex(): number {
