@@ -14,7 +14,7 @@ import {
    INavigationSourceConfig,
    INavigationPositionSourceConfig as IPositionSourceConfig,
    INavigationOptionValue as INavigation
-}  from '../_interface/INavigation';
+} from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';

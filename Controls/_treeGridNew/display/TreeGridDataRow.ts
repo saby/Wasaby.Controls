@@ -10,6 +10,11 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly Markable = true;
+    readonly SelectableItem = true;
+    readonly LadderSupport = true;
+
     constructor(options: IOptions<T>) {
         super(options);
         GridRowMixin.call(this, options);

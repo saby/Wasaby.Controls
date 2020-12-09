@@ -29,11 +29,6 @@ export interface IOptions<T> extends IBaseOptions<T> {
 
 export default abstract class Row<T> {
     readonly '[Controls/_display/grid/mixins/Row]': boolean;
-    readonly '[Controls/_display/ILadderedCollectionItem]': boolean;
-
-    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
-    // Данная возможность доступна только строке с данными.
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
 
     protected _$owner: Collection<T>;
     protected _cellModule: string;
@@ -338,8 +333,6 @@ export default abstract class Row<T> {
 
 Object.assign(Row.prototype, {
     '[Controls/_display/grid/mixins/Row]': true,
-    '[Controls/_display/ILadderedCollectionItem]': true,
-    '[Controls/_display/IEditableCollectionItem]': false,
     _cellModule: null,
     _$columns: null,
     _$columnItems: null
