@@ -98,6 +98,8 @@ const _private = {
     },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         if (self._options.useNewModel) {
+            // TODO нужно зарефакторить логику работы с expanded/collapsed, написав единию логику в контроллере
+            //  https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
             _private.toggleExpandedOnNewModel(self._options, listViewModel, dispItem);
         } else {
             listViewModel.toggleExpanded(dispItem, expanded);
