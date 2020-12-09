@@ -83,6 +83,7 @@ define(['Controls/_tile/TileView/TileViewModel', 'Types/collection', 'Types/enti
             displayProperty: 'title',
             imageWidthProperty: 'imageWidth',
             imageHeightProperty: 'imageHeight',
+            getImageProportion: tileViewModel.getImageProportion,
             itemWidth: 150,
             imageFit: 'cover',
             imageUrlResolver: urlResolver,

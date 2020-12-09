@@ -230,6 +230,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             tileMode: 'dynamic',
             displayProperty: 'title',
             imageWidthProperty: 'imageWidth',
+            getImageProportion: treeTileViewModel._tileModel.getImageProportion,
             imageHeightProperty: 'imageHeight',
             imageFit: 'cover',
             imageUrlResolver: urlResolver
