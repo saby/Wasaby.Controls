@@ -24,7 +24,7 @@ type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-x
     'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
 
 /**
- * Интерфейс для шаблона отображения элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списочном контроле}.
+ * Интерфейс для шаблона отображения элемента в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/ списке}.
  * @interface Controls/_list/interface/IBaseItemTemplateOptions
  * @author Авраменко А.С.
  * @public
