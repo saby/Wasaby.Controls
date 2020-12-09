@@ -2,23 +2,23 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/grid/SourceChanger/WithFull/WithFull';
 import {Memory} from 'Types/source';
 import {getCountriesStats, changeSourceData} from '../../DemoHelpers/DataCatalog';
-import {IColumn} from 'Controls/grid';
-import {INavigation} from 'Controls-demo/types';
+import { IColumn } from 'Controls/grid';
+import { INavigation } from 'Controls-demo/types';
 
-const {data, data2} = changeSourceData();
+const { data, data2 } = changeSourceData();
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 // tslint:disable
 class DemoSource extends Memory {
     queryNumber: number = 0;
-
+    pending: Promise<any>;
     query(): Promise<any> {
         const args = arguments;
         return delay(1000).then(() => {
             return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
                 rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
-                rawData.meta.more = this.queryNumber < 2;
+                rawData.meta.more = this.queryNumber < 5;
                 rawData.meta.total = rawData.items.length;
                 items.setRawData(rawData);
                 this.queryNumber++;
@@ -45,6 +45,7 @@ export default class extends Control {
     protected _viewSource: Memory;
     private _viewSource2: Memory;
     protected _columns: IColumn[] = getCountriesStats().getColumnsForLoad();
+    private _resolve: unknown = null;
     protected _navigation: INavigation;
 
     protected _beforeMount(): void {
@@ -69,7 +70,15 @@ export default class extends Control {
         });
     }
 
+    protected _onPen(): void {
+        const self = this;
+        this._resolve();
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
+    }
+
     protected _onChangeSource() {
+        const self = this;
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }

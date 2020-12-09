@@ -6,14 +6,13 @@ import { IColumn } from 'Controls/grid';
 import { INavigation } from 'Controls-demo/types';
 
 const { data, data2 } = changeSourceData();
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
 // tslint:disable
 class DemoSource extends Memory {
     queryNumber: number = 0;
+    pending: Promise<any>;
     query(): Promise<any> {
         const args = arguments;
-        return delay(1000).then(() => {
+        return this.pending.then(() => {
             return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
                 rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
@@ -69,7 +68,15 @@ export default class extends Control {
         });
     }
 
+    protected _onPen(): void {
+        const self = this;
+        this._resolve();
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
+    }
+
     protected _onChangeSource() {
+        const self = this;
+        this._viewSource2.pending = new Promise((res) => { self._resolve = res; });
         this._viewSource2.queryNumber = 0;
         this._viewSource = this._viewSource2;
     }

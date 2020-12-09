@@ -14,8 +14,8 @@ class DemoSource extends Memory {
         return delay(1000).then(() => {
             return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
-                rawData.items = data2.filter((cur) => cur.id === this.queryNumber);
-                rawData.meta.more = this.queryNumber < 5;
+                rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
+                rawData.meta.more = this.queryNumber < 2;
                 rawData.meta.total = rawData.items.length;
                 items.setRawData(rawData);
                 this.queryNumber++;
