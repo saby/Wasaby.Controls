@@ -133,5 +133,5 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
- * @remark При использовании кастомного columns.itemTemplate, в него нужно прокидывать afterItemTemplate.
+ * @remark При использовании кастомного {@link Controls/_grid/interface/IColumn#template шаблона отображения ячейки}, в него нужно прокидывать afterItemTemplate.
  */
