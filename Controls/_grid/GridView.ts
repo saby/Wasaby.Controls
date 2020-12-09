@@ -279,6 +279,17 @@ var
                 self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
             }
         },
+        /**
+         * Скроллит к ближайшему краю колонки если включена опция scrollByColumn
+         * @param self
+         */
+        scrollToColumnEdgeIfNeed(self): void {
+            if (self._options.scrollByColumn) {
+                self._columnScrollController.scrollToColumnEdge();
+                self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
+                self._updateColumnScrollData();
+            }
+        },
         applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
             // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             self._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
@@ -721,8 +732,7 @@ var
         _columnScrollWheelHandler(e): void {
             if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
-                this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-                this._updateColumnScrollData();
+                _private.scrollToColumnEdgeIfNeed(this);
             }
         },
         _updateColumnScrollData(): void {
@@ -834,6 +844,7 @@ var
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
+                _private.scrollToColumnEdgeIfNeed(this);
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -862,9 +873,11 @@ var
             }
         },
         _onDragScrollOverlayMouseUp(e) {
+            _private.scrollToColumnEdgeIfNeed(this);
             this._dragScrollController?.onOverlayMouseUp(e);
         },
         _onDragScrollOverlayTouchEnd(e) {
+            _private.scrollToColumnEdgeIfNeed(this);
             this._dragScrollController?.onOverlayTouchEnd(e);
             this._leftSwipeCanBeStarted = false;
         },

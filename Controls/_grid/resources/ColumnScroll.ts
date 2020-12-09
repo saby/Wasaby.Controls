@@ -47,6 +47,13 @@ const DELAY_UPDATE_SIZES = 16;
 const WHEEL_DELTA_INCREASE_COEFFICIENT = 100;
 const WHEEL_SCROLLING_SMOOTH_COEFFICIENT = 0.6;
 
+interface IVerticalDimensions {
+    left: number;
+    right: number;
+}
+
+type TScrollDirection = 'forward' | 'backward';
+
 export class ColumnScroll {
     protected _options: IColumnScrollOptions;
     private _isDestroyed: boolean = false;
@@ -64,6 +71,8 @@ export class ColumnScroll {
     private _contentSizeForHScroll: number = 0;
     private _scrollWidth: number = 0;
     private _shadowState: { start: boolean; end: boolean; } = {start: false, end: false};
+    private _scrollableColumnsWidths: DOMRect[];
+    private _currentScrollDirection: TScrollDirection;
 
     constructor(options: IColumnScrollOptions) {
         this._options = options;
@@ -133,6 +142,7 @@ export class ColumnScroll {
     private _setScrollPosition(newPosition: number): void {
         const newScrollPosition = Math.round(newPosition);
         if (this._scrollPosition !== newScrollPosition) {
+            this._currentScrollDirection = this._scrollPosition > newScrollPosition ? 'backward' : 'forward';
             this._scrollPosition = newScrollPosition;
             this._updateShadowState();
             this._drawTransform(this._scrollPosition, GridLayoutUtil.isFullGridSupport());
@@ -179,6 +189,55 @@ export class ColumnScroll {
             theme: this._options.theme,
             backgroundStyle: this._options.backgroundStyle,
             needBottomPadding: this._options.needBottomPadding,
+        });
+    }
+
+    /**
+     * Если скроллим влево:
+     * Если левая граница контента меньше левой границы контейнера, перебираем знасения пока не
+     * current.right > левой границы контейнера.
+     * Значит this._scrollToColumnEdgeIfHidden(left, right);
+     *
+     * Если скроллим вправо:
+     * Если правая граница контента больше правой границы контейнера, перебираем знасения пока не
+     * current.left < правой границы контейнера.
+     * Значит this._scrollToColumnEdgeIfHidden(left, right);
+     */
+    scrollToColumnEdge(): void {
+        const scrollContainerDimensions = this._getScrollContainerVerticalDimensions();
+        const contentContainerDimensions = this._contentContainer.getBoundingClientRect();
+        let startPosition = contentContainerDimensions.left + this._fixedColumnsWidth;
+        const columnsDimensions: IVerticalDimensions[] = this._scrollableColumnsWidths.map((rect) => {
+            const left = startPosition;
+            startPosition = left + Math.round(rect.width);
+            return {left, right: startPosition};
+        });
+
+        let current: IVerticalDimensions;
+        if (this._currentScrollDirection === 'backward') {
+            current = columnsDimensions.find((rect) => (
+                rect.left < scrollContainerDimensions.left && rect.right > scrollContainerDimensions.left
+            ));
+        } else if (this._currentScrollDirection === 'forward') {
+            current = columnsDimensions.find((rect) => (
+                rect.left < scrollContainerDimensions.right && rect.right > scrollContainerDimensions.right
+            ));
+        }
+        if (current) {
+            this._scrollToColumnHiddenEdge(current.left, current.right);
+        }
+    }
+
+    /**
+     * Набирает размеры колонок
+     * @private
+     */
+    private _updateScrollableColumnsSizes(): void {
+        this._scrollableColumnsWidths = [];
+        const columnsCSSSelector = `.controls-Grid__row:first-child .${JS_SELECTORS.SCROLLABLE_ELEMENT}`;
+        const htmlColumns: NodeList = this._contentContainer.querySelectorAll(columnsCSSSelector);
+        htmlColumns.forEach((value) => {
+            this._scrollableColumnsWidths.push((value as HTMLElement).getBoundingClientRect());
         });
     }
 
@@ -276,6 +335,7 @@ export class ColumnScroll {
         this._contentSizeForHScroll = isFullGridSupport ? this._contentSize - this._fixedColumnsWidth : this._contentSize;
         this._drawTransform(this._scrollPosition, isFullGridSupport);
         this._toggleStickyElementsForScrollCalculation(true);
+        this._updateScrollableColumnsSizes();
 
         if (afterUpdateCallback) {
             afterUpdateCallback({
@@ -455,19 +515,32 @@ export class ColumnScroll {
         if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
             return;
         }
-        const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
+        const {right: activeElementRight, left: activeElementLeft} = element.getBoundingClientRect();
+        this._scrollToColumnHiddenEdge(activeElementLeft, activeElementRight);
+    }
 
+    /**
+     * Скроллит к краю элемента, если он частично находится за границей скроллируемой области
+     * @param left
+     * @param right
+     * @private
+     */
+    private _scrollToColumnHiddenEdge(left: number, right: number): void {
+        const scrollableRect = this._getScrollContainerVerticalDimensions();
+
+        if (right > scrollableRect.right) {
+            this._setScrollPosition(this._scrollPosition + (right - scrollableRect.right));
+        } else if (left < scrollableRect.left) {
+            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - left));
+        }
+    }
+
+    private _getScrollContainerVerticalDimensions(): IVerticalDimensions {
         const containerRect = this._scrollContainer.getBoundingClientRect();
-        const scrollableRect = {
+        return {
             right: containerRect.right,
             left: containerRect.left + this._fixedColumnsWidth
         };
-
-        if (activeElementRight > scrollableRect.right) {
-            this._setScrollPosition(this._scrollPosition + (activeElementRight - scrollableRect.right));
-        } else if (activeElementLeft < scrollableRect.left) {
-            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - activeElementLeft));
-        }
     }
 
     destroy(): void {

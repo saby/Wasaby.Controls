@@ -7,7 +7,11 @@ ColumnScroll.prototype._createGuid = () => '12345';
 function mockScrollContainer(params: { offsetWidth: number }): HTMLElement {
     return {
         getClientRects: () => [null, null],
-        offsetWidth: params.offsetWidth
+        offsetWidth: params.offsetWidth,
+        getBoundingClientRect: () => ({
+            left: 12,
+            right: params.offsetWidth
+        })
     } as unknown as HTMLElement;
 }
 
@@ -17,17 +21,34 @@ function mockStylesContainer(): HTMLStyleElement {
     } as unknown as HTMLStyleElement;
 }
 
+function mockScrollColumn(width: number): HTMLElement {
+    return {
+        getBoundingClientRect: () => ({
+            width
+        })
+    } as unknown as HTMLElement;
+}
+
 function mockContentContainer(params: {
     scrollWidth: number,
     offsetWidth: number,
     stickyElements?: unknown[],
     stickyColumnsCount?: number,
-    hasMultiSelect?: boolean
+    hasMultiSelect?: boolean,
+    columnWidths?: number[]
 }): HTMLElement {
     return {
         scrollWidth: params.scrollWidth,
         offsetWidth: params.offsetWidth,
-        querySelectorAll: (selector: string) => selector === '.controls-Grid_columnScroll_wrapper' && !!params.stickyElements ? params.stickyElements : [],
+        querySelectorAll: (selector: string) => {
+            if (selector === '.controls-Grid_columnScroll_wrapper' && !!params.stickyElements) {
+                return params.stickyElements;
+            }
+            if (selector === '.controls-Grid__row:first-child .controls-Grid_columnScroll__scrollable' && !!params.columnWidths) {
+                return params.columnWidths.map((width) => mockScrollColumn(width));
+            }
+            return [];
+        },
         querySelector: (selector: string) => {
             const lastStickyColumnSelector = `.controls-Grid_columnScroll__fixed:nth-child(${(params.stickyColumnsCount || 1) + (params.hasMultiSelect ? 1 : 0)})`;
             if (selector === lastStickyColumnSelector) {
@@ -40,7 +61,8 @@ function mockContentContainer(params: {
             }
         },
         getBoundingClientRect: () => ({
-            left: 12
+            left: 12,
+            right: params.scrollWidth
         })
     } as unknown as HTMLElement;
 }
@@ -52,7 +74,8 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
     beforeEach(() => {
         const cfg = {
             hasMultiSelect: false,
-            stickyColumnsCount: 2
+            stickyColumnsCount: 2,
+            columnWidths: [100, 150, 51, 51]
         };
         columnScroll = new ColumnScroll(cfg);
 
@@ -120,6 +143,17 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         assert.equal(columnScroll.getScrollPosition(), 0);
         columnScroll.scrollToElementIfHidden(target);
         assert.equal(columnScroll.getScrollPosition(), 0);
+    });
+
+    it('should scroll to column hidden edge', () => {
+        columnScroll.updateSizes(() => {
+            columnScroll.setScrollPosition(10);
+            assert.equal(columnScroll.getScrollPosition(), 10);
+
+            // since contentContainer has static values and no real transform happens in test it always adds +2
+            columnScroll.scrollToColumnEdge();
+            assert.equal(columnScroll.getScrollPosition(), 12);
+        }, true);
     });
 
     it('getShadowClasses', () => {
