@@ -4,7 +4,7 @@ export interface IFormatMaskChars {
 
 export interface IMaskOptions {
     /**
-     * @name Controls/_decorator/resource/IMask#mask
+     * @name Controls/_decorator/resources/IMask#mask
      * @cfg {String} Устанавливает маску в поле ввода.
      * @remark
      * Маска состоит из статических и {@link formatMaskChars динамических символов}.
@@ -82,7 +82,7 @@ export interface IMaskOptions {
     */
     mask: string;
     /**
-     * @name Controls/_decorator/resource/IMask#replacer
+     * @name Controls/_decorator/resources/IMask#replacer
      * @cfg {String} Символ, который будет отображаться, если ничего не введено.
      * @default undefined
      * @remark
@@ -98,7 +98,7 @@ export interface IMaskOptions {
      */
 
     /*
-    * @name Controls/_decorator/resource/IMask#replacer
+    * @name Controls/_decorator/resources/IMask#replacer
     * @cfg {String} Symbol that will be shown when character is not entered.
     *
     * @remark If quantifiers are used in the mask, the replacer cannot be set.
@@ -112,7 +112,7 @@ export interface IMaskOptions {
     */
     replacer: string;
     /**
-     * @name Controls/_decorator/resource/IMask#formatMaskChars
+     * @name Controls/_decorator/resources/IMask#formatMaskChars
      * @cfg {Object} Объект, где ключи — символы маски, а значения — регулярные выражения, которые будут использоваться для фильтрации вводимых символов для соответствующих ключей.
      *
      * @example
@@ -134,7 +134,7 @@ export interface IMaskOptions {
      */
 
     /*
-    * @name Controls/_decorator/resource/IMask#formatMaskChars
+    * @name Controls/_decorator/resources/IMask#formatMaskChars
     * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
     *
     * @example
@@ -169,7 +169,7 @@ export function getDefaultMaskOptions(): Partial<IMaskOptions> {
 }
 /**
  * Интерфейс для контролов, которые обеспечивают работу со значением с разделителями.
- * @interface Controls/_decorator/resource/IMask
+ * @interface Controls/_decorator/resources/IMask
  * @public
  * @author Красильников А.С.
  */
