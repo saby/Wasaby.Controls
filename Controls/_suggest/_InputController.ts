@@ -180,6 +180,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
       this._searchResult = null;
 
+      this._tabsSelectedKey = null;
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
