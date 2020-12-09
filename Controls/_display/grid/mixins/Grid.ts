@@ -86,10 +86,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    getColumns(): TColumns {
-        throw Error('GridCollection.getColumns is deprecated. Use GridCollection.getColumnsConfig');
-    }
-
     getColumnsConfig(): TColumns {
         return this._$columns;
     }
@@ -145,7 +141,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
-        if (this._$editArrowVisibilityCallback === undefined) {
+        if (!this._$editArrowVisibilityCallback) {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
@@ -163,7 +159,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     protected _updateItemsLadder(): void {
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+            if (item.LadderSupport) {
                 item.setLadder(this._$ladder);
             }
         });
@@ -171,7 +167,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     protected _updateItemsColumns(): void {
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+            if (item.LadderSupport) {
                 item.setColumns(this._$columns);
             }
         });
@@ -258,6 +254,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
+    needMultiSelectColumn(): boolean {
+        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
@@ -267,6 +267,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     abstract getStartIndex(): number;
     abstract getStopIndex(): number;
     abstract getRowSeparatorSize(): string;
+    abstract getMultiSelectVisibility(): string;
+    abstract getMultiSelectPosition(): string;
 
     protected abstract _nextVersion(): void;
 

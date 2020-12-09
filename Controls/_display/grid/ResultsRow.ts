@@ -53,7 +53,7 @@ export default class ResultsRow<T> extends Row<T> {
                 }));
             }
 
-            if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+            if (this._$owner.needMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}
                 }));

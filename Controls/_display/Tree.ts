@@ -20,6 +20,7 @@ import {Object as EventObject} from 'Env/Event';
 import { TemplateFunction } from 'UI/Base';
 import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
+import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -180,6 +181,16 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$expanderVisibility: string;
 
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
+
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -289,6 +300,14 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
 
     getExpanderVisibility(): string {
         return this._$expanderVisibility;
+    }
+
+    getExpanderIcon(): string {
+        return this._$expanderIcon;
+    }
+
+    getExpanderSize(): string {
+        return this._$expanderSize;
     }
 
     // endregion Expander
@@ -751,7 +770,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 let item;
                 while (enumerator.moveNext()) {
                     item = enumerator.getCurrent();
-                    if (!(item instanceof TreeItem)) {
+                    if (!(item instanceof TreeItem) && !(item instanceof BreadcrumbsItem)) {
                         continue;
                     }
                     if (item.getParent() === parent) {
@@ -847,6 +866,8 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
+    _$expanderSize: undefined,
+    _$expanderIcon: undefined,
     _$root: undefined,
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,

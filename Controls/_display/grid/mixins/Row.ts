@@ -29,11 +29,6 @@ export interface IOptions<T> extends IBaseOptions<T> {
 
 export default abstract class Row<T> {
     readonly '[Controls/_display/grid/mixins/Row]': boolean;
-    readonly '[Controls/_display/ILadderedCollectionItem]': boolean;
-
-    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
-    // Данная возможность доступна только строке с данными.
-    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
 
     protected _$owner: Collection<T>;
     protected _cellModule: string;
@@ -231,7 +226,7 @@ export default abstract class Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const createMultiSelectColumn = this.getMultiSelectVisibility() !== 'hidden';
+            const createMultiSelectColumn = this.needMultiSelectColumn();
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
             const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
@@ -305,7 +300,7 @@ export default abstract class Row<T> {
     prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
         return prepareColumns({
             columns,
-            hasMultiSelect: this.getMultiSelectVisibility() !== 'hidden',
+            hasMultiSelect: this.needMultiSelectColumn(),
             gridColumnsCount: this._$owner.getColumnsConfig().length
         });
     }
@@ -318,6 +313,10 @@ export default abstract class Row<T> {
             options.owner = this;
             return create(this._cellModule, options as ICellOptions<T>);
         };
+    }
+
+    needMultiSelectColumn(): boolean {
+        return this._$owner.needMultiSelectColumn();
     }
 
     getIndex(): number {
@@ -334,8 +333,6 @@ export default abstract class Row<T> {
 
 Object.assign(Row.prototype, {
     '[Controls/_display/grid/mixins/Row]': true,
-    '[Controls/_display/ILadderedCollectionItem]': true,
-    '[Controls/_display/IEditableCollectionItem]': false,
     _cellModule: null,
     _$columns: null,
     _$columnItems: null

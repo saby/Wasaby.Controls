@@ -15,7 +15,7 @@
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
                         <ws:if data="{{!withoutLevelPadding && item.getLevel() > 1}}">
                             <ws:for data="i in item.getLevel() - 1">
-                                <div class="{{item.getLevelIndentClasses(theme, expanderSize, levelIndentSize)}}"></div>
+                                <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize, theme)}}"></div>
                             </ws:for>
                         </ws:if>
                         <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon, expanderSize)}}">
