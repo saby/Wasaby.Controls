@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
 import cInstance = require('Core/core-instance');
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
 import {factory} from 'Types/chain';
@@ -683,7 +683,7 @@ var
          }
       },
       _onExplorerKeyDown: function(event) {
-         keysHandler(event, HOT_KEYS, _private, this);
+         EventUtils.keysHandler(event, HOT_KEYS, _private, this);
       },
       _updateHeadingPath() {
           this._breadCrumbsItems = calculatePath(this._items).path;
@@ -756,7 +756,7 @@ var
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);
       },
-      _notifyHandler: tmplNotify
+      _notifyHandler: EventUtils.tmplNotify
    });
 
    Explorer._private = _private;
