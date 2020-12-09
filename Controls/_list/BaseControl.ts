@@ -782,7 +782,7 @@ const _private = {
                 // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
-                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getChildren(options.useNewModel ? display.getRoot() : options.root).length :
                     self._listViewModel.getCount();
             } else {
                 loadedDataCount = 0;
