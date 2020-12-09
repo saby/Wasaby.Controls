@@ -249,7 +249,8 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
-      if (this._limit && this.getCountOfSelected() === this._limit) {
+      // Если задан лимит, то обрабатывать добавленные элементы нужно, если до добавления их было меньше лимита
+      if (this._limit && (this._model.getCount() - addedItems.length) > this._limit) {
          return;
       }
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
