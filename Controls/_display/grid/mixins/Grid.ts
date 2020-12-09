@@ -141,7 +141,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
-        if (this._$editArrowVisibilityCallback === undefined) {
+        if (!this._$editArrowVisibilityCallback) {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
