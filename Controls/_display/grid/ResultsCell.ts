@@ -1,10 +1,10 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
-import GridResultsRow from './GridResultsRow';
-import GridCell from 'Controls/_display/GridCell';
+import ResultsRow from './ResultsRow';
+import Cell from './Cell';
 
 export interface IOptions<T> {
-    owner: GridResultsRow<T>;
+    owner: ResultsRow<T>;
     template?: TemplateFunction;
     align?: string;
     displayProperty?: string;
@@ -12,7 +12,7 @@ export interface IOptions<T> {
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ResultColumnTemplate';
 
-export default class GridResultsCell<T> extends GridCell<T, GridResultsRow<T>> {
+export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
     protected _$data: string|number;
     protected _$format: string;
 
@@ -104,7 +104,8 @@ export default class GridResultsCell<T> extends GridCell<T, GridResultsRow<T>> {
     }
 }
 
-Object.assign(GridResultsCell.prototype, {
+Object.assign(ResultsCell.prototype, {
+    '[Controls/_display/grid/ResultsCell]': true,
     _moduleName: 'Controls/display:GridResultsCell',
     _instancePrefix: 'grid-results-cell-',
     _$data: null,

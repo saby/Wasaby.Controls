@@ -1,19 +1,38 @@
+import {mixin} from 'Types/util';
+import {Record} from 'Types/entity';
 import { Model } from 'Types/entity';
-import GridCell, {IOptions as IGridCellOptions} from './GridCell';
-import GridDataRow from './GridDataRow';
-import IMarkable from './interface/IMarkable';
-import ITagCell from './grid/interface/ITagCell';
-import IItemActionsCell from './grid/interface/IItemActionsCell';
-import ILadderContentCell from './grid/interface/ILadderContentCell';
+import Cell, {IOptions as ICellOptions} from './Cell';
+import DataRow from './DataRow';
+import IMarkable from '../interface/IMarkable';
+import ITagCell from './interface/ITagCell';
+import IItemActionsCell from './interface/IItemActionsCell';
+import ILadderContentCell from './interface/ILadderContentCell';
+import DataCellCompatibility from './compatibility/DataCell';
 
-export interface IOptions<T> extends IGridCellOptions<T> {
+export interface IOptions<T> extends ICellOptions<T> {
 }
 
-export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends GridCell<T, TOwner> implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
+    Cell<T, TOwner>,
+    DataCellCompatibility<T>
+>(
+    Cell,
+    DataCellCompatibility
+) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+
     readonly Markable = true;
     readonly TagCell = true;
     readonly ItemActionsCell = true;
     readonly LadderContentCell = true;
+
+    getDefaultDisplayValue(): T {
+        const itemModel = this._$owner.getContents();
+        if (itemModel instanceof Record) {
+            return itemModel.get(this.getDisplayProperty());
+        } else {
+            return itemModel[this.getDisplayProperty()];
+        }
+    }
 
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
@@ -92,8 +111,8 @@ export default class GridDataCell<T, TOwner extends GridDataRow<T>> extends Grid
     // endregion
 }
 
-Object.assign(GridDataCell.prototype, {
-    '[Controls/_display/GridDataCell]': true,
+Object.assign(DataCell.prototype, {
+    '[Controls/_display/grid/DataCell]': true,
     _moduleName: 'Controls/display:GridDataCell',
     _instancePrefix: 'grid-data-cell-'
 });

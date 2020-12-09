@@ -1,24 +1,24 @@
 import { TemplateFunction } from 'UI/Base';
 import {mixin} from 'Types/util';
-import GridRow from './GridRow';
-import ExpandableMixin, {IOptions as IExpandableMixinOptions} from './ExpandableMixin';
-import {IOptions as ICollectionItemOptions} from './CollectionItem';
-import GridCell from './GridCell';
-import GridCollection from './GridCollection';
-import GridGroupCell from './GridGroupCell';
-import * as GridLadderUtil from './utils/GridLadderUtil';
+import Row from './Row';
+import ExpandableMixin, {IOptions as IExpandableMixinOptions} from '../ExpandableMixin';
+import {IOptions as IBaseCollectionItemOptions} from '../CollectionItem';
+import Cell from './Cell';
+import Collection from './Collection';
+import GroupCell from './GroupCell';
+import * as GridLadderUtil from '../utils/GridLadderUtil';
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
 
-interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
-    owner: GridCollection<T>;
+interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
+    owner: Collection<T>;
 }
 
-export default class GridGroupItem<T> extends mixin<
-    GridRow<any>,
+export default class GroupItem<T> extends mixin<
+    Row<any>,
     ExpandableMixin
     >(
-    GridRow,
+    Row,
     ExpandableMixin
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -26,9 +26,9 @@ export default class GridGroupItem<T> extends mixin<
 
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
-    readonly '[Controls/_display/GridGroupItem]': true;
+    readonly '[Controls/_display/grid/GroupItem]': true;
 
-    protected _$columnItems: Array<GridCell<T>>;
+    protected _$columnItems: Array<Cell<T>>;
     protected _groupTemplate: TemplateFunction|string;
 
     constructor(options?: IOptions<T>) {
@@ -78,7 +78,7 @@ export default class GridGroupItem<T> extends mixin<
         if (this._$columns) {
             const columns = [];
 
-            columns.push(new GridGroupCell({
+            columns.push(new GroupCell({
                 owner: this,
                 columns: this._$columns,
                 column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE }
@@ -95,9 +95,9 @@ export default class GridGroupItem<T> extends mixin<
 
 }
 
-Object.assign(GridGroupItem.prototype, {
+Object.assign(GroupItem.prototype, {
     '[Controls/_display/GroupItem]': true,
-    '[Controls/_display/GridGroupItem]': true,
+    '[Controls/_display/grid/GroupItem]': true,
     _moduleName: 'Controls/display:GridGroupItem',
     _instancePrefix: 'grid-group-item-',
     _$columns: null

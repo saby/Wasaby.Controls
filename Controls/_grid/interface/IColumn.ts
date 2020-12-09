@@ -113,7 +113,7 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
  * @public
  * @author Авраменко А.С.
  */
-export interface IColumn {
+export interface IColumn extends IColspanParams, IRowspanParams {
     /**
      * @name Controls/_grid/interface/IColumn#width
      * @cfg {String} Ширина колонки.

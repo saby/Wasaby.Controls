@@ -2303,7 +2303,7 @@ var
         setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
             this._model.setDraggedItems(draggableItem, draggedItemsKeys);
             // Если есть прилипающая колонка, то нужно пересчитать футер,
-            // т.к. прилипающая колонка во время днд скрывается и кол-во grid толбцов уменьшается
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
             if (_private.hasStickyColumn(this) && this._footerColumns) {
                 this._setFooter(this._footerColumns);
             }
@@ -2314,9 +2314,9 @@ var
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
             // Если есть прилипающая колонка, то нужно пересчитать футер,
-            // т.к. прилипающая колонка во время днд скрывается и кол-во grid толбцов уменьшается
-            if (_private.hasStickyColumn(this) && this._footer) {
-                this._setFooter(this._footer);
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
+            if (_private.hasStickyColumn(this) && this._footerColumns) {
+                this._setFooter(this._footerColumns);
             }
         },
 
