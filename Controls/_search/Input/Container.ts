@@ -7,7 +7,8 @@ import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
 
 /**
- * Контрол обертка для отлавливания событий обернутого поля ввода поиска.
+ * Контрол-контейнер для полей ввода, реализует функционал проверки количества введённых символов,
+ * а так же задержку между вводом символа в поле ввода и выполнением поискового запроса.
  * @remark
  * Контрол принимает решение по событию valueChanged, должно ли сработать событие search или нет,
  * в зависимости от заданных параметров поиска - минимальной длины для начала поиска и времени задержки.
@@ -16,11 +17,9 @@ import {constants} from 'Env/Env';
  *
  * @example
  * <pre>
- *    <Controls.ExampleControl on:search="_search()">
- *       <Controls.search:InputContainer>
- *          <Controls.search:Input/>
- *       </Controls.search:InputContainer>
- *    </Controls.ExampleControl>
+ *    <Controls.search:InputContainer on:search="_search()" on:searchReset="_searchReset()">
+ *       <Controls.search:Input/>
+ *    </Controls.search:InputContainer>
  * </pre>
  * <pre>
  *    class ExampleControl extends Control {
@@ -28,12 +27,19 @@ import {constants} from 'Env/Env';
  *       protected _search(event: SyntheticEvent, value: string) {
  *          // Поиск разрешен
  *       }
+ *       protected _searchReset(event: SyntheticEvent) {
+ *          // Поиск сброшен
+ *       }
  *       ...
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
- * @author Крюков Н.Ю.
+ *
  * @public
+ * @author Крюков Н.Ю.
+ * @demo Controls-demo/Search/Explorer
+ * @demo Controls-demo/Search/FlatList
+ * @demo Controls-demo/Search/TreeView
  */
 export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;

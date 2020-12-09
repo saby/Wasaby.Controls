@@ -814,7 +814,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {
       return {
-         delayTime: options.searchDelay,
+         searchDelay: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
          searchResetCallback: this._searchResetCallback.bind(this)

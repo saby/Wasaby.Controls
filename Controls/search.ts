@@ -40,7 +40,13 @@ export {default as ControllerClass} from './_search/ControllerClass';
 export {default as InputContainer} from './_search/Input/Container';
 export {default as SearchResolver} from './_search/SearchResolver';
 export {default as Input} from './_search/Input/Search';
-export {ISearchResolverOptions} from './_search/interface';
+export {
+   ISearchResolverOptions,
+   ISearchInputContainerOptions,
+   ISearchControllerOptions,
+   ISearchController,
+   ISearchResolver
+} from './_search/interface';
 
 export {
    Misspell,

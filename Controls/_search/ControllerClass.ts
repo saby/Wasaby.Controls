@@ -14,16 +14,44 @@ const SERVICE_FILTERS = {
 /**
  * Класс контроллер, реализующий поиск по заданному значению, либо сброс поиска.
  * Имеется возможность поиска в дереве и плоском списке.
- * @example
- * <pre>
+ * @remark
+ * Если в методе update в опциях передать новые sourceController и searchValue, то поиск или сброс будут произведены
+ * на новом sourceController.
+ * Если же передать только новый sourceController, то будет произведен поиск или сброс по старому searchValue.
  *
+ * @example
+ * При создании экзепмляра класса необходимо передать опцией sourceController - {@link Controls/dataSource:NewSourceController}
+ * <pre>
+ * const controllerClass = new ControllerClass({
+ *   sourceController: new SourceController(...)
+ * });
+ * </pre>
+ * Поиск по значению "test". Результат поиска в then
+ * <pre>
+ *    controllerClass.search('test').then((result) => {...});
+ * </pre>
+ * Сброс поиска. Может вернуть фильтр без загрузки, если предеать аргументом true
+ * <pre>
+ *    controllerClass.reset().then((result) => {...}); // Будут сброшены все фильтры, результат загрузки в result
+ *
+ *    const filter = controllerClass.reset(true); // Вернет фильтр после сброса. Загрузка произведена не будет
+ * </pre>
+ * Обновление контроллера с передачей новых опций
+ * <pre>
+ *    controllerClass.update({
+ *       searchValue: 'new test',
+ *       root: 'newRoot'
+ *    }).then((result) => {...}); // Результат поиска после передачи нового значения посредством опций
  * </pre>
  *
  * @class Controls/_search/ControllerClass
  * @implements Controls/_search/interface/ISearchController
- * @author Крюков Н.Ю.
  *
  * @public
+ * @author Крюков Н.Ю.
+ * @demo Controls-demo/Search/Explorer
+ * @demo Controls-demo/Search/FlatList
+ * @demo Controls-demo/Search/TreeView
  */
 
 export default class ControllerClass implements ISearchController {
@@ -70,7 +98,7 @@ export default class ControllerClass implements ISearchController {
 
    /**
     * Произвести поиск по значению.
-    * @param {string} value
+    * @param {string} value Значение, по которому будет производиться поиск
     */
    search(value: string): Promise<RecordSet | Error> {
       const filter: QueryWhereExpression<unknown> = {...this._options.sourceController.getFilter()};
@@ -99,7 +127,23 @@ export default class ControllerClass implements ISearchController {
 
    /**
     * Обновить опции контроллера.
+    * Если в новых опциях будет указано отличное от старого searchValue, то будет произведен поиск, или же сброс,
+    * если новое значение - пустая строка.
     * @param {Partial<ISearchControllerOptions>} options Новые опции
+    * @example
+    * Поиск будет произведен по новому значению searchValue через новый sourceController, которые переданы в опциях.
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...),
+    *       searchValue: 'new value'
+    *    }).then((result) => {...});
+    * </pre>
+    * Поиск будет произведен по старому значению searchValue, но посредством нового sourceController
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...)
+    *    }).then((result) => {...});
+    * </pre>
     */
    update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
       const needUpdateRoot = this._options.root !== options.root;
@@ -129,7 +173,7 @@ export default class ControllerClass implements ISearchController {
 
    /**
     * Установить корень для поиска в иерархическом списке.
-    * @param {string|number|null} value Ключ
+    * @param {string|number|null} value Значение корня
     */
    setRoot(value: Key): void {
       this._root = value;
@@ -143,7 +187,7 @@ export default class ControllerClass implements ISearchController {
    }
 
    /**
-    * Получить значение поиска
+    * Получить значение по которому производился поиск
     */
    getSearchValue(): string {
       return this._searchValue;

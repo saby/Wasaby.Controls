@@ -9,18 +9,18 @@ type Key = string | number | null;
 
 /**
  * Интерфейс опций контроллера {@link Controls/search:SearchResolver}
- * @interface Controls/_search/interface#ISearchResolverOptions
+ * @interface Controls/_search/interface/ISearchResolverOptions
  * @public
  * @author Крюков Н.Ю.
  */
 export interface ISearchResolverOptions {
-   delayTime?: number | null;
+   searchDelay?: number | null;
    minSearchLength?: number;
    searchCallback: (value: string) => void;
    searchResetCallback: () => void;
 
    /**
-    * @name Controls/_search/interface/ISearchResolverOptions#delayTime
+    * @name Controls/_search/interface/ISearchResolverOptions#searchDelay
     * @cfg {number|null} Время задержки перед поиском
     */
 
@@ -42,7 +42,7 @@ export interface ISearchResolverOptions {
 
 /**
  * Интерфейс опций контрола контейнера {@link Controls/search:InputContainer}
- * @interface Controls/_search/interface#ISearchInputContainerOptions
+ * @interface Controls/_search/interface/ISearchInputContainerOptions
  * @extends UI/Base/IControlOptions
  * @public
  * @author Крюков Н.Ю.
@@ -56,32 +56,47 @@ export interface ISearchInputContainerOptions extends IControlOptions {
    /**
     * @name Controls/_search/interface/ISearchInputContainerOptions#searchDelay
     * @cfg {number|null} Время задержки перед поиском
+    * @demo Controls-demo/Search/Explorer
+    * @demo Controls-demo/Search/FlatList
+    * @demo Controls-demo/Search/TreeView
     */
 
    /**
     * @name Controls/_search/interface/ISearchInputContainerOptions#minSearchLength
     * @cfg {number} Минимальная длина значения для начала поиска
+    * @demo Controls-demo/Search/Explorer
+    * @demo Controls-demo/Search/FlatList
+    * @demo Controls-demo/Search/TreeView
     */
 
    /**
     * @name Controls/_search/interface/ISearchInputContainerOptions#inputSearchValue
     * @cfg {string} Значение строки ввода
+    * @demo Controls-demo/Search/Explorer
+    * @demo Controls-demo/Search/FlatList
+    * @demo Controls-demo/Search/TreeView
     */
 
    /**
     * @name Controls/_search/interface/ISearchInputContainerOptions#useStore
     * @cfg {boolean} Использовать ли хранилище Store вместо отправки события при разрешении на поиск
+    * @demo Controls-demo/Search/Explorer
+    * @demo Controls-demo/Search/FlatList
+    * @demo Controls-demo/Search/TreeView
     */
 }
 
 /**
  * Интерфейс опций контроллера поиска {@link Controls/search:ControllerClass}
- * @interface Controls/_search/interface#ISearchControllerOptions
+ * @interface Controls/_search/interface/ISearchControllerOptions
  * @extends Controls/interface/ISearch#ISearchOptions
  * @extends Controls/interface/IHierarchy#IHierarchyOptions
  * @extends Controls/interface/IHierarchy#IHierarchySearchOptions
  * @public
  * @author Крюков Н.Ю.
+ * @demo Controls-demo/Search/Explorer
+ * @demo Controls-demo/Search/FlatList
+ * @demo Controls-demo/Search/TreeView
  */
 export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchyOptions,
@@ -93,9 +108,12 @@ export interface ISearchControllerOptions extends ISearchOptions,
 
 /**
  * Интерфейс контроллера поиска {@link Controls/search:ControllerClass}
- * @interface Controls/_search/interface#ISearchController
+ * @interface Controls/_search/interface/ISearchController
  * @public
  * @author Крюков Н.Ю.
+ * @demo Controls-demo/Search/Explorer
+ * @demo Controls-demo/Search/FlatList
+ * @demo Controls-demo/Search/TreeView
  */
 export interface ISearchController {
    reset(needLoadData?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown>;
@@ -108,7 +126,7 @@ export interface ISearchController {
 
 /**
  * Интерфейс контроллера {@link Controls/search:SearchResolver}
- * @interface Controls/_search/interface#ISearchResolver
+ * @interface Controls/_search/interface/ISearchResolver
  * @public
  * @author Крюков Н.Ю.
  */

@@ -18,7 +18,7 @@ import {ISearchResolver, ISearchResolverOptions} from './interface';
  *    const searchResolver = new SearchResolver({
  *       searchCallback: (value) => console.log('Search func called!'),
  *       searchResetCallback: () => console.log('Search reset func called!'),
- *       delayTime: 400,
+ *       searchDelay: 400,
  *       minSearchLength: 3
  *    });
  *
@@ -32,7 +32,7 @@ import {ISearchResolver, ISearchResolverOptions} from './interface';
  *    searchResolver.updateOptions({
  *       searchCallback: (value) => console.log('Search func called!'),
  *       searchResetCallback: () => console.log('Search reset func called!'),
- *       delayTime: 2000,
+ *       searchDelay: 2000,
  *       minSearchLength: 3
  *    }); // Обновим опции созданного прежде контроллера, чтобы задержка перед вызовом колбэка была 2 секунды
  *    searchResolver.resolve('test');
@@ -79,7 +79,7 @@ export default class SearchResolver implements ISearchResolver {
    }
 
    private _resolveCallback(callback: Function, value: string, searchStarted: boolean): void {
-      if (this._options.delayTime) {
+      if (this._options.searchDelay) {
          this._callAfterDelay(callback, value).then(() => {
             this._searchStarted = searchStarted;
          });
@@ -107,7 +107,7 @@ export default class SearchResolver implements ISearchResolver {
             this._delayTimer = null;
             callback(value);
             resolve();
-         }, this._options.delayTime);
+         }, this._options.searchDelay);
       });
    }
 
@@ -122,7 +122,7 @@ export default class SearchResolver implements ISearchResolver {
       if (minSearchLength && valueLength >= this._options.minSearchLength) {
          this._resolveCallback(this._options.searchCallback, value, true);
       } else if (minSearchLength || !valueLength) {
-         if (this._options.delayTime) {
+         if (this._options.searchDelay) {
             this.clearTimer();
          }
          if (this._searchStarted) {
