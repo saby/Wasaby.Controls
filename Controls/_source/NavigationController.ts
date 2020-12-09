@@ -12,7 +12,7 @@ import {default as PositionNavigationStore, IPositionNavigationState} from './Na
 import PositionParamsCalculator from './NavigationController/PositionParamsCalculator';
 
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
-import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection, TNavigationPagingMode} from 'Controls/_interface/INavigation';
+import {TNavigationSource, IBaseSourceConfig, INavigationSourceConfig, TNavigationDirection, TNavigationPagingMode} from 'Controls/interface';
 import {IHashMap} from 'Types/declarations';
 import {applied, Record} from 'Types/entity';
 import {isEqual} from 'Types/object';
