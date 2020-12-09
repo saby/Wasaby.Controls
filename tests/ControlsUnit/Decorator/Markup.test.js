@@ -50,7 +50,7 @@ define([
             'href': 'https://ya.ru',
             'target': '_blank',
             'class': 'LinkDecorator__linkWrap',
-            'rel': 'noreferrer noopener'
+            'rel': 'noopener'
          },
          ['img',
             {
@@ -64,7 +64,7 @@ define([
       linkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer noopener',
+            rel: 'noopener',
             href: 'https://ya.ru',
             target: '_blank'
          },
@@ -73,7 +73,7 @@ define([
       wwwLinkNode = ['a',
          {
             'class': 'asLink',
-            rel: 'noreferrer noopener',
+            rel: 'noopener',
             href: 'http://www.ya.ru',
             target: '_blank'
          },
@@ -85,8 +85,8 @@ define([
       nbsp = String.fromCharCode(160),
       openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
       deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
-      linkHtml = '<a class="asLink" rel="noreferrer noopener" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-      decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+      linkHtml = '<a class="asLink" rel="noopener" href="https://ya.ru" target="_blank">https://ya.ru</a>',
+      decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noopener" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
    function sortAttrs(html) {
       return html.replace(openTagRegExp, function(match, begin, attrs, end) {
@@ -620,7 +620,7 @@ define([
                ['p',
                   ['a',
                      {
-                        rel: 'noreferrer noopener',
+                        rel: 'noopener',
                         href: 'https:\\\\ya.ru\\som"e'
                      },
                      'https:\\\\ya.ru\\som"e'
@@ -647,7 +647,7 @@ define([
                '<p>' + decoratedLinkHtml + '<br />text</p>',
                '<p>' + decoratedLinkHtml + '   <br />text</p>',
                '<p><strong>' + linkHtml + '</strong>text</p>',
-               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>',
+               '<p><span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noopener" href="https:\\\\ya.ru\\som&quot;e" target="_blank"><img class="LinkDecorator__image" alt="https:\\\\ya.ru\\som&quot;e" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6XFxcXHlhLnJ1XFxzb21cImUifQ%3D%3D&amp;id=0&amp;srv=1" /></a></span></p>',
                '<p>outer text one<br />outer text two<p>inner text</p>outer text three</p>',
                '<p><a href="' + longLink + '">' + longLink + '</a></p>',
                '<p><a href="https://ya.ru">text</a></p>'
@@ -775,7 +775,7 @@ define([
             var goodResultNode = [[], ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -856,7 +856,7 @@ define([
             var goodResultNode = [[], ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'HtTpS://ya.ru',
                   target: '_blank'
                },
@@ -872,7 +872,7 @@ define([
                ['a',
                   {
                      'class': 'asLink',
-                     rel: 'noreferrer noopener',
+                     rel: 'noopener',
                      href: 'https://ya.ru/',
                      target: '_blank'
                   },
@@ -1129,7 +1129,7 @@ define([
             var parentNode = ['p', ['b',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1141,7 +1141,7 @@ define([
             var parentNode = ['span', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1153,7 +1153,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1165,7 +1165,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   target: '_blank'
                },
                'https://ya.ru'
@@ -1179,7 +1179,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: linkHref,
                   target: '_blank'
                },
@@ -1264,7 +1264,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1276,7 +1276,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1288,7 +1288,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1300,7 +1300,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1312,7 +1312,7 @@ define([
             var parentNode = ['p', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1324,7 +1324,7 @@ define([
             var parentNode = ['pre', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1336,7 +1336,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'https://ya.ru',
                   target: '_blank'
                },
@@ -1348,7 +1348,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'http://ya.ru',
                   target: '_blank'
                },
@@ -1375,7 +1375,7 @@ define([
             var parentNode = ['div', ['a',
                {
                   'class': 'asLink',
-                  rel: 'noreferrer noopener',
+                  rel: 'noopener',
                   href: 'HtTpS://ya.ru',
                   target: '_blank'
                },
