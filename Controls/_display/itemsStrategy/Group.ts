@@ -314,7 +314,7 @@ export default class Group<S, T extends CollectionItem<S> = CollectionItem<S>> e
 
         // Перемещаем элементы без группы в начало
         const hiddenGroupIndex = groupsId.indexOf('CONTROLS_HIDDEN_GROUP');
-        if (hiddenGroupIndex !== -1) {
+        if (hiddenGroupIndex !== -1 && hiddenGroupIndex < groupsOrder.length) {
             arrayMove(groupsOrder, hiddenGroupIndex, 0);
         }
 
