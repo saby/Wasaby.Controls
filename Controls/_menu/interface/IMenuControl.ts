@@ -69,20 +69,6 @@ export default interface IMenuControl {
  */
 
 /**
- * @name Controls/_menu/interface/IMenuControl#groupProperty
- * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
- * @demo Controls-demo/Menu/Control/GroupProperty/Index
- * @see groupTemplate
- */
-
-/**
- * @name Controls/_menu/interface/IMenuControl#groupTemplate
- * @cfg {String|Function} Устанавливает шаблон отображения заголовка группы.
- * @demo Controls-demo/Menu/Control/GroupProperty/GroupTemplate/Index
- * @see groupProperty
- */
-
-/**
  * @typedef {Object} ItemAction
  * @property {String} id Идентификатор опции записи.
  * @property {String} title Название опции записи.

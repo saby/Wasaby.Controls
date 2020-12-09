@@ -554,6 +554,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let childNodeSelectedCount;
 
          children.each((childItem) => {
+            //
+            if (childItem instanceof BreadcrumbsItem && this._isAllSelectedInRoot(selection)) {
+               selectedChildrenCount = null;
+            }
+
             if (selectedChildrenCount !== null) {
                childId = this._getKey(childItem);
 

@@ -1,16 +1,16 @@
-import GridCell from './GridCell';
+import Cell from './Cell';
 import {OptionsToPropertyMixin} from 'Types/entity';
-import GridGroupItem from './GridGroupItem';
+import GroupItem from './GroupItem';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
-import isFullGridSupport from './utils/GridSupportUtil';
+import isFullGridSupport from '../utils/GridSupportUtil';
 
 export interface IOptions<T> {
-    owner: GridGroupItem<T>;
+    owner: GroupItem<T>;
     column: IColumn;
     columns: IColumn[];
 }
 
-export default class GridGroupCell<T> extends GridCell<T> {
+export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     protected _$columns: IColumn[];
 
     constructor(options?: IOptions<T>) {
@@ -35,7 +35,7 @@ export default class GridGroupCell<T> extends GridCell<T> {
     }
 
     getGroupWrapperStyles() {
-        const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const hasMultiselect = this._$owner.needMultiSelectColumn();
         const ladderStickyColumn = this._$owner.getStickyColumn();
         const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const columnStart = hasMultiselect ? 1 : 0;
@@ -84,13 +84,13 @@ export default class GridGroupCell<T> extends GridCell<T> {
 
     getColspan(): number {
         const columnsCount = this._$columns.length;
-        const hasMultiselect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const hasMultiselect = this._$owner.needMultiSelectColumn();
         return +hasMultiselect + columnsCount;
     }
 }
 
-Object.assign(GridGroupCell.prototype, {
-    '[Controls/_display/GridGroupCell]': true,
+Object.assign(GroupCell.prototype, {
+    '[Controls/_display/grid/GroupCell]': true,
     _moduleName: 'Controls/display:GridGroupCell',
     _instancePrefix: 'grid-group-cell-',
     _$owner: null,

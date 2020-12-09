@@ -36,7 +36,7 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import SearchSeparator from "./SearchSeparator";
-import {INavigationOptionValue} from '../_interface/INavigation';
+import {INavigationOptionValue} from 'Controls/interface';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
@@ -92,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
+    multiSelectPosition?: 'default'|'custom';
     itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
@@ -2447,13 +2448,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
-                if (!record) {   
+                if (!record) {
 
                     // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
                     // Такой записи еще нет в наборе данных.
                     if (this._$isEditing) {
                         return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
-                    } 
+                    }
 
                     // Или требуется найти группу
                     return this.find((item) => item['[Controls/_display/GroupItem]'] && item.key === key);

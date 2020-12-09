@@ -12,6 +12,7 @@ import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
 import {
    NewSourceController as SourceController
 } from 'Controls/dataSource';
+import {QueryWhereExpression} from 'Types/source';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -120,7 +121,12 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       if (this._searchController) {
-         this._searchController.update({...newOptions, ...context.dataOptions});
+         const updateResult = this._searchController.update({...newOptions, ...context.dataOptions});
+
+         if (updateResult && !(updateResult instanceof Promise)) {
+            this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
+            this._notify('filterChanged', [updateResult]);
+         }
       }
    }
 

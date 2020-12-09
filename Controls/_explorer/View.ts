@@ -14,7 +14,7 @@ import {
    INavigationSourceConfig,
    INavigationPositionSourceConfig as IPositionSourceConfig,
    INavigationOptionValue as INavigation
-}  from '../_interface/INavigation';
+} from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
@@ -220,6 +220,14 @@ var
             if (self._newItemTemplate) {
                self._itemTemplate = self._newItemTemplate;
                self._newItemTemplate = null;
+            }
+            if (self._newBackgroundStyle) {
+               self._backgrounStyle = self._newBackgroundStyle;
+               self._newBackgroundStyle = null;
+            }
+            if (self._newHeader) {
+               self._header = self._newHeader;
+               self._newHeader = null;
             }
          },
          backByPath: function(self) {
@@ -465,6 +473,12 @@ var
          if (cfg.itemTemplate) {
             this._itemTemplate = cfg.itemTemplate;
          }
+         if (cfg.backgroundStyle) {
+            this._backgroundStyle = cfg.backgroundStyle;
+         }
+         if (cfg.header) {
+            this._header = cfg.viewMode === 'tile' ? undefined : cfg.header;;
+         }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
          this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
@@ -517,6 +531,14 @@ var
 
          if (cfg.itemTemplate !== this._options.itemTemplate) {
             this._newItemTemplate = cfg.itemTemplate;
+         }
+
+         if (cfg.backgroundStyle !== this._options.backgroundStyle) {
+            this._newBackgroundStyle = cfg.backgroundStyle;
+         }
+
+         if (cfg.header !== this._options.header || isViewModeChanged) {
+            this._newHeader = cfg.viewMode === 'tile' ? undefined : cfg.header;
          }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.

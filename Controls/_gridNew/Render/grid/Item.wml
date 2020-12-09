@@ -6,7 +6,8 @@
                 gridColumn="{{ gridColumn }}"
                 column="{{ gridColumn.getColumnConfig() }}"
                 item="{{ (item || itemData) }}"
-                itemData="{{ (item || itemData) }}"
+                itemData="{{ gridColumn }}"
+                colData="{{ gridColumn }}"
                 theme="{{ theme }}"
                 style="{{ style }}"
                 cursor="{{ cursor }}"
@@ -24,6 +25,11 @@
         <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
                             key="{{ (item || itemData).key }}"
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
+        <ws:multiSelectTemplate>
+            <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
+                <ws:templateOptions multiSelectStatus="{{(item || itemData).isSelected()}}" key="{{(item || itemData).key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+            </ws:partial>
+        </ws:multiSelectTemplate>
     </ws:partial>
 
     <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">

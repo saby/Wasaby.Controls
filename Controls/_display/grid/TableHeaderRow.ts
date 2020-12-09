@@ -1,13 +1,13 @@
-import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from './GridHeaderRow';
+import HeaderRow from './HeaderRow';
 
-export default class GridTableHeaderRow<T> extends GridHeaderRow<T> {
+export default class TableHeaderRow<T> extends HeaderRow<T> {
     getItemClasses(): string {
         return '';
     }
 
     protected _addCheckBoxColumnIfNeed(): void {
         const factory = this._getColumnsFactory();
-        if (this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$headerModel.getRowIndex(this) === 0) {
+        if (this._$owner.needMultiSelectColumn() && this._$headerModel.getRowIndex(this) === 0) {
             const {start, end} = this._$headerModel.getBounds().row;
             this._$columnItems.unshift(factory({
                 column: {
@@ -18,3 +18,7 @@ export default class GridTableHeaderRow<T> extends GridHeaderRow<T> {
         }
     }
 }
+
+Object.assign(TableHeaderRow.prototype, {
+    '[Controls/_display/grid/TableHeaderRow]': true
+});

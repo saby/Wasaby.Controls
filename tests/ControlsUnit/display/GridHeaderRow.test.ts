@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { GridHeaderRow } from 'Controls/display';
 
-describe('Controls/_display/GridHeaderRow', () => {
+describe('Controls/_display:GridHeaderRow', () => {
 
     it('.getItemClasses()', () => {
         const headerRow = new GridHeaderRow({});
@@ -15,7 +15,7 @@ describe('Controls/_display/GridHeaderRow', () => {
         const header = [{}];
         const headerRow = new GridHeaderRow({
             owner: {
-                getMultiSelectVisibility: () => 'visible',
+                needMultiSelectColumn: () => true,
                 getHeaderConfig: () => header,
                 getColumnsConfig: () => [{}],
                 isFullGridSupport: () => true

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { GridHeaderCell } from 'Controls/display';
 
-describe('Controls/_display/GridHeaderCell', () => {
+describe('Controls/display:HeaderCell', () => {
 
     describe('align and valign', () => {
 
@@ -14,7 +14,7 @@ describe('Controls/_display/GridHeaderCell', () => {
                 owner: {
                     getColumnsConfig: () => [{}],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -31,7 +31,7 @@ describe('Controls/_display/GridHeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -51,7 +51,7 @@ describe('Controls/_display/GridHeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -71,7 +71,7 @@ describe('Controls/_display/GridHeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });

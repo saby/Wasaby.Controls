@@ -7,21 +7,21 @@ import {
     IInstantiable,
     IVersionable
 } from 'Types/entity';
-import GridRow from './GridRow';
 import { TemplateFunction } from 'UI/Base';
 import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
-import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
-import {IItemPadding} from '../_list/interface/IList';
+import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
+import {IItemPadding} from 'Controls/_list/interface/IList';
+import Row from './Row';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
-    owner: GridRow<T>;
+    owner: Row<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
 }
 
-export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
+export default class Cell<T, TOwner extends Row<T>> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -56,13 +56,17 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
         this._nextVersion();
     }
 
+    getOwner(): TOwner {
+        return this._$owner;
+    }
+
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
         const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
-        const multiSelectOffset = +(this._$owner.getMultiSelectVisibility() !== 'hidden');
+        const multiSelectOffset = +(this._$owner.needMultiSelectColumn());
 
         if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
@@ -228,7 +232,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
         // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
-        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.getMultiSelectVisibility() !== 'hidden' ? 2 : 1);
+        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.needMultiSelectColumn() ? 2 : 1);
 
         return 'controls-Grid__table__relative-cell-wrapper ' +
             `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
@@ -415,7 +419,7 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
 
     // region Аспект "Множественный выбор"
     isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this.isFirstColumn();
+        return this._$owner.needMultiSelectColumn() && this.isFirstColumn();
     }
     // endregion
 
@@ -456,8 +460,8 @@ export default class GridCell<T, TOwner extends GridRow<T>> extends mixin<
     // endregion
 }
 
-Object.assign(GridCell.prototype, {
-    '[Controls/_display/GridCell]': true,
+Object.assign(Cell.prototype, {
+    '[Controls/_display/grid/Cell]': true,
     _moduleName: 'Controls/display:GridCell',
     _instancePrefix: 'grid-cell-',
     _$owner: null,

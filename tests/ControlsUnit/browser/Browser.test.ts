@@ -333,6 +333,34 @@ describe('Controls/browser:Browser', () => {
 
     });
 
+    describe('_updateSearchController', () => {
+       it('filter changed if search was reset', async () => {
+           const options = getBrowserOptions();
+           const browser = getBrowser();
+           browser.saveOptions({...options, ...{searchParam: 'param'}});
+
+           let buf;
+           browser._filterController = {
+               setFilter: (filter) => buf = filter,
+               getFilter: () => buf
+           };
+           browser._updateContext = () => {};
+           browser._dataOptionsContext = {
+               updateConsumers: () => {}
+           };
+           const notifyStub = sinon.stub(browser, '_notify');
+
+           await browser._updateSearchController({
+               searchValue: '',
+               searchParam: 'param'
+           });
+
+           assert.isTrue(notifyStub.withArgs('filterChanged', [{param: ''}]).called);
+
+           notifyStub.restore();
+       });
+    });
+
     describe('_itemsChanged', () => {
 
         it('itemsChanged, items with new format', async () => {

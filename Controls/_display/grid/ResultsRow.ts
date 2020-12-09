@@ -1,18 +1,18 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
-import GridCollection from './GridCollection';
-import GridRow from './GridRow';
+import Collection from './Collection';
+import Row from './Row';
 
 
 export type TResultsPosition = 'top' | 'bottom';
 
 export interface IOptions<T> {
-    owner: GridCollection<T>;
+    owner: Collection<T>;
     resultsTemplate: TemplateFunction;
     results: EntityModel;
 }
 
-export default class GridResultsRow<T> extends GridRow<T> {
+export default class ResultsRow<T> extends Row<T> {
     protected _$results: EntityModel;
     protected _$resultsTemplate: TemplateFunction;
 
@@ -53,7 +53,7 @@ export default class GridResultsRow<T> extends GridRow<T> {
                 }));
             }
 
-            if (this._$owner.getMultiSelectVisibility() !== 'hidden') {
+            if (this._$owner.needMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}
                 }));
@@ -62,7 +62,8 @@ export default class GridResultsRow<T> extends GridRow<T> {
     }
 }
 
-Object.assign(GridResultsRow.prototype, {
+Object.assign(ResultsRow.prototype, {
+    '[Controls/_display/grid/ResultsRow]': true,
     _moduleName: 'Controls/display:GridResults',
     _cellModule: 'Controls/display:GridResultsCell',
     _$results: null,

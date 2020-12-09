@@ -6,9 +6,14 @@ export interface IOptions<T> extends IGridRowOptions<T>, ITreeItemOptions<T> {
     owner: TreeGridCollection<T>;
 }
 
-export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
-    readonly '[Controls/_display/GridRow]': boolean;
-    readonly '[Controls/_treeGrid/TreeGridRow]': boolean;
+export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
+    readonly '[Controls/_display/grid/Row]': boolean;
+    readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
+
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly Markable = true;
+    readonly SelectableItem = true;
+    readonly LadderSupport = true;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -17,9 +22,9 @@ export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<an
 
     // region Expander
 
-    shouldDisplayExpanderBlock(column: GridCell<T, TreeGridRow<T>>): boolean {
+    shouldDisplayExpanderBlock(column: GridCell<T, TreeGridDataRow<T>>): boolean {
         const columnIndex = column.getColumnIndex();
-        const hasMultiSelect = this._$owner.getMultiSelectVisibility() !== 'hidden';
+        const hasMultiSelect = this._$owner.needMultiSelectColumn();
         return columnIndex === 0 && !hasMultiSelect || columnIndex === 1 && hasMultiSelect;
     }
 
@@ -64,10 +69,10 @@ export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<an
     // endregion overrides
 }
 
-Object.assign(TreeGridRow.prototype, {
-    '[Controls/_treeGrid/TreeGridRow]': true,
-    '[Controls/_display/GridRow]': true,
+Object.assign(TreeGridDataRow.prototype, {
+    '[Controls/treeGrid:TreeGridDataRow]': true,
+    '[Controls/_display/grid/Row]': true,
     _cellModule: 'Controls/treeGrid:TreeGridDataCell',
-    _moduleName: 'Controls/treeGrid:TreeGridRow',
+    _moduleName: 'Controls/treeGrid:TreeGridDataRow',
     _instancePrefix: 'tree-grid-row-'
 });

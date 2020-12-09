@@ -18,17 +18,18 @@
 
 import { TemplateFunction } from 'UI/Base';
 import {IColspanParams, IHeaderCell} from 'Controls/grid';
-import GridHeaderRow from './GridHeaderRow';
-import { IItemPadding } from './Collection';
-import GridCell, {IOptions as IGridCellOptions} from './GridCell';
+import HeaderRow from './HeaderRow';
+import { IItemPadding } from '../Collection';
+import Cell, {IOptions as ICellOptions} from './Cell';
 
-export interface IOptions<T> extends IGridCellOptions<T> {
+export interface IOptions<T> extends ICellOptions<T> {
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
 
-export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
-    protected _$owner: GridHeaderRow<T>;
+export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
+    protected _$owner: HeaderRow<T>;
+    protected _$column: IHeaderCell;
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
@@ -80,7 +81,7 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
     }
 
     isCheckBoxCell(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
+        return this._$owner.needMultiSelectColumn() && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
     }
 
     _getColspanParams(): Required<IColspanParams> {
@@ -204,7 +205,8 @@ export default class GridHeaderCell<T> extends GridCell<T, GridHeaderRow<T>> {
     }
 }
 
-Object.assign(GridHeaderCell.prototype, {
+Object.assign(HeaderCell.prototype, {
+    '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
     _$cellPadding: null

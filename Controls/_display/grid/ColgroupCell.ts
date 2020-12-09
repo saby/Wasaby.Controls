@@ -1,9 +1,9 @@
 import {mixin} from 'Types/util';
 import {OptionsToPropertyMixin} from 'Types/entity';
-import GridColgroup from './GridColgroup';
+import Colgroup from './Colgroup';
 
 export interface IOptions<T> {
-    owner: GridColgroup<T>;
+    owner: Colgroup<T>;
     width?: string;
     compatibleWidth?: string;
 }
@@ -11,13 +11,13 @@ export interface IOptions<T> {
 const REG_EXP_PIXEL_WIDTH_VALUE = new RegExp('^[0-9]+px$');
 const REG_EXP_PERCENT_WIDTH_VALUE = new RegExp('^[0-9]+%$');
 
-export default class GridColgroupCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
-    protected _$owner: GridColgroup<T>;
+export default class ColgroupCell<T> extends mixin<OptionsToPropertyMixin>(OptionsToPropertyMixin) {
+    protected _$owner: Colgroup<T>;
     protected _$width?: string;
     protected _$compatibleWidth?: string;
 
     isMultiSelectColumn(): boolean {
-        return this._$owner.getMultiSelectVisibility() !== 'hidden' && this._$owner.getCellIndex(this) === 0;
+        return this._$owner.needMultiSelectColumn() && this._$owner.getCellIndex(this) === 0;
     }
 
     getBodyClasses(theme: string): string {
@@ -43,7 +43,7 @@ export default class GridColgroupCell<T> extends mixin<OptionsToPropertyMixin>(O
             return this._$compatibleWidth;
         } else if (!this._$width) {
             return 'auto';
-        } else if (GridColgroupCell._isCompatibleWidthValue(this._$width)) {
+        } else if (ColgroupCell._isCompatibleWidthValue(this._$width)) {
             return this._$width;
         } else {
             return 'auto';
@@ -67,7 +67,8 @@ export default class GridColgroupCell<T> extends mixin<OptionsToPropertyMixin>(O
     }
 }
 
-Object.assign(GridColgroupCell.prototype, {
+Object.assign(ColgroupCell.prototype, {
+    '[Controls/_display/grid/ColgroupCell]': true,
     _moduleName: 'Controls/display:GridColgroupCell',
     _instancePrefix: 'grid-colgroup-cell-',
     _$owner: null,

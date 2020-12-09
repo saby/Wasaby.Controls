@@ -15,6 +15,11 @@ interface IShortDatePickerOptions extends IControlOptions, IDateConstructorOptio
 const MONTHS_IN_HALFYEAR = 6;
 const MONTHS_IN_QUARTER = 3;
 
+/**
+ * @private
+ * @author Красильников А.С.
+ */
+
 class BodyItem extends Control<IShortDatePickerOptions> implements IDateConstructor {
     readonly '[Controls/_interface/IDateConstructor]': boolean = true;
     protected _template: TemplateFunction = itemMonthsTmpl;
