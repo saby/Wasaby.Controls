@@ -1,5 +1,5 @@
 <ws:template name="imageTpl">
-   <ws:if data="{{itemData.imageFit === 'contain'}}">
+   <ws:if data="{{itemData.ImageFit === 'contain'}}">
       <!--Делаем всегда object-fit: contain(background-size: contain) кроссбраузерно, пока поддерживаем ie11-->
       <svg role="image"
            xmlns="http://www.w3.org/2000/svg"

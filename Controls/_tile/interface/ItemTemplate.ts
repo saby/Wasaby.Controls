@@ -34,19 +34,6 @@ export default interface IItemTemplateOptions {
     */
    hasTitle?: string;
    /**
-    * @typedef {String} TitleStyle
-    * @variant onhover Заголовок отображается только при наведении мыши на плитку.
-    * @variant partial Видна первая строка заголовка. При наведении мыши на плитку, виден весь заголовок (не более 3 строк).
-    * @variant accent Заголовок виден всегда, выделен жирным шрифтом и цветом, при наведении на плитку появляется подчеркивание.
-    */
-   /**
-    * @name Controls/_tile/interface/ItemTemplate#titleStyle
-    * @cfg {TitleStyle} Стиль отображения заголовка плитки.
-    * @default onhover
-    * @see hasTitle
-    */
-   titleStyle?: string;
-   /**
     * @name Controls/_tile/interface/ItemTemplate#itemWidth
     * @cfg {Number} Ширина плитки. Значение задаётся в px.
     * @remark Ширина папки настраивается в опции {@link folderWidth}.

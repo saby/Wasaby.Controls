@@ -158,7 +158,7 @@ var TileViewModel = ListViewModel.extend({
             itemCompressionCoefficient: ITEM_COMPRESSION_COEFFICIENT,
             imageHeightProperty: this._options.imageHeightProperty,
             imageWidthProperty: this._options.imageWidthProperty,
-            imageFit: this._options.imageFit,
+            imageFit: this._options.ImageFit,
             imageUrlResolver: this._options.imageUrlResolver,
             itemClasses: this.getItemPaddingClasses()
         };
