@@ -26,6 +26,7 @@ export interface IBasePopupOptions {
     isDefaultOpener?: boolean;
     showIndicator?: boolean;
     indicatorConfig?: ILoadingIndicatorOptions;
+    dataLoaders: IDataLoader[];
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
@@ -549,3 +550,126 @@ export interface IBaseOpener {
  * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
  * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-result здесь}.
  */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#dataLoaders
+ * @cfg {DataLoader[]} Список объектов конфигурируюищх предзагрузчики для загрузки данных необходимых контролам внутри окна до начала построения самого шаблона.
+ * @remark Н
+ * Это обеспечит более быстрое получение данных контролами окна,
+ * т.к. вызовы методов бизнес логики начнутся параллельно до построения верстки.
+ * @example
+ *
+ * UserControl.ts - контрол который открывает popup в popupOptions задает конфиг загрузчиков
+ * <pre>
+ *   class MyControl extends Control {
+ *      ...
+ *
+ *      _openStack() {
+ *         const key = 'myKey';
+ *         const popupOptions = {
+ *             template: 'MyPopupTemplate',
+ *             dataLoaders: [{
+ *                 key: 'myLoaderKey',
+ *                 module: 'MyLoader',
+ *                 params: {
+ *                     param1: key
+ *                 }
+ *             }],
+ *             templateOptions: {
+ *                 key: key
+ *             }
+ *         }
+ *         new StackOpener().open(popupOptions)
+ *      }
+ *      ...
+ *  }
+ * </pre>
+ *
+ * MyLoader.ts
+ * <pre>
+ *   import {getStore} from 'Application/Env';
+ *   import {SbisService} from 'Types/source';
+ *
+ *   const STORE_KEY = 'MyStoreKey';
+ *   const LOADER_KEY = 'MyLoaderKey';
+ *
+ *   export default class Base {
+ *       init(): void {
+ *           // Инициализация, если необходимо, вызывается перед вызовом loadData
+ *       }
+ *       getState() {
+ *           return getStore(STORE_KEY).get(LOADER_KEY);
+ *       }
+ *       setState(data) {
+ *           getStore(STORE_KEY).set(LOADER_KEY, data);
+ *       }
+ *       loadData(params) {
+ *           return new SbisService({
+ *               endpoint: myEndpoint
+ *           }).call('myMethod', {
+ *               key: params.param1
+ *           });
+ *       }
+ *   }
+ * </pre>
+ *
+ * MyPopupTemplate.ts - контрол который является шаблоном попапа, в него приходит опция prefetchPromise
+ * результатом которого является объект с Promise - результатами предзагрузчиков,
+ * он резолвит его и результат кладет в состояние, чтобы передать дочерним контролам.
+ * <pre>
+ *   class MyPopupTemplate extends Control {
+ *      ...
+ *
+ *      _beforeMount(options) {
+ *          options.prefetchPromise.then((resultObject) => {
+ *              this._preloadData = resultObject;
+ *          });
+ *      }
+ *      ...
+ *   }
+ * </pre>
+ *
+ * MyPopupTemplate.wml - передаем результат загрузчика компоненту, который ждет данных
+ * <pre>
+ *   <div>
+ *       <MyChildControl
+ *          if="{{ _preloadData.myLoaderKey }}"
+ *          preloadData="{{ _preloadData.myLoaderKey }}"
+ *        />
+ *   </div>
+ * </pre>
+ * MyChildControl.ts
+ * <pre>
+ *   class MyChildControl extends Control {
+ *      ...
+ *
+ *      _beforeMount(options) {
+ *          preloadData.then((data) => {
+ *              // обработка данных
+ *          });
+ *      }
+ *      ...
+ *   }
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} DataLoader
+ * @description Конфигурация загрузчика для предзагрузки данных необходимых контролам внутри шаблона всплывающего окна.
+ * @property {String} module название модуля, который будет грузить данные
+ * @property {String} key ключ по которому будет лежать Promise в результате.
+ * Если не задано то Promise хранится в поле с названием равным названию модуля.
+ * @property {Object} params объект с параметрами, который придет первым аргументом в функцию загрузчика.
+ * @property {String[]} dependencies массив ключей загрузчиков от которых зависит данный.
+ * Он будет вызван только после того, как отработают загрузичики из данного списка.
+ * Их результаты придут в функцию загрузчика вторым аргументом.
+ * @property {Boolean} await если взведен этот флаг, то перед тем как отдать объект с результатами загрузки
+ * будет ожидание этого загрузчика. В объекте с результатами он придет не как промис, а как результат загрузки.
+ */
+export interface IDataLoader {
+    key?: string;
+    module: string;
+    params?: Record<string, unknown>;
+    dependencies?: string[];
+    await?: boolean;
+}
