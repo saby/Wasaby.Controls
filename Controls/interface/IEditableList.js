@@ -52,11 +52,11 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
-    * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/keys/ клавиш}.
+    * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/keys/ клавиш}.
     * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемой записи.
     * @property {AddPositionOption} [addPosition=bottom] Позиция добавления по месту.
     * В корне списка, в группе (когда включена группировка) или в рамках узла (для иерархических списков).
-    * Если в контроле включена {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
+    * Если в контроле включена {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
     * @property {Types/entity:Model} [item=undefined] Элемент, который будет запущен на редактирование при первой отрисовке контрола.
     * 
     * Элемент необязательно должен присутствовать в {@link Types/source:DataSet}, который получен от источника данных.
