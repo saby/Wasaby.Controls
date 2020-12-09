@@ -166,13 +166,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          if (items) {
             items.forEach((item) => {
-               if (isOnlyNodesInItems) {
+               if (isOnlyNodesInItems && item.SelectableItem) {
                   isOnlyNodesInItems = this._isNode(item);
                }
             });
          } else {
             this._model.each((item) => {
-               if (isOnlyNodesInItems) {
+               // Скипаем элементы, которые нельзя выбрать, т.к. например группа испортит значение isOnlyNodesInItems
+               if (isOnlyNodesInItems && item.SelectableItem) {
                   isOnlyNodesInItems = this._isNode(item);
                }
             });
@@ -553,6 +554,11 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let childNodeSelectedCount;
 
          children.each((childItem) => {
+            //
+            if (childItem instanceof BreadcrumbsItem && this._isAllSelectedInRoot(selection)) {
+               selectedChildrenCount = null;
+            }
+
             if (selectedChildrenCount !== null) {
                childId = this._getKey(childItem);
 

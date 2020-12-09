@@ -7,8 +7,13 @@ export interface IOptions<T> extends IGridRowOptions<T>, ITreeItemOptions<T> {
 }
 
 export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
-    readonly '[Controls/_display/GridRow]': boolean;
+    readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/_treeGrid/TreeGridRow]': boolean;
+
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly Markable = true;
+    readonly SelectableItem = true;
+    readonly LadderSupport = true;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -66,7 +71,8 @@ export default class TreeGridRow<T> extends mixin<TreeItem<any>, GridRowMixin<an
 
 Object.assign(TreeGridRow.prototype, {
     '[Controls/_treeGrid/TreeGridRow]': true,
-    '[Controls/_display/GridRow]': true,
+    '[Controls/_display/grid/Row]': true,
     _cellModule: 'Controls/treeGrid:TreeGridDataCell',
-    _moduleName: 'Controls/treeGrid:TreeGridRow'
+    _moduleName: 'Controls/treeGrid:TreeGridRow',
+    _instancePrefix: 'tree-grid-row-'
 });

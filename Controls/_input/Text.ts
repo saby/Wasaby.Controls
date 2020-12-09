@@ -27,6 +27,7 @@ interface ITextInputOptions extends ITextOptions, IBaseInputOptions {}
 class Text extends Base<ITextInputOptions> {
     _defaultValue: string = '';
     _punycodeToUnicode: Function;
+    protected _controlName: string = 'Text';
 
     protected _beforeMount(options: ITextInputOptions): void | Promise<void> {
         if (options.convertPunycode) {
@@ -101,7 +102,7 @@ class Text extends Base<ITextInputOptions> {
     static getDefaultOptions(): ITextInputOptions {
         const defaultOptions: ITextInputOptions = Base.getDefaultOptions();
 
-        defaultOptions.trim = false;
+        defaultOptions.trim = true;
         defaultOptions.convertPunycode = false;
 
         return defaultOptions;

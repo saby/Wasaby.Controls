@@ -158,6 +158,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
 const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
+const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 interface IAnimationEvent extends Event {
     animationName: string;
@@ -1914,8 +1915,8 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        clickEvent.nativeEvent.preventDefault();
         clickEvent.stopImmediatePropagation();
+        clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
@@ -2795,7 +2796,8 @@ const _private = {
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
             editArrowVisibilityCallback: options.editArrowVisibilityCallback,
-            contextMenuConfig: options.contextMenuConfig
+            contextMenuConfig: options.contextMenuConfig,
+            itemActionsVisibility: options.itemActionsVisibility
         });
         if (itemActionsChangeResult.length > 0 && self._listViewModel.resetCachedItemData) {
             itemActionsChangeResult.forEach((recordKey: number | string) => {
@@ -3291,7 +3293,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         })).then((res) => {
             const editingConfig = this._getEditingConfig(newOptions);
-            return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
+            if (editingConfig.item) {
+                if (newOptions.task1180668135) {
+                    this._createEditInPlaceController(newOptions);
+                }
+                return this._startInitialEditing(editingConfig);
+            } else {
+                return res;
+            }
         }).then((res) => {
             const needInitModelState =
                 this._listViewModel &&
@@ -3530,7 +3539,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
-        if (this._viewportSize < this._viewSize) {
+        if (this._viewportSize >= this._viewSize) {
             this._pagingVisible = false;
         }
         if (this._pagingVisible && this._scrollPagingCtr) {
@@ -3762,6 +3771,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
+
+        // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
+        if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
+            if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
+                self._hideTopTrigger = true;
+            }
+        }
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
@@ -4796,12 +4812,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._editInPlaceController = this._createEditInPlaceController();
+            this._editInPlaceController = this._createEditInPlaceController(this._options);
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(): EditInPlaceController {
+    _createEditInPlaceController(options = {}): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
         // При создании редактирования по мсесту до маунта, регистрация в formController
@@ -4812,6 +4828,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return new EditInPlaceController({
+            task1180668135: options.task1180668135,
+
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
@@ -4900,7 +4918,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         })
     },
 
-    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
+    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
+        if (this._options.task1180668135 && force) {
+            this._notify('beforeEndEdit', [item, willSave, isAdd]);
+            return;
+        }
         return Promise.resolve().then(() => {
             if (willSave) {
                 // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
@@ -5004,7 +5026,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beginEdit(options) {
         _private.closeSwipe(this);
         this.showIndicator();
-        return this._getEditInPlaceController().edit(options && options.item).then((result) => {
+        return this._getEditInPlaceController().edit(options).then((result) => {
             if (!(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
             }
@@ -5017,7 +5039,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beginAdd(options, addPosition) {
         _private.closeSwipe(this);
         this.showIndicator();
-        return this._getEditInPlaceController().add(options && options.item, addPosition).then((addResult) => {
+        return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
             }
@@ -5241,7 +5263,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (!isLeftMouseButton(event)) {
             return;
         }
-        event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей. item.getContents() должен возвращать
         //  Record https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(itemData);
@@ -5302,6 +5323,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
+        // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
+        // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
+        if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            event.stopPropagation();
+            return;
+        }
         let hasDragScrolling = false;
         this._mouseDownItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         if (this._options.columnScroll) {

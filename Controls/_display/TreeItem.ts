@@ -82,6 +82,7 @@ export default class TreeItem<T> extends mixin<
         if (this._$node) {
             this._$hasChildren = true;
         }
+
         if (options) {
             // Если hasChildren не задали, то для узла по дефолту есть дети
             if (options.hasChildren === undefined) {

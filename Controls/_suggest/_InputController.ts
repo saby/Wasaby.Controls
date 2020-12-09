@@ -21,7 +21,7 @@ import {
 import {PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import ISuggest, {IEmptyTemplateProp, ISuggestFooterTemplate, ISuggestTemplateProp} from 'Controls/interface/ISuggest';
 import {IValueOptions} from 'Controls/input';
-import ModuleLoader = require('Controls/Container/Async/ModuleLoader');
+import * as ModulesLoader from 'WasabyLoader/ModulesLoader';
 import { error as dataSourceError } from 'Controls/dataSource';
 
 import Env = require('Env/Env');
@@ -33,8 +33,6 @@ import {DependencyTimer} from 'Controls/popup';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
-
-const moduleLoader = new ModuleLoader();
 
 /* if suggest is opened and marked key from suggestions list was changed,
    we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -182,6 +180,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
       this._searchResult = null;
 
+      this._tabsSelectedKey = null;
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
@@ -448,7 +447,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
       const templatesToLoad = [];
       templatesToCheck.forEach((tpl) => {
-         if (options[tpl] && options[tpl].templateName && !moduleLoader.isLoaded(options[tpl].templateName)) {
+         if (options[tpl] && options[tpl].templateName && !ModulesLoader.isLoaded(options[tpl].templateName)) {
             templatesToLoad.push(options[tpl].templateName);
          }
       });
@@ -796,7 +795,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       const scopeOptions = options ?? this._options;
 
       return this._getSourceController(scopeOptions).load().then((recordSet) => {
-         if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+         if (recordSet instanceof RecordSet &&
+            this._shouldShowSuggest(recordSet) &&
+            (this._inputActive || this._tabsSelectedKey !== null)) {
+
             this._setItems(recordSet);
             if (scopeOptions.dataLoadCallback) {
                scopeOptions.dataLoadCallback(recordSet);

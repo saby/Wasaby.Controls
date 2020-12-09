@@ -69,6 +69,53 @@ const resultCellTpl = numberResultTpl;
 
 const getCountriesStats = () => {
     return {
+        getLongCapitalData: (): IData[] => [
+            {
+                id: 0,
+                number: 1,
+                country: 'Россия',
+                capital: 'Москва',
+                population: 143420300,
+                square: 17075200,
+                populationDensity: 8
+            },
+            {
+                id: 1,
+                number: 2,
+                country: 'Соединенные Штаты Америки',
+                capital: 'Вашингтон',
+                population: 295734100,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 2,
+                number: 3,
+                country: 'Доминиканская Республика',
+                capital: 'Санто-Доминго',
+                population: 10499707,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 3,
+                number: 4,
+                country: 'Новая Зеландия',
+                capital: 'Веллингтон',
+                population: 4942500,
+                square: 9629091,
+                populationDensity: 30.71
+            },
+            {
+                id: 4,
+                number: 5,
+                country: 'Бразилия',
+                capital: 'Бразилиа',
+                population: 186112800,
+                square: 8511965,
+                populationDensity: 21.86
+            }
+        ],
         getData: (): IData[] => [
             {
                 id: 0,
@@ -568,7 +615,7 @@ const getCountriesStats = () => {
                 textOverflow
             },
             {
-                title: 'Площадь км2',
+                title: 'Площадь территории км2',
                 textOverflow
             },
             {
@@ -788,6 +835,52 @@ const getCountriesStats = () => {
                 startColumn: 3,
                 endColumn: 6,
                 align: 'center'
+            },
+            {
+                title: 'Население',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 3,
+                endColumn: 4
+            },
+            {
+                title: 'Площадь км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 4,
+                endColumn: 5
+            },
+            {
+                title: 'Плотность населения чел/км2',
+                startRow: 2,
+                endRow: 3,
+                startColumn: 5,
+                endColumn: 6
+            }
+        ],
+        getMultiHeaderVar3: (): IHeader[] => [
+            {
+                title: 'Географические характеристики стран',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 1,
+                endColumn: 2,
+                valign: 'bottom'
+            },
+            {
+                title: 'Столица',
+                startRow: 1,
+                endRow: 3,
+                startColumn: 2,
+                endColumn: 3,
+                valign: 'top'
+            },
+            {
+                title: 'Цифры',
+                startRow: 1,
+                endRow: 2,
+                startColumn: 3,
+                endColumn: 6
             },
             {
                 title: 'Население',
@@ -1502,6 +1595,7 @@ function forShowWidths(): {
     getData(): IDataForShow[];
     getHeader(): IHeader[];
     getColumns1(): IColumn[];
+    getColumns2(): IColumn[];
 } {
     return {
         getData(): IDataForShow[] {
@@ -1568,6 +1662,29 @@ function forShowWidths(): {
                     displayProperty: 'fr2of3',
                     width: '2fr',
                     compatibleWidth: '60%'
+                },
+                {
+                    displayProperty: 'auto',
+                    width: 'auto',
+                    compatibleWidth: '139px'
+                },
+                {
+                    displayProperty: 'minMax',
+                    width: 'minmax(50px, 200px)',
+                    compatibleWidth: '200px'
+                }
+            ];
+        },
+        getColumns2(): IColumn[] {
+            return [
+                {
+                    displayProperty: 'px',
+                    width: '150px'
+                },
+                {
+                    displayProperty: 'maxContent',
+                    width: 'max-content',
+                    compatibleWidth: '147px'
                 },
                 {
                     displayProperty: 'auto',

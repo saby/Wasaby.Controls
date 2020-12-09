@@ -15,6 +15,7 @@ import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
 import {ICollectionItem} from './interface/ICollectionItem';
+import IMarkable from './interface/IMarkable';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
@@ -71,12 +72,12 @@ export default class CollectionItem<T> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable {
 
     // region IInstantiable
 
     readonly '[Types/_entity/IInstantiable]': boolean;
-    readonly MarkableItem: boolean = true;
+    readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
 
     getInstanceId: () => string;
@@ -510,7 +511,7 @@ export default class CollectionItem<T> extends mixin<
 
     protected _isSupportSticky(style: string = 'default'): boolean {
         return this.getOwner().isStickyMarkedItem() !== false &&
-            (style === 'master' || style === 'masterClassic');
+            (style === 'master');
     }
 
     setDragged(dragged: boolean, silent?: boolean): void {
@@ -530,7 +531,7 @@ export default class CollectionItem<T> extends mixin<
      * @param theme - используемая тема
      * @param cursor - курсор мыши
      * @param backgroundColorStyle - стиль background
-     * @param style - режим отображения списка (master/masterClassic/default)
+     * @param style - режим отображения списка (master/default)
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
@@ -579,7 +580,7 @@ export default class CollectionItem<T> extends mixin<
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
      * @param theme - используемая тема
-     * @param style - режим отображения списка (master/masterClassic/default)
+     * @param style - режим отображения списка (master/default)
      * @remark
      * Метод должен уйти в render-модель при её разработке.
      */
@@ -632,7 +633,7 @@ export default class CollectionItem<T> extends mixin<
         return result.length ? ` ${result.join(' ')} ` : ' ';
     }
 
-    getItemTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction|string {
+    getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction|string {
         const templateFromProperty = itemTemplateProperty ? this.getContents().get(itemTemplateProperty) : '';
         return templateFromProperty || userTemplate;
     }
@@ -658,7 +659,7 @@ export default class CollectionItem<T> extends mixin<
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
-        const preparedStyle = style === 'masterClassic' ? 'default' : style;
+        const preparedStyle = style;
         const topSpacing = this.getOwner().getTopPadding().toLowerCase();
         const bottomSpacing = this.getOwner().getBottomPadding().toLowerCase();
         const rightSpacing = this.getOwner().getRightPadding().toLowerCase();

@@ -487,6 +487,32 @@ describe('Controls/suggest', () => {
          sandbox.restore();
       });
 
+      it('Suggest::_inputActivated - suggest should open', async () => {
+         const sandbox = sinon.createSandbox();
+         const inputContainer = getComponentObject({
+            searchParam: 'searchParam',
+            autoDropDown: true,
+            minSearchLength: 3,
+            keyProperty: 'Identificator',
+            source: getMemorySource()
+         });
+         if (!document) {
+            sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
+               classList: {
+                  contains: () => false
+               }
+            }));
+         }
+
+         inputContainer._inputActive = true;
+
+         const openStub = sandbox.stub(inputContainer, '_open');
+
+         await inputContainer._inputActivated();
+
+         assert.isTrue(openStub.calledOnce);
+      });
+
       it('Suggest::_inputActivated/_inputClicked with autoDropDown', () => {
          const inputContainer = getComponentObject({
             searchParam: 'searchParam',
@@ -842,7 +868,7 @@ describe('Controls/suggest', () => {
          assert.equal(inputContainer._suggestMarkedKey, null);
          assert.notEqual(inputContainer._searchResult, queryRecordSet);
          assert.isNull(inputContainer._searchResult);
-         assert.equal(inputContainer._tabsSelectedKey, 'testId2');
+         assert.equal(inputContainer._tabsSelectedKey, null);
          assert.equal(inputContainer._misspellingCaption, null);
       });
 

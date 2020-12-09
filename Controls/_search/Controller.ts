@@ -12,6 +12,7 @@ import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
 import {
    NewSourceController as SourceController
 } from 'Controls/dataSource';
+import {QueryWhereExpression} from 'Types/source';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -68,6 +69,7 @@ interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchyS
    dataLoadCallback?: Function;
    viewMode: string;
    root?: Key;
+   searchValue?: string;
 }
 
 type Key = string | number | null;
@@ -118,7 +120,14 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      this._searchController.update({...newOptions, ...context.dataOptions});
+      if (this._searchController) {
+         const updateResult = this._searchController.update({...newOptions, ...context.dataOptions});
+
+         if (updateResult && !(updateResult instanceof Promise)) {
+            this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
+            this._notify('filterChanged', [updateResult]);
+         }
+      }
    }
 
    private _setSearchValue(value: string): void {
@@ -301,13 +310,8 @@ export default class Container extends Control<IContainerOptions> {
       };
    }
 
-   static getDefaultOptions(): IContainerOptions {
+   static getDefaultOptions(): Partial<IContainerOptions> {
       return {
-         viewMode: undefined,
-         keyProperty: undefined,
-         searchNavigationMode: undefined,
-         searchParam: undefined,
-         searchValueTrim: undefined,
          minSearchLength: 3,
          searchDelay: 500,
          startingWith: 'root'

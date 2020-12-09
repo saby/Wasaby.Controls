@@ -97,78 +97,6 @@
    padding: 0 @quarterly_item-padding-left_shortDatePicker;
 }
 
-.ws-is-hover {
-   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:hover {
-      border-color: @item_hover_border-color_shortDatePicker;
-      background-color: @item_hover_background-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__footer_theme-@{themeName}:hover {
-      .controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
-         fill: @footer_hover_icon_color_shortDatePicker;
-      }
-   }
-
-   .controls-PeriodLiteDialog__arrow-wrapper_theme-@{themeName}:hover {
-      cursor: pointer;
-      border-color: @yearselector_arrow_hover_background-color_shortDatePicker;
-      .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
-         fill: @arrow_hover_icon-color_shortDatePicker;
-      }
-   }
-
-   .controls-PeriodLiteDialog__close_theme-@{themeName}:hover {
-      background-color: @closeButton_hover_background-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__year-prev:hover::before,
-   .controls-PeriodLiteDialog__year-next:hover::before {
-      color: @yearselector_arrow_hover_icon-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__year-clickable:hover {
-      background-color: inherit;
-   }
-
-   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:hover {
-      color: @quarterly_quarters_hover_text-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:hover {
-      color: @quarterly_quarters_hover_text-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
-   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:hover {
-      color: @arrow_hover_icon-color_shortDatePicker;
-   }
-}
-
-.ws-is-touch {
-   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:active {
-      border-color: @item_hover_border-color_shortDatePicker;
-      background-color: @item_hover_background-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__year-prev:active::before,
-   .controls-PeriodLiteDialog__year-next:active::before {
-      color: @yearselector_arrow_active_icon-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:active {
-      color: @quarterly_quarters_active_text-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:active {
-      color: @quarterly_quarters_active_text-color_shortDatePicker;
-   }
-
-   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
-   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:active {
-      color: @arrow_active_icon-color_shortDatePicker;
-   }
-}
-
 .controls-PeriodLiteDialog__vLayoutItem-caption_theme-@{themeName} {
    height: @item_layout_height_shortDatePicker;
    line-height: @item_layout_line-height_shortDatePicker;
@@ -338,6 +266,13 @@
 .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
    height: @arrow_icon-size_shortDatePicker;
    width: @arrow_icon-size_shortDatePicker;
+}
+
+.controls-PeriodLiteDialog__arrow_readOnly_theme-@{themeName} {
+   fill: @readonly_color;
+}
+
+.controls-PeriodLiteDialog__arrow_active_theme-@{themeName} {
    fill: @arrow_icon-color_shortDatePicker;
 }
 
@@ -415,7 +350,6 @@
 .controls-PeriodLiteDialog-item__halfYear-caption {
    .controls-PeriodLiteDialog__container-caption();
    display: flex;
-   right: initial;
    right: 0;
    justify-content: center;
    align-items: center;
@@ -429,6 +363,7 @@
 .controls-PeriodLiteDialog-item__halfYear-background_theme-@{themeName} {
    background-color: @background-color_shortDatePicker;
 }
+
 .controls-PeriodLiteDialog-item__halfYear-background-transparent_theme-@{themeName} {
    background-color: transparent;
 }
@@ -592,4 +527,76 @@
 
 .controls-PeriodLiteDialog_calendarBody_theme-@{themeName} {
    border-bottom: @separator_thickness_shortDatePicker solid @separator_color_shortDatePicker;
+}
+
+.ws-is-hover {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:hover {
+      border-color: @item_hover_border-color_shortDatePicker;
+      background-color: @item_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__footer_theme-@{themeName}:hover {
+      .controls-PeriodLiteDialog__footer-icon_theme-@{themeName} {
+         fill: @footer_hover_icon_color_shortDatePicker;
+      }
+   }
+
+   .controls-PeriodLiteDialog__arrow-wrapper_active_theme-@{themeName}:hover {
+      cursor: pointer;
+      border-color: @yearselector_arrow_hover_background-color_shortDatePicker;
+      .controls-PeriodLiteDialog__arrow_theme-@{themeName} {
+         fill: @arrow_hover_icon-color_shortDatePicker;
+      }
+   }
+
+   .controls-PeriodLiteDialog__close_theme-@{themeName}:hover {
+      background-color: @closeButton_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-prev:hover::before,
+   .controls-PeriodLiteDialog__year-next:hover::before {
+      color: @yearselector_arrow_hover_icon-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-clickable:hover {
+      background-color: inherit;
+   }
+
+   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:hover {
+      color: @quarterly_quarters_hover_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:hover {
+      color: @quarterly_quarters_hover_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
+   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:hover {
+      color: @arrow_hover_icon-color_shortDatePicker;
+   }
+}
+
+.ws-is-touch {
+   .controls-PeriodLiteDialog__vLayoutItem-clickable_theme-@{themeName}:active {
+      border-color: @item_hover_border-color_shortDatePicker;
+      background-color: @item_hover_background-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__year-prev:active::before,
+   .controls-PeriodLiteDialog__year-next:active::before {
+      color: @yearselector_arrow_active_icon-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__halfYear-caption_theme-@{themeName}:active {
+      color: @quarterly_quarters_active_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog-item__quarter-caption_theme-@{themeName}:active {
+      color: @quarterly_quarters_active_text-color_shortDatePicker;
+   }
+
+   .controls-PeriodLiteDialog__years-prev_theme-@{themeName},
+   .controls-PeriodLiteDialog__years-next_theme-@{themeName}:active {
+      color: @arrow_active_icon-color_shortDatePicker;
+   }
 }

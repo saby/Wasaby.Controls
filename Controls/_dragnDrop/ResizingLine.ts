@@ -137,7 +137,9 @@ class ResizingLine extends Control<IControlOptions, IResizingLine> {
     }
 
     protected _onEndDragHandler(event: SyntheticEvent<MouseEvent>, dragObject): void {
-        this.endDrag(dragObject.entity.offset.value);
+        if (this._dragging) {
+            this.endDrag(dragObject.entity.offset.value);
+        }
     }
 
     // Use in template.

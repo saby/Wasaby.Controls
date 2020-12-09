@@ -29,10 +29,18 @@ import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
 
+/**
+ * @typeof {String} TPagingPosition
+ * @variant left Отображения пэйджинга слева.
+ * @variant right Отображения пэйджинга справа.
+ */
+type TPagingPosition= 'left' | 'right';
+
 interface IContainerOptions extends IContainerBaseOptions, IScrollbarsOptions, IShadowsOptions {
     backgroundStyle: string;
     pagingMode?: TPagingModeScroll;
     pagingContentTemplate?: Function | string;
+    pagingPosition?: TPagingPosition;
 }
 
 const SCROLL_BY_ARROWS = 40;
@@ -171,7 +179,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _afterUpdate() {
         super._afterUpdate(...arguments);
-        this._stickyHeaderController.updateContainer(this._container);
+        this._stickyHeaderController.updateContainer(this._children.content);
         if (this._needUpdateContentSize) {
             this._needUpdateContentSize = false;
             this._updateStateAndGenerateEvents({ scrollHeight: this._children.content.scrollHeight });
@@ -189,7 +197,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _initHeaderController(): void {
         if (!this._isControllerInitialized) {
-            this._stickyHeaderController.init(this._container);
+            this._stickyHeaderController.init(this._children.content);
             this._isControllerInitialized = true;
         }
     }
@@ -525,6 +533,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._wasMouseEnter);
+        this._children.scrollBar?.setViewportSize(
+            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
@@ -565,12 +575,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {Content} Container contents.
  */
 
-
 /**
  * @name Controls/_scroll/Container#style
  * @cfg {String} Цветовая схема (цвета тени и скролла).
  * @variant normal Тема по умолчанию (для ярких фонов).
  * @variant inverted Преобразованная тема (для темных фонов).
+ * @see backgroundStyle
  */
 
 /*
@@ -585,15 +595,35 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
  * @default default
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
+ * @see style
+ */
+
+/**
+ * @typedef {String} TPagingModeScroll
+ * @variant hidden Предназначен для отключения отображения пейджинга в реестре.
+ * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
+ * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
+ * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
  */
 
 /**
  * @name Controls/_scroll/Container#pagingMode
  * @cfg {TPagingModeScroll} Определяет стиль отображения пэйджинга.
  * @default hidden
+ * @demo Controls-demo/Scroll/Paging/Basic/Index
+ * @demo Controls-demo/Scroll/Paging/Edge/Index
+ * @demo Controls-demo/Scroll/Paging/End/Index
  */
 
 /**
  * @name Controls/_scroll/Container#pagingContentTemplate
- * @cfg @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ * @cfg {Function} Опция управляет отображением произвольного шаблона внутри пэйджинга.
+ * @demo Controls-demo/Scroll/Paging/ContentTemplate/Index
+ */
+
+/**
+ * @name Controls/_scroll/Container#pagingPosition
+ * @property {TPagingPosition} pagingPosition Опция управляет позицией пэйджинга.
+ * @default right
+ * @demo Controls-demo/Scroll/Paging/PositionLeft/Index
  */
