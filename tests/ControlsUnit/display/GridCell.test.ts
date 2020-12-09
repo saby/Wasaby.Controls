@@ -1,16 +1,14 @@
 import { assert } from 'chai';
 
-import { GridCell, GridRow } from 'Controls/display';
-import GridCollection from 'Controls/_display/GridCollection';
+import { GridCell, GridCollection, GridRow } from 'Controls/display';
+import { Model } from 'Types/entity';
 
 describe('Controls/display:Cell', () => {
 
     // region Аспект "Кнопка редактирования"
 
     describe('editArrow', () => {
-
-        gridRow.getColumns().unshift({});
-        assert.isFalse(gridCell.isMultiSelectColumn());
+        let cell: GridCell<Model, GridRow<Model>>;
 
         beforeEach(() => {
             cell = new GridCell();
