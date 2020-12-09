@@ -2,15 +2,19 @@ import {TemplateFunction} from 'UI/Base';
 import Row, {IOptions as IRowOptions} from './Row';
 import DataCell from './DataCell';
 import IMarkable from '../interface/IMarkable';
+import ISelectableItem from '../interface/ISelectableItem';
+import ILadderSupport from './interface/ILadderSupport';
 
 export interface IOptions<T> extends IRowOptions<T> {
 }
 
-export default class DataRow<T> extends Row<T> implements IMarkable {
+export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupport, ISelectableItem {
     protected _$columnItems: Array<DataCell<T, this>>;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
-    readonly Markable: boolean = true;
+    readonly LadderSupport = true;
+    readonly Markable = true;
+    readonly SelectableItem = true;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -22,7 +26,7 @@ export default class DataRow<T> extends Row<T> implements IMarkable {
     }
 }
 
-Object.assign(Row.prototype, {
+Object.assign(DataRow.prototype, {
     '[Controls/_display/grid/DataRow]': true,
     _moduleName: 'Controls/display:GridDataRow',
     _cellModule: 'Controls/display:GridDataCell',

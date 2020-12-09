@@ -86,10 +86,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    getColumns(): TColumns {
-        throw Error('GridCollection.getColumns is deprecated. Use GridCollection.getColumnsConfig');
-    }
-
     getColumnsConfig(): TColumns {
         return this._$columns;
     }
@@ -163,7 +159,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     protected _updateItemsLadder(): void {
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+            if (item.LadderSupport) {
                 item.setLadder(this._$ladder);
             }
         });
@@ -171,7 +167,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     protected _updateItemsColumns(): void {
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item['[Controls/_display/ILadderedCollectionItem]']) {
+            if (item.LadderSupport) {
                 item.setColumns(this._$columns);
             }
         });

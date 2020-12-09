@@ -12,11 +12,16 @@ export default class Row<T>
     extends mixin<CollectionItem<any>, GridRowMixin<any>>(CollectionItem, GridRowMixin) {
     readonly '[Controls/_display/grid/Row]': boolean;
 
+    // По умолчанию любая абстрактная строка таблицы не имеет возможности редактироваться.
+    // Данная возможность доступна только строке с данными.
+    readonly '[Controls/_display/IEditableCollectionItem]': boolean;
+
     // TODO: Удалить имплементирование после выделения сущностей элементов списка
     //  (базовый элемент -> элемент данных / элемент группы /...)
     //  Интерфейс должен имплементироваться только у элементов, которые поддерживает отметку маркером.
     //  Сейчас, т.к. нет элемента данных, его имплементирует CollectionItem.
-    readonly Markable: boolean = false;
+    readonly Markable = false;
+    readonly SelectableItem = false;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -65,6 +70,7 @@ export default class Row<T>
 }
 
 Object.assign(Row.prototype, {
+    '[Controls/_display/IEditableCollectionItem]': false,
     '[Controls/_display/grid/Row]': true,
     _moduleName: 'Controls/display:GridRow',
     _instancePrefix: 'grid-row-'

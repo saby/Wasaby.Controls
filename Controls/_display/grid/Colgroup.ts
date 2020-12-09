@@ -43,7 +43,7 @@ export default class Colgroup<T> extends mixin<
     }
 
     reBuild(): void {
-        this._$cells = this._prepareCells(this._$owner.getColumns());
+        this._$cells = this._prepareCells(this._$owner.getColumnsConfig());
         this._nextVersion();
     }
 
