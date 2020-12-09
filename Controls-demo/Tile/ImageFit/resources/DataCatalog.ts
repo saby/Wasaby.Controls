@@ -1,6 +1,6 @@
-import {constants} from 'Env/Env';
+import * as getResourceUrl from 'Core/helpers/getResourceUrl';
 
-const baseURL = constants.resourceRoot + 'Controls-demo/Tile/ImageFit/resources/images/';
+const baseURL = '/Controls-demo/Tile/ImageFit/resources/images/';
 export const items = [
     {
         id: 1,
@@ -22,7 +22,7 @@ export const items = [
         parent: null,
         type: null,
         title: 'Речка',
-        image: `${baseURL}river.jpg`,
+        image: getResourceUrl(`${baseURL}river.jpg`),
         imageWidth: 1920,
         imageHeight: 1200,
         width: 200,
@@ -36,7 +36,7 @@ export const items = [
         type: null,
         width: 200,
         title: 'Сравнение систем по учету рабочего времени.xlsx',
-        image: `${baseURL}vodka.png`,
+        image: getResourceUrl(`${baseURL}vodka.png`),
         isDocument: true,
         hiddenGroup: true,
         imageWidth: 1600,
@@ -47,7 +47,7 @@ export const items = [
         parent: null,
         type: null,
         title: 'Конфеты копия',
-        image: `${baseURL}mountains.jpg`,
+        image: getResourceUrl(`${baseURL}mountains.jpg`),
         imageWidth: 2508,
         imageHeight: 542,
         isDocument: true,
@@ -58,7 +58,7 @@ export const items = [
         parent: null,
         type: null,
         title: 'Квадрат',
-        image: `${baseURL}square.png`,
+        image: getResourceUrl(`${baseURL}square.png`),
         imageWidth: 150,
         imageHeight: 150,
         isDocument: true,

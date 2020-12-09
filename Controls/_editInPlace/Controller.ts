@@ -159,6 +159,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             const editingCollectionItem = this._getEditingItem();
             const editingItem = editingCollectionItem.contents;
             const isAdd = editingCollectionItem.isAdd;
+            this._operationsPromises = {};
 
             if (this._options.onBeforeEndEdit) {
                 this._options.onBeforeEndEdit(editingItem, false, isAdd, true);
