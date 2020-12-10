@@ -41,7 +41,7 @@
                 <ws:if data="{{_options.separatorVisible}}">
                     <div class="controls-Tabs__itemSeparator
                                 controls-Tabs__itemSeparator_theme_{{_options.theme}}
-                                controls-Tabs__itemSeparator_align_{{item[contentTab] ? 'right' : item['align'] || 'right'}}">
+                                controls-Tabs__itemSeparator_align_{{item['contentTab'] ? 'right' : item['align'] || 'right'}}">
                     </div>
                 </ws:if>
 
