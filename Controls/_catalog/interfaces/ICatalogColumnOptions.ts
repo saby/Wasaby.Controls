@@ -1,4 +1,4 @@
-import {ICrud} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 
 /**
  * Интерфейс, представляющий общую структуру настройки колонок каталога
@@ -11,7 +11,7 @@ export interface ICatalogColumnOptions {
     /**
      * Источник данных для списка, расположенного внутри колонки.
      */
-    listSource?: ICrud;
+    listSource?: ICrudPlus;
 
     /**
      * Имя свойства, содержащего информацию об идентификаторе текущей строки.

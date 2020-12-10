@@ -1,4 +1,4 @@
-import {ICrud} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
 
 /**
@@ -25,7 +25,7 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
      *
      * @see ICatalogOptions.listSource
      */
-    listSource?: ICrud;
+    listSource?: ICrudPlus;
 
     /**
      * Имя свойства записи detail-списка, содержащего информацию о её идентификаторе.
@@ -41,6 +41,17 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
     viewMode: CatalogDetailViewMode;
 
     /**
+     * Опции для компонента {@link Controls/list:View}, который отображается
+     * в detail-колонке в режиме {@link CatalogDetailViewMode.list}
+     *
+     * Данные опции перекрывают опции, вычисленные на основании конфигурации
+     * {@link ICatalogOptions.detail|detail-колонки}
+     *
+     * @see viewMode
+     */
+    list?: object;
+
+    /**
      * Опции для компонента {@link Controls/treeGrid:View}, который отображается
      * в detail-колонке в режиме {@link CatalogDetailViewMode.table}
      *
@@ -51,4 +62,10 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
      */
     table?: object;
     //endregion
+
+    nodeProperty?: string;
+
+    parentProperty?: string;
+
+    filter?: {[key: string]: unknown};
 }

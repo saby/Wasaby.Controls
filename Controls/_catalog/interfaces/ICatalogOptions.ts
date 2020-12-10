@@ -1,7 +1,7 @@
+import {ICrudPlus} from 'Types/source';
 import {IControlOptions} from 'UI/Base';
-import {ICrud} from 'Types/source';
 import {ICatalogMasterOptions} from 'Controls/_catalog/interfaces/ICatalogMasterOptions';
-import {ICatalogDetailOptions} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
+import {CatalogDetailViewMode, ICatalogDetailOptions} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/catalog:View}
@@ -21,7 +21,7 @@ export interface ICatalogOptions extends IControlOptions {
      * @see ICatalogMasterOptions.listSource
      * @see ICatalogDetailOptions.listSource
      */
-    listSource?: ICrud;
+    listSource?: ICrudPlus;
 
     /**
      * Имя свойства, содержащего информацию об идентификаторе текущей строки в master и detail колонках.
@@ -41,6 +41,18 @@ export interface ICatalogOptions extends IControlOptions {
      * Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
      */
     propStorageId?: string;
+
+    /**
+     * Имя поля метаданных ответа сервера, содержащее настройки текущего списка в detail-колонки
+     * @default 'templateSettings'
+     */
+    templateSettingsField: string;
+
+    /**
+     * Режим отображения списка
+     * @default CatalogDetailViewMode.list
+     */
+    viewMode: CatalogDetailViewMode;
 
     /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.

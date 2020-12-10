@@ -20,32 +20,32 @@
       keyProperty="id"
       listSource="{{_baseSource}}"
       propStorageId="catalogDemoBase"
+      bind:viewMode="_vm"
    >
       <!-- Задаем общую настройку master-колонки -->
       <ws:master
          width="{{300}}"
          minWidth="{{200}}"
          maxWidth="{{500}}"
+         nodeProperty="type"
+         parentProperty="parent"
+         hasChildrenProperty="hasChild"
+         filter="{{_masterFilter}}"
          visibility="{{_isMasterVisible ? 'visible' : 'hidden'}}"
       >
          <!-- Настраиваем отображение списка -->
          <ws:treeGridView
-            nodeProperty="type"
-            parentProperty="parent"
-            hasChildrenProperty="hasChild"
-            expanderVisibility="hasChildren"
-            filter="{{_masterFilter}}"
             columns="{{_masterTableColumns}}"
          />
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
       <ws:detail
-         viewMode="{{_viewMode[0]}}"
+         nodeProperty="type"
+         parentProperty="parent"
+         filter="{{_detailFilter}}"
       >
          <!-- Конфигурируем табличное представление detail-списка -->
          <ws:table
-            nodeProperty="type"
-            parentProperty="parent"
             columns="{{_detailTableColumns}}"
          />
       </ws:detail>

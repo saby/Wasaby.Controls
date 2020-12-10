@@ -1,4 +1,4 @@
-import {ICrud} from 'Types/source';
+import {ICrudPlus} from 'Types/source';
 import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
 
 /**
@@ -8,6 +8,7 @@ import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumn
  * @author Уфимцев Д.Ю.
  */
 export interface ICatalogMasterOptions extends ICatalogColumnOptions {
+
     //region source options
     /**
      * Источник данных, который будет использован списочным представлением внутри master-колонки.
@@ -15,7 +16,7 @@ export interface ICatalogMasterOptions extends ICatalogColumnOptions {
      * {@link ICatalogOptions.listSource}
      * @see ICatalogOptions.listSource
      */
-    listSource?: ICrud;
+    listSource?: ICrudPlus;
 
     /**
      * Имя свойства записи master-списка, содержащего информацию о её идентификаторе.
@@ -48,6 +49,20 @@ export interface ICatalogMasterOptions extends ICatalogColumnOptions {
      */
     visibility?: 'visible' | 'hidden';
     //endregion
+
+    nodeProperty?: string;
+
+    parentProperty?: string;
+
+    /**
+     * Имя свойства, содержащего информацию о наличии дочерних элементов в узле дерева.
+     * Если задано, то мастер список автоматически будет сконфигурирован на отображение
+     * только узлов. При этом у узлов где в качестве дочерних элементов есть только листья
+     * не будет показан экспандер.
+     */
+    hasChildrenProperty?: string;
+
+    filter?: {[key: string]: unknown};
 
     /**
      * Опции для компонента {@link Controls/treeGrid:View}, который отображает master-список.
