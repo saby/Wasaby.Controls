@@ -712,7 +712,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       if (this._searchLibraryLoader) {
-         this._searchLibraryLoader.cancel('_suggest/_InputController: Value changes too fast, load cancelled');
+         this._searchLibraryLoader.cancel();
          this._searchLibraryLoader = null;
       }
       value = value || '';
