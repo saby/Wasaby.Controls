@@ -712,7 +712,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
       if (this._searchLibraryLoader) {
-         this._searchLibraryLoader.cancel();
+         this._searchLibraryLoader.cancel('_suggest/_InputController: Value changes too fast, load cancelled');
          this._searchLibraryLoader = null;
       }
       value = value || '';
@@ -721,7 +721,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies();
       if (this._options.suggestTemplate) {
-         return this._resolveSearch(value).catch((error) => this._searchErrback(error));
+         return this._resolveSearch(value);
       }
       return Promise.resolve();
    }
@@ -756,7 +756,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                 this._searchLibraryLoader = null;
                 return this._searchResolverController;
              })
-             .catch((error) => error);
+             .catch((error) => this._searchErrback(error));
       } else {
          result = Promise.resolve(this._searchResolverController);
       }
