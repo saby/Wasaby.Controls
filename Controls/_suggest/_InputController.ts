@@ -721,7 +721,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies();
       if (this._options.suggestTemplate) {
-         return this._resolveSearch(value);
+         return this._resolveSearch(value).catch((error) => this._searchErrback(error));
       }
       return Promise.resolve();
    }
