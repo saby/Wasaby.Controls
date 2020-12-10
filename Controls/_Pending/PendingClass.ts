@@ -1,4 +1,4 @@
-import ParallelDeferred = require('Core/ParallelDeferred');
+import * as ParallelDeferred from 'Core/ParallelDeferred';
 import {constants} from 'Env/Env';
 
 interface IPendingOptions {
@@ -82,8 +82,9 @@ class PendingClass {
         };
         if (config.showLoadingIndicator && !def.isReady()) {
             // show indicator if Promise still not finished on moment of registration
-            const indicatorConfig = {id: this._pendings[root][this._pendingsCounter].loadingIndicatorId};
-            this._pendings[root][this._pendingsCounter].loadingIndicatorId = this._notify('showIndicator', [indicatorConfig]);
+            const pending = this._pendings[root][this._pendingsCounter];
+            const indicatorConfig = {id: pending.loadingIndicatorId};
+            pending.loadingIndicatorId = this._notify('showIndicator', [indicatorConfig]);
         }
         // Замыкаем переменную _pendingsCounter
         const promiseHandler = (() => {
