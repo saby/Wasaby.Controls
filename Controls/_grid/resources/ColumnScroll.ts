@@ -192,15 +192,15 @@ export class ColumnScroll {
     }
 
     /**
-     * Если скроллим влево:
-     * Если левая граница контента меньше левой границы контейнера, перебираем значения пока не
-     * current.right > левой границы контейнера.
-     * Значит this._scrollToColumn(columnRect);
+     * Метод, позворляющий проскроллить контент до края колонки в зависимости от текущего направления скролла.
+     * Работает как с линейными заголовками, так и с мультизаголовками.
+     * Для работы мультизаголовков пересечение с границей скроллируемой оболасти вычисляется для нескольких колонок.
+     * Затем из отфильтрованных колонок выбирается меньшая для перемещения к её границе, а не к границе colspan-колонки выше.
      *
-     * Если скроллим вправо:
-     * Если правая граница контента больше правой границы контейнера, перебираем значения пока не
-     * current.left < правой границы контейнера.
-     * Значит this._scrollToColumn(columnRect);
+     * Принцип работы:
+     * Если скроллим влево, то фильтруем колонки по принципу левая сторона за пределами scrollContainer, а правая в scrollContainer
+     * Если скроллим вправо, то фильтруем колонки по принципу правая сторона за пределами scrollContainer, а левая в scrollContainer
+     * После этого выбираем меньшую из отфильрованных и вызываем прокрутку области к этой колонке.
      */
     scrollToColumn(): void {
         const scrollContainerRect = this._getScrollContainerRect();
@@ -219,17 +219,12 @@ export class ColumnScroll {
         });
 
         // Фильтруем колонки в соответствии с направлением скролла
-        let filteredColumns: DOMRect[];
-        if (this._currentScrollDirection === 'backward') {
-            filteredColumns = columns.filter((rect) => (
-                rect.left < scrollContainerRect.left && rect.right > scrollContainerRect.left
-            ));
-        } else if (this._currentScrollDirection === 'forward') {
-            filteredColumns = columns.filter((rect) => (
-                rect.left < scrollContainerRect.right && rect.right > scrollContainerRect.right
-            ));
-        }
-
+        const scrollContainerIntersectionSide = this._currentScrollDirection === 'backward' ?
+            scrollContainerRect.left :
+            scrollContainerRect.right;
+        const filteredColumns = columns.filter((rect) => (
+            rect.left < scrollContainerIntersectionSide && rect.right > scrollContainerIntersectionSide
+        ));
         // Для multiHeader выбираем колонку с минимальной шириной
         const currentColumn = filteredColumns.reduce((acc, item) => (
             !acc.width || item.width < acc.width ? item : acc
