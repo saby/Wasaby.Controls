@@ -113,34 +113,25 @@ define([
       });
       it('prepareItemClass', function() {
          var
-            item = new entity.Record({
-               rawData: {
-                  align: 'left',
-                  karambola: '15',
-                  _order: '144'
-               }
-            }),
-            item2 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  type: 'photo'
-               }
-            }),
-            item3 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  isMainTab: true
-               }
-            }),
-            item4 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  isMainTab: false
-               }
-            }),
+            item = {
+               align: 'left',
+               karambola: '15',
+               _order: '144'
+            },
+            item2 = {
+               karambola: '10',
+               _order: '2'
+            },
+            item3 = {
+               karambola: '10',
+               _order: '2',
+               isMainTab: true
+            },
+            item4 = {
+               karambola: '10',
+               _order: '2',
+               isMainTab: false
+            },
             options = {
                style: 'additional',
                inlineHeight: 's',
@@ -158,8 +149,7 @@ define([
                ' controls-Tabs__item_inlineHeight-s_theme-default' +
                ' controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
                ' controls-Tabs__item_default controls-Tabs__item_default_theme_default' +
-               ' controls-Tabs__item_type_photo controls-Tabs__item_type_photo_theme_default ' +
-               'controls-Tabs__item_notShrink',
+               ' controls-Tabs__item_notShrink',
             expected3 = 'controls-Tabs__item controls-Tabs__item_theme_default ' +
                'controls-Tabs__item_inlineHeight-s_theme-default ' +
                'controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
@@ -183,20 +173,16 @@ define([
       });
       it('prepareItemSelected', function() {
          var
-            item = new entity.Record({
-               rawData: {
-                  align: 'left',
-                  karambola: '15',
-                  _order: '144'
-               }
-            }),
-            item2 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  type: 'photo'
-               }
-            }),
+            item = {
+               karambola: '15',
+               _order: '2',
+               type: 'photo'
+            },
+            item2 = {
+               karambola: '10',
+               _order: '2',
+               type: 'photo'
+            },
             options = {
                style: 'additional',
                selectedKey: '15',
@@ -226,6 +212,7 @@ define([
          tabs._beforeMount(options, null, receivedState);
          assert.equal(tabs._items, receivedState.items, 'items uncorrect in beforeMount with receivedState');
          assert.equal(tabs._itemsOrder, receivedState.itemsOrder, 'items uncorrect in beforeMount with receivedState');
+         assert.equal(tabs._itemsArray, receivedState.itemsArray, 'items uncorrect in beforeMount with receivedState');
          tabs.destroy();
       });
       it('_beforeMount without received state', function() {
