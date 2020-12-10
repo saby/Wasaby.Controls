@@ -4,18 +4,19 @@ import {Memory} from 'Types/source';
 import {changeSourceData} from '../../DemoHelpers/DataCatalog';
 import {INavigation} from 'Controls-demo/types';
 
-const {data, data2} = changeSourceData();
+const {data2} = changeSourceData();
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 class DemoSource extends Memory {
     queryNumber: number = 0;
+
     query(): Promise<any> {
         const args = arguments;
         return delay(1000).then(() => {
             return super.query.apply(this, args).addCallback((items) => {
                 const rawData = items.getRawData();
-                rawData.items = data2.filter((cur) => cur.load === this.queryNumber);
-                rawData.meta.more = this.queryNumber < 2;
+                rawData.items = data2.filter((cur) => cur.id === this.queryNumber);
+                rawData.meta.more = this.queryNumber < 10;
                 rawData.meta.total = rawData.items.length;
                 items.setRawData(rawData);
                 this.queryNumber++;
@@ -46,7 +47,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new InitialMemory({
             keyProperty: 'id',
-            data
+            data: []
         });
         this._navigation = {
             source: 'page',
@@ -56,7 +57,7 @@ export default class extends Control {
                 page: 0
             },
             viewConfig: {
-                maxCountValue: 8
+                maxCountValue: 6
             }
         };
         this._viewSource2 = new DemoSource({
