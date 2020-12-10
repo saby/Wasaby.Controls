@@ -145,18 +145,30 @@ describe('Controls/_multiselection/Controller', () => {
          excludedKeys: []
       });
 
-      const addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
+      let addedItems = [model.getItemBySourceKey(1), model.getItemBySourceKey(2)];
       controller.onCollectionAdd(addedItems);
 
       assert.isTrue(model.getItemBySourceKey(1).isSelected());
       assert.isTrue(model.getItemBySourceKey(2).isSelected());
 
       // проверяем что не проставим селекшин для новых элементов, если уперлись в лимит
-      controller.setLimit(2);
-      controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+      controller.setLimit(1);
+      addedItems = [model.getItemBySourceKey(3), model.getItemBySourceKey(4)];
+      addedItems[0].setSelected(false);
+      addedItems[1].setSelected(false);
+      model.setItems(new RecordSet({
+         rawData: [
+            { id: 1 },
+            { id: 2 },
+            { id: 3 },
+            { id: 4 }
+         ],
+         keyProperty: 'id'
+      }), {});
+      controller.onCollectionAdd(addedItems);
 
-      assert.isTrue(model.getItemBySourceKey(3).isSelected());
-      assert.isTrue(model.getItemBySourceKey(4).isSelected());
+      assert.isFalse(addedItems[0].isSelected());
+      assert.isFalse(addedItems[1].isSelected());
    });
 
    describe('onCollectionRemove', () => {
