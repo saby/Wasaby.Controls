@@ -166,7 +166,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         if (itemType) {
             classes.push('controls-Tabs__item_type_' + itemType +
                 ' controls-Tabs__item_type_' + itemType + '_theme_' + theme);
-            classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + theme);
         }
 
         // TODO: по поручению опишут как и что должно сжиматься.
