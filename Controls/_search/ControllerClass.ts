@@ -1,6 +1,8 @@
 import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {ISearchControllerOptions, ISearchController} from './interface';
+import {NewSourceController} from 'Controls/dataSource';
+import {Logger} from 'UI/Utils';
 
 type Key = string|number|null;
 
@@ -58,11 +60,18 @@ export default class ControllerClass implements ISearchController {
    protected _options: ISearchControllerOptions = null;
 
    protected _searchValue: string = '';
+   protected _sourceController: NewSourceController = null;
    private _root: Key = null;
    private _path: RecordSet = null;
 
    constructor(options: ISearchControllerOptions) {
       this._options = options;
+
+      if (options.sourceController) {
+         this._sourceController = options.sourceController;
+      } else {
+         Logger.error('_search/ControllerClass: sourceController option has incorrect type');
+      }
 
       if (options.root !== undefined) {
          this.setRoot(options.root);
@@ -76,7 +85,7 @@ export default class ControllerClass implements ISearchController {
     * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
     */
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
-      const filter = {...this._options.sourceController.getFilter()};
+      const filter = {...this._sourceController.getFilter()};
       filter[this._options.searchParam] = this._searchValue = '';
 
       if (this._options.parentProperty) {
@@ -101,7 +110,7 @@ export default class ControllerClass implements ISearchController {
     * @param {string} value Значение, по которому будет производиться поиск
     */
    search(value: string): Promise<RecordSet | Error> {
-      const filter: QueryWhereExpression<unknown> = {...this._options.sourceController.getFilter()};
+      const filter: QueryWhereExpression<unknown> = {...this._sourceController.getFilter()};
 
       filter[this._options.searchParam] = this._searchValue = this._trim(value);
 
@@ -146,22 +155,31 @@ export default class ControllerClass implements ISearchController {
     * </pre>
     */
    update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
-      const needUpdateRoot = this._options.root !== options.root;
       let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
+      let needLoad = false;
+      const searchValue = options.hasOwnProperty('searchValue') ? options.searchValue : this._options.searchValue;
 
-      if (needUpdateRoot) {
+      if (this._options.root !== options.root) {
          this.setRoot(options.root);
+      }
+
+      if (options.sourceController && options.sourceController !== this._sourceController) {
+         this._sourceController = options.sourceController;
+         needLoad = true;
       }
 
       if (options.hasOwnProperty('searchValue')) {
          if (options.searchValue !== this._options.searchValue) {
-            if (options.searchValue) {
-               updateResult = this.search(options.searchValue).then();
-            } else {
-               // TODO: Убрать флаг в аргументе после выполнения
-               // https://online.sbis.ru/doc/fe106611-647d-4212-908f-87b81757327b
-               updateResult = this.reset(true);
-            }
+            needLoad = true;
+         }
+      }
+      if (needLoad) {
+         if (searchValue) {
+            updateResult = this.search(searchValue);
+         } else {
+            // TODO: Убрать флаг в аргументе после выполнения
+            // https://online.sbis.ru/doc/fe106611-647d-4212-908f-87b81757327b
+            updateResult = this.reset(true);
          }
       }
       this._options = {
@@ -194,12 +212,10 @@ export default class ControllerClass implements ISearchController {
    }
 
    private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error|RecordSet> {
-      const sourceController = this._options.sourceController;
-
-      sourceController.setFilter(filter);
+      this._sourceController.setFilter(filter);
 
       // TODO: Без прямой передачи фильтра в load фильтр не учитывается в sourceController (setFilter тут бесполезен)
-      return sourceController.load(undefined, undefined, filter).then((recordSet) => {
+      return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
          if (recordSet instanceof RecordSet) {
             this._path = recordSet.getMetaData().path;
 
