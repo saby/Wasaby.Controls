@@ -3,14 +3,19 @@ import {SyntheticEvent} from 'UI/Vdom';
 import {RecordSet} from 'Types/collection';
 import {Control, TemplateFunction} from 'UI/Base';
 import {ICrudPlus, QueryWhereExpression} from 'Types/source';
-import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
+import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguration';
 import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
+import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import * as ViewTemplate from 'wml!Controls/_catalog/View';
-import {ITemplateConfig} from 'Controls/_catalog/interfaces/ITemplateConfig';
 
 /**
- * Компонент реализует стандартную раскладку двухколоночного реестра с master и detail колонками
+ * Компонент реализует стандартную раскладку двухколоночного реестра с master и detail колонками.
+ *
+ * При получении списка записей для detail-колонки из метаданных ответа вычитывает поле
+ * 'listConfiguration', в котором ожидается объект реализующий интерфейст {@link IListConfiguration},
+ * и применяет полученную конфиругицию к списку.
+ *
  * @class Controls/catalog:View
  * @extends Core/Control
  * @public
@@ -177,8 +182,8 @@ export default class View extends Control<ICatalogOptions> {
                 this.buildDetailFilter(options)
             )
             .then((items: RecordSet) => {
-                const templateCfg = items.getMetaData()[this._options.templateSettingsField];
-                this.applyTemplateSettings(templateCfg);
+                const listCfg = items.getMetaData().listConfiguration;
+                this.applyListConfiguration(listCfg);
 
                 return items;
             })
@@ -198,7 +203,7 @@ export default class View extends Control<ICatalogOptions> {
         return filter;
     }
 
-    private applyTemplateSettings(cfg: ITemplateConfig): void {
+    private applyListConfiguration(cfg: IListConfiguration): void {
         if (!cfg) {
             return;
         }
@@ -294,12 +299,9 @@ export default class View extends Control<ICatalogOptions> {
 
     static getDefaultOptions(): ICatalogOptions {
         return {
-            templateSettingsField: 'templateSettings',
+            viewMode: CatalogDetailViewMode.list,
             master: {
                 visibility: 'hidden'
-            },
-            detail: {
-                viewMode: CatalogDetailViewMode.list
             }
         };
     }
@@ -348,3 +350,9 @@ export default class View extends Control<ICatalogOptions> {
     //endregion
 
 }
+
+/**
+ * @event Событие об изменении режима отображения списка в detail-колонке
+ * @name Controls/catalog:View#viewModeChanged
+ * @param {CatalogDetailViewMode} viewMode Текущий режим отображения списка
+ */

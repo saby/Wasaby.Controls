@@ -35,10 +35,15 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
 
     //region display options
     /**
-     * Режим отображения списка
-     * @default CatalogDetailViewMode.list
+     * Опции для компонента {@link Controls/list:View}, который отображается
+     * в detail-колонке в режиме {@link CatalogDetailViewMode.list}
+     *
+     * Данные опции перекрывают опции, вычисленные на основании конфигурации
+     * {@link ICatalogOptions.detail|detail-колонки}
+     *
+     * @see viewMode
      */
-    viewMode: CatalogDetailViewMode;
+    list?: object;
 
     /**
      * Опции для компонента {@link Controls/list:View}, который отображается

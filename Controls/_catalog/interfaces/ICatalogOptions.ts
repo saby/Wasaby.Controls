@@ -43,12 +43,6 @@ export interface ICatalogOptions extends IControlOptions {
     propStorageId?: string;
 
     /**
-     * Имя поля метаданных ответа сервера, содержащее настройки текущего списка в detail-колонки
-     * @default 'templateSettings'
-     */
-    templateSettingsField: string;
-
-    /**
      * Режим отображения списка
      * @default CatalogDetailViewMode.list
      */
