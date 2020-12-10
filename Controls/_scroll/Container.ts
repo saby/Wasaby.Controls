@@ -592,7 +592,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
 /**
  * @name Controls/_scroll/Container#backgroundStyle
- * @cfg {String} Определяет префикс стиля для настройки элементов которые зависят от цвета фона.
+ * @cfg {String} Определяет префикс стиля для настройки элементов, которые зависят от цвета фона.
  * @default default
  * @demo Controls-demo/Scroll/Container/BackgroundStyle/Index
  * @see style
