@@ -12,7 +12,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="s"/>
                         <ws:itemTemplate>
@@ -33,7 +33,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="s"/>
                         <ws:itemTemplate>
@@ -53,7 +53,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
@@ -74,7 +74,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="s"/>
                         <ws:itemTemplate>
@@ -94,7 +94,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
@@ -115,7 +115,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="s"/>
                         <ws:itemTemplate>
@@ -135,7 +135,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
@@ -156,7 +156,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="s"/>
                         <ws:itemTemplate>
@@ -176,7 +176,7 @@
                             keyProperty="id"
                             source="{{_viewSourceImage}}"
                             columns="{{_columnsImage}}"
-                            markedKey="1"
+                            markerVisibility="visible"
                             ladderProperties="{{_ladderProperties}}">
                         <ws:itemPadding top="l"/>
                         <ws:itemTemplate>
@@ -202,7 +202,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -220,7 +220,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -237,7 +237,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="l"/>
                     <ws:itemTemplate>
@@ -255,7 +255,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -272,7 +272,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="l"/>
                     <ws:itemTemplate>
@@ -290,7 +290,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -307,7 +307,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="l"/>
                     <ws:itemTemplate>
@@ -325,7 +325,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -342,7 +342,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="l"/>
                     <ws:itemTemplate>
@@ -360,7 +360,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="s"/>
                     <ws:itemTemplate>
@@ -377,7 +377,7 @@
                 <Controls.grid:View
                         keyProperty="id"
                         source="{{_viewSourceText}}"
-                        markedKey="2"
+                        markerVisibility="visible"
                         columns="{{_columnsText}}">
                     <ws:itemPadding top="l"/>
                     <ws:itemTemplate>
