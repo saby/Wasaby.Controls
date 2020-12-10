@@ -11,7 +11,7 @@ export interface IColumnScrollOptions {
     isEmptyTemplateShown?: boolean;
 
     // ширины прокручиваемых колонок для автоматического подскролла к колонке
-    scrollableColumnsSizes: DOMRect[];
+    scrollableColumnsSizes?: DOMRect[];
     theme?: string;
     backgroundStyle?: string;
 }

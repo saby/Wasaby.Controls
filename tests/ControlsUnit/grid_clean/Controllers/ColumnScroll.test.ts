@@ -5,12 +5,18 @@ import {ColumnScroll} from 'Controls/_grid/resources/ColumnScroll';
 ColumnScroll.prototype._createGuid = () => '12345';
 
 function mockScrollContainer(params: { offsetWidth: number }): HTMLElement {
+    const rect: DOMRect = {
+        left: 12,
+        right: params.offsetWidth
+    };
     return {
         getClientRects: () => [null, null],
         offsetWidth: params.offsetWidth,
         getBoundingClientRect: () => ({
-            left: 12,
-            right: params.offsetWidth
+            ...rect,
+            toJSON(): DOMRect {
+                return rect;
+            }
         })
     } as unknown as HTMLElement;
 }
@@ -21,12 +27,46 @@ function mockStylesContainer(): HTMLStyleElement {
     } as unknown as HTMLStyleElement;
 }
 
-function mockScrollColumn(width: number): HTMLElement {
+function mockStickyCellContainer(): HTMLStyleElement {
     return {
+        offsetWidth: 300,
         getBoundingClientRect: () => ({
-            width
+            left: 52
         })
-    } as unknown as HTMLElement;
+    } as unknown as HTMLStyleElement;
+}
+
+function mockColumnsRects(columnsSizes: number[] | number[][]): DOMRect[] {
+    const sticky = mockStickyCellContainer();
+    let startPosition;
+    const columnsRects: DOMRect[] = [];
+
+    function initStartPosition(): void {
+        startPosition = sticky.offsetWidth + sticky.getBoundingClientRect().left;
+    }
+
+    function collect(row: number[]): void {
+        row.forEach((width) => {
+            columnsRects.push({
+                width,
+                left: startPosition,
+                right: startPosition + width
+            } as DOMRect);
+            startPosition = startPosition + width;
+        });
+    }
+
+    if (Array.isArray(columnsSizes[0])) {
+        columnsSizes.forEach((row) => {
+            initStartPosition();
+            collect(row);
+        });
+    } else {
+        initStartPosition();
+        collect(columnsSizes as number[]);
+    }
+
+    return columnsRects;
 }
 
 function mockContentContainer(params: {
@@ -35,34 +75,22 @@ function mockContentContainer(params: {
     stickyElements?: unknown[],
     stickyColumnsCount?: number,
     hasMultiSelect?: boolean,
-    columnWidths?: number[]
+    scrollPosition?: number
 }): HTMLElement {
+    const left = 12 + params.scrollPosition ? params.scrollPosition : 0;
     return {
         scrollWidth: params.scrollWidth,
         offsetWidth: params.offsetWidth,
-        querySelectorAll: (selector: string) => {
-            if (selector === '.controls-Grid_columnScroll_wrapper' && !!params.stickyElements) {
-                return params.stickyElements;
-            }
-            if (selector === '.controls-Grid__row:first-child .controls-Grid_columnScroll__scrollable' && !!params.columnWidths) {
-                return params.columnWidths.map((width) => mockScrollColumn(width));
-            }
-            return [];
-        },
+        querySelectorAll: (selector: string) => (selector === '.controls-Grid_columnScroll_wrapper' && !!params.stickyElements) ? params.stickyElements : [],
         querySelector: (selector: string) => {
             const lastStickyColumnSelector = `.controls-Grid_columnScroll__fixed:nth-child(${(params.stickyColumnsCount || 1) + (params.hasMultiSelect ? 1 : 0)})`;
             if (selector === lastStickyColumnSelector) {
-                return {
-                    offsetWidth: 300,
-                    getBoundingClientRect: () => ({
-                        left: 52
-                    })
-                };
+                return mockStickyCellContainer();
             }
         },
         getBoundingClientRect: () => ({
-            left: 12,
-            right: params.scrollWidth
+            left,
+            right: left + params.scrollWidth
         })
     } as unknown as HTMLElement;
 }
@@ -74,10 +102,9 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
     beforeEach(() => {
         const cfg = {
             hasMultiSelect: false,
-            stickyColumnsCount: 2,
-            scrollEntireColumn: true
+            stickyColumnsCount: 2
         };
-        columnScroll = new ColumnScroll(cfg);
+        columnScroll = new ColumnScroll({...cfg, scrollableColumnsSizes: mockColumnsRects([100, 150, 51, 51])});
 
         columnScroll.setContainers({
             scrollContainer: mockScrollContainer({
@@ -86,8 +113,7 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
             contentContainer: mockContentContainer({
                 ...cfg,
                 scrollWidth: 782,
-                offsetWidth: 600,
-                columnWidths: [100, 150, 51, 51]
+                offsetWidth: 600
             }),
             stylesContainer: mockStylesContainer()
         });
@@ -146,14 +172,47 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         assert.equal(columnScroll.getScrollPosition(), 0);
     });
 
-    it('should scroll to column hidden edge', () => {
+    it('should scroll to column when not multiHeader', () => {
         columnScroll.updateSizes(() => {
-            columnScroll.setScrollPosition(10);
-            assert.equal(columnScroll.getScrollPosition(), 10);
+            columnScroll.setScrollPosition(8);
+            assert.equal(columnScroll.getScrollPosition(), 8);
 
-            // since contentContainer has static values and no real transform happens in test it always adds +2
+            columnScroll.setContainers({
+                contentContainer: mockContentContainer({
+                    hasMultiSelect: false,
+                    stickyColumnsCount: 2,
+                    scrollWidth: 782,
+                    offsetWidth: 600,
+                    scrollPosition: columnScroll.getScrollPosition()
+                })
+            });
+
             columnScroll.scrollToColumn();
-            assert.equal(columnScroll.getScrollPosition(), 12);
+            assert.equal(columnScroll.getScrollPosition(), 18);
+        }, true);
+    });
+
+    it('should scroll to column when multiHeader', () => {
+        columnScroll.updateSizes(() => {
+            columnScroll.setScrollableColumnsSizes(mockColumnsRects([
+                [250, 102],
+                [100, 150, 51, 51]
+            ]));
+            columnScroll.setScrollPosition(8);
+            assert.equal(columnScroll.getScrollPosition(), 8);
+
+            columnScroll.setContainers({
+                contentContainer: mockContentContainer({
+                    hasMultiSelect: false,
+                    stickyColumnsCount: 2,
+                    scrollWidth: 782,
+                    offsetWidth: 600,
+                    scrollPosition: columnScroll.getScrollPosition()
+                })
+            });
+
+            columnScroll.scrollToColumn();
+            assert.equal(columnScroll.getScrollPosition(), 18);
         }, true);
     });
 
