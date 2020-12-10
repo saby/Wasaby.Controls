@@ -709,6 +709,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    protected _changeValueHandler(event: SyntheticEvent, value: string): Promise<void> {
+      if (this._searchLibraryLoader) {
+         this._searchLibraryLoader.cancel('_suggest/_InputController: Value changes too fast, load cancelled');
+         this._searchLibraryLoader = null;
+      }
       value = value || '';
       this._searchValue = value;
       this._setFilter(this._filter, this._options, this._tabsSelectedKey);
@@ -747,6 +751,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                 this._searchResolverController = new searchLibrary.SearchResolver(
                     this._getSearchResolverOptions(options ?? this._options)
                 );
+                this._searchLibraryLoader = null;
                 return this._searchResolverController;
              })
              .catch((error) => error);
