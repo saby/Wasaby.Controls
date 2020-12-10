@@ -7,7 +7,12 @@ import {tmplNotify} from 'Controls/eventUtils';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
 import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
 import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
-import {shouldAddActionsCell, shouldDrawColumnScroll, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
+import {
+    shouldAddActionsCell,
+    shouldDrawColumnScroll,
+    isInLeftSwipeRange,
+    calculateColumnsSizes
+} from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
 
@@ -180,7 +185,7 @@ var
                 theme: options.theme,
                 backgroundStyle: options.backgroundStyle,
                 isEmptyTemplateShown: options.needShowEmptyTemplate,
-                scrollEntireColumn: options.scrollEntireColumn
+                scrollableColumnsSizes: calculateColumnsSizes(self._children.header || self._children.results)
             });
             const uniqueSelector = self._columnScrollController.getTransformSelector();
             self._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
@@ -247,6 +252,7 @@ var
                     self._columnScrollController.updateSizes((newSizes) => {
                         self._saveColumnScrollSizes(newSizes);
                         self._updateColumnScrollData();
+                        _private.setScrollableColumnsSizes(self);
                     }, true);
                 }
             } else if (dragScrollingChanged && newOptions.dragScrolling) {
@@ -284,12 +290,10 @@ var
          * Скроллит к ближайшему краю колонки если включена опция scrollEntireColumn
          * @param self
          */
-        scrollToColumnEdgeIfNeed(self): void {
-            if (self._options.scrollEntireColumn) {
-                self._columnScrollController.scrollToColumnEdge();
-                self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
-                self._updateColumnScrollData();
-            }
+        scrollToColumn(self): void {
+            self._columnScrollController.scrollToColumn();
+            self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
+            self._updateColumnScrollData();
         },
         applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
             // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
@@ -331,6 +335,10 @@ var
             } else {
                 return false;
             }
+        },
+        setScrollableColumnsSizes(self): void {
+            const sizes = calculateColumnsSizes(self._children.header || self._children.results);
+            self._columnScrollController.setScrollableColumnsSizes(sizes);
         }
     },
     GridView = ListView.extend({
@@ -526,6 +534,7 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
+                        _private.setScrollableColumnsSizes(this);
                     });
                 }
             }
@@ -736,7 +745,12 @@ var
         _columnScrollWheelHandler(e): void {
             if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
-                _private.scrollToColumnEdgeIfNeed(this);
+                if (this._options.scrollEntireColumn) {
+                    _private.scrollToColumn(this);
+                } else {
+                    this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
+                    this._updateColumnScrollData();
+                }
             }
         },
         _updateColumnScrollData(): void {
@@ -786,6 +800,7 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
+                        _private.setScrollableColumnsSizes(this);
                     });
                 }
             }
@@ -848,7 +863,9 @@ var
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
-                _private.scrollToColumnEdgeIfNeed(this);
+                if (this._options.scrollEntireColumn) {
+                    _private.scrollToColumn(this);
+                }
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -877,11 +894,15 @@ var
             }
         },
         _onDragScrollOverlayMouseUp(e) {
-            _private.scrollToColumnEdgeIfNeed(this);
+            if (this._options.scrollEntireColumn) {
+                _private.scrollToColumn(this);
+            }
             this._dragScrollController?.onOverlayMouseUp(e);
         },
         _onDragScrollOverlayTouchEnd(e) {
-            _private.scrollToColumnEdgeIfNeed(this);
+            if (this._options.scrollEntireColumn) {
+                _private.scrollToColumn(this);
+            }
             this._dragScrollController?.onOverlayTouchEnd(e);
             this._leftSwipeCanBeStarted = false;
         },

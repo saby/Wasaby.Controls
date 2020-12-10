@@ -152,7 +152,7 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
             assert.equal(columnScroll.getScrollPosition(), 10);
 
             // since contentContainer has static values and no real transform happens in test it always adds +2
-            columnScroll.scrollToColumnEdge();
+            columnScroll.scrollToColumn();
             assert.equal(columnScroll.getScrollPosition(), 12);
         }, true);
     });

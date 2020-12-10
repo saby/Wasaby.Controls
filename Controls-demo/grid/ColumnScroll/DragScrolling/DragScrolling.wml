@@ -21,6 +21,7 @@
                                 rowSeparatorSize="s"
                                 itemsReadyCallback="{{_itemsReadyCallback}}"
                                 itemsDragNDrop="{{ _itemsDragNDrop }}"
+                                scrollEntireColumn="{{true}}"
                                 on:dragStart="_dragStart()"
                                 on:dragEnd="_dragEnd()"
                                 columnScroll="{{true}}"

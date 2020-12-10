@@ -48,6 +48,25 @@ export function isInLeftSwipeRange(fixedColumnsWidth: number, scrollWidth: numbe
     return clientX >= leftSwipeRange.startX && clientX <= leftSwipeRange.stopX;
 }
 
+/**
+ * Набирает текущие параметры колонок внутри header/results
+ * @private
+ * @param container header или footer таблицы
+ */
+export function calculateColumnsSizes(container: HTMLDivElement): DOMRect[] {
+    const scrollableColumnsSizes = [];
+    const htmlColumns: NodeList = container.querySelectorAll(`.${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`);
+    if (htmlColumns) {
+        htmlColumns.forEach((value) => {
+            const columnRect = (value as HTMLElement).getBoundingClientRect();
+            if (columnRect.width) {
+                scrollableColumnsSizes.push(columnRect);
+            }
+        });
+    }
+    return scrollableColumnsSizes;
+}
+
 function getLeftSwipeRange(fixedColumnsWidth: number, scrollWidth: number): { startX: number; stopX: number } {
     const swipeWidth = Math.floor(scrollWidth * PERCENT_OF_SCROLLABLE_AREA_FOR_SWIPE);
 
