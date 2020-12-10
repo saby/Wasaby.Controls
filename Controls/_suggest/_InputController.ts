@@ -286,10 +286,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _setItems(recordSet: RecordSet): void {
-      if (this._suggestDirection === 'up') {
-         this._sourceController.setItems(this._reverseData(recordSet));
-      } else {
-         this._sourceController.setItems(recordSet);
+      if (this._sourceController) {
+         if (this._suggestDirection === 'up') {
+            this._sourceController.setItems(this._reverseData(recordSet));
+         } else {
+            this._sourceController.setItems(recordSet);
+         }
       }
    }
 
@@ -776,7 +778,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          return (await this._getSearchController()).search(value).then((recordSet) => {
             this._loadEnd(recordSet);
 
-            if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+            if (recordSet instanceof RecordSet &&
+               this._shouldShowSuggest(recordSet) &&
+               (this._inputActive || this._tabsSelectedKey !== null)) {
                this._setItems(recordSet);
                if (this._options.dataLoadCallback) {
                   this._options.dataLoadCallback(recordSet);
