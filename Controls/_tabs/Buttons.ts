@@ -293,10 +293,11 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
                      * https://online.sbis.ru/opendoc.html?guid=225bec8b-71f5-462d-b566-0ebda961bd95
                      */
                     if (
-                        item.hasOwnProperty(key) ||
-                        isTemplate(item[key]) ||
-                        isTemplateArray(item[key]) ||
-                        isTemplateObject(item[key])
+                        item.hasOwnProperty(key) && (
+                            isTemplate(item[key]) ||
+                            isTemplateArray(item[key]) ||
+                            isTemplateObject(item[key])
+                        )
                     ) {
                         return true;
                     }

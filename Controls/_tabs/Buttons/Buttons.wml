@@ -12,7 +12,7 @@
                     <ws:partial template="{{ _getTemplate(_options.itemLeftTemplate, item, _options.leftTemplateProperty) }}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
                                 index="{{index}}"
-                                item="{{_items.at(0)}}" />
+                                item="{{_items.at(index)}}" />
                 </ws:if>
                 <ws:partial
                         attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}}
@@ -26,12 +26,12 @@
                         borderThickness="{{_options.borderThickness}}"
                         keyProperty="{{_options.keyProperty}}"
                         index="{{index}}"
-                        item="{{_items.at(0)}}"/>
+                        item="{{_items.at(index)}}"/>
                 <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
                     <ws:partial template="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
                                 index="{{index}}"
-                                item="{{_items.at(0)}}" />
+                                item="{{_items.at(index)}}" />
                 </ws:if>
                 <ws:if data="{{item[contentTab] && _options.separatorVisible}}">
                     <div class="controls-Tabs__itemSeparator
