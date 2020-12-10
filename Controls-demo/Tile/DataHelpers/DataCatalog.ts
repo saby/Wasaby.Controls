@@ -1,10 +1,7 @@
 import * as explorerImages from 'Controls-demo/Explorer/ExplorerImagesLayout';
 import { IItemAction } from 'Controls/itemActions';
 import {yellow} from 'color-name';
-
-import * as getResourceUrl from 'Core/helpers/getResourceUrl';
-
-const baseURL = '/Controls-demo/Tile/DataHelpers/images/';
+import Images from 'Controls-demo/Tile/DataHelpers/Images';
 
 interface IData {
    id: number;
@@ -144,7 +141,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Гепард',
-        image: getResourceUrl(`${baseURL}Cheetah.jpg`),
+        image: Images.CHEETAH,
         imageWidth: 198,
         imageHeight: 200,
         titleStyle: 'light',
@@ -158,7 +155,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Мост',
-        image: getResourceUrl(`${baseURL}bridge.jpg`),
+        image: Images.BRIDGE,
         imageWidth: 1200,
         imageHeight: 900,
         titleStyle: 'light',
@@ -173,7 +170,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Машина',
-        image: getResourceUrl(`${baseURL}car.jpg`),
+        image: Images.CAR,
         imageWidth: 640,
         imageHeight: 480,
         titleStyle: 'light',
@@ -188,7 +185,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Лев с короной',
-        image: getResourceUrl(`${baseURL}lion.jpg`),
+        image: Images.LION,
         imageWidth: 201,
         imageHeight: 251,
         titleStyle: 'light',
@@ -203,7 +200,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Лев стоит',
-        image: getResourceUrl(`${baseURL}lion2.png`),
+        image: Images.LION_2,
         imageWidth: 184,
         imageHeight: 183,
         titleStyle: 'light',
@@ -218,7 +215,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Просто лев',
-        image: getResourceUrl(`${baseURL}lion3.jpg`),
+        image: Images.LION_3,
         imageWidth: 300,
         imageHeight: 168,
         titleStyle: 'light',
@@ -233,7 +230,7 @@ export const Gadgets = {
         parent: null,
         type: null,
         title: 'Медведь',
-        image: getResourceUrl(`${baseURL}medved.jpg`),
+        image: Images.MEDVED,
         imageWidth: 300,
         imageHeight: 168,
         titleStyle: 'light',
