@@ -17,5 +17,4 @@ export {default as HeadingPath} from './_breadcrumbs/HeadingPath';
 export {default as MultilinePath} from './_breadcrumbs/MultilinePath';
 export {default as HeadingPathBack} from './_breadcrumbs/HeadingPath/Back';
 export {default as HeadingPathCommon} from './_breadcrumbs/HeadingPath/Common';
-export {default as IBreadCrumbsOptions} from './_breadcrumbs/interface/IBreadCrumbsOptions';
 export {ItemTemplate};
