@@ -152,10 +152,7 @@ describe('Controls/_multiselection/Controller', () => {
       assert.isTrue(model.getItemBySourceKey(2).isSelected());
 
       // проверяем что не проставим селекшин для новых элементов, если уперлись в лимит
-      controller.setLimit(1);
-      addedItems = [model.getItemBySourceKey(3), model.getItemBySourceKey(4)];
-      addedItems[0].setSelected(false);
-      addedItems[1].setSelected(false);
+      controller.setLimit(3);
       model.setItems(new RecordSet({
          rawData: [
             { id: 1 },
@@ -165,10 +162,13 @@ describe('Controls/_multiselection/Controller', () => {
          ],
          keyProperty: 'id'
       }), {});
-      controller.onCollectionAdd(addedItems);
+      model.getItemBySourceKey(1).setSelected(true);
+      model.getItemBySourceKey(2).setSelected(true);
 
-      assert.isFalse(addedItems[0].isSelected());
-      assert.isFalse(addedItems[1].isSelected());
+      controller.onCollectionAdd([model.getItemBySourceKey(3), model.getItemBySourceKey(4)]);
+
+      assert.isTrue(model.getItemBySourceKey(3).isSelected());
+      assert.isFalse(model.getItemBySourceKey(4).isSelected());
    });
 
    describe('onCollectionRemove', () => {
