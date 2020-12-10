@@ -3,15 +3,15 @@ import * as Template from "wml!Controls-demo/Explorer_new/Search/Search";
 import {Gadgets} from '../DataHelpers/DataCatalog';
 import {Memory} from 'Types/source';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
-import { IColumn } from 'Controls/grid';
+import {IColumn} from 'Controls/grid';
 import {TRoot} from 'Controls-demo/types';
-import {IItemAction} from '../../../Controls/_itemActions/interface/IItemAction';
+import {IItemAction} from 'Controls/_itemActions/interface/IItemAction';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: MemorySource;
     protected _columns: IColumn[] = Gadgets.getSearchColumns();
-    protected _root: TRoot = 1;
+    protected _root: TRoot = null;
     protected _startingWith: 'root' | 'current' = 'root';
     protected _startingWithBtnCaption: 'root' | 'current' = 'current';
     protected _startingWithSource: Memory = null;
@@ -49,6 +49,10 @@ export default class extends Control {
                 }
             ]
         });
+    }
+
+    protected _afterMount(): void {
+        this._root = 1;
     }
 
     protected _onToggle(): void {
