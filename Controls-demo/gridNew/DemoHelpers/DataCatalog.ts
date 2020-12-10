@@ -607,7 +607,7 @@ const getCountriesStats = () => {
                 title: 'Страна'
             },
             {
-                title: 'Столица строны из рейтинга',
+                title: 'Столица страны из рейтинга',
                 textOverflow
             },
             {
