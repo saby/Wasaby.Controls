@@ -9,7 +9,6 @@ import { IEntryPathItem, ITreeSelectionStrategyOptions, TKeys } from '../interfa
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
 import { Tree, TreeItem } from 'Controls/display';
-import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 
 const LEAF = null;
 
@@ -549,8 +548,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let childNodeSelectedCount;
 
          children.each((childItem) => {
-            //
-            if (childItem instanceof BreadcrumbsItem && this._isAllSelectedInRoot(selection)) {
+            if (childItem && childItem['[Controls/_display/BreadcrumbsItem]'] && this._isAllSelectedInRoot(selection)) {
                selectedChildrenCount = null;
             }
 
@@ -592,10 +590,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     * @param item
     * @private
     */
-   private _isNode(item: TreeItem<Model>|BreadcrumbsItem<Model>): boolean {
+   private _isNode(item: TreeItem<Model>): boolean {
       if (item instanceof TreeItem) {
          return item.isNode() !== LEAF;
-      } else if (item instanceof BreadcrumbsItem) {
+      } else if (item && item['[Controls/_display/BreadcrumbsItem]']) {
          return true;
       }
       return false;
