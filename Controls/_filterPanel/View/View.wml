@@ -15,7 +15,6 @@
               source="{{_options.source}}"
               collapsedGroups="{{_collapsedGroups}}"
               on:editingObjectChanged="_editingObjectChanged()"
-              on:itemClick="_itemClick()"
               on:groupClick="_groupClick()"
               attr:class="controls-FilterViewPanel__propertyGrid">
          <ws:groupTemplate>
