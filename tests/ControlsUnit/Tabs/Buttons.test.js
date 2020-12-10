@@ -120,7 +120,8 @@ define([
             },
             item2 = {
                karambola: '10',
-               _order: '2'
+               _order: '2',
+               type: 'photo'
             },
             item3 = {
                karambola: '10',
@@ -149,7 +150,8 @@ define([
                ' controls-Tabs__item_inlineHeight-s_theme-default' +
                ' controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
                ' controls-Tabs__item_default controls-Tabs__item_default_theme_default' +
-               ' controls-Tabs__item_notShrink',
+               ' controls-Tabs__item_type_photo controls-Tabs__item_type_photo_theme_default ' +
+               'controls-Tabs__item_notShrink',
             expected3 = 'controls-Tabs__item controls-Tabs__item_theme_default ' +
                'controls-Tabs__item_inlineHeight-s_theme-default ' +
                'controls-Tabs__item_align_right controls-Tabs__item_align_right_theme_default' +
