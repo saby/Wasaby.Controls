@@ -286,10 +286,12 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _setItems(recordSet: RecordSet): void {
-      if (this._suggestDirection === 'up') {
-         this._sourceController.setItems(this._reverseData(recordSet));
-      } else {
-         this._sourceController.setItems(recordSet);
+      if (this._sourceController) {
+         if (this._suggestDirection === 'up') {
+            this._sourceController.setItems(this._reverseData(recordSet));
+         } else {
+            this._sourceController.setItems(recordSet);
+         }
       }
    }
 
@@ -581,7 +583,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._setFilter(options.filter, options);
 
       if (this._searchValue && options.suggestState) {
-         this._resolveSearch(this._searchValue, options);
+         this._resolveSearch(options);
       }
    }
 
@@ -715,18 +717,18 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       /* preload suggest dependencies on value changed */
       this._loadDependencies();
       if (this._options.suggestTemplate) {
-         return this._resolveSearch(value);
+         return this._resolveSearch();
       }
       return Promise.resolve();
    }
 
-   private _resolveSearch(value: string, options?: IInputControllerOptions): Promise<void> {
+   private _resolveSearch(options?: IInputControllerOptions): Promise<void> {
       if (this._searchResolverController) {
-         this._searchResolverController.resolve(value);
+         this._searchResolverController.resolve(this._searchValue);
          return Promise.resolve();
       } else {
          return this._getSearchResolver(options)
-             .then((searchResolver) => searchResolver.resolve(value))
+             .then((searchResolver) => searchResolver.resolve(this._searchValue))
              .catch((error) => error);
       }
    }
