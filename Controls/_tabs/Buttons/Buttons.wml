@@ -33,7 +33,7 @@
                                 index="{{index}}"
                                 item="{{_items.at(index)}}" />
                 </ws:if>
-                <ws:if data="{{item[contentTab] && _options.separatorVisible}}">
+                <ws:if data="{{item['contentTab'] && _options.separatorVisible}}">
                     <div class="controls-Tabs__itemSeparator
                                 controls-Tabs__itemSeparator_theme_{{_options.theme}}
                                 controls-Tabs__itemSeparator_align_left"></div>
