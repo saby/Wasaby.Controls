@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {RecordSet} from 'Types/collection';
 import {data} from '../tabsItems';
 import template = require('wml!Controls-demo/Tabs/Buttons/SeparatorVisible/SeparatorVisible');
-import {StackOpener} from "Controls/popup";
 
 export default class TabButtonsDemo extends Control {
     protected _template: TemplateFunction = template;
@@ -15,14 +14,6 @@ export default class TabButtonsDemo extends Control {
         this._items1 = new RecordSet({
             keyProperty: 'id',
             rawData: data.getDefaultItems()
-        });
-    }
-
-    protected _openTabsPanel(): void {
-        return new StackOpener().open({
-            template: 'Controls-demo/Tabs/Buttons/Panel',
-            opener: this,
-            width: 900
         });
     }
 

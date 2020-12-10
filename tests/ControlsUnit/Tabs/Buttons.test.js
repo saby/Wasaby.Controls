@@ -113,33 +113,25 @@ define([
       });
       it('prepareItemClass', function() {
          var
-            item = new entity.Record({
-               rawData: {
-                  align: 'left',
-                  karambola: '15',
-                  _order: '144'
-               }
-            }),
-            item2 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2'
-               }
-            }),
-            item3 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  isMainTab: true
-               }
-            }),
-            item4 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  isMainTab: false
-               }
-            }),
+            item = {
+               align: 'left',
+               karambola: '15',
+               _order: '144'
+            },
+            item2 = {
+               karambola: '10',
+               _order: '2'
+            },
+            item3 = {
+               karambola: '10',
+               _order: '2',
+               isMainTab: true
+            },
+            item4 = {
+               karambola: '10',
+               _order: '2',
+               isMainTab: false
+            },
             options = {
                style: 'additional',
                inlineHeight: 's',
@@ -181,20 +173,16 @@ define([
       });
       it('prepareItemSelected', function() {
          var
-            item = new entity.Record({
-               rawData: {
-                  align: 'left',
-                  karambola: '15',
-                  _order: '144'
-               }
-            }),
-            item2 = new entity.Record({
-               rawData: {
-                  karambola: '10',
-                  _order: '2',
-                  type: 'photo'
-               }
-            }),
+            item = {
+               karambola: '15',
+               _order: '2',
+               type: 'photo'
+            },
+            item2 = {
+               karambola: '10',
+               _order: '2',
+               type: 'photo'
+            },
             options = {
                style: 'additional',
                selectedKey: '15',
@@ -224,6 +212,7 @@ define([
          tabs._beforeMount(options, null, receivedState);
          assert.equal(tabs._items, receivedState.items, 'items uncorrect in beforeMount with receivedState');
          assert.equal(tabs._itemsOrder, receivedState.itemsOrder, 'items uncorrect in beforeMount with receivedState');
+         assert.equal(tabs._itemsArray, receivedState.itemsArray, 'items uncorrect in beforeMount with receivedState');
          tabs.destroy();
       });
       it('_beforeMount without received state', function() {
