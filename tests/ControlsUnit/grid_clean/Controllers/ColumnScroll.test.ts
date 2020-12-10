@@ -75,7 +75,7 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         const cfg = {
             hasMultiSelect: false,
             stickyColumnsCount: 2,
-            columnWidths: [100, 150, 51, 51]
+            scrollEntireColumn: true
         };
         columnScroll = new ColumnScroll(cfg);
 
@@ -86,7 +86,8 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
             contentContainer: mockContentContainer({
                 ...cfg,
                 scrollWidth: 782,
-                offsetWidth: 600
+                offsetWidth: 600,
+                columnWidths: [100, 150, 51, 51]
             }),
             stylesContainer: mockStylesContainer()
         });

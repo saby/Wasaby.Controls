@@ -179,7 +179,8 @@ var
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
                 theme: options.theme,
                 backgroundStyle: options.backgroundStyle,
-                isEmptyTemplateShown: options.needShowEmptyTemplate
+                isEmptyTemplateShown: options.needShowEmptyTemplate,
+                scrollEntireColumn: options.scrollEntireColumn
             });
             const uniqueSelector = self._columnScrollController.getTransformSelector();
             self._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
@@ -280,11 +281,11 @@ var
             }
         },
         /**
-         * Скроллит к ближайшему краю колонки если включена опция scrollByColumn
+         * Скроллит к ближайшему краю колонки если включена опция scrollEntireColumn
          * @param self
          */
         scrollToColumnEdgeIfNeed(self): void {
-            if (self._options.scrollByColumn) {
+            if (self._options.scrollEntireColumn) {
                 self._columnScrollController.scrollToColumnEdge();
                 self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
                 self._updateColumnScrollData();

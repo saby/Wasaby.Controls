@@ -5,7 +5,7 @@
                 source="{{_viewSource}}"
                 columns="{{_columns}}"
                 columnScroll="{{true}}"
-                scrollByColumn="{{true}}"
+                scrollEntireColumn="{{true}}"
                 backgroundStyle="default"
                 header="{{_header}}"
                 stickyColumnsCount="{{2}}"/>

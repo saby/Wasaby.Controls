@@ -9,7 +9,7 @@ export interface IColumnScrollOptions {
     hasMultiSelect: boolean;
     needBottomPadding?: boolean;
     isEmptyTemplateShown?: boolean;
-
+    scrollEntireColumn?: boolean;
     theme?: string;
     backgroundStyle?: string;
 }
@@ -236,9 +236,11 @@ export class ColumnScroll {
         this._scrollableColumnsWidths = [];
         const columnsCSSSelector = `.controls-Grid__row:first-child .${JS_SELECTORS.SCROLLABLE_ELEMENT}`;
         const htmlColumns: NodeList = this._contentContainer.querySelectorAll(columnsCSSSelector);
-        htmlColumns.forEach((value) => {
-            this._scrollableColumnsWidths.push((value as HTMLElement).getBoundingClientRect());
-        });
+        if (htmlColumns) {
+            htmlColumns.forEach((value) => {
+                this._scrollableColumnsWidths.push((value as HTMLElement).getBoundingClientRect());
+            });
+        }
     }
 
     static getShadowClasses(params: {
@@ -335,7 +337,10 @@ export class ColumnScroll {
         this._contentSizeForHScroll = isFullGridSupport ? this._contentSize - this._fixedColumnsWidth : this._contentSize;
         this._drawTransform(this._scrollPosition, isFullGridSupport);
         this._toggleStickyElementsForScrollCalculation(true);
-        this._updateScrollableColumnsSizes();
+
+        if (this._options.scrollEntireColumn) {
+            this._updateScrollableColumnsSizes();
+        }
 
         if (afterUpdateCallback) {
             afterUpdateCallback({
