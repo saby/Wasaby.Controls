@@ -2237,7 +2237,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.appendStrategy(this._dragStrategy, {
             draggedItemsKeys,
             draggableItem,
-            avatarIndex: avatarStartIndex
+            avatarIndex: avatarStartIndex,
+            filterMap: this._filterMap
         });
         this._reIndex();
 

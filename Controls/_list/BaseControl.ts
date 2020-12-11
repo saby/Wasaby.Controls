@@ -6078,8 +6078,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _processItemMouseEnterWithDragNDrop(itemData): void {
         let dragPosition;
-        if (this._dndListController.isDragging()) {
-            const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        const targetIsNode = targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
+        if (this._dndListController.isDragging() && !targetIsNode) {
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {
                 const changeDragTarget = this._notify('changeDragTarget', [this._dndListController.getDragEntity(), dragPosition.dispItem.getContents(), dragPosition.position]);

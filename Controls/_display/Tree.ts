@@ -21,6 +21,8 @@ import { TemplateFunction } from 'UI/Base';
 import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
+import { IDragPosition } from './interface/IDragPosition';
+import DragStrategy from 'Controls/_display/itemsStrategy/Drag';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -236,6 +238,17 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$footerVisibilityCallback: (nodeContents: S) => boolean;
 
+    /**
+     * Текущая позиция перетаскиваемого элемента
+     * @private
+     */
+    private _currentDragPosition: IDragPosition<T>;
+    /**
+     * Предыдущая позиция перетаскиваемого элемента
+     * @private
+     */
+    private _previousDragPosition: IDragPosition<T>;
+
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
 
@@ -311,6 +324,58 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
     }
 
     // endregion Expander
+
+    // region Drag-n-drop
+
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number | string>): void {
+        if (draggableItem.isExpanded()) {
+            this.toggleExpanded(draggableItem);
+        }
+        super.setDraggedItems(draggableItem, draggedItemsKeys);
+    }
+
+    setDragPosition(position: IDragPosition<T>): void {
+        if (position.position === 'on') {
+            const dragStrategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+            if (dragStrategy && dragStrategy.avatarItem !== position.dispItem) {
+                position.dispItem.setDragTargetNode(true);
+                this._nextVersion();
+            }
+            return;
+        }
+
+        const newPosition = {...position};
+        if (newPosition.dispItem.isNode()) {
+            if (newPosition.position === 'before') {
+                newPosition.index--;
+            }
+        }
+
+        if (this._previousDragPosition !== this._currentDragPosition) {
+            if (this._previousDragPosition) {
+                this._previousDragPosition.dispItem.setDragTargetNode(false);
+            }
+            this._previousDragPosition = this._currentDragPosition;
+        }
+        this._currentDragPosition = newPosition;
+
+        super.setDragPosition(newPosition);
+    }
+
+    getPrevDragPosition(): IDragPosition<T> {
+        return this._previousDragPosition;
+    }
+
+    resetDraggedItems(): void {
+        if (this._currentDragPosition) {
+            this._currentDragPosition.dispItem.setDragTargetNode(false);
+        }
+        super.resetDraggedItems();
+        this._currentDragPosition = null;
+        this._previousDragPosition = null;
+    }
+
+    // endregion Drag-n-drop
 
     getNodeFooterTemplate(): TemplateFunction {
         return this._$nodeFooterTemplate;
@@ -593,7 +658,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         this._reCountNodeFooters();
     }
 
-    toggleExpanded(item: TreeItem<T>): void {
+    toggleExpanded(item: T): void {
         const newExpandedState = !item.isExpanded();
         item.setExpanded(newExpandedState);
 

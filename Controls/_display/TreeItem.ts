@@ -38,7 +38,6 @@ export default class TreeItem<T> extends mixin<
     ExpandableMixin
 ) {
     protected _$owner: Tree<T>;
-
     /**
      * Родительский узел
      */
@@ -59,6 +58,12 @@ export default class TreeItem<T> extends mixin<
      * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
      */
     protected _$childrenProperty: string;
+
+    /**
+     * Признак, что узел является целью при перетаскивании
+     * @private
+     */
+    private _isDragTargetNode: boolean = false;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -161,6 +166,24 @@ export default class TreeItem<T> extends mixin<
      */
     setNode(node: boolean|null): void {
         this._$node = node;
+    }
+
+    /**
+     * Устанавливаем признак, что узел является целью при перетаскивании
+     * @param isTarget Является ли узел целью при перетаскивании
+     */
+    setDragTargetNode(isTarget: boolean): void {
+        if (this._isDragTargetNode !== isTarget) {
+            this._isDragTargetNode = isTarget;
+            this._nextVersion();
+        }
+    }
+
+    /**
+     * Возвращает признак, что узел является целью при перетаскивании
+     */
+    isDragTargetNode(): boolean {
+        return this._isDragTargetNode;
     }
 
     /**

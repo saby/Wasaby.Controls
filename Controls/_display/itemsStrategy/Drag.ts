@@ -13,10 +13,12 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> extends IItemsS
     draggedItemsKeys: TKey[];
     draggableItem: T;
     avatarIndex: number;
+    filterMap: boolean[];
 }
 
 interface ISortOptions {
     avatarIndex: number;
+    filterMap: boolean[];
 }
 
 export default class Drag<S extends Model, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
@@ -133,18 +135,21 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
     protected _createItemsOrder(): number[] {
         const items = this._getItems();
         return Drag.sortItems<S, T>(items, {
-            avatarIndex: this._options.avatarIndex
+            avatarIndex: this._options.avatarIndex,
+            filterMap: this._options.filterMap
         });
     }
 
     protected _createItems(): T[] {
-        const filteredItems = this.source.items.filter((item) => {
-            if (item['[Controls/_display/GroupItem]']) {
+        const items = this.source.items.filter((it, index) => this._options.filterMap[index]);
+        const filteredItems = items.filter((item) => {
+            if (!item.DraggableItem) {
                 return true;
             }
             const key = item.getContents().getKey();
             return !this._options.draggedItemsKeys.includes(key);
         });
+
         if (!this._avatarItem) {
             this._avatarItem = this._createAvatarItem();
         }

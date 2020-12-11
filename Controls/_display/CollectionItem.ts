@@ -20,6 +20,7 @@ import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from 
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
+import IDraggableItem from 'Controls/_display/interface/IDraggableItem';
 
 export interface IOptions<T> {
     contents?: T;
@@ -72,13 +73,14 @@ export default class CollectionItem<T> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable, IDraggableItem {
 
     // region IInstantiable
 
     readonly '[Types/_entity/IInstantiable]': boolean;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
+    readonly DraggableItem: boolean = true;
 
     getInstanceId: () => string;
 
