@@ -76,7 +76,15 @@ export default class TreeController extends FlatController {
          }
          if (position === 'after' && targetItem.isExpanded() && targetItem.getChildren().getCount()) {
             const firstChild = targetItem.getChildren().at(0);
-            dragPosition = this.calculateDragPosition(firstChild, 'before');
+            if (firstChild === this._draggableItem) {
+               dragPosition = {
+                  position: 'before',
+                  index: this._startIndex,
+                  dispItem: firstChild
+               };
+            } else {
+               dragPosition = this.calculateDragPosition(firstChild, 'before');
+            }
          } else {
             dragPosition = this.calculateDragPosition(targetItem, position);
          }

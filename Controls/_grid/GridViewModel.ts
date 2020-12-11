@@ -865,6 +865,7 @@ var
         _setHeader: function(columns) {
             this._header = columns;
             if (!this.isDrawHeaderWithEmptyList()) {
+                this._headerModel = null;
                 return;
             } else {
                 this._createHeaderModel();
@@ -909,6 +910,9 @@ var
         },
 
         getHeaderModel(): IHeaderModel {
+            if (this.isDrawHeaderWithEmptyList() && !this._headerModel && this._header && this._header.length) {
+                this._createHeaderModel();
+            }
             return this._headerModel;
         },
 
@@ -1921,6 +1925,7 @@ var
         },
 
         _setFooter(footerColumns): void {
+            this._footerColumns = footerColumns;
             const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
             const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
 
@@ -2278,12 +2283,22 @@ var
 
         setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
             this._model.setDraggedItems(draggableItem, draggedItemsKeys);
+            // Если есть прилипающая колонка, то нужно пересчитать футер,
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
+            if (_private.hasStickyColumn(this) && this._footerColumns) {
+                this._setFooter(this._footerColumns);
+            }
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
+            // Если есть прилипающая колонка, то нужно пересчитать футер,
+            // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
+            if (_private.hasStickyColumn(this) && this._footerColumns) {
+                this._setFooter(this._footerColumns);
+            }
         },
 
         setDragTargetPosition: function(position) {

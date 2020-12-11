@@ -208,7 +208,7 @@ export default class SearchControllerClass {
             if (!this._options.deepReload) {
                 this._setDeepReload(true);
             }
-        } else {
+        } else if (!(this._options.task1180732222 && !this._options.hasOwnProperty('root'))) {
             this._setRoot(root);
         }
         if (root !== dataRoot) {

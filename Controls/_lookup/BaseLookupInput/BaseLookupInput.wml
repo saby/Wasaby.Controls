@@ -26,6 +26,7 @@
             layerName="Controls/suggestPopup:__PopupLayer"
             value="{{_getInputValue(_options)}}"
             validationStatus="{{_options.validationStatus}}"
+            task1180694429="{{_options.task1180694429}}"
             attr:class="controls-Lookup__suggest">
         <Controls._lookup.BaseLookupView.InputRender
                 name="inputRender"
@@ -51,6 +52,7 @@
                 maxLength="{{_options.maxLength}}"
                 value="{{_getInputValue(_options)}}"
                 tagStyle="{{_options.tagStyle}}"
+                contrastBackground="{{_options.contrastBackground}}"
                 placeholder="{{_getPlaceholder(_options)}}"
                 on:valueChanged="_changeValueHandler()"
                 on:inputCompleted="_notifyHandler('inputCompleted')"

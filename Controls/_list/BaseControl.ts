@@ -3287,7 +3287,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         })).then((res) => {
             const editingConfig = this._getEditingConfig(newOptions);
-            return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
+            if (editingConfig.item) {
+                if (newOptions.task1180668135) {
+                    this._createEditInPlaceController(newOptions);
+                }
+                return this._startInitialEditing(editingConfig);
+            } else {
+                return res;
+            }
         }).then((res) => {
             const needInitModelState =
                 this._listViewModel &&
@@ -3516,7 +3523,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
-        if (this._viewportSize < this._viewSize) {
+        if (this._viewportSize >= this._viewSize) {
             this._pagingVisible = false;
         }
         if (this._pagingVisible && this._scrollPagingCtr) {
@@ -4786,12 +4793,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._editInPlaceController = this._createEditInPlaceController();
+            this._editInPlaceController = this._createEditInPlaceController(this._options);
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(): EditInPlaceController {
+    _createEditInPlaceController(options = {}): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
         // При создании редактирования по мсесту до маунта, регистрация в formController
@@ -4802,6 +4809,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return new EditInPlaceController({
+            task1180668135: options.task1180668135,
+
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
@@ -4874,7 +4883,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.updateItemActions(this, this._options, item);
     },
 
-    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
+    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
+        if (this._options.task1180668135 && force) {
+            this._notify('beforeEndEdit', [item, willSave, isAdd]);
+            return;
+        }
         return Promise.resolve().then(() => {
             if (willSave) {
                 // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
