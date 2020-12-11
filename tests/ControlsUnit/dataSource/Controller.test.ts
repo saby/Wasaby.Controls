@@ -232,6 +232,28 @@ describe('Controls/dataSource:SourceController', () => {
         });
     });
 
+    describe('cancelLoading', () => {
+        it('query is canceled after cancelLoading',   () => {
+            const controller = getController();
+
+            controller.load();
+            ok(controller.isLoading());
+
+            controller.cancelLoading();
+            ok(!controller.isLoading());
+        });
+
+        it('query is canceled async', async () => {
+            const controller = getController();
+            const loadPromise = controller.load();
+
+            controller._loadPromise.cancel();
+            await loadPromise.catch(() => {});
+
+            ok(controller._loadPromise);
+        });
+    });
+
     describe('updateOptions', () => {
         it('updateOptions with root',  async () => {
             const controller = getControllerWithHierarchy();

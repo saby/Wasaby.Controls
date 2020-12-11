@@ -376,7 +376,9 @@ export default class Controller {
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    this._loadPromise = null;
+                    if (!error.isCanceled && !error.canceled) {
+                        this._loadPromise = null;
+                    }
                     return error;
                 });
 
