@@ -332,20 +332,6 @@
 /**
  * @name Controls/_tile/interface/ITile#actionMenuViewMode
  * @cfg {ActionMenuViewMode} Вид отображения меню опций записи.
- * @example
- * <pre class="brush: html">
- *    <Controls.tile:View source="{{_viewSource}}"
- *                   keyProperty="id"
- *                   actionMenuViewMode='preview'
- *                   nodeProperty="Раздел@"
- *                   tileMode="static">
- *       <ws:itemTemplate>
- *          <ws:partial
- *             template='Controls/tile:PreviewTemplate'
- *             scope={{itemTemplate}}/>
- *       </ws:itemTemplate>
- *    </Controls.tile:View>
- * </pre>
  * @demo Controls-demo/Tile/DifferentItemTemplates/PreviewTemplate/Index
  */
 
@@ -386,7 +372,7 @@
  */
 
 /**
- * @name Controls/_tile/interface/ITile#ImageFit.wml
+ * @name Controls/_tile/interface/ITile#imageFit
  * @cfg {ImageFit} Режим отображения изображения в плитке
  * @see imageUrlResolver
  * @see imageProperty
