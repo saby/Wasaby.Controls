@@ -40,7 +40,7 @@
                         <ws:partial
                               attr:class="controls-MonthList__template"
                               template="{{_getTemplate(itemTemplate.itemData.item)}}"
-                              date="{{_idToDate(itemTemplate.itemData.item.id)}}"
+                              date="{{itemTemplate.itemData.item.date}}"
                               extData="{{ _extData.getData(itemTemplate.itemData.item.id) }}"
                               startValue="{{itemTemplate.itemData.item.startValue}}"
                               endValue="{{itemTemplate.itemData.item.endValue}}"
