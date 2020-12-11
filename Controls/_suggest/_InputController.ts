@@ -180,10 +180,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       }
       this._searchResult = null;
 
-      // Под опцией до 21.1000
-      if (this._options.task1180694429) {
-         this._tabsSelectedKey = null;
-      }
+      this._tabsSelectedKey = null;
       // when closing popup we reset the cache with recent keys
       this._historyLoad = null;
       this._historyKeys = null;
@@ -817,7 +814,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    private _getSearchResolverOptions(options: IInputControllerOptions): ISearchResolverOptions {
       return {
-         delayTime: options.searchDelay,
+         searchDelay: options.searchDelay,
          minSearchLength: options.minSearchLength,
          searchCallback: (validatedValue: string) => this._resolveLoad(validatedValue),
          searchResetCallback: this._searchResetCallback.bind(this)

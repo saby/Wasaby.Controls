@@ -14,7 +14,7 @@ import {INavigationOptionValue,
         ISourceOptions,
         IPromiseSelectableOptions,
         INavigationOptions} from 'Controls/interface';
-import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
+import {TNavigationPagingMode} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';

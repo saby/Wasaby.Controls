@@ -399,7 +399,6 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          });
 
          const strategy = new TreeSelectionStrategy({
-            nodesSourceControllers,
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
