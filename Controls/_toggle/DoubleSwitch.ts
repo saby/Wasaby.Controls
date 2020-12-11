@@ -124,6 +124,7 @@ class DoubleSwitch extends Control<IDoubleSwitchOptions> implements ICheckable, 
 /**
  * @name Controls/_toggle/DoubleSwitch#orientation
  * @cfg {String} Ориентация двойного переключателя в пространстве.
+ * @demo Controls-demo/toggle/DoubleSwitch/Orientation/Index
  * @variant horizontal Горизонтальная ориентация. Значение по умолчанию.
  * @variant vertical Вертикальная ориентация.
  */
