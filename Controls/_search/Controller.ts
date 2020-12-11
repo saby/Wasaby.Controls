@@ -120,8 +120,13 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      if (this._searchController) {
-         const updateResult = this._searchController.update({...newOptions, ...context.dataOptions});
+      const options = {...newOptions, ...context.dataOptions};
+
+      if (this._searchController && options.sourceController) {
+         if (this._sourceController !== options.sourceController) {
+            this._sourceController = options.sourceController;
+         }
+         const updateResult = this._searchController.update(options);
 
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);

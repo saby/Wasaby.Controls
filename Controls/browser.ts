@@ -5,5 +5,4 @@
  * @author Герасимов А.М.
  * @public
  */
-export {default as Browser} from 'Controls/_browser/Browser';
-export {default as IBrowser} from 'Controls/_browser/interface/IBrowser';
+export {default as Browser} from './_browser/Browser';
