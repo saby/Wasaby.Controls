@@ -3851,6 +3851,82 @@ define([
                });
             });
          });
+
+         describe('collapse group', () => {
+            let ctrl;
+            let cancelCalled;
+
+            const cfg = {
+               viewName: 'Controls/List/ListView',
+               source: source,
+               viewConfig: {
+                  keyProperty: 'id'
+               },
+               viewModelConfig: {
+                  items: rs,
+                  keyProperty: 'id',
+                  selectedKeys: [1, 3]
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+            };
+
+            beforeEach(async () => {
+               cancelCalled = false;
+               ctrl = new lists.BaseControl(cfg);
+               ctrl.saveOptions(cfg);
+               await ctrl._beforeMount(cfg);
+               ctrl._listViewModel.getDisplay = () => ({
+                  find: () => ({
+                     contents: {}
+                  }),
+                  getGroup: () => () => 1,
+                  getCollapsedGroups: () => {}
+               });
+               ctrl._listViewModel.toggleGroup = () => {};
+               ctrl.isEditing = () => true;
+               ctrl._cancelEdit = () => {
+                  cancelCalled = true;
+                  return Promise.resolve();
+               };
+            });
+
+            afterEach(() => {
+               ctrl._beforeUnmount();
+               sandbox.restore();
+            });
+
+            it('should cancel editing if its group will be collapsed', () => {
+               ctrl._onGroupClick({}, 1, {
+                  target: {
+                     closest: () => true
+                  }
+               });
+               assert.isTrue(cancelCalled);
+            });
+
+            it('should not cancel editing if the other group will be collapsed', () => {
+               ctrl._onGroupClick({}, 2, {
+                  target: {
+                     closest: () => true
+                  }
+               });
+               assert.isFalse(cancelCalled);
+            });
+
+            it('should not cancel editing and toggle group if end edit canceled', () => {
+               ctrl._cancelEdit = () => {
+                  cancelCalled = false;
+                  return Promise.resolve({ canceled: true });
+               };
+               ctrl._onGroupClick({}, 1, {
+                  target: {
+                     closest: () => true
+                  }
+               });
+               assert.isFalse(cancelCalled);
+            });
+         });
       });
 
       it('can\'t start drag on readonly list', function() {
