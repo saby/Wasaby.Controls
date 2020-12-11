@@ -20,7 +20,8 @@
                 listModel="{{ _listModel }}"
                 trackVisible="{{ _trackVisible }}"
                 positionChangeHandler="{{ _horizontalPositionChangedHandler }}"
-                backgroundStyle="{{_options.backgroundStyle || _options.style}}">
+                backgroundStyle="{{_options.backgroundStyle || _options.style}}"
+                on:mouseup="_onScrollWrapperMouseUp()">
         </Controls._grid.ScrollWrapper>
     </ws:if>
 

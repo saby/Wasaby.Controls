@@ -909,6 +909,12 @@ var
         _onDragScrollOverlayMouseLeave(e) {
             this._dragScrollController?.onOverlayMouseLeave(e);
         },
+        _onScrollWrapperMouseUp(e) {
+            e.stopPropagation();
+            if (this._options.scrollEntireColumn) {
+                _private.scrollToColumn(this);
+            }
+        },
         _onItemSwipe(event, itemData) {
             const direction = event.nativeEvent.direction;
             if (direction === 'top' || direction === 'bottom') {

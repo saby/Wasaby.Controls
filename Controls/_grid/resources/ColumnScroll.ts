@@ -542,9 +542,9 @@ export class ColumnScroll {
     private _getScrollContainerRect(): DOMRect {
         const containerRect = this._scrollContainer.getBoundingClientRect();
         return {
-            ...containerRect.toJSON(),
+            right: containerRect.right,
             left: containerRect.left + this._fixedColumnsWidth
-        };
+        } as DOMRect;
     }
 
     destroy(): void {
