@@ -2277,7 +2277,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             // Событие remove нужно слать, только когда мы закончили перетаскивание в другом списке,
             // т.к. только в этом случае мы отправим событие add на начало перетаскивания
-            if (!this.getCollection().getRecordById(avatarKey)) {
+            // Если не найден индекс для перетаскиваемого элемента, значит его удалили прикладники на событие dragEnd
+            if (!this.getCollection().getRecordById(avatarKey) && avatarIndex !== -1) {
                 this._notifyBeforeCollectionChange();
                 this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [strategy.avatarItem], avatarIndex);
                 this._notifyAfterCollectionChange();
@@ -2285,7 +2286,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    // endregion
+    // endregion Drag-N-Drop
 
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
