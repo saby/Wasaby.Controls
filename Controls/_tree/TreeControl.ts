@@ -254,6 +254,7 @@ const _private = {
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
+            self._children.baseControl.stopBatchAdding();
         }, (error) => {
             if (typeof self._options.dataLoadErrback === 'function') {
                 self._options.dataLoadErrback(error);
