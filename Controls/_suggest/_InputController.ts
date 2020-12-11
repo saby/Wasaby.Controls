@@ -286,12 +286,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _setItems(recordSet: RecordSet): void {
-      if (this._sourceController) {
-         if (this._suggestDirection === 'up') {
-            this._sourceController.setItems(this._reverseData(recordSet));
-         } else {
-            this._sourceController.setItems(recordSet);
-         }
+      if (this._suggestDirection === 'up') {
+         this._sourceController.setItems(this._reverseData(recordSet));
+      } else {
+         this._sourceController.setItems(recordSet);
       }
    }
 
