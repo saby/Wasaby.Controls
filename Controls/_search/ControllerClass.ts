@@ -49,9 +49,7 @@ const SERVICE_FILTERS = {
  *
  * @public
  * @author Крюков Н.Ю.
- * @demo Controls-demo/Search/Explorer
- * @demo Controls-demo/Search/FlatList
- * @demo Controls-demo/Search/TreeView
+ * @demo Controls-demo/Search/FlatList/Index
  */
 
 export default class ControllerClass implements ISearchController {
