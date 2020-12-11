@@ -24,16 +24,15 @@ interface ITabButtonItem {
     [key: string]: any;
 }
 
-/**
- * Интерфейс для шаблонных опций контрола вкладок.
- * @interface Controls/_tabs/ITabsTemplateOptions
- * @public
- */
-
 export interface ITabsTemplate {
     readonly '[Controls/_tabs/ITabsTemplate]': boolean;
 }
 
+/**
+ * Интерфейс для шаблонных опций контрола вкладок.
+ * @interface Controls/_tabs/ITabsTemplate
+ * @public
+ */
 export interface ITabsTemplateOptions extends IItemTemplateOptions, IHeightOptions {
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
@@ -326,7 +325,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
 }
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#tabSpaceTemplate
+ * @name Controls/_tabs/ITabsTemplate#tabSpaceTemplate
  * @cfg {Content} Шаблон, отображаемый между вкладками.
  * @default undefined
  * @remark
@@ -350,7 +349,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /*
- * @name Controls/_tabs/ITabsTemplateOptions#tabSpaceTemplate
+ * @name Controls/_tabs/ITabsTemplate#tabSpaceTemplate
  * @cfg {Content} Contents of the area near the tabs.
  * @default undefined
  * @remark
@@ -376,7 +375,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplate
+ * @name Controls/_tabs/ITabsTemplate#itemTemplate
  * @cfg {Function} Шаблон для рендеринга.
  * @default Base template 'Controls/tabs:buttonsItemTemplate'
  * @remark
@@ -406,7 +405,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /*
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplate
+ * @name Controls/_tabs/ITabsTemplate#itemTemplate
  * @cfg {Function} Template for item render.
  * @default Base template 'Controls/tabs:buttonsItemTemplate'
  * @remark
@@ -434,7 +433,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplateProperty
+ * @name Controls/_tabs/ITabsTemplate#itemTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента.
  * @default Если параметр не задан, вместо него используется itemTemplate.
  * @remark
@@ -474,7 +473,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /*
- * @name Controls/_tabs/ITabsTemplateOptions#itemTemplateProperty
+ * @name Controls/_tabs/ITabsTemplate#itemTemplateProperty
  * @cfg {String} Name of the item property that contains template for item render.
  * @default If not set, itemTemplate is used instead.
  * @remark
@@ -509,7 +508,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#rightTemplateProperty
+ * @name Controls/_tabs/ITabsTemplate#rightTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося справа от основного содержимого.
  * @example
  * <pre class="brush: html; highlight: [2]">
@@ -540,7 +539,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#leftTemplateProperty
+ * @name Controls/_tabs/ITabsTemplate#leftTemplateProperty
  * @cfg {String} Имя поля, которое содержит шаблон отображения элемента, находящегося слева от основного содержимого.
  * @example
  * <pre class="brush: html; highlight: [2]">
@@ -571,7 +570,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemRightTemplate
+ * @name Controls/_tabs/ITabsTemplate#itemRightTemplate
  * @cfg {String} Шаблон элемента, находящегося справа от основного содержимого.
  * @remark
  * Базовый шаблон itemRightTemplate поддерживает следующие параметры:
@@ -592,7 +591,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  */
 
 /**
- * @name Controls/_tabs/ITabsTemplateOptions#itemLeftTemplate
+ * @name Controls/_tabs/ITabsTemplate#itemLeftTemplate
  * @cfg {String} Шаблон элемента, находящегося слева от основного содержимого.
  * @remark
  * Базовый шаблон itemLeftTemplate поддерживает следующие параметры:
@@ -610,6 +609,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  * </Controls.tabs:Buttons>
  * </pre>
  * @see itemRightTemplate
- */
+ */ 
 
 export default TabsButtons;
