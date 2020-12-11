@@ -314,17 +314,32 @@ export default class Controller {
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
-        ): IQueryParams {
+        ): IQueryParams|IQueryParams[] {
         const navigationController = this._getNavigationController(this._options);
-        return navigationController.getQueryParams(
-            {
-                filter: queryParams.filter,
-                sorting: queryParams.sorting
-            },
-            key,
-            navigationSourceConfig,
-            NAVIGATION_DIRECTION_COMPATIBILITY[direction]
-        );
+        const navigationConfig = navigationSourceConfig || this._options.navigation.sourceConfig;
+        const userQueryParams = {
+            filter: queryParams.filter,
+            sorting: queryParams.sorting
+        };
+
+        if (navigationConfig && navigationConfig.multiNavigation && this._isDeepReload()) {
+            return navigationController.getQueryParamsForHierarchy(
+                userQueryParams,
+                navigationSourceConfig,
+                false
+            );
+        } else {
+            return navigationController.getQueryParams(
+                userQueryParams,
+                key,
+                navigationSourceConfig,
+                NAVIGATION_DIRECTION_COMPATIBILITY[direction]
+            );
+        }
+    }
+
+    private _isDeepReload(): boolean {
+        return this._deepReload || this._options.deepReload;
     }
 
     private _setItems(items: RecordSet): void {
@@ -359,10 +374,10 @@ export default class Controller {
                         this._options.source;
                     const crudWrapper = this._getCrudWrapper(source as ICrud);
 
-                    let params = {
+                    let params: IQueryParams | IQueryParams[] = {
                         filter: preparedFilter,
                         sorting: this._options.sorting
-                    } as IQueryParams;
+                    };
 
                     if (this._hasNavigationBySource()) {
                         params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
@@ -394,14 +409,13 @@ export default class Controller {
         const rootForFilter = root || this._root;
         const expandedItemsForFilter = this._expandedItems || options.expandedItems;
         const parentProperty = this._parentProperty;
-        const deepReload = this._deepReload || options.deepReload;
         let resultFilter = initialFilter;
 
         return new Promise((resolve) => {
             if (parentProperty) {
                 resultFilter = {...initialFilter};
 
-                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && deepReload) {
+                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && this._isDeepReload()) {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
