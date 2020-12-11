@@ -338,6 +338,7 @@
 
 .controls-PeriodLiteDialog-item__halfYear {
    .controls-PeriodLiteDialog__container();
+
    &:last-child {
       margin-bottom: 0;
    }
@@ -349,6 +350,7 @@
 
 .controls-PeriodLiteDialog-item__halfYear-caption {
    .controls-PeriodLiteDialog__container-caption();
+
    display: flex;
    right: 0;
    justify-content: center;
@@ -370,6 +372,7 @@
 
 .controls-PeriodLiteDialog-item__quarter_theme-@{themeName} {
    .controls-PeriodLiteDialog__container();
+
    margin: 0 (@quarterly_halfyears_width_shortDatePicker + @separator_thickness_shortDatePicker) @separator_thickness_shortDatePicker 0;
 }
 
@@ -379,6 +382,7 @@
 
 .controls-PeriodLiteDialog-item__quarter-caption {
    .controls-PeriodLiteDialog__container-caption();
+
    display: flex;
    right: 0;
    position: absolute;
@@ -461,7 +465,7 @@
    position: relative;
    font-weight: bold;
 
-   &:after {
+   &::after {
       content: '';
       position: absolute;
       width: 100%;
@@ -512,6 +516,10 @@
    border-top: none;
 }
 
+.controls-PeriodLiteDialog_calendarBody {
+   position: relative;
+}
+
 .ws-is-mobile-android {
 
    // На android на самом маленьком масштабе элементы списка не отображаются, пока мы не поскроллим.
@@ -519,10 +527,6 @@
    .controls-PeriodLiteDialog_calendarBody {
       transform: translate3d(0, 0, 0);
    }
-}
-
-.controls-PeriodLiteDialog_calendarBody {
-   position: relative;
 }
 
 .controls-PeriodLiteDialog_calendarBody_theme-@{themeName} {
