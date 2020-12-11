@@ -11,7 +11,7 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: MemorySource;
     protected _columns: IColumn[] = Gadgets.getSearchColumns();
-    protected _root: TRoot = null;
+    protected _root: TRoot = 1;
     protected _startingWith: 'root' | 'current' = 'root';
     protected _startingWithBtnCaption: 'root' | 'current' = 'current';
     protected _startingWithSource: Memory = null;
@@ -49,10 +49,6 @@ export default class extends Control {
                 }
             ]
         });
-    }
-
-    protected _afterMount(): void {
-        this._root = 1;
     }
 
     protected _onToggle(): void {
