@@ -384,7 +384,7 @@ define([
                         ['datalist', ['option', 'Test option']],
                         ['select', ['option', 'Test option']],
                         ['keygen'],
-                        ['output', 'Test ouput'],
+                        ['output', 'Test output'],
                         ['audio', ['track', {src: '/testAudio.mp3'} ]],
                         ['video', ['track', {src: '/testVideo.mp4'} ]]
                      ]
