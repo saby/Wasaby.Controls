@@ -369,7 +369,24 @@ define([
                            ['thead', ['tr', ['th', 'Test'], ['th', 'head']]],
                            ['tbody', ['tr', ['td', 'Test'], ['td', 'body']]],
                            ['tfoot', ['tr', ['td', 'Test'], ['td', 'foot']]]
-                        ]
+                        ],
+                        ['bdi', 'Test bdi'],
+                        ['dialog', 'Test dialog'],
+                        ['mark', 'Test mark'],
+                        ['meter', 'Test meter'],
+                        ['progress', 'Test progress'],
+                        ['ruby',
+                           ['rp', 'Test rp'],
+                           ['rt', 'Test rt']
+                        ],
+                        ['details', ['summary', 'Test summary']],
+                        ['wbr'],
+                        ['datalist', ['option', { value: 'Test option'} ]],
+                        ['select', ['option', { value: 'Test option'} ]],
+                        ['keygen'],
+                        ['output', 'Test ouput'],
+                        ['audio', ['track', {src: '/testAudio.mp3'} ]],
+                        ['video', ['track', {src: '/testVideo.mp4'} ]]
                      ]
                   ]
                ],
@@ -429,6 +446,20 @@ define([
                '<tbody><tr><td>Test</td><td>body</td></tr></tbody>' +
                '<tfoot><tr><td>Test</td><td>foot</td></tr></tfoot>' +
                '</table>' +
+               '<bdi>Test</bdi>' +
+               '<dialog>Test dialog</dialog>' +
+               '<mark>Test mark</mark>' +
+               '<meter>Test meter</meter>' +
+               '<progress>Test progress</progress>' +
+               '<ruby><rp>Test rp</rp><rt>Test rt</rt></ruby>' +
+               '<details><summary>Test summary</summary></details>' +
+               '<wbr/>' +
+               '<datalist><option value="Test option"/></datalist>' +
+               '<select><option value="Test option"/></select>' +
+               '<keygen/>' +
+               '<output>Test output</output>' +
+               '<audio><track src="/testAudio.mp3"/></audio>' +
+               '<video><track src="/testAudio.mp4"/></video>' +
                '</body>' +
                '</html>' +
                '</p>' +
