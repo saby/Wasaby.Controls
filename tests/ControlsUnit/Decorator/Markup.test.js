@@ -456,7 +456,7 @@ define([
                '<wbr />' +
                '<datalist><option>Test option</option></datalist>' +
                '<select><option>Test option</option></select>' +
-               '<keygen/>' +
+               '<keygen />' +
                '<output>Test output</output>' +
                '<audio><track src="/testAudio.mp3" /></audio>' +
                '<video><track src="/testVideo.mp4" /></video>' +
