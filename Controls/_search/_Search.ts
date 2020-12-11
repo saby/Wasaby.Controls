@@ -27,7 +27,7 @@ var _private = {
    },
 
    searchCallback: function(self, result) {
-      if (!self._searchDeferred.isReady()) {
+      if (self._searchDeferred && !self._searchDeferred.isReady()) {
          self._searchDeferred.callback({
             data: result,
             hasMore: self._sourceController.hasMoreData('down')
@@ -36,7 +36,9 @@ var _private = {
    },
 
    searchErrback: function(self, error) {
-      self._searchDeferred.errback(error);
+      if (self._searchDeferred && !self._searchDeferred.isReady()) {
+         self._searchDeferred.errback(error);
+      }
    },
 
    clearSearchDelay: function(self) {
@@ -158,7 +160,9 @@ var Search  = extend({
          if (isLoading) {
             self._sourceController.cancelLoading();
          }
-         abortDef.callback();
+         if (!abortDef.isReady()) {
+            abortDef.callback();
+         }
       };
 
       _private.clearSearchDelay(this);
