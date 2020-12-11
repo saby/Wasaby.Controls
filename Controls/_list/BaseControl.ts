@@ -4726,6 +4726,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onGroupClick(e, groupId, baseEvent, dispItem) {
+        const collapseGroupAfterEndEdit = (collection) => {
+            const display = this._options.useNewModel ? collection : collection.getDisplay();
+
+            if (groupId === display.getGroup()(display.find((i) => i.isEditing()).contents)) {
+                this._cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
+                });
+            } else {
+                GroupingController.toggleGroup(collection, groupId);
+            }
+        };
+
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             const groupingLoader = this._groupingLoader;
@@ -4738,6 +4752,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
                         dispItem.setExpanded(needExpandGroup);
                     });
+                } else if (!needExpandGroup && this.isEditing()) {
+                    collapseGroupAfterEndEdit(collection);
                 } else {
                     dispItem.setExpanded(needExpandGroup);
                 }
@@ -4768,7 +4784,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         GroupingController.toggleGroup(collection, groupId);
                     });
                 } else {
-                    GroupingController.toggleGroup(collection, groupId);
+                    if (!needExpandGroup && this.isEditing()) {
+                        collapseGroupAfterEndEdit(collection);
+                    } else {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
                 }
             }
         }
