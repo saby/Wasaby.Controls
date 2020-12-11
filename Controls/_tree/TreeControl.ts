@@ -24,7 +24,7 @@ const HOT_KEYS = {
     collapseMarkedItem: Env.constants.key.left
 };
 
-const DRAG_MAX_OFFSET = 10;
+const DRAG_MAX_OFFSET = 0.3;
 const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
 
@@ -502,7 +502,7 @@ const _private = {
      * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
      *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
      */
-    getTargetRow(event: SyntheticEvent): Element {
+    getTargetRow(self: any, event: SyntheticEvent): Element {
         if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
             return event.target;
         }
@@ -510,12 +510,22 @@ const _private = {
         const startTarget = event.target;
         let target = startTarget;
 
-        while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (self._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
+
+        while (condition()) {
             target = target.parentNode;
 
             // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
             if (!target.classList || !target.parentNode || !target.parentNode.classList
-                || target.classList.contains('controls-BaseControl')) {
+               || target.classList.contains('controls-BaseControl')) {
                 target = startTarget;
                 break;
             }
@@ -842,7 +852,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
         if (dispItem.isNode()) {
             const dndListController = this._children.baseControl.getDndListController();
-            const targetElement = _private.getTargetRow(nativeEvent);
+            const targetElement = _private.getTargetRow(this, nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
                 targetItem: dispItem,
@@ -972,8 +982,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const dragTargetRect = targetElement.getBoundingClientRect();
 
             result = { top: null, bottom: null };
-            result.top = event.nativeEvent.pageY - dragTargetRect.top;
-            result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
+            } else {
+                result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
+            }
         }
 
         return result;
