@@ -213,11 +213,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
       it('with ENTRY_PATH', () => {
          // если есть ENTRY_PATH то удаляется только текущий корень и его дети
-         strategy._entryPath = [];
+         strategy._entryPath = [{}];
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
          assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.excluded, []);
+      });
+
+      it('with empty ENTRY_PATH', () => {
+         // если есть ENTRY_PATH то удаляется только текущий корень и его дети
+         strategy._entryPath = [];
+         strategy._rootId = 2;
+         let selection = { selected: [2, 5], excluded: [2, 3] };
+         selection = strategy.unselectAll(selection);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
    });
