@@ -419,9 +419,7 @@ define([
             var html = '<div>' +
                '<p>' +
                '<html>' +
-               '<head></head>' +
-               '<title>Test title</title>' +
-               '<link "href="/resources/WS.Core/css/core-min.css" rel="stylesheet" />' +
+               '<head><title>Test title</title><link href="/resources/WS.Core/css/core-min.css" rel="stylesheet" /></head>' +
                '<body>' +
                '<div>Test division</div>' +
                '<code>Test code</code>' +
