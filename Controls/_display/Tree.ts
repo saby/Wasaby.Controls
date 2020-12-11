@@ -17,6 +17,7 @@ import IItemsStrategy from './IItemsStrategy';
 import RootStrategy from './itemsStrategy/Root';
 import {object} from 'Types/util';
 import {Object as EventObject} from 'Env/Event';
+import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { TemplateFunction } from 'UI/Base';
 import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
@@ -751,7 +752,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 let item;
                 while (enumerator.moveNext()) {
                     item = enumerator.getCurrent();
-                    if (!(item instanceof TreeItem)) {
+                    if (!(item instanceof TreeItem) && !(item instanceof BreadcrumbsItem)) {
                         continue;
                     }
                     if (item.getParent() === parent) {
