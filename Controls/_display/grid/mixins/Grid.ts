@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import { TColumns } from 'Controls/_grid/interface/IColumn';
+import { TColumns, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 
 import { IViewIterator } from '../../Collection';
@@ -43,6 +43,7 @@ export interface IOptions {
     stickyColumn?: {};
     showEditArrow?: boolean;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
+    columnSeparatorSize?: TColumnSeparatorSize;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -62,6 +63,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$resultsVisibility: TResultsVisibility;
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$isFullGridSupport: boolean;
 
     protected constructor(options: IOptions) {
@@ -145,6 +147,15 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
+    }
+
+    getColumnSeparatorSize(): TColumnSeparatorSize {
+        return this._$columnSeparatorSize;
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
@@ -285,5 +296,6 @@ Object.assign(Grid.prototype, {
     _$stickyColumn: null,
     _$isFullGridSupport: true,
     _$showEditArrow: false,
-    _$editArrowVisibilityCallback: null
+    _$editArrowVisibilityCallback: null,
+    _$columnSeparatorSize: null
 });

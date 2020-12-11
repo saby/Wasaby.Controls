@@ -31,6 +31,9 @@ const GridView = ListView.extend({
         if (columnsChanged) {
             this._listModel.setColumns(newOptions.columns, false);
         }
+        if (this._options.columnSeparatorSize !== newOptions.columnSeparatorSize) {
+            this._listModel.setColumnSeparatorSize(newOptions.columnSeparatorSize);
+        }
     },
 
     _resolveItemTemplate(options): TemplateFunction {

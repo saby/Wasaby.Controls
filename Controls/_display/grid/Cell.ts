@@ -12,6 +12,7 @@ import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
+import {TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
@@ -256,6 +257,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         contentClasses += this._getContentPaddingClasses(theme);
 
+        contentClasses += this._getContentSeparatorClasses(theme);
+
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
 
         if (this._$column.align) {
@@ -340,15 +343,39 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
-            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
+        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = this._getSeparatorForColumn();
 
             if (columnSeparatorSize !== null) {
-                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
-                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+                classes += ' controls-Grid__row-cell_withColumnSeparator';
             }
-        }*/
+        }
         return classes;
+    }
+
+    protected _getContentSeparatorClasses(theme: string): string {
+        const columnSeparatorSize = this._getSeparatorForColumn();
+        return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+    }
+
+    private _getSeparatorForColumn(): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize;
+        const currentColumn = this._$column;
+        const previousCell = this._$owner.getColumns()[this.getColumnIndex() + 1];
+        const previousColumn = previousCell?.getColumnConfig();
+
+        // Приводим значение к lowerCase
+        const normalize = (value: TColumnSeparatorSize) => (
+            typeof value === 'string' ? value.toLowerCase() : null) as TColumnSeparatorSize;
+
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = normalize(previousColumn.columnSeparatorSize.right);
+        } else {
+            columnSeparatorSize = this._$owner.getColumnSeparatorSize();
+        }
+        return columnSeparatorSize;
     }
 
     protected _getContentPaddingClasses(theme: string): string {

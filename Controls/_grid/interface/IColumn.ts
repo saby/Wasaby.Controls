@@ -60,18 +60,26 @@ export type TOverflow = 'ellipsis' | 'none';
  * @variant s Размер тонкой линии-разделителя.
  * @variant null Без линии-разделителя.
  */
-type TColumnSeparatorSize = 's' | null;
+export type TColumnSeparatorSize = 's' | null;
 
 /**
- * @typedef {Object} TColumnSeparatorSizeConfig
- * @description Ширина линии-разделителя колонок слева и справа.
- * @property {TColumnSeparatorSize} [left=null] Ширина линии-разделителя колонок слева.
- * @property {TColumnSeparatorSize} [right=null] Ширина линии-разделителя колонок справа.
+ * Ширина линии-разделителя колонок слева и справа.
+ * @interface Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig
+ * @public
+ * @author Аверкиев П.А.
  */
-type TColumnSeparatorSizeConfig = {
+export interface IColumnSeparatorSizeConfig {
+    /**
+     * @name Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig#left
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок слева.
+     */
     left?: TColumnSeparatorSize;
+    /**
+     * @name Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig#right
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок справа.
+     */
     right?: TColumnSeparatorSize;
-};
+}
 
 export interface IColspanParams {
     startColumn?: number;
@@ -306,7 +314,7 @@ export interface IColumn extends IColspanParams, IRowspanParams {
     textOverflow?: TOverflow;
     /**
      * @name Controls/_grid/interface/IColumn#columnSeparatorSize
-     * @cfg {TColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
+     * @cfg {Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
      * @default none
      * @remark
      * Ширину линии-разделителя между двумя колонками можно задать на любой из них (левую или правую соответственно).
@@ -334,7 +342,7 @@ export interface IColumn extends IColspanParams, IRowspanParams {
      * @see Controls/list:IList#rowSeparatorSize
      * @see Controls/grid:IGridControl#columnSeparatorSize
      */
-    columnSeparatorSize?: TColumnSeparatorSizeConfig;
+    columnSeparatorSize?: IColumnSeparatorSizeConfig;
     /**
      * @name Controls/_grid/interface/IColumn#cellPadding
      * @cfg {ICellPadding} Конфигурация левого и правого отступа в ячейках колонки, исключая левый отступ первой и правый последней ячейки.

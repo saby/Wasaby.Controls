@@ -1,6 +1,6 @@
 import { TemplateFunction } from 'UI/Base';
 import { create } from 'Types/di';
-import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { IOptions as IBaseOptions } from '../../CollectionItem';
 import HeaderRow from '../HeaderRow';
 import Collection from '../Collection';
@@ -321,6 +321,10 @@ export default abstract class Row<T> {
 
     getIndex(): number {
         return this._$owner.getRowIndex(this);
+    }
+
+    getColumnSeparatorSize(): TColumnSeparatorSize {
+        return this._$owner.getColumnSeparatorSize();
     }
 
     abstract getOwner(): Collection<T>;
