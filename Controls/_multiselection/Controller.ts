@@ -12,6 +12,7 @@ import {
    ISelectionDifference, IEntryPathItem
 } from './interface';
 import { CrudEntityKey } from 'Types/source';
+import clone = require('Core/core-clone');
 
 /**
  * Контроллер множественного выбора
@@ -154,10 +155,13 @@ export class Controller {
       let newSelection;
 
       if (status === true || status === null) {
-         newSelection = this._strategy.unselect(this._selection, key);
+         newSelection = this._strategy.unselect(this._selection, key, this._searchValue);
+         if (this._limit) {
+            this._limit--;
+         }
       } else {
-         if (this._limit && !this._excludedKeys.includes(key)) {
-            newSelection = this._increaseLimit([key]);
+         if (this._limit) {
+            newSelection = this._increaseLimit(key);
          }
 
          if (newSelection) {
@@ -175,7 +179,7 @@ export class Controller {
     * @return {ISelection}
     */
    selectAll(): ISelection {
-      return this._strategy.selectAll(this._selection);
+      return this._strategy.selectAll(this._selection, this._limit);
    }
 
    /**
@@ -244,7 +248,8 @@ export class Controller {
     * @void
     */
    onCollectionAdd(addedItems: Array<CollectionItem<Model>>): void {
-      if (this._limit && this.getCountOfSelected() === this._limit) {
+      // Если задан лимит, то обрабатывать добавленные элементы нужно, если до добавления их было меньше лимита
+      if (this._limit && (this._model.getCount() - addedItems.length) > this._limit) {
          return;
       }
       this._updateModel(this._selection, false, addedItems.filter((it) => it.SelectableItem));
@@ -317,31 +322,29 @@ export class Controller {
 
    /**
     * Увеличивает лимит на количество выбранных записей, все предыдущие невыбранные записи при этом попадают в исключение
-    * @param {Array} keys
     * @private
+    * @param toggledItemKey
     */
-   private _increaseLimit(keys: TKeys): ISelection {
-      const newSelection = {...this._selection};
-      let selectedItemsCount: number = 0;
-      const limit: number = this._limit ? this._limit - this._excludedKeys.length : 0;
+   private _increaseLimit(toggledItemKey: CrudEntityKey): ISelection {
+      const newSelection = clone(this._selection);
+      let selectedItemsCount = 0;
+      const limit = this._limit ? this._limit : 0;
 
-      this._model.getCollection().forEach((item) => {
-         const key: CrudEntityKey = item.getKey();
-
-         const selectionForModel = this._strategy.getSelectionForModel(this._selection, this._limit);
-
-         let itemStatus = false;
-         if (selectionForModel.get(true).find((selectedItem) => selectedItem.getContents().getKey() === key)) {
-            itemStatus = true;
+      let stopIncreasing = false;
+      this._model.each((item) => {
+         if (stopIncreasing) {
+            return;
          }
 
-         if (selectedItemsCount < limit && itemStatus !== false) {
+         if (selectedItemsCount < limit && item.isSelected() !== false) {
             selectedItemsCount++;
-         } else if (selectedItemsCount >= limit && keys.length) {
-            selectedItemsCount++;
-            this._limit++;
-
-            if (!keys.includes(key)) {
+         } else {
+            const key = this._getKey(item);
+            if (toggledItemKey === key) {
+               selectedItemsCount++;
+               this._limit++;
+               stopIncreasing = true;
+            } else if (!newSelection.excluded.includes(key)) {
                newSelection.excluded.push(key);
             }
          }
@@ -351,7 +354,16 @@ export class Controller {
    }
 
    private _updateModel(selection: ISelection, silent: boolean = false, items?: Array<CollectionItem<Model>>): void {
-      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit, items, this._searchValue);
+      let limit = this._limit;
+      // Если есть лимит, то при обработке дозагруженных элементов мы должны обработать не все записи,
+      // а только то кол-во, которое не хватает до лимита
+      if (this._limit && items) {
+         let countSelectedItems = 0;
+         this._model.each((it) => it.isSelected() ? countSelectedItems++ : null);
+         limit = limit - countSelectedItems;
+      }
+
+      const selectionForModel = this._strategy.getSelectionForModel(selection, limit, items, this._searchValue);
       // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);

@@ -62,21 +62,10 @@ define([
                 assert.isTrue(resultDisplay);
             });
         });
-        describe('itemClick', () => {
+        describe('groupClick', () => {
             it('toggle expand state on group item', () => {
                 const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
-                collection.moveToFirst();
-                const getGroup = (collection) => {
-                    let groupItem = null;
-                    collection.each((item) => {
-                        if (!groupItem && item['[Controls/_display/GroupItem]']) {
-                            groupItem = item;
-                        }
-                    });
-                    return groupItem;
-                }
-                const groupItem = getGroup(collection);
-                assert.isTrue(!!groupItem);
+                const groupItem = collection.at(2);
                 const expandedState = groupItem.isExpanded();
                 const clickEvent = {
                     target: {
@@ -85,10 +74,23 @@ define([
                 };
                 ViewInstance._collapsedGroups = {};
                 ViewInstance._listModel = collection;
-                ViewInstance._itemClick(null, groupItem, clickEvent);
+                ViewInstance._groupClick(null, groupItem, clickEvent);
                 assert.isTrue(expandedState !== groupItem.isExpanded());
             });
         });
+
+       describe('toggledEditors', () => {
+
+           it('collection filtered by toggled editors', () => {
+               source[0].toggleEditorButtonIcon = 'testIcon';
+               ViewInstance._beforeMount({
+                   source,
+                   editingObject
+               });
+               assert.deepEqual(ViewInstance._toggledEditors, {stringField: false});
+           });
+
+       });
 
       describe('itemActions', () => {
          before(() => {

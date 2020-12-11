@@ -86,6 +86,11 @@
             </Router.router:Reference>
          </div>
          <div>
+            <Router.router:Reference state="Controls-demo/app/:app" app="{{ 'Controls-demo/treeGridNew/Index' }}">
+               <a href="{{content.href}}">treeGrid_new on new model</a>
+            </Router.router:Reference>
+         </div>
+         <div>
             <Router.router:Reference state="Controls-demo/app/:app" app="{{ 'Controls-demo/Tile/Index' }}">
                <a href="{{content.href}}">tile_new</a>
             </Router.router:Reference>
@@ -523,6 +528,12 @@
             </li>
           </ul>
          </Controls.spoiler:View>
+
+         <Controls.spoiler:ListCut captions="ListCut">
+            <li>
+              <a href="Controls-demo%252FSpoiler%252FListCut%252FIndex">ListCut</a>
+            </li>
+         </Controls.spoiler:ListCut>
 
          <h1>Decorator</h1>
          <h2>

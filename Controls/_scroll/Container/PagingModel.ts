@@ -3,13 +3,7 @@ import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_POSITION} from '../Utils/Scroll';
 import {IScrollState} from '../Utils/ScrollState';
 import {IArrowState} from '../../_paging/Paging';
-/**
- * @typedef {String} TPagingModeScroll
- * @variant hidden Предназначен для отключения отображения пейджинга в реестре.
- * @variant basic Предназначен для пейджинга в реестре с подгрузкой по скроллу.
- * @variant edge Предназначен для пейджинга с отображением одной команды прокрутки. Отображается кнопка в конец, либо в начало, в зависимости от положения.
- * @variant end Предназначен для пейджинга с отображением одной команды прокрутки. Отображается только кнопка в конец.
- */
+
 export type TPagingModeScroll = 'hidden' | 'basic' | 'edge' | 'end';
 
 export default class PagingModel extends mixin<VersionableMixin>(VersionableMixin) implements IVersionable {
@@ -66,7 +60,7 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
     get arrowState(): IArrowState {
         switch (this.pagingMode) {
             case 'edge':
-                if (this._arrowState.next === 'visible') {
+                if (this._arrowState.next === 'visible' || this._arrowState.end === 'visible') {
                     this._arrowState.begin = 'hidden';
                     this._arrowState.end = 'visible';
                 } else if (this._arrowState.begin === 'visible') {
@@ -77,7 +71,7 @@ export default class PagingModel extends mixin<VersionableMixin>(VersionableMixi
                 break;
 
             case 'end':
-                if (this._arrowState.next === 'visible') {
+                if (this._arrowState.next === 'visible' || this._arrowState.end === 'visible') {
                     this._arrowState.end = 'visible';
                 } else {
                     this._arrowState.end = 'hidden';

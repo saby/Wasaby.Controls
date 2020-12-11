@@ -231,7 +231,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         if (!this._isStickySupport) {
             return;
         }
-        UnregisterUtil(this, 'listScroll');
         UnregisterUtil(this, 'controlResize');
         UnregisterUtil(this, 'scrollStateChanged');
         if (this._model) {
@@ -248,7 +247,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         this._observeHandler = undefined;
         this._observer = undefined;
-        this._resetTopBottomStyles();
         this._notify('stickyRegister', [{id: this._index}, false], {bubbling: true});
     }
 
@@ -273,8 +271,17 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             // и вызовут полную перерисовку, т.к. контрол посчитает что изменились высоты контента.
             // При след. замерах возьмется актуальная высота и опять начнется перерисовка.
             // Т.к. смещения только на ios добавляем, считаю высоту через clientHeight только для ios.
-            // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели
-            this._height = detection.isMobileIOS ? container.clientHeight : container.offsetHeight - Math.abs(1 - window.devicePixelRatio);
+            if (detection.isMobileIOS) {
+                this._height = container.clientHeight;
+            } else {
+                this._height = container.offsetHeight;
+                if (!detection.isMobileAndroid) {
+                    // offsetHeight округляет к ближайшему числу, из-за этого на масштабе просвечивают полупиксели.
+                    // Такое решение подходит тоько для десктопа, т.к. на мобильных устройствах devicePixelRatio всегда
+                    // равен 2.75
+                    this._height -= Math.abs(1 - window.devicePixelRatio);
+                }
+            }
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
@@ -445,11 +452,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
      * @private
      */
     protected _fixationStateChangeHandler(newPosition: POSITION, prevPosition: POSITION): void {
-        // If the header is hidden we cannot calculate its current height.
-        // Use the height that it had before it was hidden.
-        if (!isHidden(this._container)) {
-            this._height = this._container.offsetHeight;
-        }
         this._isFixed = !!newPosition;
         this._fixedNotifier(newPosition, prevPosition);
     }
@@ -458,7 +460,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         const information: IFixedEventData = {
             id: this._index,
             fixedPosition: newPosition,
-            offsetHeight: this._height,
             prevPosition,
             mode: this._options.mode,
             shadowVisible: this._options.shadowVisibility === 'visible',
@@ -492,16 +493,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style: string = '',
             minHeight: number;
 
-        /**
-         * On android and ios there is a gap between child elements.
-         * When the header is fixed, there is a space between the container, relative to which it is fixed,
-         * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
-         * https://jsfiddle.net/tz52xr3k/3/
-         *
-         * As a solution, move the header up and increase its size by an offset, using padding.
-         * In this way, the content of the header does not change visually, and the free space disappears.
-         * The offset must be at least as large as the free space. Take the nearest integer equal to one.
-         */
         // Этот костыль нужен, чтобы убрать щели между заголовками. Для прозрачных заголовков он не нужен.
         offset = this._options.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
@@ -584,7 +575,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         // The top observer has a height of 1 pixel. In order to track when it is completely hidden
         // beyond the limits of the scrollable container, taking into account round-off errors,
         // it should be located with an offset of -3 pixels from the upper border of the container.
-        let coord: number = this._stickyHeadersHeight[position] + 3;
+        let coord: number = this._stickyHeadersHeight[position] + 2;
+        if (StickyHeader.getDevicePixelRatio() !== 1) {
+            coord += 1;
+        }
         if (position === POSITION.top && offsetTop && shadowVisibility === SHADOW_VISIBILITY.visible) {
             coord += offsetTop;
         }
@@ -600,12 +594,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
 
         return position + ': -' + coord + 'px;';
-    }
-
-    protected _resetTopBottomStyles(): void {
-        // Чистим top и bottom, т.к устанавливали их до этого напрямую, чтобы не было скачков в интерфейсе
-        this._children.content.style.top = '';
-        this._children.content.style.bottom = '';
     }
 
     protected updateFixed(ids: number[]): void {
@@ -749,6 +737,13 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 'topbottom'
             ])
         };
+    }
+
+    static getDevicePixelRatio(): number {
+        if (window?.devicePixelRatio) {
+            return window.devicePixelRatio;
+        }
+        return 1;
     }
 
     static _theme: string[] = ['Controls/scroll'];

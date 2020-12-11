@@ -190,6 +190,7 @@ describe('Controls/suggest', () => {
 
       it('Suggest::_shouldShowSuggest', () => {
          const inputContainer = getComponentObject();
+         inputContainer._inputActive = true;
          const result = new List({items: [1, 2, 3]});
          const emptyResult = new List();
 
@@ -470,6 +471,7 @@ describe('Controls/suggest', () => {
             inputContainer._historyLoad = new Deferred();
             return Promise.resolve();
          });
+         inputContainer._inputActive = true;
 
          inputContainer._inputActivated();
          await inputContainer._inputActivated();
@@ -483,6 +485,32 @@ describe('Controls/suggest', () => {
          assert.isTrue(loadSpy.calledThrice);
 
          sandbox.restore();
+      });
+
+      it('Suggest::_inputActivated - suggest should open', async () => {
+         const sandbox = sinon.createSandbox();
+         const inputContainer = getComponentObject({
+            searchParam: 'searchParam',
+            autoDropDown: true,
+            minSearchLength: 3,
+            keyProperty: 'Identificator',
+            source: getMemorySource()
+         });
+         if (!document) {
+            sandbox.stub(inputContainer, '_getActiveElement').callsFake(() => ({
+               classList: {
+                  contains: () => false
+               }
+            }));
+         }
+
+         inputContainer._inputActive = true;
+
+         const openStub = sandbox.stub(inputContainer, '_open');
+
+         await inputContainer._inputActivated();
+
+         assert.isTrue(openStub.calledOnce);
       });
 
       it('Suggest::_inputActivated/_inputClicked with autoDropDown', () => {
@@ -642,6 +670,7 @@ describe('Controls/suggest', () => {
          after(() => sandbox.restore());
 
          it('value is not specified', async () => {
+            inputContainer._inputActive = true;
             sandbox.stub(SourceController.prototype, 'load')
                .callsFake(() => Promise.resolve(recordSet));
             const result = await inputContainer._resolveLoad();
@@ -655,6 +684,7 @@ describe('Controls/suggest', () => {
 
          it('value is specified', async () => {
             const value = 'test1';
+            inputContainer._inputActive = true;
             sandbox.stub(SearchController.prototype, 'search')
                .callsFake(() => Promise.resolve(recordSet));
 
@@ -799,6 +829,7 @@ describe('Controls/suggest', () => {
 
          inputContainer._notify = () => {};
          inputContainer._searchValue = 'notEmpty';
+         inputContainer._inputActive = true;
 
          queryRecordSet.setMetaData({
             results: new Model({
@@ -837,7 +868,7 @@ describe('Controls/suggest', () => {
          assert.equal(inputContainer._suggestMarkedKey, null);
          assert.notEqual(inputContainer._searchResult, queryRecordSet);
          assert.isNull(inputContainer._searchResult);
-         assert.equal(inputContainer._tabsSelectedKey, 'testId2');
+         assert.equal(inputContainer._tabsSelectedKey, null);
          assert.equal(inputContainer._misspellingCaption, null);
       });
 

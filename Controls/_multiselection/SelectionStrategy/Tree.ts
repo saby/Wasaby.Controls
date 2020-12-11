@@ -10,7 +10,7 @@ import { IEntryPathItem, ITreeSelectionStrategyOptions, TKeys } from '../interfa
 // @ts-ignore
 import clone = require('Core/core-clone');
 import { CrudEntityKey } from 'Types/source';
-import { Tree, TreeItem } from 'Controls/display';
+import { BreadcrumbsItem, Tree, TreeItem } from 'Controls/display';
 
 const LEAF = null;
 
@@ -60,7 +60,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       return cloneSelection;
    }
 
-   unselect(selection: ISelection, key: CrudEntityKey): ISelection {
+   unselect(selection: ISelection, key: CrudEntityKey, searchValue?: string): ISelection {
       const item = this._getItem(key);
 
       const cloneSelection = clone(selection);
@@ -76,6 +76,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
       if (key !== this._rootId && item && this._selectAncestors) {
          this._unselectParentNodes(cloneSelection, item.getParent());
+      }
+      if (searchValue && this._isAllSelectedInRoot(cloneSelection) && this._isAllChildrenExcluded(cloneSelection, this._getRoot())) {
+         cloneSelection.selected.length = 0;
+         cloneSelection.excluded.length = 0;
       }
 
       if (!cloneSelection.selected.length) {
@@ -99,7 +103,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    unselectAll(selection: ISelection): ISelection {
       let cloneSelection = clone(selection);
 
-      if (this._entryPath) {
+      if (this._entryPath && this._entryPath.length) {
          cloneSelection = this._unselectAllInRoot(cloneSelection);
       } else {
          cloneSelection.selected.length = 0;
@@ -165,13 +169,14 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
          if (items) {
             items.forEach((item) => {
-               if (isOnlyNodesInItems) {
+               if (isOnlyNodesInItems && item.SelectableItem) {
                   isOnlyNodesInItems = this._isNode(item);
                }
             });
          } else {
             this._model.each((item) => {
-               if (isOnlyNodesInItems) {
+               // Скипаем элементы, которые нельзя выбрать, т.к. например группа испортит значение isOnlyNodesInItems
+               if (isOnlyNodesInItems && item.SelectableItem) {
                   isOnlyNodesInItems = this._isNode(item);
                }
             });
@@ -191,7 +196,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let isSelected = !selection.excluded.includes(key) && (selection.selected.includes(key) ||
              this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key);
 
-         if (this._selectAncestors && isNode) {
+         if ((this._selectAncestors || searchValue) && isNode) {
             isSelected = this._getStateNode(item, isSelected, {
                selected: selectedKeysWithEntryPath,
                excluded: selection.excluded
@@ -428,7 +433,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
       }
 
-      if (countChildrenInList > 0) {
+      if (countChildrenInList === children.getCount() && node instanceof BreadcrumbsItem) {
+         stateNode = !initialState;
+      } else if (countChildrenInList > 0) {
          stateNode = null;
       } else if (this._entryPath) {
          const nodeKey = this._getKey(node);
@@ -552,6 +559,10 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          let childNodeSelectedCount;
 
          children.each((childItem) => {
+            if (childItem instanceof BreadcrumbsItem && this._isAllSelectedInRoot(selection)) {
+               selectedChildrenCount = null;
+            }
+
             if (selectedChildrenCount !== null) {
                childId = this._getKey(childItem);
 
@@ -591,7 +602,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     * @private
     */
    private _isNode(item: TreeItem<Model>): boolean {
-      return item instanceof TreeItem ? item.isNode() !== LEAF : true;
+      if (item instanceof TreeItem) {
+         return item.isNode() !== LEAF;
+      } else if (item instanceof BreadcrumbsItem) {
+         return true;
+      }
+      return false;
    }
 
    /**
@@ -607,7 +623,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       let contents = item.getContents();
       // tslint:disable-next-line:ban-ts-ignore
       // @ts-ignore
-      if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+      if (item instanceof BreadcrumbsItem || item.breadCrumbs) {
          // tslint:disable-next-line
          contents = contents[(contents as any).length - 1];
       }

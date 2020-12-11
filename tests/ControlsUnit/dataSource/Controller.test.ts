@@ -230,6 +230,48 @@ describe('Controls/dataSource:SourceController', () => {
             ok(loadedItems.getCount() === 4);
             sinonSandbox.restore();
         });
+
+        it('load call with direction update items',  async () => {
+            const controller = getController({
+                navigation: {
+                    source: 'page',
+                    sourceConfig: {
+                        pageSize: 2,
+                        hasMore: false
+                    }
+                }
+            });
+
+            await controller.load();
+            ok(controller.getItems().getCount() === 2);
+            ok(controller.getItems().at(0).get('title') === 'Sasha');
+
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 4);
+            ok(controller.getItems().at(2).get('title') === 'Aleksey');
+        });
+    });
+
+    describe('cancelLoading', () => {
+        it('query is canceled after cancelLoading',   () => {
+            const controller = getController();
+
+            controller.load();
+            ok(controller.isLoading());
+
+            controller.cancelLoading();
+            ok(!controller.isLoading());
+        });
+
+        it('query is canceled async', async () => {
+            const controller = getController();
+            const loadPromise = controller.load();
+
+            controller._loadPromise.cancel();
+            await loadPromise.catch(() => {});
+
+            ok(controller._loadPromise);
+        });
     });
 
     describe('updateOptions', () => {

@@ -83,6 +83,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
     pagingLeftTemplate?: TemplateFunction|string;
+    pagingRightTemplate?: TemplateFunction|string;
     multiSelectVisibility?: TMultiSelectVisibility;
     stickyMarkedItem?: boolean;
     uniqueKeys?: boolean;
@@ -215,6 +216,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
+ * @name Controls/_list/interface/IList#pagingRightTemplate
+ * @cfg {Function} Шаблон для отображения справа от постраничной навигации.
+ * @demo Controls-demo/list_new/Navigation/Paging/Position/RightTemplate/Index
+ */
+
+/*ENG
+ * @name Controls/_list/interface/IList#pagingRightTemplate
+ * @cfg {Function} Template to display to the right of page navigation.
+ * <a href="/materials/Controls-demo/app/Controls-demo%2Flist_new%2FNavigation%2FPaging%2FPosition%2FRightTemplate%2FIndex">Example</a>.
+ */
+
+/**
  * @typedef {String} MultiSelectVisibility
  * @variant visible Показать.
  * @variant hidden Скрыть.
@@ -330,7 +343,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Функция, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
- * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
+ * Функция вызывается единожды в рамках {@link /doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
  * @remark
  * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
  * @example
@@ -384,7 +397,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @typedef {String} Style
  * @variant master Двухколоночный реестр.
- * @variant masterClassic Режим отображения мастера, в котором отмеченная маркером строка имеет контрастный фон.
  * @variant default Плоский список.
  */
 
@@ -397,7 +409,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /*ENG
  * @typedef {String} Style
  * @variant master Stylizes control as MasterDetail
- * @variant masterClassic Stylizes control as MasterDetail in which the line marked with a marker has a contrasting background
  * @variant default Simple list
  */
 
@@ -439,7 +450,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * Возвращает рекордсет, на основании которого в данный момент строится списочный контрол.
+ * Возвращает рекордсет, на основании которого в данный момент строится список.
  * @function Controls/_list/interface/IList#getItems
  * @return {RecordSet} Список элементов.
  * @example
@@ -668,7 +679,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @variant master Предназначен для настройки фона masterDetail (Берётся из свойства style)
  * @variant infoBox Предназначен для настройки фона infoBox.
  * @variant stack Предназначен для настройки фона стековой панели.
- * @variant masterClassic
  * @variant detailContrast
  * @variant listItem
  * @variant stackHeader

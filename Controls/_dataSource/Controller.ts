@@ -14,9 +14,9 @@ import {INavigationOptionValue,
         ISourceOptions,
         IPromiseSelectableOptions,
         INavigationOptions} from 'Controls/interface';
-import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
+import {TNavigationPagingMode} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {Record as EntityRecord, CancelablePromise} from 'Types/entity';
+import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
@@ -49,6 +49,7 @@ export interface IControllerOptions extends
     IPromiseSelectableOptions,
     INavigationOptions<INavigationSourceConfig> {
     dataLoadErrback?: Function;
+    dataLoadCallback?: Function;
     root?: string;
     expandedItems?: TKey[];
     deepReload?: boolean;
@@ -64,7 +65,8 @@ interface ILoadConfig {
     direction?: Direction;
 }
 
-type LoadResult = Promise<RecordSet|Error>;
+type LoadPromiseResult = RecordSet|Error;
+type LoadResult = Promise<LoadPromiseResult>;
 
 enum NAVIGATION_DIRECTION_COMPATIBILITY {
     up = 'backward',
@@ -75,7 +77,8 @@ export default class Controller {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
-    private _loadPromise: CancelablePromise<LoadResult>;
+    private _loadPromise: CancelablePromise<RecordSet|Error>;
+    private _dataLoadCallback: Function;
 
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
@@ -101,7 +104,7 @@ export default class Controller {
     load(direction?: Direction,
          key: TKey = this._root,
          filter?: QueryWhereExpression<unknown>
-    ): Promise<LoadResult> {
+    ): LoadResult {
         return this._load({
             direction,
             key,
@@ -125,7 +128,7 @@ export default class Controller {
         return (this._options.source as ICrud).read(key, meta);
     }
 
-    update(item: EntityRecord): Promise<void> {
+    update(item: Model): Promise<void> {
         return (this._options.source as ICrud).update(item);
     }
 
@@ -260,6 +263,10 @@ export default class Controller {
         return hasMoreData;
     }
 
+    setDataLoadCallback(callback: Function): void {
+        this._dataLoadCallback = callback;
+    }
+
     hasLoaded(key: TKey): boolean {
         let loadedResult = false;
 
@@ -352,14 +359,51 @@ export default class Controller {
         );
     }
 
+    private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {
+        if (this._items && key === this._root) {
+            this._items.setMetaData(items.getMetaData());
+        }
+
+        if (direction === 'up') {
+            this._prependItems(items);
+        } else if (direction === 'down') {
+            this._appendItems(items);
+        } else if (key !== this._root && this._items) {
+            this._mergeItems(items);
+        } else {
+            this._setItems(items);
+        }
+
+        return items;
+    }
+
     private _setItems(items: RecordSet): void {
         if (this._items && Controller._isEqualItems(this._items, items)) {
-            this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
         } else {
             this._subscribeItemsCollectionChangeEvent(items);
             this._items = items;
         }
+    }
+
+    private _appendItems(items: RecordSet): void {
+        if (this._shouldAddItems(items)) {
+            this._items.append(items);
+        }
+    }
+
+    private _prependItems(items: RecordSet): void {
+        if (this._shouldAddItems(items)) {
+            this._items.prepend(items);
+        }
+    }
+
+    private _mergeItems(items: RecordSet): void {
+        this._items.merge(items, { remove: false, inject: true });
+    }
+
+    private _shouldAddItems(items: RecordSet): boolean {
+        return items.getCount() > 0 || this._items.getCount() === 0;
     }
 
     private _resolveNavigationParamsChangedCallback(cfg: IControllerOptions): void {
@@ -368,9 +412,11 @@ export default class Controller {
         }
     }
 
-    private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): Promise<LoadResult> {
+    private _load({direction, key, navigationSourceConfig, filter}: ILoadConfig): LoadResult {
         if (this._options.source) {
-            const filterPromise = filter ? Promise.resolve(filter) : this._prepareFilterForQuery(this._filter, key);
+            const filterPromise = filter && !direction ?
+                Promise.resolve(filter) :
+                this._prepareFilterForQuery(filter || this._filter, key);
             this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 filterPromise.then((preparedFilter: QueryWhereExpression<unknown>) => {
@@ -393,14 +439,17 @@ export default class Controller {
                 }));
 
             this._loadPromise.promise
-                .then((result) => {
+                .then((result: RecordSet) => {
                     this._loadPromise = null;
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    this._loadPromise = null;
-                    this._navigationController = null;
-                    return this._processQueryError(error);
+                    if (!error.isCanceled && !error.canceled) {
+                        this._loadPromise = null;
+                        this._navigationController = null;
+                        this._processQueryError(error);
+                    }
+                    return error;
                 });
 
             return this._loadPromise.promise;
@@ -461,18 +510,34 @@ export default class Controller {
     }
 
     private _processQueryResult(
-        result: LoadResult,
+        result: RecordSet,
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
-        direction: Direction): LoadResult {
+        direction: Direction): LoadPromiseResult {
+        let methodResult;
+        let dataLoadCallbackResult;
+
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
-        return result;
+
+        if (this._dataLoadCallback) {
+            dataLoadCallbackResult = this._dataLoadCallback(result, direction);
+        }
+
+        if (dataLoadCallbackResult instanceof Promise) {
+            methodResult = dataLoadCallbackResult.then(() => {
+                return this._addItems(result, key, direction);
+            });
+        } else {
+            methodResult = this._addItems(result, key, direction);
+        }
+
+        return methodResult;
     }
 
     private _processQueryError(
         result: LoadResult
     ): LoadResult {
-        if (this._options.dataLoadErrback instanceof Function) {
+        if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(result);
         }
         return result;
@@ -493,8 +558,54 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
+            // Навигация при изменении ReocrdSet'a должно обновляться только по записям из корня,
+            // поэтому получение элементов с границ recordSet'a
+            // нельзя делать обычным получением первого и последнего элемента,
+            // надо так же проверять, находится ли элемент в корне
+            const firstItem = this._getFirstItemFromRoot();
+            const lastItem = this._getLastItemFromRoot();
+
+            if (this._items.getCount() && firstItem && lastItem) {
+                this._getNavigationController(this._options)
+                    .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
+            }
         }
+    }
+
+    private _getFirstItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let firstItem;
+        for (let i = 0; i < itemsCount; i++) {
+            firstItem = this._getItemFromRootByIndex(i);
+            if (firstItem) {
+                break;
+            }
+        }
+        return firstItem;
+    }
+
+    private _getLastItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let lastItem;
+        for (let i = itemsCount - 1; i > 0; i--) {
+            lastItem = this._getItemFromRootByIndex(i);
+            if (lastItem) {
+                break;
+            }
+        }
+        return lastItem;
+    }
+
+    private _getItemFromRootByIndex(index: number): Model|void {
+        let item;
+        if (this._options.parentProperty && this._root !== undefined) {
+            if (this._items.at(index).get(this._options.parentProperty) === this._root) {
+                item = this._items.at(index);
+            }
+        } else {
+            item = this._items.at(index);
+        }
+        return item;
     }
 
     private _destroyNavigationController(): void {

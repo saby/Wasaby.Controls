@@ -25,6 +25,7 @@ import {load} from 'Core/library';
 import {IFilterItem} from './View/interface/IFilterView';
 import {StickyOpener, StackOpener} from 'Controls/popup';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
+import Store from 'Controls/Store';
 
 const DEFAULT_FILTER_NAME = 'all_frequent';
 var _private = {
@@ -381,12 +382,22 @@ var _private = {
         return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
-
-                // FIXME https://online.sbis.ru/opendoc.html?guid=0c3738a7-6e8f-4a12-8459-9c6a2034d927
-                // history.Source не умеет сериализоваться - удаляем его из receivedState
-                return { configs: deleteHistorySourceFromConfig(self._configs, 'source') };
+                return { configs: force ? deleteHistorySourceFromConfig(self._configs, 'source') : _private.purifyConfigs(self._configs)};
             });
         });
+    },
+
+    deleteFieldFromConfigs(configs: Record<string, any>, fieldName: string): void {
+        factory(configs).each((config) => {
+            if (config[fieldName]) {
+                delete config[fieldName];
+            }
+        });
+    },
+
+    purifyConfigs(configs): Array<Record<string, any>> {
+        _private.deleteFieldFromConfigs(configs, 'sourceController')
+        return deleteHistorySourceFromConfig(configs, '_source')
     },
 
     setValue: function(self, selectedKeys, name) {
@@ -707,6 +718,16 @@ var Filter = Control.extend({
         return resultDef;
     },
 
+    _afterMount: function(options) {
+        if (options.useStore) {
+            this._openCallbackId = Store.declareCommand(
+                'openFilterDetailPanel',
+                this.openDetailPanel.bind(this)
+            );
+            this._resetCallbackId = Store.declareCommand('resetFilter', this.reset.bind(this));
+        }
+    },
+
     _mouseEnterHandler: function(event: SyntheticEvent<MouseEvent>) {
         if (!this._options.readOnly) {
             if (!this._dependenciesTimer) {
@@ -756,6 +777,10 @@ var Filter = Control.extend({
         }
         if (this._stackOpener) {
             this._stackOpener.destroy();
+        }
+        if (this._options.useStore) {
+            Store.unsubscribe(this._openCallbackId);
+            Store.unsubscribe(this._resetCallbackId);
         }
     },
 

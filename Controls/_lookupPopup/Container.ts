@@ -8,13 +8,16 @@ import {ContextOptions} from 'Controls/context';
 import {CrudWrapper} from 'Controls/dataSource';
 import {selectionToRecord} from 'Controls/operations';
 import {adapter as adapterLib} from 'Types/entity';
-import {IData, IDecorator} from 'Types/source';
+import {IData, IDecorator, QueryWhereExpression} from 'Types/source';
 import {List, RecordSet} from 'Types/collection';
-import {ISelectionObject,
-        TSelectionRecord,
-        TSelectionType,
-        IHierarchyOptions,
-        IFilterOptions} from 'Controls/interface';
+import {
+    ISelectionObject,
+    TSelectionRecord,
+    TSelectionType,
+    IHierarchyOptions,
+    IFilterOptions, 
+    TKey
+} from 'Controls/interface';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 import {error as dataSourceError} from 'Controls/dataSource';
@@ -195,7 +198,8 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
              items: RecordSet,
              keyProperty: string,
              parentProperty?: string,
-             nodeProperty?: string
+             nodeProperty?: string,
+             root: TKey = null
          ): ISelectionObject {
             const isNode = (key): boolean => {
                const item = items.getRecordById(key);
@@ -219,11 +223,26 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                return hasExcludedChild;
             };
 
-            selection.selected.forEach((key) => {
-               if (!selection.excluded.includes(key) && hasExcludedChildren(key)) {
-                  selection.excluded.push(key);
-               }
-            });
+            if (parentProperty && selection.selected.includes(root)) {
+                let key;
+                items.each((item) => {
+                    key = item.get(keyProperty);
+
+                    if (isNode(key) && !selection.excluded.includes(key) && hasExcludedChildren(key)) {
+                        selection.excluded.push(key);
+
+                        if (!selection.selected.includes(key)) {
+                            selection.selected.push(key);
+                        }
+                    }
+                });
+            } else {
+                selection.selected.forEach((key) => {
+                    if (!selection.excluded.includes(key) && hasExcludedChildren(key)) {
+                        selection.excluded.push(key);
+                    }
+                });
+            }
 
             return selection;
          },
@@ -251,7 +270,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             return result;
          },
 
-         loadSelectedItems(self: object, filter: object): Promise<RecordSet> {
+         loadSelectedItems(self: object, filter: QueryWhereExpression<unknown>): Promise<RecordSet> {
             const dataOptions = self.context.get('dataOptions');
             const items = dataOptions.items;
             let loadItemsPromise;
@@ -264,18 +283,16 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                   loadItemsPromise = Promise.resolve(selectedItems);
                } else {
                   const crudWrapper = _private.getCrudWrapper(dataOptions.source);
-                  const loadItemsCallback = (result) => {
-                     _private.hideIndicator(self);
-
-                     if (result instanceof Error) {
-                         dataSourceError.process({error: result});
-                     }
-
-                     return result;
-                  };
-
                   _private.showIndicator(self);
-                  loadItemsPromise = crudWrapper.query({filter}).then(loadItemsCallback, loadItemsCallback);
+                  loadItemsPromise = crudWrapper
+                      .query({filter})
+                      .catch((error) => {
+                          dataSourceError.process({error});
+                          return Promise.reject(error);
+                      })
+                      .finally(() => {
+                          _private.hideIndicator(self);
+                      });
                }
             } else {
                loadItemsPromise = Promise.resolve(_private.getEmptyItems(items));
@@ -383,7 +400,8 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
                    items,
                    keyProperty,
                    options.parentProperty,
-                   options.nodeProperty
+                   options.nodeProperty,
+                   options.root
                );
             }
             const adapter = _private.getSourceAdapter(dataOptions.source);
@@ -404,18 +422,15 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
             // выбранный записей в отдельный слой.
             // здесь будет только формирование фильтра
             if (this._options.selectionLoadMode) {
-               loadPromise = new Promise((resolve) => {
-                   _private.loadSelectedItems(this, filter)
-                       .then((loadedItems) => {
-                           resolve(_private.prepareResult(
-                               loadedItems,
-                               this._initialSelection,
-                               keyProperty,
-                               this._selectCompleteInitiator
-                               )
-                           );
-                       });
-               });
+                loadPromise = _private.loadSelectedItems(this, filter)
+                    .then((loadedItems) => {
+                        return _private.prepareResult(
+                            loadedItems,
+                            this._initialSelection,
+                            keyProperty,
+                            this._selectCompleteInitiator
+                        );
+                    });
             } else {
                loadPromise = Promise.resolve(filter);
             }

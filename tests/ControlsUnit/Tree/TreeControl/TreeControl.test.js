@@ -318,7 +318,16 @@ define([
             }
          };
 
-         const target = tree.TreeControl._private.getTargetRow(event);
+         const treeControl = {
+            _children: {
+               baseControl: {
+                  getViewModel: () => {
+                     return {};
+                  }
+               }
+            }
+         }
+         const target = tree.TreeControl._private.getTargetRow(treeControl, event);
          assert.equal(event.target, target);
       });
 
@@ -626,7 +635,7 @@ define([
                   assert.deepEqual([], treeViewModel.getExpandedItems());
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
-                  treeControl._beforeUpdate({root: treeControl._root});
+                  treeControl._beforeUpdate({root: treeControl._root, source: source});
                   assert.isTrue(resetExpandedItemsCalled);
                   resolve();
                }, 20);
@@ -922,7 +931,8 @@ define([
                   root: 'testRoot',
                   parentProperty: 'parentKey',
                   nodeProperty: 'itemType',
-                  hasChildrenProperty: 'hasChildren'
+                  hasChildrenProperty: 'hasChildren',
+                  source: source
                });
                try {
                   assert.equal(treeGridViewModel._options.parentProperty, 'parentKey');
@@ -1184,9 +1194,6 @@ define([
                             setHasMoreStorage: function () {
                                setHasMoreCalled = true;
                             },
-                            mergeItems: function () {
-                               mergeItemsCalled = true;
-                            },
                             getExpandedItems: () => []
                          };
                       },
@@ -1196,6 +1203,7 @@ define([
                       hideIndicator() {
                          isIndicatorHasBeenHidden = true;
                       },
+                      stopBatchAdding() {},
                       getSourceController() {
                          return {
                             load: (direction, key) => {
@@ -1224,7 +1232,6 @@ define([
              }, mockedTreeControlInstance._options.filter,
              'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
-         assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(isIndicatorHasBeenShown);
          assert.isTrue(isIndicatorHasBeenHidden);
@@ -2022,7 +2029,7 @@ define([
          }), cfg);
 
          tree.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
-
+         treeGridViewModel.getItems().merge(newItems, {remove: false, inject: true}); // эмуляция работы sourceController'a
          assert.equal(treeGridViewModel.getItems().getCount(), 3);
          assert.deepEqual(treeGridViewModel.getItems().at(0).getRawData(), {id: 0, 'Раздел@': false, "Раздел": null});
       });

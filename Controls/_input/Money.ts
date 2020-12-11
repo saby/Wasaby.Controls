@@ -33,6 +33,7 @@ interface IMoneyOptions extends INumberLengthOptions {
 class Money extends Base implements INumberLength {
     _options: IMoneyOptions;
     protected _inputMode = 'decimal';
+    protected _controlName: string = 'Money';
 
     readonly '[Controls/_input/interface/INumberLength]' = true;
 
@@ -115,7 +116,7 @@ class Money extends Base implements INumberLength {
  *         }
  *     }
  * </pre>
- * Пример можно упростить, воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
+ * Пример можно упростить, воспользовавшись синтаксисом шаблонизатора {@link /doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
  * <pre>
  *     <Controls.input:Money bind:value="_value"/>
  * </pre>

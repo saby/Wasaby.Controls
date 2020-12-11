@@ -1825,24 +1825,40 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    describe('.isAllGroupsCollpsed()', () => {
+    describe('.isAllGroupsCollapsed()', () => {
         const list = new List({
             items: [
                 { id: 1, group: 1 },
                 { id: 2, group: 2 }
             ]
         });
-        const display = new CollectionDisplay({
-            collection: list,
-            collapsedGroups: [1, 2],
-            groupingKeyCallback: (item) => {
-                return item.group;
-            }
+
+        it('set by options collapsed groups', () => {
+            const display = new CollectionDisplay({
+                collection: list,
+                collapsedGroups: [1, 2],
+                groupingKeyCallback: (item) => {
+                    return item.group;
+                }
+            });
+
+            assert.isTrue(display.isAllGroupsCollapsed());
+            display.setCollapsedGroups([1]);
+            assert.isFalse(display.isAllGroupsCollapsed());
         });
 
-        assert.isTrue(display.isAllGroupsCollapsed());
-        display.setCollapsedGroups([1]);
-        assert.isFalse(display.isAllGroupsCollapsed());
+        it('set collapsed by group item state', () => {
+            const display = new CollectionDisplay({
+                collection: list,
+                groupingKeyCallback: (item) => {
+                    return item.group;
+                }
+            });
+
+            display.each((it) => it instanceof GroupItem ? it.setExpanded(false) : null);
+
+            assert.isTrue(display.isAllGroupsCollapsed());
+        });
     });
 
     describe('.getGroupByIndex()', () => {
@@ -4328,17 +4344,36 @@ describe('Controls/_display/Collection', () => {
         assert.strictEqual(collection.getSearchValue(), searchValue);
     });
 
-    it('.getItemBySourceKey()', () => {
-        const list = new RecordSet({
-            rawData: items,
-            keyProperty: 'id'
+    describe('.getItemBySourceKey()', () => {
+        it('.getItemBySourceKey() for item', () => {
+            const list = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            const collection = new CollectionDisplay({
+                collection: list,
+                keyProperty: 'id'
+            });
+            const item = collection.getItemBySourceKey(1);
+            assert.strictEqual(item.getContents().getId(), 1);
         });
-        const collection = new CollectionDisplay({
-            collection: list,
-            keyProperty: 'id'
+        it('.getItemBySourceKey() for group', () => {
+            const list = new RecordSet({
+                items: [
+                    {id: 1, group: '#1'},
+                    {id: 2, group: '#2'},
+                    {id: 3, group: '#1'},
+                    {id: 4, group: '#3'}
+                ]
+            });
+            const collection = new CollectionDisplay({
+                collection: list,
+                keyProperty: 'id',
+                group: (item) => item.group
+            });
+            const item = collection.getItemBySourceKey('#1');
+            assert.strictEqual(item.getContents(), '#1');
         });
-        const item = collection.getItemBySourceKey(1);
-        assert.strictEqual(item.getContents().getId(), 1);
     });
 
     it('.getIndexByKey()', () => {
@@ -4538,13 +4573,14 @@ describe('Controls/_display/Collection', () => {
     describe('drag', () => {
         let display: CollectionDisplay<unknown>;
         let notifyLaterSpy;
+        let rs;
         beforeEach(() => {
             const items = [
                 { id: 1, name: 'Ivan' },
                 { id: 2, name: 'Alexey' },
                 { id: 3, name: 'Olga' }
             ];
-            const rs = new RecordSet({
+            rs = new RecordSet({
                 rawData: items,
                 keyProperty: 'id'
             });
@@ -4555,21 +4591,21 @@ describe('Controls/_display/Collection', () => {
             notifyLaterSpy = spy(display, '_notifyLater');
         });
 
-        it('setDraggedItems', () => {
+        it('setDraggedItems and was add item', () => {
             const draggedItem = display.createItem({contents: {getKey: () => '123'}});
             display.setDraggedItems(draggedItem, ['123']);
             assert.equal(display.getItems()[2].getContents().getKey(), '123');
             assert.isTrue(notifyLaterSpy.called);
         });
 
-        it('setDraggedItems', () => {
+        it('setDraggedItems and was not add item', () => {
             const draggedItem = display.getItemBySourceKey(1);
             display.setDraggedItems(draggedItem, [1]);
             assert.equal(display.getItems()[0].getContents().getKey(), 1);
             assert.isFalse(notifyLaterSpy.called);
         });
 
-        it('resetDraggedItems', () => {
+        it('resetDraggedItems and was not add item', () => {
             const draggedItem = display.getItemBySourceKey(1);
             display.setDraggedItems(draggedItem, [1]);
             assert.equal(display.getItems()[0].getContents().getKey(), 1);
@@ -4579,7 +4615,7 @@ describe('Controls/_display/Collection', () => {
             assert.isFalse(notifyLaterSpy.called);
         });
 
-        it('resetDraggedItems', () => {
+        it('resetDraggedItems and was add item', () => {
             const draggedItem = display.createItem({contents: {getKey: () => '123'}});
             display.setDraggedItems(draggedItem, ['123']);
             assert.equal(display.getItems()[2].getContents().getKey(), '123');
@@ -4587,6 +4623,18 @@ describe('Controls/_display/Collection', () => {
 
             display.resetDraggedItems();
             assert.isTrue(notifyLaterSpy.calledTwice);
+        });
+
+        it('resetDraggedItems and item was remove on dragEnd event', () => {
+            const draggedItem = display.getItemBySourceKey(1);
+            display.setDraggedItems(draggedItem, [1]);
+            assert.equal(display.getItems()[0].getContents().getKey(), 1);
+            assert.isFalse(notifyLaterSpy.called);
+
+            rs.remove(draggedItem.getContents());
+            notifyLaterSpy.resetHistory();
+            display.resetDraggedItems();
+            assert.isTrue(notifyLaterSpy.called);
         });
     });
 });

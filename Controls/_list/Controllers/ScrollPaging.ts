@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
-import {TNavigationPagingMode} from '../../_interface/INavigation';
+import {TNavigationPagingMode} from 'Controls/interface';
 
 /**
  *
@@ -153,7 +153,7 @@ export default class ScrollPagingController {
                 break;
 
             case 'edge':
-                if (arrowState.next === 'visible') {
+                if (arrowState.next === 'visible' || arrowState.end === 'visible') {
                     arrowState.begin = 'hidden';
                     arrowState.end = 'visible';
                 } else if (arrowState.begin === 'visible') {
@@ -165,7 +165,7 @@ export default class ScrollPagingController {
                 break;
 
             case 'end':
-                if (arrowState.next === 'visible') {
+                if (arrowState.next === 'visible' || arrowState.end === 'visible') {
                     arrowState.end = 'visible';
                 } else {
                     arrowState.end = 'hidden';

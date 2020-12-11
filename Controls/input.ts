@@ -52,7 +52,7 @@ export {default as DateBase} from 'Controls/_input/DateTime';
 export {default as TimeInterval} from 'Controls/_input/TimeInterval';
 export {default as Money} from 'Controls/_input/Money';
 export {default as Area} from './_input/Area';
-import Date = require('Controls/_input/Date/Picker');
+export {default as Date} from 'Controls/_input/Date/Picker';
 export {default as Render, IRenderOptions} from 'Controls/_input/Render';
 export {default as Field} from './_input/resources/Field';
 
@@ -110,7 +110,6 @@ const InputCallback = {
 
 export {
     IDateTimeMask,
-    Date,
     BaseViewModel,
     MaskInputProcessor,
     MaskFormatterValue,

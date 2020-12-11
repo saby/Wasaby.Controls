@@ -18,6 +18,33 @@ export default class TreeGridView extends GridView {
         return Item;
     }
 
+    protected _onItemClick(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
+        if (dispItem['[Controls/treeGridNew:TreeGridNodeFooterRow]']) {
+            e.stopImmediatePropagation();
+            return;
+        }
+
+        super._onItemClick(e, dispItem);
+    }
+
+    protected _onItemMouseUp(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
+        if (dispItem['[Controls/treeGridNew:TreeGridNodeFooterRow]']) {
+            e.stopImmediatePropagation();
+            return;
+        }
+
+        super._onItemMouseUp(e, dispItem);
+    }
+
+    protected _onItemMouseDown(e: SyntheticEvent, dispItem: TreeItem<Model>): void {
+        if (dispItem['[Controls/treeGridNew:TreeGridNodeFooterRow]']) {
+            e.stopImmediatePropagation();
+            return;
+        }
+
+        super._onItemMouseDown(e, dispItem);
+    }
+
     private _onExpanderClick(e: SyntheticEvent, item: TreeItem<Model>): void {
         this._notify('expanderClick', [item], {bubbling: true});
         e.stopImmediatePropagation();

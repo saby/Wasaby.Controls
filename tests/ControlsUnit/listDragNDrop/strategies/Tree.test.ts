@@ -75,7 +75,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
           strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
           const targetItem = model.getItemBySourceKey(5);
-          const mouseOffsetInTargetItem = {top: 5, bottom: 25};
+          const mouseOffsetInTargetItem = {top: 0.2, bottom: 25};
           const currentPosition = { index: 0, position: 'on', dispItem: targetItem };
           const position = strategy.calculatePosition({targetItem, currentPosition, mouseOffsetInTargetItem });
 
@@ -91,7 +91,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(5);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -105,7 +105,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(5);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -119,7 +119,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(6);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -133,7 +133,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(6);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -175,7 +175,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
 
             const targetNode = model.getItemBySourceKey(1);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -189,13 +189,55 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
 
             const targetNode = model.getItemBySourceKey(1);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
                index: 0,
                position: 'after',
                dispItem: targetNode
+            });
+         });
+
+         it('drag leaf from bottom node to after this node', () => {
+            model.setExpandedItems([null]);
+            model.getItemBySourceKey(1).setExpanded(true);
+
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(3));
+
+            const targetNode = model.getItemBySourceKey(1);
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
+
+            const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 0,
+               position: 'before',
+               dispItem: model.getItemBySourceKey(2)
+            });
+         });
+
+         it('drag first leaf from node and back to same place ', () => {
+            model.setExpandedItems([null]);
+            model.getItemBySourceKey(1).setExpanded(true);
+
+            strategy = new TreeStrategy(model, model.getItemBySourceKey(4));
+
+            const targetNode = model.getItemBySourceKey(2);
+            let mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
+
+            let newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'before',
+               dispItem: targetNode
+            });
+
+            mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
+            newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
+            equalPosition(newPosition, {
+               index: 1,
+               position: 'after',
+               dispItem: model.getItemBySourceKey(2)
             });
          });
       });
@@ -209,7 +251,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(5);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -223,7 +265,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(5);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -237,7 +279,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(6);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -251,7 +293,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(1));
 
             const targetNode = model.getItemBySourceKey(6);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -293,7 +335,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
 
             const targetNode = model.getItemBySourceKey(1);
-            const mouseOffsetInTargetItem = {top: 5, bottom: 20};
+            const mouseOffsetInTargetItem = {top: 0.2, bottom: 0.8};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {
@@ -307,7 +349,7 @@ describe('Controls/_listDragNDrop/strategies/TreeStrategy', () => {
             strategy = new TreeStrategy(model, model.getItemBySourceKey(6));
 
             const targetNode = model.getItemBySourceKey(1);
-            const mouseOffsetInTargetItem = {top: 20, bottom: 5};
+            const mouseOffsetInTargetItem = {top: 0.8, bottom: 0.2};
 
             const newPosition = strategy.calculatePosition({targetItem: targetNode, mouseOffsetInTargetItem });
             equalPosition(newPosition, {

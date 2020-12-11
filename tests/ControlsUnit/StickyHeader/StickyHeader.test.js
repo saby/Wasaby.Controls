@@ -101,7 +101,6 @@ define([
             component._observer = {
                disconnect: sinon.fake()
             };
-            sinon.stub(component, '_resetTopBottomStyles');
 
             component._beforeUnmount();
             assert.isUndefined(component._observeHandler);
@@ -315,14 +314,14 @@ define([
             const component = createComponent(StickyHeader, {});
             component._model = { fixedPosition: '' };
 
-            assert.strictEqual(component._getObserverStyle('top'), 'top: -3px;');
-            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -3px;');
+            assert.strictEqual(component._getObserverStyle('top'), 'top: -2px;');
+            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -2px;');
             component._stickyHeadersHeight = {
                top: 2,
                bottom: 3
             };
-            assert.strictEqual(component._getObserverStyle('top'), 'top: -5px;');
-            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -6px;');
+            assert.strictEqual(component._getObserverStyle('top'), 'top: -4px;');
+            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -5px;');
             sinon.restore();
          });
          it('should consider borders', function() {
@@ -333,14 +332,14 @@ define([
             sinon.stub(component, '_getComputedStyle').returns({ 'border-top-width': '1px', 'border-bottom-width': '1px' });
             component._model = { fixedPosition: '' };
 
-            assert.strictEqual(component._getObserverStyle('top'), 'top: -4px;');
-            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -4px;');
+            assert.strictEqual(component._getObserverStyle('top'), 'top: -3px;');
+            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -3px;');
             component._stickyHeadersHeight = {
                top: 2,
                bottom: 3
             };
-            assert.strictEqual(component._getObserverStyle('top'), 'top: -6px;');
-            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -7px;');
+            assert.strictEqual(component._getObserverStyle('top'), 'top: -5px;');
+            assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -6px;');
             EnvLib.constants.isServerSide = oldIsServerSide;
             sinon.restore();
          });
@@ -390,7 +389,6 @@ define([
                   fixedPosition: '',
                   id: component._index,
                   mode: "replaceable",
-                  offsetHeight: 10,
                   prevPosition: "top",
                   shadowVisible: true,
                   isFakeFixed: false
@@ -398,33 +396,6 @@ define([
                   bubbling: true
                }
             );
-            sinon.restore();
-         });
-         it('should use previous offsetHeight if container is hidden', function() {
-            const component = createComponent(StickyHeader, {});
-            component._height = 10;
-            component._container = {
-               closest: () => true,
-               offsetHeight: 0
-            }
-            sinon.stub(component, '_notify');
-            component._fixationStateChangeHandler('', 'top');
-            sinon.assert.calledWith(
-               component._notify,
-               'fixed',
-               [{
-                  fixedPosition: '',
-                  id: component._index,
-                  mode: "replaceable",
-                  offsetHeight: 10,
-                  prevPosition: "top",
-                  shadowVisible: true,
-                  isFakeFixed: false
-               }], {
-                  bubbling: true
-               }
-            );
-
             sinon.restore();
          });
       });

@@ -60,17 +60,7 @@ export default class TreeItem<T> extends mixin<
      */
     protected _$childrenProperty: string;
 
-    /**
-     * Иконка экспандера
-     */
-    protected _$expanderIcon: string;
-
-    /**
-     * Размер экспандера
-     */
-    protected _$expanderSize: string;
-
-    constructor(options?: IOptions<T>) {
+    constructor(options: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);
 
@@ -82,6 +72,7 @@ export default class TreeItem<T> extends mixin<
         if (this._$node) {
             this._$hasChildren = true;
         }
+
         if (options) {
             // Если hasChildren не задали, то для узла по дефолту есть дети
             if (options.hasChildren === undefined) {
@@ -158,6 +149,7 @@ export default class TreeItem<T> extends mixin<
 
     /**
      * Возвращает признак, является ли элемент узлом
+     * TODO нужен параметр или метод, который будет возвращать для узлов и скрытых узлов true, а для листьев false. Сейчас листья это null
      */
     isNode(): boolean|null {
         return this._$node;
@@ -200,6 +192,11 @@ export default class TreeItem<T> extends mixin<
         return this.getOwner().getChildren(this, withFilter);
     }
 
+    hasMoreStorage(): boolean {
+        const hasMoreStorage = this._$owner.getHasMoreStorage();
+        return !!hasMoreStorage[this.getContents().getKey()];
+    }
+
     // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести
     //  он используется для группы, но можно от него унаследоваться и расширить вот этим кодом
     // region Expandable
@@ -217,11 +214,11 @@ export default class TreeItem<T> extends mixin<
     }
 
     getExpanderIcon(expanderIcon?: string): string {
-        return expanderIcon || this._$expanderIcon;
+        return expanderIcon || this._$owner.getExpanderIcon();
     }
 
     getExpanderSize(expanderSize?: string): string {
-        return expanderSize || this._$expanderSize;
+        return expanderSize || this._$owner.getExpanderSize();
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
@@ -247,10 +244,10 @@ export default class TreeItem<T> extends mixin<
         return expanderPaddingClasses;
     }
 
-    getLevelIndentClasses(theme: string = 'default', expanderSize: string = 's', levelIndentSize: string = 's'): string {
-        // TODO нужно поддержать expanderSize и levelIndentSize, они не передаются в темплейт сейчас
+    getLevelIndentClasses(expanderSizeTmpl: string, levelIndentSize: string, theme: string = 'default'): string {
         const sizes = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
         let resultLevelIndentSize;
+        const expanderSize = this.getExpanderSize(expanderSizeTmpl);
 
         if (expanderSize && levelIndentSize) {
             if (sizes.indexOf(expanderSize) >= sizes.indexOf(levelIndentSize)) {
@@ -364,7 +361,5 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
-    _$expanderIcon: undefined,
-    _$expanderSize: undefined,
     _instancePrefix: 'tree-item-'
 });

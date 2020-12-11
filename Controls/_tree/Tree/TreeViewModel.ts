@@ -191,10 +191,12 @@ var
             let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
             let expanderIconClass = '';
 
+            let expanderIconStyle = itemData.style;
             if (expanderPosition !== 'right') {
                 expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
             } else {
                 expanderClasses += ` controls-TreeGrid__row_expander_position_right_theme-${theme} `;
+                expanderIconStyle = 'default';
             }
             expanderClasses += EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE;
 
@@ -207,7 +209,7 @@ var
 
                 // могут передать node или hiddenNode в этом случае добавляем наши классы для master/default
                 if ((expanderIcon === 'node') || (expanderIcon === 'hiddenNode') || (expanderIcon === 'emptyNode')) {
-                    expanderIconClass += '_' + (itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default');
+                    expanderIconClass += '_' + (expanderIconStyle === 'master' ? 'master' : 'default');
                 }
             } else {
                 const needEmptyFolderIcon = itemData.expanderVisibility === 'hasChildrenOrHover' && !itemData.hasChildItem;
@@ -218,7 +220,7 @@ var
                 // В случае если expanderVisibility === 'hasChildrenOrHover' и у узла нет дочерних элементов, то
                 // рисуем иконку пустого узла. Во всех остальных случаях рисуем иконку в зависимости от типа узла.
                 const iconType = needEmptyFolderIcon ? 'emptyNode' : itemType === true ? 'node' : 'hiddenNode';
-                const iconStyle = itemData.style === 'master' || itemData.style === 'masterClassic' ? 'master' : 'default';
+                const iconStyle = expanderIconStyle === 'master' ? 'master' : 'default';
 
                 expanderIconClass += ` controls-TreeGrid__row-expander_${iconType}_${iconStyle}`;
             }
