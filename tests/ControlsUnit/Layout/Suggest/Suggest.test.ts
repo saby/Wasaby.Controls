@@ -710,8 +710,7 @@ describe('Controls/suggest', () => {
 
          const resolverSpy = sinon.spy(SearchResolverController.prototype, 'resolve');
 
-         inputContainer._searchValue = 'test';
-         await inputContainer._resolveSearch();
+         await inputContainer._resolveSearch('test');
 
          assert.instanceOf(inputContainer._searchResolverController, SearchResolverController);
          assert.isTrue(resolverSpy.calledWith('test'));
