@@ -55,7 +55,11 @@ export function isInLeftSwipeRange(fixedColumnsWidth: number, scrollWidth: numbe
  */
 export function calculateColumnsSizes(container: HTMLDivElement): DOMRect[] {
     const scrollableColumnsSizes = [];
-    const htmlColumns: NodeList = container.querySelectorAll(`.${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`);
+    let htmlColumns: NodeList;
+    if (!container) {
+        return scrollableColumnsSizes;
+    }
+    htmlColumns = container.querySelectorAll(`.${COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT}`)
     if (htmlColumns) {
         htmlColumns.forEach((value) => {
             const columnRect = (value as HTMLElement).getBoundingClientRect();
