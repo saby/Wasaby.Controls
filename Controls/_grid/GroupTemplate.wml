@@ -17,7 +17,7 @@
          <ws:else>{{itemData.item}}</ws:else>
       </div>
       <ws:if data="{{columnAlignGroup === undefined}}">
-         <ws:if data="{{separatorVisibility !== false && textAlign !== 'right'}}">
+         <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'right')}}">
             <div class="controls-ListView__groupSeparator-right_theme-{{itemData.theme}}">&nbsp;</div>
          </ws:if>
          <ws:if data="{{!!rightTemplate}}">
@@ -29,7 +29,7 @@
 </ws:template>
 <ws:template name="groupRightTemplate">
    <div class="controls-ListView__groupContent">
-      <ws:if data="{{separatorVisibility !== false && textAlign !== 'right'}}">
+      <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'right')}}">
          <div class="controls-ListView__groupSeparator-right_theme-{{itemData.theme}}">&nbsp;</div>
       </ws:if>
       <ws:if data="{{!!rightTemplate}}">
@@ -45,7 +45,7 @@
         backgroundStyle="{{itemData.backgroundStyle}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent"
         fixedZIndex="{{4}}">
-         <ws:if data="{{separatorVisibility !== false && textAlign !== 'right'}}">
+         <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'right')}}">
             <div class="controls-ListView__groupSeparator-right_theme-{{itemData.theme}}">&nbsp;</div>
          </ws:if>
          <ws:if data="{{!!rightTemplate}}">
