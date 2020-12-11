@@ -69,8 +69,6 @@ export default class ControllerClass implements ISearchController {
 
       if (options.sourceController) {
          this._sourceController = options.sourceController;
-      } else {
-         Logger.error('_search/ControllerClass: sourceController option has incorrect type');
       }
 
       if (options.root !== undefined) {

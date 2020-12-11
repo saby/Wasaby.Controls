@@ -101,7 +101,7 @@ export interface ISearchInputContainerOptions extends IControlOptions {
 export interface ISearchControllerOptions extends ISearchOptions,
    IHierarchyOptions,
    IHierarchySearchOptions {
-   sourceController: NewSourceController;
+   sourceController?: NewSourceController;
    searchValue?: string;
    root?: Key;
 }
