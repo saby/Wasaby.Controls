@@ -156,7 +156,7 @@ export class Controller {
       let newSelection;
 
       if (status === true || status === null) {
-         newSelection = this._strategy.unselect(this._selection, key);
+         newSelection = this._strategy.unselect(this._selection, key, this._searchValue);
          if (this._limit) {
             this._limit--;
          }
