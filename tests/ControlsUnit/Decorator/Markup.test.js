@@ -381,8 +381,8 @@ define([
                         ],
                         ['details', ['summary', 'Test summary']],
                         ['wbr'],
-                        ['datalist', ['option', { value: 'Test option'} ]],
-                        ['select', ['option', { value: 'Test option'} ]],
+                        ['datalist', ['option', 'Test option']],
+                        ['select', ['option', 'Test option']],
                         ['keygen'],
                         ['output', 'Test ouput'],
                         ['audio', ['track', {src: '/testAudio.mp3'} ]],
@@ -420,6 +420,8 @@ define([
                '<p>' +
                '<html>' +
                '<head></head>' +
+               '<title>Test title</title>' +
+               '<link "href="/resources/WS.Core/css/core-min.css" rel="stylesheet" />'
                '<body>' +
                '<div>Test division</div>' +
                '<code>Test code</code>' +
@@ -446,20 +448,20 @@ define([
                '<tbody><tr><td>Test</td><td>body</td></tr></tbody>' +
                '<tfoot><tr><td>Test</td><td>foot</td></tr></tfoot>' +
                '</table>' +
-               '<bdi>Test</bdi>' +
+               '<bdi>Test bdi</bdi>' +
                '<dialog>Test dialog</dialog>' +
                '<mark>Test mark</mark>' +
                '<meter>Test meter</meter>' +
                '<progress>Test progress</progress>' +
                '<ruby><rp>Test rp</rp><rt>Test rt</rt></ruby>' +
                '<details><summary>Test summary</summary></details>' +
-               '<wbr/>' +
-               '<datalist><option value="Test option"/></datalist>' +
-               '<select><option value="Test option"/></select>' +
+               '<wbr />' +
+               '<datalist><option>Test option</option></datalist>' +
+               '<select><option>Test option</option></select>' +
                '<keygen/>' +
                '<output>Test output</output>' +
-               '<audio><track src="/testAudio.mp3"/></audio>' +
-               '<video><track src="/testAudio.mp4"/></video>' +
+               '<audio><track src="/testAudio.mp3" /></audio>' +
+               '<video><track src="/testVideo.mp4" /></video>' +
                '</body>' +
                '</html>' +
                '</p>' +
