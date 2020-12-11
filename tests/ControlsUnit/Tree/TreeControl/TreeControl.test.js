@@ -1194,6 +1194,7 @@ define([
                       hideIndicator() {
                          isIndicatorHasBeenHidden = true;
                       },
+                      stopBatchAdding() {},
                       getSourceController() {
                          return {
                             load: (direction, key) => {
