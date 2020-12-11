@@ -44,6 +44,8 @@ import {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwip
 export {Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig};
 import {default as CollectionItem} from './_display/CollectionItem';
 export {CollectionItem};
+import BreadcrumbsItem from './_display/BreadcrumbsItem';
+export {BreadcrumbsItem};
 import {default as Enum} from './_display/Enum';
 export {Enum};
 import {default as Flags} from './_display/Flags';
