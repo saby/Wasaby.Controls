@@ -421,7 +421,7 @@ define([
                '<html>' +
                '<head></head>' +
                '<title>Test title</title>' +
-               '<link "href="/resources/WS.Core/css/core-min.css" rel="stylesheet" />'
+               '<link "href="/resources/WS.Core/css/core-min.css" rel="stylesheet" />' +
                '<body>' +
                '<div>Test division</div>' +
                '<code>Test code</code>' +
