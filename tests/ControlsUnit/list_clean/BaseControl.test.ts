@@ -810,12 +810,14 @@ describe('Controls/list_clean/BaseControl', () => {
                 return rs;
             };
             baseControlOptions.searchValue = 'test';
+            baseControlOptions.loading = true;
             const baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
             baseControl.saveOptions(baseControlOptions);
 
             loadStarted = false;
             baseControlOptions = {...baseControlOptions};
+            baseControlOptions.loading = false;
             baseControl._beforeUpdate(baseControlOptions);
             assert.isTrue(loadStarted);
         });
