@@ -203,11 +203,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
       it('with ENTRY_PATH', () => {
          // если есть ENTRY_PATH то удаляется только текущий корень и его дети
-         strategy._entryPath = [];
+         strategy._entryPath = [{}];
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
          assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.excluded, []);
+      });
+
+      it('with empty ENTRY_PATH', () => {
+         // если есть ENTRY_PATH то удаляется только текущий корень и его дети
+         strategy._entryPath = [];
+         strategy._rootId = 2;
+         let selection = { selected: [2, 5], excluded: [2, 3] };
+         selection = strategy.unselectAll(selection);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
    });
@@ -371,21 +381,31 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                nodeType: true,
                title: 'test_node1'
             }, {
-               id: 2,
+               id: 11,
                parent: 1,
                nodeType: null,
                title: 'test_leaf11'
+            }, {
+               id: 12,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf12'
             },
             {
-               id: 3,
+               id: 2,
                parent: null,
                nodeType: true,
                title: 'test_node2'
             }, {
-               id: 4,
-               parent: 3,
+               id: 21,
+               parent: 2,
                nodeType: null,
                title: 'test_leaf21'
+            }, {
+               id: 22,
+               parent: 2,
+               nodeType: null,
+               title: 'test_leaf22'
             }],
             keyProperty: 'id'
          });
@@ -405,10 +425,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             model: searchModel
          });
 
-         const res = strategy.getSelectionForModel({selected: [null], excluded: [null]}, undefined, undefined, 'sad');
-         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(2), searchModel.getItemBySourceKey(4)]);
-         assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(3)]);
+         let res = strategy.getSelectionForModel({selected: [null], excluded: [null]}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12), searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(2)]);
          assert.deepEqual(res.get(false), []);
+
+         res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11, 12]}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(2)]);
+         assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
       });
    });
 

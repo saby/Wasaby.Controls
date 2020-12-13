@@ -444,9 +444,12 @@ export default class Controller {
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    this._loadPromise = null;
-                    this._navigationController = null;
-                    return this._processQueryError(error);
+                    if (!error.isCanceled && !error.canceled) {
+                        this._loadPromise = null;
+                        this._navigationController = null;
+                        this._processQueryError(error);
+                    }
+                    return error;
                 });
 
             return this._loadPromise.promise;

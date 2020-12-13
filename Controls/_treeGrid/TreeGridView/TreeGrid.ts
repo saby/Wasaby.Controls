@@ -20,7 +20,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
@@ -49,7 +49,7 @@ import { TreeControl } from 'Controls/tree';
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_marker/interface/IMarkerListOptions
