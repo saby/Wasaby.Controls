@@ -1,62 +1,87 @@
-<div class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
-    <!-- Header -->
-    <ws:if data="{{ _listModel.getHeader() }}">
-        <ws:partial template="{{ _listModel.getHeader().getRow().getTemplate() }}"
-                    attr:name="header"
-                    item="{{ _listModel.getHeader().getRow() }}"
-                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-    </ws:if>
-    <!-- Results (top) -->
-    <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}">
-        <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
-                    attr:name="results"
-                    item="{{ _listModel.getResults() }}"
-                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-    </ws:if>
-    <!-- Items -->
-    <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
-        <ws:partial
-                template="wml!Controls/_list/Render/For"
-                itemTemplate="{{ _itemTemplate }}"
-                collection="{{ _listModel }}"
-                keyPrefix="gridView-item"
+<div name="gridWrapper"
+     on:wheel="_onGridWrapperWheel()"
+     class="{{ _getGridViewWrapperClasses(_options) }}"
+     style="{{ _getGridViewWrapperStyles(_options) }}">
+    <style name="columnScrollStylesContainer" data-vdom-ignore="true"></style>
 
-                style="{{ _options.style }}"
-                theme="{{ _options.theme }}"
-                itemTemplateProperty="{{ _options.itemTemplateProperty }}"
-                groupTemplate="{{ _groupTemplate }}"
-                itemActionsPosition="{{ _options.itemActionsPosition }}"
-                itemActionsTemplate="{{ _options.itemActionsTemplate }}"
-                itemActionsClass="{{ _options.itemActionsClass }}"
-                swipeTemplate="{{ _options.swipeTemplate }}"
-                multiSelectTpl="{{ _options.multiSelectTpl }}"
-                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
-                tagTemplate="{{ _options.tagTemplate }}">
-            <ws:editArrowTemplate>
-                <ws:partial template="wml!Controls/_gridNew/Render/EditArrowTemplate"/>
-            </ws:editArrowTemplate>
-        </ws:partial>
+    <!-- Тени -->
+    <ws:if data="{{ isColumnScrollVisible() }}">
+        <div name="columnScrollShadowStart" class="{{ _columnScrollShadowClasses.start }}"></div>
+        <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
+    </ws:if>
+
+    <div name="grid" class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
+        <!-- Header -->
+        <ws:if data="{{ _listModel.getHeader() }}">
+            <ws:partial template="{{ _listModel.getHeader().getRow().getTemplate() }}"
+                        attr:name="header"
+                        item="{{ _listModel.getHeader().getRow() }}"
+                        backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+        </ws:if>
+        <!-- Results (top) -->
+        <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}">
+            <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
+                        attr:name="results"
+                        item="{{ _listModel.getResults() }}"
+                        backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+        </ws:if>
+        <!-- Скроллбар горизонтального скролла. -->
+        <ws:if data="{{ _options.columnScroll && (_listModel.getHeader() || (_listModel.getResults() && _listModel.getResultsPosition() === 'top')) }}">
+            <Controls.columnScroll:Thumb
+                    name="horizontalScrollThumb"
+                    attr:style="{{ _getThumbStyles() }} width: {{ _horizontalScrollWidth }};"
+                    stickyHeader="{{ true }}"
+                    trackVisible="{{ true }}"
+                    positionChangeHandler="{{ _horizontalPositionChangedHandler }}"
+                    contentSize="{{ _contentSizeForHScroll }}"
+                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+        </ws:if>
+        <!-- Items -->
+        <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
+            <ws:partial
+                    template="wml!Controls/_list/Render/For"
+                    itemTemplate="{{ _itemTemplate }}"
+                    collection="{{ _listModel }}"
+                    keyPrefix="gridView-item"
+
+                    style="{{ _options.style }}"
+                    theme="{{ _options.theme }}"
+                    itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+                    groupTemplate="{{ _groupTemplate }}"
+                    itemActionsPosition="{{ _options.itemActionsPosition }}"
+                    itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+                    itemActionsClass="{{ _options.itemActionsClass }}"
+                    swipeTemplate="{{ _options.swipeTemplate }}"
+                    multiSelectTpl="{{ _options.multiSelectTpl }}"
+                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                    tagTemplate="{{ _options.tagTemplate }}">
+                <ws:editArrowTemplate>
+                    <ws:partial template="wml!Controls/_gridNew/Render/EditArrowTemplate"/>
+                </ws:editArrowTemplate>
+            </ws:partial>
+        </div>
+        <!-- emptyTemplate -->
+        <ws:if data="{{_options.emptyTemplate}}">
+            <ws:partial template="{{ _options.emptyTemplate }}"
+                        attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
+                        prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
+                        prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"
+                        hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
+        </ws:if>
+        <!-- Results (bottom) -->
+        <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}">
+            <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
+                        attr:name="results"
+                        item="{{ _listModel.getResults() }}"
+                        backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+        </ws:if>
+        <!-- Footer -->
+        <ws:if data="{{ _listModel.getFooter() }}">
+            <ws:partial template="{{ _listModel.getFooter().getTemplate() }}"
+                        attr:name="footer"
+                        item="{{ _listModel.getFooter() }}"
+                        backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+        </ws:if>
     </div>
-    <!-- emptyTemplate -->
-    <ws:if data="{{_options.emptyTemplate}}">
-        <ws:partial template="{{ _options.emptyTemplate }}"
-                    attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
-                    prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
-                    prepareColumnsForEmptyEditingTemplate="{{ _prepareColumnsForEmptyEditingTemplate }}"
-                    hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
-    </ws:if>
-    <!-- Results (bottom) -->
-    <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}">
-        <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
-                    attr:name="results"
-                    item="{{ _listModel.getResults() }}"
-                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-    </ws:if>
-    <!-- Footer -->
-    <ws:if data="{{ _listModel.getFooter() }}">
-        <ws:partial template="{{ _listModel.getFooter().getTemplate() }}"
-                    attr:name="footer"
-                    item="{{ _listModel.getFooter() }}"
-                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-    </ws:if>
+    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>

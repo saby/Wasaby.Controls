@@ -323,6 +323,14 @@ export default abstract class Row<T> {
         return this._$owner.getRowIndex(this);
     }
 
+    hasColumnScroll(): boolean {
+        return this._$owner.hasColumnScroll();
+    }
+
+    getStickyColumnsCount(): number {
+        return this._$owner.getStickyColumnsCount();
+    }
+
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;

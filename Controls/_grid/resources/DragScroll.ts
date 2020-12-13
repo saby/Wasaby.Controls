@@ -1,5 +1,4 @@
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './ColumnScroll';
 import {constants} from 'Env/Env';
 
 export interface IDragScrollParams {
@@ -249,6 +248,7 @@ export class DragScroll {
         * DragScroll.JS_SELECTORS.NOT_DRAG_SCROLLABLE. Отсюда controls-Grid__cell_fixed удалить.
         * COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT
         * */
+        // TODO: Убрал
         return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`) && !target.closest('.controls-Grid__cell_fixed');
     }
 

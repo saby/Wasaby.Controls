@@ -101,9 +101,9 @@ export {
 
 export {
     JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS,
-    ColumnScroll,
-    IColumnScrollOptions
-} from './_grid/resources/ColumnScroll';
+    Controller as ColumnScroll,
+    IControllerOptions as IColumnScrollOptions
+} from 'Controls/columnScroll';
 
 export {
     JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS

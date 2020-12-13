@@ -10,18 +10,33 @@ import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
+import {
+    Controller as ColumnScroll,
+    JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS
+} from 'Controls/columnScroll'
 
 const GridView = ListView.extend({
     _template: GridTemplate,
     _hoveredCellIndex: null,
     _hoveredCellItem: null,
     _groupTemplate: GroupTemplate,
+    _isFullMounted: false,
+    _columnScrollShadowClasses: null,
 
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
         this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
+        this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
+
         return result;
+    },
+
+    _afterMount(): void {
+        if (this._options.columnScroll) {
+            this._actualizeColumnScroll(this._options, true);
+        }
+        this._isFullMounted = true;
     },
 
     _beforeUpdate(newOptions): void {
@@ -64,10 +79,22 @@ const GridView = ListView.extend({
         return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
     },
 
+    _getGridViewWrapperClasses(): string {
+        return `${this._columnScrollContainerClasses} ${this.isColumnScrollVisible() ? COLUMN_SCROLL_JS_SELECTORS.COLUMN_SCROLL_VISIBLE : ''}`
+    },
+
+    _getGridViewWrapperStyles(): string {
+        return '';
+    },
+
     _getGridViewClasses(options): string {
         let classes = `controls-Grid controls-Grid_${options.style}_theme-${options.theme}`;
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ' controls-Grid_support-ladder';
+        }
+        if (options.columnScroll) {
+            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.CONTENT}`;
+            // classes.add(DRAG_SCROLL_JS_SELECTORS.CONTENT, this._isDragScrollingVisible(options));
         }
         return classes;
     },
@@ -182,6 +209,189 @@ const GridView = ListView.extend({
                     `controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
             }
         });
+    },
+
+    //#region COLUMN SCROLL
+    /**
+     * Создает или удаляет контроллер горизонтального скролла в зависимости от того, нужен ли он списку
+     *  should be called in the end of life cycle
+     */
+    _actualizeColumnScroll(options, isOnMount?: boolean): 'created' | 'actual' | 'destroyed' {
+        let result: 'created' | 'actual' | 'destroyed';
+
+        if (options.columnScroll) {
+            const scrollContainer = this._children.gridWrapper;
+            const contentContainer = this._children.grid;
+            const needBySize = ColumnScroll.shouldDrawColumnScroll(scrollContainer, contentContainer, options.isFullGridSupport);
+
+            if (needBySize) {
+                if (!this._columnScrollController) {
+                    this._createColumnScroll(options);
+                    this._columnScrollController.updateSizes((newSizes) => {
+                        if (isOnMount && this._options.columnScrollStartPosition === 'end') {
+                            this._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
+                        }
+                        this._saveColumnScrollSizes(newSizes);
+                        this._updateColumnScrollData();
+                    }, true);
+                    result = 'created';
+                } else {
+                    result = 'actual';
+                }
+            } else {
+                this._destroyColumnScroll();
+                result = 'destroyed';
+            }
+        } else {
+            this._destroyColumnScroll();
+            result = 'destroyed';
+        }
+
+        return result;
+    },
+    _createColumnScroll(options): void {
+        this._columnScrollController = new ColumnScroll({
+            isFullGridSupport: options.isFullGridSupport,
+            needBottomPadding: options._needBottomPadding,
+            stickyColumnsCount: options.stickyColumnsCount,
+            hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
+            theme: options.theme,
+            backgroundStyle: options.backgroundStyle,
+            isEmptyTemplateShown: options.needShowEmptyTemplate
+        });
+        const uniqueSelector = this._columnScrollController.getTransformSelector();
+        this._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
+        this._columnScrollShadowClasses = { start: '', end: '' };
+
+        if (this._isDragScrollingEnabled(options) && !this._dragScrollController) {
+            // _private.initDragScroll(self, options);
+        }
+
+        this._columnScrollController.setContainers({
+            scrollContainer: this._children.gridWrapper,
+            contentContainer: this._children.grid,
+            stylesContainer: this._children.columnScrollStylesContainer
+        });
+    },
+
+    _destroyColumnScroll(): void {
+        if (this._columnScrollController) {
+            this._columnScrollController.destroy();
+            this._columnScrollController = null;
+            this._columnScrollContainerClasses = COLUMN_SCROLL_JS_SELECTORS.CONTAINER;
+            this._columnScrollShadowClasses = null;
+            this._destroyDragScroll();
+        }
+    },
+
+    _destroyDragScroll(): void {
+        if (this._dragScrollController) {
+            this._dragScrollController.destroy();
+            this._dragScrollController = null;
+            this._dragScrollOverlayClasses = '';
+        }
+    },
+
+    isColumnScrollVisible(): boolean {
+        return this._columnScrollController && this._columnScrollController.isVisible() && (
+            !!this._listModel.getCount() ||
+            this._listModel.isEditing() ||
+            this._options.headerVisibility === 'visible' ||
+            this._options.headerInEmptyListVisible === true
+        );
+    },
+    _saveColumnScrollSizes(newSizes): void {
+        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
+        this._horizontalScrollWidth = newSizes.scrollWidth;
+        this._containerSize = newSizes.containerSize;
+        this._fixedColumnsWidth = newSizes.fixedColumnsWidth;
+        this._scrollableColumnsWidth = newSizes.scrollableColumnsWidth;
+    },
+    _updateColumnScrollData(): void {
+        this._updateColumnScrollShadowClasses();
+        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
+        this._dragScrollController?.updateScrollData({
+            scrollLength: this._columnScrollController.getScrollLength(),
+            scrollPosition: this._horizontalScrollPosition
+        });
+    },
+    _updateColumnScrollShadowClasses(options = this._options): void {
+        const start = this._getColumnScrollShadowClasses(options, 'start');
+        const end = this._getColumnScrollShadowClasses(options, 'end');
+
+        if (!this._columnScrollShadowClasses) {
+            this._columnScrollShadowClasses = {};
+        }
+        if (this._columnScrollShadowClasses.start !== start || this._columnScrollShadowClasses.end !== end) {
+            this._columnScrollShadowClasses = { start, end };
+        }
+    },
+    _getColumnScrollShadowClasses(options, position: 'start' | 'end'): string {
+        return this._columnScrollController.getShadowClasses(position);
+    },
+    _setHorizontalScrollPosition(value: number): void {
+        if (this._horizontalScrollPosition !== value) {
+            this._horizontalScrollPosition = value;
+        }
+        this._children.horizontalScrollThumb?.setPosition(value);
+    },
+    _onGridWrapperWheel(e) {
+        if (this.isColumnScrollVisible()) {
+            this._columnScrollController.scrollByWheel(e);
+            this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
+            this._updateColumnScrollData();
+        }
+    },
+    _horizontalPositionChangedHandler(e, newScrollPosition: number): void {
+        this._columnScrollController.setScrollPosition(newScrollPosition);
+        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
+        this._updateColumnScrollData();
+    },
+    _getThumbStyles(): string {
+        if (!this.isColumnScrollVisible()) {
+            return 'display: none;';
+        }
+
+        let offset = 0;
+        let lastCellOffset = 0;
+
+        // Учёт колонки с чекбоксами для выбора записей
+        if (this._listModel.needMultiSelectColumn()) {
+            offset += 1;
+        }
+
+        // Учёт колонки(или колонок) с лесенкой
+        offset += GridLadderUtil.stickyLadderCellsCount(
+            this._options.columns,
+            this._options.stickyColumn,
+            this._listModel.getDraggingItem()
+        );
+
+        // if (listModel._shouldAddActionsCell()) {
+        //     lastCellOffset++;
+        // }
+        const stickyColumnsCount = this._listModel.getStickyColumnsCount();
+        const columns = this._listModel.getColumnsConfig();
+
+        return `grid-column: ${stickyColumnsCount + 1 + offset} / ${(columns.length + lastCellOffset + 1) + offset};`
+             + ` width: ${this._horizontalScrollWidth}px;`;
+    },
+    //#endregion
+
+    _isDragScrollingEnabled(options): boolean {
+        const hasOption = typeof options.dragScrolling === 'boolean';
+        return hasOption ? options.dragScrolling : !options.itemsDragNDrop;
+    },
+
+    _resizeHandler(): void {
+        if (this._options.columnScroll) {
+            if (this._actualizeColumnScroll(this._options) === 'actual') {
+                this._columnScrollController.updateSizes((newSizes) => {
+                    this._saveColumnScrollSizes(newSizes);
+                    this._updateColumnScrollData();
+                });
+            }
+        }
     }
 });
 
