@@ -6391,6 +6391,7 @@ define([
          assert.isNull(baseControl._loadingIndicatorState);
 
          baseControl._loadingIndicatorState = 'up';
+         baseControl._loadTriggerVisibility = {up: false};
          baseControl._componentDidUpdate();
          assert.isNull(baseControl._loadingIndicatorState);
 
