@@ -86,33 +86,16 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     _getColspanParams(): Required<IColspanParams> {
         const params = super._getColspanParams();
-        if (this.isCheckBoxCell()) {
+
+        // checkBoxCell также является HeaderCell, и она участвует в рассчёте colspanParams для всех колонок
+        // Поэтому всем колонкам надо вычесть multiSelectOffset
+        if (this._$owner.needMultiSelectColumn()) {
             params.endColumn--;
             params.startColumn--;
         }
         return params;
     }
 
-    // проверить
-    //
-    // if (!this._isMultiHeader && !cell.isActionCell && (columnIndex > multiSelectOffset)) {
-    //     // В this._columns нет колонки под чекбокс, а в this._headerRows[N] есть, поэтому индекс может быть больше.
-    //     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, columnIndex - multiSelectOffset,
-    //     this._options.columnSeparatorSize);
-    //     if (columnSeparatorSize !== null) {
-    //         cellClasses += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-    //     }
-    // }
-    //
-    // проверить для multiheader
-    //
-    // // У первой колонки не рисуем вертикальные разделители. startColumn - конфигурация GridLayout, начинается с 1.
-    // if (!cell.isActionCell && (startColumn - (hasMultiSelectColumn ? 2 : 1))) {
-    //     const columnSeparatorSize = _private.getSeparatorForColumn(this._columns, startColumn - 1, this._options.columnSeparatorSize);
-    //     if (columnSeparatorSize !== null) {
-    //         cellClasses += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-    //     }
-    // }
     getWrapperClasses(theme: string, style: string = 'default'): string {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
                           + ` controls-Grid__header-cell_theme-${theme}`
