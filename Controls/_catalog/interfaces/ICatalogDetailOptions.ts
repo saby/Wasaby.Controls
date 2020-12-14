@@ -46,17 +46,6 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
     list?: object;
 
     /**
-     * Опции для компонента {@link Controls/list:View}, который отображается
-     * в detail-колонке в режиме {@link CatalogDetailViewMode.list}
-     *
-     * Данные опции перекрывают опции, вычисленные на основании конфигурации
-     * {@link ICatalogOptions.detail|detail-колонки}
-     *
-     * @see viewMode
-     */
-    list?: object;
-
-    /**
      * Опции для компонента {@link Controls/treeGrid:View}, который отображается
      * в detail-колонке в режиме {@link CatalogDetailViewMode.table}
      *
