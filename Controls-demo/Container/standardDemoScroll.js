@@ -19,7 +19,14 @@ define('Controls-demo/Container/standardDemoScroll', [
                     'Calendar', 'My Page', 'Our Company'];
 
             this._menuItems = menuItems;
-        }
+
+        },
+
+        // _afterMount: function() {
+        //     setTimeout(function () {
+        //         require(['css!Controls-demo/Container/standardDemoScroll']);
+        //     }, 5000);
+        // }
     });
 
     ModuleClass._styles = ['Controls-demo/Container/standardDemoScroll'];

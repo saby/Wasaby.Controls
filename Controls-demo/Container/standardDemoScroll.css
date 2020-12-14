@@ -38,3 +38,19 @@
 .ControlsDemo-record {
   padding: 3px;
 }
+
+
+.ControlsDemo-controls-Scroll-Container {
+  height: 100px;
+}
+
+.ControlsDemo-controls-Scroll__scrollbar {
+  background-color: red;
+  width: 20px;
+  height: 100%;
+  visibility: hidden;
+}
+
+.ws-is-hover .ControlsDemo-controls-Scroll-Container:hover > .ControlsDemo-controls-Scroll__scrollbar {
+  visibility: visible;
+}
