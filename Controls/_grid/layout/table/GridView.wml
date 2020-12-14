@@ -76,6 +76,7 @@
     <!-- Подвал таблицы -->
     <ws:partial template="wml!Controls/_grid/FooterTemplate"
                 columns="{{ _listModel.getFooter() }}"
+                _listModel="{{ _listModel }}"
                 _footer="{{ _options.footer }}"
                 _footerTemplate="{{ _options.footerTemplate }}"
                 _needBottomPadding="{{ _options._needBottomPadding }}"
