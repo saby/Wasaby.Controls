@@ -433,7 +433,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          }
       }
 
-      if (countChildrenInList === children.getCount() && node instanceof BreadcrumbsItem) {
+      if (countChildrenInList && countChildrenInList === children.getCount() && node instanceof BreadcrumbsItem) {
          stateNode = !initialState;
       } else if (countChildrenInList > 0) {
          stateNode = null;
