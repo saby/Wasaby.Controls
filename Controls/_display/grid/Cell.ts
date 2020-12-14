@@ -347,30 +347,25 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     protected _getColumnSeparatorClasses(theme: string): string {
         if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
-            const columnSeparatorSize = this._getSeparatorForColumn();
+            let columnSeparatorSize: TColumnSeparatorSize;
+            const currentColumn = this._$column;
+            const previousCell = this._$owner.getColumns()[this.getColumnIndex() + 1];
+            const previousColumn = previousCell?.getColumnConfig();
+
+            // Приводим значение к lowerCase
+            const normalize = (value: TColumnSeparatorSize) => (
+                typeof value === 'string' ? value.toLowerCase() : null) as TColumnSeparatorSize;
+
+            if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+                columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+            } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+                columnSeparatorSize = normalize(previousColumn.columnSeparatorSize.right);
+            } else {
+                columnSeparatorSize = this._$owner.getColumnSeparatorSize();
+            }
             return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
         }
         return '';
-    }
-
-    private _getSeparatorForColumn(): TColumnSeparatorSize {
-        let columnSeparatorSize: TColumnSeparatorSize;
-        const currentColumn = this._$column;
-        const previousCell = this._$owner.getColumns()[this.getColumnIndex() + 1];
-        const previousColumn = previousCell?.getColumnConfig();
-
-        // Приводим значение к lowerCase
-        const normalize = (value: TColumnSeparatorSize) => (
-            typeof value === 'string' ? value.toLowerCase() : null) as TColumnSeparatorSize;
-
-        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
-            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
-        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
-            columnSeparatorSize = normalize(previousColumn.columnSeparatorSize.right);
-        } else {
-            columnSeparatorSize = this._$owner.getColumnSeparatorSize();
-        }
-        return columnSeparatorSize;
     }
 
     protected _getContentPaddingClasses(theme: string): string {

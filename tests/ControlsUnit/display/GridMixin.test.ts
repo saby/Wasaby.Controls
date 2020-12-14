@@ -29,4 +29,8 @@ describe('Controls/_display/GridMixin', () => {
       grid.setMultiSelectPosition('custom');
       assert.isFalse(grid.needMultiSelectColumn());
    });
+
+   it('setColumnSeparatorSize should change header version', () => {
+      // setColumnSeparatorSize should change header version
+   });
 });

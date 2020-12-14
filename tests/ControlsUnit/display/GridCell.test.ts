@@ -38,4 +38,18 @@ describe('Controls/display:Cell', () => {
         grid.setMultiSelectPosition('custom');
         assert.isFalse(gridCell.isMultiSelectColumn());
     });
+
+    describe('wrapperClasses', () => {
+        // controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-default // 's' || null
+
+        it('should add separatorClass according to default separatorSize');
+
+        it('should add left separatorClass according column\'s columnSeparatorSize config');
+
+        it('shouldn\'t add left separatorClass according column\'s columnSeparatorSize config');
+
+        it('should add right separatorClass according column\'s columnSeparatorSize config');
+
+        it('shouldn\'t add right separatorClass according column\'s columnSeparatorSize config');
+    });
 });
