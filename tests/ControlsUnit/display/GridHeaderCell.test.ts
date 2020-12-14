@@ -1,7 +1,42 @@
 import { assert } from 'chai';
+import { Model } from 'Types/entity';
 import { GridHeaderCell } from 'Controls/display';
 
 describe('Controls/display:HeaderCell', () => {
+
+    describe('columns for getColspanStyles', () => {
+        let needMultiSelectColumn: boolean;
+        let headerColumnConfig: any;
+        let columnIndex: number;
+
+        function getHeaderCell(): GridHeaderCell<Model> {
+            return new GridHeaderCell({
+                owner: {
+                    isFullGridSupport: () => true,
+                    getHeaderConfig: () => [headerColumnConfig],
+                    needMultiSelectColumn: () => needMultiSelectColumn,
+                    getColumnIndex: () => columnIndex
+                },
+                column: headerColumnConfig
+            });
+        }
+
+        beforeEach(() => {
+            needMultiSelectColumn = false;
+            headerColumnConfig = {};
+        });
+
+        it('should calculate second column as 2 / 3 when no multiselect', () => {
+            columnIndex = 1;
+            assert.equal(getHeaderCell().getColspanStyles(), 'grid-column: 2 / 3;');
+        });
+
+        it('should calculate second column as 2 / 3 when multiselect', () => {
+            needMultiSelectColumn = true;
+            columnIndex = 1;
+            assert.equal(getHeaderCell().getColspanStyles(), 'grid-column: 2 / 3;');
+        });
+    });
 
     describe('align and valign', () => {
 
