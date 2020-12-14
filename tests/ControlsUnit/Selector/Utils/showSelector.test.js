@@ -174,5 +174,25 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
          assert.equal(lastPopupOptions.template, 'selectorTemplate');
          assert.equal(lastPopupOptions.templateOptions.searchValue, '');
       });
+
+      it('showSelector with dialog mode in selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._opener = null;
+         baseController._options.selectorTemplate = {
+            mode: 'dialog'
+         };
+         showSelector.default(baseController, {});
+         assert.isTrue(baseController._opener instanceof popup.DialogOpener);
+      });
+
+      it('showSelector with stack mode in selectorTemplate', function() {
+         const baseController = getBaseController();
+         baseController._opener = null;
+         baseController._options.selectorTemplate = {
+            mode: 'stack'
+         };
+         showSelector.default(baseController, {});
+         assert.isTrue(baseController._opener instanceof popup.StackOpener);
+      });
    });
 });
