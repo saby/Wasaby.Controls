@@ -442,9 +442,16 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(2)]);
          assert.deepEqual(res.get(false), []);
 
+         // Изменилось состояние хлебной крошки, когда сняли чекбокс с одного из ее детей
          res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11, 12]}, undefined, undefined, 'sad');
          assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
          assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(2)]);
+         assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
+
+         // Выбирается хлебная крошка
+         res = strategy.getSelectionForModel({selected: [2], excluded: []}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(2), searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), []);
          assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
       });
    });
