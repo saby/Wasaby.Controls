@@ -22,5 +22,4 @@
             />
         </ws:itemTemplate>
     </Controls.propertyGrid:PropertyGrid>
-    <Controls.list:Remover source="{{_source}}" name="listRemover"/>
 </div>
