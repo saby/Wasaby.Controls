@@ -28,7 +28,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_list/interface/IList
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_tree/interface/ITreeControlOptions
+ * @implements Controls/_tree/interface/ITreeControl
  * @mixes Controls/_interface/IDraggable
  * @mixes Controls/_tile/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
@@ -59,7 +59,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_itemActions/interface/IItemActionsOptions
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_tree/interface/ITreeControlOptions
+ * @implements Controls/_tree/interface/ITreeControl
  * @mixes Controls/_interface/IDraggable
  * @mixes Controls/List/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
