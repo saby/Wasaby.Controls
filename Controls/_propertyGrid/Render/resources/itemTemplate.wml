@@ -15,7 +15,8 @@
        scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-    <div class="controls-PropertyGrid__editor_theme-{{theme}}">
+    <div class="controls-PropertyGrid__editor_theme-{{theme}}
+                {{captionPosition === 'top' ? 'controls-PropertyGrid__flex-editor_theme-' + theme}}">
         <ws:partial template="itemTemplate"
                     attr:class="{{highlightOnHover ? 'controls-PropertyGrid__row_highlightOnHover_theme-' + theme}}"/>
         <ws:if data="{{ collectionItem.shouldDisplayActions() }}">

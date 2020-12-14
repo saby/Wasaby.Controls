@@ -39,20 +39,21 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
             `grid-template-columns: ${width.caption} ${width.editor}`;
     }
 
-    protected _getItemStyles(item: PropertyGridItem<Model>, columnIndex: number, colspan?: boolean): string {
-        const itemIndex = this._options.listModel.getIndex(item);
-        if (colspan) {
+    protected _getItemStyles(item: PropertyGridItem<Model>, columnIndex: number, colspan?: boolean, needMoveToNextLine?: boolean): string {
+        let itemIndex = this._options.listModel.getIndex(item) + 1;
+        itemIndex = needMoveToNextLine ? itemIndex + 1 : itemIndex;
+        if (colspan || needMoveToNextLine) {
             return `-ms-grid-column: 1;
                     -ms-grid-column-span: 2;
                     grid-column-start: 1;
                     grid-column-end: 3;
-                    grid-row: ${itemIndex + 1};
-                    -ms-grid-row: ${itemIndex + 1}`;
+                    grid-row: ${itemIndex};
+                    -ms-grid-row: ${itemIndex}`;
         }
         return `grid-column: ${columnIndex};
-                grid-row: ${itemIndex + 1};
+                grid-row: ${itemIndex};
                 -ms-grid-column: ${columnIndex};
-                -ms-grid-row: ${itemIndex + 1};`;
+                -ms-grid-row: ${itemIndex};`;
     }
 
     protected _propertyValueChanged(e: SyntheticEvent<Event>, item: Model, value: Record<string, any>): void {

@@ -5,7 +5,7 @@
 
 .controls-PropertyGrid__gridLayout_editor-caption_theme-@{themeName} {
    font-size: @font-size_m;
-   padding-right: @offset_m;
+   margin-right: @offset_m;
    color: @label_text-color;
 }
 
@@ -44,4 +44,9 @@
       visibility: visible;
       opacity: 1;
    }
+}
+
+.controls-PropertyGrid__gridLayout_editor-wrapper {
+   display: grid;
+   grid-template-columns: inherit;
 }
