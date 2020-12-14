@@ -43,20 +43,8 @@ const _private = {
             self._errorViewConfig = viewConfig;
         });
     },
-    toggleExpandedOnNewModel(self: any, options: any, model: Tree<TreeItem<Model>>, item: TreeItem<Model>): void {
-        if (!options.hasOwnProperty('expandedItems') && !options.hasOwnProperty('collapsedItems')) {
-            if (options.singleExpand) {
-                model.each((it) => {
-                    if (it !== item && it.getLevel() === item.getLevel()) {
-                        it.setExpanded(false, true);
-                    }
-                });
-            }
-            model.toggleExpanded(item);
-            return;
-        }
-
-        const newExpandedState = !!item.isExpanded();
+    toggleExpandedOnNewModel(self: any, options: any, model: Tree<Model>, item: TreeItem<Model>): void {
+        const newExpandedState = !item.isExpanded();
         const itemKey = item.getContents().getKey();
 
         const newExpandedItems = cClone(options.expandedItems) || [];
@@ -84,7 +72,6 @@ const _private = {
             // свернули узел
 
             if (newExpandedItems.includes(itemKey)) {
-                newExpandedItems.push(itemKey);
                 newExpandedItems.splice(newExpandedItems.indexOf(itemKey), 1);
             }
 
@@ -93,8 +80,17 @@ const _private = {
             }
         }
 
-        self._notify('expandedItemsChanged', newExpandedItems);
-        self._notify('collapsedItemsChanged', newCollapsedItems);
+        if (options.singleExpand) {
+            model.each((it) => {
+                if (it !== item && it.getLevel() === item.getLevel()) {
+                    it.setExpanded(false, true);
+                }
+            });
+        }
+        model.toggleExpanded(item);
+
+        self._notify('expandedItemsChanged', [newExpandedItems]);
+        self._notify('collapsedItemsChanged', [newCollapsedItems]);
     },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         if (self._options.useNewModel) {
@@ -109,22 +105,24 @@ const _private = {
         // todo: удалить события itemExpanded и itemCollapsed в 20.2000.
         self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
     },
-    expandMarkedItem: function(self) {
-        var
-            model = self._children.baseControl.getViewModel(),
-            markedItemKey = model.getMarkedKey(),
-            markedItem = model.getMarkedItem();
-        if (model.getItemType(markedItem) !== 'leaf' && !model.isExpanded(markedItem)) {
-            self.toggleExpanded(markedItemKey);
+    expandMarkedItem(self: typeof TreeControl): void {
+        const markerController = self._children.baseControl._markerController;
+        if (markerController && markerController.getMarkedKey() !== null) {
+            const model = self._children.baseControl.getViewModel();
+            const markedItem = model.getItemBySourceKey(markerController.getMarkedKey());
+            if (markedItem && markedItem.isNode() !== null && !markedItem.isExpanded()) {
+                self.toggleExpanded(markerController.getMarkedKey());
+            }
         }
     },
-    collapseMarkedItem: function(self) {
-        var
-            model = self._children.baseControl.getViewModel(),
-            markedItemKey = model.getMarkedKey(),
-            markedItem = model.getMarkedItem();
-        if (markedItem && model.isExpanded(markedItem)) {
-            self.toggleExpanded(markedItemKey);
+    collapseMarkedItem(self: typeof TreeControl): void {
+        const markerController = self._children.baseControl._markerController;
+        if (markerController && markerController.getMarkedKey() !== null) {
+            const model = self._children.baseControl.getViewModel();
+            const markedItem = model.getItemBySourceKey(markerController.getMarkedKey());
+            if (markedItem && markedItem.isNode() !== null && markedItem.isExpanded()) {
+                self.toggleExpanded(markerController.getMarkedKey());
+            }
         }
     },
     toggleExpanded: function(self, dispItem) {

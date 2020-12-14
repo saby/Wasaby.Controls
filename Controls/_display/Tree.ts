@@ -316,6 +316,13 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return this._$nodeFooterTemplate;
     }
 
+    setNodeFooterTemplate(nodeFooterTemplate: TemplateFunction): void {
+        if (this._$nodeFooterTemplate !== nodeFooterTemplate) {
+            this._$nodeFooterTemplate = nodeFooterTemplate;
+            this._nextVersion();
+        }
+    }
+
     getIndexBySourceItem(item: any): number {
         if (this._$rootEnumerable && this.getRoot().getContents() === item) {
             return 0;
@@ -593,7 +600,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         this._reCountNodeFooters();
     }
 
-    toggleExpanded(item: TreeItem<T>): void {
+    toggleExpanded(item: T): void {
         const newExpandedState = !item.isExpanded();
         item.setExpanded(newExpandedState);
 

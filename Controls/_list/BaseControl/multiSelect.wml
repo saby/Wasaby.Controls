@@ -1,8 +1,6 @@
 <Controls.Container.Async templateName="Controls/toggle:CheckboxMarker">
     <ws:partial template="{{content.resolvedTemplate}}"
-                attr:class="js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
-                           js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
-                           controls-Checkbox__iconWrapper_inList_theme-{{_options.theme}}"
+                attr:class="{{ (gridColumn || colData || item || itemData) ? (gridColumn || colData || item || itemData).getMultiSelectClasses(theme, backgroundColorStyle, cursor, highlightOnHover) : '' }}"
                 triState="{{triState}}"
                 readOnly="{{checkboxReadOnly || false}}"
                 value="{{multiSelectStatus}}"
