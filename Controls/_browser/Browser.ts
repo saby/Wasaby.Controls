@@ -77,6 +77,8 @@ type IFilterControllerOptions = Pick<IBrowserOptions,
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IHierarchySearch
+ *
+ * @demo Controls-demo/Search/FlatList/Index
  */
 export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;

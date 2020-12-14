@@ -26,6 +26,7 @@ import {QueryWhereExpression} from 'Types/source';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
  *
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
@@ -52,6 +53,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
