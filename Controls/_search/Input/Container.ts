@@ -36,6 +36,7 @@ import {constants} from 'Env/Env';
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
+ * @implements Controls/_search/interface/ISearchInputContainer
  *
  * @public
  * @author Крюков Н.Ю.
