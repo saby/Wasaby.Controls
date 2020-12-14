@@ -7,8 +7,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/operations/">руководство разработчика</a>
+ * * <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/operations/">руководство разработчика</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
  *
  * @class Controls/_operations/Panel
@@ -25,7 +24,7 @@ import {error as loadDataError} from 'Controls/dataSource';
 
 /*
  * Control for grouping operations.
- * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/actions/operations/'>here</a>.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo</a>.
  *
  * @class Controls/_operations/Panel

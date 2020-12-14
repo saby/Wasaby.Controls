@@ -1,4 +1,5 @@
 import { Control, TemplateFunction } from 'UI/Base';
+import { SyntheticEvent } from  'Vdom/Vdom';
 import { Memory } from 'Types/source';
 import { IColumn } from 'Controls/grid';
 
@@ -20,16 +21,42 @@ export default class extends Control {
         }
     ]);
     protected _separatorVisibility: boolean = true;
+    protected _textAlign: string;
+    protected _columnAlignGroup: number = 2;
+    protected _radioSource: Memory;
 
     protected _beforeMount(): void {
+        this._textAlign = null;
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getTasks().getData()
+        });
+        // displayProperty: 'caption',
+        this._radioSource = new Memory({
+            keyProperty: 'id',
+            data: [{
+                id: null,
+                title: 'null'
+            }, {
+                id: 'left',
+                title: 'left'
+            }, {
+                id: 'right',
+                title: 'right'
+            }]
         });
     }
 
     protected _onToggleSeparatorVisibility(): void {
         this._separatorVisibility = !this._separatorVisibility;
+    }
+
+    protected _onToggleColumnAlignGroup(): void {
+        this._columnAlignGroup = !this._columnAlignGroup ? 2 : undefined;
+    }
+
+    protected _onChangeTextAlign(e: SyntheticEvent, val: string): void {
+        this._textAlign = val;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
