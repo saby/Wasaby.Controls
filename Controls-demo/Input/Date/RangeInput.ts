@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import template = require('wml!Controls-demo/Input/Date/Range/RangeInput');
+import template = require('wml!Controls-demo/Input/Date/RangeInput');
 
 class Range extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
