@@ -12,7 +12,6 @@ export default class extends Control {
    protected _columns: IColumn[] = Gadgets.getSearchColumns();
    protected _root: TRoot = 1;
    protected _startingWith: 'root' | 'current' = 'root';
-   // tslint:disable-next-line
    protected _filter: object = {demo: 123};
 
    protected _itemActions: IItemAction[] = [
