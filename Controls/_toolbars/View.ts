@@ -57,7 +57,7 @@ export interface IMenuOptions {
 
 /**
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
- * @interface Controls/_toolbars/IToolbarOptions
+ * @interface Controls/_toolbars/IToolbar
  * @public
  * @author Красильников А.С.
  */
@@ -65,13 +65,11 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions {
     /**
-     * @name Controls/_toolbars/IToolbarOptions#popupClassName
      * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      * @default ''
      */
     popupClassName: string;
     /**
-     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
      * @cfg {String} Размер расстояния между кнопками.
      * @variant medium
      * @variant big
@@ -79,25 +77,20 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      */
     itemsSpacing: TItemsSpacing;
     /**
-     * @name Controls/_toolbars/View#additionalProperty
      * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
      */
     additionalProperty?: string;
     /**
-     * @name Controls/_toolbars/IToolbarOptions#popupFooterTemplate
      * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
      * @demo Controls-demo/Toolbar/PopupFooterTemplate/Index
      */
     popupFooterTemplate?: String | Function;
-
     /**
-     * @name  Controls/_toolbars/IToolbarOptions#itemActions
      * @cfg {Array<ItemAction>} Конфигурация опций записи.
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActions?: IItemAction[];
     /**
-     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
      * @cfg {function} Функция управления видимостью операций над записью.
      * @param {ItemAction} action Объект с настройкой действия.
      * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
@@ -105,9 +98,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-
     /**
-     * @name Controls/_toolbars/IToolbarOptions#menuSource
      * @cfg {Types/source:ICrudPlus} Объект реализующий интерфейс {@link Types/source:ICrud},
      * необходимый для работы с источником данных выпадающего меню тулбара.
      * Данные будут загружены отложенно, при взаимодействии с меню.
@@ -115,9 +106,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @link items
      */
     menuSource?: ICrudPlus;
-
     /**
-     * @name Controls/_toolbars/IToolbarOptions#contrastBackground
      * @cfg {Boolean} Определяет наличие подложки у кнопки открытия выпадающего меню тулбара.
      */
     contrastBackground?: true;
@@ -134,15 +123,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/_toolbars/IToolbarOptions
- * @mixes Controls/_toolbars/IToolbarSource
- * @mixes Controls/interface:IItemTemplate
- * @mixes Controls/interface:IItems
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IFontColorStyle
- *
+ * @implements Controls/interface/IItemTemplate
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index

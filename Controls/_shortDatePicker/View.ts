@@ -341,12 +341,14 @@ class View extends Control<IDateLitePopupOptions> {
             }
         };
         for (const i in buttons) {
-            const amountOfFollowingItems = this._getAmountOfFollowingItems(buttons[i].delta);
-            this[buttons[i].name] = !this._canChangeYear(
-                this._position.getFullYear(),
-                buttons[i].delta,
-                amountOfFollowingItems
-            );
+            if (buttons.hasOwnProperty(i)) {
+                const amountOfFollowingItems = this._getAmountOfFollowingItems(buttons[i].delta);
+                this[buttons[i].name] = !this._canChangeYear(
+                    this._position.getFullYear(),
+                    buttons[i].delta,
+                    amountOfFollowingItems
+                );
+            }
         }
     }
 

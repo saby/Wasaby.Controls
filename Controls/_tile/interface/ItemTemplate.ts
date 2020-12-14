@@ -21,7 +21,7 @@
  * </Controls.tile:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/templates/item/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/tile/item/ здесь}.
  * @public
  * @demo Controls-demo/Tile/DifferentItemTemplates/CustomTemplate/Index
  */

@@ -155,7 +155,7 @@ export class Controller {
       let newSelection;
 
       if (status === true || status === null) {
-         newSelection = this._strategy.unselect(this._selection, key);
+         newSelection = this._strategy.unselect(this._selection, key, this._searchValue);
          if (this._limit) {
             this._limit--;
          }
@@ -354,7 +354,16 @@ export class Controller {
    }
 
    private _updateModel(selection: ISelection, silent: boolean = false, items?: Array<CollectionItem<Model>>): void {
-      const selectionForModel = this._strategy.getSelectionForModel(selection, this._limit, items, this._searchValue);
+      let limit = this._limit;
+      // Если есть лимит, то при обработке дозагруженных элементов мы должны обработать не все записи,
+      // а только то кол-во, которое не хватает до лимита
+      if (this._limit && items) {
+         let countSelectedItems = 0;
+         this._model.each((it) => it.isSelected() ? countSelectedItems++ : null);
+         limit = limit - countSelectedItems;
+      }
+
+      const selectionForModel = this._strategy.getSelectionForModel(selection, limit, items, this._searchValue);
       // TODO думаю лучше будет занотифаить об изменении один раз после всех вызовов (сейчас нотифай в каждом)
       this._model.setSelectedItems(selectionForModel.get(true), true, silent);
       this._model.setSelectedItems(selectionForModel.get(false), false, silent);
