@@ -594,7 +594,7 @@ var
          }
 
       },
-      _beforePaint: function() {
+       _componentDidUpdate: function() {
          if (this._markerForRestoredScroll !== null) {
             this.scrollToItem(this._markerForRestoredScroll);
             this._markerForRestoredScroll = null;
