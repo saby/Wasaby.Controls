@@ -205,15 +205,12 @@ var
                 startDragNDropCallback,
                 dragNDropDelay: options.dragNDropDelay,
                 onOverlayShown: () => {
-                    self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_ACTIVATED}`;
                 },
                 onOverlayHide: () => {
                     _private.setGrabbing(self, false);
-                    self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
                 }
             });
             _private.setGrabbing(self, false);
-            self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
 
         updateColumnScrollByOptions(self, oldOptions, newOptions): void {
@@ -271,7 +268,6 @@ var
             if (self._dragScrollController) {
                 self._dragScrollController.destroy();
                 self._dragScrollController = null;
-                self._dragScrollOverlayClasses = '';
             }
         },
         setGrabbing(self, isGrabbing: boolean): void {
@@ -339,7 +335,6 @@ var
 
         _notifyHandler: tmplNotify,
         _columnScrollContainerClasses: '',
-        _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,

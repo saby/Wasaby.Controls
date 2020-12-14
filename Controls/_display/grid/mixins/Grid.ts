@@ -270,6 +270,11 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$stickyColumnsCount;
     }
 
+    setStickyColumnsCount(stickyColumnsCount: number): void {
+        this._$stickyColumnsCount = stickyColumnsCount;
+        this._nextVersion();
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;

@@ -10,7 +10,26 @@
         <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
     </ws:if>
 
-    <div name="grid" class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
+
+    <ws:if data="{{ _isDragScrollingEnabled(_options) }}">
+        <div class="{{ _dragScrollOverlayClasses }}"
+             on:mouseup="_onDragScrollOverlayMouseUp()"
+             on:touchend="_onDragScrollOverlayTouchEnd()"
+             on:mousemove="_onDragScrollOverlayMouseMove()"
+             on:touchmove="_onDragScrollOverlayTouchMove()"
+             on:mouseleave="_onDragScrollOverlayMouseLeave()">
+        </div>
+    </ws:if>
+
+    <div name="grid"
+         class="{{ _getGridViewClasses(_options) }}"
+         style="{{ _getGridViewStyles(_options) }}"
+         on:mousedown="_onMouseDown()"
+         on:touchstart="_onTouchStart('touch')"
+         on:mousemove="_onMouseMove('mouse')"
+         on:touchmove="_onTouchMove('touch')"
+         on:mouseup="_onMouseUp('mouse')"
+         on:touchend="_onTouchEnd('touch')">
         <!-- Header -->
         <ws:if data="{{ _listModel.getHeader() }}">
             <ws:partial template="{{ _listModel.getHeader().getRow().getTemplate() }}"

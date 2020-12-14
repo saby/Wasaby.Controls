@@ -241,15 +241,7 @@ export class DragScroll {
      * @private
      */
     private _isTargetScrollable(target: HTMLElement): boolean {
-
-        /*
-        * TODO: https://online.sbis.ru/opendoc.html?guid=f5101ade-8716-40cb-a0be-3701b212b2fa
-        * После закрытия везде, где вешается controls-Grid__cell_fixed начать вешать еще и
-        * DragScroll.JS_SELECTORS.NOT_DRAG_SCROLLABLE. Отсюда controls-Grid__cell_fixed удалить.
-        * COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT
-        * */
-        // TODO: Убрал
-        return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`) && !target.closest('.controls-Grid__cell_fixed');
+        return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`);
     }
 
     /**

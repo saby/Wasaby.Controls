@@ -372,7 +372,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
         if (this._isFixedCell()) {
-            return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} controls-GridNew__cell_fixed controls-GridNew__cell_fixed_theme-${theme}`;
+            return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} js-controls-ColumnScroll__notDraggable controls-GridNew__cell_fixed controls-GridNew__cell_fixed_theme-${theme}`;
         }
         return COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT;
     }
