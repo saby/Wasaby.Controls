@@ -40,7 +40,7 @@ export default class IPropertyGridRender extends Control<IPropertyGridGridRender
     }
 
     protected _getItemStyles(item: PropertyGridItem<Model>, columnIndex: number, colspan?: boolean): string {
-        let itemIndex = this._options.listModel.getIndex(item);
+        const itemIndex = this._options.listModel.getIndex(item);
         if (colspan) {
             return `-ms-grid-column: 1;
                     -ms-grid-column-span: 2;
