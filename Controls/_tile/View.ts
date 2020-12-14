@@ -32,7 +32,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_interface/IDraggable
  * @mixes Controls/_tile/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
- * @mixes Controls/_marker/interface/IMarkerListOptions
+ * @mixes Controls/_marker/interface/IMarkerList
  *
  * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
@@ -63,7 +63,7 @@ import TreeTileView = require('Controls/_tile/TreeTileView/TreeTileView');
  * @mixes Controls/_interface/IDraggable
  * @mixes Controls/List/interface/ITile
  * @mixes Controls/_list/interface/IClickableView
- * @mixes Controls/_marker/interface/IMarkerListOptions
+ * @mixes Controls/_marker/interface/IMarkerList
  *
  * @mixes Controls/_list/interface/IVirtualScrollConfig
  *
