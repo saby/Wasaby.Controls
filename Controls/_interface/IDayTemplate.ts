@@ -27,16 +27,5 @@ export default interface IDayTemplate {
  *     <li>weekend - определяет, является ли день выходным </li>
  *     <li>extData - данные, загруженные через источник данных</li>
  * </ul>
- * @example
- * <pre>
- * <Controls.calendar:MonthView>
- *    <ws:dayTemplate>
- *      <ws:partial template="Controls/calendar:MonthViewDayTemplate">
- *          <ws:contentTemplate>
- *                 {{contentTemplate.value.day}}
- *          </ws:contentTemplate>
- *      </ws:partial>
- *    </ws:dayTemplate>
- * </Controls.calendar:MonthView>
- * </pre>
+ * @demo Controls-demo/dateRange/DayTemplate/Index
  */

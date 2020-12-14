@@ -26,26 +26,7 @@
  * @remark
  * Тег может использоваться для отображения информации о поле (например, если поле является обязательным).
  * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег.
- * @example
- * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
- * Когда вы кликните по тегу, появится всплывающая подсказка с сообщением "This field is required".
- * <pre>
- *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _tagClickHandler(target) {
- *          this._children.infoboxOpener.open({
- *             target: target,
- *             text: 'This field is required'
- *          });
- *       }
- *       ...
- *    });
- * </pre>
+ * @demo Controls-demo/dateRange/Tag/Index
  * @see endTagStyle
  * @see startTagHover
  * @see endTagHover
@@ -63,25 +44,7 @@
  * @variant info
  * @remark
  * Tag is used to show some information about the field (e.g. if the field is required). Frequently, Infobox with the tip is shown when you click or hover on the tag (see tagClick, tagHover).
- * @example
- * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
- * <pre>
- *    <Controls.dateRange:Input startTagStyle="danger" on:startTagClick="tagClickHandler()"/>
- *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _tagClickHandler(target) {
- *          this._children.infoboxOpener.open({
- *             target: target,
- *             text: 'This field is required'
- *          });
- *       }
- *       ...
- *    });
- * </pre>
+ * @demo Controls-demo/dateRange/Tag/Index
  * @see endTagStyle
  * @see startTagHover
  * @see endTagHover
@@ -227,26 +190,7 @@
  * @remark
  * Тег используется для отображения информации о поле (например, если поле является обязательным).
  * Часто всплывающая подсказка отображается при клике или наведении курсора мыши на тег.
- * @example
- * В этом примере поле будет отображаться со стилем "danger", чтобы показать, что его заполнение необходимо.
- * Когда вы кликните по тегу, появится всплывающая подсказка с сообщением "This field is required".
- * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
- *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _tagClickHandler(target) {
- *          this._children.infoboxOpener.open({
- *             target: target,
- *             text: 'This field is required'
- *          });
- *       }
- *       ...
- *    });
- * </pre>
+ * @demo Controls-demo/dateRange/Tag/Index
  * @see startTagStyle
  * @see startTagHover
  * @see endTagHover
@@ -265,24 +209,7 @@
  * @remark
  * Tag is used to show some information about the field (e.g. if the field is required). Frequently, Infobox with the tip is shown when you click or hover on the tag (see tagClick, tagHover).
  * @example
- * In this example, the field will be rendered with "danger" to show that it is required. When you click on tag, the Infobox with message "This field is required" will be shown.
- * <pre>
- *    <Controls.dateRange:Input endTagStyle="danger" on:endTagClick="_tagClickHandler()"/>
- *    <Controls.popup:InfoboxTarget name="infoboxOpener"/>
- * </pre>
- *
- * <pre>
- *    Control.extend({
- *       ...
- *       _tagClickHandler(target) {
- *          this._children.infoboxOpener.open({
- *             target: target,
- *             text: 'This field is required'
- *          });
- *       }
- *       ...
- *    });
- * </pre>
+ * @demo Controls-demo/dateRange/Tag/Index
  * @see startTagStyle
  * @see startTagHover
  * @see endTagHover

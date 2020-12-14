@@ -12,85 +12,25 @@ export interface IDateRangeOptions {
 /**
  * @name Controls/_dateRange/interfaces/IDateRange#startValue
  * @cfg {Date} Начальное значение диапазона.
- * @example
- * <pre>
- *    <Controls.dateRange:Input bind:startValue="_startValue" />
- *    <Controls.buttons:Button on:click="_sendButtonClick()" />
- * </pre>
- * <pre>
- *    Control.extend({
- *       ...
- *       _startValue: new Date(),
- *       _sendButtonClick() {
- *          this._sendData(this._startValue);
- *       }
- *       ...
- *   });
- * </pre>
+ * @demo Controls-demo/dateRange/Default/Index
  */
 
 /*
  * @name Controls/_dateRange/interfaces/IDateRange#startValue
  * @cfg {Date} Beginning of period
- * @example
- * In this example you bind _startValue in control's state to the value of input field.
- * At any time of control's lifecycle, _startValue will contain the current start value of the input field.
- * <pre>
- *    <Controls.dateRange:Input bind:startValue="_startValue" />
- *    <Controls.buttons:Button on:click="_sendButtonClick()" />
- * </pre>
- * <pre>
- *    Control.extend({
- *       ...
- *       _startValue: new Date(),
- *       _sendButtonClick() {
- *          this._sendData(this._startValue);
- *       }
- *       ...
- *   });
- * </pre>
+ * @demo Controls-demo/dateRange/Default/Index
  */
 
 /**
  * @name Controls/_dateRange/interfaces/IDateRange#endValue
  * @cfg {Date} Конечное значение диапазона.
- * @example
- * <pre>
- *    <Controls.Input.DateRange bind:endValue="_endValue" />
- *    <Controls.buttons:Button on:click="_sendButtonClick()" />
- * </pre>
- * <pre>
- *    Control.extend({
- *       ...
- *       _endValue: new Date(),
- *       _sendButtonClick() {
- *          this._sendData(this._endValue);
- *       }
- *       ...
- *   });
- * </pre>
+ * @demo Controls-demo/dateRange/Default/Index
  */
 
 /*
  * @name Controls/_dateRange/interfaces/IDateRange#endValue
  * @cfg {Date} End of period
- * @example
- * In this example you bind _endValue in control's state to the value of input field.
- * At any time of control's lifecycle, _endValue will contain the current ens value of the input field.
- * <pre>
- *    <Controls.Input.DateRange bind:endValue="_endValue" />
- *    <Controls.buttons:Button on:click="_sendButtonClick()" />
- * </pre>
- * <pre>
- *    Control.extend({
- *       ...
- *       _endValue: new Date(),
- *       _sendButtonClick() {
- *          this._sendData(this._endValue);
- *       }
- *       ...
- *   });
- * </pre>
+ * @demo Controls-demo/dateRange/Default/Index
  */
 
 /**
