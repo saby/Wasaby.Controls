@@ -34,7 +34,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_interface/IDateRangeValidators
  * 
  * @public
- * @demo Controls-demo/Input/Date/Range
+ * @demo Controls-demo/Input/Date/Range/RangeInput
  * @author Красильников А.С.
  */
 
@@ -50,7 +50,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  *
  * 
  * @public
- * @demo Controls-demo/Input/Date/Range
+ * @demo Controls-demo/Input/Date/Range/RangeInput
  * @author Красильников А.С.
  */
 export default class DateRangeInput extends Control<IDateRangeInputOptions> implements

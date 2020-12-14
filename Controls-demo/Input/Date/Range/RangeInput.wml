@@ -1,0 +1,15 @@
+<div class="controlsDemo-Input-DateRange">
+    <h1>Controls.dateRange:Input</h1>
+    <div class="controlsDemo-Input-DatePicker__content">
+        <div class="controlsDemo-Input-DateRange__row">
+            <div class="controlsDemo-Input-DateRange__row-item">
+                <Controls.dateRange:Input
+                        bind:startValue="_startDate"
+                        bind:endValue="_endDate"
+                        mask="{{_mask}}"
+                        startTagStyle="{{'danger'}}"
+                        endTagStyle="{{'success'}}"/>
+            </div>
+        </div>
+    </div>
+</div>
