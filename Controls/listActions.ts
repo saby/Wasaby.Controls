@@ -3,7 +3,7 @@
  * @library Controls/listActions
  * @includes Remove Controls/_listActions/Remove
  * @includes IAction Control/_listActions/interface/IAction
- * @includes IActionOptions Controls/_listActions/interface/IActionOptions
+ * @includes IActionOptions Controls/_listActions/interface/IAction
  */
 
 import IAction from './_listActions/interface/IAction';
