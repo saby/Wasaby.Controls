@@ -287,7 +287,7 @@ var
             }
         },
         /**
-         * Скроллит к ближайшему краю колонки если включена опция scrollEntireColumn
+         * Скроллит к ближайшему краю колонки
          * @param self
          */
         scrollToColumn(self): void {
@@ -745,12 +745,7 @@ var
         _columnScrollWheelHandler(e): void {
             if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
-                if (this._options.scrollEntireColumn) {
-                    _private.scrollToColumn(this);
-                } else {
-                    this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-                    this._updateColumnScrollData();
-                }
+                _private.scrollToColumn(this);
             }
         },
         _updateColumnScrollData(): void {
@@ -863,9 +858,7 @@ var
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
-                if (this._options.scrollEntireColumn) {
-                    _private.scrollToColumn(this);
-                }
+                _private.scrollToColumn(this);
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -894,15 +887,11 @@ var
             }
         },
         _onDragScrollOverlayMouseUp(e) {
-            if (this._options.scrollEntireColumn) {
-                _private.scrollToColumn(this);
-            }
+            _private.scrollToColumn(this);
             this._dragScrollController?.onOverlayMouseUp(e);
         },
         _onDragScrollOverlayTouchEnd(e) {
-            if (this._options.scrollEntireColumn) {
-                _private.scrollToColumn(this);
-            }
+            _private.scrollToColumn(this);
             this._dragScrollController?.onOverlayTouchEnd(e);
             this._leftSwipeCanBeStarted = false;
         },
@@ -911,9 +900,7 @@ var
         },
         _onScrollWrapperMouseUp(e) {
             e.stopPropagation();
-            if (this._options.scrollEntireColumn) {
-                _private.scrollToColumn(this);
-            }
+            _private.scrollToColumn(this);
         },
         _onItemSwipe(event, itemData) {
             const direction = event.nativeEvent.direction;

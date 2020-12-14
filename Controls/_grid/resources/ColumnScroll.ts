@@ -334,10 +334,6 @@ export class ColumnScroll {
         this._drawTransform(this._scrollPosition, isFullGridSupport);
         this._toggleStickyElementsForScrollCalculation(true);
 
-        if (this._options.scrollEntireColumn) {
-            this._updateScrollableColumnsSizes();
-        }
-
         if (afterUpdateCallback) {
             afterUpdateCallback({
                 wasSizesChanged,
