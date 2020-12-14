@@ -12,6 +12,7 @@
 <ws:if data="{{isGridLayout}}">
     <ws:partial
        template="wml!Controls/_propertyGrid/GridRender/resources/itemTemplate"
+       attr:class="{{(captionPosition === 'top' ? 'controls-PropertyGrid__flex-editor_theme-' : 'controls-PropertyGrid__grid-editor_theme-') + theme}}"
        scope="{{_options}}"/>
 </ws:if>
 <ws:else>

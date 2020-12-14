@@ -6,18 +6,18 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-   <div class="controls-PropertyGrid__gridLayout_editor-wrapper" style="{{getItemStyles(collectionItem, 1, true)}}">
+   <div style="{{getItemStyles(collectionItem, 1, true)}}">
       <span class="controls-PropertyGrid__gridLayout_editor-caption
                   controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
                   {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}} {{class}}"
-            style="{{getItemStyles(collectionItem, 1, captionPosition === 'top')}}">
+            style="{{getItemStyles(collectionItem, 1)}}">
          <div class="controls-PropertyGrid__gridLayout_editor-caption-baseline">{{item.caption}}</div>
       </span>
       <div class="controls-PropertyGrid__gridLayout_editor
                   controls-PropertyGrid__gridLayout_editor_theme-{{theme}}
                   controls-PropertyGrid__gridLayout_editor_theme-{{theme}}
                   {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
-           style="{{getItemStyles(collectionItem, 2, !item.caption, captionPosition === 'top')}}">
+           style="{{getItemStyles(collectionItem, 2, !item.caption)}}">
          <Controls.Container.Async
                  templateName="{{collectionItem.getEditorTemplateName()}}"
                  templateOptions="{{collectionItem.getEditorOptions()}}"/>
