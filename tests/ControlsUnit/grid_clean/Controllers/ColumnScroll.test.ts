@@ -36,13 +36,13 @@ function mockStickyCellContainer(): HTMLStyleElement {
     } as unknown as HTMLStyleElement;
 }
 
-function mockColumnsRects(columnsSizes: number[] | number[][]): DOMRect[] {
+function mockColumnsHTMLContainer(columnsSizes: number[] | number[][], offset: number): HTMLDivElement {
     const sticky = mockStickyCellContainer();
     let startPosition;
     const columnsRects: DOMRect[] = [];
 
     function initStartPosition(): void {
-        startPosition = sticky.offsetWidth + sticky.getBoundingClientRect().left;
+        startPosition = offset + sticky.offsetWidth + sticky.getBoundingClientRect().left;
     }
 
     function collect(row: number[]): void {
@@ -66,7 +66,14 @@ function mockColumnsRects(columnsSizes: number[] | number[][]): DOMRect[] {
         collect(columnsSizes as number[]);
     }
 
-    return columnsRects;
+    return {
+        querySelectorAll: (selectors: string): NodeListOf<HTMLElement> => columnsRects.map((rect) => ({
+            getBoundingClientRect(): DOMRect {
+                return rect;
+            },
+            offsetWidth: rect.width
+        })) as undefined as NodeListOf<HTMLElement>
+    } as HTMLDivElement;
 }
 
 function mockContentContainer(params: {
@@ -104,7 +111,7 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
             hasMultiSelect: false,
             stickyColumnsCount: 2
         };
-        columnScroll = new ColumnScroll({...cfg, scrollableColumnsSizes: mockColumnsRects([100, 150, 51, 51])});
+        columnScroll = new ColumnScroll(cfg);
 
         columnScroll.setContainers({
             scrollContainer: mockScrollContainer({
@@ -172,48 +179,22 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         assert.equal(columnScroll.getScrollPosition(), 0);
     });
 
-    it('should scroll to column when not multiHeader', () => {
-        columnScroll.updateSizes(() => {
-            columnScroll.setScrollPosition(8);
-            assert.equal(columnScroll.getScrollPosition(), 8);
-
-            columnScroll.setContainers({
-                contentContainer: mockContentContainer({
-                    hasMultiSelect: false,
-                    stickyColumnsCount: 2,
-                    scrollWidth: 782,
-                    offsetWidth: 600,
-                    scrollPosition: columnScroll.getScrollPosition()
-                })
-            });
-
-            columnScroll.scrollToColumn();
-            assert.equal(columnScroll.getScrollPosition(), 18);
-        }, true);
+    it('should scroll to right column when not multiHeader', () => {
+        columnScroll.setScrollPosition(8);
+        assert.equal(columnScroll.getScrollPosition(), 8);
+        columnScroll.scrollToColumnWithinContainer(mockColumnsHTMLContainer(
+            [100, 150, 51, 51], columnScroll.getScrollPosition()));
+        assert.equal(columnScroll.getScrollPosition(), 18);
     });
 
-    it('should scroll to column when multiHeader', () => {
-        columnScroll.updateSizes(() => {
-            columnScroll.setScrollableColumnsSizes(mockColumnsRects([
-                [250, 102],
-                [100, 150, 51, 51]
-            ]));
-            columnScroll.setScrollPosition(8);
-            assert.equal(columnScroll.getScrollPosition(), 8);
-
-            columnScroll.setContainers({
-                contentContainer: mockContentContainer({
-                    hasMultiSelect: false,
-                    stickyColumnsCount: 2,
-                    scrollWidth: 782,
-                    offsetWidth: 600,
-                    scrollPosition: columnScroll.getScrollPosition()
-                })
-            });
-
-            columnScroll.scrollToColumn();
-            assert.equal(columnScroll.getScrollPosition(), 18);
-        }, true);
+    it('should scroll to right column when multiHeader', () => {
+        columnScroll.setScrollPosition(8);
+        assert.equal(columnScroll.getScrollPosition(), 8);
+        columnScroll.scrollToColumnWithinContainer(mockColumnsHTMLContainer([
+            [250, 102],
+            [100, 150, 51, 51]
+        ], columnScroll.getScrollPosition()));
+        assert.equal(columnScroll.getScrollPosition(), 18);
     });
 
     it('getShadowClasses', () => {

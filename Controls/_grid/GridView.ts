@@ -10,8 +10,7 @@ import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/
 import {
     shouldAddActionsCell,
     shouldDrawColumnScroll,
-    isInLeftSwipeRange,
-    calculateColumnsSizes
+    isInLeftSwipeRange
 } from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
@@ -184,8 +183,7 @@ var
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
                 theme: options.theme,
                 backgroundStyle: options.backgroundStyle,
-                isEmptyTemplateShown: options.needShowEmptyTemplate,
-                scrollableColumnsSizes: calculateColumnsSizes(self._children.header || self._children.results)
+                isEmptyTemplateShown: options.needShowEmptyTemplate
             });
             const uniqueSelector = self._columnScrollController.getTransformSelector();
             self._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
@@ -252,7 +250,6 @@ var
                     self._columnScrollController.updateSizes((newSizes) => {
                         self._saveColumnScrollSizes(newSizes);
                         self._updateColumnScrollData();
-                        _private.setScrollableColumnsSizes(self);
                     }, true);
                 }
             } else if (dragScrollingChanged && newOptions.dragScrolling) {
@@ -291,7 +288,7 @@ var
          * @param self
          */
         scrollToColumn(self): void {
-            self._columnScrollController.scrollToColumn();
+            self._columnScrollController.scrollToColumnWithinContainer(self._children.header || self._children.results);
             self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
             self._updateColumnScrollData();
         },
@@ -335,10 +332,6 @@ var
             } else {
                 return false;
             }
-        },
-        setScrollableColumnsSizes(self): void {
-            const sizes = calculateColumnsSizes(self._children.header || self._children.results);
-            self._columnScrollController.setScrollableColumnsSizes(sizes);
         }
     },
     GridView = ListView.extend({
@@ -534,7 +527,6 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
-                        _private.setScrollableColumnsSizes(this);
                     });
                 }
             }
@@ -795,7 +787,6 @@ var
                     this._columnScrollController.updateSizes((newSizes) => {
                         this._saveColumnScrollSizes(newSizes);
                         this._updateColumnScrollData();
-                        _private.setScrollableColumnsSizes(this);
                     });
                 }
             }
