@@ -37,6 +37,17 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
         return this._$column.resultTemplate || DEFAULT_CELL_TEMPLATE;
     }
 
+    // Для resultsColumn wrapper _getColumnSeparatorClasses
+    //
+    // if (!resultsColumn.column?.isActionCell && (columnIndex > hasMultiSelectColumn ? 1 : 0)) {
+    // 	const columnSeparatorSize = _private.getSeparatorForColumn(
+    // 		this._resultsColumns,
+    // 		columnIndex,
+    // 		this._options.columnSeparatorSize
+    // 	);
+    //
+    // 	cellClasses += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${this._options.theme}`;
+    // }
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const isMultiSelectColumn = this.isMultiSelectColumn();
 
@@ -54,8 +65,8 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
         let wrapperClasses = 'controls-Grid__results-cell'
                             + ` controls-Grid__cell_${style}`
-                            + ` controls-Grid__results-cell_theme-${theme}`;
-
+                            + ` controls-Grid__results-cell_theme-${theme}`
+                            + ` ${this._getColumnSeparatorClasses(theme)}`;
 
         if (this._$column.align) {
             wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$align}`;

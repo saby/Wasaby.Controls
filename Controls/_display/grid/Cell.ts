@@ -257,8 +257,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         contentClasses += this._getContentPaddingClasses(theme);
 
-        contentClasses += this._getContentSeparatorClasses(theme);
-
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
 
         if (this._$column.align) {
@@ -343,19 +341,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
-            const columnSeparatorSize = this._getSeparatorForColumn();
-
-            if (columnSeparatorSize !== null) {
-                classes += ' controls-Grid__row-cell_withColumnSeparator';
-            }
-        }
+        classes += this._getColumnSeparatorClasses(theme);
         return classes;
     }
 
-    protected _getContentSeparatorClasses(theme: string): string {
-        const columnSeparatorSize = this._getSeparatorForColumn();
-        return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = this._getSeparatorForColumn();
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
     }
 
     private _getSeparatorForColumn(): TColumnSeparatorSize {
