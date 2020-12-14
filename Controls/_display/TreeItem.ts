@@ -235,11 +235,9 @@ export default class TreeItem<T> extends mixin<
     }
 
     getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {
-        // TODO поддержать параметр isNodeFooter
-        const isNodeFooter = false;
-        const expanderSize = this.getExpanderSize(tmplExpanderSize);
-        let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding` + `_theme-${theme}`;
-        expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${theme}`;
+        const expanderSize = this.getExpanderSize(tmplExpanderSize) || 'default';
+        let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_theme-${theme}`;
+        expanderPaddingClasses += ` controls-TreeGrid__row-expanderPadding_size_${expanderSize}_theme-${theme}`;
         expanderPaddingClasses += ' js-controls-ListView__notEditable';
         return expanderPaddingClasses;
     }

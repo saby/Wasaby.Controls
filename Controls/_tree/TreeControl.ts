@@ -43,7 +43,7 @@ const _private = {
             self._errorViewConfig = viewConfig;
         });
     },
-    toggleExpandedOnNewModel(options: any, model: Tree<TreeItem<Model>>, item: TreeItem<Model>): void {
+    toggleExpandedOnNewModel(self: any, options: any, model: Tree<TreeItem<Model>>, item: TreeItem<Model>): void {
         if (!options.hasOwnProperty('expandedItems') && !options.hasOwnProperty('collapsedItems')) {
             if (options.singleExpand) {
                 model.each((it) => {
@@ -93,14 +93,14 @@ const _private = {
             }
         }
 
-        this._notify('expandedItemsChanged', newExpandedItems);
-        this._notify('collapsedItemsChanged', newCollapsedItems);
+        self._notify('expandedItemsChanged', newExpandedItems);
+        self._notify('collapsedItemsChanged', newCollapsedItems);
     },
     toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
         if (self._options.useNewModel) {
             // TODO нужно зарефакторить логику работы с expanded/collapsed, написав единию логику в контроллере
             //  https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
-            _private.toggleExpandedOnNewModel(self._options, listViewModel, dispItem);
+            _private.toggleExpandedOnNewModel(self, self._options, listViewModel, dispItem);
         } else {
             listViewModel.toggleExpanded(dispItem, expanded);
         }

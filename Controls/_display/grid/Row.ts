@@ -2,7 +2,9 @@ import CollectionItem from '../CollectionItem';
 import Collection from './Collection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
-import {TemplateFunction} from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
+import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
+import { IItemPadding } from 'Controls/_list/interface/IList';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -32,6 +34,21 @@ export default class Row<T>
 
     getTemplate(): TemplateFunction | string {
         return this.getDefaultTemplate();
+    }
+
+    getMarkerClasses(
+       theme: string,
+       style: string = 'default',
+       markerClassName: TMarkerClassName = 'default',
+       itemPadding: IItemPadding = {},
+       markerPosition: 'left' | 'right' = 'left'
+    ): string {
+        return `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme}
+            controls-GridView__itemV_marker-${style}_theme-${theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme}
+            controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme}
+            controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}
+            controls-ListView__itemV_marker-${markerPosition}`;
     }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
