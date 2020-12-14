@@ -15,7 +15,7 @@ import {constants} from 'Env/Env';
  *
  * Если задана опция useStore, то вместо использования события, будет отправлено значение свойства searchValue в Store.
  *
- * Использование c контролом Controls.browser:Browser можно посмотреть в демо Controls-demo/Search/FlatList
+ * Использование c контролом {@link Controls/browser:Browser} можно посмотреть в демо Controls-demo/Search/FlatList
  *
  * @example
  * <pre>
