@@ -3,6 +3,7 @@ import Collection from '../Collection';
 import { mixin } from 'Types/util';
 import { DestroyableMixin, Model } from 'Types/entity';
 import IItemsStrategy, { IOptions as IItemsStrategyOptions } from '../IItemsStrategy';
+import { IDragPosition } from 'Controls/_display/interface/IDragPosition';
 
 type TKey = string|number;
 
@@ -13,7 +14,6 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> extends IItemsS
     draggedItemsKeys: TKey[];
     draggableItem: T;
     avatarIndex: number;
-    filterMap: boolean[];
 }
 
 interface ISortOptions {
@@ -50,11 +50,6 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         return this._options;
     }
 
-    setAvatarPosition(avatarIndex: number): void {
-        this._options.avatarIndex = avatarIndex;
-        this.invalidate();
-    }
-
     get source(): IItemsStrategy<S, T> {
         return this._options.source;
     }
@@ -72,6 +67,23 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
 
     get avatarItem(): T {
         return this._avatarItem;
+    }
+
+    setPosition(newPosition: IDragPosition<T>): void {
+        let newIndex: number;
+
+        // Приводим пару параметров index и position к одному - index
+        if (this._options.avatarIndex < newPosition.index && newPosition.position === 'before') {
+            // нужна дополнительная проверка, т.к. при первом изменении позиции она не изменится при -1
+            newIndex = newPosition.index - 1 === this._options.avatarIndex ? newPosition.index : newPosition.index - 1;
+        } else if (this._options.avatarIndex > newPosition.index && newPosition.position === 'after') {
+            newIndex = newPosition.index + 1;
+        } else {
+            newIndex = newPosition.index;
+        }
+
+        this._options.avatarIndex = newIndex;
+        this.invalidate();
     }
 
     at(index: number): T {
@@ -136,13 +148,12 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         const items = this._getItems();
         return Drag.sortItems<S, T>(items, {
             avatarIndex: this._options.avatarIndex,
-            filterMap: this._options.filterMap
+            filterMap: this._options.display.getFilterMap()
         });
     }
 
     protected _createItems(): T[] {
-        const items = this.source.items.filter((it, index) => this._options.filterMap[index]);
-        const filteredItems = items.filter((item) => {
+        const filteredItems = this.source.items.filter((item) => {
             if (!item.DraggableItem) {
                 return true;
             }
@@ -188,7 +199,15 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
             itemsOrder[i - 1] = i;
         }
 
-        itemsOrder.splice(options.avatarIndex, 0, 0);
+        let i = 0, j = 0;
+        while (i < options.avatarIndex) {
+            j++;
+            if (options.filterMap[j]) {
+                i++;
+            }
+        }
+
+        itemsOrder.splice(j, 0, 0);
 
         return itemsOrder;
     }

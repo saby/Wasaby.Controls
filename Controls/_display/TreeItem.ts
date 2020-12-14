@@ -8,6 +8,7 @@ import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -30,7 +31,7 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeItem<T> extends mixin<
+export default class TreeItem<T extends Model = Model> extends mixin<
     CollectionItem<any>,
     ExpandableMixin
     >(
