@@ -17,7 +17,6 @@
         <ws:itemTemplate>
             <ws:partial template="Controls/propertyGrid:ItemTemplate"
                         class="controls-demo-pg-highlightOnHover-editor-padding"
-                        captionPosition="top"
                         scope="{{itemTemplate}}"
                         highlightOnHover="{{true}}"
             />
