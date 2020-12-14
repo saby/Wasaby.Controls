@@ -20,7 +20,7 @@ const ERROR_NOT_FOUND = 404;
  * @extends UI/Base:Async
  *
  * @public
- * @author Санников К.А.
+ * @author Герасимов А.М.
  */
 
 export default class Async extends BaseAsync {
