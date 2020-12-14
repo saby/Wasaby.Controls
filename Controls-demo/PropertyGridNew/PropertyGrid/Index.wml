@@ -17,10 +17,10 @@
         <ws:itemTemplate>
             <ws:partial template="Controls/propertyGrid:ItemTemplate"
                         class="controls-demo-pg-highlightOnHover-editor-padding"
+                        captionPosition="top"
                         scope="{{itemTemplate}}"
                         highlightOnHover="{{true}}"
             />
         </ws:itemTemplate>
     </Controls.propertyGrid:PropertyGrid>
-    <Controls.list:Remover source="{{_source}}" name="listRemover"/>
 </div>
