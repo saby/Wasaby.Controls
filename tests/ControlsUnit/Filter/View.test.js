@@ -845,7 +845,9 @@ define(
                      load: () => {
                         isLoading = true; return Deferred.success();
                      },
-                     hasMoreData: () => {return true;}},
+                     hasMoreData: () => {return true;},
+                     setFilter: () => {}
+                  },
                   displayProperty: 'title',
                   keyProperty: 'id',
                   multiSelect: true}
@@ -1259,10 +1261,10 @@ define(
             it('loadItemsFromSource', () => {
                let actualFilter;
                view._configs.document.sourceController = {
-                  load: (queryFilter) => {
+                  setFilter: (queryFilter) => {
                      actualFilter = queryFilter;
-                     return Promise.reject();
-                  }
+                  },
+                  load: () => Promise.reject()
                };
                view._configs.document.historyId = 'testId';
                filter.View._private.loadItemsFromSource(view._configs.document, view._source);
@@ -1357,6 +1359,7 @@ define(
                });
                view._source[0].editorOptions.source = hSource;
                view._configs.document.sourceController = {
+                  setFilter: () => {},
                   load: () => {return Deferred.success();},
                   hasMoreData: () => {return true;}
                };
