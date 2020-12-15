@@ -9,7 +9,6 @@ export interface IColumnScrollOptions {
     hasMultiSelect: boolean;
     needBottomPadding?: boolean;
     isEmptyTemplateShown?: boolean;
-
     theme?: string;
     backgroundStyle?: string;
 }
@@ -47,6 +46,8 @@ const DELAY_UPDATE_SIZES = 16;
 const WHEEL_DELTA_INCREASE_COEFFICIENT = 100;
 const WHEEL_SCROLLING_SMOOTH_COEFFICIENT = 0.6;
 
+type TScrollDirection = 'forward' | 'backward';
+
 export class ColumnScroll {
     protected _options: IColumnScrollOptions;
     private _isDestroyed: boolean = false;
@@ -64,6 +65,8 @@ export class ColumnScroll {
     private _contentSizeForHScroll: number = 0;
     private _scrollWidth: number = 0;
     private _shadowState: { start: boolean; end: boolean; } = {start: false, end: false};
+    private _currentScrollDirection: TScrollDirection;
+    private _scrollableColumns: HTMLElement[];
 
     constructor(options: IColumnScrollOptions) {
         this._options = options;
@@ -133,6 +136,7 @@ export class ColumnScroll {
     private _setScrollPosition(newPosition: number): void {
         const newScrollPosition = Math.round(newPosition);
         if (this._scrollPosition !== newScrollPosition) {
+            this._currentScrollDirection = this._scrollPosition > newScrollPosition ? 'backward' : 'forward';
             this._scrollPosition = newScrollPosition;
             this._updateShadowState();
             this._drawTransform(this._scrollPosition, GridLayoutUtil.isFullGridSupport());
@@ -180,6 +184,65 @@ export class ColumnScroll {
             backgroundStyle: this._options.backgroundStyle,
             needBottomPadding: this._options.needBottomPadding,
         });
+    }
+
+    /**
+     * Метод, позворляющий проскроллить контент до края колонки внутри указанного HTML контейнера в зависимости от текущего направления скролла.
+     * Работает как с обычными колонками, так и с мультизаголовками.
+     * Для работы мультизаголовков пересечение с границей скроллируемой оболасти вычисляется для нескольких колонок.
+     * Затем из отфильтрованных колонок выбирается меньшая для перемещения к её границе, а не к границе colspan-колонки выше.
+     *
+     * Принцип работы:
+     * Если скроллим влево, то фильтруем колонки по принципу левая сторона за пределами scrollContainer, а правая в scrollContainer
+     * Если скроллим вправо, то фильтруем колонки по принципу правая сторона за пределами scrollContainer, а левая в scrollContainer
+     * После этого выбираем меньшую из отфильрованных и вызываем прокрутку области к этой колонке.
+     * @param container
+     */
+    scrollToColumnWithinContainer(container: HTMLDivElement): void {
+        const scrollContainerRect = this._getScrollContainerRect();
+        const scrollableColumns = this._getScrollableColumns(container);
+        const scrollableColumnsSizes = scrollableColumns.map((column) => column.getBoundingClientRect());
+
+        // Фильтруем колонки в соответствии с направлением скролла
+        const scrollContainerIntersectionSide = this._currentScrollDirection === 'backward' ?
+            scrollContainerRect.left :
+            scrollContainerRect.right;
+        const filteredColumns = scrollableColumnsSizes.filter((rect) => (
+            rect.left < scrollContainerIntersectionSide && rect.right > scrollContainerIntersectionSide
+        ));
+        // Для multiHeader выбираем колонку с минимальной шириной
+        const currentColumnRect = filteredColumns.reduce((acc, item) => (
+            !acc.width || item.width < acc.width ? item : acc
+        ), {} as DOMRect);
+
+        if (currentColumnRect) {
+            this._scrollToColumnRect(currentColumnRect);
+        }
+    }
+
+    /**
+     * Набирает текущие параметры колонок внутри переданного контейнера
+     * @private
+     * @param container header или footer таблицы
+     */
+    private _getScrollableColumns(container: HTMLDivElement): HTMLElement[] {
+        if (this._scrollableColumns) {
+            return this._scrollableColumns;
+        }
+        this._scrollableColumns = [];
+        let htmlColumns: NodeList;
+        if (!container) {
+            return this._scrollableColumns;
+        }
+        htmlColumns = container.querySelectorAll(`.${JS_SELECTORS.SCROLLABLE_ELEMENT}`);
+        if (htmlColumns) {
+            htmlColumns.forEach((column: HTMLElement) => {
+                if (column.offsetWidth) {
+                    this._scrollableColumns.push(column);
+                }
+            });
+        }
+        return this._scrollableColumns;
     }
 
     static getShadowClasses(params: {
@@ -276,6 +339,7 @@ export class ColumnScroll {
         this._contentSizeForHScroll = isFullGridSupport ? this._contentSize - this._fixedColumnsWidth : this._contentSize;
         this._drawTransform(this._scrollPosition, isFullGridSupport);
         this._toggleStickyElementsForScrollCalculation(true);
+        this._scrollableColumns = null;
 
         if (afterUpdateCallback) {
             afterUpdateCallback({
@@ -451,23 +515,39 @@ export class ColumnScroll {
      * @param element
      */
     scrollToElementIfHidden(element: HTMLElement): void {
+        const column = element.closest(`.${JS_SELECTORS.SCROLLABLE_ELEMENT}`);
         // Не скроллим к зафиксированным ячейкам.
-        if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
+        if (!column) {
             return;
         }
-        const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
+        this._scrollToColumnRect(column.getBoundingClientRect());
+    }
 
+    /**
+     * Скроллит к краю элемента, если он частично находится за границей скроллируемой области
+     * @param columnRect
+     * @private
+     */
+    private _scrollToColumnRect(columnRect: DOMRect): void {
+        const scrollableRect = this._getScrollContainerRect();
+
+        if (columnRect.right > scrollableRect.right) {
+            this._setScrollPosition(this._scrollPosition + (columnRect.right - scrollableRect.right));
+        } else if (columnRect.left < scrollableRect.left) {
+            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - columnRect.left));
+        }
+    }
+
+    /**
+     * Возвращает параметры области, в которой скроллится содержимое
+     * @private
+     */
+    private _getScrollContainerRect(): DOMRect {
         const containerRect = this._scrollContainer.getBoundingClientRect();
-        const scrollableRect = {
+        return {
             right: containerRect.right,
             left: containerRect.left + this._fixedColumnsWidth
-        };
-
-        if (activeElementRight > scrollableRect.right) {
-            this._setScrollPosition(this._scrollPosition + (activeElementRight - scrollableRect.right));
-        } else if (activeElementLeft < scrollableRect.left) {
-            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - activeElementLeft));
-        }
+        } as DOMRect;
     }
 
     destroy(): void {
