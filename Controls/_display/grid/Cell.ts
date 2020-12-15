@@ -12,7 +12,7 @@ import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
@@ -50,6 +50,9 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     shouldDisplayItemActions(): boolean {
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            return false;
+        }
         return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
     }
 
@@ -64,10 +67,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
-        const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
+        let startColumn;
         let endColumn;
-
         const multiSelectOffset = +(this._$owner.needMultiSelectColumn());
+
+        if (typeof this._$column.startColumn === 'number') {
+            startColumn = this._$column.startColumn;
+        } else {
+            startColumn = this.getColumnIndex() - multiSelectOffset + 1
+        }
+
 
         if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
@@ -486,8 +495,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // endregion
 
     protected _isFixedCell(): boolean {
-        const stickyColumnCount = this._$owner.getStickyColumnsCount() + (this._$owner.getMultiSelectVisibility() !== 'hidden' ? 1 : 0);
-        return this.getColumnIndex() < stickyColumnCount;
+        const startColumn = this._getColspanParams().startColumn - +(this._$owner.needMultiSelectColumn());
+
+        // columnConfig.startColumn - индекс начала колонки в GridLayout, он начинается с единицы,
+        // чтобы привести его к индексу колонок таблицы, уменьшаем его на 1.
+        return (startColumn - 1) < this._$owner.getStickyColumnsCount();
     }
 }
 

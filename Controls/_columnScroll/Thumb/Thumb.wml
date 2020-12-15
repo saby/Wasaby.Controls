@@ -13,10 +13,10 @@
                 position="{{_position}}"
                 direction="horizontal"
                 contentSize="{{_options.contentSize}}"
-                shouldSetMarginTop="{{_shouldSetMarginTop}}"
+                shouldSetMarginTop="{{ true }}"
                 trackVisible="{{_options.trackVisible}}"
                 attr:class="controls-ColumnScroll_theme-{{_options.theme}}"
-                on:positionChanged="_localPositionHandler()"/>
+                on:positionChanged="_onPositionChanged()"/>
     </Controls.scroll:StickyHeader>
 </ws:if>
 <ws:else>
@@ -25,8 +25,8 @@
             position="{{_position}}"
             direction="horizontal"
             contentSize="{{_options.contentSize}}"
-            shouldSetMarginTop="{{_shouldSetMarginTop}}"
+            shouldSetMarginTop="{{ false }}"
             trackVisible="{{_options.trackVisible}}"
             attr:class="js-controls-Grid_columnScroll_thumb-wrapper controls-ColumnScroll_theme-{{_options.theme}}"
-            on:positionChanged="_localPositionHandler()"/>
+            on:positionChanged="_onPositionChanged()"/>
 </ws:else>

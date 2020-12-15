@@ -5,8 +5,12 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import {tmplNotify} from 'Controls/eventUtils';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, Controller as ColumnScroll} from 'Controls/columnScroll';
-import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
+import {
+    COLUMN_SCROLL_JS_SELECTORS,
+    DRAG_SCROLL_JS_SELECTORS,
+    ColumnScrollController as ColumnScroll,
+    DragScrollController as DragScroll
+} from 'Controls/columnScroll';
 import {
     shouldAddActionsCell,
     shouldDrawColumnScroll,

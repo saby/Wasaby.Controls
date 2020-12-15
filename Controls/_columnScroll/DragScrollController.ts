@@ -29,7 +29,7 @@ interface TPoint {
     y: number;
 }
 
-export class DragScroll {
+export default class DragScroll {
     private _startDragNDropCallback: IDragScrollParams['startDragNDropCallback'];
     private _scrollLength: number = 0;
     private _scrollPosition: number = 0;

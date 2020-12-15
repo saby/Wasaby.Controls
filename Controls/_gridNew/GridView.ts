@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import { GridRow, GridLadderUtil, GridLayoutUtil, isFullGridSupport } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -11,10 +11,11 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import {
-    Controller as ColumnScroll,
-    JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS
+    ColumnScrollController as ColumnScroll,
+    DragScrollController as DragScroll,
+    COLUMN_SCROLL_JS_SELECTORS,
+    DRAG_SCROLL_JS_SELECTORS
 } from 'Controls/columnScroll'
-import {DragScroll, JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS} from "Controls/_grid/resources/DragScroll";
 import {isInLeftSwipeRange} from "Controls/_grid/utils/GridColumnScrollUtil";
 
 const GridView = ListView.extend({
@@ -25,6 +26,7 @@ const GridView = ListView.extend({
     _isFullMounted: false,
     _columnScrollController: null,
     _dragScrollController: null,
+    _columnScrollContainerClasses: '',
     _columnScrollShadowClasses: '',
     _dragScrollOverlayClasses: '',
     _viewGrabbingClasses: '',
@@ -34,6 +36,22 @@ const GridView = ListView.extend({
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
         this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
         this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
+
+
+        if (options.columnScroll && options.columnScrollStartPosition === 'end' && options.isFullGridSupport) {
+            // В таблице с горизонтальным скроллом изначально прокрученным в конец используется фейковая таблица.
+            // Т.к. для отрисовки горизонтального скролла требуется знать размеры таблицы, инициализация горизонтального скролла
+            // происходит на afterMount, который не вызывается на сервере. Чтобы измежать скачка, при оживлении таблицы с
+            // прокрученными в конец колонками, на сервере строится фейковая таблица, состаящая из двух гридов.
+            // Первый - фиксированные колонки, абсолютный блок, прижат к левому краю релативной обертки.
+            // Второй - все остальные колонки, абсолютный блок, прижат к правому краю релативной обертки.
+            // При построении настоящая таблица скрывается с помощью visibility и строится в обыччном порядке.
+            // Затем проскроливается вконец и только после этого заменяет фейковую.
+            // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
+            // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
+            // списочного контрола.
+            this._showFakeGridWithColumnScroll = !options.preventServerSideColumnScroll;
+        }
 
         return result;
     },
@@ -90,16 +108,18 @@ const GridView = ListView.extend({
         return GridItem;
     },
 
-    _getGridTemplateColumns(columns: Array<{width?: string}>, hasMultiSelect: boolean): string {
-        if (!columns) {
+    _getGridTemplateColumns(options): string {
+        const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
+
+        if (!options.columns) {
             Logger.warn('You must set "columns" option to make grid work correctly!', this);
             return '';
         }
-        const initialWidths = columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
+        const initialWidths = options.columns.map(((column) => column.width || GridLayoutUtil.getDefaultColumnWidth()));
         let columnsWidths: string[] = [];
         columnsWidths = initialWidths;
         const ladderStickyColumn = GridLadderUtil.getStickyColumn({
-            columns
+            columns: options.columns
         });
         if (ladderStickyColumn) {
             if (ladderStickyColumn.property.length === 2) {
@@ -110,15 +130,16 @@ const GridView = ListView.extend({
         if (hasMultiSelect) {
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
+
+        if (options.isFullGridSupport && !!options.columnScroll && options.itemActionsPosition !== 'custom') {
+            columnsWidths.push('0px');
+        }
+
         return GridLayoutUtil.getTemplateColumnsStyle(columnsWidths);
     },
 
     _getGridViewWrapperClasses(): string {
         return `${this._columnScrollContainerClasses} ${this.isColumnScrollVisible() ? COLUMN_SCROLL_JS_SELECTORS.COLUMN_SCROLL_VISIBLE : ''}`
-    },
-
-    _getGridViewWrapperStyles(): string {
-        return '';
     },
 
     _getGridViewClasses(options): string {
@@ -136,8 +157,7 @@ const GridView = ListView.extend({
     },
 
     _getGridViewStyles(options): string {
-        const hasMultiSelectColumn = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
-        return this._getGridTemplateColumns(options.columns, hasMultiSelectColumn);
+        return this._getGridTemplateColumns(options);
     },
 
     _onItemMouseMove(event, collectionItem) {
@@ -245,6 +265,14 @@ const GridView = ListView.extend({
                     `controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
             }
         });
+    },
+
+    _onWrapperMouseEnter: function() {
+        // При загрузке таблицы с проскроленным в конец горизонтальным скролом следует оживить таблицу при
+        // вводе в нее указателя мыши, но после отрисовки thumb'а (скрыт через visibility) во избежание скачков
+        if (this._showFakeGridWithColumnScroll) {
+            this._showFakeGridWithColumnScroll = false;
+        }
     },
 
     _onMouseDown(e) {
@@ -418,7 +446,40 @@ const GridView = ListView.extend({
         }
     },
     _getColumnScrollShadowClasses(options, position: 'start' | 'end'): string {
+        if (this._showFakeGridWithColumnScroll && options.columnScrollStartPosition === 'end') {
+            let classes = '';
+            if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
+                classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
+            }
+            return classes + ColumnScroll.getShadowClasses({
+                position,
+                isVisible: position === 'start',
+                theme: options.theme,
+                backgroundStyle: options.backgroundStyle,
+                needBottomPadding: options.needBottomPadding
+            });
+        }
         return this._columnScrollController.getShadowClasses(position);
+    },
+    _getColumnScrollFakeShadowStyles(options, position: 'start' | 'end'): string {
+        if (this._showFakeGridWithColumnScroll && options.columnScrollStartPosition === 'end') {
+            if (position === 'end') {
+                return '';
+            }
+
+            let offsetLeft = 0;
+
+            for (let i = 0; i < options.columns.length && i < options.stickyColumnsCount; i++) {
+                if (!(options.columns[i].width && options.columns[i].width.indexOf('px') !== -1)) {
+
+                } else {
+                    offsetLeft += Number.parseInt(options.columns[i].width);
+                }
+            }
+
+            return `left: ${offsetLeft}px; z-index: 5;`
+        }
+        return '';
     },
     _setHorizontalScrollPosition(value: number): void {
         if (this._horizontalScrollPosition !== value) {
@@ -429,11 +490,16 @@ const GridView = ListView.extend({
     _onGridWrapperWheel(e) {
         if (this.isColumnScrollVisible()) {
             this._columnScrollController.scrollByWheel(e);
-            this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-            this._updateColumnScrollData();
+            this._scrollToColumn();
         }
     },
+    _scrollToColumn(): void {
+        this._columnScrollController.scrollToColumnWithinContainer(this._children.header || this._children.results);
+        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
+        this._updateColumnScrollData();
+    },
     _horizontalPositionChangedHandler(e, newScrollPosition: number): void {
+        e.stopPropagation();
         this._columnScrollController.setScrollPosition(newScrollPosition);
         this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
         this._updateColumnScrollData();
@@ -458,15 +524,21 @@ const GridView = ListView.extend({
             this._listModel.getDraggingItem()
         );
 
-        // if (listModel._shouldAddActionsCell()) {
-        //     lastCellOffset++;
-        // }
+        if (!!this._options.columns && this._options.itemActionsPosition !== 'custom') {
+            lastCellOffset++;
+        }
+
         const stickyColumnsCount = this._listModel.getStickyColumnsCount();
         const columns = this._listModel.getColumnsConfig();
 
         return `grid-column: ${stickyColumnsCount + 1 + offset} / ${(columns.length + lastCellOffset + 1) + offset};`
              + ` width: ${this._horizontalScrollWidth}px;`;
     },
+    _onThumbMouseUp(e) {
+        e.stopPropagation();
+        this._scrollToColumn();
+    },
+
     //#endregion
 
     _isDragScrollingEnabled(options): boolean {
@@ -540,6 +612,7 @@ const GridView = ListView.extend({
     },
     _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
         if (this.isColumnScrollVisible() && this._dragScrollController) {
+            this._scrollToColumn();
             if (startBy === 'mouse') {
                 this._dragScrollController.onViewMouseUp(e);
             } else {
@@ -568,11 +641,12 @@ const GridView = ListView.extend({
         }
     },
     _onDragScrollOverlayMouseUp(e) {
+        this._scrollToColumn();
         this._dragScrollController?.onOverlayMouseUp(e);
     },
     _onDragScrollOverlayTouchEnd(e) {
+        this._scrollToColumn();
         this._dragScrollController?.onOverlayTouchEnd(e);
-        this._leftSwipeCanBeStarted = false;
     },
     _onDragScrollOverlayMouseLeave(e) {
         this._dragScrollController?.onOverlayMouseLeave(e);

@@ -275,6 +275,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
+    protected hasItemActionsSeparatedCell(): boolean {
+        return !!this.getColumnsConfig() && this.hasColumnScroll() && (this.getActionsTemplateConfig()?.itemActionsPosition !== 'custom');
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;

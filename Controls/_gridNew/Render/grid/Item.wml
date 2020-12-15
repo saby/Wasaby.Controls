@@ -2,6 +2,7 @@
     <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker) }}"
          class="{{ gridColumn.getMarkerClasses(theme, style, markerClassName, itemPadding, markerPosition) }}"></div>
     <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl) }}"
+                if="{{ gridColumn.getTemplate(multiSelectTpl) }}"
                 attr:key="{{ gridColumn.getInstanceId() }}"
                 gridColumn="{{ gridColumn }}"
                 column="{{ gridColumn.getColumnConfig() }}"

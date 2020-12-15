@@ -1,14 +1,23 @@
-import Controller, {IControllerOptions, JS_SELECTORS as COLUMN_SCROLL_JS} from 'Controls/_columnScroll/Controller'
+import ColumnScrollController, {
+    IControllerOptions as IColumnScrollControllerOptions,
+    JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS
+} from 'Controls/_columnScroll/ColumnScrollController'
+
+import DragScrollController, {
+    IDragScrollParams as IDragScrollControllerOptions,
+    JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS
+} from 'Controls/_columnScroll/DragScrollController'
+
 import Thumb from 'Controls/_columnScroll/Thumb/Thumb';
 
-const JS_SELECTORS = {
-    ...COLUMN_SCROLL_JS,
-    DRAG_SCROLL: {}
-};
-
 export {
-    Controller,
-    IControllerOptions,
-    JS_SELECTORS,
+    ColumnScrollController,
+    IColumnScrollControllerOptions,
+    COLUMN_SCROLL_JS_SELECTORS,
+
+    DragScrollController,
+    IDragScrollControllerOptions,
+    DRAG_SCROLL_JS_SELECTORS,
+
     Thumb
 }

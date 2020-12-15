@@ -100,11 +100,8 @@ export {
 } from './_grid/interface/IHeaderCell';
 
 export {
-    JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS,
-    Controller as ColumnScroll,
-    IControllerOptions as IColumnScrollOptions
+    COLUMN_SCROLL_JS_SELECTORS,
+    DRAG_SCROLL_JS_SELECTORS,
+    ColumnScrollController as ColumnScroll,
+    IColumnScrollControllerOptions as IColumnScrollOptions
 } from 'Controls/columnScroll';
-
-export {
-    JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS
-} from './_grid/resources/DragScroll';

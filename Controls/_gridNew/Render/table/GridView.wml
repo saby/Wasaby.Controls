@@ -1,41 +1,20 @@
-<div name="gridWrapper"
-     on:wheel="_onGridWrapperWheel()"
-     class="{{ _getGridViewWrapperClasses(_options) }}"
-     style="{{ _getGridViewWrapperStyles(_options) }}">
+<ws:template name="gridView">
+    <table class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
 
-    <style name="columnScrollStylesContainer" data-vdom-ignore="true"></style>
-
-    <!-- Тени -->
-    <ws:if data="{{ isColumnScrollVisible() }}">
-        <div name="columnScrollShadowStart" class="{{ _columnScrollShadowClasses.start }}"></div>
-        <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
-    </ws:if>
-
-    <!-- Скроллбар горизонтального скролла. -->
-    <ws:if data="{{ _options.columnScroll && (_listModel.getHeader() || (_listModel.getResults() && _listModel.getResultsPosition() === 'top')) }}">
-        <Controls.columnScroll:Thumb
-                name="horizontalScrollThumb"
-                attr:style="{{ _getThumbStyles() }}"
-                stickyHeader="{{ false }}"
-                trackVisible="{{ true }}"
-                positionChangeHandler="{{ _horizontalPositionChangedHandler }}"
-                contentSize="{{ _contentSizeForHScroll }}"
-                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-    </ws:if>
-
-    <table name="grid" class="{{ _getGridViewClasses(_options) }}" style="{{ _getGridViewStyles(_options) }}">
         <!-- Colgroup. Describes columns widths -->
         <ws:partial template="wml!Controls/_gridNew/Render/table/Colgroup" colgroup="{{ _listModel.getColgroup() }}"/>
+
         <!-- Header -->
         <ws:if data="{{ _listModel.getHeader() }}">
             <thead attr:name="header" class="{{ _listModel.getHeader().getBodyClasses() }}">
-                <ws:for data="headerRow in _listModel.getHeader().getRows()">
-                    <ws:partial template="{{ headerRow.getTemplate() }}"
-                                item="{{ headerRow }}"
-                                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
-                </ws:for>
+            <ws:for data="headerRow in _listModel.getHeader().getRows()">
+                <ws:partial template="{{ headerRow.getTemplate() }}"
+                            item="{{ headerRow }}"
+                            backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
+            </ws:for>
             </thead>
         </ws:if>
+
         <!-- Results (top) -->
         <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'top' }}">
             <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
@@ -43,39 +22,43 @@
                         item="{{ _listModel.getResults() }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
+
         <!-- Items -->
         <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
-            <ws:partial
-                    template="wml!Controls/_list/Render/For"
-                    itemTemplate="{{ _itemTemplate }}"
-                    collection="{{ _listModel }}"
-                    keyPrefix="gridView-item"
 
-                    style="{{ _options.style }}"
-                    theme="{{ _options.theme }}"
-                    itemTemplateProperty="{{ _options.itemTemplateProperty }}"
-                    groupTemplate="{{ _groupTemplate }}"
-                    itemActionsPosition="{{ _options.itemActionsPosition }}"
-                    itemActionsTemplate="{{ _options.itemActionsTemplate }}"
-                    itemActionsClass="{{ _options.itemActionsClass }}"
-                    swipeTemplate="{{ _options.swipeTemplate }}"
-                    multiSelectTpl="{{ _options.multiSelectTpl }}"
-                    backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
-                    tagTemplate="{{ _options.tagTemplate }}">
-                <ws:editArrowTemplate>
-                    <ws:partial template="wml!Controls/_gridNew/Render/EditArrowTemplate"/>
-                </ws:editArrowTemplate>
-            </ws:partial>
+        <ws:partial
+                template="wml!Controls/_list/Render/For"
+                itemTemplate="{{ _itemTemplate }}"
+                collection="{{ _listModel }}"
+                keyPrefix="gridView-item"
+
+                style="{{ _options.style }}"
+                theme="{{ _options.theme }}"
+                itemTemplateProperty="{{ _options.itemTemplateProperty }}"
+                groupTemplate="{{ _groupTemplate }}"
+                itemActionsPosition="{{ _options.itemActionsPosition }}"
+                itemActionsTemplate="{{ _options.itemActionsTemplate }}"
+                itemActionsClass="{{ _options.itemActionsClass }}"
+                swipeTemplate="{{ _options.swipeTemplate }}"
+                multiSelectTpl="{{ _options.multiSelectTpl }}"
+                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                tagTemplate="{{ _options.tagTemplate }}">
+            <ws:editArrowTemplate>
+                <ws:partial template="wml!Controls/_gridNew/Render/EditArrowTemplate"/>
+            </ws:editArrowTemplate>
+        </ws:partial>
         </tbody>
+
         <!-- emptyTemplate -->
         <ws:if data="{{_options.emptyTemplate}}">
             <td colspan="{{ _listModel.getColumnsConfig().length + (_listModel.getMultiSelectVisibility() !== 'hidden' ? 1 : 0) }}">
                 <ws:partial template="{{ _options.emptyTemplate }}"
-                        attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
-                        prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
-                        hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
+                            attr:class="{{ _listModel.getEmptyTemplateClasses(_options.theme) }}"
+                            prepareColumnsForEmptyTemplate="{{ _prepareColumnsForEmptyTemplate }}"
+                            hasMultiSelect="{{ _options.multiSelectVisibility !=='hidden' }}"/>
             </td>
         </ws:if>
+
         <!-- Results (bottom) -->
         <ws:if data="{{ _listModel.getResults() && _listModel.getResultsPosition() === 'bottom' }}">
             <ws:partial template="{{ _listModel.getResults().getTemplate() }}"
@@ -83,6 +66,7 @@
                         item="{{ _listModel.getResults() }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
+
         <!-- Footer -->
         <ws:if data="{{ _listModel.getFooter() }}">
             <ws:partial template="{{ _listModel.getFooter().getTemplate() }}"
@@ -91,5 +75,67 @@
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
     </table>
-    <Controls.event:Listener event="controlResize" on:controlResize="_resizeHandler()"/>
+</ws:template>
+
+<div name="gridWrapper"
+     on:wheel="_onGridWrapperWheel()"
+     on:mouseenter="_onWrapperMouseEnter()"
+     class="{{ _getGridViewWrapperClasses(_options) }}">
+
+    <style if="{{ _options.columnScroll }}" name="columnScrollStylesContainer" data-vdom-ignore="true"></style>
+
+    <!-- Тени для горизонтального скролла -->
+    <ws:if data="{{ _options.columnScroll && isColumnScrollVisible() && !_showFakeGridWithColumnScroll}}">
+        <div name="columnScrollShadowStart" class="{{ _columnScrollShadowClasses.start }}"></div>
+        <div name="columnScrollShadowEnd" class="{{ _columnScrollShadowClasses.end }}"></div>
+    </ws:if>
+
+    <!-- Оверлей скролла колонок мышкой -->
+    <ws:if data="{{ _options.columnScroll && _isDragScrollingEnabled(_options) && !_showFakeGridWithColumnScroll}}">
+        <div class="{{ _dragScrollOverlayClasses }}"
+             on:mouseup="_onDragScrollOverlayMouseUp()"
+             on:touchend="_onDragScrollOverlayTouchEnd()"
+             on:mousemove="_onDragScrollOverlayMouseMove()"
+             on:touchmove="_onDragScrollOverlayTouchMove()"
+             on:mouseleave="_onDragScrollOverlayMouseLeave()">
+        </div>
+    </ws:if>
+
+    <!-- Скроллбар горизонтального скролла. -->
+    <ws:if data="{{ _options.columnScroll && (_listModel.getHeader() || (_listModel.getResults() && _listModel.getResultsPosition() === 'top')) }}">
+        <Controls.columnScroll:Thumb
+                name="horizontalScrollThumb"
+                attr:style="{{ _getThumbStyles() }} width: {{ _horizontalScrollWidth }};"
+                attr:class="{{ _showFakeGridWithColumnScroll ? 'controls-Grid__ColumnScroll_hidden' }}"
+                stickyHeader="{{ false }}"
+                trackVisible="{{ true }}"
+                contentSize="{{ _contentSizeForHScroll }}"
+                backgroundStyle="{{ _options.backgroundStyle || _options.style }}"
+                on:positionChanged="_horizontalPositionChangedHandler()"
+                on:mouseup="_onThumbMouseUp()"/>
+    </ws:if>
+
+    <!-- Контент таблицы -->
+    <ws:partial template="gridView"
+                attr:name="grid"
+                attr:class="{{ _showFakeGridWithColumnScroll ? 'controls-Grid__ColumnScroll_hidden' }}"
+                realGridView="{{ true }}"
+                on:mousedown="_onMouseDown()"
+                on:touchstart="_onTouchStart('touch')"
+                on:mousemove="_onMouseMove('mouse')"
+                on:touchmove="_onTouchMove('touch')"
+                on:mouseup="_onMouseUp('mouse')"
+                on:touchend="_onTouchEnd('touch')"/>
+
+    <!-- Серверная верстка таблицы с горизонтальным скролом и колонками изначально прокрученными вконец -->
+    <ws:if data="{{ _options.columnScroll && _showFakeGridWithColumnScroll }}">
+        <ws:partial template="gridView" attr:class="controls-Grid__ColumnScroll__fixedPart"/>
+        <div class="{{ _getColumnScrollShadowClasses(_options, 'start') }}"
+             style="{{ _getColumnScrollFakeShadowStyles(_options, 'start') }}"></div>
+        <div class="controls-Grid__ColumnScroll__scrollablePart">
+            <ws:partial template="gridView"/>
+        </div>
+    </ws:if>
+
+    <Controls.event:Listener if="{{ _options.columnScroll }}" event="controlResize" on:controlResize="_resizeHandler()"/>
 </div>

@@ -50,7 +50,7 @@ const WHEEL_SCROLLING_SMOOTH_COEFFICIENT = 0.6;
 
 type TScrollDirection = 'forward' | 'backward';
 
-export default class Controller {
+export default class ColumnScrollController {
     protected _options: IControllerOptions;
     private _isDestroyed: boolean = false;
 
@@ -172,7 +172,7 @@ export default class Controller {
     }
 
     getShadowClasses(position: 'start' | 'end', isVisible: boolean = this._shadowState[position]): string {
-        return Controller.getShadowClasses({
+        return ColumnScrollController.getShadowClasses({
             position,
             isVisible,
             theme: this._options.theme,

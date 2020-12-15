@@ -16,6 +16,7 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 
+import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
 import {IColspanParams, IHeaderCell} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
