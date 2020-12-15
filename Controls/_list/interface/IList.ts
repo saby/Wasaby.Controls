@@ -283,6 +283,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @default default
  */
 
+
+/**
+ * @name Controls/_list/interface/IList#checkboxStateProperty
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @cfg {String} Имя свойства, содержащего информацию об состоянии чекбокса элемента.
+ * @remark Определяет возможность изменения состояния чекбокса и его видимость
+ * @property true Чекбокс виден и с ним можно взаимодействовать
+ * @property false Чекбокс виден, но с ним нельзя взаимодействовать
+ * @property null Чекбокс скрыт
+ * @demo Controls-demo/list_new/ItemTemplate/CheckboxReadOnly/Index
+ */
+
 /**
  * @event Происходит в момент, когда курсор оказывается над элементом списка.
  * @name Controls/_list/interface/IList#itemMouseEnter
