@@ -114,7 +114,10 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
             baseControl._beforePaint();
-            baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
+            baseControl._container = {
+                getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
+                clientHeight: 800
+            };
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
             baseControl._viewSize = 800;

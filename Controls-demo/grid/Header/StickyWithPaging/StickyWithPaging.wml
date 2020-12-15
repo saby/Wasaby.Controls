@@ -9,7 +9,7 @@
                 columns="{{_columns}}">
                 <ws:navigation view="infinity" source="page">
                     <ws:sourceConfig pageSize="{{100}}" page="{{0}}" hasMore="{{false}}"/>
-                    <ws:viewConfig pagingMode="numbers"/>
+                    <ws:viewConfig pagingMode="basic"/>
                 </ws:navigation>
             </Controls.grid:View>
         </Controls.list:HotKeysContainer>

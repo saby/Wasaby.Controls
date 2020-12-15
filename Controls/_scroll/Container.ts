@@ -352,20 +352,23 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
         if (!event.nativeEvent.isTrusted) {
             let offset: number;
+            let headersHeight = 0;
+            if (detection.isBrowserEnv) {
+                headersHeight = getHeadersHeight(this._container, 'top', 'allFixed');
+            }
             const
-                headersHeight = getHeadersHeight(this._container, 'top', 'allFixed') || 0,
                 clientHeight = this._scrollModel.clientHeight - headersHeight,
                 scrollTop: number = this._scrollModel.scrollTop;
             const scrollContainerHeight: number = this._scrollModel.scrollHeight - this._scrollModel.clientHeight;
 
             if (event.nativeEvent.which === constants.key.pageDown) {
-                offset = scrollTop + this._scrollModel.clientHeight;
+                offset = scrollTop + clientHeight;
             }
             if (event.nativeEvent.which === constants.key.down) {
                 offset = scrollTop + SCROLL_BY_ARROWS;
             }
             if (event.nativeEvent.which === constants.key.pageUp) {
-                offset = scrollTop - this._scrollModel.clientHeight;
+                offset = scrollTop - clientHeight;
             }
             if (event.nativeEvent.which === constants.key.up) {
                 offset = scrollTop - SCROLL_BY_ARROWS;
