@@ -10,7 +10,7 @@ export default {
     /**
      * Отображает индикатор загрузки.
      * @function
-     * @name Controls/LoadingIndicator#show
+     * @name Controls/_LoadingIndicator/LoadingIndicatorOpener#show
      * @param {Object} [config] Объект с параметрами. Если не задан, по умолчанию используется значение аналогичного параметра контрола.
      * @param {Boolean} [config.isGlobal=true] Определяет, показать индикатор над всей страницей или только над собственным контентом.
      * @param {String} [config.message=''] Текст сообщения индикатора.
@@ -31,7 +31,7 @@ export default {
     /**
      * Скрывает индикатор загрузки.
      * @function
-     * @name Controls/LoadingIndicator#hide
+     * @name Controls/_LoadingIndicator/LoadingIndicatorOpener#hide
      * @param {string} id Идентификатор индикатора загрузки.
      * @see show
      */
