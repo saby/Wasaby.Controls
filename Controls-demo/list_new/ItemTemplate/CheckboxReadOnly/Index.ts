@@ -6,16 +6,17 @@ import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected checkboxReadOnly: Boolean;
     protected _selectedKeys: [] = [];
     protected _excludedKeys: [] = [];
 
     protected _beforeMount(): void {
+        const data = getData();
+        data.forEach((it) => it.checkboxState = false);
+
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: getData()
+            data
         });
-        this.checkboxReadOnly = true;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

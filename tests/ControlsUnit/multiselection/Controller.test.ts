@@ -223,7 +223,8 @@ describe('Controls/_multiselection/Controller', () => {
          selectAncestors: true,
          rootId: null,
          nodesSourceControllers,
-         entryPath: []
+         entryPath: [],
+         selectionType: 'all'
       });
 
       controller = new SelectionController({
@@ -376,7 +377,8 @@ describe('Controls/_multiselection/Controller', () => {
              selectDescendants: false,
              selectAncestors: false,
              rootId: null,
-             nodesSourceControllers
+             nodesSourceControllers,
+            selectionType: 'all'
          });
 
          controller = new SelectionController({

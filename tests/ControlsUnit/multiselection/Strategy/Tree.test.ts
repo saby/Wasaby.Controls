@@ -27,14 +27,16 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: false,
       selectAncestors: false,
       rootId: null,
-      model: model
+      model: model,
+      selectionType: 'all'
    });
 
    const strategyWithDescendantsAndAncestors = new TreeSelectionStrategy({
       selectDescendants: true,
       selectAncestors: true,
       rootId: null,
-      model: model
+      model: model,
+      selectionType: 'all'
    });
 
    function toArray(array: TreeItem<Model>[]): object[] {
@@ -327,7 +329,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
               selectDescendants: true,
               selectAncestors: true,
               rootId: null,
-              model: model
+              model: model,
+             selectionType: 'all'
           });
           const entryPath = [
               {parent: 6, id: 10},
@@ -422,7 +425,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: true,
             selectAncestors: true,
             rootId: null,
-            model: searchModel
+            model: searchModel,
+            selectionType: 'all'
          });
 
          let res = strategy.getSelectionForModel({selected: [null], excluded: [null]}, undefined, undefined, 'sad');
@@ -494,7 +498,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              selectAncestors: true,
              selectDescendants: true,
              rootId: null,
-             model: model
+             model: model,
+             selectionType: 'all'
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
       });
@@ -582,7 +587,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: null,
-            model: model
+            model: model,
+            selectionType: 'all'
          });
          const selection = { selected: [], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, false, 0, true));

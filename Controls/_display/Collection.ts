@@ -3,7 +3,7 @@ import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
-import { Model as EntityModel } from 'Types/entity';
+import { Model, Model as EntityModel } from 'Types/entity';
 import IItemsStrategy from './IItemsStrategy';
 import ItemsStrategyComposer from './itemsStrategy/Composer';
 import DirectItemsStrategy from './itemsStrategy/Direct';
@@ -402,7 +402,7 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
+export default class Collection<S extends Model = Model, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     VersionableMixin,
@@ -635,6 +635,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$style: string;
 
     protected _$navigation: INavigationOptionValue;
+
+    /**
+     * Задает состояние чекбокса
+     * @variant true Чекбокс виден и включен
+     * @variant false Чекбокс виден и задизейблен
+     * @variant null Чекбокс скрыт
+     * @protected
+     */
+    protected _$checkboxStateProperty: boolean|null;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -3111,6 +3120,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
+            if (options.contents.has && options.contents.has(this._$checkboxStateProperty)) {
+                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$checkboxStateProperty);
+            }
             return create(this._itemModule, options);
         };
     }
@@ -3933,6 +3945,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$checkboxStateProperty: '',
     _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
