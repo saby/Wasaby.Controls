@@ -1,6 +1,15 @@
 <div class="controlsDemo__wrapper controlDemo__grid-header-sticky">
     <div class="controlsDemo__cell">
-        <Controls.buttons:Button caption="Переключить separatorVisibility" on:click="_onToggleSeparatorVisibility()"/>
+        <Controls.buttons:Button caption="Переключить separatorVisibility" on:click="_onToggleSeparatorVisibility()"/><br/>
+        <Controls.buttons:Button caption="Переключить columnAlignGroup" on:click="_onToggleColumnAlignGroup()"/><br/>
+        <span>Переключить textAlign: <Controls.toggle:RadioGroup
+                attr:style="display: inline-block"
+                keyProperty="id"
+                source="{{ _radioSource }}"
+                direction="horizontal"
+                selectedKey="{{ _textAlign }}"
+                on:selectedKeyChanged="_onChangeTextAlign()"
+        /></span >
     </div>
     <Controls.scroll:Container attr:style="height: 250px; width: 530px;">
         <Controls.list:Container>
@@ -13,10 +22,11 @@
                     groupProperty="fullName">
                 <ws:groupTemplate>
                     <ws:partial template="Controls/grid:GroupTemplate"
-                                itemData="{{itemData}}"
-                                separatorVisibility="{{_separatorVisibility}}"
-                                expanderVisible="{{true}}"
-                                columnAlignGroup="{{2}}">
+                                itemData="{{ itemData }}"
+                                textAlign="{{ _textAlign }}"
+                                separatorVisibility="{{ _separatorVisibility }}"
+                                expanderVisible="{{ true }}"
+                                columnAlignGroup="{{ _columnAlignGroup }}">
                         <ws:rightTemplate>
                             <Controls.decorator:Money value="{{itemData.metaData.groupResults[itemData.item]}}" fontColorStyle="group" useGrouping="{{false}}"/>
                         </ws:rightTemplate>

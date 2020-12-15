@@ -6,12 +6,12 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-        <span class="controls-PropertyGrid__gridLayout_editor-caption
-                    controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
-                    {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
-              style="{{getItemStyles(collectionItem, 1)}}">
-            <div class="controls-PropertyGrid__gridLayout_editor-caption-baseline">{{item.caption}}</div>
-        </span>
+   <span class="controls-PropertyGrid__gridLayout_editor-caption
+               controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
+               {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
+         style="{{getItemStyles(collectionItem, 1)}}">
+      <div class="controls-PropertyGrid__gridLayout_editor-caption-baseline">{{item.caption}}</div>
+   </span>
    <div class="controls-PropertyGrid__gridLayout_editor
                controls-PropertyGrid__gridLayout_editor_theme-{{theme}}
                controls-PropertyGrid__gridLayout_editor_theme-{{theme}}

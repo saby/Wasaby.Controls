@@ -1,8 +1,7 @@
-import {ISearchResolver, ISearchResolverOptions} from './interface';
+import {ISearchResolverOptions} from './interface';
 
 /**
  * Контроллер, используемый для принятия решения, совершать ли поиск или производить его сброс по заданным параметрам в опциях.
- * Используется в {@link Controls/suggest:_InputController} как звено в логической цепочке поиска.
  * С помощью этого контроллера производится настройка: временная задержка между вводом символа и началом поиска; количество символов, с которых начинается поиск.
  * @remark
  * <ul>
@@ -41,12 +40,12 @@ import {ISearchResolver, ISearchResolverOptions} from './interface';
  *
  * @class Controls/_search/SearchResolver
  * @implements Controls/_search/interface/ISearchResolver
- * @author Крюков Н.Ю.
  *
- * @public
+ * @private
+ * @author Крюков Н.Ю.
  */
 
-export default class SearchResolver implements ISearchResolver {
+export default class SearchResolver {
 
    /**
     * Таймер для запуска поиска после паузы, заданной в опции delayTime

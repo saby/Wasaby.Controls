@@ -390,7 +390,7 @@ var
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
@@ -400,7 +400,7 @@ var
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
-    * @mixes Controls/_marker/interface/IMarkerListOptions
+    * @mixes Controls/_marker/interface/IMarkerList
     *
     * @public
     * @author Авраменко А.С.
@@ -428,7 +428,7 @@ var
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
@@ -437,7 +437,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
-    * @mixes Controls/_marker/interface/IMarkerListOptions
+    * @mixes Controls/_marker/interface/IMarkerList
     *
     * @public
     * @author Авраменко А.С.
