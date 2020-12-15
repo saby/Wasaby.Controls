@@ -28,6 +28,7 @@ import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyH
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
+import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
 /**
  * @typeof {String} TPagingPosition
@@ -83,6 +84,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _template: TemplateFunction = template;
     protected _baseTemplate: TemplateFunction = baseTemplate;
+    protected _options: IContainerOptions;
 
     protected _shadows: ShadowsModel;
     protected _scrollbars: ScrollbarsModel;
@@ -350,7 +352,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // если сами вызвали событие keydown (горячие клавиши), нативно не прокрутится, прокрутим сами
         if (!event.nativeEvent.isTrusted) {
             let offset: number;
-            const scrollTop: number = this._scrollModel.scrollTop;
+            const
+                headersHeight = getHeadersHeight(this._container, 'top', 'allFixed') || 0,
+                clientHeight = this._scrollModel.clientHeight - headersHeight,
+                scrollTop: number = this._scrollModel.scrollTop;
             const scrollContainerHeight: number = this._scrollModel.scrollHeight - this._scrollModel.clientHeight;
 
             if (event.nativeEvent.which === constants.key.pageDown) {

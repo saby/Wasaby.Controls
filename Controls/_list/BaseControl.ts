@@ -95,7 +95,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
@@ -3646,10 +3646,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _getScrollParams(): IScrollParams {
+        let headersHeight = 0;
+        if (detection.isBrowserEnv) {
+            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+        }
         const scrollParams = {
             scrollTop: this._scrollTop,
             scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize
+            clientHeight: this._viewportSize - headersHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
