@@ -1,7 +1,8 @@
 <div class="controlsDemo__wrapper">
     <Controls.scroll:Container attr:class="controlsDemo_fixedWidth300 controlsDemo__height200">
-        <div class="controls-ControlsDemo__content">
-
+        <div class="controls-ControlsDemo__contentWrapper">
+            <div class="controls-ControlsDemo__content">
+            </div>
         </div>
     </Controls.scroll:Container>
 </div>

@@ -9,6 +9,7 @@ describe('Controls/scroll:ContainerBase', () => {
    };
 
    const contains: Function = () => false;
+   const classList = { contains: () => false };
 
    describe('_beforeMount', () => {
       it('should create models', () => {
@@ -28,9 +29,14 @@ describe('Controls/scroll:ContainerBase', () => {
          sinon.stub(control._resizeObserver, 'observe');
          control._controlResizeHandler = () => {};
          control._children = {
-            content: {
+            scrollContainer: {
                children: children,
                getBoundingClientRect: () => {}
+            },
+            content: {
+               classList: {
+                  contains: () => true
+               }
             }
          };
          control._afterMount();
@@ -51,7 +57,7 @@ describe('Controls/scroll:ContainerBase', () => {
 
    describe('_afterUpdate', () => {
       let control;
-      const content = {
+      const scrollContainer = {
          scrollTop: 10,
          scrollLeft: 20,
          clientHeight: 30,
@@ -66,7 +72,12 @@ describe('Controls/scroll:ContainerBase', () => {
          control._state = {
          };
          control._children = {
-            content: content
+            scrollContainer: scrollContainer,
+            content: {
+               classList: {
+                  contains: () => true
+               }
+            }
          };
 
          sinon.stub(control, '_generateEvent');
@@ -95,12 +106,12 @@ describe('Controls/scroll:ContainerBase', () => {
          control._afterMount();
          control._afterUpdate();
 
-         assert.strictEqual(control._scrollModel.scrollTop, content.scrollTop);
-         assert.strictEqual(control._scrollModel.scrollLeft, content.scrollLeft);
-         assert.strictEqual(control._scrollModel.clientHeight, content.clientHeight);
-         assert.strictEqual(control._scrollModel.scrollHeight, content.scrollHeight);
-         assert.strictEqual(control._scrollModel.clientWidth, content.clientWidth);
-         assert.strictEqual(control._scrollModel.scrollWidth, content.scrollWidth);
+         assert.strictEqual(control._scrollModel.scrollTop, scrollContainer.scrollTop);
+         assert.strictEqual(control._scrollModel.scrollLeft, scrollContainer.scrollLeft);
+         assert.strictEqual(control._scrollModel.clientHeight, scrollContainer.clientHeight);
+         assert.strictEqual(control._scrollModel.scrollHeight, scrollContainer.scrollHeight);
+         assert.strictEqual(control._scrollModel.clientWidth, scrollContainer.clientWidth);
+         assert.strictEqual(control._scrollModel.scrollWidth, scrollContainer.scrollWidth);
       });
 
       it("should't update state from dom if resize observer available", () => {
@@ -125,7 +136,7 @@ describe('Controls/scroll:ContainerBase', () => {
 
          sinon.stub(control._resizeObserver, 'observe');
          sinon.stub(control._resizeObserver, 'unobserve');
-         control._children.content.children = children;
+         control._children.scrollContainer.children = children;
          control._observedElements = [children[0], 'children3'];
 
          control._afterUpdate();
@@ -154,7 +165,7 @@ describe('Controls/scroll:ContainerBase', () => {
          const control: ContainerBase = new ContainerBase(options);
          control._beforeMount(options);
 
-         const content = {
+         const scrollContainer = {
             scrollTop: 10,
             scrollLeft: 20,
             clientHeight: 30,
@@ -165,7 +176,12 @@ describe('Controls/scroll:ContainerBase', () => {
          };
 
          control._children = {
-            content: content
+            scrollContainer: scrollContainer,
+            content: {
+               classList: {
+                  contains: () => true
+               }
+            }
          };
 
          control._resizeObserver = {
@@ -182,12 +198,12 @@ describe('Controls/scroll:ContainerBase', () => {
 
          control._resizeHandler();
 
-         assert.strictEqual(control._scrollModel.scrollTop, content.scrollTop);
-         assert.strictEqual(control._scrollModel.scrollLeft, content.scrollLeft);
-         assert.strictEqual(control._scrollModel.clientHeight, content.clientHeight);
-         assert.strictEqual(control._scrollModel.scrollHeight, content.scrollHeight);
-         assert.strictEqual(control._scrollModel.clientWidth, content.clientWidth);
-         assert.strictEqual(control._scrollModel.scrollWidth, content.scrollWidth);
+         assert.strictEqual(control._scrollModel.scrollTop, scrollContainer.scrollTop);
+         assert.strictEqual(control._scrollModel.scrollLeft, scrollContainer.scrollLeft);
+         assert.strictEqual(control._scrollModel.clientHeight, scrollContainer.clientHeight);
+         assert.strictEqual(control._scrollModel.scrollHeight, scrollContainer.scrollHeight);
+         assert.strictEqual(control._scrollModel.clientWidth, scrollContainer.clientWidth);
+         assert.strictEqual(control._scrollModel.scrollWidth, scrollContainer.scrollWidth);
          sinon.restore();
       });
    });
@@ -218,14 +234,19 @@ describe('Controls/scroll:ContainerBase', () => {
 
          control._scrollLockedPosition = position;
          control._children = {
-            content: {
+            scrollContainer: {
                scrollTop: 0
+            },
+            content: {
+               classList: {
+                  contains: () => true
+               }
             }
          };
 
          control._scrollHandler({currentTarget: { scrollTop: position }});
 
-         assert.strictEqual(control._children.content.scrollTop, position);
+         assert.strictEqual(control._children.scrollContainer.scrollTop, position);
       });
 
       it('should\'t scroll if locked position is not specified', () => {
@@ -235,9 +256,14 @@ describe('Controls/scroll:ContainerBase', () => {
 
          control._scrollLockedPosition = null;
          control._children = {
-            content: {
+            scrollContainer: {
                scrollTop: position,
                getBoundingClientRect: sinon.fake()
+            },
+            content: {
+               classList: {
+                  contains: () => true
+               }
             }
          };
          control._resizeObserver = {
@@ -254,7 +280,7 @@ describe('Controls/scroll:ContainerBase', () => {
 
          control._scrollHandler({currentTarget: { scrollTop: position }});
 
-         assert.strictEqual(control._children.content.scrollTop, position);
+         assert.strictEqual(control._children.scrollContainer.scrollTop, position);
          sinon.restore();
       });
    });
@@ -302,14 +328,14 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          control._children = {
-            content: {
+            scrollContainer: {
                scrollTop: 0
             }
          };
 
          control.scrollTo(newPosition);
 
-         assert.strictEqual(control._children.content.scrollTop, newPosition);
+         assert.strictEqual(control._children.scrollContainer.scrollTop, newPosition);
       });
 
       it('should scroll horizontal', () => {
@@ -318,14 +344,14 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          control._children = {
-            content: {
+            scrollContainer: {
                scrollLeft: 0
             }
          };
 
          control.scrollTo(newPosition, SCROLL_DIRECTION.HORIZONTAL);
 
-         assert.strictEqual(control._children.content.scrollLeft, newPosition);
+         assert.strictEqual(control._children.scrollContainer.scrollLeft, newPosition);
       });
    });
 
@@ -369,14 +395,14 @@ describe('Controls/scroll:ContainerBase', () => {
          control._beforeMount(options);
 
          control._children = {
-            content: {
+            scrollContainer: {
                scrollLeft: 0
             }
          };
 
          control.horizontalScrollTo(newPosition);
 
-         assert.strictEqual(control._children.content.scrollLeft, newPosition);
+         assert.strictEqual(control._children.scrollContainer.scrollLeft, newPosition);
       });
    });
 
@@ -403,7 +429,7 @@ describe('Controls/scroll:ContainerBase', () => {
             control._beforeMount(options);
 
             control._children = {
-               content: {
+               scrollContainer: {
                   scrollTop: 10,
                   scrollHeight: 200,
                   clientHeight: 100,
@@ -411,6 +437,11 @@ describe('Controls/scroll:ContainerBase', () => {
                   scrollWidth: 200,
                   clientWidth: 100,
                   getBoundingClientRect: sinon.fake()
+               },
+               content: {
+                  classList: {
+                     contains: () => true
+                  }
                }
             };
             control._resizeObserver = {
@@ -425,16 +456,16 @@ describe('Controls/scroll:ContainerBase', () => {
             sinon.stub(control, '_observeContentSize');
             control._afterMount();
 
-            control._scrollModel._scrollTop = control._children.content.scrollTop;
-            control._scrollModel._scrollHeight = control._children.content.scrollHeight;
-            control._scrollModel._clientHeight = control._children.content.clientHeight;
-            control._scrollModel._scrollLeft = control._children.content.scrollLeft;
-            control._scrollModel._scrollWidth = control._children.content.scrollWidth;
-            control._scrollModel._clientWidth = control._children.content.clientWidth;
+            control._scrollModel._scrollTop = control._children.scrollContainer.scrollTop;
+            control._scrollModel._scrollHeight = control._children.scrollContainer.scrollHeight;
+            control._scrollModel._clientHeight = control._children.scrollContainer.clientHeight;
+            control._scrollModel._scrollLeft = control._children.scrollContainer.scrollLeft;
+            control._scrollModel._scrollWidth = control._children.scrollContainer.scrollWidth;
+            control._scrollModel._clientWidth = control._children.scrollContainer.clientWidth;
 
             control[`scrollTo${test.position}`]();
 
-            assert.strictEqual(control._children.content[test.checkProperty], test.scrollPosition);
+            assert.strictEqual(control._children.scrollContainer[test.checkProperty], test.scrollPosition);
             sinon.restore();
          });
       });
@@ -468,8 +499,13 @@ describe('Controls/scroll:ContainerBase', () => {
       it('should not update state if unchanged state arrives', () => {
          const inst:ContainerBase = new ContainerBase();
          inst._children = {
-            content: {
+            scrollContainer: {
                scrollTop: 0
+            },
+            content: {
+               classList: {
+                  contains: () => true
+               }
             }
          };
          inst._resizeObserver = {
@@ -490,10 +526,15 @@ describe('Controls/scroll:ContainerBase', () => {
       it('should update state if changed state arrives', () => {
          const inst = new ContainerBase();
          inst._children = {
-            content: {
+            scrollContainer: {
                scrollTop: 0,
                getBoundingClientRect: () => {
                   return {};
+               }
+            },
+            content: {
+               classList: {
+                  contains: () => true
                }
             }
          };
@@ -519,7 +560,7 @@ describe('Controls/scroll:ContainerBase', () => {
          const control: ContainerBase = new ContainerBase(options);
          control._beforeMount(options);
          control._children = {
-            content: {
+            scrollContainer: {
                scrollTop: 0,
                scrollLeft: 0,
                clientHeight: 100,
@@ -527,6 +568,11 @@ describe('Controls/scroll:ContainerBase', () => {
                clientWidth: 100,
                scrollWidth: 100,
                getBoundingClientRect: sinon.fake()
+            },
+            content: {
+               classList: {
+                  contains: () => true
+               }
             }
          };
           control._resizeObserver = {
