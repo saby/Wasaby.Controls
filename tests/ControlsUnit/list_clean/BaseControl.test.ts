@@ -113,7 +113,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
-            baseControl._beforePaint();
+            baseControl._componentDidUpdate();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -130,7 +130,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
-            baseControl._beforePaint();
+            baseControl._componentDidUpdate();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 0;
@@ -144,7 +144,7 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlCfg);
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
-            baseControl._beforePaint();
+            baseControl._componentDidUpdate();
             baseControl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}])};
             assert.isFalse(baseControl._pagingVisible);
             baseControl._viewportSize = 200;
@@ -166,7 +166,7 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._afterMount();
             baseControl._beforeUpdate(baseControlCfg);
             baseControl._afterUpdate(baseControlCfg);
-            baseControl._beforePaint();
+            baseControl._componentDidUpdate();
             baseControl._container = {
                 clientHeight: 1000,
                 getElementsByClassName: () => ([{clientHeight: 100, offsetHeight: 0}]),
