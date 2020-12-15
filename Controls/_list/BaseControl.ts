@@ -4915,6 +4915,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
+
+        // В chrome/safari mouseEnter происходит всегда, сразу после touch
+        if (!detection.isMobilePlatform) {
+            _private.updateItemActionsOnce(this, this._options);
+        }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
@@ -4954,11 +4959,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _mouseEnter(event): void {
-        // В chrome/safari mouseEnter происходит всегда, сразу после touch
-        if (!detection.isMobilePlatform) {
-            _private.updateItemActionsOnce(this, this._options);
-        }
-
         if (this._documentDragging) {
             this._insideDragging = true;
 
