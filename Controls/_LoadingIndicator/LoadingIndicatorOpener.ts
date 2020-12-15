@@ -1,5 +1,9 @@
 import ILoadingIndicator, {ILoadingIndicatorOptions} from './interface/ILoadingIndicator';
 
+/**
+ * Хэлпер для открытия глобального индикатора загрузки
+ * @public
+ */
 export default {
     _setIndicator(indicator: ILoadingIndicator): void {
         this.mainIndicator = indicator;
