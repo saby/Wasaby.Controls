@@ -164,7 +164,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._updateStyles(options);
     }
 
-    protected _beforePaintOnMount(): void {
+    protected _componentDidMount(): void {
         if (!this._isStickySupport) {
             return;
         }
