@@ -134,3 +134,7 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
  */
+/**
+ * @name Controls/_treeGrid/View#root
+ * @cfg {Number|String} Идентификатор корневого узла.
+ */
