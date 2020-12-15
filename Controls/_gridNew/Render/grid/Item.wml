@@ -26,7 +26,7 @@
                             key="{{ (item || itemData).key }}"
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
         <ws:multiSelectTemplate>
-            <ws:partial template="{{multiSelectTpl}}" attr:class="{{ gridColumn.getMultiSelectClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}">
+            <ws:partial template="{{multiSelectTpl}}">
                 <ws:templateOptions multiSelectStatus="{{(item || itemData).isSelected()}}" key="{{(item || itemData).key}}" checkboxReadOnly="{{checkboxReadOnly}}"/>
             </ws:partial>
         </ws:multiSelectTemplate>
