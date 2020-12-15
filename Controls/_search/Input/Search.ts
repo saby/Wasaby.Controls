@@ -83,11 +83,11 @@ class Search extends Base {
         }
     }
 
-   protected _beforeUnmount(): void {
-      if (this._resetCommandCallbackId) {
-         Store.unsubscribe(this._resetCommandCallbackId);
-      }
-   }
+    protected _beforeUnmount(): void {
+        if (this._resetCommandCallbackId) {
+            Store.unsubscribe(this._resetCommandCallbackId);
+        }
+    }
 
     protected _renderStyle(): string {
         let style: string;
