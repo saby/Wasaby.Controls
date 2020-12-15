@@ -108,6 +108,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     importantItemProperties?: string[];
     itemActionsProperty?: string;
     navigation?: INavigationOptionValue;
+    checkboxStateProperty?: string;
 }
 
 export interface ICollectionCounters {
