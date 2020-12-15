@@ -92,6 +92,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
+    multiSelectPosition?: 'default'|'custom';
     itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
@@ -2276,7 +2277,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
             // Событие remove нужно слать, только когда мы закончили перетаскивание в другом списке,
             // т.к. только в этом случае мы отправим событие add на начало перетаскивания
-            if (!this.getCollection().getRecordById(avatarKey)) {
+            // Если не найден индекс для перетаскиваемого элемента, значит его удалили прикладники на событие dragEnd
+            if (!this.getCollection().getRecordById(avatarKey) && avatarIndex !== -1) {
                 this._notifyBeforeCollectionChange();
                 this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [strategy.avatarItem], avatarIndex);
                 this._notifyAfterCollectionChange();
@@ -2284,7 +2286,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         }
     }
 
-    // endregion
+    // endregion Drag-N-Drop
 
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
@@ -2447,13 +2449,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
-                if (!record) {   
+                if (!record) {
 
                     // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
                     // Такой записи еще нет в наборе данных.
                     if (this._$isEditing) {
                         return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
-                    } 
+                    }
 
                     // Или требуется найти группу
                     return this.find((item) => item['[Controls/_display/GroupItem]'] && item.key === key);

@@ -16,6 +16,8 @@ const MONTHS_IN_HALFYEAR = 6;
 const MONTHS_IN_QUARTER = 3;
 
 /**
+ * Контрол, отвечающий за отображение центральной части в окне Быстрого выбора периода.
+ * Отображение определяется значениями опций chooseHalfyears, chooseQuarters, chooseMonths, chooseYears.
  * @private
  * @author Красильников А.С.
  */

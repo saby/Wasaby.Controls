@@ -2576,7 +2576,7 @@ const _private = {
                 self._notifyPlaceholdersChanged = () => {
                     self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
                 }
-                if (result.placeholders.top > 0) {
+                if (result.shadowVisibility?.up || result.placeholders.top > 0 || _private.hasMoreData(self, self._sourceController, 'up')) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
@@ -3679,6 +3679,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount(): void {
         this._isMounted = true;
 
+        if (_private.hasMoreData(this, this._sourceController, 'up')) {
+            this._notify('enableVirtualNavigation', [], { bubbling: true });
+        } else {
+            this._notify('disableVirtualNavigation', [], { bubbling: true });
+        }
+
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4033,7 +4039,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const isPortionedLoad = _private.isPortionedLoad(this);
             const hasMoreData = _private.hasMoreData(this, this._sourceController, 'down');
             const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
-            const needCheckLoadToDirection = hasMoreData && isSearchReturnsEmptyResult && !this._sourceController.isLoading();
+            const needCheckLoadToDirection =
+                hasMoreData &&
+                isSearchReturnsEmptyResult &&
+                !this._sourceController.isLoading() &&
+                this._options.loading !== newOptions.loading;
 
             // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
             // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
@@ -4303,7 +4313,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beforePaint(): void {
+    _componentDidUpdate(): void {
         let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
@@ -4720,6 +4730,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onGroupClick(e, groupId, baseEvent, dispItem) {
+        const collapseGroupAfterEndEdit = (collection) => {
+            const display = this._options.useNewModel ? collection : collection.getDisplay();
+
+            if (groupId === display.getGroup()(display.find((i) => i.isEditing()).contents)) {
+                this._cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
+                });
+            } else {
+                GroupingController.toggleGroup(collection, groupId);
+            }
+        };
+
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             const groupingLoader = this._groupingLoader;
@@ -4732,6 +4756,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
                         dispItem.setExpanded(needExpandGroup);
                     });
+                } else if (!needExpandGroup && this.isEditing()) {
+                    collapseGroupAfterEndEdit(collection);
                 } else {
                     dispItem.setExpanded(needExpandGroup);
                 }
@@ -4762,7 +4788,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         GroupingController.toggleGroup(collection, groupId);
                     });
                 } else {
-                    GroupingController.toggleGroup(collection, groupId);
+                    if (!needExpandGroup && this.isEditing()) {
+                        collapseGroupAfterEndEdit(collection);
+                    } else {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
                 }
             }
         }

@@ -343,7 +343,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Функция, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
- * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
+ * Функция вызывается единожды в рамках {@link /doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
  * @remark
  * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
  * @example
@@ -450,7 +450,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * Возвращает рекордсет, на основании которого в данный момент строится списочный контрол.
+ * Возвращает рекордсет, на основании которого в данный момент строится список.
  * @function Controls/_list/interface/IList#getItems
  * @return {RecordSet} Список элементов.
  * @example

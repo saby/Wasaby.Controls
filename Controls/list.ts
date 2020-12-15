@@ -36,7 +36,6 @@
  * @includes IMovableList Controls/_list/interface/IMovableList
  * @includes IMoveDialogTemplate Controls/_list/interface/IMovableList/IMoveDialogTemplate
  * @includes IMovableOptions Controls/_list/interface/IMovableList/IMovableOptions
- * @includes IMarkerListOptions Controls/_marker/interface/IMarkerListOptions
  * @public
  * @author Крайнов Д.О.
  */
@@ -213,6 +212,6 @@ const editing = {
 };
 
 import {groupConstants} from './display';
-import {CursorDirection} from './_interface/INavigation';
+import {CursorDirection} from './interface';
 
 export {CursorDirection, groupConstants, editing};

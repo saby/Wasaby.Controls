@@ -6,6 +6,44 @@ import {ISearchInputContainerOptions} from '../interface';
 import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
 
+/**
+ * Контрол-контейнер для полей ввода, реализует функционал проверки количества введённых символов,
+ * а так же задержку между вводом символа в поле ввода и выполнением поискового запроса.
+ * @remark
+ * Контрол принимает решение по событию valueChanged, должно ли сработать событие search или нет,
+ * в зависимости от заданных параметров поиска - минимальной длины для начала поиска и времени задержки.
+ *
+ * Если задана опция useStore, то вместо использования события, будет отправлено значение свойства searchValue в Store.
+ *
+ * Использование c контролом {@link Controls/browser:Browser} можно посмотреть в демо Controls-demo/Search/FlatList
+ *
+ * @example
+ * <pre>
+ *    <Controls.search:InputContainer on:search="_search()" on:searchReset="_searchReset()">
+ *       <Controls.search:Input/>
+ *    </Controls.search:InputContainer>
+ * </pre>
+ * <pre>
+ *    class ExampleControl extends Control {
+ *       ...
+ *       protected _search(event: SyntheticEvent, value: string) {
+ *          // Выполняем поиск
+ *       }
+ *       protected _searchReset(event: SyntheticEvent) {
+ *          // Сбрасываем поиск
+ *       }
+ *       ...
+ *    }
+ * </pre>
+ * @class Controls/_search/Input/Container
+ * @implements Controls/_search/interface/ISearchInputContainer
+ *
+ * @public
+ * @author Крюков Н.Ю.
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
+ */
 export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
@@ -46,7 +84,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       }
    }
 
-   protected _getSearchDelayController(): SearchResolver {
+   protected _getSearchResolverController(): SearchResolver {
       if (!this._searchResolverController) {
          this._searchResolverController = new SearchResolver({
             delayTime: this._options.searchDelay,
@@ -77,7 +115,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _searchClick(event: SyntheticEvent): void {
       if (this._value) {
-         this._getSearchDelayController().setSearchStarted(true);
+         this._getSearchResolverController().setSearchStarted(true);
          this._resolve(this._value);
       }
    }
@@ -85,7 +123,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _valueChanged(event: SyntheticEvent, value: string): void {
       if (this._value !== value) {
          this._value = value;
-         this._getSearchDelayController().resolve(value);
+         this._getSearchResolverController().resolve(value);
       }
    }
 

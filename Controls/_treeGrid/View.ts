@@ -28,7 +28,7 @@ import { Model } from 'Types/entity';
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
@@ -65,7 +65,7 @@ import { Model } from 'Types/entity';
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplate
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_grid/interface/IGridControl
@@ -134,4 +134,8 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
  * @remark При использовании кастомного {@link Controls/_grid/interface/IColumn#template шаблона отображения ячейки}, в него нужно прокидывать все опции через scope.
+ */
+/**
+ * @name Controls/_treeGrid/View#root
+ * @cfg {Number|String} Идентификатор корневого узла.
  */

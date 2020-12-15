@@ -207,7 +207,7 @@ export default interface IBaseDropdown {
 /**
  * Открывает выпадающий список.
  * @function Controls/_dropdown/interface/IBaseDropdown#openMenu
- * @param {Object} popupOptions Конфигурация прилипающего блока {@link https://wi.sbis.ru/docs/js/Controls/popup/IStickyPopupOptions/ popupOptions}
+ * @param {Object} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/popup/IStickyPopupOptions/ popupOptions}
  * @example
  * WML:
  * <pre>

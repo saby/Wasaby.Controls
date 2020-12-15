@@ -14,7 +14,7 @@ describe('Controls/display:HeaderCell', () => {
                 owner: {
                     getColumnsConfig: () => [{}],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -31,7 +31,7 @@ describe('Controls/display:HeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -51,7 +51,7 @@ describe('Controls/display:HeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });
@@ -71,7 +71,7 @@ describe('Controls/display:HeaderCell', () => {
                         valign: 'bottom'
                     }],
                     getHeaderConfig: () => [headerColumnConfig],
-                    getMultiSelectVisibility: () => 'hidden'
+                    needMultiSelectColumn: () => false
                 },
                 column: headerColumnConfig,
             });

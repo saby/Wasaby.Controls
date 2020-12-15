@@ -26,6 +26,7 @@ import {QueryWhereExpression} from 'Types/source';
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
  *
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
@@ -52,6 +53,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
@@ -120,8 +122,13 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      if (this._searchController) {
-         const updateResult = this._searchController.update({...newOptions, ...context.dataOptions});
+      const options = {...newOptions, ...context.dataOptions};
+
+      if (this._searchController && options.sourceController) {
+         if (this._sourceController !== options.sourceController) {
+            this._sourceController = options.sourceController;
+         }
+         const updateResult = this._searchController.update(options);
 
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
