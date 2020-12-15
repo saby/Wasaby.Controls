@@ -35,7 +35,7 @@ export interface IPhoneOptions extends IControlOptions {
  * * Остальные номера отображаются как есть без формата.
  *
  * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less">переменные тем оформления</a>
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less переменные тем оформления}
  *
  * @class Controls/_decorator/Phone
  * @extends UI/Base:Control
