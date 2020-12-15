@@ -43,9 +43,7 @@ export {default as Input} from './_search/Input/Search';
 export {
    ISearchResolverOptions,
    ISearchInputContainerOptions,
-   ISearchControllerOptions,
-   ISearchController,
-   ISearchResolver
+   ISearchControllerOptions
 } from './_search/interface';
 
 export {

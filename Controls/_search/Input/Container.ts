@@ -15,6 +15,8 @@ import {constants} from 'Env/Env';
  *
  * Если задана опция useStore, то вместо использования события, будет отправлено значение свойства searchValue в Store.
  *
+ * Использование c контролом {@link Controls/browser:Browser} можно посмотреть в демо Controls-demo/Search/FlatList
+ *
  * @example
  * <pre>
  *    <Controls.search:InputContainer on:search="_search()" on:searchReset="_searchReset()">
@@ -25,21 +27,22 @@ import {constants} from 'Env/Env';
  *    class ExampleControl extends Control {
  *       ...
  *       protected _search(event: SyntheticEvent, value: string) {
- *          // Поиск разрешен
+ *          // Выполняем поиск
  *       }
  *       protected _searchReset(event: SyntheticEvent) {
- *          // Поиск сброшен
+ *          // Сбрасываем поиск
  *       }
  *       ...
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
+ * @implements Controls/_search/interface/ISearchInputContainer
  *
  * @public
  * @author Крюков Н.Ю.
- * @demo Controls-demo/Search/Explorer
- * @demo Controls-demo/Search/FlatList
- * @demo Controls-demo/Search/TreeView
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
  */
 export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;

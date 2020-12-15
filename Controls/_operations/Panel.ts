@@ -19,7 +19,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/OperationsPanelNew/Base/Index
- * @demo Controls-demo/OperationsPanelNew/ReadOnly/Index
+ * @demo Controls-demo/OperationsPanelNew/PanelWithList/Default/Index
  */
 
 /*

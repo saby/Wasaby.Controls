@@ -1,6 +1,6 @@
 import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {ISearchControllerOptions, ISearchController} from './interface';
+import {ISearchControllerOptions} from './interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
 
@@ -17,12 +17,14 @@ const SERVICE_FILTERS = {
  * Класс контроллер, реализующий поиск по заданному значению, либо сброс поиска.
  * Имеется возможность поиска в дереве и плоском списке.
  * @remark
+ * Если при инициализации экземпляра класса не передавать опцию sourceController,
+ * то рекомендуется его передать в опциях в метод ControllerClass#update, иначе при попытке поиска или сброса возникнут ошибки.
  * Если в методе update в опциях передать новые sourceController и searchValue, то поиск или сброс будут произведены
  * на новом sourceController.
  * Если же передать только новый sourceController, то будет произведен поиск или сброс по старому searchValue.
  *
  * @example
- * При создании экзепмляра класса необходимо передать опцией sourceController - {@link Controls/dataSource:NewSourceController}
+ * При создании экзепмляра класса можно передать опцией sourceController - {@link Controls/dataSource:NewSourceController}
  * <pre>
  * const controllerClass = new ControllerClass({
  *   sourceController: new SourceController(...)
@@ -51,12 +53,10 @@ const SERVICE_FILTERS = {
  *
  * @public
  * @author Крюков Н.Ю.
- * @demo Controls-demo/Search/Explorer
- * @demo Controls-demo/Search/FlatList
- * @demo Controls-demo/Search/TreeView
+ * @demo Controls-demo/Search/FlatList/Index
  */
 
-export default class ControllerClass implements ISearchController {
+export default class ControllerClass {
    protected _options: ISearchControllerOptions = null;
 
    protected _searchValue: string = '';
@@ -69,8 +69,10 @@ export default class ControllerClass implements ISearchController {
 
       if (options.sourceController) {
          this._sourceController = options.sourceController;
-      } else {
-         Logger.error('_search/ControllerClass: sourceController option has incorrect type');
+      }
+
+      if (options.hasOwnProperty('searchValue')) {
+         this._searchValue = this._options.searchValue;
       }
 
       if (options.root !== undefined) {
@@ -85,6 +87,8 @@ export default class ControllerClass implements ISearchController {
     * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
     */
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
+      this._checkSourceController();
+
       const filter = {...this._sourceController.getFilter()};
       filter[this._options.searchParam] = this._searchValue = '';
 
@@ -110,6 +114,8 @@ export default class ControllerClass implements ISearchController {
     * @param {string} value Значение, по которому будет производиться поиск
     */
    search(value: string): Promise<RecordSet | Error> {
+      this._checkSourceController();
+
       const filter: QueryWhereExpression<unknown> = {...this._sourceController.getFilter()};
 
       filter[this._options.searchParam] = this._searchValue = this._trim(value);
@@ -234,15 +240,23 @@ export default class ControllerClass implements ISearchController {
       return this._options.searchValueTrim && value ? value.trim() : value;
    }
 
-    static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
-        let root;
+   private _checkSourceController(): void {
+      if (!this._sourceController) {
+         Logger.error('_search/ControllerClass: sourceController не обнаружен. ' +
+            'Если sourceController не был передан при инициализации, ' +
+            'то рекомендуется передать его в метод _search/ControllerClass#update');
+      }
+   }
 
-        if (path && path.getCount() > 0) {
-            root = path.at(0).get(parentProperty);
-        } else {
-            root = currentRoot;
-        }
+   static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
+     let root;
 
-        return root;
-    }
+     if (path && path.getCount() > 0) {
+         root = path.at(0).get(parentProperty);
+     } else {
+         root = currentRoot;
+     }
+
+     return root;
+   }
 }
