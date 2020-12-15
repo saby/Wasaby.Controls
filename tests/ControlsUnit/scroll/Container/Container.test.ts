@@ -15,6 +15,8 @@ function createComponent(Component, cfg) {
     return cmp;
 }
 
+const classList = { contains: () => false };
+
 describe('Controls/scroll:Container', () => {
     describe('constructor', () => {
         it('should initialize by default', () => {
@@ -69,9 +71,12 @@ describe('Controls/scroll:Container', () => {
             component = createComponent(Container, {});
             sinon.stub(component._stickyHeaderController, 'init');
             component._children = {
-                content: {
+                scrollContainer: {
                     getBoundingClientRect: () => undefined,
                     children: []
+                },
+                content: {
+                    classList
                 }
             };
         });
@@ -95,9 +100,12 @@ describe('Controls/scroll:Container', () => {
         it('should update sticky header controller', () => {
             const component: Container = createComponent(Container, {});
             component._children = {
-                content: {
+                scrollContainer: {
                     getBoundingClientRect: () => undefined,
                     children: []
+                },
+                content: {
+                    classList
                 }
             };
             component._afterUpdate({}, {});
@@ -174,7 +182,7 @@ describe('Controls/scroll:Container', () => {
         it('should update _scrollCssClass, scrollMode: "vertical"', () => {
             const component = createComponent(Container, {scrollMode: 'vertical'});
             component._children = {
-                content: {
+                scrollContainer: {
                     getBoundingClientRect: () => undefined
                 }
             };
@@ -196,7 +204,7 @@ describe('Controls/scroll:Container', () => {
         it('should update _scrollCssClass, scrollMode: "verticalHorizontal"', () => { // controls-Scroll-ContainerBase__scroll_vertical
             const component = createComponent(Container, {scrollMode: 'verticalHorizontal'});
             component._children = {
-                content: {
+                scrollContainer: {
                     getBoundingClientRect: () => undefined
                 }
             };
@@ -221,7 +229,7 @@ describe('Controls/scroll:Container', () => {
                 const component = createComponent(Container, {scrollMode: 'vertical'});
                 component._isOptimizeShadowEnabled = true;
                 component._children = {
-                    content: {
+                    scrollContainer: {
                         getBoundingClientRect: () => undefined
                     }
                 };
@@ -251,7 +259,7 @@ describe('Controls/scroll:Container', () => {
             it('should initialize scrollbars only after mouseenter', () => {
                 const component = createComponent(Container, {scrollMode: 'vertical'});
                 component._children = {
-                    content: {
+                    scrollContainer: {
                         getBoundingClientRect: () => undefined
                     }
                 };
@@ -280,7 +288,7 @@ describe('Controls/scroll:Container', () => {
             it('should initialize scrollbars in _updateState  after mouseenter', () => {
                 const component = createComponent(Container, {scrollMode: 'vertical'});
                 component._children = {
-                    content: {
+                    scrollContainer: {
                         getBoundingClientRect: () => undefined
                     }
                 };
@@ -322,7 +330,7 @@ describe('Controls/scroll:Container', () => {
                 scrollTop: 1000
             };
             component._children = {
-                content: {
+                scrollContainer: {
                     scrollTop : 1000,
                     children: []
                 }
@@ -337,7 +345,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._keydownHandler(event);
-            assert.strictEqual(component._children.content.scrollTop, result);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, result);
         });
         it('should scroll down 40px when key down', () => {
             const component = createComponent(Container, {});
@@ -349,7 +357,7 @@ describe('Controls/scroll:Container', () => {
                 clientHeight: 600
             };
             component._children = {
-                content: {
+                scrollContainer: {
                     scrollTop: 1000,
                     children: []
                 }
@@ -364,7 +372,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._keydownHandler(event);
-            assert.strictEqual(component._children.content.scrollTop, result);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, result);
         });
         it('should not scroll down 40px when key down', () => {
             const component = createComponent(Container, {});
@@ -376,7 +384,7 @@ describe('Controls/scroll:Container', () => {
                 clientHeight: 1000
             };
             component._children = {
-                content: {
+                scrollContainer: {
                     scrollTop: 1000,
                     children: []
                 }
@@ -391,7 +399,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._keydownHandler(event);
-            assert.strictEqual(component._children.content.scrollTop, result);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, result);
         });
         it('should not scroll down 40px when key up', () => {
             const component = createComponent(Container, {});
@@ -401,7 +409,7 @@ describe('Controls/scroll:Container', () => {
                 scrollTop: 0
             };
             component._children = {
-                content: {
+                scrollContainer: {
                     scrollTop: 0,
                     children: []
                 }
@@ -416,7 +424,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._keydownHandler(event);
-            assert.strictEqual(component._children.content.scrollTop, result);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, result);
         });
         it('should not scroll anywhere if not native keydown', () => {
             const component = createComponent(Container, {});
@@ -426,7 +434,7 @@ describe('Controls/scroll:Container', () => {
                 scrollTop: 0
             };
             component._children = {
-                content: {
+                scrollContainer: {
                     scrollTop: 0,
                     children: []
                 }
@@ -441,7 +449,7 @@ describe('Controls/scroll:Container', () => {
                 }
             };
             component._keydownHandler(event);
-            assert.strictEqual(component._children.content.scrollTop, result);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, result);
         });
     });
 
@@ -524,7 +532,7 @@ describe('Controls/scroll:Container', () => {
         it('should update scrollTop, scrollMode: "vertical"', () => {
             const component = createComponent(Container, {scrollMode: 'vertical'});
             component._children = {
-                content: {
+                scrollContainer: {
                     getBoundingClientRect: () => undefined,
                     scrollTop: 100
                 }
@@ -534,7 +542,7 @@ describe('Controls/scroll:Container', () => {
             };
             sinon.stub(component, '_updateStateAndGenerateEvents');
             component._positionChangedHandler({}, SCROLL_DIRECTION.VERTICAL, 10);
-            assert.strictEqual(component._children.content.scrollTop, 10);
+            assert.strictEqual(component._children.scrollContainer.scrollTop, 10);
         });
     });
 });
