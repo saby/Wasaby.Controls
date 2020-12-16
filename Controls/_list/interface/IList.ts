@@ -193,7 +193,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Шаблон отображения подвала списка.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/footer/ руководство разработчика}.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ руководство разработчика}.
  * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
@@ -665,7 +665,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/paddings/ руководство разработчика}.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/paddings/ руководство разработчика}.
  */
 
 /*ENG
