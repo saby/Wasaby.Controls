@@ -133,6 +133,7 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
+ * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/RightWithColumnTemplate/Index В следующем примере для контрола опция expanderPosition установлена в значение right, а также задан шаблон отображения колонки.
  */
 /**
  * @name Controls/_treeGrid/View#root
