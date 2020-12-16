@@ -2,9 +2,9 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
 import SearchResolver from 'Controls/_search/SearchResolver';
-import {ISearchInputContainerOptions} from '../interface';
 import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
+import ISearchInputContainer, {ISearchInputContainerOptions} from 'Controls/_search/interface/ISearchInputContainer';
 
 /**
  * Контрол-контейнер для полей ввода, реализует функционал проверки количества введённых символов,
@@ -36,15 +36,17 @@ import {constants} from 'Env/Env';
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
+ * @extends Core/Control
  * @implements Controls/_search/interface/ISearchInputContainer
- *
- * @public
- * @author Крюков Н.Ю.
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index
+ * @public
+ * @author Крюков Н.Ю.
  */
-export default class Container extends Control<ISearchInputContainerOptions> {
+export default class Container extends Control<ISearchInputContainerOptions> implements ISearchInputContainer {
+   readonly '[Controls/_search/interface/ISearchInputContainer]': boolean;
+
    protected _template: TemplateFunction = template;
 
    protected _value: string;
