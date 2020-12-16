@@ -1,14 +1,4 @@
 <div class="ControlsDemo-scroll">
-    <h1>Scrolls</h1>
-    <h2>Scrolling in accordion</h2>
-    <Controls.scroll:Container style="inverted" attr:class="ControlsDemo-navigation_scroll">
-        <div attr:class="ControlsDemo-navigation">
-            <ws:for data="item in _menuItems">
-                <div attr:class="ControlsDemo-item_nav">{{item}}</div>
-            </ws:for>
-        </div>
-    </Controls.scroll:Container>
-
     <h2>Scrolling one area to another</h2>
     <Controls.scroll:Container attr:class="ControlsDemo-external_scrollable_area">
         <div>
@@ -24,5 +14,4 @@
             <div attr:class="ControlsDemo-padding_text">{{_demoText}}</div>
         </div>
     </Controls.scroll:Container>
-    <Controls-demo.Container.StickyHeader.Index/>
 </div>

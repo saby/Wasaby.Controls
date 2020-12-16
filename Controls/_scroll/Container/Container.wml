@@ -27,8 +27,7 @@
             <div class="controls-Scroll__shadow controls-Scroll__shadow_vertical controls-Scroll__shadow_right {{!_shadows.right.isVisible ? ' ws-invisible'}}"></div>
         </ws:if>
 
-        <ws:if data="{{_scrollbars.isVisible}}">
-            <ws:if data="{{_scrollbars.vertical.isVisible}}">
+
                 <Controls._scroll.Scroll.Scrollbar
                         position="{{_scrollbars.vertical.position}}"
                         name="scrollBar"
@@ -38,23 +37,7 @@
                         on:positionChanged="_positionChangedHandler('vertical')"
                         on:draggingChanged="_draggingChangedHandler('vertical')"
                         attr:style="{{_scrollbars.vertical.style}}"/>
-            </ws:if>
 
-            <ws:if data="{{_scrollbars.horizontal.isVisible}}">
-                <Controls._scroll.Scroll.Scrollbar
-                        position="{{_scrollbars.horizontal.position}}"
-                        direction="horizontal"
-                        name="horizontalScrollBar"
-                        contentSize="{{_scrollbars.horizontal.contentSize}}"
-                        thumbStyle="accented"
-                        thumbThickness="l"
-                        attr:class="controls-Scroll__scrollbar controls-ScrollContainer__scrollbar_horizontal {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}
-                            {{_scrollbars.vertical.isVisible ? 'controls-VScrollbar_horizontal_offset'}}"
-                        on:positionChanged="_positionChangedHandler('horizontal')"
-                        on:draggingChanged="_draggingChangedHandler('horizontal')"
-                        attr:style="{{_scrollbars.horizontal.style}}"/>
-            </ws:if>
-        </ws:if>
 
         <ws:if data="{{_paging.isVisible}}">
             <Controls.Container.Async templateName="Controls/paging:Paging">
