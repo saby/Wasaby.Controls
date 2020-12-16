@@ -251,8 +251,8 @@ const _private = {
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
-            if (options.nodeLoadCallback) {
-                options.nodeLoadCallback(list, nodeKey);
+            if (self._options.nodeLoadCallback) {
+                self._options.nodeLoadCallback(list, nodeKey);
             }
             self._children.baseControl.stopBatchAdding();
         }, (error) => {
