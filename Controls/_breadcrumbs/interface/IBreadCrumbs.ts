@@ -2,6 +2,12 @@ import {Record} from 'Types/entity';
 import {IControlOptions} from 'UI/Base';
 import {IFontSizeOptions} from 'Controls/interface';
 
+/**
+ * Интерфейс для контролов, отображающих "хлебные крошки".
+ * @interface Controls/_breadcrumbs/interface/IBreadCrumbs
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
     items: Record[];
     keyProperty: string;
@@ -9,15 +15,6 @@ export interface IBreadCrumbsOptions extends IControlOptions, IFontSizeOptions {
     displayProperty: string;
     containerWidth: number;
 }
-
-/**
- * Интерфейс для контролов, отображающих "хлебные крошки".
- *
- *
- * @interface Controls/_breadcrumbs/interface/IBreadCrumbs
- * @public
- * @author Красильников А.С.
- */
 
 /*
  * Interface for breadcrumbs.
