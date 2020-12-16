@@ -18,9 +18,9 @@
         </ws:if>
         <!-- Скроллбар горизонтального скролла. -->
         <ws:if data="{{ _options.columnScroll && realGridView && (_listModel.getHeader() || (_listModel.getResults() && _listModel.getResultsPosition() === 'top')) }}">
-            <Controls.columnScroll:Thumb
+            <Controls.columnScroll:ScrollBar
                     name="horizontalScrollThumb"
-                    attr:style="{{ _getThumbStyles() }} width: {{ _horizontalScrollWidth }};"
+                    attr:style="{{ _getHorizontalScrollBarStyles() }} width: {{ _horizontalScrollWidth }};"
                     attr:class="{{ _showFakeGridWithColumnScroll ? 'controls-Grid__ColumnScroll_hidden' }}"
                     stickyHeader="{{ true }}"
                     trackVisible="{{ true }}"

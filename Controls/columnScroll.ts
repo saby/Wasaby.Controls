@@ -8,7 +8,8 @@ import DragScrollController, {
     JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS
 } from 'Controls/_columnScroll/DragScrollController'
 
-import Thumb from 'Controls/_columnScroll/Thumb/Thumb';
+import ScrollBar, {IScrollBarOptions} from 'Controls/_columnScroll/ScrollBar/ScrollBar';
+import {isInLeftSwipeRange} from 'Controls/_columnScroll/ColumnScrollUtil';
 
 export {
     ColumnScrollController,
@@ -19,5 +20,8 @@ export {
     IDragScrollControllerOptions,
     DRAG_SCROLL_JS_SELECTORS,
 
-    Thumb
+    ScrollBar,
+    IScrollBarOptions,
+
+    isInLeftSwipeRange
 }

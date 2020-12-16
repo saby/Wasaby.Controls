@@ -14,9 +14,9 @@ import {
     ColumnScrollController as ColumnScroll,
     DragScrollController as DragScroll,
     COLUMN_SCROLL_JS_SELECTORS,
-    DRAG_SCROLL_JS_SELECTORS
-} from 'Controls/columnScroll'
-import {isInLeftSwipeRange} from "Controls/_grid/utils/GridColumnScrollUtil";
+    DRAG_SCROLL_JS_SELECTORS,
+    isInLeftSwipeRange
+} from 'Controls/columnScroll';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -71,27 +71,19 @@ const GridView = ListView.extend({
             this._listModel.setColumns(newOptions.columns, false);
         }
 
-        if (!newOptions.columnScroll) {
-            this._destroyColumnScroll();
-        } else if (this._options.dragScrolling !== newOptions.dragScrolling) {
-            if (newOptions.dragScrolling) {
-                this._initDragScroll(newOptions);
-            } else {
-                this._destroyDragScroll();
-            }
-        } else if (this._dragScrollController && (this._options.itemsDragNDrop !== newOptions.itemsDragNDrop)) {
-            this._dragScrollController.setStartDragNDropCallback(!newOptions.itemsDragNDrop ? null : () => {
-                this._setGrabbing(false);
-                newOptions.startDragNDropCallback();
-            });
-        }
+        // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
+        // columnScroll и dragScroll.
+        this._updateColumnScroll(this._options, newOptions);
     },
 
     _afterUpdate(oldOptions): void {
         GridView.superclass._afterUpdate.apply(this, arguments);
 
         if (this._options.columnScroll) {
-            this._updateColumnScrollByOptions(oldOptions, this._options);
+            // Обновление горизонтального скролла при изменении опций, которые косвенно влияют на горизонтальный скролл(опции,
+            // которые приведут к визуальному изменению списка), например, видимость множественного выбора, кол-во
+            // зафиксированных колонок и т.п.
+            this._updateColumnScrollBySideOptions(oldOptions, this._options);
         }
     },
 
@@ -338,6 +330,7 @@ const GridView = ListView.extend({
 
         return result;
     },
+
     _createColumnScroll(options): void {
         this._columnScrollController = new ColumnScroll({
             isFullGridSupport: options.isFullGridSupport,
@@ -363,7 +356,7 @@ const GridView = ListView.extend({
         });
     },
 
-    _updateColumnScrollByOptions(oldOptions, newOptions): void {
+    _updateColumnScrollBySideOptions(oldOptions, newOptions): void {
         const columnScrollStatus = this._actualizeColumnScroll(newOptions);
         if (columnScrollStatus === 'destroyed') {
             return;
@@ -398,6 +391,43 @@ const GridView = ListView.extend({
             // Создание dragScroll на afterUpdate вынудит делать _forceUpdate для обновления состояний (курсор над записями).
             // Создание columnScroll на beforeUpdate невозможно, т.к. контроллер создается только по мере необходимости.
             this._updateColumnScrollData();
+        }
+    },
+
+    _updateColumnScroll(oldOptions, newOptions): void {
+        const isColumnScrollChanged = newOptions.columnScroll !== oldOptions.columnScroll;
+
+        // Если горизонтального скролла не было и нет либо он только появился - то ничего не делаем.
+        // Создание произойдет после обновления, когда все размеры будут актуальны.
+        if (isColumnScrollChanged && newOptions.columnScroll || !isColumnScrollChanged && !newOptions.columnScroll) {
+            return;
+        }
+
+        // Выключение горизонтального скролла приводит к разрушению контроллера.
+        // Попадаем сюда если опция columnScroll поменялась и стала false.
+        if (!newOptions.columnScroll) {
+            this._destroyColumnScroll();
+            return;
+        }
+
+        // Включение/выключение перемещения мышкой приводит к созданию/разрушению контроллера.
+        // Попадаем сюда, если опция columnScroll не поменялась и равна true.
+        if (oldOptions.dragScrolling !== newOptions.dragScrolling) {
+            if (newOptions.dragScrolling) {
+                this._initDragScroll(newOptions);
+            } else {
+                this._destroyDragScroll();
+            }
+            return;
+        }
+
+        // При включении/выключении перемещения записей мышкой необходимо уведомить контроллер скроллирования перетаскиванием.
+        // Попадаем сюда, если опции columnScroll и dragScrolling не поменялась и равны true.
+        if (newOptions.dragScrolling && oldOptions.itemsDragNDrop !== newOptions.itemsDragNDrop) {
+            this._dragScrollController.setStartDragNDropCallback(!newOptions.itemsDragNDrop ? null : () => {
+                this._setGrabbing(false);
+                newOptions.startDragNDropCallback();
+            });
         }
     },
 
@@ -504,7 +534,7 @@ const GridView = ListView.extend({
         this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
         this._updateColumnScrollData();
     },
-    _getThumbStyles(): string {
+    _getHorizontalScrollBarStyles(): string {
         if (!this.isColumnScrollVisible()) {
             return 'display: none;';
         }

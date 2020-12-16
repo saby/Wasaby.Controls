@@ -1,13 +1,13 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_columnScroll/Thumb/Thumb';
+import * as template from 'wml!Controls/_columnScroll/ScrollBar/ScrollBar';
 
-export interface IThumbOptions extends IControlOptions {
+export interface IScrollBarOptions extends IControlOptions {
     stickyHeader?: boolean;
     contentSize: number;
     backgroundStyle: string;
 }
 
-export default class Thumb extends Control<IThumbOptions> {
+export default class ScrollBar extends Control<IScrollBarOptions> {
     protected _template: TemplateFunction = template;
     private _position: number = 0;
 

@@ -9,12 +9,12 @@ import {
     COLUMN_SCROLL_JS_SELECTORS,
     DRAG_SCROLL_JS_SELECTORS,
     ColumnScrollController as ColumnScroll,
-    DragScrollController as DragScroll
+    DragScrollController as DragScroll,
+    isInLeftSwipeRange
 } from 'Controls/columnScroll';
 import {
     shouldAddActionsCell,
     shouldDrawColumnScroll,
-    isInLeftSwipeRange
 } from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
