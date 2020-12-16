@@ -90,6 +90,12 @@ export default class ControllerClass {
       }
    }
 
+   /**
+    * Сброс поиска.
+    * Производит очистку фильтра, затем загрузку в sourceController с обновленными параметрами.
+    * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
+    * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
+    */
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
 
@@ -113,6 +119,10 @@ export default class ControllerClass {
       return filter;
    }
 
+   /**
+    * Произвести поиск по значению.
+    * @param {string} value Значение, по которому будет производиться поиск
+    */
    search(value: string): Promise<RecordSet | Error> {
       this._checkSourceController();
 
@@ -140,6 +150,26 @@ export default class ControllerClass {
       return this._updateFilterAndLoad(filter);
    }
 
+   /**
+    * Обновить опции контроллера.
+    * Если в новых опциях будет указано отличное от старого searchValue, то будет произведен поиск, или же сброс,
+    * если новое значение - пустая строка.
+    * @param {Partial<ISearchControllerOptions>} options Новые опции
+    * @example
+    * Поиск будет произведен по новому значению searchValue через новый sourceController, которые переданы в опциях.
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...),
+    *       searchValue: 'new value'
+    *    }).then((result) => {...});
+    * </pre>
+    * Поиск будет произведен по старому значению searchValue, но посредством нового sourceController
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...)
+    *    }).then((result) => {...});
+    * </pre>
+    */
    update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
       let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
       let needLoad = false;
@@ -175,14 +205,24 @@ export default class ControllerClass {
       return updateResult;
    }
 
+   /**
+    * Установить корень для поиска в иерархическом списке.
+    * @param {string|number|null} value Значение корня
+    */
    setRoot(value: Key): void {
       this._root = value;
    }
 
+   /**
+    * Получить корень поиска по иерархическому списку.
+    */
    getRoot(): Key {
       return this._root;
    }
 
+   /**
+    * Получить значение по которому производился поиск
+    */
    getSearchValue(): string {
       return this._searchValue;
    }
@@ -244,56 +284,4 @@ export default class ControllerClass {
 /**
  * @name Controls/_search/ControllerClass#root
  * @cfg {string | number | null} Корень для поиска по иерархии
- */
-
-/**
- * Сброс поиска.
- * Производит очистку фильтра, затем загрузку в sourceController с обновленными параметрами.
- * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
- * @function Controls/_search/ControllerClass#reset
- * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
- */
-
-/**
- * Произвести поиск по значению.
- * @function Controls/_search/ControllerClass#search
- * @param {string} value Значение, по которому будет производиться поиск
- */
-
-/**
- * Обновить опции контроллера.
- * Если в новых опциях будет указано отличное от старого searchValue, то будет произведен поиск, или же сброс,
- * если новое значение - пустая строка.
- * @function Controls/_search/ControllerClass#update
- * @param {Partial<ISearchControllerOptions>} options Новые опции
- * @example
- * Поиск будет произведен по новому значению searchValue через новый sourceController, которые переданы в опциях.
- * <pre>
- *    searchController.update({
- *       sourceController: new SourceController(...),
- *       searchValue: 'new value'
- *    }).then((result) => {...});
- * </pre>
- * Поиск будет произведен по старому значению searchValue, но посредством нового sourceController
- * <pre>
- *    searchController.update({
- *       sourceController: new SourceController(...)
- *    }).then((result) => {...});
- * </pre>
- */
-
-/**
- * Установить корень для поиска в иерархическом списке.
- * @function Controls/_search/ControllerClass#setRoot
- * @param {string|number|null} value Значение корня
- */
-
-/**
- * Получить корень поиска по иерархическому списку.
- * @function Controls/_search/ControllerClass#getRoot
- */
-
-/**
- * Получить значение по которому производился поиск
- * @function Controls/_search/ControllerClass#getSearchValue
  */

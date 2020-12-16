@@ -71,6 +71,10 @@ export default class SearchResolver {
       this._options = options;
    }
 
+   /**
+    * Обновляет опции контроллера
+    * @param {ISearchResolverOptions} options Новые опции контроллера
+    */
    updateOptions(options: ISearchResolverOptions): void {
       this._options = options;
    }
@@ -86,6 +90,9 @@ export default class SearchResolver {
       }
    }
 
+   /**
+    * Очищает таймер реализующий задержку перед поиском
+    */
    clearTimer(): void {
       if (this._delayTimer) {
          clearTimeout(this._delayTimer);
@@ -105,6 +112,10 @@ export default class SearchResolver {
       });
    }
 
+   /**
+    * Инициировать проверку, какое действие предпринять по полученному через аргумент значению поиска
+    * @param {string|null} value Значение, по которому должен произзводиться поиск
+    */
    resolve(value: string | null): void {
       const valueLength = value ? value.length : 0;
       const minSearchLength = this._options.minSearchLength !== null;
@@ -126,50 +137,11 @@ export default class SearchResolver {
       }
    }
 
+   /**
+    * Устанавливает флаг начала поиска на переданное в аргументе значение
+    * @param {boolean} value Флаг начала поиска
+    */
    setSearchStarted(value: boolean): void {
       this._searchStarted = value;
    }
 }
-
-/**
- * @name Controls/_search/SearchResolver#searchDelay
- * @cfg {number|null} Время задержки перед поиском
- */
-
-/**
- * @name Controls/_search/SearchResolver#minSearchLength
- * @cfg {number} Минимальная длина значения для начала поиска
- */
-
-/**
- * @name Controls/_search/SearchResolver#searchCallback
- * @cfg {Function} Функция, начала поиска
- */
-
-/**
- * @name Controls/_search/SearchResolver#searchResetCallback
- * @cfg {Function} Функция, которая будет вызвана если поиск был сброшен
- */
-
-/**
- * Обновляет опции контроллера
- * @function Controls/_search/SearchResolver#updateOptions
- * @param {ISearchResolverOptions} options Новые опции контроллера
- */
-
-/**
- * Очищает таймер реализующий задержку перед поиском
- * @function Controls/_search/SearchResolver#clearTimer
- */
-
-/**
- * Инициировать проверку, какое действие предпринять по полученному через аргумент значению поиска
- * @function Controls/_search/SearchResolver#resolve
- * @param {string|null} value Значение, по которому должен произзводиться поиск
- */
-
-/**
- * Устанавливает флаг начала поиска на переданное в аргументе значение
- * @function Controls/_search/SearchResolver#setSearchStarted
- * @param {boolean} value Флаг начала поиска
- */
