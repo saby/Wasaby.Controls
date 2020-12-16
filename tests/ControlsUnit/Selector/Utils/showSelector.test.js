@@ -181,8 +181,12 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
          baseController._options.selectorTemplate = {
             mode: 'dialog'
          };
-         showSelector.default(baseController, {template: 'template'});
+         const sandbox = sinon.createSandbox();
+         sandbox.replace(popup.Dialog, 'openPopup', () => {});
+
+         showSelector.default(baseController, {});
          assert.isTrue(baseController._opener instanceof popup.DialogOpener);
+         sandbox.restore();
       });
 
       it('showSelector with stack mode in selectorTemplate', function() {
@@ -191,8 +195,12 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
          baseController._options.selectorTemplate = {
             mode: 'stack'
          };
-         showSelector.default(baseController, {template: 'template'});
+         const sandbox = sinon.createSandbox();
+         sandbox.replace(popup.Stack, 'openPopup', () => {});
+
+         showSelector.default(baseController, {});
          assert.isTrue(baseController._opener instanceof popup.StackOpener);
+         sandbox.restore();
       });
    });
 });
