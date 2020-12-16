@@ -542,17 +542,19 @@ export default class CollectionItem<T> extends mixin<
                       style: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
-        return `controls-ListView__itemV ${this._getCursorClasses(cursor)}
+        let wrapperClasses = `controls-ListView__itemV ${this._getCursorClasses(cursor)}
             controls-ListView__item_${style}
             controls-ListView__item_${style}_theme-${theme}
             controls-ListView__item_showActions
             js-controls-ItemActions__swipeMeasurementContainer
-            controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
-            ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
-            ${this.isEditing() ? (` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`) : ''}
-            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
-            ${backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : ''}
-            ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
+            controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
+
+        wrapperClasses += templateHighlightOnHover && !this.isEditing() ? ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : '';
+        wrapperClasses += this.isEditing() ? (` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`) : '';
+        wrapperClasses += this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : '';
+        wrapperClasses += backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : '';
+        wrapperClasses += templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : '';
+        return wrapperClasses;
     }
 
     getItemActionClasses(itemActionsPosition: string, theme?: string, isLastRow?: boolean, rowSeparatorSize?: string): string {
@@ -587,10 +589,12 @@ export default class CollectionItem<T> extends mixin<
     getContentClasses(theme: string, style: string = 'default'): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
-        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
-        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
-        ${isAnimatedForSelection ? ' controls-ListView__item_rightSwipeAnimation' : ''}
+        let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
         controls-ListView__itemContent_${style}_theme-${theme}`;
+
+        contentClasses += rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : '';
+        contentClasses += isAnimatedForSelection ? ' controls-ListView__item_rightSwipeAnimation' : '';
+        return contentClasses;
     }
 
     /**
