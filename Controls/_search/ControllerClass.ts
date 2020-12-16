@@ -88,7 +88,8 @@ export default class ControllerClass implements ISearchController {
       this._checkSourceController();
 
       const filter = {...this._sourceController.getFilter()};
-      filter[this._options.searchParam] = this._searchValue = '';
+      delete filter[this._options.searchParam];
+      this._searchValue = '';
 
       if (this._options.parentProperty) {
          for (const i in SERVICE_FILTERS.HIERARCHY) {
@@ -162,6 +163,7 @@ export default class ControllerClass implements ISearchController {
             updateResult = this.reset(true);
          }
       }
+      // TODO: Должны ли использоваться новые опции в reset или search?
       this._options = {
          ...this._options,
          ...options
