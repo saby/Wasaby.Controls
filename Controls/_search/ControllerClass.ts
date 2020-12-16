@@ -2,9 +2,18 @@ import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {NewSourceController} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
-import ISearchController, {ISearchControllerOptions} from 'Controls/_search/interface/ISearchController';
+import {IHierarchyOptions, ISearchOptions} from 'Controls/interface';
+import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 
 type Key = string | number | null;
+
+export interface ISearchControllerOptions extends ISearchOptions,
+   IHierarchyOptions,
+   IHierarchySearchOptions {
+   sourceController?: NewSourceController;
+   searchValue?: string;
+   root?: Key;
+}
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -49,7 +58,6 @@ const SERVICE_FILTERS = {
  * </pre>
  *
  * @class Controls/_search/ControllerClass
- * @implements Controls/_search/ControllerClass/ISearchController
  * @implements Controls/interface/ISearch
  * @implements Controls/interface/IHierarchy
  * @implements Controls/interface/IHierarchySearch
@@ -58,9 +66,7 @@ const SERVICE_FILTERS = {
  * @author Крюков Н.Ю.
  */
 
-export default class ControllerClass implements ISearchController {
-   readonly '[Controls/_search/interface/ISearchController]': boolean = true;
-
+export default class ControllerClass {
    protected _options: ISearchControllerOptions = null;
 
    protected _searchValue: string = '';
@@ -84,6 +90,12 @@ export default class ControllerClass implements ISearchController {
       }
    }
 
+   /**
+    * Сброс поиска.
+    * Производит очистку фильтра, затем загрузку в sourceController с обновленными параметрами.
+    * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
+    * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
+    */
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
 
@@ -107,6 +119,10 @@ export default class ControllerClass implements ISearchController {
       return filter;
    }
 
+   /**
+    * Произвести поиск по значению.
+    * @param {string} value Значение, по которому будет производиться поиск
+    */
    search(value: string): Promise<RecordSet | Error> {
       this._checkSourceController();
 
@@ -134,6 +150,26 @@ export default class ControllerClass implements ISearchController {
       return this._updateFilterAndLoad(filter);
    }
 
+   /**
+    * Обновить опции контроллера.
+    * Если в новых опциях будет указано отличное от старого searchValue, то будет произведен поиск, или же сброс,
+    * если новое значение - пустая строка.
+    * @param {Partial<ISearchControllerOptions>} options Новые опции
+    * @example
+    * Поиск будет произведен по новому значению searchValue через новый sourceController, которые переданы в опциях.
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...),
+    *       searchValue: 'new value'
+    *    }).then((result) => {...});
+    * </pre>
+    * Поиск будет произведен по старому значению searchValue, но посредством нового sourceController
+    * <pre>
+    *    searchController.update({
+    *       sourceController: new SourceController(...)
+    *    }).then((result) => {...});
+    * </pre>
+    */
    update(options: Partial<ISearchControllerOptions>): void | Promise<RecordSet|Error> | QueryWhereExpression<unknown> {
       let updateResult: void | Promise<RecordSet|Error> | QueryWhereExpression<unknown>;
       let needLoad = false;
@@ -169,10 +205,17 @@ export default class ControllerClass implements ISearchController {
       return updateResult;
    }
 
+   /**
+    * Установить корень для поиска в иерархическом списке.
+    * @param {string|number|null} value Значение корня
+    */
    setRoot(value: Key): void {
       this._root = value;
    }
 
+   /**
+    * Получить корень поиска по иерархическому списку.
+    */
    getRoot(): Key {
       return this._root;
    }
@@ -227,3 +270,18 @@ export default class ControllerClass implements ISearchController {
      return root;
    }
 }
+
+/**
+ * @name Controls/_search/ControllerClass#sourceController
+ * @cfg {NewSourceController} Экземпляр контроллера источника для выполнения поиска
+ */
+
+/**
+ * @name Controls/_search/ControllerClass#searchValue
+ * @cfg {string} Значение по которому будет осуществляться поиск
+ */
+
+/**
+ * @name Controls/_search/ControllerClass#root
+ * @cfg {string | number | null} Корень для поиска по иерархии
+ */

@@ -1,4 +1,9 @@
-import ISearchResolver, {ISearchResolverOptions} from 'Controls/_search/interface/ISearchResolver';
+export interface ISearchResolverOptions {
+   searchDelay?: number | null;
+   minSearchLength?: number;
+   searchCallback: (value: string) => void;
+   searchResetCallback: () => void;
+}
 
 /**
  * Контроллер, используемый для принятия решения, совершать ли поиск или производить его сброс по заданным параметрам в опциях.
@@ -39,15 +44,11 @@ import ISearchResolver, {ISearchResolverOptions} from 'Controls/_search/interfac
  * </pre>
  *
  * @class Controls/_search/SearchResolver
- * @implements Controls/_search/interface/ISearchResolver
- *
  * @private
  * @author Крюков Н.Ю.
  */
 
-export default class SearchResolver implements ISearchResolver {
-   readonly '[Controls/_search/interface/ISearchResolver]': boolean = true;
-
+export default class SearchResolver {
    /**
     * Таймер для запуска поиска после паузы, заданной в опции delayTime
     * @protected
@@ -70,6 +71,10 @@ export default class SearchResolver implements ISearchResolver {
       this._options = options;
    }
 
+   /**
+    * Обновляет опции контроллера
+    * @param {ISearchResolverOptions} options Новые опции контроллера
+    */
    updateOptions(options: ISearchResolverOptions): void {
       this._options = options;
    }
@@ -85,6 +90,9 @@ export default class SearchResolver implements ISearchResolver {
       }
    }
 
+   /**
+    * Очищает таймер реализующий задержку перед поиском
+    */
    clearTimer(): void {
       if (this._delayTimer) {
          clearTimeout(this._delayTimer);
@@ -104,6 +112,10 @@ export default class SearchResolver implements ISearchResolver {
       });
    }
 
+   /**
+    * Инициировать проверку, какое действие предпринять по полученному через аргумент значению поиска
+    * @param {string|null} value Значение, по которому должен произзводиться поиск
+    */
    resolve(value: string | null): void {
       const valueLength = value ? value.length : 0;
       const minSearchLength = this._options.minSearchLength !== null;
@@ -125,6 +137,10 @@ export default class SearchResolver implements ISearchResolver {
       }
    }
 
+   /**
+    * Устанавливает флаг начала поиска на переданное в аргументе значение
+    * @param {boolean} value Флаг начала поиска
+    */
    setSearchStarted(value: boolean): void {
       this._searchStarted = value;
    }

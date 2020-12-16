@@ -6,7 +6,7 @@ import {isEqual} from 'Types/object';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IStackPopupOptions, Stack as StackOpener} from 'Controls/popup';
 import {ControllerClass as SearchController, SearchResolver as SearchResolverController} from 'Controls/search';
-import {ISearchResolverOptions} from 'Controls/_search/interface/ISearchResolver';
+import {ISearchResolverOptions} from 'Controls/_search/SearchResolver';
 import {NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
 import {RecordSet} from 'Types/collection';
 import {__ContentLayer, __PopupLayer} from 'Controls/suggestPopup';
