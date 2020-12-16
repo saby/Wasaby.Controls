@@ -7,7 +7,7 @@ import { TreeControl } from 'Controls/tree';
 
 /**
     * Иерархический список с пользовательским шаблоном элемента. Может загружать данные из источника данных.
-    * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid демо-пример}.
+    * {@link /materials/Controls-demo/app/Controls-demo%2FList%2FGrid%2FEditableGrid демо-пример}.
     *
     * @class Controls/TreeGrid
     * @extends Controls/Grid

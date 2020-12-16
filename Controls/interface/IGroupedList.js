@@ -57,7 +57,7 @@ define('Controls/interface/IGroupedList', [
     * @name Controls/interface/IGroupedList#collapsedGroups
     * @cfg {Array.<String>} Список идентификаторов свернутых групп. Идентификаторы групп получаются из свойства {@link groupProperty}.
     * @remark
-    * См. <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG демо-пример}.
+    * См. {@link /materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG демо-пример}.
     * @see groupTemplate
     * @see groupProperty
     * @see groupHistoryId

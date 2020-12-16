@@ -41,7 +41,7 @@ export interface IStateIndicatorOptions extends IControlOptions {
 
 /*
  * Progress state indicator
- * <a href="/materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex демо-пример}.
+ * {@link /materials/Controls-demo/app/Controls-demo%2fprogress%2fStateIndicator%2fIndex демо-пример}.
  * @class Controls/_progress/StateIndicator
  * @extends Core/Control
  * @author Колесов В.А.
