@@ -23,7 +23,6 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
  * @class Controls/_popup/Opener/Confirmation
  * @extends Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IConfirmation
- * @mixes Controls/_popup/interface/IConfirmationFooter
  * @implements Controls/_popup/interface/IConfirmationFooter
  * 
  * @public
