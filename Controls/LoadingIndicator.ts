@@ -26,7 +26,7 @@ let ManagerController;
  * Параметры события hideIndicator идентичны аргументам метода {@link hide}.
  *
  * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less">переменные тем оформления</a>
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less переменные тем оформления}
  *
  * @class Controls/LoadingIndicator
  * @extends Core/Control

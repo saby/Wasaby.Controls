@@ -40,6 +40,7 @@
  * @includes IBackgroundStyle Controls/_interface/IBackgroundStyle
  * @includes IDraggable Controls/_interface/IDraggable
  * @includes ICanBeDefaultOpener Controls/_interface/ICanBeDefaultOpener
+ * @includes IContrastBackground Controls/_interface/IContrastBackground
  * @public
  * @author Крайнов Д.О.
  */
@@ -75,11 +76,20 @@ export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropSt
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from './_interface/IValidationStatus';
 export {default as IDateConstructor, IDateConstructorOptions} from './_interface/IDateConstructor';
-export {default as ISelectionType, ISelectionTypeOptions, TSelectionType, TSelectionRecord, ISelectionObject, TKeySelection, TKeysSelection} from './_interface/ISelectionType';
+export {
+    default as ISelectionType,
+    ISelectionTypeOptions,
+    TSelectionType,
+    TSelectionRecord,
+    ISelectionObject,
+    TKeySelection,
+    TKeysSelection
+} from './_interface/ISelectionType';
 export {default as IApplication, IApplicationOptions, IAttributes, HeadJson} from './_interface/IApplication';
 export {default as IRUM, IRUMOptions} from './_interface/IRUM';
 export {default as IFilter, IFilterOptions} from './_interface/IFilter';
 export {default as IFilterChanged} from './_interface/IFilterChanged';
+export {default as IContrastBackground, IContrastBackgroundOptions} from './_interface/IContrastBackground';
 export {
     default as INavigation,
     INavigationOptions,
