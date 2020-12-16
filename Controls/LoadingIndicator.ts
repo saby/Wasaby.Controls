@@ -92,6 +92,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     protected mods: Array<string> | string;
     protected delay: number;
     protected delayTimeout: number;
+    private _blockedEvents: string[];
 
     protected _beforeMount(cfg: ILoadingIndicatorOptions): void {
         this.mods = [];
@@ -115,6 +116,7 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         // Выше коммент и задача после которой можно будет удалить.
         // В светлом будущем нужно решать через окна. https://github.com/saby/wasaby-controls/pull/15953/files
         this._recalcMessagePosition = this._recalcMessagePosition.bind(this);
+        this._eventsHandler = this._eventsHandler.bind(this);
         RegisterUtil(this, 'controlResize', this._recalcMessagePosition);
     }
 
@@ -389,16 +391,17 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
     private _toggleEvents(toggle: boolean): void {
         const action = toggle ? 'addEventListener' : 'removeEventListener';
         const events = ['mousedown', 'mouseup', 'click', 'keydown', 'keyup'];
+        this._blockedEvents = [];
         // TODO https://online.sbis.ru/opendoc.html?guid=157084a2-d702-40b9-b54e-1a42853c301e
         for (const event of events) {
             if (window) {
-                window[action](event, LoadingIndicator._eventsHandler, true);
+                window[action](event, this._eventsHandler, true);
                 /**
                  * В оффлайне стрельнул баг: если отписываться с флагом true(несмотря на такую же подписку)
                  * отписка от события не произойдет. Вызываю дополнительно отписку без флага.
                  */
                 if (!toggle) {
-                    window[action](event, LoadingIndicator._eventsHandler);
+                    window[action](event, this._eventsHandler);
                 }
             }
         }
@@ -542,7 +545,19 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         return simpleClassName + ' ' + simpleClassName + '_theme-' + this.theme;
     }
 
-    static _eventsHandler(event: Event): void {
+    private _eventsHandler(event: Event): void {
+        const type = event.type;
+        // Показ индикатора зовется при определенных пользовательских сценариях.
+        // Если показ индикатора был спровоцирован событием mousedown (т.е. на момент mousedown блокировки еще не было)
+        // то не будем блочить событие mouseup и click, которые последовательно выполнятся после действия пользователя.
+        // Пример: По mousedown записи списка обновляют опции окна, FC инициирует загрузку записи, показывает индикатор
+        // По mouseup список меняет маркер. Если прервать цепочку после mousedown, маркер списка не обновится.
+        if (type === 'mouseup' || type === 'click') {
+            if (!this._blockedEvents.includes('mousedown')) {
+                return;
+            }
+        }
+        this._blockedEvents.push(type);
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
