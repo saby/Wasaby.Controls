@@ -1,4 +1,9 @@
-import ISearchResolver, {ISearchResolverOptions} from 'Controls/_search/interface/ISearchResolver';
+export interface ISearchResolverOptions {
+   searchDelay?: number | null;
+   minSearchLength?: number;
+   searchCallback: (value: string) => void;
+   searchResetCallback: () => void;
+}
 
 /**
  * Контроллер, используемый для принятия решения, совершать ли поиск или производить его сброс по заданным параметрам в опциях.
@@ -39,15 +44,11 @@ import ISearchResolver, {ISearchResolverOptions} from 'Controls/_search/interfac
  * </pre>
  *
  * @class Controls/_search/SearchResolver
- * @implements Controls/_search/interface/ISearchResolver
- *
  * @private
  * @author Крюков Н.Ю.
  */
 
-export default class SearchResolver implements ISearchResolver {
-   readonly '[Controls/_search/interface/ISearchResolver]': boolean = true;
-
+export default class SearchResolver {
    /**
     * Таймер для запуска поиска после паузы, заданной в опции delayTime
     * @protected
@@ -129,3 +130,46 @@ export default class SearchResolver implements ISearchResolver {
       this._searchStarted = value;
    }
 }
+
+/**
+ * @name Controls/_search/SearchResolver#searchDelay
+ * @cfg {number|null} Время задержки перед поиском
+ */
+
+/**
+ * @name Controls/_search/SearchResolver#minSearchLength
+ * @cfg {number} Минимальная длина значения для начала поиска
+ */
+
+/**
+ * @name Controls/_search/SearchResolver#searchCallback
+ * @cfg {Function} Функция, начала поиска
+ */
+
+/**
+ * @name Controls/_search/SearchResolver#searchResetCallback
+ * @cfg {Function} Функция, которая будет вызвана если поиск был сброшен
+ */
+
+/**
+ * Обновляет опции контроллера
+ * @function Controls/_search/SearchResolver#updateOptions
+ * @param {ISearchResolverOptions} options Новые опции контроллера
+ */
+
+/**
+ * Очищает таймер реализующий задержку перед поиском
+ * @function Controls/_search/SearchResolver#clearTimer
+ */
+
+/**
+ * Инициировать проверку, какое действие предпринять по полученному через аргумент значению поиска
+ * @function Controls/_search/SearchResolver#resolve
+ * @param {string|null} value Значение, по которому должен произзводиться поиск
+ */
+
+/**
+ * Устанавливает флаг начала поиска на переданное в аргументе значение
+ * @function Controls/_search/SearchResolver#setSearchStarted
+ * @param {boolean} value Флаг начала поиска
+ */
