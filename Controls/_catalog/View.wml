@@ -20,7 +20,15 @@
       <div class="controls-Catalog__detail">
          <!-- Список -->
          <ws:if data="{{_currentViewMode === _viewModeEnum.list}}">
-            <Controls.list:View scope="{{_detailListOptions}}"/>
+            <Controls.list:View scope="{{_detailListOptions}}">
+               <ws:itemTemplate>
+                  <ws:partial
+                     template="{{_listItemTemplate}}"
+                     viewOptions="{{_listViewOptions}}"
+                     scope="{{itemTemplate}}"
+                  />
+               </ws:itemTemplate>
+            </Controls.list:View>
          </ws:if>
 
          <!-- Плитка -->

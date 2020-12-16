@@ -57,6 +57,8 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
     table?: object;
     //endregion
 
+    imageProperty?: string;
+
     nodeProperty?: string;
 
     parentProperty?: string;

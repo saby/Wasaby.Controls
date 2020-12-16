@@ -1,5 +1,41 @@
 import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
 
+export enum BackgroundStyle {
+    default = 'default',
+    gray = 'gray'
+}
+
+export enum ItemViewMode {
+    default = 'default',
+    description = 'description'
+}
+
+export enum ImageEffect {
+    default = 'default',
+    mono = 'mono',
+    smart = 'smart'
+}
+
+export enum ImagePosition {
+    none = 'none',
+    top = 'top',
+    left = 'left',
+    right = 'right'
+}
+
+export enum ImageViewMode {
+    none = 'none',
+    rectangle = 'rectangle',
+    circle = 'circle',
+    ellipse = 'ellipse'
+}
+
+export enum TileSize {
+    s = 's',
+    m = 'm',
+    l = 'l'
+}
+
 /**
  * Интерфейс описывает структуру конфигурации списка в detail-колонки
  * @interface Controls/catalog:IListConfiguration
@@ -8,33 +44,58 @@ import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetail
  */
 export interface IListConfiguration {
     settings: {
-        access: 'global',
+        access: string,
         accountViewMode: CatalogDetailViewMode,
         clientViewMode: CatalogDetailViewMode
     };
-    tile: {
+    list: {
         leaf: {
-            countLines: '3',
-            viewMode: 'description'
+            viewMode: ItemViewMode,
+            countLines: string | number
+        },
+        list: {
+            backgroundStyle: BackgroundStyle
         },
         node: {
-            countLines: '5',
-            viewMode: 'default'
+            viewMode: ItemViewMode
+        },
+        photo: {
+            viewMode: ImageViewMode,
+            imagePosition: ImagePosition
+        }
+    };
+    tile: {
+        leaf: {
+            viewMode: ItemViewMode,
+            countLines: string | number
         },
         photoLeaf: {
-            effect: 'default',
-            height: '50',
-            viewMode: 'circle'
+            effect: ImageEffect,
+            viewMode: ImageViewMode,
+            height: string | number
+        },
+        node: {
+            viewMode: ItemViewMode,
+            countLines: string | number
         },
         photoNode: {
-            effect: 'default',
-            height: '100',
-            viewMode: 'circle'
+            effect: ImageEffect,
+            viewMode: ImageViewMode,
+            height: string | number
         },
         tile: {
-            backgroundStyle: 'gray',
-            imagePosition: 'top',
-            size: 'm'
+            size: TileSize,
+            imagePosition: ImagePosition,
+            backgroundStyle: BackgroundStyle
+        }
+    };
+    table: {
+        leaf: {
+            countLines: string | number,
+            viewMode: ItemViewMode
+        },
+        photo: {
+            viewMode: ImageViewMode
         }
     };
 }

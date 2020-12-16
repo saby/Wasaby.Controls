@@ -1,0 +1,13 @@
+<ws:partial
+   template="Controls/listTemplates:ListItemTemplate"
+   imagePosition="{{viewOptions.imagePosition}}"
+   imageViewMode="{{viewOptions.imageViewMode}}"
+   imageProperty="{{viewOptions.imageProperty}}"
+   scope="{{_options}}"
+>
+   <ws:contentTemplate>
+      imagePosition="{{viewOptions.imagePosition}}"
+      imageViewMode="{{viewOptions.imageViewMode}}"
+      imageProperty="{{viewOptions.imageProperty}}"
+   </ws:contentTemplate>
+</ws:partial>

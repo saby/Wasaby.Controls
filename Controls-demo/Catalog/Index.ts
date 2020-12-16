@@ -1,13 +1,13 @@
 import {Memory} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
 import {CatalogDetailViewMode} from 'Controls/catalog';
+import {FlatHierarchy} from 'Controls-demo/_DemoData/Data';
 import {DemoSource} from 'Controls-demo/Catalog/DemoSource';
-import {Gadgets} from 'Controls-demo/treeGrid/DemoHelpers/DataCatalog';
 import * as Template from 'wml!Controls-demo/Catalog/Index';
 
 const baseSource = new DemoSource({
     keyProperty: 'id',
-    data: Gadgets.getFlatData()
+    data: FlatHierarchy.getData()
 });
 
 export default class extends Control {
@@ -62,7 +62,7 @@ export default class extends Control {
     /**
      * Набор колонок, отображаемый в master
      */
-    protected _masterTableColumns: unknown[] = [Gadgets.getGridColumnsForFlat()[0]];
+    protected _masterTableColumns: unknown[] = FlatHierarchy.getGridColumns(1);
 
     /**
      * Фильтр по которому отбираются только узлы в master-колонке
@@ -74,7 +74,7 @@ export default class extends Control {
     /**
      * Набор колонок, отображаемый в detail
      */
-    protected _detailTableColumns: unknown[] = Gadgets.getGridColumnsForFlat();
+    protected _detailTableColumns: unknown[] = FlatHierarchy.getGridColumns();
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
 }

@@ -1,4 +1,6 @@
 import {ICrudPlus} from 'Types/source';
+import {ITreeControlOptions} from 'Controls/tree';
+import {IHierarchyOptions} from 'Controls/interface';
 import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
 
 /**
@@ -50,18 +52,6 @@ export interface ICatalogMasterOptions extends ICatalogColumnOptions {
     visibility?: 'visible' | 'hidden';
     //endregion
 
-    nodeProperty?: string;
-
-    parentProperty?: string;
-
-    /**
-     * Имя свойства, содержащего информацию о наличии дочерних элементов в узле дерева.
-     * Если задано, то мастер список автоматически будет сконфигурирован на отображение
-     * только узлов. При этом у узлов где в качестве дочерних элементов есть только листья
-     * не будет показан экспандер.
-     */
-    hasChildrenProperty?: string;
-
     filter?: {[key: string]: unknown};
 
     /**
@@ -69,5 +59,5 @@ export interface ICatalogMasterOptions extends ICatalogColumnOptions {
      * Данные опции перекрывают опции, вычисленные на основании конфигурации
      * {@link ICatalogOptions.master|master-колонки}
      */
-    treeGridView?: object;
+    treeGridView: ITreeControlOptions & IHierarchyOptions;
 }

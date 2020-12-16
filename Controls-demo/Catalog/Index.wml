@@ -27,23 +27,27 @@
          width="{{300}}"
          minWidth="{{200}}"
          maxWidth="{{500}}"
-         nodeProperty="type"
-         parentProperty="parent"
-         hasChildrenProperty="hasChild"
          filter="{{_masterFilter}}"
          visibility="{{_isMasterVisible ? 'visible' : 'hidden'}}"
       >
          <!-- Настраиваем отображение списка -->
          <ws:treeGridView
+            nodeProperty="type"
+            parentProperty="parent"
+            hasChildrenProperty="hasChild"
+            expanderVisibility="hasChildren"
             columns="{{_masterTableColumns}}"
          />
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
       <ws:detail
          nodeProperty="type"
+         imageProperty="photo"
          parentProperty="parent"
          filter="{{_detailFilter}}"
       >
+         <ws:list>
+         </ws:list>
          <!-- Конфигурируем табличное представление detail-списка -->
          <ws:table
             columns="{{_detailTableColumns}}"
