@@ -34,6 +34,7 @@ let _private = {
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IText
+ * @implements Controls/interface:IContrastBackground
  *
  * @ignoreOptions style
  *
@@ -57,6 +58,7 @@ let _private = {
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IText
+ * @implements Controls/interface:IContrastBackground
  *
  * @ignoreOptions style
  *
@@ -280,11 +282,9 @@ class Search extends Base {
 
 /**
  * @name Controls/_search/Input/Search#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+ * @cfg
  * @default false
  * @remark
- * * true - контрастный фон.
- * * false - фон, гармонично сочетающийся с окружением.
  * Опция используется для визуального выделения контрола, относительно окружения.
  * Например в ситуации когда цвет окружения, близкий к цвету самого контрола.
  * @demo Controls-demo/Search/Input/Base/Index
