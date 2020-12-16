@@ -28,7 +28,6 @@ import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyH
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
 import {IScrollState} from './Utils/ScrollState';
-import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
 /**
  * @typeof {String} TPagingPosition
@@ -354,7 +353,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             let offset: number;
             let headersHeight = 0;
             if (detection.isBrowserEnv) {
-                headersHeight = getHeadersHeight(this._container, 'top', 'allFixed');
+                headersHeight = this._stickyHeaderController.getHeadersHeight('top', 'allFixed');
             }
             const
                 clientHeight = this._scrollModel.clientHeight - headersHeight,
