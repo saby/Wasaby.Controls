@@ -22,9 +22,9 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/openers/stack/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less">переменные тем оформления</a>
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FPopup%2FOpener%2FStackDemo демо-пример}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ руководство разработчика}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * Для открытия стековых окон из кода используйте {@link Controls/popup:StackOpener}.
  *
  * @class Controls/popup:Stack

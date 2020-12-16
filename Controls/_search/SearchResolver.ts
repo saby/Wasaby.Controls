@@ -1,4 +1,4 @@
-import {ISearchResolverOptions} from './interface';
+import ISearchResolver, {ISearchResolverOptions} from 'Controls/_search/interface/ISearchResolver';
 
 /**
  * Контроллер, используемый для принятия решения, совершать ли поиск или производить его сброс по заданным параметрам в опциях.
@@ -45,7 +45,8 @@ import {ISearchResolverOptions} from './interface';
  * @author Крюков Н.Ю.
  */
 
-export default class SearchResolver {
+export default class SearchResolver implements ISearchResolver {
+   readonly '[Controls/_search/interface/ISearchResolver]': boolean = true;
 
    /**
     * Таймер для запуска поиска после паузы, заданной в опции delayTime
@@ -69,10 +70,6 @@ export default class SearchResolver {
       this._options = options;
    }
 
-   /**
-    * Обновляет опции контроллера
-    * @param options Новые опции контроллера
-    */
    updateOptions(options: ISearchResolverOptions): void {
       this._options = options;
    }
@@ -88,9 +85,6 @@ export default class SearchResolver {
       }
    }
 
-   /**
-    * Очищает таймер реализующий задержку перед поиском
-    */
    clearTimer(): void {
       if (this._delayTimer) {
          clearTimeout(this._delayTimer);
@@ -110,10 +104,6 @@ export default class SearchResolver {
       });
    }
 
-   /**
-    * Инициировать проверку, какое действие предпринять по полученному в аргументе значению
-    * @param value Значение, по которому должен произзводиться поиск
-    */
    resolve(value: string | null): void {
       const valueLength = value ? value.length : 0;
       const minSearchLength = this._options.minSearchLength !== null;
@@ -135,10 +125,6 @@ export default class SearchResolver {
       }
    }
 
-   /**
-    * Устанавливает флаг начала поиска на переданное в аргументе значение
-    * @param value Начат ли поиск
-    */
    setSearchStarted(value: boolean): void {
       this._searchStarted = value;
    }
