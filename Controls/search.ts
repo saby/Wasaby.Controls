@@ -36,10 +36,6 @@ import {default as Controller} from 'Controls/_search/Controller';
 
 import getSwitcherStrFromData = require('Controls/_search/Misspell/getSwitcherStrFromData');
 
-export {default as ISearchResolver} from './_search/interface/ISearchResolver';
-export {default as ISearchController} from './_search/interface/ISearchController';
-export {default as ISearchInputContainer} from './_search/interface/ISearchInputContainer';
-
 export {default as ControllerClass} from './_search/ControllerClass';
 export {default as InputContainer} from './_search/Input/Container';
 export {default as SearchResolver} from './_search/SearchResolver';
