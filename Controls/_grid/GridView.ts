@@ -213,12 +213,15 @@ var
                 startDragNDropCallback,
                 dragNDropDelay: options.dragNDropDelay,
                 onOverlayShown: () => {
+                    self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_ACTIVATED}`;
                 },
                 onOverlayHide: () => {
                     _private.setGrabbing(self, false);
+                    self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
                 }
             });
             _private.setGrabbing(self, false);
+            self._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
         },
 
         updateColumnScrollByOptions(self, oldOptions, newOptions): void {
@@ -276,6 +279,7 @@ var
             if (self._dragScrollController) {
                 self._dragScrollController.destroy();
                 self._dragScrollController = null;
+                self._dragScrollOverlayClasses = '';
             }
         },
         setGrabbing(self, isGrabbing: boolean): void {
@@ -352,6 +356,7 @@ var
 
         _notifyHandler: tmplNotify,
         _columnScrollContainerClasses: '',
+        _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
@@ -402,7 +407,7 @@ var
                 // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
                 // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
                 // списочного контрола.
-                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
+                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScrollOld;
             }
 
             return resultSuper;
