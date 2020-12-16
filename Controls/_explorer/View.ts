@@ -369,9 +369,9 @@ var
     * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
     *
     * Полезные ссылки:
-    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
+    * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/ руководство разработчика}
+    * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less переменные тем оформления explorer}
+    * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less переменные тем оформления list}
     *
     * @demo Controls-demo/Explorer/Explorer
     * @demo Controls-demo/Explorer/Search
