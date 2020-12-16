@@ -34,8 +34,8 @@ const LIST_CFG = {
         viewMode: ItemViewMode.description
     },
     photo: {
-        imagePosition: ImagePosition.right,
-        viewMode: ImageViewMode.rectangle
+        imagePosition: ImagePosition.left,
+        viewMode: ImageViewMode.ellipse
     }
 };
 

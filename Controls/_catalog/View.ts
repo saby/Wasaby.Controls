@@ -3,13 +3,14 @@ import {SyntheticEvent} from 'UI/Vdom';
 import {RecordSet} from 'Types/collection';
 import {Control, TemplateFunction} from 'UI/Base';
 import {IList} from 'Controls/_list/interface/IList';
+import {IItemTemplateOptions} from 'Controls/interface';
 import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
-import {IListConfiguration, ImagePosition, ImageViewMode} from 'Controls/_catalog/interfaces/IListConfiguration';
+import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguration';
+import {IImageItemTemplateCfg} from 'Controls/_catalog/interfaces/IImageItemTemplateCfg';
 import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
 import {ISourceControllerOptions, NewSourceController as SourceController} from 'Controls/dataSource';
 import * as ViewTemplate from 'wml!Controls/_catalog/View';
-import {IItemTemplateOptions} from 'Controls/interface';
 
 type IListOptions = IList & IItemTemplateOptions;
 
@@ -88,13 +89,9 @@ export default class View extends Control<ICatalogOptions> {
     protected _listItemTemplate: TemplateFunction | string;
 
     /**
-     * Настройки отображения итема плоского списка
+     * Настройки отображения картники
      */
-    protected _listViewOptions: {
-        imageProperty?: string,
-        imageViewMode?: ImageViewMode,
-        imagePosition?: ImagePosition
-    } = {};
+    protected _imageItemTemplateCfg: IImageItemTemplateCfg = {};
     //endregion
 
     /**
@@ -199,8 +196,96 @@ export default class View extends Control<ICatalogOptions> {
         // На основании полученного состояния соберем опции для detail-списков
         this._detailTreeOptions = this.buildDetailTreeOption(options);
         this._detailListOptions = this.buildDetailListOption(options);
+        this._listItemTemplate = this._detailListOptions.itemTemplate;
         //endregion
     }
+
+    /**
+     * На основании текущего состояния и переданных параметров собирает опции для
+     * создания SourceController для master- или detail-колонки.
+     */
+    private buildScrollControllerOptions(
+        target: 'master' | 'detail',
+        options: ICatalogOptions
+    ): ISourceControllerOptions {
+        const master = target === 'master';
+        const ops = master ? options.master : options.detail;
+
+        return {
+            filter: ops?.filter,
+            source: master ? this._masterSource : this._detailSource,
+            keyProperty: master ? this._masterKeyProperty : this._detailKeyProperty,
+            nodeProperty: master ? options.master.treeGridView.nodeProperty : options.detail.nodeProperty,
+            parentProperty: master ? options.master.treeGridView.parentProperty : options.detail.parentProperty
+        };
+    }
+
+    //region build lists options
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
+     * расположенном в master-колонке.
+     */
+    private buildMasterTreeOption(options: ICatalogOptions = this._options): unknown {
+        const defaultCfg = {
+            style: 'master',
+            backgroundStyle: 'master',
+            expanderVisibility: undefined,
+            hasChildrenProperty: undefined,
+            keyProperty: this._masterKeyProperty,
+            sourceController: this._masterSourceController,
+            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
+            // а список всеравно в первую очередь смотрит на sourceController
+            source: this._masterSource
+        };
+
+        return {...defaultCfg, ...options.master.treeGridView};
+    }
+
+    private buildDetailExplorerOptions(options: ICatalogOptions = this._options): unknown {
+        return {
+            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
+            // а список всеравно в первую очередь смотрит на sourceController
+            source: this._detailSource,
+            keyProperty: this._detailKeyProperty,
+            sourceController: this._detailSourceController,
+            itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate'
+        };
+    }
+
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/list:View,
+     * расположенном в detail-колонке.
+     */
+    private buildDetailListOption(options: ICatalogOptions = this._options): IListOptions {
+        const defaultCfg = this.buildDefaultDetailListOptions();
+        return  {...defaultCfg, ...options.detail.list} as IListOptions;
+    }
+
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
+     * расположенном в detail-колонке.
+     */
+    private buildDetailTreeOption(options: ICatalogOptions = this._options): unknown {
+        const defaultCfg = {
+            ...this.buildDefaultDetailListOptions(),
+            nodeProperty: options.detail?.nodeProperty,
+            parentProperty: options.detail?.parentProperty
+        };
+
+        return {...defaultCfg, ...options.detail.table};
+    }
+
+    private buildDefaultDetailListOptions(): object {
+        return {
+            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
+            // а список всеравно в первую очередь смотрит на sourceController
+            source: this._detailSource,
+            keyProperty: this._detailKeyProperty,
+            sourceController: this._detailSourceController,
+            itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate'
+        };
+    }
+    //endregion
 
     protected setMasterMarkedKey(e: SyntheticEvent, value: string): void {
         this._masterMarkedKey = value;
@@ -254,93 +339,16 @@ export default class View extends Control<ICatalogOptions> {
             return;
         }
 
+        this._imageItemTemplateCfg = {};
         this._currentViewMode = cfg.settings.clientViewMode;
 
         if (this._currentViewMode === CatalogDetailViewMode.list) {
-            this._listItemTemplate = this._detailListOptions.itemTemplate;
-            this._listViewOptions.imageViewMode = cfg.list.photo.viewMode;
-            this._listViewOptions.imagePosition = cfg.list.photo.imagePosition;
-            this._listViewOptions.imageProperty = options.detail.imageProperty;
+            this._imageItemTemplateCfg.viewMode = cfg.list.photo.viewMode;
+            this._imageItemTemplateCfg.position = cfg.list.photo.imagePosition;
+            this._imageItemTemplateCfg.imageProperty = options.detail.imageProperty;
             this._detailListOptions.backgroundStyle = cfg.list.list.backgroundStyle;
         }
     }
-
-    /**
-     * На основании текущего состояния и переданных параметров собирает опции для
-     * создания SourceController для master- или detail-колонки.
-     */
-    private buildScrollControllerOptions(
-        target: 'master' | 'detail',
-        options: ICatalogOptions
-    ): ISourceControllerOptions {
-        const master = target === 'master';
-        const ops = master ? options.master : options.detail;
-
-        return {
-            filter: ops?.filter,
-            source: master ? this._masterSource : this._detailSource,
-            keyProperty: master ? this._masterKeyProperty : this._detailKeyProperty,
-            nodeProperty: master ? options.master.treeGridView.nodeProperty : options.detail.nodeProperty,
-            parentProperty: master ? options.master.treeGridView.parentProperty : options.detail.parentProperty
-        };
-    }
-
-    //region build lists options
-    /**
-     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
-     * расположенном в master-колонке.
-     */
-    private buildMasterTreeOption(options: ICatalogOptions = this._options): unknown {
-        const defaultCfg = {
-            style: 'master',
-            backgroundStyle: 'master',
-            expanderVisibility: undefined,
-            hasChildrenProperty: undefined,
-            keyProperty: this._masterKeyProperty,
-            sourceController: this._masterSourceController,
-            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
-            // а список всеравно в первую очередь смотрит на sourceController
-            source: this._masterSource
-        };
-
-        return {...defaultCfg, ...options.master.treeGridView};
-    }
-
-    /**
-     * По переданным опциям собирает конфигурацию для Controls/list:View,
-     * расположенном в detail-колонке.
-     */
-    private buildDetailListOption(options: ICatalogOptions = this._options): IListOptions {
-        const defaultCfg = this.buildDefaultDetailListOptions(options);
-        return  {...defaultCfg, ...options.detail.list} as IListOptions;
-    }
-
-    /**
-     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
-     * расположенном в detail-колонке.
-     */
-    private buildDetailTreeOption(options: ICatalogOptions = this._options): unknown {
-        const defaultCfg = {
-            ...this.buildDefaultDetailListOptions(options),
-            nodeProperty: options.detail?.nodeProperty,
-            parentProperty: options.detail?.parentProperty
-        };
-
-        return {...defaultCfg, ...options.detail.table};
-    }
-
-    private buildDefaultDetailListOptions(options: ICatalogOptions = this._options): object {
-        return {
-            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
-            // а список всеравно в первую очередь смотрит на sourceController
-            source: this._detailSource,
-            keyProperty: this._detailKeyProperty,
-            sourceController: this._detailSourceController,
-            itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate',
-            itemTemplateProperty: undefined
-        };
-    }
-    //endregion
 
     //region static utils
     static _theme: string[] = [

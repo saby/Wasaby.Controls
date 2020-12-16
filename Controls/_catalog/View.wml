@@ -18,13 +18,18 @@
 
    <ws:detail>
       <div class="controls-Catalog__detail">
+<!--         <Controls.explorer:View
+            bind:root="_masterMarkedKey"
+         ></Controls.explorer:View>-->
+
+
          <!-- Список -->
          <ws:if data="{{_currentViewMode === _viewModeEnum.list}}">
             <Controls.list:View scope="{{_detailListOptions}}">
                <ws:itemTemplate>
                   <ws:partial
                      template="{{_listItemTemplate}}"
-                     viewOptions="{{_listViewOptions}}"
+                     imageCfg="{{_imageItemTemplateCfg}}"
                      scope="{{itemTemplate}}"
                   />
                </ws:itemTemplate>

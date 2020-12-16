@@ -1,13 +1,22 @@
 <ws:partial
    template="Controls/listTemplates:ListItemTemplate"
-   imagePosition="{{viewOptions.imagePosition}}"
-   imageViewMode="{{viewOptions.imageViewMode}}"
-   imageProperty="{{viewOptions.imageProperty}}"
    scope="{{_options}}"
+   imagePosition="{{imageCfg.position}}"
+   imageViewMode="{{imageCfg.viewMode}}"
+   imageProperty="{{imageCfg.imageProperty}}"
 >
+   <ws:captionTemplate>
+      <Controls.heading:Title
+         fontSize="4xl"
+         fontColorStyle="default"
+         caption="{{_options.itemData.item.title}}"
+         tooltip="{{_options.itemData.item.title}}"
+      />
+   </ws:captionTemplate>
    <ws:contentTemplate>
-      imagePosition="{{viewOptions.imagePosition}}"
-      imageViewMode="{{viewOptions.imageViewMode}}"
-      imageProperty="{{viewOptions.imageProperty}}"
+      {{_options.itemData.item.description}}
    </ws:contentTemplate>
+   <ws:footerTemplate>
+      <div>Дополнительное описани</div>
+   </ws:footerTemplate>
 </ws:partial>
