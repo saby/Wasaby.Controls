@@ -181,7 +181,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
          baseController._options.selectorTemplate = {
             mode: 'dialog'
          };
-         showSelector.default(baseController, {});
+         showSelector.default(baseController, {template: 'template'});
          assert.isTrue(baseController._opener instanceof popup.DialogOpener);
       });
 
@@ -191,7 +191,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
          baseController._options.selectorTemplate = {
             mode: 'stack'
          };
-         showSelector.default(baseController, {});
+         showSelector.default(baseController, {template: 'template'});
          assert.isTrue(baseController._opener instanceof popup.StackOpener);
       });
    });
