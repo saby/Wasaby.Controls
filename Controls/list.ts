@@ -183,6 +183,9 @@ export {
 /**
  * Константы:
  * - groupConstants.hiddenGroup — константа для определения элемента hiddenGroup в {@link Controls/interface/IGroupedList#groupProperty groupProperty};
+ * - checkboxStateConstants.enabled — константа, которая разрешает изменение состояния чекбокса у записи;
+ * - checkboxStateConstants.disabled — константа, которая запрещает изменение состояния чекбокса у записи;
+ * - checkboxStateConstants.hidden — константа, которая скрывает чекбокс у записи;
  * - editing.CANCEL — константа, которую можно вернуть в {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} для отмены редактирования.
  * - CursorDirection - enum, направление выборки при навигации по курсору.
  *
@@ -212,6 +215,7 @@ const editing = {
 };
 
 import {groupConstants} from './display';
+import {checkboxStateConstants} from './display';
 import {CursorDirection} from './interface';
 
-export {CursorDirection, groupConstants, editing};
+export {CursorDirection, groupConstants, editing, checkboxStateConstants};

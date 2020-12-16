@@ -283,7 +283,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @default default
  */
 
-
 /**
  * @name Controls/_list/interface/IList#checkboxStateProperty
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
@@ -292,6 +291,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @property true Чекбокс виден и с ним можно взаимодействовать
  * @property false Чекбокс виден, но с ним нельзя взаимодействовать
  * @property null Чекбокс скрыт
+ * @remark Для задания значения использовать {@link Controls/list:View#checkboxStateConstants константы}
  * @demo Controls-demo/list_new/ItemTemplate/CheckboxReadOnly/Index
  */
 

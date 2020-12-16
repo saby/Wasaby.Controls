@@ -44,6 +44,13 @@ const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
+const checkboxStateConstants = {
+    enabled: true,
+    disabled: false,
+    hidden: null
+};
+export {checkboxStateConstants};
+
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
 }
@@ -3121,7 +3128,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
-            if (options.contents.has && options.contents.has(this._$checkboxStateProperty)) {
+            if (options.contents instanceof EntityModel && options.contents.has(this._$checkboxStateProperty)) {
                 options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$checkboxStateProperty);
             }
             return create(this._itemModule, options);
