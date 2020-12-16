@@ -19,7 +19,6 @@ const groupConstants = {
      */
     /*
     * Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGroupedList#groupProperty groupProperty}
-    * @public
     */
     hiddenGroup: 'CONTROLS_HIDDEN_GROUP'
 };
