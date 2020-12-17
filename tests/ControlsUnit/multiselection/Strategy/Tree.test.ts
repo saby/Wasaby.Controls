@@ -656,9 +656,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
             const selection = { selected: [null], excluded: [null] };
             const res = strategy.getSelectionForModel(selection);
-            assert.deepEqual(res.get(true), [model.getItemBySourceKey(5), model.getItemBySourceKey(7)] );
-            assert.deepEqual(res.get(null), []);
-            assert.deepEqual(res.get(false), [model.getItemBySourceKey(4)]);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![4, 5, 7].includes(it.id)));
          });
       });
 
@@ -692,10 +692,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             const res = strategy.getSelectionForModel(selection);
             assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 3, 6].includes(it.id)) );
             assert.deepEqual(toArray(res.get(null)), []);
-            assert.deepEqual(toArray(res.get(false)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)));
          });
-
-
 
          it('with readonly items', () => {
             const data = ListData.getItems();
@@ -724,9 +722,9 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
             const selection = { selected: [null], excluded: [null] };
             const res = strategy.getSelectionForModel(selection);
-            assert.deepEqual(res.get(true), [model.getItemBySourceKey(2), model.getItemBySourceKey(3), model.getItemBySourceKey(6)] );
-            assert.deepEqual(res.get(null), []);
-            assert.deepEqual(res.get(false), [model.getItemBySourceKey(1)]);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 3, 6].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3, 6].includes(it.id)));
          });
       });
    });
