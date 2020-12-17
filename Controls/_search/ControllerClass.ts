@@ -34,7 +34,7 @@ const SERVICE_FILTERS = {
  * Поле, переданное через опцию searchParam, при сбросе поиска будет удалено из фильтра.
  *
  * @example
- * При создании экзепмляра класса можно передать опцией  {@link Controls/dataSource:NewSourceController sourceController}
+ * При создании экзепмляра класса можно передать опцией {@link Controls/source:Controller sourceController}
  * <pre>
  * const controllerClass = new ControllerClass({
  *   sourceController: new SourceController(...)
