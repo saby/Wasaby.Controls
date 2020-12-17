@@ -180,10 +180,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     protected _afterUpdate() {
         super._afterUpdate(...arguments);
-        this._stickyHeaderController.updateContainer(this._children.content);
+        this._stickyHeaderController.updateContainer(this._children.scrollContainer);
         if (this._needUpdateContentSize) {
             this._needUpdateContentSize = false;
-            this._updateStateAndGenerateEvents({ scrollHeight: this._children.content.scrollHeight });
+            this._updateStateAndGenerateEvents({ scrollHeight: this._children.scrollContainer.scrollHeight });
         }
     }
 
@@ -198,7 +198,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
     private _initHeaderController(): void {
         if (!this._isControllerInitialized) {
-            this._stickyHeaderController.init(this._children.content);
+            this._stickyHeaderController.init(this._children.scrollContainer);
             this._isControllerInitialized = true;
         }
     }
@@ -555,7 +555,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
             this._wasMouseEnter || detection.isIE);
         this._children.scrollBar?.setViewportSize(
-            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
+            this._children.scrollContainer.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {

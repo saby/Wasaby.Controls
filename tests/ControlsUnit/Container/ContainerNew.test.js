@@ -50,7 +50,7 @@ define(
             scroll._children.stickyHeaderShadow = {
                start: sinon.fake()
             };
-            scroll._children.content = {
+            scroll._children.scrollContainer = {
                offsetHeight: 40,
                scrollHeight: 50,
                scrollTop: 10
