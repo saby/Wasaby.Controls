@@ -53,17 +53,17 @@ class DateTime extends Control {
     protected _dateConstructor: Date | WSDate;
     protected _controlName: string = 'DateBase';
 
-    protected _formatMaskChars = {
-        'D': '[0-9]',
-        'M': '[0-9]',
-        'Y': '[0-9]',
-        'H': '[0-9]',
-        'm': '[0-9]',
-        's': '[0-9]',
-        'U': '[0-9]'
+    protected _formatMaskChars: Record<string, string> = {
+        D: '[0-9]',
+        M: '[0-9]',
+        Y: '[0-9]',
+        H: '[0-9]',
+        m: '[0-9]',
+        s: '[0-9]',
+        U: '[0-9]'
     };
 
-    protected _model: Model;
+    protected _model: typeof Model;
 
     protected _validators: Function[] = [];
 
@@ -92,7 +92,7 @@ class DateTime extends Control {
                 dateConstructor: this._dateConstructor
             });
         }
-        if (this._options.valuevalidators !== options.valueValidators || options.value !== this._options.value) {
+        if (this._options.valueValidators !== options.valueValidators || options.value !== this._options.value) {
             this._updateValidators(options.valueValidators);
         }
     }

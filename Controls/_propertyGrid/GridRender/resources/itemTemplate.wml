@@ -17,9 +17,8 @@
                controls-PropertyGrid__gridLayout_editor_theme-{{theme}}
                {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}"
         style="{{getItemStyles(collectionItem, 2, !item.caption)}}">
-      <Controls.Container.Async
-         templateName="{{collectionItem.getEditorTemplateName()}}"
-         templateOptions="{{collectionItem.getEditorOptions()}}"/>
+      <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
+                  scope="{{_options}}"/>
       <ws:if data="{{ collectionItem.shouldDisplayActions() }}">
          <ws:if data="{{ !collectionItem.isSwiped() }}">
             <ws:partial

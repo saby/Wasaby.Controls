@@ -97,7 +97,7 @@ import {TemplateFunction} from 'UI/Base';
  */
 
 /**
- * @name Controls/_propertyGrid/IProperty#editorTemplateName
+ * @name Controls/_propertyGrid/IProperty#editorTemplate.wml
  * @cfg {String} Имя контрола, который будет использоваться в качестве редактора. Если параметр не задан, будет использоваться редактор по-умолчанию.
  */
 
