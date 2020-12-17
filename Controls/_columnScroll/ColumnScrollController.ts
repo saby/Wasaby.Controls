@@ -6,7 +6,6 @@ import {detection} from 'Env/Env';
 export interface IControllerOptions {
     stickyColumnsCount?: number;
     hasMultiSelect: boolean;
-    needBottomPadding?: boolean;
     isEmptyTemplateShown?: boolean;
     isFullGridSupport?: boolean;
 
@@ -171,13 +170,16 @@ export default class ColumnScrollController {
         this._shadowState.end = (this._contentSize - this._containerSize - this._scrollPosition) >= 1;
     }
 
-    getShadowClasses(position: 'start' | 'end', isVisible: boolean = this._shadowState[position]): string {
-        return ColumnScrollController.getShadowClasses({
-            position,
+    getShadowClasses(position: 'start' | 'end', params: {
+        isVisible?: boolean;
+        needBottomPadding?: boolean;
+    } = {}): string {
+        const isVisible = typeof params.isVisible === 'boolean' ? params.isVisible : this._shadowState[position];
+        return ColumnScrollController.getShadowClasses(position, {
             isVisible,
             theme: this._options.theme,
             backgroundStyle: this._options.backgroundStyle,
-            needBottomPadding: this._options.needBottomPadding,
+            needBottomPadding: !!params.needBottomPadding
         });
     }
 
@@ -193,7 +195,7 @@ export default class ColumnScrollController {
      * После этого выбираем меньшую из отфильрованных и вызываем прокрутку области к этой колонке.
      * @param container
      */
-    scrollToColumnWithinContainer(container: HTMLDivElement): void {
+    scrollToColumnWithinContainer(container: HTMLElement): void {
         const scrollContainerRect = this._getScrollContainerRect();
         const scrollableColumns = this._getScrollableColumns(container);
         const scrollableColumnsSizes = scrollableColumns.map((column) => column.getBoundingClientRect());
@@ -240,17 +242,16 @@ export default class ColumnScrollController {
         return this._scrollableColumns;
     }
 
-    static getShadowClasses(params: {
-        position: 'start' | 'end',
+    static getShadowClasses(position: 'start' | 'end', params: {
         isVisible: boolean,
         theme: string;
         needBottomPadding?: boolean;
         backgroundStyle?: string;
     }): string {
-        return `js-controls-ColumnScroll__shadow-${params.position}`
+        return `js-controls-ColumnScroll__shadow-${position}`
             + ` controls-ColumnScroll__shadow_theme-${params.theme}`
             + ` controls-ColumnScroll__shadow_with${params.needBottomPadding ? '' : 'out'}-bottom-padding_theme-${params.theme}`
-            + ` controls-ColumnScroll__shadow-${params.position}_theme-${params.theme}`
+            + ` controls-ColumnScroll__shadow-${position}_theme-${params.theme}`
             + ` controls-horizontal-gradient-${params.backgroundStyle}_theme-${params.theme}`;
     }
 
@@ -501,6 +502,17 @@ export default class ColumnScrollController {
         return (isFirefox ? Math.sign(delta) * WHEEL_DELTA_INCREASE_COEFFICIENT : delta) * WHEEL_SCROLLING_SMOOTH_COEFFICIENT;
     }
 
+    getSizes() {
+        return {
+            // containerSize: this._containerSize,
+            // contentSize: this._contentSize,
+            fixedColumnsWidth: this._fixedColumnsWidth,
+            scrollableColumnsWidth: this._containerSize - this._fixedColumnsWidth,
+            contentSizeForHScroll: this._contentSizeForHScroll,
+            scrollWidth: this._scrollWidth
+        }
+    }
+
     /**
      * TODO: Переписать, чтобы проскроливалось вначало или вконец без зазора, либо к элементу по центру.
      *  #rea_columnnScroll
@@ -547,7 +559,7 @@ export default class ColumnScrollController {
         this._options = {} as IControllerOptions;
     }
 
-    static shouldDrawColumnScroll(scrollContainer: HTMLDivElement, contentContainer: HTMLDivElement, isFullGridSupport: boolean): boolean {
+    static shouldDrawColumnScroll(scrollContainer: HTMLElement, contentContainer: HTMLElement, isFullGridSupport: boolean): boolean {
         const contentContainerSize = contentContainer.scrollWidth;
         const scrollContainerSize = isFullGridSupport ? contentContainer.offsetWidth : scrollContainer.offsetWidth;
         return contentContainerSize > scrollContainerSize;

@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridRow, GridLadderUtil, GridLayoutUtil, isFullGridSupport } from 'Controls/display';
+import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -10,13 +10,7 @@ import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
-import {
-    ColumnScrollController as ColumnScroll,
-    DragScrollController as DragScroll,
-    COLUMN_SCROLL_JS_SELECTORS,
-    DRAG_SCROLL_JS_SELECTORS,
-    isInLeftSwipeRange
-} from 'Controls/columnScroll';
+import ColumnScrollViewController, {COLUMN_SCROLL_JS_SELECTORS} from './ViewControllers/ColumnScroll';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -24,19 +18,21 @@ const GridView = ListView.extend({
     _hoveredCellItem: null,
     _groupTemplate: GroupTemplate,
     _isFullMounted: false,
-    _columnScrollController: null,
-    _dragScrollController: null,
-    _columnScrollContainerClasses: '',
-    _columnScrollShadowClasses: '',
+
+    _columnScrollViewController: null,
+    _columnScrollWrapperClasses: '',
+    _columnScrollContentClasses: '',
     _dragScrollOverlayClasses: '',
-    _viewGrabbingClasses: '',
+    _columnScrollShadowClasses: '',
+    _contentSizeForHScroll: 0,
+    _horizontalScrollWidth: 0,
+    _fixedColumnsWidth: 0,
+    _scrollableColumnsWidth: 0,
 
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
         this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
         this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
-        this._horizontalPositionChangedHandler = this._horizontalPositionChangedHandler.bind(this);
-
 
         if (options.columnScroll && options.columnScrollStartPosition === 'end' && options.isFullGridSupport) {
             // В таблице с горизонтальным скроллом изначально прокрученным в конец используется фейковая таблица.
@@ -53,13 +49,15 @@ const GridView = ListView.extend({
             this._showFakeGridWithColumnScroll = !options.preventServerSideColumnScroll;
         }
 
+        if (options.columnScroll) {
+            this._columnScrollViewController = this._createColumnScroll(options);
+        }
+
         return result;
     },
 
     _afterMount(): void {
-        if (this._options.columnScroll) {
-            this._actualizeColumnScroll(this._options, true);
-        }
+        this._actualizeColumnScroll(this._options);
         this._isFullMounted = true;
     },
 
@@ -73,23 +71,29 @@ const GridView = ListView.extend({
 
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
-        this._updateColumnScroll(this._options, newOptions);
+        if (this._columnScrollViewController) {
+            const action = this._columnScrollViewControlle?.updateControllers(newOptions);
+            if (action === 'columnScrollDisabled') {
+                this._columnScrollViewController.destroy();
+                this._applyColumnScrollChanges();
+                this._columnScrollViewController = null;
+            }
+        } else if (newOptions.columnScroll) {
+            this._columnScrollViewController = this._createColumnScroll(newOptions);
+        }
     },
 
     _afterUpdate(oldOptions): void {
         GridView.superclass._afterUpdate.apply(this, arguments);
-
-        if (this._options.columnScroll) {
-            // Обновление горизонтального скролла при изменении опций, которые косвенно влияют на горизонтальный скролл(опции,
-            // которые приведут к визуальному изменению списка), например, видимость множественного выбора, кол-во
-            // зафиксированных колонок и т.п.
-            this._updateColumnScrollBySideOptions(oldOptions, this._options);
-        }
+        this._actualizeColumnScroll(this._options);
     },
 
     _beforeUnmount(): void {
         GridView.superclass._beforeUnmount.apply(this, arguments);
-        this._destroyColumnScroll();
+        if (this._columnScrollViewController) {
+            this._columnScrollViewController.destroy();
+            this._columnScrollViewController = null;
+        }
     },
 
     _resolveItemTemplate(options): TemplateFunction {
@@ -131,7 +135,7 @@ const GridView = ListView.extend({
     },
 
     _getGridViewWrapperClasses(): string {
-        return `${this._columnScrollContainerClasses} ${this.isColumnScrollVisible() ? COLUMN_SCROLL_JS_SELECTORS.COLUMN_SCROLL_VISIBLE : ''}`
+        return `${this._columnScrollWrapperClasses} ${this.isColumnScrollVisible() ? COLUMN_SCROLL_JS_SELECTORS.COLUMN_SCROLL_VISIBLE : ''}`
     },
 
     _getGridViewClasses(options): string {
@@ -139,12 +143,7 @@ const GridView = ListView.extend({
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ' controls-Grid_support-ladder';
         }
-        if (options.columnScroll) {
-            classes += ` ${COLUMN_SCROLL_JS_SELECTORS.CONTENT}`;
-            if (this._isDragScrollingEnabled(options)) {
-                classes += ` ${DRAG_SCROLL_JS_SELECTORS.CONTENT} ${this._viewGrabbingClasses}`;
-            }
-        }
+        classes += ` ${this._columnScrollContentClasses}`;
         return classes;
     },
 
@@ -191,6 +190,7 @@ const GridView = ListView.extend({
         }
         return element;
     },
+
     _getCellByEventTarget(target: HTMLElement): HTMLElement {
         return target.closest('.controls-Grid__row-cell') as HTMLElement;
     },
@@ -267,438 +267,133 @@ const GridView = ListView.extend({
         }
     },
 
-    _onMouseDown(e) {
-        this._startDragScrolling(e, 'mouse');
-    },
-
-    _onTouchStart(e) {
-        this._startDragScrolling(e, 'touch');
-    },
-
-    _onMouseMove(e) {
-        this._moveDragScroll(e, 'mouse');
-    },
-
-    _onTouchMove(e) {
-        this._moveDragScroll(e, 'touch');
-    },
-
-    _onMouseUp(e) {
-        this._stopDragScrolling(e, 'mouse');
-    },
-
-    _onTouchEnd(e) {
-        this._stopDragScrolling(e, 'touch');
-    },
-
-
     //#region COLUMN SCROLL
-    /**
-     * Создает или удаляет контроллер горизонтального скролла в зависимости от того, нужен ли он списку
-     *  should be called in the end of life cycle
-     */
-    _actualizeColumnScroll(options, isOnMount?: boolean): 'created' | 'actual' | 'destroyed' {
-        let result: 'created' | 'actual' | 'destroyed';
-
-        if (options.columnScroll) {
-            const scrollContainer = this._children.gridWrapper;
-            const contentContainer = this._children.grid;
-            const needBySize = ColumnScroll.shouldDrawColumnScroll(scrollContainer, contentContainer, options.isFullGridSupport);
-
-            if (needBySize) {
-                if (!this._columnScrollController) {
-                    this._createColumnScroll(options);
-                    this._columnScrollController.updateSizes((newSizes) => {
-                        if (isOnMount && this._options.columnScrollStartPosition === 'end') {
-                            this._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
-                        }
-                        this._saveColumnScrollSizes(newSizes);
-                        this._updateColumnScrollData();
-                    }, true);
-                    result = 'created';
-                } else {
-                    result = 'actual';
-                }
-            } else {
-                this._destroyColumnScroll();
-                result = 'destroyed';
-            }
-        } else {
-            this._destroyColumnScroll();
-            result = 'destroyed';
-        }
-
-        return result;
-    },
-
-    _createColumnScroll(options): void {
-        this._columnScrollController = new ColumnScroll({
-            isFullGridSupport: options.isFullGridSupport,
-            needBottomPadding: options._needBottomPadding,
-            stickyColumnsCount: options.stickyColumnsCount,
-            hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
-            theme: options.theme,
-            backgroundStyle: options.backgroundStyle,
-            isEmptyTemplateShown: options.needShowEmptyTemplate
-        });
-        const uniqueSelector = this._columnScrollController.getTransformSelector();
-        this._columnScrollContainerClasses = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${uniqueSelector}`;
-        this._columnScrollShadowClasses = { start: '', end: '' };
-
-        if (this._isDragScrollingEnabled(options) && !this._dragScrollController) {
-            this._initDragScroll(options);
-        }
-
-        this._columnScrollController.setContainers({
-            scrollContainer: this._children.gridWrapper,
-            contentContainer: this._children.grid,
-            stylesContainer: this._children.columnScrollStylesContainer
-        });
-    },
-
-    _updateColumnScrollBySideOptions(oldOptions, newOptions): void {
-        const columnScrollStatus = this._actualizeColumnScroll(newOptions);
-        if (columnScrollStatus === 'destroyed') {
-            return;
-        }
-
-        const stickyColumnsCountChanged = newOptions.stickyColumnsCount !== oldOptions.stickyColumnsCount;
-        const multiSelectVisibilityChanged = newOptions.multiSelectVisibility !== oldOptions.multiSelectVisibility;
-        const dragScrollingChanged = newOptions.dragScrolling !== oldOptions.dragScrolling;
-        const columnsChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
-            { template: true, resultTemplate: true });
-        let columnScrollChanged = false;
-
-        if (
-            columnScrollChanged ||
-            stickyColumnsCountChanged ||
-            multiSelectVisibilityChanged ||
-            columnsChanged
-        ) {
-
-            // Если горизонтльный скролл был только что создан, то он хранит актуальные размеры.
-            if (columnScrollStatus !== 'created') {
-
-                // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
-                this._columnScrollController.updateSizes((newSizes) => {
-                    this._saveColumnScrollSizes(newSizes);
-                    this._updateColumnScrollData();
-                }, true);
-            }
-        } else if (dragScrollingChanged && newOptions.dragScrolling) {
-            // При включении перетаскивания не нужно ничего перерисовывать. Нужно просто отдать контроллеру перетаскивания размеры.
-            // Сделать при инициализации это нельзя, т.к. контроллеры drag и scroll создаются на разных хуках (before и after update соотв.)
-            // Создание dragScroll на afterUpdate вынудит делать _forceUpdate для обновления состояний (курсор над записями).
-            // Создание columnScroll на beforeUpdate невозможно, т.к. контроллер создается только по мере необходимости.
-            this._updateColumnScrollData();
-        }
-    },
-
-    _updateColumnScroll(oldOptions, newOptions): void {
-        const isColumnScrollChanged = newOptions.columnScroll !== oldOptions.columnScroll;
-
-        // Если горизонтального скролла не было и нет либо он только появился - то ничего не делаем.
-        // Создание произойдет после обновления, когда все размеры будут актуальны.
-        if (isColumnScrollChanged && newOptions.columnScroll || !isColumnScrollChanged && !newOptions.columnScroll) {
-            return;
-        }
-
-        // Выключение горизонтального скролла приводит к разрушению контроллера.
-        // Попадаем сюда если опция columnScroll поменялась и стала false.
-        if (!newOptions.columnScroll) {
-            this._destroyColumnScroll();
-            return;
-        }
-
-        // Включение/выключение перемещения мышкой приводит к созданию/разрушению контроллера.
-        // Попадаем сюда, если опция columnScroll не поменялась и равна true.
-        if (oldOptions.dragScrolling !== newOptions.dragScrolling) {
-            if (newOptions.dragScrolling) {
-                this._initDragScroll(newOptions);
-            } else {
-                this._destroyDragScroll();
-            }
-            return;
-        }
-
-        // При включении/выключении перемещения записей мышкой необходимо уведомить контроллер скроллирования перетаскиванием.
-        // Попадаем сюда, если опции columnScroll и dragScrolling не поменялась и равны true.
-        if (newOptions.dragScrolling && oldOptions.itemsDragNDrop !== newOptions.itemsDragNDrop) {
-            this._dragScrollController.setStartDragNDropCallback(!newOptions.itemsDragNDrop ? null : () => {
-                this._setGrabbing(false);
-                newOptions.startDragNDropCallback();
-            });
-        }
-    },
-
-    _destroyColumnScroll(): void {
-        if (this._columnScrollController) {
-            this._columnScrollController.destroy();
-            this._columnScrollController = null;
-            this._columnScrollContainerClasses = COLUMN_SCROLL_JS_SELECTORS.CONTAINER;
-            this._columnScrollShadowClasses = null;
-            this._destroyDragScroll();
-        }
-    },
 
     isColumnScrollVisible(): boolean {
-        return this._columnScrollController && this._columnScrollController.isVisible() && (
+        return !!this._columnScrollViewController?.isVisible() && (
             !!this._listModel.getCount() ||
             this._listModel.isEditing() ||
             this._options.headerVisibility === 'visible' ||
             this._options.headerInEmptyListVisible === true
         );
     },
-    _saveColumnScrollSizes(newSizes): void {
-        this._contentSizeForHScroll = newSizes.contentSizeForScrollBar;
-        this._horizontalScrollWidth = newSizes.scrollWidth;
-        this._containerSize = newSizes.containerSize;
-        this._fixedColumnsWidth = newSizes.fixedColumnsWidth;
-        this._scrollableColumnsWidth = newSizes.scrollableColumnsWidth;
+
+    _getColumnScrollFakeShadowStyles(position: 'start' | 'end'): string {
+        return this._columnScrollViewController.getColumnScrollFakeShadowStyles(position);
     },
-    _updateColumnScrollData(): void {
-        this._updateColumnScrollShadowClasses();
-        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-        this._dragScrollController?.updateScrollData({
-            scrollLength: this._columnScrollController.getScrollLength(),
-            scrollPosition: this._horizontalScrollPosition
+    _getColumnScrollFakeShadowClasses(position: 'start' | 'end'): string {
+        return this._columnScrollViewController.getColumnScrollFakeShadowClasses(position, {
+            needBottomPadding: this._options.needBottomPadding
         });
     },
-    _updateColumnScrollShadowClasses(options = this._options): void {
-        const start = this._getColumnScrollShadowClasses(options, 'start');
-        const end = this._getColumnScrollShadowClasses(options, 'end');
 
-        if (!this._columnScrollShadowClasses) {
-            this._columnScrollShadowClasses = {};
-        }
-        if (this._columnScrollShadowClasses.start !== start || this._columnScrollShadowClasses.end !== end) {
-            this._columnScrollShadowClasses = { start, end };
-        }
-    },
-    _getColumnScrollShadowClasses(options, position: 'start' | 'end'): string {
-        if (this._showFakeGridWithColumnScroll && options.columnScrollStartPosition === 'end') {
-            let classes = '';
-            if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
-                classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
-            }
-            return classes + ColumnScroll.getShadowClasses({
-                position,
-                isVisible: position === 'start',
-                theme: options.theme,
-                backgroundStyle: options.backgroundStyle,
-                needBottomPadding: options.needBottomPadding
-            });
-        }
-        return this._columnScrollController.getShadowClasses(position);
-    },
-    _getColumnScrollFakeShadowStyles(options, position: 'start' | 'end'): string {
-        if (this._showFakeGridWithColumnScroll && options.columnScrollStartPosition === 'end') {
-            if (position === 'end') {
-                return '';
-            }
-
-            let offsetLeft = 0;
-
-            for (let i = 0; i < options.columns.length && i < options.stickyColumnsCount; i++) {
-                if (!(options.columns[i].width && options.columns[i].width.indexOf('px') !== -1)) {
-
-                } else {
-                    offsetLeft += Number.parseInt(options.columns[i].width);
-                }
-            }
-
-            return `left: ${offsetLeft}px; z-index: 5;`
-        }
-        return '';
-    },
-    _setHorizontalScrollPosition(value: number): void {
-        if (this._horizontalScrollPosition !== value) {
-            this._horizontalScrollPosition = value;
-        }
-        this._children.horizontalScrollThumb?.setPosition(value);
-    },
-    _onGridWrapperWheel(e) {
-        if (this.isColumnScrollVisible()) {
-            this._columnScrollController.scrollByWheel(e);
-            this._scrollToColumn();
-        }
-    },
-    _scrollToColumn(): void {
-        this._columnScrollController.scrollToColumnWithinContainer(this._children.header || this._children.results);
-        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-        this._updateColumnScrollData();
-    },
-    _horizontalPositionChangedHandler(e, newScrollPosition: number): void {
-        e.stopPropagation();
-        this._columnScrollController.setScrollPosition(newScrollPosition);
-        this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-        this._updateColumnScrollData();
-    },
     _getHorizontalScrollBarStyles(): string {
-        if (!this.isColumnScrollVisible()) {
+        if (!(this._columnScrollViewController && this.isColumnScrollVisible())) {
             return 'display: none;';
         }
-
-        let offset = 0;
-        let lastCellOffset = 0;
-
-        // Учёт колонки с чекбоксами для выбора записей
-        if (this._listModel.needMultiSelectColumn()) {
-            offset += 1;
-        }
-
-        // Учёт колонки(или колонок) с лесенкой
-        offset += GridLadderUtil.stickyLadderCellsCount(
+        return this._columnScrollViewController.getScrollBarStyles(GridLadderUtil.stickyLadderCellsCount(
             this._options.columns,
             this._options.stickyColumn,
             this._listModel.getDraggingItem()
-        );
-
-        if (!!this._options.columns && this._options.itemActionsPosition !== 'custom') {
-            lastCellOffset++;
-        }
-
-        const stickyColumnsCount = this._listModel.getStickyColumnsCount();
-        const columns = this._listModel.getColumnsConfig();
-
-        return `grid-column: ${stickyColumnsCount + 1 + offset} / ${(columns.length + lastCellOffset + 1) + offset};`
-             + ` width: ${this._horizontalScrollWidth}px;`;
-    },
-    _onThumbMouseUp(e) {
-        e.stopPropagation();
-        this._scrollToColumn();
+        ));
     },
 
-    //#endregion
-
-    _isDragScrollingEnabled(options): boolean {
-        const hasOption = typeof options.dragScrolling === 'boolean';
-        return hasOption ? options.dragScrolling : !options.itemsDragNDrop;
-    },
-
-    _initDragScroll(options, pure?: boolean): void {
-        const startDragNDropCallback = !options.startDragNDropCallback ? null : () => {
-            this._setGrabbing(false);
-            options.startDragNDropCallback();
-        };
-        this._dragScrollController = new DragScroll({
-            startDragNDropCallback,
-            dragNDropDelay: options.dragNDropDelay,
-            onOverlayShown: () => {
-                this._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_ACTIVATED}`;
-            },
-            onOverlayHide: () => {
-                this._setGrabbing(false);
-                this._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
+    _createColumnScroll(options): ColumnScrollViewController {
+        return new ColumnScrollViewController({
+            ...options,
+            hasMultiSelectColumn: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom',
+            isActivated: !this._showFakeGridWithColumnScroll,
+            onOverlayChangedCallback: (newState) => {
+                if (newState) {
+                    this._applyColumnScrollChanges();
+                }
             }
         });
-        this._setGrabbing(false);
-        this._dragScrollOverlayClasses = `${DRAG_SCROLL_JS_SELECTORS.OVERLAY} ${DRAG_SCROLL_JS_SELECTORS.OVERLAY_DEACTIVATED}`;
     },
 
-    _setGrabbing(isGrabbing: boolean): void {
-        if (this._isGrabbing !== isGrabbing) {
-            this._isGrabbing = isGrabbing;
-            this._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
+    _actualizeColumnScroll(options) {
+        return this._columnScrollViewController?.actualizeColumnScroll({
+            ...options,
+            scrollBar: this._children.horizontalScrollBar,
+            containers: {
+                header: this._children.header || this._children.results,
+                wrapper: this._children.gridWrapper as HTMLElement,
+                content: this._children.grid as HTMLElement,
+                styles: this._children.columnScrollStylesContainer as HTMLStyleElement
+            },
+            hasMultiSelectColumn: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom',
+            isActivated: !this._showFakeGridWithColumnScroll,
+        }).then((result) => {
+            if (result.status === 'created') {
+                this._applyColumnScrollChanges();
+            }
+        });
+    },
+
+    _applyColumnScrollChanges() {
+        this._columnScrollWrapperClasses = this._columnScrollViewController.getClasses('wrapper');
+        this._columnScrollContentClasses = this._columnScrollViewController.getClasses('content');
+        this._dragScrollOverlayClasses = this._columnScrollViewController.getClasses('overlay');
+
+        const params = { needBottomPadding: this._options.needBottomPadding };
+        const start = this._columnScrollViewController.getClasses('shadowStart', params);
+        const end = this._columnScrollViewController.getClasses('shadowEnd', params);
+
+        if (this._columnScrollShadowClasses?.start !== start || this._columnScrollShadowClasses?.end !== end) {
+            this._columnScrollShadowClasses = { start, end };
+        }
+
+        const sizes = this._columnScrollViewController.getSizes();
+        this._contentSizeForHScroll = sizes.contentSizeForHScroll;
+        this._horizontalScrollWidth = sizes.scrollWidth;
+        this._fixedColumnsWidth = sizes.fixedColumnsWidth;
+        this._scrollableColumnsWidth = sizes.scrollableColumnsWidth;
+    },
+
+    _onHorizontalPositionChangedHandler(e, newScrollPosition: number): void {
+        this._columnScrollViewController.onPositionChanged(newScrollPosition);
+        this._applyColumnScrollChanges();
+    },
+
+    _onGridWrapperWheel(e) {
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
+            this._columnScrollViewController.onScrollByWheel(e);
+            this._applyColumnScrollChanges();
         }
     },
 
-    _startDragScrolling(e, startBy: 'mouse' | 'touch'): void {
-        if (this.isColumnScrollVisible() && this._dragScrollController) {
-            let isGrabbing: boolean;
-            if (startBy === 'mouse') {
-                isGrabbing = this._dragScrollController.onViewMouseDown(e);
-            } else {
-                // clientX - координата относительно документа, чтобы получить координату
-                // относиттельно начала списка, нужно учесть отступ самого списка
-                const touchClientX = e.nativeEvent.touches[0].clientX;
-                const containerLeft = this._children.columnScrollContainer.getBoundingClientRect().left;
-                if (!isInLeftSwipeRange(this._fixedColumnsWidth, this._scrollableColumnsWidth, touchClientX - containerLeft)) {
-                    isGrabbing = this._dragScrollController.onViewTouchStart(e);
-                } else {
-                    this._leftSwipeCanBeStarted = true;
-                }
-            }
-            this._setGrabbing(isGrabbing);
-        }
+    _onScrollBarMouseUp(e) {
+        e.stopPropagation();
+        this._columnScrollViewController.onScrollEnded();
+        this._applyColumnScrollChanges();
     },
-    _moveDragScroll(e, startBy: 'mouse' | 'touch') {
-        if (this.isColumnScrollVisible() && this._dragScrollController) {
-            let newPosition: number;
-            if (startBy === 'mouse') {
-                newPosition = this._dragScrollController.onViewMouseMove(e);
-            } else {
-                newPosition = this._dragScrollController.onViewTouchMove(e);
-            }
-            if (newPosition !== null) {
-                if (startBy === 'touch') {
-                    this._notify('closeSwipe', []);
-                }
-                this._columnScrollController.setScrollPosition(newPosition);
-                this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-                this._updateColumnScrollData();
+
+    _onStartDragScrolling(e, startBy: 'mouse' | 'touch'): void {
+        this._columnScrollViewController?.startDragScrolling(e, startBy);
+        this._applyColumnScrollChanges();
+    },
+
+    _onMoveDragScroll(e, startBy: 'mouse' | 'touch') {
+        if (this._columnScrollViewController) {
+            const oldPosition = this._columnScrollViewController.getScrollPosition();
+            const newPosition = this._columnScrollViewController.moveDragScroll(e, startBy);
+
+            if (oldPosition !== newPosition) {
+                this._applyColumnScrollChanges();
             }
         }
     },
-    _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
-        if (this.isColumnScrollVisible() && this._dragScrollController) {
-            this._scrollToColumn();
-            if (startBy === 'mouse') {
-                this._dragScrollController.onViewMouseUp(e);
-            } else {
-                this._dragScrollController.onViewTouchEnd(e);
-                this._leftSwipeCanBeStarted = false;
-            }
-            this._setGrabbing(false);
-        }
-    },
-    _onDragScrollOverlayMouseMove(e): void {
-        if (this.isColumnScrollVisible() && this._dragScrollController) {
-            const newPosition = this._dragScrollController.onOverlayMouseMove(e);
-            if (newPosition !== null) {
-                this._columnScrollController.setScrollPosition(newPosition);
-                this._updateColumnScrollData();
-            }
-        }
-    },
-    _onDragScrollOverlayTouchMove(e): void {
-        if (this.isColumnScrollVisible() && this._dragScrollController) {
-            const newPosition = this._dragScrollController.onOverlayTouchMove(e);
-            if (newPosition !== null) {
-                this._columnScrollController.setScrollPosition(newPosition);
-                this._updateColumnScrollData();
-            }
-        }
-    },
-    _onDragScrollOverlayMouseUp(e) {
-        this._scrollToColumn();
-        this._dragScrollController?.onOverlayMouseUp(e);
-    },
-    _onDragScrollOverlayTouchEnd(e) {
-        this._scrollToColumn();
-        this._dragScrollController?.onOverlayTouchEnd(e);
-    },
-    _onDragScrollOverlayMouseLeave(e) {
-        this._dragScrollController?.onOverlayMouseLeave(e);
-    },
-    _destroyDragScroll(): void {
-        if (this._dragScrollController) {
-            this._dragScrollController.destroy();
-            this._dragScrollController = null;
-            this._dragScrollOverlayClasses = '';
-        }
+
+    _onStopDragScrolling(e, startBy: 'mouse' | 'touch') {
+        this._columnScrollViewController?.stopDragScrolling(e, startBy);
+        this._applyColumnScrollChanges();
     },
 
     _resizeHandler(): void {
-        if (this._options.columnScroll) {
-            if (this._actualizeColumnScroll(this._options) === 'actual') {
-                this._columnScrollController.updateSizes((newSizes) => {
-                    this._saveColumnScrollSizes(newSizes);
-                    this._updateColumnScrollData();
-                });
-            }
-        }
+        this._actualizeColumnScroll(this._options);
     }
+
+    //#endregion
 });
 
 GridView._theme = ['Controls/grid', 'Controls/Classes'];

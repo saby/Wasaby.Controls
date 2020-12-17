@@ -702,15 +702,15 @@ var
                 if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
                     classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
                 }
-                return classes + ColumnScroll.getShadowClasses({
-                    position,
+                return classes + ColumnScroll.getShadowClasses(position, {
                     isVisible: position === 'start',
                     theme: options.theme,
                     backgroundStyle: options.backgroundStyle,
-                    needBottomPadding: options.needBottomPadding
                 });
             }
-            return this._columnScrollController.getShadowClasses(position);
+            return this._columnScrollController.getShadowClasses(position, {
+                needBottomPadding: options.needBottomPadding
+            });
         },
 
         _getColumnScrollFakeShadowStyles(options, position: 'start' | 'end'): string {

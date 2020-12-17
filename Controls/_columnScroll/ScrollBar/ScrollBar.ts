@@ -30,6 +30,7 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
 
     _onPositionChanged(e, newPosition): void {
         e.stopPropagation();
+        this._position = newPosition;
         this._notify('positionChanged', [newPosition]);
     }
 }
