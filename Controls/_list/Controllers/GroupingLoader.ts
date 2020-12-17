@@ -41,4 +41,8 @@ export default class GroupingLoader {
     resetLoadedGroups(): void {
         this._loadedGroups = {};
     }
+
+    destroy(): void {
+        this.resetLoadedGroups();
+    }
 }
