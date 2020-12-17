@@ -1,6 +1,6 @@
 import {TreeItem} from 'Controls/display';
 import PropertyGridCollection from './PropertyGridCollection';
-import {DEFAULT_EDITORS} from './Constants';
+import {DEFAULT_EDITORS, DEFAULT_VALIDATORS} from './Constants';
 import {Enum} from 'Types/collection';
 import * as getType from 'Core/helpers/getType';
 import {Model} from 'Types/entity';
@@ -19,7 +19,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
     getEditorTemplateName(): string {
         const itemContents = this.getContents();
-        const editorTemplateName = itemContents.get('editorTemplateName');
+        const editorTemplateName = itemContents.get('editorTemplate.wml');
         const type = itemContents.get('type');
         const propertyValue = this._$propertyValue;
 
@@ -52,6 +52,23 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const editorOptions = itemContents.get('editorOptions') || {};
         editorOptions.propertyValue = this._$propertyValue;
         return editorOptions;
+    }
+
+    getValidateTemplateName(): string {
+        const editorOptions = this.getEditorOptions();
+        const type = this.getContents().get('type');
+        if (editorOptions.validators) {
+            return editorOptions.validatorTemplateName || DEFAULT_VALIDATORS[type];
+        }
+        return '';
+    }
+
+    getValidators(): Function[] {
+        return this.getEditorOptions().validators;
+    }
+
+    getPropertyValue(): any {
+        return this._$propertyValue;
     }
 
     setPropertyValue(editingObject: Object | Model | Record<string, any>): void {
