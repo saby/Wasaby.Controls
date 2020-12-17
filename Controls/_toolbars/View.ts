@@ -5,7 +5,7 @@ import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {StickyOpener} from 'Controls/popup';
-import {Controller as SourceController} from 'Controls/source';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
@@ -216,9 +216,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             filter[this._options.parentProperty] = itemKey;
             const sourceController = new SourceController({
                 source: this._options.menuSource,
-                keyProperty: this._options.keyProperty
+                keyProperty: this._options.keyProperty,
+                filter
             });
-            return sourceController.load(filter).then((items) => {
+            return sourceController.load().then((items) => {
                 this._menuItems[itemKey] = items;
                 const menuSource = this._createPrefetchProxy(this._options.menuSource, items);
                 return menuSource;

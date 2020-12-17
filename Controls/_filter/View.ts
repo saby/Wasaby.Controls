@@ -7,8 +7,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {isEqual} from 'Types/object';
-import {Controller as SourceController} from 'Controls/source';
-import {error as dataSourceError} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
@@ -303,7 +302,10 @@ var _private = {
         }
             // As the data source can be history source, then you need to merge the filter
         queryFilter = withHistory ? historyUtils.getSourceFilter(queryFilter, source) : queryFilter;
-        return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback((items) => {
+        const sourceController = _private.getSourceController(instance, source, navigation);
+        sourceController.setFilter(queryFilter);
+
+        return sourceController.load().addCallback((items) => {
             instance.items = items;
             if (dataLoadCallback) {
                 dataLoadCallback(items);
