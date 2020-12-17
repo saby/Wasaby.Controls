@@ -83,7 +83,7 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
                 newPosition = this._startPosition;
             } else {
                 newPosition = {
-                    index: this._model.getIndex(targetItem),
+                    index: this._model.getIndex(firstChild),
                     position: 'before',
                     dispItem: firstChild
                 };

@@ -111,7 +111,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      * @param parent Новый родительский узел
      */
     setParent(parent: TreeItem<T>): void {
-        this._$parent = parent;
+        if (this._$parent !== parent) {
+            this._$parent = parent;
+            this._nextVersion();
+        }
     }
 
     /**

@@ -2266,6 +2266,7 @@ export default class Collection<S extends Model = Model, T extends CollectionIte
         if (strategy && position) {
             strategy.setPosition(position);
             this._reIndex();
+            this._reSort();
             this.nextVersion();
         }
     }

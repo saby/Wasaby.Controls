@@ -25,6 +25,7 @@ import { IDragPosition } from './interface/IDragPosition';
 import DragStrategy from 'Controls/_display/itemsStrategy/Drag';
 import TreeDragStrategy from 'Controls/_display/itemsStrategy/TreeDrag';
 import { Model } from 'Types/entity';
+import { isEqual } from 'Types/object';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -343,22 +344,23 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setDragPosition(position: IDragPosition<T>): void {
+        if (!isEqual(this._previousDragPosition, position)) {
+            if (this._previousDragPosition && this._previousDragPosition.dispItem.isDragTargetNode()) {
+                this._previousDragPosition.dispItem.setDragTargetNode(false);
+                this._nextVersion();
+            }
+            this._previousDragPosition = this._currentDragPosition;
+        }
+        this._currentDragPosition = position;
+
         if (position.position === 'on') {
             const dragStrategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-            if (dragStrategy && dragStrategy.avatarItem !== position.dispItem) {
+            if (dragStrategy && dragStrategy.avatarItem !== position.dispItem && !position.dispItem.isDragTargetNode()) {
                 position.dispItem.setDragTargetNode(true);
                 this._nextVersion();
             }
             return;
         }
-
-        if (this._previousDragPosition !== this._currentDragPosition) {
-            if (this._previousDragPosition) {
-                this._previousDragPosition.dispItem.setDragTargetNode(false);
-            }
-            this._previousDragPosition = this._currentDragPosition;
-        }
-        this._currentDragPosition = position;
 
         super.setDragPosition(position);
     }

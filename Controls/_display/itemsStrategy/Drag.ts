@@ -75,7 +75,7 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         // Приводим пару параметров index и position к одному - index
         if (this._options.avatarIndex < newPosition.index && newPosition.position === 'before') {
             // нужна дополнительная проверка, т.к. при первом изменении позиции она не изменится при -1
-            newIndex = newPosition.index - 1 === this._options.avatarIndex ? newPosition.index : newPosition.index - 1;
+            newIndex = newPosition.index - 1;
         } else if (this._options.avatarIndex > newPosition.index && newPosition.position === 'after') {
             newIndex = newPosition.index + 1;
         } else {
@@ -199,16 +199,29 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
             itemsOrder[i - 1] = i;
         }
 
-        let i = 0, j = 0;
-        while (i < options.avatarIndex) {
-            j++;
-            if (options.filterMap[j]) {
-                i++;
+        const avatarIndex = this.getAvatarIndex(options.avatarIndex, options.filterMap);
+        itemsOrder.splice(avatarIndex, 0, 0);
+
+        return itemsOrder;
+    }
+
+    /**
+     * Возвращает индекс перетаскиваемой записи, учитывая скрытые записи
+     * @param avatarIndex
+     * @param filterMap
+     * @private
+     */
+    private static getAvatarIndex(avatarIndex: number, filterMap: boolean[]): number {
+        let countVisibleItem = 0;
+        let projectionIndex = 0;
+
+        while (countVisibleItem < avatarIndex) {
+            projectionIndex++;
+            if (filterMap[projectionIndex]) {
+                countVisibleItem++;
             }
         }
 
-        itemsOrder.splice(j, 0, 0);
-
-        return itemsOrder;
+        return projectionIndex;
     }
 }
