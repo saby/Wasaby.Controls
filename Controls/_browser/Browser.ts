@@ -25,7 +25,7 @@ import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
-import {ISearchControllerOptions} from 'Controls/_search/interface/ISearchController';
+import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {IMarkerListOptions} from 'Controls/_marker/interface';

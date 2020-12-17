@@ -102,7 +102,7 @@ export default interface IBaseItemTemplateOptions {
     * @name Controls/_list/interface/IBaseItemTemplateOptions#backgroundColorStyle
     * @cfg {Controls/_list/interface/IBaseItemTemplateOptions/BackgroundColorStyle.typedef} Настройка фона строки.
     * @remark 
-    * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight">руководство разработчика</a>.
+    * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#highlight руководство разработчика}.
     * @demo Controls-demo/list_new/ItemTemplate/BackgroundColorStyle/Index
     */
    backgroundColorStyle?: string;

@@ -1,7 +1,7 @@
 import {SearchResolver} from 'Controls/search';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import {ISearchResolverOptions} from 'Controls/_search/interface/ISearchResolver';
+import {ISearchResolverOptions} from 'Controls/_search/SearchResolver';
 
 const defaultOptions = {
    searchCallback: () => null,
