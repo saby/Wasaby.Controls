@@ -224,6 +224,10 @@ export default abstract class Row<T> {
         }
     }
 
+    protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
+        return {};
+    }
+
     protected _initializeColumns(): void {
         if (this._$columns) {
             const createMultiSelectColumn = this.needMultiSelectColumn();
@@ -235,7 +239,23 @@ export default abstract class Row<T> {
                 this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
             const factory = this._getColumnsFactory();
 
-            this._$columnItems = this._$columns.map((column) => factory({ column }));
+            this._$columnItems = [];
+            for (let columnIndex = 0; columnIndex < this._$columns.length; columnIndex++) {
+                const column = this._$columns[columnIndex];
+                const colspanParams = this._getColspanParams(column, columnIndex);
+                const { startColumn, endColumn, colspan } = colspanParams;
+                if (typeof startColumn === 'number' && typeof endColumn === 'number') {
+                    columnIndex = endColumn - 1;
+                } else if (typeof colspan === 'number') {
+                    columnIndex += colspan - 1;
+                }
+                this._$columnItems.push(factory({
+                    column,
+                    startColumn,
+                    endColumn,
+                    colspan
+                }));
+            }
 
             if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
                 this._$columnItems[0].setHiddenForLadder(true);
@@ -297,6 +317,7 @@ export default abstract class Row<T> {
         }
     }
 
+    // todo refactor
     prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
         return prepareColumns({
             columns,

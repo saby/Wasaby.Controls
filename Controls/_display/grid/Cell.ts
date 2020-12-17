@@ -19,6 +19,9 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
     column: IColumn;
     hiddenForLadder?: boolean;
+    startColumn?: number;
+    endColumn?: number;
+    colspan?: number;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -36,6 +39,9 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$owner: TOwner;
     protected _$column: IColumn;
     protected _$hiddenForLadder: boolean;
+    protected _$startColumn: number;
+    protected _$endColumn: number;
+    protected _$colspan: number;
 
     getInstanceId: () => string;
 
@@ -63,6 +69,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
+        // todo неправильно multiselect
         const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
         let endColumn;
 
@@ -91,8 +98,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (!this._$owner.isFullGridSupport()) {
             return '';
         }
-        const {startColumn, endColumn} = this._getColspanParams();
-        return `grid-column: ${startColumn} / ${endColumn};`;
+        const colspanParams = this._getColspanParams();
+        if (!colspanParams) {
+            return '';
+        }
+        return `grid-column: ${colspanParams.startColumn + 1} / ${colspanParams.endColumn + 1};`;
     }
 
     _getRowspanParams(): Required<IRowspanParams> {
@@ -466,5 +476,8 @@ Object.assign(Cell.prototype, {
     _instancePrefix: 'grid-cell-',
     _$owner: null,
     _$column: null,
-    _$hiddenForLadder: null
+    _$hiddenForLadder: null,
+    _$startColumn: null,
+    _$endColumn: null,
+    _$colspan: null
 });
