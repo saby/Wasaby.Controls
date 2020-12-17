@@ -26,7 +26,7 @@ export interface IBasePopupOptions {
     isDefaultOpener?: boolean;
     showIndicator?: boolean;
     indicatorConfig?: ILoadingIndicatorOptions;
-    dataLoaders?: IDataLoader[];
+    dataLoaders?: IDataLoader[][];
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     actionOnScroll?: string; // TODO Перенести на sticky, Удалить из baseOpener
     zIndex?: number; // TODO Compatible
@@ -233,7 +233,7 @@ export interface IBaseOpener {
 
 /**
  * @name Controls/_popup/interface/IBaseOpener#opener
- * @cfg {Node} Логический инициатор открытия всплывающего окна. Читайте подробнее {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @cfg {Node} Логический инициатор открытия всплывающего окна. Читайте подробнее {@link /doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
  */
 
 /**
@@ -542,22 +542,22 @@ export interface IBaseOpener {
 /**
  * @typedef {Object} EventHandlers
  * @description Функции обратного вызова позволяют подписаться на события всплывающего окна, открытого через статические методы.
- * Когда {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
+ * Когда {@link /doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
  * @property {Function} onOpen Функция обратного вызова, которая вызывается при открытии всплывающего окна.
- * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-open-window здесь}.
+ * Пример декларативной подписки на событие доступен {@link /doc/platform/developmentapl/interface-development/controls/openers/#event-open-window здесь}.
  * @property {Function} onClose Функция обратного вызова, которая вызывается при закрытии всплывающего окна.
- * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-close-window здесь}.
+ * Пример декларативной подписки на событие доступен {@link /doc/platform/developmentapl/interface-development/controls/openers/#event-close-window здесь}.
  * @property {Function} onResult Функция обратного вызова, которая вызывается в событии sendResult в шаблоне всплывающего окна.
- * Пример декларативной подписки на событие доступен {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/openers/#event-result здесь}.
+ * Пример декларативной подписки на событие доступен {@link /doc/platform/developmentapl/interface-development/controls/openers/#event-result здесь}.
  */
 
 /**
  * @name Controls/_popup/interface/IBaseOpener#dataLoaders
- * @cfg {DataLoader[]} Задает массив предзагрузчиков данных, необходимых для построения {@link template шаблона}. 
+ * @cfg {DataLoader[]} Задает массив предзагрузчиков данных, необходимых для построения {@link template шаблона}.
  * Опция используется для ускорения открытия окна, за счет распараллеливания получения данных и построения верстки.
  * Полученные данные будут переданы в опцию prefetchPromise.
  * @remark
- * Обратите внимение: модуль загрузчика данных - синглтон.
+ * **Обратите внимение: модуль загрузчика данных - синглтон.**
  * @example
  *
  * Описание модуля предзагрузки
@@ -568,7 +568,7 @@ export interface IBaseOpener {
  *   const STORE_KEY = 'MyStoreKey';
  *   const LOADER_KEY = 'MyLoaderKey';
  *
- *   export default class Base {
+ *   class MyLoader {
  *       init(): void {
  *           // Инициализация, если необходимо, вызывается перед вызовом loadData
  *       }
@@ -586,6 +586,9 @@ export interface IBaseOpener {
  *           });
  *       }
  *   }
+ *   // Загрузчик является синглтоном
+ *   export default new MyLoader();
+ * </pre>
  *
  * Описание предзагрузчика при открытии окна
  * <pre>
@@ -595,13 +598,15 @@ export interface IBaseOpener {
  *      _openStack() {
  *         const popupOptions = {
  *             template: 'MyPopupTemplate',
- *             dataLoaders: [{
- *                 key: 'myLoaderKey',
- *                 module: 'MyLoader',
- *                 params: {
- *                     param1: 'data1'
- *                 }
- *             }],
+ *             dataLoaders: [
+ *                 [{
+ *                     key: 'myLoaderKey',
+ *                     module: 'MyLoader',
+ *                     params: {
+ *                         param1: 'data1'
+ *                     }
+ *                 }]
+*              ],
  *             templateOptions: {
  *                 record: null
  *             }

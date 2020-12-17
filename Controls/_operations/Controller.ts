@@ -12,8 +12,8 @@ import { TSelectionType } from 'Controls/interface';
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/operations/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less">переменные тем оформления</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ руководство разработчика}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/Controller
  * @extends Core/Control
@@ -26,7 +26,7 @@ import { TSelectionType } from 'Controls/interface';
 /*
  * Container for content that can work with multiselection.
  * Puts selection in child context.
- * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/operations/'>here</a>.
+ * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/actions/operations/'>here</a>.
  *
  * @class Controls/_operations/Controller
  * @extends Core/Control

@@ -2,7 +2,7 @@
  * Шаблон, который по умолчанию используется для отображения элементов в контроле {@link Controls/grid:View Таблица}.
  *  
  * @class Controls/_grid/interface/ItemTemplate
- * @mixes Controls/_grid/interface/BaseItemTemplate
+ * @mixes Controls/_list/interface/BaseItemTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/IGridItemTemplate#itemTemplate
  * @see Controls/interface/IGridItemTemplate#itemTemplateProperty
@@ -17,6 +17,6 @@
  * </Controls.grid:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/item/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/item/ здесь}.
  * @public
  */

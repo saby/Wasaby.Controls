@@ -1,7 +1,7 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/treeGrid:View дереве}.
  * @class Controls/_treeGrid/interface/ItemTemplate
- * @mixes Controls/_list/interface/IBaseItemTemplateOptions
+ * @mixes Controls/_list/interface/IBaseItemTemplate
  * @author Авраменко А.С.
  * @see Controls/interface/ITreeGridItemTemplate#itemTemplate
  * @see Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
@@ -16,7 +16,7 @@
  * </pre>
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/templates/item/">руководство разработчика</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/templates/item/ руководство разработчика}
  *
  * @public
  */
@@ -59,7 +59,7 @@ export default interface IItemTemplateOptions {
      * @default s
      * @see expanderIcon
      * @remark
-     * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
+     * Каждому значению опции соответствует размер в px. Он зависит от {@link /doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
      */
     expanderSize?: string;
     /**
@@ -68,7 +68,7 @@ export default interface IItemTemplateOptions {
      * @default s
      * @see withoutLevelPadding
      * @remark
-     * Каждому значению опции соответствует размер в px. Он зависит от {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
+     * Каждому значению опции соответствует размер в px. Он зависит от {@link /doc/platform/developmentapl/interface-development/themes/ темы оформления} приложения.
      */
     levelIndentSize?: string;
 }

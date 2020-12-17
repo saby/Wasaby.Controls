@@ -318,7 +318,16 @@ define([
             }
          };
 
-         const target = tree.TreeControl._private.getTargetRow(event);
+         const treeControl = {
+            _children: {
+               baseControl: {
+                  getViewModel: () => {
+                     return {};
+                  }
+               }
+            }
+         }
+         const target = tree.TreeControl._private.getTargetRow(treeControl, event);
          assert.equal(event.target, target);
       });
 
@@ -1068,7 +1077,7 @@ define([
 
                   let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
                   treeControl._children.baseControl._afterUpdate({});
-                  treeControl._children.baseControl._beforePaint();
+                  treeControl._children.baseControl._componentDidUpdate();
                   afterUpdatePromise.then(function() {
                      try {
                         assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
@@ -1194,6 +1203,7 @@ define([
                       hideIndicator() {
                          isIndicatorHasBeenHidden = true;
                       },
+                      stopBatchAdding() {},
                       getSourceController() {
                          return {
                             load: (direction, key) => {

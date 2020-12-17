@@ -1,7 +1,7 @@
 /**
  * Шаблон, который по умолчанию используется для отображения элементов в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/ItemTemplate
- * @mixes Controls/_list/interface/IBaseItemTemplateOptions
+ * @mixes Controls/_list/interface/IBaseItemTemplate
  * @mixes Controls/_list/interface/IContentTemplateOptions
  * @author Авраменко А.С.
  * @see Controls/tile:View
@@ -21,7 +21,7 @@
  * </Controls.tile:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/tile/templates/item/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/tile/item/ здесь}.
  * @public
  * @demo Controls-demo/Tile/DifferentItemTemplates/CustomTemplate/Index
  */

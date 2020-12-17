@@ -164,7 +164,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * </pre>
  * @remark
  * Пользовательский шаблон получается путем конфигурации базового шаблона {@link Controls/list:EmptyTemplate}.
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/empty-list/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty-list/ руководство разработчика}.
  */
 
 /*ENG
@@ -193,7 +193,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Шаблон отображения подвала списка.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/footer/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ руководство разработчика}.
  * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
@@ -343,7 +343,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @name Controls/_list/interface/IList#itemsReadyCallback
  * @cfg {Function} Функция, которая вызывается, когда экземпляр данных получен из источника и подготовлен к дальнейшей обработке контролом.
- * Функция вызывается единожды в рамках {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
+ * Функция вызывается единожды в рамках {@link /doc/platform/developmentapl/interface-development/ui-library/control/#life-cycle-phases жизненного цикла} на этапе mount.
  * @remark
  * Единственный аргумент функции — **items** с типом данных {@link Types/collection:RecordSet}, где содержатся загруженные данные.
  * @example
@@ -665,7 +665,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/paddings/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/paddings/ руководство разработчика}.
  */
 
 /*ENG
