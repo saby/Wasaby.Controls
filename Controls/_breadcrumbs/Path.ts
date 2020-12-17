@@ -42,23 +42,28 @@ interface IReceivedState {
 
 class BreadCrumbs extends Control<IBreadCrumbsOptions> {
     protected _template: TemplateFunction = template;
-    protected _visibleItems =  [];
-    protected _viewUpdated: boolean = false;
-    protected _notifyHandler = tmplNotify;
+    protected _visibleItems: any[] =  [];
+    protected _notifyHandler: Function = tmplNotify;
     protected _width: number = 0;
     protected _dotsWidth: number = 0;
-    protected _indexEdge: number = 0;
     protected _items: Record[] = [];
     protected calculateBreadcrumbsUtil: object;
     protected _arrowWidth: number;
     protected _paddingRight: number;
 
-    protected _beforeMount(options?: IBreadCrumbsOptions, contexts?: object, receivedState?: IReceivedState): Promise<IReceivedState> | void {
+    protected _beforeMount(
+        options?: IBreadCrumbsOptions,
+        contexts?: object,
+        receivedState?: IReceivedState
+    ): Promise<IReceivedState> | void {
         if (options.items && options.items.length > 0) {
             if (!options.containerWidth) {
                 this._visibleItems = PrepareDataUtil.drawBreadCrumbsItems(options.items);
             } else {
-                //утилиту PrepareDataUtil для основных преобразований крошек грузим всегда. Утилиту для расчета ширины только тогда, когда нам передают containerWidth
+                /*
+                 * Утилиту PrepareDataUtil для основных преобразований крошек грузим всегда.
+                 * Утилиту для расчета ширины только тогда, когда нам передают containerWidth
+                 */
                 const arrPromise = [import('Controls/_breadcrumbs/Utils')];
                 if (!receivedState) {
                     arrPromise.push(loadFontWidthConstants());
