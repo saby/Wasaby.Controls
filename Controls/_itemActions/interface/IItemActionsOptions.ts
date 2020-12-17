@@ -18,14 +18,14 @@ export type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 
 /**
  * Интерфейс опций контрола, который работает с {@link Controls/_itemActions/Controller контроллером опций записи}.
- * @interface Controls/_itemActions/interface/IItemActionsOptions
+ * @interface Controls/_itemActions/interface/IItemActions
  * @public
  * @author Аверкиев П.А.
  */
 
 /*
  * Interface of options of Control that works with {@link Controls/_itemActions/Controller Actions controller}
- * @interface Controls/_itemActions/interface/IItemActionsOptions
+ * @interface Controls/_itemActions/interface/IItemActions
  * @public
  * @author Аверкиев П.А.
  */
@@ -39,7 +39,6 @@ export interface IItemActionsOptions {
 
     /*ENG
      * @cfg {Boolean} Determines whether context menu should be shown on right-click.
-     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
      * @default true
      */
     contextMenuVisibility?: boolean;
@@ -214,7 +213,7 @@ export interface IItemActionsOptions {
      */
 
     /*ENG
-     * @name Controls/_itemActions/interface/IItemActionsOptions#itemActionsProperty
+     * @name Controls/_itemActions/interface/IItemActions#itemActionsProperty
      * @cfg {String} Name of the item's property that contains item actions.
      */
     itemActionsProperty?: string;
@@ -255,7 +254,7 @@ export interface IItemActionsOptions {
 
     /*ENG
      * @cfg {TActionCaptionPosition} Determines where the caption of an item action will be displayed on swipe.
-     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FSwipe%2FScenarios">Example</a>.
+     * @demo Controls-demo/List/Swipe/Scenarios
      * @variant right Title will be displayed to the right of the action's icon.
      * @variant bottom Title will be displayed under the action's icon.
      * @variant none Title will not be displayed.
@@ -365,7 +364,7 @@ export interface IItemActionsOptions {
 
 /**
  * @event Происходит при клике по {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
- * @name Controls/_itemActions/interface/IItemActionsOptions#actionClick
+ * @name Controls/_itemActions/interface/IItemActions#actionClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Controls/itemActions:IItemAction} action Объект с конфигурацией опции записи, по которой выполнили клик.
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
@@ -382,7 +381,7 @@ export interface IItemActionsOptions {
 
 /*ENG
  * @event Occurs when itemAction button is clicked.
- * @name Controls/_itemActions/interface/IItemActionsOptions#actionClick
+ * @name Controls/_itemActions/interface/IItemActions#actionClick
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Controls/itemActions:IItemAction} action Object with configuration of the clicked action.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.

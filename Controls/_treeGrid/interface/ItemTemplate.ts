@@ -16,7 +16,7 @@
  * </pre>
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/tree/templates/item/">руководство разработчика</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/templates/item/ руководство разработчика}
  *
  * @public
  */

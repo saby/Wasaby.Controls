@@ -1,10 +1,16 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
 import SearchResolver from 'Controls/_search/SearchResolver';
-import {ISearchInputContainerOptions} from '../interface';
 import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
+
+export interface ISearchInputContainerOptions extends IControlOptions {
+   searchDelay?: number | null;
+   minSearchLength?: number;
+   inputSearchValue?: string;
+   useStore?: boolean;
+}
 
 /**
  * Контрол-контейнер для полей ввода, реализует функционал проверки количества введённых символов,
@@ -36,15 +42,16 @@ import {constants} from 'Env/Env';
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
- * @implements Controls/_search/interface/ISearchInputContainer
- *
- * @public
- * @author Крюков Н.Ю.
+ * @extends Core/Control
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index
+ * @public
+ * @author Крюков Н.Ю.
  */
 export default class Container extends Control<ISearchInputContainerOptions> {
+   readonly '[Controls/_search/Input/Container]': boolean;
+
    protected _template: TemplateFunction = template;
 
    protected _value: string;
@@ -140,3 +147,48 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       };
    }
 }
+
+/**
+ * @name Controls/_search/Input/Container#searchDelay
+ * @cfg {number|null} Время задержки перед поиском
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
+ */
+
+/**
+ * @name Controls/_search/Input/Container#minSearchLength
+ * @cfg {number} Минимальная длина значения для начала поиска
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
+ */
+
+/**
+ * @name Controls/_search/Input/Container#inputSearchValue
+ * @cfg {string} Значение строки ввода
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
+ */
+
+/**
+ * @name Controls/_search/Input/Container#useStore
+ * @cfg {boolean} Использовать ли хранилище Store вместо отправки события при разрешении на поиск
+ * @demo Controls-demo/Search/Explorer/Index
+ * @demo Controls-demo/Search/FlatList/Index
+ * @demo Controls-demo/Search/TreeView/Index
+ */
+
+/**
+ * @event Происходит при начале поиска
+ * @name Controls/_search/Input/Container#search
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {value} string Значение по которому производится поиск.
+ */
+
+/**
+ * @event Происходит при сбросе поиска
+ * @name Controls/_search/Input/Container#resetSearch
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ */
