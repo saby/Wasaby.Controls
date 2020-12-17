@@ -1255,6 +1255,19 @@ define(
                filter.View._private.setItems(view._configs.document, view._source[0], chain.factory(newItems).toArray());
                assert.deepEqual(historyItems.getRawData(), expectedResult);
             });
+
+            it('loadItemsFromSource', () => {
+               let actualFilter;
+               view._configs.document.sourceController = {
+                  load: (queryFilter) => {
+                     actualFilter = queryFilter;
+                     return Promise.reject();
+                  }
+               };
+               view._configs.document.historyId = 'testId';
+               filter.View._private.loadItemsFromSource(view._configs.document, view._source);
+               assert.deepStrictEqual(actualFilter, {historyId: 'testId'});
+            });
          });
 
          describe('View history', function() {
