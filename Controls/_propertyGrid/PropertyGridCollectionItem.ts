@@ -58,7 +58,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         const editorOptions = this.getEditorOptions();
         const type = this.getContents().get('type');
         if (editorOptions.validators) {
-            return editorOptions.validatorTemplateName || DEFAULT_VALIDATORS[type];
+            return editorOptions.validateTemplateName || DEFAULT_VALIDATORS[type];
         }
         return '';
     }
