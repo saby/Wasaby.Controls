@@ -134,33 +134,17 @@ export {
 };
 
 /**
- * Константы:
- * - groupConstants.hiddenGroup — константа для определения элемента hiddenGroup в {@link Controls/interface/IGroupedList#groupProperty groupProperty};
- * - editing.CANCEL — константа, которую можно вернуть в {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} для отмены редактирования.
- * - CursorDirection - enum, направление выборки при навигации по курсору.
- *
+ * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактированием по месту}.
  * @public
- */
-
-/*
- * Constants
- * <ul>
- *    <li>
- *       groupConstants.hiddenGroup - Constant for determining item in the hiddenGroup in the {@link Controls/interface/IGroupedList#groupProperty groupProperty}
- *    </li>
- *    <li>
- *       editing.CANCEL - Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel editing
- *    </li>
- *    <li>
- *       CursorDirection - enum, navigation direction variants for cursor navigation
- *    </li>
- * </ul>
- *
- * @class Controls/list
- * @public
- */
-
+ */ 
 const editing = {
+    /**
+     * С помощью этой константы можно отменить запуск {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
+     * Для этого константу следует вернуть из обработчика события {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit}.
+     */
+    /*
+     * Constant that can be returned in {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit} to cancel editing
+     */
     CANCEL: 'Cancel'
 };
 
