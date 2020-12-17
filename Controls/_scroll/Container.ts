@@ -259,7 +259,13 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             }
 
             // При инициализации не обновляем скрол бары. Инициализируем их по наведению мышкой.
-            if (this._scrollModel && this._wasMouseEnter) {
+            // Оптимизация отключена для ie. С оптимизацией некоректно работал :hover для скролбаров.
+            // На демке без наших стилей иногда не появляется скролбар по ховеру. Такое впечатление что не происходит
+            // paint после ховера и после снятия ховера. Изменение любых стилей через девтулсы исправляет ситуаци.
+            // Если покрасить подложку по которой движется скролл красным, то после ховера видно, как она перерисовыатся
+            // только в местах где по ней проехал скролбар.
+            // После отключения оптимизации проблема почему то уходит.
+            if (this._scrollModel && (this._wasMouseEnter || detection.isIE)) {
                 this._scrollbars.updateScrollState(this._scrollModel, this._container);
             }
 
@@ -539,7 +545,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     protected _headersResizeHandler(): void {
         const scrollbarOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.initialFixed);
         const scrollbarOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.initialFixed);
-        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom }, this._wasMouseEnter);
+        // Обновляе скролбары только после наведения мышкой.
+        // Оптимизация отключена для ie. С оптимизацией некоректно работал :hover для скролбаров.
+        // На демке без наших стилей иногда не появляется скролбар по ховеру. Такое впечатление что не происходит
+        // paint после ховера и после снятия ховера. Изменение любых стилей через девтулсы исправляет ситуаци.
+        // Если покрасить подложку по которой движется скролл красным, то после ховера видно, как она перерисовыатся
+        // только в местах где по ней проехал скролбар.
+        // После отключения оптимизации проблема почему то уходит.
+        this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
+            this._wasMouseEnter || detection.isIE);
         this._children.scrollBar?.setViewportSize(
             this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
     }
