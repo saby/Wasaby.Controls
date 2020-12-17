@@ -95,7 +95,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
@@ -1193,11 +1193,7 @@ const _private = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
             };
-            const scrollParams = {
-                scrollTop: self._scrollTop,
-                clientHeight: viewportSize,
-                scrollHeight: viewSize
-            };
+
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -1215,7 +1211,7 @@ const _private = {
                 self._recalcPagingVisible = true;
             }
             if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams, hasMoreData);
+                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1238,12 +1234,7 @@ const _private = {
             self._updateItemsHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
-                const scrollParams = {
-                    scrollTop: self._scrollTop,
-                    scrollHeight: params.scrollHeight,
-                    clientHeight: params.clientHeight
-                };
-                _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
+                _private.getScrollPagingControllerWithCallback(self, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
@@ -1264,7 +1255,7 @@ const _private = {
             self._isScrollShown = false;
         });
     },
-    getScrollPagingControllerWithCallback(self, scrollParams, callback) {
+    getScrollPagingControllerWithCallback(self, callback) {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
@@ -1273,15 +1264,16 @@ const _private = {
                     up: _private.hasMoreData(self, self._sourceController, 'up'),
                     down: _private.hasMoreData(self, self._sourceController, 'down')
                 };
-                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                _private.createScrollPagingController(self, hasMoreData).then((scrollPaging) => {
                         self._scrollPagingCtr = scrollPaging;
                         callback(scrollPaging);
                     });
                 }
         }
     },
-    createScrollPagingController(self, scrollParams, hasMoreData) {
+    createScrollPagingController(self, hasMoreData) {
         let elementsCount;
+        const scrollParams = self._getScrollParams();
         if (self._sourceController) {
             elementsCount = _private.getAllDataCount(self);
             if (typeof elementsCount !== 'number') {
@@ -1395,7 +1387,7 @@ const _private = {
     },
 
     updateScrollPagingButtons(self, scrollParams) {
-        _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
+        _private.getScrollPagingControllerWithCallback(self, (scrollPaging) => {
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -3646,10 +3638,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _getScrollParams(): IScrollParams {
+        let headersHeight = 0;
+        if (detection.isBrowserEnv) {
+            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+        }
         const scrollParams = {
             scrollTop: this._scrollTop,
             scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize
+            clientHeight: this._viewportSize - headersHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
@@ -4653,11 +4649,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         //При выборе первой или последней страницы крутим в край.
         if (page === 1) {
+            this._currentPage = page;
             _private.scrollToEdge(this, 'up');
-            this._currentPage = page;
         } else if (page === this._pagingCfg.pagesCount) {
-            _private.scrollToEdge(this, 'down');
             this._currentPage = page;
+            _private.scrollToEdge(this, 'down');
         } else {
 
             // При выборе некрайней страницы, проверяем,
