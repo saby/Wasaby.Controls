@@ -1,4 +1,4 @@
-import {DataSet, Memory, Query} from 'Types/source';
+import {DataSet, HierarchicalMemory, Query} from 'Types/source';
 import {
     BackgroundStyle,
     CatalogDetailViewMode,
@@ -7,7 +7,7 @@ import {
     ItemViewMode, TileSize
 } from 'Controls/catalog';
 
-export class DemoSource extends Memory {
+export class DemoSource extends HierarchicalMemory {
     query(query?: Query): Promise<DataSet> {
         const templateConfig = getFolderConfig(query);
 

@@ -3,10 +3,13 @@ import {Control, TemplateFunction} from 'UI/Base';
 import {CatalogDetailViewMode} from 'Controls/catalog';
 import {FlatHierarchy} from 'Controls-demo/_DemoData/Data';
 import {DemoSource} from 'Controls-demo/Catalog/DemoSource';
+// tslint:disable-next-line:ban-ts-ignore
+// @ts-ignore
 import * as Template from 'wml!Controls-demo/Catalog/Index';
 
 const baseSource = new DemoSource({
     keyProperty: 'id',
+    parentProperty: 'parent',
     data: FlatHierarchy.getData()
 });
 
@@ -16,7 +19,7 @@ export default class extends Control {
     /**
      * Источник данных для колонок каталога
      */
-    protected _baseSource: Memory = baseSource;
+    protected _baseSource: DemoSource = baseSource;
 
     /**
      * Источник данных для выбора режима отображения списка в detail-колонке

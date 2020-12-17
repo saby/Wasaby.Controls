@@ -1,9 +1,7 @@
 import {Logger} from 'UI/Utils';
-import {SyntheticEvent} from 'UI/Vdom';
 import {RecordSet} from 'Types/collection';
+import {ContextOptions} from 'Controls/context';
 import {Control, TemplateFunction} from 'UI/Base';
-import {IList} from 'Controls/_list/interface/IList';
-import {IItemTemplateOptions} from 'Controls/interface';
 import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
 import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguration';
@@ -13,12 +11,19 @@ import {ISourceControllerOptions, NewSourceController as SourceController} from 
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as ViewTemplate from 'wml!Controls/_catalog/View';
-
-type IListOptions = IList & IItemTemplateOptions;
+import {IControllerState} from 'Controls/_dataSource/Controller';
 
 interface IReceivedState {
     masterItems: RecordSet;
     detailItems: RecordSet;
+}
+
+/**
+ * Из метаданных RecordSet возвращает конфигурацию отображения списка
+ * в detail-колонке
+ */
+function getListConfiguration(items: RecordSet): IListConfiguration {
+    return items.getMetaData().listConfiguration;
 }
 
 /**
@@ -46,6 +51,8 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      */
     private _basePropStorageId: string;
 
+    private _dataOptionsContext: typeof ContextOptions;
+
     /**
      * Enum со списком доступных вариантов отображения контента в detail-колонке
      */
@@ -55,18 +62,19 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      * Текущий режим отображения списка в detail-колонке
      */
     protected get _currentViewMode(): CatalogDetailViewMode {
-        return this._detailViewMode;
+        return this._permanentlyDetailViewMode || this._defaultDetailViewMode;
     }
     protected set _currentViewMode(value: CatalogDetailViewMode) {
-        if (this._detailViewMode === value) {
+        if (this._defaultDetailViewMode === value) {
             return;
         }
 
-        this._detailViewMode = value;
+        this._defaultDetailViewMode = value;
         // Уведомляем о том, что изменился режим отображения списка в detail-колонке
         this._notify('viewModeChanged', [value]);
     }
-    private _detailViewMode: CatalogDetailViewMode;
+    private _defaultDetailViewMode: CatalogDetailViewMode;
+    private _permanentlyDetailViewMode: CatalogDetailViewMode;
 
     //region source
     protected _masterSource: ICrudPlus;
@@ -119,8 +127,10 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         this._masterMarkedKey = value;
         // Уведомляем о том, что изменилась корневая папка
         this._notify('rootChanged', [value]);
+
+        this._detailSourceController.setRoot(value);
         // Загрузим содержимое папки в detail-колонку
-        this.loadDetail().then();
+        // this.loadDetailData().then();
     }
     private _masterMarkedKey: string = null;
 
@@ -129,17 +139,10 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      */
     protected _masterTreeOptions: unknown;
 
+    /**
+     * Опции для Controls/explorer:View detail-колонке
+     */
     protected _detailExplorerOptions: unknown;
-
-    /**
-     * Опции для списочного представления списка в detail-колонке
-     */
-    protected _detailListOptions: IListOptions;
-
-    /**
-     * Опции для табличного представления списка в detail-колонке
-     */
-    protected _detailTreeOptions: unknown;
     //endregion
 
     // region life circle hooks
@@ -148,17 +151,19 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         contexts?: object,
         receivedState?: IReceivedState
     ): Promise<IReceivedState> | void {
-        this.updateState(options);
 
-        /*if (receivedState) {
+        this.updateState(options);
+        this._dataOptionsContext = new ContextOptions(this._detailSourceController.getState());
+
+        if (receivedState) {
             this._masterSourceController.setItems(receivedState.masterItems);
             this._detailSourceController.setItems(receivedState.detailItems);
             this.applyListConfiguration(
-                this.getListConfiguration(receivedState.detailItems),
+                getListConfiguration(receivedState.detailItems),
                 options
             );
-        } else*/ {
-            const detailDataPromise = this.loadDetail(options);
+        } else {
+            const detailDataPromise = this.loadDetailData(options);
             const masterDataPromise = this._masterSourceController.load() as Promise<RecordSet>;
 
             return Promise
@@ -175,7 +180,29 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
     protected _beforeUpdate(newOptions?: ICatalogOptions, contexts?: unknown): void {
         this.updateState(newOptions);
     }
+
+    protected _beforeUnmount(): void {
+        this._masterSourceController.destroy();
+        this._detailSourceController.destroy();
+    }
     //endregion
+
+    _getChildContext(): object {
+        return {
+            dataOptions: this._dataOptionsContext
+        };
+    }
+
+    private _updateContext(sourceControllerState: IControllerState): void {
+        const curContext = this._dataOptionsContext;
+
+        for (const i in sourceControllerState) {
+            if (sourceControllerState.hasOwnProperty(i)) {
+                curContext[i] = sourceControllerState[i];
+            }
+        }
+        curContext.updateConsumers();
+    }
 
     /**
      * Обновляет текущее состояние контрола в соответствии с переданными опциями
@@ -192,7 +219,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
 
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
         // об изменении значения, т.к. и так идет синхронизация опций
-        this._detailViewMode = options.viewMode;
+        this._defaultDetailViewMode = options.viewMode;
         this._masterMarkedKey = options.root;
 
         //region update master fields
@@ -221,10 +248,8 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
             );
         }
 
-        // На основании полученного состояния соберем опции для detail-списков
+        // На основании полученного состояния соберем опции для detail-explorer
         this._detailExplorerOptions = this.buildDetailExplorerOptions(options);
-        this._detailTreeOptions = this.buildDetailTreeOption(options);
-        this._detailListOptions = this.buildDetailListOption(options);
 
         this._listItemTemplate = options.detail.listItemTemplate || 'wml!Controls/_catalog/templates/ListItemTemplate';
         this._tileItemTemplate = options.detail.tileItemTemplate || 'wml!Controls/_catalog/templates/TileItemTemplate';
@@ -243,6 +268,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         const ops = master ? options.master : options.detail;
 
         return {
+            root: options.root,
             filter: ops?.filter,
             source: master ? this._masterSource : this._detailSource,
             keyProperty: master ? this._masterKeyProperty : this._detailKeyProperty,
@@ -251,7 +277,6 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         };
     }
 
-    //region build lists options
     /**
      * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
      * расположенном в master-колонке.
@@ -278,66 +303,23 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
             // а список всеравно в первую очередь смотрит на sourceController
             source: this._detailSource,
             keyProperty: this._detailKeyProperty,
-            sourceController: this._detailSourceController,
-            itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate'
+            sourceController: this._detailSourceController
         };
 
         return {...def, ...options.detail};
     }
 
-    /**
-     * По переданным опциям собирает конфигурацию для Controls/list:View,
-     * расположенном в detail-колонке.
-     */
-    private buildDetailListOption(options: ICatalogOptions = this._options): IListOptions {
-        const defaultCfg = this.buildDefaultDetailListOptions();
-        return  {...defaultCfg, ...options.detail.list} as IListOptions;
-    }
-
-    /**
-     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
-     * расположенном в detail-колонке.
-     */
-    private buildDetailTreeOption(options: ICatalogOptions = this._options): unknown {
-        const defaultCfg = {
-            ...this.buildDefaultDetailListOptions(),
-            nodeProperty: options.detail?.nodeProperty,
-            parentProperty: options.detail?.parentProperty
-        };
-
-        return {...defaultCfg, ...options.detail.table};
-    }
-
-    private buildDefaultDetailListOptions(): object {
-        return {
-            // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
-            // а список всеравно в первую очередь смотрит на sourceController
-            source: this._detailSource,
-            keyProperty: this._detailKeyProperty,
-            sourceController: this._detailSourceController,
-            itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate'
-        };
-    }
-    //endregion
-
-    protected setMasterMarkedKey(e: SyntheticEvent, value: string): void {
-        this._masterMarkedKey = value;
-        this.loadDetail().then();
-    }
-
-    private loadDetail(options: ICatalogOptions = this._options): Promise<RecordSet> {
+    private loadDetailData(options: ICatalogOptions = this._options): Promise<RecordSet> {
         return this._detailSourceController
-            .load(
-                undefined,
-                undefined,
-                this.buildDetailFilter(options)
-            )
+            .load(undefined, this._root)
             .then((items: RecordSet) => {
-                this.applyListConfiguration(
-                    this.getListConfiguration(items),
-                    options
-                );
+                // Применим новую конфигурацию к отображению detail-списка
+                this.applyListConfiguration(getListConfiguration(items), options);
                 this._detailSourceController.setItems(items);
+
+                // Обновим данные detail-списка
+                this._updateContext(this._detailSourceController.getState());
+
                 return items;
             })
             .catch((error) => {
@@ -346,16 +328,8 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
             });
     }
 
-    /**
-     * Из метаданных RecordSet возвращает конфигурацию отображения списка
-     * в detail-колонке
-     */
-    private getListConfiguration(items: RecordSet): IListConfiguration {
-        return items.getMetaData().listConfiguration;
-    }
-
     private buildDetailFilter(options: ICatalogOptions = this._options): QueryWhereExpression<unknown> {
-        const filter = this._detailSourceController.getFilter();
+        const filter = this._detailSourceController.getFilter() || {};
 
         if (options.detail?.parentProperty) {
             filter[options.detail.parentProperty] = this._root;
@@ -364,6 +338,9 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         return filter;
     }
 
+    /**
+     * Обновляет состояние контрола в соответствии с переданной настройкой отображения списков
+     */
     private applyListConfiguration(
         cfg: IListConfiguration,
         options: ICatalogOptions = this._options
@@ -372,15 +349,14 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
             return;
         }
 
-        this._imageItemTemplateCfg = {};
         this._listConfiguration = cfg;
+        this._imageItemTemplateCfg = {};
         this._currentViewMode = cfg.settings.clientViewMode;
 
         if (this._currentViewMode === CatalogDetailViewMode.list) {
             this._imageItemTemplateCfg.viewMode = cfg.list.photo.viewMode;
             this._imageItemTemplateCfg.position = cfg.list.photo.imagePosition;
             this._imageItemTemplateCfg.imageProperty = options.detail.imageProperty;
-            this._detailListOptions.backgroundStyle = cfg.list.list.backgroundStyle;
         }
     }
 

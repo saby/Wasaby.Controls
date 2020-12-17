@@ -18,43 +18,46 @@
 
    <ws:detail>
       <div class="controls-Catalog__detail">
-         <Controls.explorer:View
-            bind:root="_root"
-            viewMode="{{_currentViewMode}}"
-            scope="{{_detailExplorerOptions}}"
-         >
-            <ws:itemTemplate>
-               <ws:partial
-                  template="{{_listItemTemplate}}"
-                  imageCfg="{{_imageItemTemplateCfg}}"
-                  scope="{{itemTemplate}}"
-               />
-            </ws:itemTemplate>
-            <ws:tileItemTemplate>
-               <ws:partial
-                  template="{{_tileItemTemplate}}"
-                  scope="{{tileItemTemplate}}"
-                  imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
-                  imageViewMode="{{
-                     tileItemTemplate.itemData.dispItem.isNode()
-                        ? _listConfiguration.tile.photoNode.viewMode
-                        : _listConfiguration.tile.photoLeaf.viewMode
-                  }}"
-                  imageEffect="{{
-                     tileItemTemplate.itemData.dispItem.isNode()
-                        ? _listConfiguration.tile.photoNode.effect
-                        : _listConfiguration.tile.photoLeaf.effect
-                  }}"
-                  imageSize="{{_listConfiguration.tile.tile.size}}"
-                  description="{{tileItemTemplate.itemData.item.description}}"
-                  descriptionLines="{{
-                     tileItemTemplate.itemData.dispItem.isNode()
-                        ? _listConfiguration.tile.node.countLines
-                        : _listConfiguration.tile.leaf.countLines
-                  }}"
-               />
-            </ws:tileItemTemplate>
-         </Controls.explorer:View>
+
+         <Controls.list:Container>
+            <Controls.explorer:View
+               bind:root="_root"
+               viewMode="{{_currentViewMode}}"
+               scope="{{_detailExplorerOptions}}"
+            >
+               <ws:itemTemplate>
+                  <ws:partial
+                     template="{{_listItemTemplate}}"
+                     imageCfg="{{_imageItemTemplateCfg}}"
+                     scope="{{itemTemplate}}"
+                  />
+               </ws:itemTemplate>
+               <ws:tileItemTemplate>
+                  <ws:partial
+                     template="{{_tileItemTemplate}}"
+                     scope="{{tileItemTemplate}}"
+                     imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
+                     imageViewMode="{{
+                        tileItemTemplate.itemData.dispItem.isNode()
+                           ? _listConfiguration.tile.photoNode.viewMode
+                           : _listConfiguration.tile.photoLeaf.viewMode
+                     }}"
+                     imageEffect="{{
+                        tileItemTemplate.itemData.dispItem.isNode()
+                           ? _listConfiguration.tile.photoNode.effect
+                           : _listConfiguration.tile.photoLeaf.effect
+                     }}"
+                     imageSize="{{_listConfiguration.tile.tile.size}}"
+                     description="{{tileItemTemplate.itemData.item.description}}"
+                     descriptionLines="{{
+                        tileItemTemplate.itemData.dispItem.isNode()
+                           ? _listConfiguration.tile.node.countLines
+                           : _listConfiguration.tile.leaf.countLines
+                     }}"
+                  />
+               </ws:tileItemTemplate>
+            </Controls.explorer:View>
+         </Controls.list:Container>
 
 
          <!-- Список -->

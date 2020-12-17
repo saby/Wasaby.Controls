@@ -45,14 +45,9 @@
          nodeProperty="type"
          imageProperty="photo"
          parentProperty="parent"
-         filter="{{_detailFilter}}"
+         hasChildrenProperty="hasChild"
          columns="{{_detailTableColumns}}"
-      >
-         <!-- Конфигурируем табличное представление detail-списка -->
-         <ws:table
-            columns="{{_detailTableColumns}}"
-         />
-      </ws:detail>
+      />
    </Controls.catalog:View>
 
    <svg class="clip-svg" width="0" height="0">
