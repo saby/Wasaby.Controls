@@ -14,6 +14,9 @@
       />
    </ws:captionTemplate>
    <ws:contentTemplate>
+      imagePosition="{{imageCfg.position}}"
+      imageViewMode="{{imageCfg.viewMode}}"
+      imageProperty="{{imageCfg.imageProperty}}"
       {{_options.itemData.item.description}}
    </ws:contentTemplate>
    <ws:footerTemplate>

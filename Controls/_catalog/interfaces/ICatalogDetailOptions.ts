@@ -1,5 +1,6 @@
 import {ICrudPlus} from 'Types/source';
 import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
+import {TemplateFunction} from 'UI/Base';
 
 /**
  * Enum со списком доступных вариантов отображения контента в detail-колонке
@@ -57,11 +58,28 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
     table?: object;
     //endregion
 
+    //region item templates
+    /**
+     * Шаблон отображения итема плоского списка
+     */
+    listItemTemplate?: TemplateFunction | string;
+
+    /**
+     * Шаблон отображения итема плитки
+     */
+    tileItemTemplate?: TemplateFunction | string;
+    //endregion
+
+    /**
+     * Название поле записи в котором лежит ссылка на картинку
+     */
     imageProperty?: string;
 
     nodeProperty?: string;
 
     parentProperty?: string;
+
+    columns?: unknown;
 
     filter?: {[key: string]: unknown};
 }

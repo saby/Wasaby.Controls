@@ -8,7 +8,7 @@
 
    <ws:master>
       <Controls.scroll:Container>
-         <Controls.masterDetail:List on:markedKeyChanged="setMasterMarkedKey()">
+         <Controls.masterDetail:List bind:markedKey="_root">
             <Controls.treeGrid:View
                scope="{{_masterTreeOptions}}"
             />
@@ -18,33 +18,61 @@
 
    <ws:detail>
       <div class="controls-Catalog__detail">
-<!--         <Controls.explorer:View
-            bind:root="_masterMarkedKey"
-         ></Controls.explorer:View>-->
+         <Controls.explorer:View
+            bind:root="_root"
+            viewMode="{{_currentViewMode}}"
+            scope="{{_detailExplorerOptions}}"
+         >
+            <ws:itemTemplate>
+               <ws:partial
+                  template="{{_listItemTemplate}}"
+                  imageCfg="{{_imageItemTemplateCfg}}"
+                  scope="{{itemTemplate}}"
+               />
+            </ws:itemTemplate>
+            <ws:tileItemTemplate>
+               <ws:partial
+                  template="{{_tileItemTemplate}}"
+                  scope="{{tileItemTemplate}}"
+                  imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
+                  imageViewMode="{{
+                     tileItemTemplate.itemData.dispItem.isNode()
+                        ? _listConfiguration.tile.photoNode.viewMode
+                        : _listConfiguration.tile.photoLeaf.viewMode
+                  }}"
+                  imageEffect="{{
+                     tileItemTemplate.itemData.dispItem.isNode()
+                        ? _listConfiguration.tile.photoNode.effect
+                        : _listConfiguration.tile.photoLeaf.effect
+                  }}"
+                  imageSize="{{_listConfiguration.tile.tile.size}}"
+                  description="{{tileItemTemplate.itemData.item.description}}"
+                  descriptionLines="{{
+                     tileItemTemplate.itemData.dispItem.isNode()
+                        ? _listConfiguration.tile.node.countLines
+                        : _listConfiguration.tile.leaf.countLines
+                  }}"
+               />
+            </ws:tileItemTemplate>
+         </Controls.explorer:View>
 
 
          <!-- Список -->
-         <ws:if data="{{_currentViewMode === _viewModeEnum.list}}">
+<!--         <ws:if data="{{_currentViewMode === _viewModeEnum.list}}">
             <Controls.list:View scope="{{_detailListOptions}}">
-               <ws:itemTemplate>
-                  <ws:partial
-                     template="{{_listItemTemplate}}"
-                     imageCfg="{{_imageItemTemplateCfg}}"
-                     scope="{{itemTemplate}}"
-                  />
-               </ws:itemTemplate>
+
             </Controls.list:View>
          </ws:if>
 
-         <!-- Плитка -->
+         &lt;!&ndash; Плитка &ndash;&gt;
          <ws:if data="{{_currentViewMode === _viewModeEnum.tile}}">
             <Controls.tile:View scope="{{_detailListOptions}}"/>
          </ws:if>
 
-         <!-- Таблица -->
+         &lt;!&ndash; Таблица &ndash;&gt;
          <ws:if data="{{_currentViewMode === _viewModeEnum.table}}">
             <Controls.treeGrid:View scope="{{_detailTreeOptions}}"/>
-         </ws:if>
+         </ws:if>-->
       </div>
    </ws:detail>
 

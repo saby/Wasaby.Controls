@@ -38,6 +38,11 @@ export interface ICatalogOptions extends IControlOptions {
     keyProperty?: string;
 
     /**
+     * Идентификатор папки, содержимое которой нужно отобразить в каталоге
+     */
+    root?: string;
+
+    /**
      * Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
      */
     propStorageId?: string;

@@ -1,4 +1,4 @@
-<div>
+<div style="display: flex; flex-flow: column nowrap; flex: 1 1 100%;">
    <div class="controlDemo__input-row">
       <Controls.toggle:DoubleSwitch
          attr:class="controlsDemo_m"
@@ -21,6 +21,7 @@
       listSource="{{_baseSource}}"
       propStorageId="catalogDemoBase"
       bind:viewMode="_vm"
+      attr:style="flex: 1 1 100%;"
    >
       <!-- Задаем общую настройку master-колонки -->
       <ws:master
@@ -45,9 +46,8 @@
          imageProperty="photo"
          parentProperty="parent"
          filter="{{_detailFilter}}"
+         columns="{{_detailTableColumns}}"
       >
-         <ws:list>
-         </ws:list>
          <!-- Конфигурируем табличное представление detail-списка -->
          <ws:table
             columns="{{_detailTableColumns}}"

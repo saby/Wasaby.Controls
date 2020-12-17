@@ -3,6 +3,7 @@
  * @library Controls/catalog
  * @includes View Controls/_catalog/View
  * @includes ListItemTemplate Controls/_catalog/templates/ListItemTemplate
+ * @includes TileItemTemplate Controls/_catalog/templates/TileItemTemplate
  * @includes ICatalogOptions Controls/_catalog/View/interfaces/ICatalogOptions
  * @includes TileSize Controls/_catalog/View/interfaces/IListConfiguration
  * @includes ImageEffect Controls/_catalog/View/interfaces/IListConfiguration
@@ -16,7 +17,17 @@
  * @includes CatalogDetailViewMode Controls/_catalog/interfaces/ICatalogDetailOptions
  * @author Уфимцев Д.Ю.
  */
+// tslint:disable-next-line:ban-ts-ignore
+// @ts-ignore
 import * as ListItemTemplate from 'wml!Controls/_catalog/templates/ListItemTemplate';
+// tslint:disable-next-line:ban-ts-ignore
+// @ts-ignore
+import * as TileItemTemplate from 'wml!Controls/_catalog/templates/TileItemTemplate';
+
+export {
+    ListItemTemplate,
+    TileItemTemplate
+};
 
 export {default as View} from 'Controls/_catalog/View';
 export {ICatalogOptions} from './_catalog/interfaces/ICatalogOptions';
@@ -31,7 +42,3 @@ export {
     BackgroundStyle,
     IListConfiguration
 } from './_catalog/interfaces/IListConfiguration';
-
-export {
-    ListItemTemplate
-};

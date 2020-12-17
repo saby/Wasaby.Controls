@@ -10,6 +10,8 @@ import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguratio
 import {IImageItemTemplateCfg} from 'Controls/_catalog/interfaces/IImageItemTemplateCfg';
 import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
 import {ISourceControllerOptions, NewSourceController as SourceController} from 'Controls/dataSource';
+// tslint:disable-next-line:ban-ts-ignore
+// @ts-ignore
 import * as ViewTemplate from 'wml!Controls/_catalog/View';
 
 type IListOptions = IList & IItemTemplateOptions;
@@ -31,7 +33,7 @@ interface IReceivedState {
  * @public
  * @author Уфимцев Д.Ю.
  */
-export default class View extends Control<ICatalogOptions> {
+export default class View extends Control<ICatalogOptions, IReceivedState> {
 
     //region fields
     /**
@@ -56,9 +58,7 @@ export default class View extends Control<ICatalogOptions> {
         return this._detailViewMode;
     }
     protected set _currentViewMode(value: CatalogDetailViewMode) {
-        const changed = this._detailViewMode !== value;
-
-        if (!changed) {
+        if (this._detailViewMode === value) {
             return;
         }
 
@@ -89,20 +89,47 @@ export default class View extends Control<ICatalogOptions> {
     protected _listItemTemplate: TemplateFunction | string;
 
     /**
+     * Шаблон отображения итема плитки
+     */
+    protected _tileItemTemplate: TemplateFunction | string;
+
+    /**
+     * Текущая конфигурация списков, полученная из метаданных последнего запроса
+     * к данным для detail-колонки. Заполняется в {@link applyListConfiguration}
+     */
+    protected _listConfiguration: IListConfiguration;
+
+    /**
      * Настройки отображения картники
      */
     protected _imageItemTemplateCfg: IImageItemTemplateCfg = {};
     //endregion
 
     /**
-     * Идентификатор записи, выбранной в мастер списке
+     * Идентификатор папки содержимое которой в данный момент отображается
      */
-    protected _masterMarkedKey: string = null;
+    protected get _root(): string {
+        return this._masterMarkedKey;
+    }
+    protected set _root(value: string) {
+        if (this._masterMarkedKey === value) {
+            return;
+        }
+
+        this._masterMarkedKey = value;
+        // Уведомляем о том, что изменилась корневая папка
+        this._notify('rootChanged', [value]);
+        // Загрузим содержимое папки в detail-колонку
+        this.loadDetail().then();
+    }
+    private _masterMarkedKey: string = null;
 
     /**
      * Опции для списка в master-колонке
      */
     protected _masterTreeOptions: unknown;
+
+    protected _detailExplorerOptions: unknown;
 
     /**
      * Опции для списочного представления списка в detail-колонке
@@ -123,14 +150,14 @@ export default class View extends Control<ICatalogOptions> {
     ): Promise<IReceivedState> | void {
         this.updateState(options);
 
-        if (receivedState) {
+        /*if (receivedState) {
             this._masterSourceController.setItems(receivedState.masterItems);
             this._detailSourceController.setItems(receivedState.detailItems);
             this.applyListConfiguration(
                 this.getListConfiguration(receivedState.detailItems),
                 options
             );
-        } else {
+        } else*/ {
             const detailDataPromise = this.loadDetail(options);
             const masterDataPromise = this._masterSourceController.load() as Promise<RecordSet>;
 
@@ -166,6 +193,7 @@ export default class View extends Control<ICatalogOptions> {
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
         // об изменении значения, т.к. и так идет синхронизация опций
         this._detailViewMode = options.viewMode;
+        this._masterMarkedKey = options.root;
 
         //region update master fields
         this._masterSource = options.master?.listSource || options.listSource;
@@ -194,9 +222,12 @@ export default class View extends Control<ICatalogOptions> {
         }
 
         // На основании полученного состояния соберем опции для detail-списков
+        this._detailExplorerOptions = this.buildDetailExplorerOptions(options);
         this._detailTreeOptions = this.buildDetailTreeOption(options);
         this._detailListOptions = this.buildDetailListOption(options);
-        this._listItemTemplate = this._detailListOptions.itemTemplate;
+
+        this._listItemTemplate = options.detail.listItemTemplate || 'wml!Controls/_catalog/templates/ListItemTemplate';
+        this._tileItemTemplate = options.detail.tileItemTemplate || 'wml!Controls/_catalog/templates/TileItemTemplate';
         //endregion
     }
 
@@ -242,7 +273,7 @@ export default class View extends Control<ICatalogOptions> {
     }
 
     private buildDetailExplorerOptions(options: ICatalogOptions = this._options): unknown {
-        return {
+        const def = {
             // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
             // а список всеравно в первую очередь смотрит на sourceController
             source: this._detailSource,
@@ -250,6 +281,8 @@ export default class View extends Control<ICatalogOptions> {
             sourceController: this._detailSourceController,
             itemTemplate: 'wml!Controls/_catalog/templates/ListItemTemplate'
         };
+
+        return {...def, ...options.detail};
     }
 
     /**
@@ -304,7 +337,7 @@ export default class View extends Control<ICatalogOptions> {
                     this.getListConfiguration(items),
                     options
                 );
-
+                this._detailSourceController.setItems(items);
                 return items;
             })
             .catch((error) => {
@@ -325,7 +358,7 @@ export default class View extends Control<ICatalogOptions> {
         const filter = this._detailSourceController.getFilter();
 
         if (options.detail?.parentProperty) {
-            filter[options.detail.parentProperty] = this._masterMarkedKey;
+            filter[options.detail.parentProperty] = this._root;
         }
 
         return filter;
@@ -340,6 +373,7 @@ export default class View extends Control<ICatalogOptions> {
         }
 
         this._imageItemTemplateCfg = {};
+        this._listConfiguration = cfg;
         this._currentViewMode = cfg.settings.clientViewMode;
 
         if (this._currentViewMode === CatalogDetailViewMode.list) {
@@ -415,4 +449,10 @@ export default class View extends Control<ICatalogOptions> {
  * @event Событие об изменении режима отображения списка в detail-колонке
  * @name Controls/catalog:View#viewModeChanged
  * @param {CatalogDetailViewMode} viewMode Текущий режим отображения списка
+ */
+
+/**
+ * @event Событие об изменении текущей корнево папки
+ * @name Controls/catalog:View#rootChanged
+ * @param {string} root Текущая корневая папка
  */

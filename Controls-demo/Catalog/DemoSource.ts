@@ -88,7 +88,7 @@ function getFolderConfig(query?: Query): IListConfiguration {
         table: TABLE_CFG
     };
 
-    if (filter.parent === null) {
+    if (filter.parent == null) {
         result.settings.clientViewMode = CatalogDetailViewMode.list;
         return result;
     }
