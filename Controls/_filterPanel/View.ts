@@ -11,10 +11,17 @@ import * as clone from 'Core/core-clone';
  *
  * @class Controls/_filterPanel/View
  * @extends Core/Control
- *
+ * @demo Controls-demo/filterPanel/View/Index
  * @public
  * @author Мельникова Е.А.
  *
+ */
+
+/**
+ * @name Controls/_filterPanel/View#source
+ * @cfg {Array.<Controls/_filter/View/interface/IFilterItem/FilterItem.typedef>} Устанавливает список полей фильтра и их конфигурацию.
+ * В числе прочего, по конфигурации определяется визуальное представление поля фильтра в составе контрола.
+ * @demo Controls-demo/filterPanel/View/Index
  */
 
 interface IViewPanelOptions {

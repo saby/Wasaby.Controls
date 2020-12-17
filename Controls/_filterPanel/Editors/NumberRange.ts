@@ -14,12 +14,47 @@ interface INumberRange {
 }
 
 /**
- * Контрол используют в качестве редактора для выбора диапазона чисел на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
+ * Контрол используют в качестве редактора для выбора диапазона чисел на {@link Controls/filterPanel:View панели фильтров}.
  * @class Controls/_filterPanel/Editors/NumberRange
  * @extends Core/Control
  * @author Мельникова Е.А.
  * @public
  */
+
+/**
+ * @name Controls/_filterPanel/Editors/NumberRange#minValueInputPlaceholder
+ * @cfg {String} Устанавливает placeholder для поля ввода минимального значения.
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/NumberRange#maxValueInputPlaceholder
+ * @cfg {String} Устанавливает placeholder для поля ввода максимального значения.
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/NumberRange#afterEditorTemplate
+ * @cfg {TemplateFunction} Шаблон, который отобразится справа от редактора.
+ * @demo Controls-demo/filterPanel/NumberRangeEditor/Index
+ * @example
+ * Создаем шаблон, который передадим в afterEditorTemplate:
+ * MyAfterEditorTemplate.wml:
+ * <pre class="brush: html">
+ *    <span class="myClass"> руб. </span>
+ * </pre>
+ * JS:
+ * <pre class="brush: js">
+ *    this._sourse = [{
+ *      group: 'Стоимость товара',
+ *      name: 'amount',
+ *      editorTemplateName: 'Controls/filterPanel:NumberRangeEditor',
+ *      value: [],
+ *      editorOptions: {
+ *          afterEditorTemplate: 'wml!MyAfterEditorTemplate'
+ *      }
+ *    }];
+ * </pre>
+ */
+
 class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberRange {
     readonly '[Controls/_filterPanel/Editors/NumberRange]': boolean = true;
     protected _template: TemplateFunction = DateRangeTemplate;
