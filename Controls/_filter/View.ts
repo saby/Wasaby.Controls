@@ -297,13 +297,13 @@ var _private = {
     },
 
     loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?, withHistory = true) {
-        let queryFilter;
+        let queryFilter = Merge({}, filter);
         if (instance.nodeProperty) {
-            queryFilter = Merge(filter, {historyId: instance.historyId});
+            queryFilter = Merge(queryFilter, {historyId: instance.historyId});
         }
             // As the data source can be history source, then you need to merge the filter
-        queryFilter = withHistory ? historyUtils.getSourceFilter(filter, source) : filter;
-        return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
+        queryFilter = withHistory ? historyUtils.getSourceFilter(queryFilter, source) : queryFilter;
+        return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback((items) => {
             instance.items = items;
             if (dataLoadCallback) {
                 dataLoadCallback(items);
