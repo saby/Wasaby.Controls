@@ -23,7 +23,7 @@
 
 <ws:template name="multiSelectTemplate">
    <ws:partial template="{{multiSelectTpl}}" attr:class="{{itemData.multiSelectClassList}}">
-      <ws:templateOptions item="{{ itemData.dispItem }}"/>
+      <ws:templateOptions item="{{ itemData.dispItem }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
    </ws:partial>
 </ws:template>
 

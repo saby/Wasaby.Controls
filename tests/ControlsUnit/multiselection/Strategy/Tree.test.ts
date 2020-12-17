@@ -626,7 +626,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             const res = strategy.getSelectionForModel(selection);
             assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)) );
             assert.deepEqual(toArray(res.get(null)), []);
-            assert.deepEqual(toArray(res.get(false)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![4, 5, 7].includes(it.id)));
          });
 
          it('with readonly items', () => {

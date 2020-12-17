@@ -713,15 +713,17 @@ const _private = {
             return;
         }
 
-        const markerController = _private.getMarkerController(self);
-        let toggledItemId = markerController.getMarkedKey();
-        if (toggledItemId === null || toggledItemId === undefined) {
-            toggledItemId = markerController.getNextMarkedKey();
-        }
+        if (!self._options.checkboxReadOnly) {
+            const markerController = _private.getMarkerController(self);
+            let toggledItemId = markerController.getMarkedKey();
+            if (toggledItemId === null || toggledItemId === undefined) {
+                toggledItemId = markerController.getNextMarkedKey();
+            }
 
-        if (toggledItemId) {
-            const result = _private.getSelectionController(self).toggleItem(toggledItemId);
-            _private.changeSelection(self, result);
+            if (toggledItemId) {
+                const result = _private.getSelectionController(self).toggleItem(toggledItemId);
+                _private.changeSelection(self, result);
+            }
         }
 
         _private.moveMarkerToNext(self, event);
@@ -4005,7 +4007,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const visibilityChangedFromHidden = this._options.multiSelectVisibility === 'hidden' &&  newOptions.multiSelectVisibility !== 'hidden';
 
             // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this)) || visibilityChangedFromHidden && newOptions.selectedKeys?.length) {
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this)) || visibilityChangedFromHidden && newOptions.selectedKeys?.length || this._options.selectionType !== newOptions.selectionType) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys

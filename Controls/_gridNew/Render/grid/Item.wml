@@ -27,7 +27,7 @@
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
         <ws:multiSelectTemplate>
             <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
-                <ws:templateOptions item="{{ item }}"/>
+                <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
             </ws:partial>
         </ws:multiSelectTemplate>
     </ws:partial>

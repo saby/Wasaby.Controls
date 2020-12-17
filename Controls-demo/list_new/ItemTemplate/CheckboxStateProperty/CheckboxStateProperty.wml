@@ -3,11 +3,11 @@
             keyProperty="id"
             source="{{_viewSource}}"
             multiSelectVisibility="visible"
-            checkboxReadOnly="{{true}}"
+            checkboxStateProperty="checkboxState"
             bind:selectedKeys="_selectedKeys"
             bind:excludedKeys="_excludedKeys">
         <ws:itemTemplate>
-            <ws:partial template="Controls/list:ItemTemplate" checkboxReadOnly="{{true}}"/>
+            <ws:partial template="Controls/list:ItemTemplate"/>
         </ws:itemTemplate>
     </Controls.list:View>
 </div>

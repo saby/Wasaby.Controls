@@ -196,7 +196,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       const handleItem = (item) => {
-         if (!this._canBeSelected(item)) {
+         if (!item.SelectableItem) {
             return;
          }
 
@@ -204,9 +204,9 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
 
-         let isSelected = item.isReadonlyCheckbox()
-            ? selection.selected.includes(key)
-            : !selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key);
+         let isSelected = this._canBeSelected(item)
+            ? !selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key)
+            : selection.selected.includes(key) || this._isAllSelected(selection, parentId) && !selection.excluded.includes(key) && this._canBeSelectedBySelectionType(item);
 
          if ((this._selectAncestors || searchValue) && isNode) {
             isSelected = this._getStateNode(item, isSelected, {
@@ -673,8 +673,12 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    private _canBeSelected(item: TreeItem<Model>): boolean {
+      const canBeSelectedBySelectionType = this._canBeSelectedBySelectionType(item);
+      return canBeSelectedBySelectionType && !item.isReadonlyCheckbox();
+   }
+
+   private _canBeSelectedBySelectionType(item: TreeItem<Model>): boolean {
       const isNode = this._isNode(item);
-      const canBeSelectedBySelectionType = this._selectionType === 'all' || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
-      return item.SelectableItem && canBeSelectedBySelectionType || item.isReadonlyCheckbox();
+      return item.isReadonlyCheckbox() || this._selectionType === 'all' || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
    }
 }
