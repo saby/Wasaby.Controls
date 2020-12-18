@@ -5,12 +5,16 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
 import {tmplNotify} from 'Controls/eventUtils';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
-import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
+import {
+    COLUMN_SCROLL_JS_SELECTORS,
+    DRAG_SCROLL_JS_SELECTORS,
+    ColumnScrollController as ColumnScroll,
+    DragScrollController as DragScroll,
+    isInLeftSwipeRange
+} from 'Controls/columnScroll';
 import {
     shouldAddActionsCell,
     shouldDrawColumnScroll,
-    isInLeftSwipeRange
 } from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
@@ -178,6 +182,7 @@ var
         },
         createColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
@@ -402,7 +407,7 @@ var
                 // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
                 // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
                 // списочного контрола.
-                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
+                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScrollOld;
             }
 
             return resultSuper;
@@ -697,15 +702,15 @@ var
                 if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
                     classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
                 }
-                return classes + ColumnScroll.getShadowClasses({
-                    position,
+                return classes + ColumnScroll.getShadowClasses(position, {
                     isVisible: position === 'start',
                     theme: options.theme,
                     backgroundStyle: options.backgroundStyle,
-                    needBottomPadding: options.needBottomPadding
                 });
             }
-            return this._columnScrollController.getShadowClasses(position);
+            return this._columnScrollController.getShadowClasses(position, {
+                needBottomPadding: options.needBottomPadding
+            });
         },
 
         _getColumnScrollFakeShadowStyles(options, position: 'start' | 'end'): string {

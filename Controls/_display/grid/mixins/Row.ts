@@ -352,6 +352,18 @@ export default abstract class Row<T> {
         return this._$owner.getRowIndex(this);
     }
 
+    hasColumnScroll(): boolean {
+        return this._$owner.hasColumnScroll();
+    }
+
+    getStickyColumnsCount(): number {
+        return this._$owner.getStickyColumnsCount();
+    }
+
+    protected hasItemActionsSeparatedCell(): boolean {
+        return this._$owner.hasItemActionsSeparatedCell();
+    }
+
     abstract getContents(): T;
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;

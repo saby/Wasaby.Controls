@@ -2,7 +2,6 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 import { Model } from 'Types/entity';
 import { ISelectionObject as ISelection } from 'Controls/interface';
-import { Controller as SourceController } from 'Controls/source';
 import ISelectionStrategy from './ISelectionStrategy';
 import { IEntryPathItem, ITreeSelectionStrategyOptions, TKeys } from '../interface';
 // нет замены
