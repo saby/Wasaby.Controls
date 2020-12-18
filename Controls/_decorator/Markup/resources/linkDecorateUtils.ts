@@ -443,13 +443,12 @@ export function receiveLinksArray(stringNode: string): string[] {
    const result: string[] = [];
    let hasAnyLink: boolean = false;
    let linkParseExec = linkParseRegExp.exec(stringNode);
+
    while (linkParseExec !== null) {
       let [match, email, emailDomain, link, simpleLinkPrefix, simpleLinkDomain, ending, noLink] = linkParseExec;
       linkParseExec = linkParseRegExp.exec(stringNode);
       let nodeToPush: string[] | string;
-      if (match.length >= linkMaxLenght) {
-            nodeToPush = match;
-      } else if (link) {
+      if (link) {
          const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
          if (isEndingPartOfDomain) {
             simpleLinkDomain += ending;
@@ -457,11 +456,15 @@ export function receiveLinksArray(stringNode: string): string[] {
          const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
          hasAnyLink = hasAnyLink || !wrongDomain;
          link = link + ending;
-         nodeToPush = wrongDomain ? match : (simpleLinkPrefix ? 'http://' : '' + link);
-         result.push(nodeToPush);
+         nodeToPush = wrongDomain ? match : simpleLinkPrefix ? 'http://' + link : '' + link;
+         
+         if (hasAnyLink) {
+            result.push(nodeToPush);
+         }
       }
-      return result;
    }
+
+   return result;
 }
 
 export function clearNeedDecorateGlobals() {

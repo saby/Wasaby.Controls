@@ -1144,6 +1144,162 @@ define([
          });
       });
 
+      describe('receiveLinksArray', function() {
+         it('with protocol - 1', function() {
+            var str = 'https://ya.ru';
+            var result = ['https://ya.ru'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('long link', () => {
+            const str = 'https://ya.ru/' + 'a'.repeat(100);
+            const result = [str];
+            const checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol - 2', function() {
+            var str = 'http://localhost:1025';
+            const result = [str];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol - 3', function() {
+            var str = 'http:\\\\localhost:1025';
+            var result = ['http:\\\\localhost:1025'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol - 4', function() {
+            var str = 'https://';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol - 5', function() {
+            var str = 'http:\\localhost:1025';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol in brackets', function() {
+            var str = '(http://localhost:1025)';
+            var result = ['http://localhost:1025'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with protocol with capital letters', function() {
+            var str = 'HtTpS://ya.ru';
+            var result = ['HtTpS://ya.ru'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with emoji and protocol', function() {
+            var str = ['p', 'https://ya.ru/😊'];
+            var result = ['https://ya.ru/'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('with emoji and without protocol', function() {
+            var str = 'vk.com/😊';
+            var result = ['http://vk.com/'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 1', function() {
+            var str = 'usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup';
+            var result = ['http://usd-comp162.corp.tensor.ru:1025/?grep=Controls%5C.Decorator%5C.Markup'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 2', function() {
+            var str = 'vk.com';
+            var result = ['http://vk.com'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 3', function() {
+            var str = 'market.yandex.ru';
+            var result = ['http://market.yandex.ru'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 4', function() {
+            var str = 'my page on vk.com is vk.com/id0';
+            var result = ['http://vk.com', 'http://vk.com/id0'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 5', function() {
+            var str = 'yandex.ru.';
+            var result = ['http://yandex.ru'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol - 6', function() {
+            var str = 'www.google.com';
+            var result = ['http://www.google.com'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol in brackets', function() {
+            var str = '(www.google.com)';
+            var result = ['http://www.google.com'];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 1', function() {
+            var str = 'www.google.comma';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 2', function() {
+            var str = 'vk.comma/id0';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('without protocol wrong top level domain name - 3', function() {
+            var str = 'usd-comp162.corp.tensor.ur:1025/?grep=Controls%5C.Decorator%5C.Markup';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('email - 1', function() {
+            var str = 'sm.body@tensor.ru';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+
+         it('email - 2', function() {
+            var str = 'rweghjrewefij.rwe.gareg.123.32423.fswef@mail.ru';
+            var result = [];
+            var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
+            assert.deepEqual(result, checkResultNode);
+         });
+      });
+
       describe('needDecorate', function() {
          beforeEach(function() {
             decoratedLinkService = Env.constants.decoratedLinkService;

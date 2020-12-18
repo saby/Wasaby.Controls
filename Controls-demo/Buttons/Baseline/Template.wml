@@ -9,7 +9,7 @@
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{true}}" icon="icon-Add" iconSize="s" caption="caption" buttonStyle="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
-    <Controls.buttons:Button on:click="_clickHandler()" readOnly="{{false}}" icon="icon-Add" iconSize="s" caption="caption" fontSize="xl" inlineHeight="2xl" buttonStyle="primary" viewMode="button"/>
+    <Controls.buttons:Button readOnly="{{false}}" icon="icon-Add" iconSize="s" caption="caption" fontSize="xl" inlineHeight="2xl" buttonStyle="primary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
     <Controls.buttons:Button readOnly="{{false}}" icon="icon-Add" iconSize="m" caption="caption" fontSize="xl" inlineHeight="2xl" buttonStyle="secondary" viewMode="button"/>
     <span class="baseline_span">baseline</span>
