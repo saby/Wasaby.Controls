@@ -76,6 +76,27 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
     private _defaultDetailViewMode: CatalogDetailViewMode;
     private _permanentlyDetailViewMode: CatalogDetailViewMode;
 
+    /**
+     * Идентификатор папки содержимое которой в данный момент отображается
+     */
+    protected get _root(): string {
+        return this._masterMarkedKey;
+    }
+    protected set _root(value: string) {
+        if (this._masterMarkedKey === value) {
+            return;
+        }
+
+        this._masterMarkedKey = value;
+        // Уведомляем о том, что изменилась корневая папка
+        this._notify('rootChanged', [value]);
+
+        this._detailSourceController.setRoot(value);
+        // Загрузим содержимое папки в detail-колонку
+        this.loadDetailData().then();
+    }
+    private _masterMarkedKey: string = null;
+
     //region source
     protected _masterSource: ICrudPlus;
 
@@ -112,27 +133,6 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      */
     protected _imageItemTemplateCfg: IImageItemTemplateCfg = {};
     //endregion
-
-    /**
-     * Идентификатор папки содержимое которой в данный момент отображается
-     */
-    protected get _root(): string {
-        return this._masterMarkedKey;
-    }
-    protected set _root(value: string) {
-        if (this._masterMarkedKey === value) {
-            return;
-        }
-
-        this._masterMarkedKey = value;
-        // Уведомляем о том, что изменилась корневая папка
-        this._notify('rootChanged', [value]);
-
-        this._detailSourceController.setRoot(value);
-        // Загрузим содержимое папки в detail-колонку
-        // this.loadDetailData().then();
-    }
-    private _masterMarkedKey: string = null;
 
     /**
      * Опции для списка в master-колонке
@@ -220,7 +220,9 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
         // об изменении значения, т.к. и так идет синхронизация опций
         this._defaultDetailViewMode = options.viewMode;
-        this._masterMarkedKey = options.root;
+        // Обновляем root из опций только в том случае, если он задан,
+        // в пртивном случае берем то, что лежит у нас в состоянии
+        this._masterMarkedKey = options.root !== undefined ? options.root : this._root;
 
         //region update master fields
         this._masterSource = options.master?.listSource || options.listSource;
@@ -323,7 +325,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
                 return items;
             })
             .catch((error) => {
-                // TODO: processing error
+                Logger.error('Возникла ошибка при загрузке данных detail-колонки', this, error);
                 return error;
             });
     }
