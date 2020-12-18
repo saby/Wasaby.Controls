@@ -33,10 +33,6 @@ import {ISelectorTemplate} from 'Controls/interface';
 export default class MultiSelectList extends ListEditorBase {
     protected _columns: object[] = null;
 
-    protected _beforeUpdate(newOptions: IListEditorOptions): void {
-        super._beforeUpdate(newOptions);
-    }
-
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
         this._selectedKeys = keys;
         this._notifyPropertyValueChanged(this._getTextValue());
