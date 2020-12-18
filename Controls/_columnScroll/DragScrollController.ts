@@ -1,5 +1,4 @@
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS} from './ColumnScroll';
 import {constants} from 'Env/Env';
 
 export interface IDragScrollParams {
@@ -30,7 +29,7 @@ interface TPoint {
     y: number;
 }
 
-export class DragScroll {
+export default class DragScroll {
     private _startDragNDropCallback: IDragScrollParams['startDragNDropCallback'];
     private _scrollLength: number = 0;
     private _scrollPosition: number = 0;
@@ -242,14 +241,7 @@ export class DragScroll {
      * @private
      */
     private _isTargetScrollable(target: HTMLElement): boolean {
-
-        /*
-        * TODO: https://online.sbis.ru/opendoc.html?guid=f5101ade-8716-40cb-a0be-3701b212b2fa
-        * После закрытия везде, где вешается controls-Grid__cell_fixed начать вешать еще и
-        * DragScroll.JS_SELECTORS.NOT_DRAG_SCROLLABLE. Отсюда controls-Grid__cell_fixed удалить.
-        * COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT
-        * */
-        return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`) && !target.closest('.controls-Grid__cell_fixed');
+        return !target.closest(`.${JS_SELECTORS.NOT_DRAG_SCROLLABLE}`);
     }
 
     /**
