@@ -90,10 +90,10 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     // region Аспект "Объединение колонок"
     _getColspanParams(): IColspanParams {
-        if (this._$startColumn && this._$endColumn) {
+        if (this._$column.startColumn && this._$column.endColumn) {
             return {
-                startColumn: this._$startColumn,
-                endColumn: this._$endColumn
+                startColumn: this._$column.startColumn,
+                endColumn: this._$column.endColumn
             };
         }
         return super._getColspanParams();
@@ -134,7 +134,13 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     getWrapperStyles(): string {
-        return super.getWrapperStyles() + ` ${ this.getRowspanStyles() }`;
+        let zIndex;
+        if (this._$owner.hasColumnScroll()) {
+            zIndex = this._$isFixed ? FIXED_HEADER_Z_INDEX : STICKY_HEADER_Z_INDEX;
+        } else {
+            zIndex = FIXED_HEADER_Z_INDEX;
+        }
+        return super.getWrapperStyles() + ` ${ this.getRowspanStyles() } z-index: ${zIndex};`;
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
@@ -169,16 +175,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
         // _private.getBackgroundStyle(this._options, true);
         return wrapperClasses;
-    }
-
-    getWrapperStyles(): string {
-        let zIndex;
-        if (this._$owner.hasColumnScroll()) {
-            zIndex = this._isFixedCell() ? FIXED_HEADER_Z_INDEX : STICKY_HEADER_Z_INDEX;
-        } else {
-            zIndex = FIXED_HEADER_Z_INDEX;
-        }
-        return `${super.getWrapperStyles()} z-index: ${zIndex};`;
     }
 
     getContentClasses(theme: string): string {

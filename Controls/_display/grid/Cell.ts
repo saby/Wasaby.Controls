@@ -23,6 +23,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     startColumn?: number;
     endColumn?: number;
     colspan?: number;
+    isFixed?: boolean;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -43,6 +44,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$startColumn: number;
     protected _$endColumn: number;
     protected _$colspan: number;
+    protected _$isFixed: boolean;
 
     getInstanceId: () => string;
 
@@ -336,7 +338,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
-        if (this._isFixedCell()) {
+        if (this._$isFixed) {
             return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} js-controls-ColumnScroll__notDraggable controls-GridNew__cell_fixed controls-GridNew__cell_fixed_theme-${theme}`;
         }
         return COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT;
@@ -449,14 +451,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     // endregion
-
-    protected _isFixedCell(): boolean {
-        const startColumn = this._getColspanParams().startColumn - +(this._$owner.needMultiSelectColumn());
-
-        // columnConfig.startColumn - индекс начала колонки в GridLayout, он начинается с единицы,
-        // чтобы привести его к индексу колонок таблицы, уменьшаем его на 1.
-        return (startColumn - 1) < this._$owner.getStickyColumnsCount();
-    }
 }
 
 Object.assign(Cell.prototype, {
@@ -468,5 +462,6 @@ Object.assign(Cell.prototype, {
     _$hiddenForLadder: null,
     _$startColumn: null,
     _$endColumn: null,
-    _$colspan: null
+    _$colspan: null,
+    _$isFixed: null
 });

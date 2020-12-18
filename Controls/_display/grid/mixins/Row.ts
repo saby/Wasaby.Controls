@@ -7,7 +7,6 @@ import Cell, { IOptions as ICellOptions } from '../Cell';
 import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
-import prepareColumns from '../../utils/GridColspanUtil';
 import {Model as EntityModel} from 'Types/entity';
 import { THeader } from '../../../_grid/interface/IHeaderCell';
 
@@ -224,11 +223,35 @@ export default abstract class Row<T> {
         }
     }
 
-    protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
-        const colspanCalculationCallback = this._$owner.getColspanCalculationCallback();
-        if (colspanCalculationCallback) {
-            return colspanCalculationCallback(this.getContents(), column, columnIndex);
+    protected _getColspanParams(column: IColspanParams, columnIndex: number): IColspanParams {
+        return undefined;
+    }
+
+    protected _prepareColumnItems(columns: IColspanParams[], factory: (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>>): Array<Cell<T, Row<T>>> {
+        const columnItems = [];
+        for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            const column = columns[columnIndex];
+            const colspanParams = this._getColspanParams(column, columnIndex);
+            let startColumn, endColumn, colspan;
+            if (colspanParams) {
+                startColumn = colspanParams.startColumn;
+                endColumn = colspanParams.endColumn;
+                colspan = colspanParams.colspan;
+                if (typeof startColumn === 'number' && typeof endColumn === 'number') {
+                    columnIndex = endColumn - 1;
+                } else if (typeof colspan === 'number') {
+                    columnIndex += colspan - 1;
+                }
+            }
+            columnItems.push(factory({
+                column,
+                startColumn,
+                endColumn,
+                colspan,
+                isFixed: columnIndex < this.getStickyColumnsCount()
+            }));
         }
+        return columnItems;
     }
 
     protected _initializeColumns(): void {
@@ -240,30 +263,9 @@ export default abstract class Row<T> {
                 this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
             const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
                 this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
-            const factory = this._getColumnsFactory();
 
-            this._$columnItems = [];
-            for (let columnIndex = 0; columnIndex < this._$columns.length; columnIndex++) {
-                const column = this._$columns[columnIndex];
-                const colspanParams = this._getColspanParams(column, columnIndex);
-                let startColumn, endColumn, colspan;
-                if (colspanParams) {
-                    startColumn = colspanParams.startColumn;
-                    endColumn = colspanParams.endColumn;
-                    colspan = colspanParams.colspan;
-                    if (typeof startColumn === 'number' && typeof endColumn === 'number') {
-                        columnIndex = endColumn - 1;
-                    } else if (typeof colspan === 'number') {
-                        columnIndex += colspan - 1;
-                    }
-                }
-                this._$columnItems.push(factory({
-                    column,
-                    startColumn,
-                    endColumn,
-                    colspan
-                }));
-            }
+            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+
 
             if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
                 this._$columnItems[0].setHiddenForLadder(true);
@@ -323,15 +325,6 @@ export default abstract class Row<T> {
                     break;
             }
         }
-    }
-
-    // todo refactor
-    prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
-        return prepareColumns({
-            columns,
-            hasMultiSelect: this.needMultiSelectColumn(),
-            gridColumnsCount: this._$owner.getColumnsConfig().length
-        });
     }
 
     protected _getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
