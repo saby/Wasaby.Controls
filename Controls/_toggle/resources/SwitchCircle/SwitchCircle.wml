@@ -1,4 +1,3 @@
 <div class="controls-SwitchCircle controls-SwitchCircle_theme-{{ _options.theme }}
-      {{ readOnly ? 'controls-SwitchCircle_readonly_theme-' + _options.theme }}
-      controls-SwitchCircle_{{ selected ? 'selected' : 'unselected' }}_theme-{{ _options.theme }}">
+            controls-SwitchCircle_{{selected ? 'selected' : 'unselected'}}{{readOnly ? '_disabled'}}_theme-{{_options.theme}}">
 </div>
