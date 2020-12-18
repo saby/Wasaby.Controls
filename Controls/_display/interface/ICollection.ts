@@ -1,5 +1,5 @@
-import { DestroyableMixin, Model, ObservableMixin } from 'Types/entity';
-import {IEnumerable} from '../Abstract';
+import { DestroyableMixin, Model, ObservableMixin } from "Types/entity";
+import {IEnumerable} from "../Abstract";
 import {IBaseCollection} from 'Controls/_display/interface';
 import {ICollectionItem} from 'Controls/_display/interface/ICollectionItem';
 
