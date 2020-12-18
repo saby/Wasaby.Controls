@@ -7,8 +7,7 @@ import ParallelDeferred = require('Core/ParallelDeferred');
 import Deferred = require('Core/Deferred');
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import {isEqual} from 'Types/object';
-import {Controller as SourceController} from 'Controls/source';
-import {error as dataSourceError} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController} from 'Controls/dataSource';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {detection, IoC} from 'Env/Env';
 import {object} from 'Types/util';
@@ -297,13 +296,16 @@ var _private = {
     },
 
     loadItemsFromSource: function(instance, source, filter, navigation?, dataLoadCallback?, withHistory = true) {
-        let queryFilter;
+        let queryFilter = Merge({}, filter);
         if (instance.nodeProperty) {
-            queryFilter = Merge(filter, {historyId: instance.historyId});
+            queryFilter = Merge(queryFilter, {historyId: instance.historyId});
         }
             // As the data source can be history source, then you need to merge the filter
-        queryFilter = withHistory ? historyUtils.getSourceFilter(filter, source) : filter;
-        return _private.getSourceController(instance, source, navigation).load(queryFilter).addCallback(function(items) {
+        queryFilter = withHistory ? historyUtils.getSourceFilter(queryFilter, source) : queryFilter;
+        const sourceController = _private.getSourceController(instance, source, navigation);
+        sourceController.setFilter(queryFilter);
+
+        return sourceController.load().addCallback((items) => {
             instance.items = items;
             if (dataLoadCallback) {
                 dataLoadCallback(items);

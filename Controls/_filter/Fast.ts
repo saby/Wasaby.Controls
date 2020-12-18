@@ -10,7 +10,7 @@ import Deferred = require('Core/Deferred');
 import Utils = require('Types/util');
 import Merge = require('Core/core-merge');
 import {PrefetchProxy} from 'Types/source';
-import {Controller as SourceController} from 'Controls/source';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {isEqual} from 'Types/object';
 import {dropdownHistoryUtils as historyUtils} from 'Controls/dropdown';
 import {getItemsWithHistory, getUniqItems, deleteHistorySourceFromConfig} from 'Controls/_filter/HistoryUtils';
@@ -83,13 +83,14 @@ import {Model} from 'Types/entity';
             // As the data source can be history source, then you need to merge the filter
             return _private.getSourceController(instance, {source, navigation, keyProperty, historyId}).addCallback((sourceController) => {
                let queryFilter = withHistory ? historyUtils.getSourceFilter(filter, instance._source) : filter;
-                return sourceController.load(queryFilter).addCallback((items) => {
-                    instance._items = items;
-                    if (dataLoadCallback) {
-                        dataLoadCallback(items);
-                    }
-                    return items;
-                });
+               sourceController.setFilter(queryFilter);
+               return sourceController.load().addCallback((items) => {
+                   instance._items = items;
+                   if (dataLoadCallback) {
+                       dataLoadCallback(items);
+                   }
+                   return items;
+               });
             });
          },
 
@@ -476,7 +477,7 @@ import {Model} from 'Types/entity';
                selectedKeys: selectedKeys instanceof Array ? selectedKeys : [selectedKeys],
                isCompoundTemplate: getPropValue(this._items.at(index), 'properties').isCompoundTemplate,
                hasMoreButton: this._configs[index]._sourceController.hasMoreData('down'),
-               navigation: this._configs[index]._sourceController.getNavigation(),
+               navigation: this._configs[index].navigation,
                selectorDialogResult: this._onSelectorTemplateResult.bind(this),
                afterSelectorOpenCallback: this._afterSelectorOpenCallback.bind(this),
                dropdownClassName: `controls-FastFilter_width-popup_theme-${this._options.theme}`

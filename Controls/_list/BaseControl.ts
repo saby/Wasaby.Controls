@@ -3241,6 +3241,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
+    _preventServerSideColumnScroll: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -4539,6 +4541,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
+        this._preventServerSideColumnScroll = true;
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();

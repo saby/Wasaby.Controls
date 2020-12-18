@@ -2230,6 +2230,12 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     getItemsDragNDrop(): boolean {
         return this._$itemsDragNDrop;
     }
+
+    getDraggingItem(): CollectionItem<T> {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        return strategy?.avatarItem;
+    }
+
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
