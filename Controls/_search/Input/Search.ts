@@ -5,6 +5,7 @@ import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from "Vdom/Vdom";
+import {default as Store} from 'Controls/Store';
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
@@ -38,7 +39,7 @@ var _private = {
  *
  * @ignoreOptions style
  *
- * 
+ *
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
@@ -61,7 +62,7 @@ var _private = {
  *
  * @ignoreOptions style
  *
- * 
+ *
  * @public
  * @demo Controls-demo/Search/Input/Base/Index
  *
@@ -69,11 +70,24 @@ var _private = {
  */
 var Search = Base.extend({
    _wasActionUser: false,
+   _resetCommandCallbackId: '',
 
    _beforeMount(options): void {
       this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
       generateStates(this, options);
       return Search.superclass._beforeMount.apply(this, arguments);
+   },
+
+   _afterMount: function () {
+      if (this._options.useStore) {
+         this._resetCommandCallbackId = Store.declareCommand('resetSearch', this._resetSearch.bind(this));
+      }
+   },
+
+   _beforeUnmount: function () {
+      if (this._resetCommandCallbackId) {
+         Store.unsubscribe(this._resetCommandCallbackId);
+      }
    },
 
    _renderStyle() {
@@ -122,11 +136,7 @@ var Search = Base.extend({
       Search.superclass._notifyInputCompleted.apply(this, arguments);
    },
 
-   _resetClick: function() {
-      if (this._options.readOnly) {
-         return;
-      }
-
+   _resetSearch: function () {
       this._notify('resetClick');
 
       this._viewModel.displayValue = '';
@@ -134,6 +144,13 @@ var Search = Base.extend({
 
       // move focus from clear button to input
       this.activate();
+   },
+
+   _resetClick: function() {
+      if (this._options.readOnly) {
+         return;
+      }
+      this._resetSearch();
    },
 
    _resetMousedown(event): void {
