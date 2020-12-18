@@ -3,12 +3,15 @@
                        columns="{{_columns}}"
                        keyProperty="{{_options.keyProperty}}"
                        markedKey="{{_options.propertyValue}}"
+                       selectedKeys="{{_selectedKeys}}"
                        scope="{{_options}}"
+                       markerVisibility="{{false}}"
                        navigation="{{_options.navigation}}"
                        backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
                        itemsReadyCallback="{{_itemsReadyCallback}}"
-                       on:markedKeyChanged="_handleMarkedKeyChanged()">
+                       on:selectedKeysChanged="_handleSelectedKeysChanged()"
+                       on:itemClick="_handleItemClick()">
       <ws:itemPadding left="xxl" right="m"/>
       <ws:footerTemplate>
          <ws:if data="{{_options.selectorTemplate}}">

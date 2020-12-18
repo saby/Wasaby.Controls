@@ -68,7 +68,7 @@ export default class extends Control {
                 value: [],
                 textValue: '',
                 editorOptions: {
-                    afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate',
+                    afterEditorTemplate: 'wml!Controls-demo/filterPanel/resources/AfterEditorTemplate',
                     minValueInputPlaceholder: '0',
                     maxValueInputPlaceholder: '1 000 000'
                 }

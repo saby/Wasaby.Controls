@@ -4,17 +4,38 @@ import {Model} from 'Types/entity';
 import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
 
 /**
- * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
+ * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link Controls/filterPanel:View панели фильтров}.
  * @class Controls/_filterPanel/Editors/EnumList
  * @extends Core/Control
+ * @mixes Controls/_grid/interface/IGridControl
+ * @mixes Controls/_interface/INavigation
  * @author Мельникова Е.А.
  * @public
  */
+
+/**
+ * @name Controls/_filterPanel/Editors/EnumList#showSelectorCaption
+ * @cfg {String} Заголовок для кнопки в подвале списка, которая открывает окно выбора из справочника.
+ * @demo Controls-demo/filterPanel/EnumListEditor/ShowSelectorCaption/Index
+ * @default Другие
+ */
+
+/**
+ * @name Controls/_filterPanel/Editors/EnumList#additionalTextProperty
+ * @cfg {String} Имя свойства, содержащего информацию об идентификаторе дополнительного столбца в списке.
+ * @demo Controls-demo/filterPanel/EnumListEditor/AdditionalTextProperty/Index
+ */
+
 class ListEditor extends ListEditorBase {
     protected _columns: object[] = null;
 
-    protected _handleMarkedKeyChanged(event: SyntheticEvent, value: string|number): void {
+    protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
+        const value = item.get(this._options.keyProperty);
         this._notifyPropertyValueChanged(value, this._getTextValue(value));
+    }
+
+    protected _handleSelectedKeysChanged(): void {
+        //
     }
 
     protected _handleSelectorResult(result: Model[]): void {
@@ -31,18 +52,9 @@ class ListEditor extends ListEditorBase {
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
-    protected _getTextValue(value: string|number): string {
+    private _getTextValue(value: string|number): string {
         const record = this._items.getRecordById(value);
         return record.get(this._options.displayProperty);
-    }
-
-    static getDefaultOptions(): object {
-        return {
-            ...ListEditorBase.getDefaultOptions(),
-            ...{
-                markerVisibility: false
-            }
-        };
     }
 }
 export default ListEditor;

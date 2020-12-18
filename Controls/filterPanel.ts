@@ -9,5 +9,6 @@
 export {default as View} from './_filterPanel/View';
 export {default as NumberRangeEditor} from './_filterPanel/Editors/NumberRange';
 export {default as EnumListEditor} from './_filterPanel/Editors/EnumList';
+export {default as MultiSelectList} from './_filterPanel/Editors/MultiSelectList';
 export {default as ListBase} from './_filterPanel/Editors/ListBase';
 export {default as Container} from './_filterPanel/View/Container';
