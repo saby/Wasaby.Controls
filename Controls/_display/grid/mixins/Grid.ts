@@ -104,6 +104,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$header;
     }
 
+    hasHeader(): boolean {
+        return !!this.getHeader();
+    }
+
     getFooter(): FooterRow<S> {
         return this._$footer;
     }

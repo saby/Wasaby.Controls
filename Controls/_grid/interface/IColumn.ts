@@ -79,12 +79,6 @@ export interface IColspanParams {
     colspan?: number;
 }
 
-export interface IRowspanParams {
-    startRow?: number;
-    endRow?: number;
-    rowspan?: number;
-}
-
 /**
  * @typedef {String} TActionDisplayMode
  * @description Стиль тега
@@ -113,7 +107,7 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
  * @public
  * @author Авраменко А.С.
  */
-export interface IColumn extends IColspanParams, IRowspanParams {
+export interface IColumn extends IColspanParams {
     /**
      * @name Controls/_grid/interface/IColumn#width
      * @cfg {String} Ширина колонки.

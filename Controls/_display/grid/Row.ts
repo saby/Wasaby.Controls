@@ -66,15 +66,6 @@ export default class Row<T>
             this._redrawColumns('all');
         }
     }
-
-    protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
-        const colspanCalculationCallback = this._$owner.getColspanCalculationCallback();
-        if (colspanCalculationCallback) {
-            return colspanCalculationCallback(this.getContents(), column, columnIndex);
-        }
-        return super._getColspanParams(column, columnIndex);
-    }
-
     // endregion
 }
 

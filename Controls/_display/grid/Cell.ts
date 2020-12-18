@@ -67,32 +67,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     // region Аспект "Объединение колонок"
-
-    _getColspanParams(): Required<IColspanParams> {
-        // todo неправильно multiselect
-        const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
-        let endColumn;
-
-        const multiSelectOffset = +(this._$owner.needMultiSelectColumn());
-
-        if (typeof this._$column.endColumn === 'number') {
-            endColumn = this._$column.endColumn;
-        } else if (typeof this._$column.colspan === 'number') {
-            endColumn = startColumn + this._$column.colspan;
-        } else {
-            endColumn = startColumn + 1;
+    _getColspanParams(): IColspanParams {
+        if (this._$colspan) {
+            const startColumn = this.getColumnIndex() + 1;
+            const endColumn = startColumn + this._$colspan;
+            return {
+                startColumn,
+                endColumn
+            };
         }
-
-        return {
-            startColumn: startColumn + multiSelectOffset,
-            endColumn: endColumn + multiSelectOffset,
-            colspan: endColumn - startColumn
-        };
-    }
-
-    getColspan(): number {
-        return this._getColspanParams().colspan;
-    }
+    };
 
     getColspanStyles(): string {
         if (!this._$owner.isFullGridSupport()) {
@@ -102,40 +86,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (!colspanParams) {
             return '';
         }
-        return `grid-column: ${colspanParams.startColumn + 1} / ${colspanParams.endColumn + 1};`;
+        return `grid-column: ${colspanParams.startColumn} / ${colspanParams.endColumn};`;
     }
-
-    _getRowspanParams(): Required<IRowspanParams> {
-        const startRow = typeof this._$column.startRow === 'number' ? this._$column.startRow : (this._$owner.getIndex() + 1);
-        let endRow;
-
-        if (typeof this._$column.endRow === 'number') {
-            endRow = this._$column.endRow;
-        } else if (typeof this._$column.rowspan === 'number') {
-            endRow = startRow + this._$column.rowspan;
-        } else {
-            endRow = startRow + 1;
-        }
-
-        return {
-            startRow,
-            endRow,
-            rowspan: endRow - startRow
-        };
-    }
-
-    getRowspan(): number {
-        return this._getRowspanParams().rowspan;
-    }
-
-    getRowspanStyles(): string {
-        if (!this._$owner.isFullGridSupport()) {
-            return '';
-        }
-        const {startRow, endRow} = this._getRowspanParams();
-        return `grid-row: ${startRow} / ${endRow};`;
-    }
-
     // endregion
 
     // region Аспект "Лесенка"
@@ -250,7 +202,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     getWrapperStyles(): string {
-        return `${this.getColspanStyles()} ${this.getRowspanStyles()}`;
+        return this.getColspanStyles();
     }
 
     getContentClasses(theme: string,

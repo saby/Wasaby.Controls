@@ -8,7 +8,6 @@ import ITagCell from './interface/ITagCell';
 import IItemActionsCell from './interface/IItemActionsCell';
 import ILadderContentCell from './interface/ILadderContentCell';
 import DataCellCompatibility from './compatibility/DataCell';
-import {IColspanParams} from "../../_grid/interface/IColumn";
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
@@ -26,6 +25,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     readonly ItemActionsCell = true;
     readonly LadderContentCell = true;
 
+    // region Аспект "Рендер"
     getDefaultDisplayValue(): T {
         const itemModel = this._$owner.getContents();
         if (itemModel instanceof Record) {
@@ -34,6 +34,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
             return itemModel[this.getDisplayProperty()];
         }
     }
+    // endregion
 
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
@@ -44,37 +45,6 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
                 this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
         }
     }
-    // region
-
-    // region Аспект "Объединение ячеек"
-
-    // Объединение ячеек данных должно быть здесь.
-    _getColspanParams(): Required<IColspanParams> {
-        if (this._$startColumn && this._$endColumn) {
-            return {
-                startColumn: this._$startColumn,
-                endColumn: this._$endColumn,
-                colspan: this._$endColumn - this._$startColumn
-            };
-        }
-        if (this._$colspan) {
-            const startColumn = this.getColumnIndex();
-            const endColumn = startColumn + this._$colspan;
-            return {
-                startColumn,
-                endColumn,
-                colspan: endColumn - startColumn
-            };
-        }
-    };
-    getRowspan() {
-        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
-        return undefined;
-    };
-    getRowspanStyles() {
-        // Пока объединение ячеек данных не реализовано, не выводим в html лишние свойства
-        return '';
-    };
     // endregion
 
     // region Аспект "Тег"
