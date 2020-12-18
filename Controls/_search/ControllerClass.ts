@@ -1,10 +1,19 @@
 import {QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
-import {ISearchControllerOptions} from './interface';
 import {NewSourceController} from 'Controls/dataSource';
 import {Logger} from 'UI/Utils';
+import {IHierarchyOptions, ISearchOptions} from 'Controls/interface';
+import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 
-type Key = string|number|null;
+type Key = string | number | null;
+
+export interface ISearchControllerOptions extends ISearchOptions,
+   IHierarchyOptions,
+   IHierarchySearchOptions {
+   sourceController?: NewSourceController;
+   searchValue?: string;
+   root?: Key;
+}
 
 const SERVICE_FILTERS = {
    HIERARCHY: {
@@ -49,11 +58,12 @@ const SERVICE_FILTERS = {
  * </pre>
  *
  * @class Controls/_search/ControllerClass
- * @implements Controls/_search/interface/ISearchController
- *
+ * @implements Controls/interface/ISearch
+ * @implements Controls/interface/IHierarchy
+ * @implements Controls/interface/IHierarchySearch
  * @public
+ * @demo Controls-demo/Search/FlatList/Index Поиск в плоском списке
  * @author Крюков Н.Ю.
- * @demo Controls-demo/Search/FlatList/Index
  */
 
 export default class ControllerClass {
@@ -248,7 +258,7 @@ export default class ControllerClass {
       }
    }
 
-   static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
+   private static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
      let root;
 
      if (path && path.getCount() > 0) {
@@ -260,3 +270,18 @@ export default class ControllerClass {
      return root;
    }
 }
+
+/**
+ * @name Controls/_search/ControllerClass#sourceController
+ * @cfg {NewSourceController} Экземпляр контроллера источника для выполнения поиска
+ */
+
+/**
+ * @name Controls/_search/ControllerClass#searchValue
+ * @cfg {string} Значение по которому будет осуществляться поиск
+ */
+
+/**
+ * @name Controls/_search/ControllerClass#root
+ * @cfg {string | number | null} Корень для поиска по иерархии
+ */

@@ -53,7 +53,7 @@ const SCALE_ROUNDING_ERROR_FIX = 1.5;
  *
  * @remark
  * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less">переменные тем оформления</a>
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less переменные тем оформления}
  *
  * @class Controls/_calendar/MonthList
  * @extends Core/Control

@@ -746,6 +746,7 @@ export default class Collection<S extends Model = Model, T extends CollectionIte
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: Function = DragStrategy;
+    private _wasNotifyAddEventOnStartDrag: boolean = false;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2233,6 +2234,12 @@ export default class Collection<S extends Model = Model, T extends CollectionIte
     getItemsDragNDrop(): boolean {
         return this._$itemsDragNDrop;
     }
+
+    getDraggingItem(): CollectionItem<T> {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        return strategy?.avatarItem;
+    }
+
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
@@ -2249,6 +2256,7 @@ export default class Collection<S extends Model = Model, T extends CollectionIte
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
 
         if (!this.getItemBySourceKey(draggableItem.getContents().getKey())) {
+            this._wasNotifyAddEventOnStartDrag = true;
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
                 IObservable.ACTION_ADD,
@@ -2276,17 +2284,14 @@ export default class Collection<S extends Model = Model, T extends CollectionIte
         if (strategy) {
             const avatarItem = strategy.avatarItem;
             const avatarIndex = this.getIndex(strategy.avatarItem as T);
-            const avatarKey = avatarItem.getContents().getKey();
 
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
 
-            // Событие remove нужно слать, только когда мы закончили перетаскивание в другом списке,
-            // т.к. только в этом случае мы отправим событие add на начало перетаскивания
-            // Если не найден индекс для перетаскиваемого элемента, значит его удалили прикладники на событие dragEnd
-            if (!this.getCollection().getRecordById(avatarKey) && avatarIndex !== -1) {
+            if (this._wasNotifyAddEventOnStartDrag) {
+                this._wasNotifyAddEventOnStartDrag = false;
                 this._notifyBeforeCollectionChange();
-                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [strategy.avatarItem], avatarIndex);
+                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [avatarItem], avatarIndex);
                 this._notifyAfterCollectionChange();
             }
         }
