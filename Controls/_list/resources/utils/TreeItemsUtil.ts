@@ -49,7 +49,7 @@ var
                  unique: true,
                  filter: filter,
                  sort: cfg.itemsSortMethod,
-                 checkboxStateProperty: cfg.checkboxStateProperty
+                 multiSelectAccessibilityProperty: cfg.multiSelectAccessibilityProperty
               },
               root, rootAsNode;
 

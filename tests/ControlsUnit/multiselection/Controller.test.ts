@@ -253,7 +253,7 @@ describe('Controls/_multiselection/Controller', () => {
          readonlyModel = new Collection({
             keyProperty: 'id',
             collection: readonlyItems,
-            checkboxStateProperty: 'checkboxState'
+            multiSelectAccessibilityProperty: 'checkboxState'
          });
 
          controllerWithReadonly = new SelectionController({

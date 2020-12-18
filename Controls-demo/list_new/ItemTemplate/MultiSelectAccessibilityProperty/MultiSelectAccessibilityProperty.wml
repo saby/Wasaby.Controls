@@ -3,7 +3,7 @@
             keyProperty="id"
             source="{{_viewSource}}"
             multiSelectVisibility="visible"
-            checkboxStateProperty="checkboxState"
+            multiSelectAccessibilityProperty="checkboxState"
             bind:selectedKeys="_selectedKeys"
             bind:excludedKeys="_excludedKeys">
         <ws:itemTemplate>

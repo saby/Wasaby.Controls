@@ -471,5 +471,5 @@ export interface ITreeControlOptions extends IControlOptions {
  * @variant node только узлы доступны для выбора
  * @variant leaf только листья доступны для выбора
  * @variant all все типы записей доступны для выбора
- * @remark Опция {@link Controls/_list/interface/IList#checkboxStateProperty checkboxStateProperty} преобладает над этой опцией
+ * @remark Опция {@link Controls/_list/interface/IList#multiSelectAccessibilityProperty multiSelectAccessibilityProperty} преобладает над этой опцией
  */

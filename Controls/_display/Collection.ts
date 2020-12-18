@@ -115,7 +115,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     importantItemProperties?: string[];
     itemActionsProperty?: string;
     navigation?: INavigationOptionValue;
-    checkboxStateProperty?: string;
+    multiSelectAccessibilityProperty?: string;
 }
 
 export interface ICollectionCounters {
@@ -651,7 +651,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @variant null Чекбокс скрыт
      * @protected
      */
-    protected _$checkboxStateProperty: boolean|null;
+    protected _$multiSelectAccessibilityProperty: boolean|null;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -3133,8 +3133,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
-            if (options.contents instanceof EntityModel && options.contents.has(this._$checkboxStateProperty)) {
-                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$checkboxStateProperty);
+            if (options.contents instanceof EntityModel && options.contents.has(this._$multiSelectAccessibilityProperty)) {
+                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
             }
             return create(this._itemModule, options);
         };
@@ -3958,7 +3958,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
-    _$checkboxStateProperty: '',
+    _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

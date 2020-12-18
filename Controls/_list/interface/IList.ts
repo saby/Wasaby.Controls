@@ -284,7 +284,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @name Controls/_list/interface/IList#checkboxStateProperty
+ * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @cfg {String} Имя свойства, содержащего информацию об состоянии чекбокса элемента.
  * @remark Определяет возможность изменения состояния чекбокса и его видимость

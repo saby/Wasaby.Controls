@@ -643,7 +643,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                parentProperty: ListData.PARENT_PROPERTY,
                nodeProperty: ListData.NODE_PROPERTY,
                hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
-               checkboxStateProperty: 'checkboxState'
+               multiSelectAccessibilityProperty: 'checkboxState'
             });
 
             const strategy = new TreeSelectionStrategy({
@@ -709,7 +709,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
                parentProperty: ListData.PARENT_PROPERTY,
                nodeProperty: ListData.NODE_PROPERTY,
                hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
-               checkboxStateProperty: 'checkboxState'
+               multiSelectAccessibilityProperty: 'checkboxState'
             });
 
             const strategy = new TreeSelectionStrategy({

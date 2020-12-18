@@ -11,7 +11,7 @@
                 nodeProperty="type"
                 multiSelectVisibility="visible"
                 selectionType="{{_selectionType}}"
-                checkboxStateProperty="checkboxState"
+                multiSelectAccessibilityProperty="checkboxState"
                 bind:selectedKeys="_selectedKeys"
                 bind:excludedKeys="_excludedKeys"
                 bind:expandedItems="_expandedItems"
