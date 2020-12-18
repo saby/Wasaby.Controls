@@ -2,16 +2,14 @@
  * Интерфейс для перемещения элементов списка с помощью drag'n'drop.
  * Больше информации можно прочитать {@link /doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ здесь}.
  *
- * @interface Controls/_interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */
 
 /*
  * Interface to move elements of the list by using drag'n'drop.
- * More information you can read <a href="/doc/platform/developmentapl/interface-development/controls/drag-n-drop/">here</a>.
+ * More information you can read {@link /doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ here}.
  *
- * @interface Controls/_interface/IDraggable
  * @public
  * @author Авраменко А.С.
  */

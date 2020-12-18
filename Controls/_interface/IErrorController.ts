@@ -6,7 +6,7 @@ export interface IErrorControllerOptions {
 /**
  * Интерфейс контролов, использующих источники данных и обрабатывающих ошибки от сервисов через {@link Controls/dataSource:error.Controller error-controller}.
  *
- * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/'>здесь</a>.
+ * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/pattern-and-practice/handling-errors/ здесь}.
  * @public
  * @author Заляев А.В
  */

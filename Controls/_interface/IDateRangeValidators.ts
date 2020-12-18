@@ -15,8 +15,6 @@ export interface IDateRangeValidatorsOptions {
 
 /**
  * Интерфейс для полей ввода с внутренней валидацией. Позволяет заать валидаторы для возвращаемого значения.
- *
- * @interface Controls/_interface/IDateRangeValidators
  * @public
  * @author Красильников А.С.
  */
