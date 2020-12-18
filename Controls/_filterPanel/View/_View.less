@@ -59,7 +59,8 @@
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName}:hover,
 .controls-FilterViewPanel__groupReset_theme-@{themeName}:hover,
-.controls-FilterViewPanel__group-content_theme-@{themeName}:hover {
+.controls-FilterViewPanel__group-content_theme-@{themeName}:hover,
+.controls-FilterViewPanel__groupReset-title_theme-@{themeName}:hover {
    color: @button_color-hover_filterViewPanel;
 }
 
@@ -74,6 +75,16 @@
    display: flex;
    flex-direction: row;
    height: @group_height_filterViewPanel;
+}
+
+.controls-FilterViewPanel__groupReset-title_theme-@{themeName} {
+   display: flex;
+   color: @group_color_filterViewPanel;
+   cursor: pointer;
+   flex-shrink: 0;
+   position: absolute;
+   top: @group-close-button_padding-top_filterViewPanel;
+   right: @padding-right_filterViewPanel;
 }
 
 .controls-FilterViewPanel__groupReset_theme-@{themeName} {

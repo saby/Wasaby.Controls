@@ -12,6 +12,12 @@
               {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
    </div>
+   <ws:if data="{{!collapsedGroups[item]}}">
+      <div class="controls-FilterViewPanel__groupReset
+                  controls-FilterViewPanel__groupReset-title_theme-{{_options.theme}}">
+         {{_options.resetCaption}}
+      </div>
+   </ws:if>
    <ws:if data="{{collapsedGroups[item] && _options.groupItems[item].textValue.length}}">
       <span class="controls-FilterViewPanel__groupReset
                   controls-PropertyGrid__groupExpander

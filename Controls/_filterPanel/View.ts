@@ -5,6 +5,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
 import * as clone from 'Core/core-clone';
+import rk = require('i18n!Controls');
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
@@ -34,6 +35,7 @@ export default class View extends Control<IControlOptions> {
     protected _editingObject: object = {};
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
+    protected _resetCaption: string = rk('все');
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._source = clone(options.source);
