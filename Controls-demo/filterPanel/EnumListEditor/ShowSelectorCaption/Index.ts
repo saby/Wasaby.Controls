@@ -39,7 +39,7 @@ export default class extends Control {
                     displayProperty: 'title',
                     showSelectorCaption: 'Другие сотрудники',
                     selectorTemplate: {
-                        templateName: 'Controls-demo/filterPanel/resources/StackTemplate',
+                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
                         templateOptions: {items: this._filterItems},
                         popupOptions: {
                             width: 500
