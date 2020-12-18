@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {ColumnScroll} from 'Controls/_grid/resources/ColumnScroll';
+import ColumnScroll from 'Controls/_columnScroll/ColumnScrollController';
 
 // @ts-ignore
 ColumnScroll.prototype._createGuid = () => '12345';

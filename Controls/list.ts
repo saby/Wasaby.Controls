@@ -11,6 +11,7 @@
  * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
+ * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -28,6 +29,7 @@
  * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
+ * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
  * @public
  * @author Крайнов Д.О.
  */

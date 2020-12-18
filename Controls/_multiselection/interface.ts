@@ -2,7 +2,7 @@ import { Collection, CollectionItem, IBaseCollection, ICollectionItem, TreeItem 
 import { Model, relation } from 'Types/entity';
 import { default as ISelectionStrategy } from './SelectionStrategy/ISelectionStrategy';
 import { RecordSet } from 'Types/collection';
-import { Controller as SourceController } from 'Controls/source';
+import { NewSourceController as SourceController } from 'Controls/dataSource';
 import { CrudEntityKey } from 'Types/source';
 
 export type TKeys = CrudEntityKey[];
