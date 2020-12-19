@@ -16,6 +16,7 @@ import DataRow from '../DataRow';
 import FooterRow from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
+import EmptyRow from '../EmptyRow';
 
 
 type THeaderVisibility = 'visible' | 'hasdata';
@@ -45,7 +46,9 @@ export interface IOptions {
     colspanCalculationCallback?: Function;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
-    stickyColumnsCount?: number
+    stickyColumnsCount?: number;
+    emptyTemplate: TemplateFunction;
+    emptyColumns;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -69,6 +72,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
+    protected _$emptyTemplate: TemplateFunction;
+    protected _$emptyColumns: EmptyRow<S>;
 
     protected constructor(options: IOptions) {
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
@@ -90,6 +95,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
         }
+
+        if (this._$emptyTemplate || this._$emptyColumns) {
+            this._$emptyGridRow = new EmptyRow<S>({
+                owner: this,
+                emptyTemplate: this._$emptyTemplate,
+                emptyColumns: this._$emptyColumns
+            });
+        }
     }
 
     getColumnsConfig(): TColumns {
@@ -110,6 +123,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     hasHeader(): boolean {
         return !!this.getHeader();
+    }
+
+    getEmptyGridRow(): EmptyRow<S> {
+        return this._$emptyGridRow;
     }
 
     getFooter(): FooterRow<S> {
@@ -319,5 +336,7 @@ Object.assign(Grid.prototype, {
     _$editArrowVisibilityCallback: null,
     _$colspanCalculationCallback: null,
     _$columnScroll: false,
-    _$stickyColumnsCount: 1
+    _$stickyColumnsCount: 1,
+    _$emptyTemplate: null,
+    _$emptyColumns: null
 });
