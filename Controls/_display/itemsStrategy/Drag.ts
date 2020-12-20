@@ -48,7 +48,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
     constructor(options: IOptions<S, T>) {
         super();
         this._options = options;
-        this._startIndex = options.display.getIndex(options.draggableItem);
+        this._startIndex = options.targetIndex;
     }
 
     get options(): IItemsStrategyOptions<S, T> {
