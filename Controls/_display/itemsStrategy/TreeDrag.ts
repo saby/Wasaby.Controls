@@ -10,24 +10,8 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
    setPosition(newPosition: IDragPosition<T>): void {
       super.setPosition(newPosition);
 
-      let avatarParent;
-
-      const targetItem = newPosition.dispItem;
-      const relativePosition = newPosition.position;
-      if (targetItem.isNode()) {
-         if (relativePosition === 'before' || relativePosition === 'after' && !targetItem.isExpanded()) {
-            avatarParent = targetItem.getParent();
-         } else if (relativePosition === 'after' && targetItem.isExpanded()) {
-            avatarParent = targetItem;
-         } else {
-            // relativePosition = 'on'
-            avatarParent = this.avatarItem.getParent();
-         }
-      } else {
-         avatarParent = targetItem.getParent();
-      }
-
-      this.avatarItem.setParent(avatarParent);
+      const newParent = this._getParentForDraggableItem(newPosition);
+      this.avatarItem.setParent(newParent);
    }
 
    protected _createItem(protoItem: T): T {
@@ -36,5 +20,26 @@ export default class TreeDrag<S extends Model = Model, T extends TreeItem<S> = T
          item.setParent(protoItem.getParent());
       }
       return item;
+   }
+
+   private _getParentForDraggableItem(newPosition: IDragPosition<T>): T {
+      let parent;
+
+      const targetItem = newPosition.dispItem;
+      const relativePosition = newPosition.position;
+      if (targetItem.isNode()) {
+         if (relativePosition === 'before' || relativePosition === 'after' && !targetItem.isExpanded()) {
+            parent = targetItem.getParent();
+         } else if (relativePosition === 'after' && targetItem.isExpanded()) {
+            parent = targetItem;
+         } else {
+            // relativePosition = 'on'
+            parent = this.avatarItem.getParent();
+         }
+      } else {
+         parent = targetItem.getParent();
+      }
+
+      return parent;
    }
 }

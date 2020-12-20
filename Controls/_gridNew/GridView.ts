@@ -294,7 +294,7 @@ const GridView = ListView.extend({
         return this._columnScrollViewController.getScrollBarStyles(GridLadderUtil.stickyLadderCellsCount(
             this._options.columns,
             this._options.stickyColumn,
-            this._listModel.getDraggingItem()
+            this._listModel.getDraggableItem()
         ));
     },
 

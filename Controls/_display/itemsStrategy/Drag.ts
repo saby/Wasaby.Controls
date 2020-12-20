@@ -13,15 +13,16 @@ interface IOptions<S extends Model, T extends CollectionItem<S>> extends IItemsS
 
     draggedItemsKeys: TKey[];
     draggableItem: T;
-    avatarIndex: number;
+    targetIndex: number;
 }
 
 interface ISortOptions {
-    avatarIndex: number;
+    targetIndex: number;
+    startIndex: number;
     filterMap: boolean[];
 }
 
-export default class Drag<S extends Model, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
+export default class Drag<S extends Model = Model, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     DestroyableMixin
 >(
     DestroyableMixin
@@ -41,9 +42,13 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
     // записи, и в который добавлена призрачная запись
     protected _items: T[];
 
+    private _startIndex: number;
+    private _currentPosition: IDragPosition<T>;
+
     constructor(options: IOptions<S, T>) {
         super();
         this._options = options;
+        this._startIndex = options.display.getIndex(options.draggableItem);
     }
 
     get options(): IItemsStrategyOptions<S, T> {
@@ -73,17 +78,22 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         let newIndex: number;
 
         // Приводим пару параметров index и position к одному - index
-        if (this._options.avatarIndex < newPosition.index && newPosition.position === 'before') {
+        if (this._options.targetIndex < newPosition.index && newPosition.position === 'before') {
             // нужна дополнительная проверка, т.к. при первом изменении позиции она не изменится при -1
             newIndex = newPosition.index - 1;
-        } else if (this._options.avatarIndex > newPosition.index && newPosition.position === 'after') {
+        } else if (this._options.targetIndex > newPosition.index && newPosition.position === 'after') {
             newIndex = newPosition.index + 1;
         } else {
             newIndex = newPosition.index;
         }
 
-        this._options.avatarIndex = newIndex;
+        this._options.targetIndex = newIndex;
+        this._currentPosition = newPosition;
         this.invalidate();
+    }
+
+    getCurrentPosition(): IDragPosition<T> {
+        return this._currentPosition;
     }
 
     at(index: number): T {
@@ -146,25 +156,28 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
 
     protected _createItemsOrder(): number[] {
         const items = this._getItems();
+        // filterMap нельзя передавать один раз через опции, т.к. во время перетаскивания он может измениться.
+        // Например, развернули узел. Через метод getFilterMap мы всегда получим актуальный filterMap
         return Drag.sortItems<S, T>(items, {
-            avatarIndex: this._options.avatarIndex,
-            filterMap: this._options.display.getFilterMap()
+            targetIndex: this._options.targetIndex,
+            filterMap: this._options.display.getFilterMap(),
+            startIndex: this._startIndex
         });
     }
 
     protected _createItems(): T[] {
-        const filteredItems = this.source.items.filter((item) => {
+        const filteredItems = this.source.items.filter((item, index) => {
             if (!item.DraggableItem) {
                 return true;
             }
             const key = item.getContents().getKey();
             return !this._options.draggedItemsKeys.includes(key);
         });
-
         if (!this._avatarItem) {
             this._avatarItem = this._createAvatarItem();
         }
-        return [this._avatarItem].concat(filteredItems);
+        filteredItems.splice(this._startIndex, 0, this._avatarItem);
+        return filteredItems;
     }
 
     protected _getProtoItem(): T {
@@ -188,34 +201,35 @@ export default class Drag<S extends Model, T extends CollectionItem<S> = Collect
         return item;
     }
 
-    static sortItems<S, T extends CollectionItem<S> = CollectionItem<S>>(
+    static sortItems<S extends Model = Model, T extends CollectionItem<S> = CollectionItem<S>>(
         items: T[],
         options: ISortOptions
     ): number[] {
         const itemsCount = items.length;
 
         const itemsOrder = new Array(itemsCount - 1);
-        for (let i = 1; i < itemsCount; i++) {
-            itemsOrder[i - 1] = i;
+        for (let i = 0; i < itemsCount; i++) {
+            itemsOrder[i] = i;
         }
 
-        const avatarIndex = this.getAvatarIndex(options.avatarIndex, options.filterMap);
-        itemsOrder.splice(avatarIndex, 0, 0);
+        const targetIndex = this.getIndexGivenFilter(options.targetIndex, options.filterMap);
+        itemsOrder.splice(options.startIndex, 1);
+        itemsOrder.splice(targetIndex, 0, options.startIndex);
 
         return itemsOrder;
     }
 
     /**
      * Возвращает индекс перетаскиваемой записи, учитывая скрытые записи
-     * @param avatarIndex
+     * @param sourceIndex
      * @param filterMap
      * @private
      */
-    private static getAvatarIndex(avatarIndex: number, filterMap: boolean[]): number {
+    private static getIndexGivenFilter(sourceIndex: number, filterMap: boolean[]): number {
         let countVisibleItem = 0;
         let projectionIndex = 0;
 
-        while (countVisibleItem < avatarIndex) {
+        while (countVisibleItem < sourceIndex) {
             projectionIndex++;
             if (filterMap[projectionIndex]) {
                 countVisibleItem++;

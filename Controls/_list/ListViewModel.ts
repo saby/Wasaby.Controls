@@ -488,6 +488,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
+    getDraggableItem(): CollectionItem {
+        if (this.getDisplay()) {
+            return this.getDisplay().getDraggableItem();
+        }
+    },
+
     // endregion
 
     setSwipeItem: function(itemData) {

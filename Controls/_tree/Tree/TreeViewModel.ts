@@ -684,15 +684,6 @@ var
                 _private.setNodeFooterIfNeed(this, current);
             }
 
-            const originalGetVersion = current.getVersion;
-            current.getVersion = () => {
-                let version = originalGetVersion();
-                if (current.dispItem.isDragTargetNode()) {
-                    version = 'DRAGTARGETNODE_' + version;
-                }
-                return version;
-            };
-
             return current;
         },
 
@@ -705,13 +696,11 @@ var
                 version = 'COLLAPSED_' + version;
             }
 
-            return version;
-        },
-
-        getPrevDragPosition(): IDragPosition<TreeItem> {
-            if (this.getDisplay()) {
-                return this.getDisplay().getPrevDragPosition();
+            if (this.isDragging() && this.getItemBySourceKey(key)?.isDragTargetNode()) {
+                version = 'DRAGTARGETNODE_' + version;
             }
+
+            return version;
         },
 
         setHasMoreStorage: function(hasMoreStorage) {

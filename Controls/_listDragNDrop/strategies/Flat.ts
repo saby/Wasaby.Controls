@@ -46,7 +46,7 @@ export default class Flat<
         }
 
         // If you hover on a record that is being dragged, then the position should not change.
-        if (!(targetItem['[Controls/_display/GroupItem]']) && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey()) {
+        if (!(targetItem['[Controls/_display/GroupItem]']) && this._targetItemIsDraggable(targetItem)) {
             return currentPosition;
         }
 
@@ -73,5 +73,10 @@ export default class Flat<
             dispItem: targetItem,
             position
         };
+    }
+
+    protected _targetItemIsDraggable(targetItem: T): boolean {
+        return this._draggableItem && targetItem
+           && this._draggableItem.getContents().getKey() === targetItem.getContents().getKey();
     }
 }

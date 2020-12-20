@@ -308,10 +308,6 @@ var
             this._model.setHasMoreStorage(hasMoreStorage);
         },
 
-       getPrevDragPosition() {
-           return this._model.getPrevDragPosition();
-       },
-
         destroy: function () {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);

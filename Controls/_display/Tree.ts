@@ -3,7 +3,7 @@ import Collection, {
     IOptions as ICollectionOptions,
     ISessionItemState,
     ISerializableState as IDefaultSerializableState,
-    ISplicedArray
+    ISplicedArray, StrategyConstructor
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
@@ -247,17 +247,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _dragStrategy: Function = TreeDragStrategy;
 
-    /**
-     * Текущая позиция перетаскиваемого элемента
-     * @private
-     */
-    private _currentDragPosition: IDragPosition<T>;
-    /**
-     * Предыдущая позиция перетаскиваемого элемента
-     * @private
-     */
-    private _previousDragPosition: IDragPosition<T>;
-
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
 
@@ -344,38 +333,39 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setDragPosition(position: IDragPosition<T>): void {
-        if (!isEqual(this._previousDragPosition, position)) {
-            if (this._previousDragPosition && this._previousDragPosition.dispItem.isDragTargetNode()) {
-                this._previousDragPosition.dispItem.setDragTargetNode(false);
-                this._nextVersion();
+        const dragStrategy = this.getStrategyInstance(this._dragStrategy as StrategyConstructor<any>) as TreeDragStrategy;
+
+        if (dragStrategy) {
+            const currentPosition = dragStrategy.getCurrentPosition();
+            if (!isEqual(currentPosition, position)) {
+                if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
+                    currentPosition.dispItem.setDragTargetNode(false);
+                    this._nextVersion();
+                }
             }
-            this._previousDragPosition = this._currentDragPosition;
-        }
-        this._currentDragPosition = position;
 
-        if (position.position === 'on') {
-            const dragStrategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
-            if (dragStrategy && dragStrategy.avatarItem !== position.dispItem && !position.dispItem.isDragTargetNode()) {
-                position.dispItem.setDragTargetNode(true);
-                this._nextVersion();
+            if (position.position === 'on') {
+                if (dragStrategy.avatarItem !== position.dispItem && !position.dispItem.isDragTargetNode()) {
+                    position.dispItem.setDragTargetNode(true);
+                    this._nextVersion();
+                }
+                return;
             }
-            return;
+
+            super.setDragPosition(position);
         }
-
-        super.setDragPosition(position);
-    }
-
-    getPrevDragPosition(): IDragPosition<T> {
-        return this._previousDragPosition;
     }
 
     resetDraggedItems(): void {
-        if (this._currentDragPosition) {
-            this._currentDragPosition.dispItem.setDragTargetNode(false);
+        const dragStrategy = this.getStrategyInstance(this._dragStrategy as StrategyConstructor<any>) as TreeDragStrategy;
+
+        if (dragStrategy) {
+            const currentPosition = dragStrategy.getCurrentPosition();
+            if (currentPosition) {
+                currentPosition.dispItem.setDragTargetNode(false);
+            }
+            super.resetDraggedItems();
         }
-        super.resetDraggedItems();
-        this._currentDragPosition = null;
-        this._previousDragPosition = null;
     }
 
     // endregion Drag-n-drop
