@@ -397,17 +397,8 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
             if (match.length >= linkMaxLenght) {
                 nodeToPush = match;
             } else if (link) {
-                const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
-                if (isEndingPartOfDomain) {
-                    simpleLinkDomain += ending;
-                }
-                const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
-                hasAnyLink = hasAnyLink || !wrongDomain;
-                link = link + ending;
-                nodeToPush = wrongDomain ? match : createLinkNode(
-                    (simpleLinkPrefix ? 'http://' : '') + link,
-                    link
-                );
+               [hasAnyLink, nodeToPush] = processLink(link, simpleLinkDomain, ending,
+                  hasAnyLink, simpleLinkPrefix, match, false);
             } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
                 if (isEndingPartOfEmail) {
@@ -449,22 +440,38 @@ export function receiveLinksArray(stringNode: string): string[] {
       linkParseExec = linkParseRegExp.exec(stringNode);
       let nodeToPush: string[] | string;
       if (link) {
-         const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
-         if (isEndingPartOfDomain) {
-            simpleLinkDomain += ending;
-         }
-         const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
-         hasAnyLink = hasAnyLink || !wrongDomain;
-         link = link + ending;
-         nodeToPush = wrongDomain ? match : simpleLinkPrefix ? 'http://' + link : '' + link;
-         
-         if (hasAnyLink) {
+         [hasAnyLink, nodeToPush] = processLink(link, simpleLinkDomain, ending,
+            hasAnyLink, simpleLinkPrefix, match, true);
+
+         if (hasAnyLink && typeof nodeToPush === 'string') {
             result.push(nodeToPush);
          }
       }
    }
 
    return result;
+}
+
+function processLink(link: string, simpleLinkDomain: string, ending: string,
+   hasAnyLink: boolean, simpleLinkPrefix: string, match: string, onlyLinks: boolean):
+   [boolean, string | string[]] {
+   const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
+   if (isEndingPartOfDomain) {
+      simpleLinkDomain += ending;
+   }
+   const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
+   hasAnyLink = hasAnyLink || !wrongDomain;
+   link = link + ending;
+
+   if (onlyLinks) {
+      const result = wrongDomain ? match : simpleLinkPrefix ? 'http://' + link : '' + link;
+      return [hasAnyLink, result];
+   }
+
+   const result = wrongDomain ? match : createLinkNode(
+      (simpleLinkPrefix ? 'http://' : '') + link, link);
+
+   return [hasAnyLink, result];
 }
 
 export function clearNeedDecorateGlobals() {
