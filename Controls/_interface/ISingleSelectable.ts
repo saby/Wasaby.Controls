@@ -2,7 +2,7 @@ export type TSelectedKey = number|string|null;
 
 export interface ISingleSelectableOptions {
    selectedKey?: TSelectedKey;
-   keyProperty: string;
+   keyProperty?: string;
 }
 /**
  * Интерфейс для выбора элементов в списках с одиночным выбором (единовременно может быть выбран только один элемент).
