@@ -233,6 +233,49 @@ export interface IColumn extends IColspanParams, IRowspanParams {
      */
     template?: TemplateFunction;
     /**
+     * @name Controls/_grid/interface/IColumn#templateOptions
+     * @cfg {object} Объект с опциями для колонки.
+     *
+     * Позволяет передать дополнительные настройки в шаблон колонки, которые будут доступны в поле _options.
+     * @remark Необходимо использовать для кастомизации шаблона колонки, в случаях когда нужно избежать дублирования кода.
+     * @example
+     * В следующем примере показано как использовать templateOptions для кастомизации цвета текста в колонке.
+     *
+     * TS:
+     * <pre class="brush: js">
+     * import * as exampleTemplate 'wml!.../ExampleColumn';
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         template: exampleTemplate
+     *         templateOptions: {
+     *             displayProperty: 'price',
+     *             style: 'primary'
+     *         }
+     *     },
+     *     {
+     *         template: exampleTemplate
+     *         templateOptions: {
+     *             displayProperty: 'sum',
+     *             style: 'secondary'
+     *         }
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     *
+     * WML:
+     * <pre class="brush: html; highlight: [4]">
+     * <!-- ExampleColumn.wml -->
+     * <Controls.grid:ColumnTemplate itemData="{{itemData}}">
+     *     <ws:contentTemplate>
+     *         <div class="controls-text-{{_options.style}}_theme-{{_options.theme}}">{{itemData.item[_options.displayProperty]}}</div>
+     *     </ws:contentTemplate>
+     * </Controls.grid:ColumnTemplate>
+     * </pre>
+     */
+    templateOptions?: object;
+    /**
      * @name Controls/_grid/interface/IColumn#resultTemplate
      * @cfg {String|Function} Шаблон отображения ячейки в строке итогов.
      * @default undefined
