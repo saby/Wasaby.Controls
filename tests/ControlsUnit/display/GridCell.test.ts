@@ -2,6 +2,7 @@ import { assert } from 'chai';
 
 import { GridCell, GridCollection, GridRow } from 'Controls/display';
 import { Model } from 'Types/entity';
+import {IColumn} from 'Controls/grid';
 
 describe('Controls/display:Cell', () => {
 
@@ -39,17 +40,55 @@ describe('Controls/display:Cell', () => {
         assert.isFalse(gridCell.isMultiSelectColumn());
     });
 
-    describe('wrapperClasses', () => {
-        // controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-default // 's' || null
+    describe('wrapperClasses with and without columnSeparator class', () => {
+        let columns: IColumn[];
+        let gridRow: GridRow<Model>;
+        let columnSeparatorSize: 's' | null;
 
-        it('should add separatorClass according to default separatorSize');
+        function getGridCollection(): GridCollection<Model> {
+            return new GridCollection({
+                collection: [{id: 1, name: 'James', surName: 'Bond', salary: '50000$', position: 'Secret agent'}],
+                keyProperty: 'id',
+                columnSeparatorSize,
+                columns
+            });
+        }
 
-        it('should add left separatorClass according column\'s columnSeparatorSize config');
+        function getCell(grid: GridCollection<Model>, index: number): GridCell<Model, GridRow<Model>> {
+            gridRow = grid.at(0) as GridRow<Model>;
+            return gridRow.getColumns()[index] as GridCell<Model, GridRow<Model>>;
+        }
 
-        it('shouldn\'t add left separatorClass according column\'s columnSeparatorSize config');
+        beforeEach('', () => {
+            columns = [{ width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}];
+        });
 
-        it('should add right separatorClass according column\'s columnSeparatorSize config');
+        it('should add separatorClass according to default separatorSize', () => {
+            columnSeparatorSize = 's';
+            const grid = getGridCollection();
+            const wrapperClasses = getCell(grid, 1).getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
 
-        it('shouldn\'t add right separatorClass according column\'s columnSeparatorSize config');
+        it('should add separatorClass according to the column left columnSeparatorSize config', () => {
+            columns[1].columnSeparatorSize = {left: 's', right: null};
+            const grid = getGridCollection();
+            const wrapperClasses1 = getCell(grid, 1).getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses1, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('shouldn\'t add separatorClass according to the column left columnSeparatorSize config', () => {
+            columns[1].columnSeparatorSize = {left: null, right: 's'};
+            const grid = getGridCollection();
+            const wrapperClasses2 = getCell(grid, 1).getWrapperClasses('default', 'default', 'default', true);
+            assert.notInclude(wrapperClasses2, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should add separatorClass according to the previous column right columnSeparatorSize config', () => {
+            columns[1].columnSeparatorSize = {left: null, right: 's'};
+            const grid = getGridCollection();
+            const wrapperClasses = getCell(grid, 2).getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
     });
 });
