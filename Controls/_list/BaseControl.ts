@@ -448,7 +448,8 @@ const _private = {
 
                     _private.resetScrollAfterLoad(self);
 
-                    // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+                    // If received list is empty, make another request. If it’s not empty, the following page will be
+                    // requested in resize event handler after current items are rendered on the page.
                     if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
                         if (self._isMounted) {
                             _private.checkLoadToDirectionCapability(self, filter, navigation);
@@ -1420,7 +1421,7 @@ const _private = {
      * Инициализируем paging если он не создан
      * @private
      */
-    initPaging(self) {
+    initPaging(self: typeof BaseControl): void {
         if (!(self._editInPlaceController && self._editInPlaceController.isEditing())
             && _private.needScrollPaging(self._options.navigation)) {
             if (self._viewportSize) {
@@ -1438,7 +1439,7 @@ const _private = {
         }
     },
 
-    handleListScrollSync(self, scrollTop) {
+    handleListScrollSync(self: typeof BaseControl, scrollTop: number): void {
         if (!self._pagingVisible) {
             _private.initPaging(self);
         }
@@ -2739,7 +2740,8 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
-            forceInitVirtualScroll: options?.navigation?.view === 'infinity'
+            forceInitVirtualScroll: options?.navigation?.view === 'infinity',
+            list: self
         });
         const result = self._scrollController.handleResetItems();
         _private.handleScrollControllerResult(self, result);
@@ -3768,7 +3770,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _updateScrollController(newOptions) {
+    _updateScrollController(newOptions): void {
         if (this._scrollController) {
             this._scrollController.setRendering(true);
             const result = this._scrollController.update({
@@ -4404,9 +4406,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             let itemsUpdated = false;
             if (this._listViewModel && !this._modelRecreated && this._viewReady) {
-                itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+                itemsUpdated = this._scrollController.updateItemsHeights(
+                    getItemsHeightsData(this._getItemsContainer())
+                );
             }
-            this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
+            this._scrollController.update({
+                params: {
+                    scrollHeight: this._viewSize,
+                    clientHeight: this._viewportSize
+                }
+            });
             this._scrollController.setRendering(false);
 
             let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||

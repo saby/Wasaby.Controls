@@ -2,7 +2,6 @@ import {IControlOptions} from 'UI/Base';
 import {Collection} from 'Controls/display';
 import VirtualScroll from './ScrollContainer/VirtualScroll';
 import {Record, Model} from 'Types/entity';
-import {IObservable} from 'Types/collection';
 import {
     IItemsHeights,
     IPlaceholders,
@@ -18,6 +17,7 @@ import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
 import { getDimensions as uDimension } from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
+import * as ListBaseControl from './BaseControl';
 
 export interface IScrollParams {
     clientHeight: number;
@@ -46,6 +46,7 @@ export interface IOptions extends IControlOptions, ICompatibilityOptions {
     _triggerPositionCoefficient: number;
     forceInitVirtualScroll: boolean;
     attachLoadTopTriggerToNull: boolean;
+    list: typeof ListBaseControl;
 }
 
 /**
@@ -67,7 +68,13 @@ export default class ScrollController {
 
     private _continueScrollToItem: Function;
     private _completeScrollToItem: Function;
-    private _applyScrollTopCallback: Function;
+
+    /**
+     * Величина на которую нужно сделать доскрол виртуального скрола после того как
+     * поменялся диапазон отображаемых записей и был пересчитат topPlaceholder
+     * Обрабатывается в ф-ии {@link completeVirtualScrollIfNeed}
+     */
+    private _newVirtualScrollPosition: number;
 
     private _isRendering: boolean = false;
 
@@ -199,14 +206,22 @@ export default class ScrollController {
         }
         return result;
     }
+
+    /**
+     * Выполняет доскрол списка после того как отрабатает основная
+     * логика виртуального скрола.
+     *
+     * @see _newVirtualScrollPosition
+     */
     completeVirtualScrollIfNeed(): boolean {
-        let result = false;
-        if (this._applyScrollTopCallback) {
-                this._applyScrollTopCallback();
-                this._applyScrollTopCallback = null;
-                result = true;
+        if (!this._newVirtualScrollPosition) {
+            return false;
         }
-        return result;
+
+        // Доскрол виртуального скрола после изменнеия величины topPlaceholder
+        this._options.list._notify('doScroll', [this._newVirtualScrollPosition], { bubbling: true });
+        this._newVirtualScrollPosition = 0;
+        return true;
     }
 
     /**
@@ -482,20 +497,30 @@ export default class ScrollController {
      * @private
      */
     private virtualScrollPositionChanged(params: IScrollParams): IScrollControllerResult  {
-        if (this._virtualScroll) {
-            const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
-            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
-                this._options.needScrollCalculation);
-            this._applyScrollTopCallback = params.applyScrollTopCallback;
-            if (!this._isRendering && !this._virtualScroll.rangeChanged) {
-                this.completeVirtualScrollIfNeed();
-            }
-            this.savePlaceholders(rangeShiftResult.placeholders);
-            return {
-                placeholders: rangeShiftResult.placeholders,
-                shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
-            };
+        if (!this._virtualScroll) {
+            return;
         }
+
+        const rangeShiftResult = this._virtualScroll.shiftRangeToScrollPosition(params.scrollTop);
+        this._setCollectionIndices(
+            this._options.collection,
+            rangeShiftResult.range,
+            false,
+            this._options.needScrollCalculation
+        );
+
+        // Т.к. изменился размер верхнего placeholder, то нужно пересчитать величину
+        // виртуального скрола и выполнить доскол
+        this._newVirtualScrollPosition = params.scrollTop - rangeShiftResult.placeholders.top;
+        if (!this._isRendering && !this._virtualScroll.rangeChanged) {
+            this.completeVirtualScrollIfNeed();
+        }
+
+        this.savePlaceholders(rangeShiftResult.placeholders);
+        return {
+            placeholders: rangeShiftResult.placeholders,
+            shadowVisibility: this._calcShadowVisibility(this._options.collection, rangeShiftResult.range)
+        };
     }
 
     /**
