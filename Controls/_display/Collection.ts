@@ -2304,6 +2304,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
             this.removeStrategy(this._dragStrategy as StrategyConstructor<any>);
             this._reIndex();
+            this._reFilter();
 
             if (this._wasNotifyAddEventOnStartDrag) {
                 this._wasNotifyAddEventOnStartDrag = false;

@@ -868,7 +868,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                     Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
                     то почему-то не срабатывает mouseLeave
                  */
-                if (dragTargetPosition.position === 'before') {
+                if (dragTargetPosition.position !== 'on') {
                     this._clearTimeoutForExpandOnDrag();
                 }
             }
