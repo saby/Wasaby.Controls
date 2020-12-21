@@ -22,7 +22,6 @@
 
 export default interface IMediumTemplate {
     /**
-     * @name Controls/_tile/interface/MediumTemplate#imageSize
      * @cfg {Number} Количество строк в описании.
      * @default 1
      */

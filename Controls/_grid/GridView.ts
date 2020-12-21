@@ -407,7 +407,7 @@ var
                 // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
                 // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
                 // списочного контрола.
-                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScrollOld;
+                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
             }
 
             return resultSuper;

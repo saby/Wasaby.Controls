@@ -2460,12 +2460,12 @@ const _private = {
     getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
-                nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
                 rootId: options.root,
                 model: collection,
-                entryPath
+                entryPath,
+                selectionType: options.selectionType
             };
         } else {
             return { model: collection };
@@ -3241,7 +3241,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
-    _preventServerSideColumnScroll: false,
+    _useServerSideColumnScroll: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3271,6 +3271,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.initializeNavigation(this, newOptions);
         this._loadTriggerVisibility = {};
+
+        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+            if (typeof newOptions.preventServerSideColumnScroll === 'boolean') {
+                this._useServerSideColumnScroll = !newOptions.preventServerSideColumnScroll;
+            } else {
+                this._useServerSideColumnScroll = true;
+            }
+        }
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
@@ -3677,6 +3685,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _afterMount(): void {
         this._isMounted = true;
 
+        if (this._useServerSideColumnScroll) {
+            this._useServerSideColumnScroll = false;
+        }
+
         if (_private.hasMoreData(this, this._sourceController, 'up')) {
             this._notify('enableVirtualNavigation', [], { bubbling: true });
         } else {
@@ -4002,8 +4014,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
 
+            const visibilityChangedFromHidden = this._options.multiSelectVisibility === 'hidden' &&  newOptions.multiSelectVisibility !== 'hidden';
+
             // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this))) {
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this)) || visibilityChangedFromHidden && newOptions.selectedKeys?.length || this._options.selectionType !== newOptions.selectionType) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -4541,7 +4555,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        this._preventServerSideColumnScroll = true;
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4683,11 +4696,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick(e, key, status, readOnly) {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, readOnly: boolean): void {
+        const key = item.getContents().getKey();
         if (!readOnly) {
             const newSelection = _private.getSelectionController(this).toggleItem(key);
+            this._notify('checkboxClick', [key, item.isSelected()]);
             _private.changeSelection(this, newSelection);
-            this._notify('checkboxClick', [key, status]);
         }
         // если чекбокс readonly, то мы все равно должны проставить маркер
         this.setMarkedKey(key);
