@@ -2588,11 +2588,14 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
-                self._notify('activeElementChanged', [result.activeElement]);
-                if (result.scrollToActiveElement) {
+            if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+                if (result.activeElement) {
+                    self._notify('activeElementChanged', [result.activeElement]);
+                }
+                if (result.scrollToActiveElement && self._options.activeElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                    self._keepScrollAfterReload = true;
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
