@@ -558,6 +558,7 @@ export interface IBaseOpener {
  * Полученные данные будут переданы в опцию prefetchPromise.
  * @remark
  * **Обратите внимение: модуль загрузчика данных - синглтон.**
+ * **Внимание. Функционал является экспериментальным, перед использованием посоветуйтесь с Андреем К.**
  * @example
  *
  * Описание модуля предзагрузки
@@ -566,17 +567,24 @@ export interface IBaseOpener {
  *   import {SbisService} from 'Types/source';
  *
  *   const STORE_KEY = 'MyStoreKey';
- *   const LOADER_KEY = 'MyLoaderKey';
  *
  *   class MyLoader {
  *       init(): void {
  *           // Инициализация, если необходимо, вызывается перед вызовом loadData
  *       }
- *       getState() {
- *           return getStore(STORE_KEY).get(LOADER_KEY);
+ *       getState(key) {
+ *           return getStore(STORE_KEY).get(key);
  *       }
- *       setState(data) {
- *           getStore(STORE_KEY).set(LOADER_KEY, data);
+ *       setState(key, data) {
+ *           getStore(STORE_KEY).set(key, data);
+ *       }
+ *
+ *       // Это нужно для того, чтобы хакэшировать полученные на сервере даные и не запрашивать еше раз на клиенте
+ *       getReceivedData(params) {
+ *           return this.getState(this._getKeyByParams(params));
+ *       }
+ *       _getKeyByParams(params) {
+ *           // Нужно получить из параметров уникальное значение для данного набора параметров, чтобы закэшировать ответ.
  *       }
  *       loadData(params) {
  *           return new SbisService({
