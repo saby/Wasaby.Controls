@@ -39,6 +39,12 @@ export default class Header<T> {
         return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
     }
 
+    nextVersion(): void {
+        this._$rows.forEach((row) => {
+            row.nextVersion();
+        });
+    }
+
     protected _initializeRows(options: IOptions<T>): Array<HeaderRow<T>> {
         this._$headerBounds = this._getGridHeaderBounds(options);
         return this._buildRows(options);

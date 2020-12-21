@@ -16,12 +16,12 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 
-import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell} from 'Controls/grid';
+import {IColspanParams, IColumnSeparatorSizeConfig, IHeaderCell} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
 import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
+import {TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
@@ -37,6 +37,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
+    protected _$columnSeparatorSize: IColumnSeparatorSizeConfig;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -90,10 +91,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     _getColspanParams(): Required<IColspanParams> {
         const params = super._getColspanParams();
-
-        // checkBoxCell также является HeaderCell, и она участвует в рассчёте colspanParams для всех колонок
-        // Поэтому всем колонкам надо вычесть multiSelectOffset
-        if (this._$owner.needMultiSelectColumn()) {
+        if (this.isCheckBoxCell()) {
             params.endColumn--;
             params.startColumn--;
         }
@@ -185,6 +183,31 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return this._$column.textOverflow;
     }
 
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
+            let columnSeparatorSize: TColumnSeparatorSize;
+            let previousCell: HeaderCell<T>;
+            if (this.getColumnIndex() !== 0) {
+                previousCell = this._$owner.getColumns()[this.getColumnIndex() - 1] as undefined as HeaderCell<T>;
+            }
+            if (this.getColumnSeparatorSize()?.hasOwnProperty('left')) {
+                columnSeparatorSize = this.getColumnSeparatorSize().left;
+
+            } else if (previousCell?.getColumnSeparatorSize()?.hasOwnProperty('right')) {
+                columnSeparatorSize = previousCell.getColumnSeparatorSize().right;
+
+            } else {
+                columnSeparatorSize = this._$owner.getColumnSeparatorSize();
+            }
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
+    }
+
+    getColumnSeparatorSize(): IColumnSeparatorSizeConfig {
+        return this._$columnSeparatorSize;
+    }
+
     // todo <<< START >>> compatible with old gridHeaderModel
     get column(): IHeaderCell {
         return this._$column;
@@ -232,5 +255,6 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null
+    _$cellPadding: null,
+    _$columnSeparatorSize: null
 });

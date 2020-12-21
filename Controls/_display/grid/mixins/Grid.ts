@@ -160,7 +160,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$columnSeparatorSize = columnSeparatorSize;
         this._nextVersion();
-        this._$header.getRow().nextVersion();
+        this._$header.nextVersion();
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {

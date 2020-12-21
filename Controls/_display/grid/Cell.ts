@@ -8,7 +8,7 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
+import {IColumn, IColspanParams, IRowspanParams, IColumnSeparatorSizeConfig} from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
@@ -375,25 +375,32 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     protected _getColumnSeparatorClasses(theme: string): string {
         if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
-            let columnSeparatorSize: TColumnSeparatorSize;
-            const currentColumn = this._$column;
-            const previousCell = this._$owner.getColumns()[this.getColumnIndex() + 1];
-            const previousColumn = previousCell?.getColumnConfig();
-
-            // Приводим значение к lowerCase
-            const normalize = (value: TColumnSeparatorSize) => (
-                typeof value === 'string' ? value.toLowerCase() : null) as TColumnSeparatorSize;
-
-            if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
-                columnSeparatorSize = currentColumn.columnSeparatorSize.left;
-            } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
-                columnSeparatorSize = normalize(previousColumn.columnSeparatorSize.right);
-            } else {
-                columnSeparatorSize = this._$owner.getColumnSeparatorSize();
-            }
-            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+            const columnSeparatorSize = this._getColumnSeparatorSize();
+            const normalizedColumnSeparatorSize: TColumnSeparatorSize = (typeof columnSeparatorSize === 'string' ?
+                columnSeparatorSize.toLowerCase() : null) as TColumnSeparatorSize;
+            return ` controls-Grid__columnSeparator_size-${normalizedColumnSeparatorSize}_theme-${theme}`;
         }
         return '';
+    }
+
+    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize;
+        const currentColumn = this._$column;
+        let previousColumn: IColumn;
+        if (this.getColumnIndex() !== 0) {
+            const previousCell = this._$owner.getColumns()[this.getColumnIndex() - 1];
+            previousColumn = previousCell?.getColumnConfig();
+        }
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
+
+        } else {
+            columnSeparatorSize = this._$owner.getColumnSeparatorSize();
+        }
+        return columnSeparatorSize;
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {

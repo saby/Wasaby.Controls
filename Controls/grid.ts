@@ -90,7 +90,8 @@ export {
     TCellAlign,
     TCellPaddingVariant,
     TCellVerticalAlign,
-    TOverflow
+    TOverflow,
+    IColumnSeparatorSizeConfig
 } from './_grid/interface/IColumn';
 
 export {IGridControl} from './_grid/interface/IGridControl';
