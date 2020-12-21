@@ -143,7 +143,7 @@ const editing = {
 };
 
 import {groupConstants} from './display';
-import {checkboxStateConstants} from './display';
+import {MultiSelectAccessibility} from './display';
 import {CursorDirection} from './interface';
 
-export {CursorDirection, groupConstants, editing, checkboxStateConstants};
+export {CursorDirection, groupConstants, editing, MultiSelectAccessibility};
