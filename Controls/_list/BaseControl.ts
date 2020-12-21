@@ -2589,10 +2589,13 @@ const _private = {
                 }
             }
             if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+                // activeElement запишется в result только, когда он изменится
                 if (result.activeElement) {
                     self._notify('activeElementChanged', [result.activeElement]);
                 }
-                if (result.scrollToActiveElement && self._options.activeElement) {
+
+                // Скроллить к активному элементу нужно только, когда в опции передали activeElement
+                if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
                     _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
