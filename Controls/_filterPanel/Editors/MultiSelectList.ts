@@ -70,7 +70,7 @@ export default class MultiSelectList extends ListEditorBase {
             textValue,
             needColapse
         };
-        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.additionalTextProperty);
+        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.multiSelectVisibility, this._options.additionalTextProperty);
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 

@@ -136,20 +136,27 @@
    top: (@cell_min-height_grid - @circle_size_filterViewPanel) / 2;
 }
 
-.controls-EnumList_Editor__borderCircle {
-   fill: transparent;
+.controls-MultiSelectList_Editor__svg_theme-@{themeName} {
+   width: @circle_size_filterViewPanel;
+   height: @circle_size_filterViewPanel;
+   position: absolute;
+   left: (@padding-left_filterViewPanel - @circle_size_filterViewPanel) / 2;
+   top: 0;
 }
 
-.controls-EnumList_Editor__borderCircle_theme-@{themeName} {
-   stroke-width: @border-circle_thickness_filterViewPanel;
-   stroke: @background-color_filterViewPanel;
+.controls-EnumList_Editor__borderCircle {
+   fill: transparent;
 }
 
 .controls-EditorList__columns {
    position: relative;
 }
 
-.controls-EditorList__columns:hover {
+.controls-EditorList__multiSelect-column_theme-@{themeName} {
+   padding-left: @item_padding-left_filterViewPanel;
+}
+
+.controls-Grid__row:hover {
    .controls-EnumList_Editor__borderCircle_theme-@{themeName} {
       stroke: @border-circle_color_filterViewPanel;
    }

@@ -3,6 +3,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/ListBase';
 import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
+import * as CircleTemplate from 'wml!Controls/_filterPanel/Editors/resources/CircleTemplate';
 import {StackOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
 import {IFilterOptions, ISourceOptions, INavigationOptions, IItemActionsOptions, ISelectorDialogOptions, ISelectorTemplate} from 'Controls/interface';
@@ -19,6 +20,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 
 abstract class ListEditorBase extends Control<IListEditorOptions> {
     protected _template: TemplateFunction = ListTemplate;
+    protected _circleTemplate: TemplateFunction = CircleTemplate;
     protected _columns: object[] = null;
     protected _stackOpener: StackOpener = null;
     protected _items: RecordSet = null;
@@ -31,7 +33,7 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
-        this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+        this._setColumns(options.displayProperty, options.propertyValue, options.multiSelectVisibility, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
     }
 
@@ -41,7 +43,7 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
-            this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+            this._setColumns(options.displayProperty, options.propertyValue, options.multiSelectVisibility, options.additionalTextProperty);
         }
     }
 
@@ -68,8 +70,13 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         this._items = items;
     }
 
-    protected _setColumns(displayProperty: string, propertyValue: number|string|string[]|number[], additionalTextProperty?: string): void {
-        this._columns = [{template: ColumnTemplate, selected: propertyValue, displayProperty}];
+    protected _setColumns(displayProperty: string, propertyValue: number|string|string[]|number[], multiSelectVisibility: string, additionalTextProperty?: string): void {
+        this._columns = [{
+            template: ColumnTemplate,
+            selected: propertyValue,
+            displayProperty,
+            multiSelect: multiSelectVisibility && multiSelectVisibility !== 'hidden'
+        }];
         if (additionalTextProperty) {
             this._columns.push({align: 'right', displayProperty: additionalTextProperty, width: 'auto'});
         }

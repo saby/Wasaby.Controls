@@ -13,6 +13,9 @@
                        on:selectedKeysChanged="_handleSelectedKeysChanged()"
                        on:itemClick="_handleItemClick()">
       <ws:itemPadding left="xxl" right="m"/>
+      <ws:multiSelectTemplate>
+         <ws:partial template="{{_circleTemplate}}" multiSelectVisibility="{{_options.multiSelectVisibility}}"/>
+      </ws:multiSelectTemplate>
       <ws:footerTemplate>
          <ws:if data="{{_options.selectorTemplate}}">
             <Controls.buttons:Button viewMode="linkButton"
