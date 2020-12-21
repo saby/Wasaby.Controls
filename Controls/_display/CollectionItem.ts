@@ -33,8 +33,8 @@ export interface IOptions<T extends Model = Model> {
     owner?: ICollection<T, CollectionItem<T>>;
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
-    multiSelectVisibility: string;
-    checkboxState: boolean|null;
+    multiSelectVisibility?: string;
+    checkboxState?: boolean|null;
 }
 
 export interface ISerializableState<T> extends IDefaultSerializableState {

@@ -79,7 +79,6 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
 
         // Приводим пару параметров index и position к одному - index
         if (this._options.targetIndex < newPosition.index && newPosition.position === 'before') {
-            // нужна дополнительная проверка, т.к. при первом изменении позиции она не изменится при -1
             newIndex = newPosition.index - 1;
         } else if (this._options.targetIndex > newPosition.index && newPosition.position === 'after') {
             newIndex = newPosition.index + 1;
@@ -122,7 +121,9 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         const reallyAdded: T[] = added.map(
            (contents) => contents instanceof CollectionItem ? contents as any as T : this._createItem(contents)
         );
-        this._items.splice(start, deleteCount, ...reallyAdded);
+        if (this._items) {
+            this._items.splice(start, deleteCount, ...reallyAdded);
+        }
         return this.source.splice(
             start,
             deleteCount,
@@ -171,7 +172,7 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
     }
 
     protected _createItems(): T[] {
-        const filteredItems = this.source.items.filter((item, index) => {
+        const filteredItems = this.source.items.filter((item) => {
             if (!item.DraggableItem) {
                 return true;
             }
