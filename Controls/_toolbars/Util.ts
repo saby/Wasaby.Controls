@@ -63,11 +63,17 @@ export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions
     const cfg: IButtonOptions = {};
     const defaultOptions = getDefaultOptions();
     const icon = item.get('icon');
-    const caption = item.get('caption');
     const viewMode = item.get('viewMode') || 'link';
     const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
     const buttonStyle = item.get('buttonStyle') || defaultOptions.buttonStyle;
     const iconStyle = item.get('iconStyle') || toolbarOptions.iconStyle || defaultOptions.iconStyle;
+
+    let caption = '';
+    if (viewMode && viewMode !== 'toolButton') {
+        caption = item.get('caption');
+    } else if (item.get('title') && !viewMode) {
+        caption = item.get('title');
+    }
 
     cfg._hoverIcon = true;
     cfg._buttonStyle = readOnly ? 'readonly' : buttonStyle;
