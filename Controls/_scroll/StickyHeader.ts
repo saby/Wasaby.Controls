@@ -502,8 +502,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (positionFromOptions.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
-            const checkOffset = fixedPosition || isIosOptimizedMode;
-            style += 'top: ' + (top - (checkOffset ? offset : 0)) + 'px;';
+            if (!top && (fixedPosition || isIosOptimizedMode)) {
+                top -= offset;
+            }
+            style += 'top: ' + top + 'px;';
         }
 
         if (positionFromOptions.indexOf(POSITION.bottom) !== -1 && this._stickyHeadersHeight.bottom !== null) {
