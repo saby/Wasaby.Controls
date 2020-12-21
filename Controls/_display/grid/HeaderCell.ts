@@ -119,14 +119,9 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
             rowspan: endRow - startRow
         };
     }
-
-    getRowspan(): number {
-        return this._getRowspanParams().rowspan;
-    }
-
-    getRowspanStyles(): string {
+    getRowspan(): string {
         if (!this._$owner.isFullGridSupport()) {
-            return '';
+            return this._getRowspanParams().rowspan;
         }
         const {startRow, endRow} = this._getRowspanParams();
         return `grid-row: ${startRow} / ${endRow};`;
@@ -140,7 +135,12 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         } else {
             zIndex = FIXED_HEADER_Z_INDEX;
         }
-        return super.getWrapperStyles() + ` ${ this.getRowspanStyles() } z-index: ${zIndex};`;
+        let styles = super.getWrapperStyles();
+        if (this._$owner.isFullGridSupport()) {
+            styles += this.getRowspan();
+        }
+        styles += ` z-index: ${zIndex};`;
+        return styles;
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {

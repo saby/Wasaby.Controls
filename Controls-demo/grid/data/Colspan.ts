@@ -34,7 +34,7 @@ const RawData = [
         communicated: 7,
         likes: 2,
         dislikes: 0,
-        sales: 12170,
+        sales: 1270,
         type: true,
         parent: null
     },

@@ -44,7 +44,7 @@ export default class FooterRow<T> extends Row<T> {
         return `controls-GridView__footer`;
     }
 
-    protected _getColspanParams(column: IFooter, columnIndex: number): IColspanParams {
+    protected _getColspan(column: IFooter, columnIndex: number): number {
         let colspan = 0;
 
         if (column.startColumn && column.endColumn) {
@@ -69,11 +69,7 @@ export default class FooterRow<T> extends Row<T> {
             }
         }
 
-        if (colspan) {
-            return {
-                colspan
-            }
-        }
+        return colspan;
     }
 
     _initializeColumns(): void {

@@ -39,13 +39,11 @@ export default class extends Control {
         }
     ];
 
-    protected _colspanCalculationCallback(item, column, columnIndex) {
+    protected _colspanCallback(item, column, columnIndex, isEditing): number {
         if (item.get('type') === true) {
-            return {};
+            return;
         }
-        return {
-            colspan: 7
-        }
+        return 7;
     }
 
     protected _beforeMount(): void {

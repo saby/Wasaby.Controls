@@ -84,15 +84,19 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         }
     };
 
-    getColspanStyles(): string {
-        if (!this._$owner.isFullGridSupport()) {
-            return '';
-        }
+    getColspan(): string {
         const colspanParams = this._getColspanParams();
         if (!colspanParams) {
             return '';
         }
+        if (!this._$owner.isFullGridSupport()) {
+            return '' + this._$colspan;
+        }
         return `grid-column: ${colspanParams.startColumn} / ${colspanParams.endColumn};`;
+    }
+
+    getRowspan(): string {
+        return '';
     }
     // endregion
 
@@ -226,7 +230,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     getWrapperStyles(): string {
-        return this.getColspanStyles();
+        let styles = '';
+        if (this._$owner.isFullGridSupport()) {
+            styles += this.getColspan();
+        }
+        return styles;
     }
 
     getContentClasses(theme: string,

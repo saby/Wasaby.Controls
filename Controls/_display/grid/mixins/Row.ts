@@ -9,6 +9,7 @@ import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
 import { THeader } from '../../../_grid/interface/IHeaderCell';
+import { TColspanCallback } from './Grid';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -24,6 +25,7 @@ interface IItemTemplateParams {
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
+    colspanCallback: TColspanCallback;
 }
 
 export default abstract class Row<T> {
@@ -34,6 +36,7 @@ export default abstract class Row<T> {
 
     protected _$columns: TColumns;
     protected _$columnItems: Array<Cell<T, Row<T>>>;
+    protected _$colspanCallback: TColspanCallback;
     protected _$ladder: {};
 
     getDefaultTemplate(): string {
@@ -196,6 +199,12 @@ export default abstract class Row<T> {
         }
     }
 
+    setColspanCallback(colspanCallback: TColspanCallback): void {
+        this._$colspanCallback = colspanCallback;
+        this._nextVersion();
+        this._reinitializeColumns();
+    }
+
     getLadder(): {} {
         let result;
         if (this._$ladder && this._$ladder.ladder) {
@@ -223,10 +232,10 @@ export default abstract class Row<T> {
         }
     }
 
-    protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
-        const colspanCalculationCallback = this._$owner.getColspanCalculationCallback();
-        if (colspanCalculationCallback) {
-            return colspanCalculationCallback(this.getContents(), column, columnIndex);
+    protected _getColspan(column: IColumn, columnIndex: number): number {
+        const colspanCallback = this._$colspanCallback;
+        if (colspanCallback) {
+            return colspanCallback(this.getContents(), column, columnIndex, this.isEditing());
         }
         return undefined;
     }
@@ -235,22 +244,12 @@ export default abstract class Row<T> {
         const columnItems = [];
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const column = columns[columnIndex];
-            const colspanParams = this._getColspanParams(column, columnIndex);
-            let startColumn, endColumn, colspan;
-            if (colspanParams) {
-                startColumn = colspanParams.startColumn;
-                endColumn = colspanParams.endColumn;
-                colspan = colspanParams.colspan;
-                if (typeof startColumn === 'number' && typeof endColumn === 'number') {
-                    columnIndex = endColumn - 1;
-                } else if (typeof colspan === 'number') {
-                    columnIndex += colspan - 1;
-                }
+            const colspan = this._getColspan(column, columnIndex);
+            if (colspan) {
+                columnIndex += colspan - 1;
             }
             columnItems.push(factory({
                 column,
-                startColumn,
-                endColumn,
                 colspan,
                 isFixed: columnIndex < this.getStickyColumnsCount()
             }));
@@ -374,5 +373,6 @@ Object.assign(Row.prototype, {
     '[Controls/_display/grid/mixins/Row]': true,
     _cellModule: null,
     _$columns: null,
+    _$colspanCallback: null,
     _$columnItems: null
 });
