@@ -89,12 +89,12 @@ function getFolderConfig(query?: Query): IListConfiguration {
     };
 
     if (filter.parent == null) {
-        result.settings.clientViewMode = CatalogDetailViewMode.list;
+        result.settings.clientViewMode = CatalogDetailViewMode.tile;
         return result;
     }
 
     if (filter.parent === 1) {
-        result.settings.clientViewMode = CatalogDetailViewMode.tile;
+        result.settings.clientViewMode = CatalogDetailViewMode.list;
         return result;
     }
 }

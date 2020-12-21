@@ -33,98 +33,119 @@ export const FlatHierarchy = {
             },
                 {
                     id: 11,
-                    title: 'Smartphones1',
+                    title: 'Mac',
                     parent: 1,
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: images[1]
+                    photo: BrandsImages.mac
                 },
+                    {
+                        id: 111,
+                        title: 'MacBook Air',
+                        parent: 11,
+                        rating: '9.2',
+                        type: null,
+                        photo: BrandsImages.macBookAir
+                    },
                 {
                     id: 12,
-                    title: 'Smartphones2',
+                    title: 'iPad',
                     parent: 1,
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: images[1]
+                    photo: BrandsImages.iPad
                 },
                 {
                     id: 13,
-                    title: 'Smartphones3',
+                    title: 'iPhone',
                     parent: 1,
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: images[0]
+                    photo: BrandsImages.iPhone
                 },
                 {
                     id: 14,
-                    title: 'Smartphones4',
+                    title: 'Watch',
                     parent: 1,
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: images[0]
-                },
-                {
-                    id: 15,
-                    title: 'Smartphones5',
-                    parent: 1,
-                    rating: '9.2',
-                    type: true,
-                    hasChild: true,
-                    photo: images[0]
+                    photo: BrandsImages.appleWathc
                 },
                     {
-                        id: 151,
-                        title: 'iPhone 4s',
+                        id: 141,
+                        title: 'Apple Watch Series 6',
                         rating: '9.5',
-                        parent: 15,
-                        type: null
+                        parent: 14,
+                        type: null,
+                        photo: BrandsImages.apple
                     },
                     {
-                        id: 152,
-                        title: 'iPhone 4',
+                        id: 142,
+                        title: 'Apple Watch SE',
                         rating: '8.9',
-                        parent: 15,
-                        type: null
+                        parent: 14,
+                        type: null,
+                        photo: BrandsImages.apple
                     },
                     {
-                        id: 153,
-                        title: 'iPhone X Series',
+                        id: 143,
+                        title: 'Apple Watch Series 3',
                         rating: '7.6',
-                        parent: 15,
-                        type: false
+                        parent: 14,
+                        type: false,
+                        photo: BrandsImages.apple
+                    },
+                    {
+                        id: 144,
+                        title: 'Apple Watch Nike',
+                        rating: '7.6',
+                        parent: 14,
+                        type: false,
+                        photo: BrandsImages.apple
+                    },
+                    {
+                        id: 145,
+                        title: 'Bands',
+                        rating: '7.6',
+                        parent: 14,
+                        type: false,
+                        photo: BrandsImages.apple
                     },
                         {
-                            id: 1531,
-                            title: 'iPhone Xs',
+                            id: 1451,
+                            title: 'Solo Loop',
                             rating: '7.4',
-                            parent: 153,
-                            type: null
+                            parent: 145,
+                            type: null,
+                            photo: BrandsImages.apple
                         },
                         {
-                            id: 1532,
-                            title: 'iPhone Xs Max',
+                            id: 1452,
+                            title: 'Braided Solo Loop',
                             rating: '6.8',
-                            parent: 153,
-                            type: null
+                            parent: 145,
+                            type: null,
+                            photo: BrandsImages.apple
                         },
                         {
-                            id: 1533,
-                            title: 'iPhone XR',
+                            id: 1453,
+                            title: 'Sport Band',
                             rating: '7.1',
-                            parent: 153,
-                            type: null
+                            parent: 145,
+                            type: null,
+                            photo: BrandsImages.apple
                         },
                 {
-                id: 16,
-                title: 'Notebooks',
-                parent: 1,
-                rating: '9.4',
-                type: false
-            },
+                    id: 16,
+                    title: 'Notebooks',
+                    parent: 1,
+                    rating: '9.4',
+                    type: false
+                },
                     {
                         id: 161,
                         title: 'MacBook Pro',

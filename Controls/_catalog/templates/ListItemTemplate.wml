@@ -14,10 +14,7 @@
       />
    </ws:captionTemplate>
    <ws:contentTemplate>
-      imagePosition="{{imageCfg.position}}"
-      imageViewMode="{{imageCfg.viewMode}}"
-      imageProperty="{{imageCfg.imageProperty}}"
-      {{_options.itemData.item.description}}
+      <ws:partial template="{{itemContent}}" scope="{{contentTemplate}}"/>
    </ws:contentTemplate>
    <ws:footerTemplate>
       <div>Дополнительное описани</div>

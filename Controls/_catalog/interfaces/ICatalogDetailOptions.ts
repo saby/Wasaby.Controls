@@ -1,6 +1,6 @@
 import {ICrudPlus} from 'Types/source';
-import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
 import {TemplateFunction} from 'UI/Base';
+import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
 
 /**
  * Enum со списком доступных вариантов отображения контента в detail-колонке
@@ -17,16 +17,16 @@ export enum CatalogDetailViewMode {
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogDetailOptions extends ICatalogColumnOptions {
+export interface ICatalogDetailOptions extends ISourceOptions {
     //region source options
     /**
      * Источник данных, который будет использован списочным представлением внутри detail-колонки.
      * Если не задан, то будет использован источник данных, который указан в основной конфигурации
-     * {@link ICatalogOptions.listSource}
+     * {@link ICatalogOptions.source}
      *
-     * @see ICatalogOptions.listSource
+     * @see ICatalogOptions.source
      */
-    listSource?: ICrudPlus;
+    source?: ICrudPlus;
 
     /**
      * Имя свойства записи detail-списка, содержащего информацию о её идентификаторе.
@@ -75,11 +75,5 @@ export interface ICatalogDetailOptions extends ICatalogColumnOptions {
      */
     imageProperty?: string;
 
-    nodeProperty?: string;
-
-    parentProperty?: string;
-
     columns?: unknown;
-
-    filter?: {[key: string]: unknown};
 }

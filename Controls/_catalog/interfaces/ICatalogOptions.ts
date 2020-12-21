@@ -2,6 +2,7 @@ import {ICrudPlus} from 'Types/source';
 import {IControlOptions} from 'UI/Base';
 import {ICatalogMasterOptions} from 'Controls/_catalog/interfaces/ICatalogMasterOptions';
 import {CatalogDetailViewMode, ICatalogDetailOptions} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
+import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/catalog:View}
@@ -9,7 +10,7 @@ import {CatalogDetailViewMode, ICatalogDetailOptions} from 'Controls/_catalog/in
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogOptions extends IControlOptions {
+export interface ICatalogOptions extends IControlOptions, ISourceOptions {
     /**
      * Базовый источник данных, который будет использован по умолчанию для списков, отображаемых в каталоге.
      * Может быть перекрыт на уровне конкретного блока каталога.
@@ -18,10 +19,10 @@ export interface ICatalogOptions extends IControlOptions {
      * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках используют
      * один и тот же источник данных
      *
-     * @see ICatalogMasterOptions.listSource
-     * @see ICatalogDetailOptions.listSource
+     * @see ICatalogMasterOptions.source
+     * @see ICatalogDetailOptions.source
      */
-    listSource?: ICrudPlus;
+    source?: ICrudPlus;
 
     /**
      * Имя свойства, содержащего информацию об идентификаторе текущей строки в master и detail колонках.

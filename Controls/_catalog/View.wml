@@ -8,11 +8,11 @@
 
    <ws:master>
       <Controls.scroll:Container>
-         <Controls.masterDetail:List bind:markedKey="_root">
-            <Controls.treeGrid:View
-               scope="{{_masterTreeOptions}}"
-            />
-         </Controls.masterDetail:List>
+         <Controls.explorer:View
+            bind:root="masterRoot"
+            bind:markedKey="detailRoot"
+            scope="{{_masterExplorerOptions}}"
+         />
       </Controls.scroll:Container>
    </ws:master>
 
@@ -21,61 +21,50 @@
 
          <Controls.list:Container>
             <Controls.explorer:View
-               bind:root="_root"
-               viewMode="{{_currentViewMode}}"
+               bind:root="detailRoot"
+               viewMode="{{currentViewMode}}"
                scope="{{_detailExplorerOptions}}"
             >
                <ws:itemTemplate>
                   <ws:partial
+                     scope="{{itemTemplate}}"
                      template="{{_listItemTemplate}}"
                      imageCfg="{{_imageItemTemplateCfg}}"
-                     scope="{{itemTemplate}}"
+                     itemContent="{{_options.detail.itemContent}}"
                   />
                </ws:itemTemplate>
                <ws:tileItemTemplate>
-                  <ws:partial
-                     template="{{_tileItemTemplate}}"
-                     scope="{{tileItemTemplate}}"
-                     imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
-                     imageViewMode="{{
-                        tileItemTemplate.itemData.dispItem.isNode()
-                           ? _listConfiguration.tile.photoNode.viewMode
-                           : _listConfiguration.tile.photoLeaf.viewMode
-                     }}"
-                     imageEffect="{{
-                        tileItemTemplate.itemData.dispItem.isNode()
-                           ? _listConfiguration.tile.photoNode.effect
-                           : _listConfiguration.tile.photoLeaf.effect
-                     }}"
-                     imageSize="{{_listConfiguration.tile.tile.size}}"
-                     description="{{tileItemTemplate.itemData.item.description}}"
-                     descriptionLines="{{
-                        tileItemTemplate.itemData.dispItem.isNode()
-                           ? _listConfiguration.tile.node.countLines
-                           : _listConfiguration.tile.leaf.countLines
-                     }}"
-                  />
+                  <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
+                     <ws:partial
+                        template="{{_tileItemTemplate}}"
+                        scope="{{tileItemTemplate}}"
+                        imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
+                        imageViewMode="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.photoNode.viewMode
+                              : _listConfiguration.tile.photoLeaf.viewMode
+                        }}"
+                        imageEffect="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.photoNode.effect
+                              : _listConfiguration.tile.photoLeaf.effect
+                        }}"
+                        imageSize="{{_listConfiguration.tile.tile.size}}"
+                        description="{{tileItemTemplate.itemData.item.description}}"
+                        descriptionLines="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.node.countLines
+                              : _listConfiguration.tile.leaf.countLines
+                        }}"
+                     />
+                  </ws:if>
+                  <ws:else>
+                     <invisible-node/>
+                  </ws:else>
+
                </ws:tileItemTemplate>
             </Controls.explorer:View>
          </Controls.list:Container>
-
-
-         <!-- Список -->
-<!--         <ws:if data="{{_currentViewMode === _viewModeEnum.list}}">
-            <Controls.list:View scope="{{_detailListOptions}}">
-
-            </Controls.list:View>
-         </ws:if>
-
-         &lt;!&ndash; Плитка &ndash;&gt;
-         <ws:if data="{{_currentViewMode === _viewModeEnum.tile}}">
-            <Controls.tile:View scope="{{_detailListOptions}}"/>
-         </ws:if>
-
-         &lt;!&ndash; Таблица &ndash;&gt;
-         <ws:if data="{{_currentViewMode === _viewModeEnum.table}}">
-            <Controls.treeGrid:View scope="{{_detailTreeOptions}}"/>
-         </ws:if>-->
       </div>
    </ws:detail>
 

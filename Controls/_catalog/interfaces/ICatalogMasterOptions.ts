@@ -1,7 +1,7 @@
 import {ICrudPlus} from 'Types/source';
 import {ITreeControlOptions} from 'Controls/tree';
 import {IHierarchyOptions} from 'Controls/interface';
-import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumnOptions';
+import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
 
 /**
  * Интерфейс описывает структуру настроек master-колонки компонента {@link Controls/catalog:View}
@@ -9,16 +9,16 @@ import {ICatalogColumnOptions} from 'Controls/_catalog/interfaces/ICatalogColumn
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogMasterOptions extends ICatalogColumnOptions {
+export interface ICatalogMasterOptions extends ISourceOptions {
 
     //region source options
     /**
      * Источник данных, который будет использован списочным представлением внутри master-колонки.
      * Если не задан, то будет использован источник данных, который указан в основной конфигурации
-     * {@link ICatalogOptions.listSource}
-     * @see ICatalogOptions.listSource
+     * {@link ICatalogOptions.source}
+     * @see ICatalogOptions.source
      */
-    listSource?: ICrudPlus;
+    source?: ICrudPlus;
 
     /**
      * Имя свойства записи master-списка, содержащего информацию о её идентификаторе.
@@ -51,8 +51,6 @@ export interface ICatalogMasterOptions extends ICatalogColumnOptions {
      */
     visibility?: 'visible' | 'hidden';
     //endregion
-
-    filter?: {[key: string]: unknown};
 
     /**
      * Опции для компонента {@link Controls/treeGrid:View}, который отображает master-список.

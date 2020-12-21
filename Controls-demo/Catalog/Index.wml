@@ -17,8 +17,11 @@
    </div>
 
    <Controls.catalog:View
+      source="{{_baseSource}}"
       keyProperty="id"
-      listSource="{{_baseSource}}"
+      nodeProperty="type"
+      parentProperty="parent"
+      hasChildrenProperty="hasChild"
       propStorageId="catalogDemoBase"
       bind:viewMode="_vm"
       attr:style="flex: 1 1 100%;"
@@ -33,19 +36,13 @@
       >
          <!-- Настраиваем отображение списка -->
          <ws:treeGridView
-            nodeProperty="type"
-            parentProperty="parent"
-            hasChildrenProperty="hasChild"
             expanderVisibility="hasChildren"
             columns="{{_masterTableColumns}}"
          />
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
       <ws:detail
-         nodeProperty="type"
          imageProperty="photo"
-         parentProperty="parent"
-         hasChildrenProperty="hasChild"
          columns="{{_detailTableColumns}}"
       />
    </Controls.catalog:View>
