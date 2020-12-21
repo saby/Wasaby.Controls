@@ -164,7 +164,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * </pre>
  * @remark
  * Пользовательский шаблон получается путем конфигурации базового шаблона {@link Controls/list:EmptyTemplate}.
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/empty-list/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/empty-list/ руководство разработчика}.
  */
 
 /*ENG
@@ -193,7 +193,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#footerTemplate
  * @cfg {Function} Шаблон отображения подвала списка.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/footer/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/footer/ руководство разработчика}.
  * @demo Controls-demo/list_new/FooterTemplate/Index
  */
 
@@ -281,6 +281,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @cfg {MultiSelectPosition} Position of multiple selection checkboxes
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
+ */
+
+/**
+ * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
+ * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
+ * @cfg {String} Имя свойства, содержащего информацию об состоянии чекбокса элемента.
+ * @remark Определяет возможность изменения состояния чекбокса и его видимость
+ * @property {@link Controls/list:View#checkboxStateConstants.enabled enabled} Чекбокс виден и с ним можно взаимодействовать
+ * @property {@link Controls/list:View#checkboxStateConstants.disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
+ * @property {@link Controls/list:View#checkboxStateConstants.hidden hidden} Чекбокс скрыт
+ * @remark Для задания значения использовать {@link Controls/list:View#checkboxStateConstants константы}
+ * @demo Controls-demo/list_new/ItemTemplate/CheckboxReadOnly/Index
  */
 
 /**
@@ -665,7 +677,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
  * @remark
- * См. <a href="/doc/platform/developmentapl/interface-development/controls/list/list/paddings/">руководство разработчика</a>.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/list/paddings/ руководство разработчика}.
  */
 
 /*ENG

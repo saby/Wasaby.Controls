@@ -43,6 +43,8 @@ export interface IOptions {
     stickyColumn?: {};
     showEditArrow?: boolean;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
+    columnScroll?: boolean;
+    stickyColumnsCount?: number
     columnSeparatorSize?: TColumnSeparatorSize;
 }
 
@@ -65,6 +67,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$isFullGridSupport: boolean;
+    protected _$columnScroll: boolean;
+    protected _$stickyColumnsCount: number;
 
     protected constructor(options: IOptions) {
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
@@ -270,6 +274,23 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
     }
 
+    hasColumnScroll(): boolean {
+        return this._$columnScroll;
+    }
+
+    getStickyColumnsCount(): number {
+        return this._$stickyColumnsCount;
+    }
+
+    setStickyColumnsCount(stickyColumnsCount: number): void {
+        this._$stickyColumnsCount = stickyColumnsCount;
+        this._nextVersion();
+    }
+
+    protected hasItemActionsSeparatedCell(): boolean {
+        return !!this.getColumnsConfig() && this.hasColumnScroll() && (this.getActionsTemplateConfig()?.itemActionsPosition !== 'custom');
+    }
+
     // region Controls/_display/CollectionItem
 
     abstract getMetaResults(): EntityModel;
@@ -298,5 +319,7 @@ Object.assign(Grid.prototype, {
     _$isFullGridSupport: true,
     _$showEditArrow: false,
     _$editArrowVisibilityCallback: null,
+    _$columnScroll: false,
+    _$stickyColumnsCount: 1,
     _$columnSeparatorSize: null
 });

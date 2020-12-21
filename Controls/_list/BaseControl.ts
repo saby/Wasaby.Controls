@@ -95,7 +95,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
@@ -1193,11 +1193,7 @@ const _private = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
             };
-            const scrollParams = {
-                scrollTop: self._scrollTop,
-                clientHeight: viewportSize,
-                scrollHeight: viewSize
-            };
+
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -1215,7 +1211,7 @@ const _private = {
                 self._recalcPagingVisible = true;
             }
             if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams, hasMoreData);
+                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1238,12 +1234,7 @@ const _private = {
             self._updateItemsHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
-                const scrollParams = {
-                    scrollTop: self._scrollTop,
-                    scrollHeight: params.scrollHeight,
-                    clientHeight: params.clientHeight
-                };
-                _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
+                _private.getScrollPagingControllerWithCallback(self, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
@@ -1264,7 +1255,7 @@ const _private = {
             self._isScrollShown = false;
         });
     },
-    getScrollPagingControllerWithCallback(self, scrollParams, callback) {
+    getScrollPagingControllerWithCallback(self, callback) {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
@@ -1273,15 +1264,16 @@ const _private = {
                     up: _private.hasMoreData(self, self._sourceController, 'up'),
                     down: _private.hasMoreData(self, self._sourceController, 'down')
                 };
-                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                _private.createScrollPagingController(self, hasMoreData).then((scrollPaging) => {
                         self._scrollPagingCtr = scrollPaging;
                         callback(scrollPaging);
                     });
                 }
         }
     },
-    createScrollPagingController(self, scrollParams, hasMoreData) {
+    createScrollPagingController(self, hasMoreData) {
         let elementsCount;
+        const scrollParams = self._getScrollParams();
         if (self._sourceController) {
             elementsCount = _private.getAllDataCount(self);
             if (typeof elementsCount !== 'number') {
@@ -1395,7 +1387,7 @@ const _private = {
     },
 
     updateScrollPagingButtons(self, scrollParams) {
-        _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
+        _private.getScrollPagingControllerWithCallback(self, (scrollPaging) => {
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -2468,12 +2460,12 @@ const _private = {
     getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
-                nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
                 rootId: options.root,
                 model: collection,
-                entryPath
+                entryPath,
+                selectionType: options.selectionType
             };
         } else {
             return { model: collection };
@@ -3249,6 +3241,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
+    _preventServerSideColumnScroll: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3646,10 +3640,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _getScrollParams(): IScrollParams {
+        let headersHeight = 0;
+        if (detection.isBrowserEnv) {
+            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+        }
         const scrollParams = {
             scrollTop: this._scrollTop,
             scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize
+            clientHeight: this._viewportSize - headersHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
@@ -4004,8 +4002,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
 
+            const visibilityChangedFromHidden = this._options.multiSelectVisibility === 'hidden' &&  newOptions.multiSelectVisibility !== 'hidden';
+
             // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this))) {
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this)) || visibilityChangedFromHidden && newOptions.selectedKeys?.length || this._options.selectionType !== newOptions.selectionType) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -4313,7 +4313,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beforePaint(): void {
+    _componentDidUpdate(): void {
         let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
@@ -4543,6 +4543,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
+        this._preventServerSideColumnScroll = true;
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();
@@ -4651,11 +4652,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         //При выборе первой или последней страницы крутим в край.
         if (page === 1) {
+            this._currentPage = page;
             _private.scrollToEdge(this, 'up');
-            this._currentPage = page;
         } else if (page === this._pagingCfg.pagesCount) {
-            _private.scrollToEdge(this, 'down');
             this._currentPage = page;
+            _private.scrollToEdge(this, 'down');
         } else {
 
             // При выборе некрайней страницы, проверяем,
@@ -4684,11 +4685,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick(e, key, status, readOnly) {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, readOnly: boolean): void {
+        const key = item.getContents().getKey();
         if (!readOnly) {
             const newSelection = _private.getSelectionController(this).toggleItem(key);
+            this._notify('checkboxClick', [key, item.isSelected()]);
             _private.changeSelection(this, newSelection);
-            this._notify('checkboxClick', [key, status]);
         }
         // если чекбокс readonly, то мы все равно должны проставить маркер
         this.setMarkedKey(key);

@@ -12,6 +12,7 @@ import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
+import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 import {TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
@@ -50,6 +51,9 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     shouldDisplayItemActions(): boolean {
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            return false;
+        }
         return this.isLastColumn() && (this._$owner.hasVisibleActions() || this._$owner.isEditing());
     }
 
@@ -64,10 +68,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Объединение колонок"
 
     _getColspanParams(): Required<IColspanParams> {
-        const startColumn = typeof this._$column.startColumn === 'number' ? this._$column.startColumn : (this.getColumnIndex() + 1);
+        let startColumn;
         let endColumn;
-
         const multiSelectOffset = +(this._$owner.needMultiSelectColumn());
+
+        if (typeof this._$column.startColumn === 'number') {
+            startColumn = this._$column.startColumn;
+        } else {
+            startColumn = this.getColumnIndex() - multiSelectOffset + 1
+        }
+
 
         if (typeof this._$column.endColumn === 'number') {
             endColumn = this._$column.endColumn;
@@ -151,7 +161,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     // region Аспект "Стилевое оформление"
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        const hasColumnScroll = false;
+        const hasColumnScroll = this._$owner.hasColumnScroll();
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
 
         let wrapperClasses = '';
@@ -170,6 +180,14 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
         } else if (templateHighlightOnHover !== false) {
             wrapperClasses += ` controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+        }
+
+        if (this._$owner.hasColumnScroll()) {
+            wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
+
+            if (!this._$owner.isEditing()) {
+                wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, theme)}`;
+            }
         }
 
         /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
@@ -225,6 +243,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         }
         return classLists;*/
         return wrapperClasses;
+    }
+
+    protected _getBackgroundColorWrapperClasses(backgroundColorStyle: string, theme: string): string {
+        if (backgroundColorStyle) {
+            return `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`
+        }
+
+        // TODO: Брать от родителя
+        // return options.backgroundStyle || options.style || 'default';
+        return `controls-background-${'default'}_theme-${theme}`;
     }
 
     // Only for partial grid support
@@ -368,6 +396,13 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
+    protected _getColumnScrollWrapperClasses(theme: string): string {
+        if (this._isFixedCell()) {
+            return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} js-controls-ColumnScroll__notDraggable controls-GridNew__cell_fixed controls-GridNew__cell_fixed_theme-${theme}`;
+        }
+        return COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT;
+    }
+
     protected _getContentPaddingClasses(theme: string): string {
         let classes = '';
 
@@ -475,6 +510,14 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     // endregion
+
+    protected _isFixedCell(): boolean {
+        const startColumn = this._getColspanParams().startColumn - +(this._$owner.needMultiSelectColumn());
+
+        // columnConfig.startColumn - индекс начала колонки в GridLayout, он начинается с единицы,
+        // чтобы привести его к индексу колонок таблицы, уменьшаем его на 1.
+        return (startColumn - 1) < this._$owner.getStickyColumnsCount();
+    }
 }
 
 Object.assign(Cell.prototype, {
