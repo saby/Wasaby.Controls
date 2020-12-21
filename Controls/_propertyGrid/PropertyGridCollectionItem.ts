@@ -19,7 +19,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
     getEditorTemplateName(): string {
         const itemContents = this.getContents();
-        const editorTemplateName = itemContents.get('editorTemplate');
+        const editorTemplateName = itemContents.get('editorTemplateName');
         const type = itemContents.get('type');
         const propertyValue = this._$propertyValue;
 
@@ -63,7 +63,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return '';
     }
 
-    getValidators(): Function[] {
+    getValidators(): Function[] | null {
         return this.getEditorOptions().validators;
     }
 
