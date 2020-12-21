@@ -3076,6 +3076,9 @@ const _private = {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
+            if (self._children.listView.beforeActivateRow) {
+                self._children.listView.beforeActivateRow();
+            }
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
