@@ -2,7 +2,6 @@ import {Control} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
-import {IListEditorOptions} from 'Controls/_filterPanel/Editors/ListBase';
 import {List} from 'Types/collection';
 import {factory} from 'Types/chain';
 import {ISelectorTemplate} from 'Controls/interface';
@@ -20,14 +19,14 @@ import {ISelectorTemplate} from 'Controls/interface';
 /**
  * @name Controls/_filterPanel/Editors/MultiSelectList#showSelectorCaption
  * @cfg {String} Заголовок для кнопки в подвале списка, которая открывает окно выбора из справочника.
- * @demo Controls-demo/filterPanel/EnumListEditor/ShowSelectorCaption/Index
+ * @demo Controls-demo/filterPanel/MultiSelectListEditor/ShowSelectorCaption/Index
  * @default Другие
  */
 
 /**
  * @name Controls/_filterPanel/Editors/MultiSelectList#additionalTextProperty
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе дополнительного столбца в списке.
- * @demo Controls-demo/filterPanel/EnumListEditor/AdditionalTextProperty/Index
+ * @demo Controls-demo/filterPanel/MultiSelectListEditor/AdditionalTextProperty/Index
  */
 
 export default class MultiSelectList extends ListEditorBase {

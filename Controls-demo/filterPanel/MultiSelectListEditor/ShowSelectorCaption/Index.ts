@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanel/EnumListEditor/ShowSelectorCaption/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/MultiSelectListEditor/ShowSelectorCaption/Index';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -19,11 +19,11 @@ export default class extends Control {
             {
                 group: 'Ответственный',
                 name: 'owner',
-                resetValue: null,
+                resetValue: [],
                 caption: '',
-                value: null,
+                value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
+                editorTemplateName: 'Controls/filterPanel:MultiSelectList',
                 editorOptions: {
                     navigation: {
                         source: 'page',
