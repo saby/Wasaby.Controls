@@ -194,4 +194,22 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             assert.strictEqual(shadows.getVersion(), version);
         });
     });
+
+    describe('hasVisibleShadow', () => {
+        it('should return false if there is no visible shadows.', () => {
+            const shadows = new ShadowsModel({
+                ...getShadowsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            });
+            assert.isFalse(shadows.hasVisibleShadow());
+        });
+        it('should return true if there is visible shadows.', () => {
+            const shadows = new ShadowsModel({
+                ...getShadowsDefaultOptions(),
+                scrollMode: SCROLL_MODE.VERTICAL
+            });
+            shadows.top._isVisible = true;
+            assert.isTrue(shadows.hasVisibleShadow());
+        });
+    });
 });
