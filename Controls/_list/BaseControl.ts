@@ -1426,6 +1426,7 @@ const _private = {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+                self._pagingVisibilityChanged = self._pagingVisible;
                 if (detection.isMobilePlatform) {
                     self._recalcPagingVisible = !self._pagingVisible;
                 }
@@ -3142,6 +3143,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _pagingVisibilityChanged: false,
     _actualPagingVisible: false,
     _pagingPadding: null,
 
@@ -4341,7 +4343,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
-
+        if (this._pagingVisibilityChanged) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pagingVisibilityChanged = false;
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
