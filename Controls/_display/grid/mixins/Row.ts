@@ -226,7 +226,7 @@ export default abstract class Row<T> {
     protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
         const colspanCalculationCallback = this._$owner.getColspanCalculationCallback();
         if (colspanCalculationCallback) {
-            return colspanCalculationCallback(this.getContents(), column, columnIndex);
+            return colspanCalculationCallback(this.getContents(), column, columnIndex, this.isEditing());
         }
         return undefined;
     }
