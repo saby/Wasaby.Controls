@@ -3,7 +3,7 @@ define([
 ], function(
    scroll
 ) {
-   describe('Controls/Utils/scrollToElement', function() {
+   describe('Controls/scroll:scrollToElement', function() {
 
       var documentElement = {};
       function mockDOM(bodyScrollTop, bodyClientHeight) {
