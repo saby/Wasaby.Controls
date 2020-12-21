@@ -3241,7 +3241,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
-    _preventServerSideColumnScroll: false,
+    _useServerSideColumnScroll: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3271,6 +3271,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.initializeNavigation(this, newOptions);
         this._loadTriggerVisibility = {};
+
+        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+            if (typeof newOptions.preventServerSideColumnScroll === 'boolean') {
+                this._useServerSideColumnScroll = !newOptions.preventServerSideColumnScroll;
+            } else {
+                this._useServerSideColumnScroll = true;
+            }
+        }
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
@@ -3676,6 +3684,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
+
+        if (this._useServerSideColumnScroll) {
+            this._useServerSideColumnScroll = false;
+        }
 
         if (_private.hasMoreData(this, this._sourceController, 'up')) {
             this._notify('enableVirtualNavigation', [], { bubbling: true });
@@ -4543,7 +4555,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        this._preventServerSideColumnScroll = true;
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();
