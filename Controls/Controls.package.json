@@ -16,7 +16,7 @@
     "Controls/Container/Async/*"
   ],
   "output": "controls-container-async.package.js"
-},  {
+}, {
   "include": [
     "Controls/Utils/*"
   ],
