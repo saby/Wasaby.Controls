@@ -1,13 +1,13 @@
 import { Control, TemplateFunction } from 'UI/Base';
-import { Memory } from 'Types/source';
+import { HierarchicalMemory } from 'Types/source';
 import { TColumns } from 'Controls/grid';
 import RawData from 'Controls-demo/grid/data/Colspan';
-import * as Template from 'wml!Controls-demo/grid/Colspan/Colspan';
-import * as FirstColumnTemplate from 'wml!Controls-demo/grid/Colspan/FirstColumn';
+import * as Template from 'wml!Controls-demo/treeGrid/Colspan/Colspan';
+import * as FirstColumnTemplate from 'wml!Controls-demo/treeGrid/Colspan/FirstColumn';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _viewSource: Memory;
+    protected _viewSource: HierarchicalMemory;
     protected _columns: TColumns = [
         {
             template: FirstColumnTemplate,
@@ -49,7 +49,7 @@ export default class extends Control {
     }
 
     protected _beforeMount(): void {
-        this._viewSource = new Memory({
+        this._viewSource = new HierarchicalMemory({
             keyProperty: 'key',
             data: RawData
         });
