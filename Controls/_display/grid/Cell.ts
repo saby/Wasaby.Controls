@@ -8,12 +8,11 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import {IColumn, IColspanParams, IRowspanParams, IColumnSeparatorSizeConfig} from 'Controls/grid';
+import {IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize} from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
 import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
-import {TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 
@@ -384,21 +383,22 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getColumnSeparatorSize(): TColumnSeparatorSize {
-        let columnSeparatorSize: TColumnSeparatorSize;
-        const currentColumn = this._$column;
+        const columns = this._$owner.getColumnsConfig();
+        const columnIndex = this.getColumnIndex() - +(this._$owner.needMultiSelectColumn());
+        const currentColumn = columns[columnIndex];
         let previousColumn: IColumn;
-        if (this.getColumnIndex() !== 0) {
-            const previousCell = this._$owner.getColumns()[this.getColumnIndex() - 1];
-            previousColumn = previousCell?.getColumnConfig();
+        if (columnIndex !== 0) {
+            previousColumn = columns[columnIndex - 1];
         }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize = this._$owner.getColumnSeparatorSize();
         if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
             columnSeparatorSize = currentColumn.columnSeparatorSize.left;
-
         } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
             columnSeparatorSize = previousColumn.columnSeparatorSize.right;
-
-        } else {
-            columnSeparatorSize = this._$owner.getColumnSeparatorSize();
         }
         return columnSeparatorSize;
     }

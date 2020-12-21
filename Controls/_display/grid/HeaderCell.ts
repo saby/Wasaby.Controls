@@ -17,11 +17,10 @@
 */
 
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IColumnSeparatorSizeConfig, IHeaderCell} from 'Controls/grid';
+import {IColspanParams, IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
 import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
-import {TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
@@ -37,7 +36,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
-    protected _$columnSeparatorSize: IColumnSeparatorSizeConfig;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -183,36 +181,42 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return this._$column.textOverflow;
     }
 
-    protected _getColumnSeparatorClasses(theme: string): string {
-        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
-            let columnSeparatorSize: TColumnSeparatorSize;
-            let previousCell: HeaderCell<T>;
-            if (this.getColumnIndex() !== 0) {
-                previousCell = this._$owner.getColumns()[this.getColumnIndex() - 1] as undefined as HeaderCell<T>;
-            }
-            if (this.getColumnSeparatorSize()?.hasOwnProperty('left')) {
-                columnSeparatorSize = this.getColumnSeparatorSize().left;
-
-            } else if (previousCell?.getColumnSeparatorSize()?.hasOwnProperty('right')) {
-                columnSeparatorSize = previousCell.getColumnSeparatorSize().right;
-
-            } else {
-                columnSeparatorSize = this._$owner.getColumnSeparatorSize();
-            }
-            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-        }
-        return '';
-    }
-
-    getColumnSeparatorSize(): IColumnSeparatorSizeConfig {
-        return this._$columnSeparatorSize;
-    }
-
     // todo <<< START >>> compatible with old gridHeaderModel
     get column(): IHeaderCell {
         return this._$column;
     }
     // todo <<< END >>>
+
+    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
+        const columnIndex = this.getColumnIndex();
+        const headerColumns = this._$owner.getColumns().map((headerColumn) => headerColumn.getColumnConfig());
+        const currentColumn = {
+            ...headerColumns[columnIndex],
+            columnSeparatorSize: this._getHeaderColumnSeparatorSize(headerColumns[columnIndex])
+        } as IColumn;
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = {
+                ...headerColumns[columnIndex - 1],
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(headerColumns[columnIndex - 1])
+            } as IColumn;
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell): IColumnSeparatorSizeConfig {
+        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
+        const columns = this._$owner.getColumnsConfig();
+        const columnLeft = columns[headerColumn.startColumn - 1];
+        const columnRight = columns[headerColumn.endColumn - 2];
+        if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
+        }
+        if (columnRight?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
 
     protected _getWrapperPaddingClasses(theme: string): string {
         let paddingClasses = '';
@@ -255,6 +259,5 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null,
-    _$columnSeparatorSize: null
+    _$cellPadding: null
 });

@@ -1,4 +1,4 @@
-import {IHeaderCell, THeader, IColumnSeparatorSizeConfig} from 'Controls/grid';
+import {THeader} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import Header from './Header';
 import ItemActionsCell from './ItemActionsCell';
@@ -45,8 +45,7 @@ export default class HeaderRow<T> extends Row<T> {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
             this._$columnItems = this._$header.map((column) => factory({
-                column,
-                columnSeparatorSize: this._getColumnSeparatorSize(column)
+                column
             }));
             this._addCheckBoxColumnIfNeed();
 
@@ -70,23 +69,6 @@ export default class HeaderRow<T> extends Row<T> {
                 }
             }));
         }
-    }
-
-    /**
-     * Набирает в колонки header необходимые настройки из колонок таблицы
-     * @private
-     */
-    private _getColumnSeparatorSize(headerColumn: IHeaderCell): IColumnSeparatorSizeConfig {
-        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
-        const columnLeft = this._$columns[headerColumn.startColumn - 1];
-        const columnRight = this._$columns[headerColumn.endColumn - 2];
-        if (columnLeft.columnSeparatorSize) {
-            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
-        }
-        if (columnRight.columnSeparatorSize) {
-            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
-        }
-        return columnSeparatorSize;
     }
 }
 
