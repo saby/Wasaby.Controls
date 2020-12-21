@@ -22,10 +22,8 @@ import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { IDragPosition } from './interface/IDragPosition';
-import DragStrategy from 'Controls/_display/itemsStrategy/Drag';
 import TreeDragStrategy from 'Controls/_display/itemsStrategy/TreeDrag';
 import { Model } from 'Types/entity';
-import { isEqual } from 'Types/object';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -337,11 +335,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         if (dragStrategy) {
             const currentPosition = dragStrategy.getCurrentPosition();
-            if (!isEqual(currentPosition, position)) {
-                if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
-                    currentPosition.dispItem.setDragTargetNode(false);
-                    this._nextVersion();
-                }
+            if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
+                currentPosition.dispItem.setDragTargetNode(false);
+                this._nextVersion();
             }
 
             if (position.position === 'on') {
