@@ -1,4 +1,4 @@
-<div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
+<ws:template name="listBase">
    <Controls.grid:View source="{{_options.source}}"
                        columns="{{_columns}}"
                        keyProperty="{{_options.keyProperty}}"
@@ -9,6 +9,7 @@
                        navigation="{{_options.navigation}}"
                        backgroundStyle="transparent"
                        hoverBackgroundStyle="listEditor"
+                       footerTemplate="{{footerTemplate}}"
                        itemsReadyCallback="{{_itemsReadyCallback}}"
                        on:selectedKeysChanged="_handleSelectedKeysChanged()"
                        on:itemClick="_handleItemClick()">
@@ -16,13 +17,21 @@
       <ws:multiSelectTemplate>
          <ws:partial template="{{_circleTemplate}}" multiSelectVisibility="{{_options.multiSelectVisibility}}"/>
       </ws:multiSelectTemplate>
-      <ws:footerTemplate>
-         <ws:if data="{{_options.selectorTemplate}}">
+   </Controls.grid:View>
+</ws:template>
+
+<div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
+   <ws:if data="{{_options.selectorTemplate}}">
+      <ws:partial template="listBase">
+         <ws:footerTemplate>
             <Controls.buttons:Button viewMode="linkButton"
                                      caption="{{_options.showSelectorCaption}}"
                                      fontColorStyle="label"
                                      on:click="_handleFooterClick()"/>
-         </ws:if>
-      </ws:footerTemplate>
-   </Controls.grid:View>
+         </ws:footerTemplate>
+      </ws:partial>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="listBase"/>
+   </ws:else>
 </div>
