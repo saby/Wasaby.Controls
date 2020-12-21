@@ -3,21 +3,20 @@ import { assert } from 'chai';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 
 import {
-    Collection as CollectionDisplay,
-    TreeItem
+    Collection as CollectionDisplay, CollectionItem
 } from 'Controls/display';
 import Drag from 'Controls/_display/itemsStrategy/Drag';
 import { Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 
 describe('Controls/_display/itemsStrategy/Drag', () => {
-    function wrapItem<S extends Model = Model, T = TreeItem>(item: S): T {
-        return new TreeItem({
+    function wrapItem<S extends Model = Model, T = CollectionItem>(item: S): T {
+        return new CollectionItem({
             contents: item
         });
     }
 
-    function getSource<S = Model, T = TreeItem>(wraps: T[]): IItemsStrategy<S, T> {
+    function getSource<S = Model, T = CollectionItem>(wraps: T[]): IItemsStrategy<S, T> {
         const items = wraps.slice();
 
         return {

@@ -678,7 +678,7 @@ var
             if (current.item && current.item.get) {
                 current.level = current.dispItem.getLevel();
             }
-            current.isDragTargetNode = () => current.dispItem.isDragTargetNode();
+            current.isDragTargetNode = () => current.dispItem._isDragTargetNode && current.dispItem.isDragTargetNode();
             current.useNewNodeFooters = this._options.useNewNodeFooters;
             if (current.item && current.item.get) {
                 _private.setNodeFooterIfNeed(this, current);

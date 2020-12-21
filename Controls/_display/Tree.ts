@@ -54,8 +54,8 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     root?: T | any;
     rootEnumerable?: boolean;
     hasMoreStorage?: Record<string, boolean>;
-    expandedItems: CrudEntityKey[];
-    collapsedItems: CrudEntityKey[];
+    expandedItems?: CrudEntityKey[];
+    collapsedItems?: CrudEntityKey[];
 }
 
 /**
