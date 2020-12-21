@@ -1,14 +1,10 @@
 /**
  * Библиотека контролов, которые реализуют плоский список. Список может строиться по данным, полученным из источника. Также можно организовать удаление и перемещение данных.
  * @library Controls/list
- * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
- * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
- * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
@@ -19,14 +15,10 @@
 /*
  * List library
  * @library Controls/list
- * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
- * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
- * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate

@@ -27,7 +27,6 @@ export default interface ISmallTemplateOptions {
      * @variant m Размер, соответствующий размеру m.
      */
     /**
-     * @name Controls/_tile/interface/ISmallTemplate#imageSize
      * @cfg {ImageSize} Размер изображения.
      */
     imageSize?: 's' | 'm';
