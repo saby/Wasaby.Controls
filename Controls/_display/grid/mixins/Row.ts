@@ -339,6 +339,10 @@ export default abstract class Row<T> {
         return this._$owner.getColumnSeparatorSize();
     }
 
+    nextVersion(): void {
+        this._nextVersion();
+    }
+
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;

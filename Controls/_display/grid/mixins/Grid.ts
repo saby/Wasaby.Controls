@@ -143,6 +143,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$columns = newColumns;
         this._$colgroup?.reBuild();
         this._nextVersion();
+        this._$header.nextVersion();
         this._updateItemsColumns();
     }
 
@@ -159,8 +160,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$columnSeparatorSize = columnSeparatorSize;
-        this._nextVersion();
         this._$header.nextVersion();
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            item.nextVersion();
+        });
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {

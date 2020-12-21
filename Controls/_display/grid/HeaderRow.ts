@@ -36,10 +36,6 @@ export default class HeaderRow<T> extends Row<T> {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
     }
 
-    nextVersion(): void {
-        this._nextVersion();
-    }
-
     protected _initializeColumns(): void {
         if (this._$header) {
             this._$columnItems = [];
