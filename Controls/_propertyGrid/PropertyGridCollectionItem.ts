@@ -19,7 +19,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
 
     getEditorTemplateName(): string {
         const itemContents = this.getContents();
-        const editorTemplateName = itemContents.get('editorTemplate.wml');
+        const editorTemplateName = itemContents.get('editorTemplate');
         const type = itemContents.get('type');
         const propertyValue = this._$propertyValue;
 
