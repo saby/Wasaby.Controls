@@ -31,14 +31,6 @@ export default class Row<T>
 
     // region overrides
 
-    protected _getColspanParams(column: IColumn, columnIndex: number): IColspanParams {
-        const colspanCalculationCallback = this._$owner.getColspanCalculationCallback();
-        if (colspanCalculationCallback) {
-            return colspanCalculationCallback(this.getContents(), column, columnIndex);
-        }
-        return super._getColspanParams(column, columnIndex);
-    }
-
     getTemplate(): TemplateFunction | string {
         return this.getDefaultTemplate();
     }
