@@ -1,4 +1,4 @@
-import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmationOpenerFooter';
+import {IConfirmationFooterOptions} from 'Controls/_popup/interface/IConfirmationFooter';
 import {IControlOptions} from 'UI/Base';
 
 /**
