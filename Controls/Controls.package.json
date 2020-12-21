@@ -35,7 +35,6 @@
     "Controls/LoadingIndicator",
     "Controls/scroll",
     "Controls/buttons",
-    "Controls/eventUtils",
     "Controls/sizeUtils",
     "Controls/Store",
     "Controls/dataSource"
