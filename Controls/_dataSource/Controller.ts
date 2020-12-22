@@ -14,7 +14,7 @@ import {INavigationOptionValue,
         ISourceOptions,
         IPromiseSelectableOptions,
         INavigationOptions} from 'Controls/interface';
-import {TNavigationPagingMode} from 'Controls/_interface/INavigation';
+import {TNavigationPagingMode} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
@@ -71,6 +71,36 @@ type LoadResult = Promise<LoadPromiseResult>;
 enum NAVIGATION_DIRECTION_COMPATIBILITY {
     up = 'backward',
     down = 'forward'
+}
+
+export function isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {
+    const getProtoOf = Object.getPrototypeOf.bind(Object);
+    const items1Model = oldList.getModel();
+    const items2Model = newList.getModel();
+    let isModelEqual = items1Model === items2Model;
+
+    function getModelModuleName(model: string|Function): string {
+        let name;
+
+        if (typeof model === 'function') {
+            name = model.prototype._moduleName;
+        } else {
+            name = model;
+        }
+
+        return name;
+    }
+
+    if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
+        isModelEqual = true;
+    }
+    return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
+        isModelEqual &&
+        (newList.getKeyProperty() === oldList.getKeyProperty()) &&
+        // tslint:disable-next-line:triple-equals
+        (getProtoOf(newList).constructor == getProtoOf(newList).constructor) &&
+        // tslint:disable-next-line:triple-equals
+        (getProtoOf(newList.getAdapter()).constructor == getProtoOf(oldList.getAdapter()).constructor);
 }
 
 export default class Controller {
@@ -346,17 +376,32 @@ export default class Controller {
         key: TKey,
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
-        ): IQueryParams {
+        ): IQueryParams|IQueryParams[] {
         const navigationController = this._getNavigationController(this._options);
-        return navigationController.getQueryParams(
-            {
-                filter: queryParams.filter,
-                sorting: queryParams.sorting
-            },
-            key,
-            navigationSourceConfig,
-            NAVIGATION_DIRECTION_COMPATIBILITY[direction]
-        );
+        const navigationConfig = navigationSourceConfig || this._options.navigation.sourceConfig;
+        const userQueryParams = {
+            filter: queryParams.filter,
+            sorting: queryParams.sorting
+        };
+
+        if (navigationConfig && navigationConfig.multiNavigation && this._isDeepReload()) {
+            return navigationController.getQueryParamsForHierarchy(
+                userQueryParams,
+                navigationSourceConfig,
+                false
+            );
+        } else {
+            return navigationController.getQueryParams(
+                userQueryParams,
+                key,
+                navigationSourceConfig,
+                NAVIGATION_DIRECTION_COMPATIBILITY[direction]
+            );
+        }
+    }
+
+    private _isDeepReload(): boolean {
+        return this._deepReload || this._options.deepReload;
     }
 
     private _addItems(items: RecordSet, key: TKey, direction: Direction): RecordSet {
@@ -378,7 +423,7 @@ export default class Controller {
     }
 
     private _setItems(items: RecordSet): void {
-        if (this._items && Controller._isEqualItems(this._items, items)) {
+        if (this._items && isEqualItems(this._items, items)) {
             this._items.assign(items);
         } else {
             this._subscribeItemsCollectionChangeEvent(items);
@@ -427,10 +472,10 @@ export default class Controller {
                         this._options.source;
                     const crudWrapper = this._getCrudWrapper(source as ICrud);
 
-                    let params = {
+                    let params: IQueryParams | IQueryParams[] = {
                         filter: preparedFilter,
                         sorting: this._options.sorting
-                    } as IQueryParams;
+                    };
 
                     if (this._hasNavigationBySource()) {
                         params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
@@ -444,9 +489,12 @@ export default class Controller {
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    this._loadPromise = null;
-                    this._navigationController = null;
-                    return this._processQueryError(error);
+                    if (!error.isCanceled && !error.canceled) {
+                        this._loadPromise = null;
+                        this._navigationController = null;
+                        this._processQueryError(error);
+                    }
+                    return error;
                 });
 
             return this._loadPromise.promise;
@@ -462,14 +510,13 @@ export default class Controller {
         root: TKey = this._root): Promise<QueryWhereExpression<unknown>> {
         const expandedItemsForFilter = this._expandedItems || options.expandedItems;
         const parentProperty = this._parentProperty;
-        const deepReload = this._deepReload || options.deepReload;
         let resultFilter = initialFilter;
 
         return new Promise((resolve) => {
             if (parentProperty) {
                 resultFilter = {...initialFilter};
 
-                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && deepReload) {
+                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && this._isDeepReload()) {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
@@ -555,8 +602,54 @@ export default class Controller {
 
     private _collectionChange(): void {
         if (this._hasNavigationBySource()) {
-            this._getNavigationController(this._options).updateQueryRange(this._items, this._root);
+            // Навигация при изменении ReocrdSet'a должно обновляться только по записям из корня,
+            // поэтому получение элементов с границ recordSet'a
+            // нельзя делать обычным получением первого и последнего элемента,
+            // надо так же проверять, находится ли элемент в корне
+            const firstItem = this._getFirstItemFromRoot();
+            const lastItem = this._getLastItemFromRoot();
+
+            if (this._items.getCount() && firstItem && lastItem) {
+                this._getNavigationController(this._options)
+                    .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
+            }
         }
+    }
+
+    private _getFirstItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let firstItem;
+        for (let i = 0; i < itemsCount; i++) {
+            firstItem = this._getItemFromRootByIndex(i);
+            if (firstItem) {
+                break;
+            }
+        }
+        return firstItem;
+    }
+
+    private _getLastItemFromRoot(): Model|void {
+        const itemsCount = this._items.getCount();
+        let lastItem;
+        for (let i = itemsCount - 1; i > 0; i--) {
+            lastItem = this._getItemFromRootByIndex(i);
+            if (lastItem) {
+                break;
+            }
+        }
+        return lastItem;
+    }
+
+    private _getItemFromRootByIndex(index: number): Model|void {
+        let item;
+        if (this._options.parentProperty && this._root !== undefined) {
+            if (this._items.at(index).get(this._options.parentProperty) === this._root) {
+                item = this._items.at(index);
+            }
+        } else {
+            item = this._items.at(index);
+        }
+        return item;
     }
 
     private _destroyNavigationController(): void {
@@ -569,17 +662,6 @@ export default class Controller {
     private _hasNavigationBySource(navigation?: INavigationOptionValue<unknown>): boolean {
         const navigationOption = navigation || this._options.navigation;
         return Boolean(navigationOption && navigationOption.source);
-    }
-
-    private static _isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {
-        const getProtoOf = Object.getPrototypeOf.bind(Object);
-        return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
-               (newList.getModel() === oldList.getModel()) &&
-               (newList.getKeyProperty() === oldList.getKeyProperty()) &&
-                // tslint:disable-next-line:triple-equals
-               (getProtoOf(newList).constructor == getProtoOf(newList).constructor) &&
-                // tslint:disable-next-line:triple-equals
-               (getProtoOf(newList.getAdapter()).constructor == getProtoOf(oldList.getAdapter()).constructor);
     }
 
     private static _getFilterForCollapsedGroups(

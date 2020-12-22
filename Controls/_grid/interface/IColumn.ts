@@ -79,12 +79,6 @@ export interface IColspanParams {
     colspan?: number;
 }
 
-export interface IRowspanParams {
-    startRow?: number;
-    endRow?: number;
-    rowspan?: number;
-}
-
 /**
  * @typedef {String} TActionDisplayMode
  * @description Стиль тега
@@ -113,7 +107,7 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
  * @public
  * @author Авраменко А.С.
  */
-export interface IColumn {
+export interface IColumn extends IColspanParams {
     /**
      * @name Controls/_grid/interface/IColumn#width
      * @cfg {String} Ширина колонки.
@@ -127,7 +121,7 @@ export interface IColumn {
      * При установке ширины фиксированным колонкам рекомендуется использовать абсолютные величины (px). От конфигурации ширины фиксированных колонок зависит ширина скроллируемой области. Например, при установке ширины фиксированной колонки 1fr её контент может растянуться на всю ширину таблицы, и в результате не останется свободного пространства для скролла.
      * @see compatibleWidth
      */
-    width: string;
+    width?: string;
     /**
      * @name Controls/_grid/interface/IColumn#displayProperty
      * @cfg {String} Имя поля, данные которого отображаются в колонке.
@@ -231,7 +225,7 @@ export interface IColumn {
      * </pre>
      * @see resultTemplate
      */
-    template?: TemplateFunction;
+    template?: TemplateFunction|string;
     /**
      * @name Controls/_grid/interface/IColumn#resultTemplate
      * @cfg {String|Function} Шаблон отображения ячейки в строке итогов.
@@ -242,9 +236,9 @@ export interface IColumn {
      *
      * Также шаблон {@link Controls/grid:ResultColumnTemplate} поддерживает параметры, с помощью которых можно изменить отображение ячейки.
      *
-     * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию resultTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultColumnTemplate.
+     * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию resultTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultColumnTemplate.
      *
-     * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/column/ руководстве разработчика}.
+     * Дополнительно о работе с шаблоном вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/column/ руководстве разработчика}.
      *
      * Для отображения строки итогов необходимо задать значение в опции {@link Controls/grid:View#resultsPosition resultsPosition}.
      * @example

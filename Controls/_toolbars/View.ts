@@ -5,7 +5,7 @@ import {descriptor, Record} from 'Types/entity';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {StickyOpener} from 'Controls/popup';
-import {Controller as SourceController} from 'Controls/source';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
 
 import {
@@ -36,7 +36,6 @@ import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
-import * as ActualAPI from 'Controls/_toolbars/ActualAPI';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from "Env/Env";
 
@@ -57,7 +56,7 @@ export interface IMenuOptions {
 
 /**
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
- * @interface Controls/_toolbars/IToolbarOptions
+ * @interface Controls/_toolbars/IToolbar
  * @public
  * @author Красильников А.С.
  */
@@ -65,13 +64,11 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions {
     /**
-     * @name Controls/_toolbars/IToolbarOptions#popupClassName
      * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      * @default ''
      */
     popupClassName: string;
     /**
-     * @name Controls/_toolbars/IToolbarOptions#itemsSpacing
      * @cfg {String} Размер расстояния между кнопками.
      * @variant medium
      * @variant big
@@ -79,25 +76,20 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      */
     itemsSpacing: TItemsSpacing;
     /**
-     * @name Controls/_toolbars/View#additionalProperty
      * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню. Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.
      */
     additionalProperty?: string;
     /**
-     * @name Controls/_toolbars/IToolbarOptions#popupFooterTemplate
      * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
      * @demo Controls-demo/Toolbar/PopupFooterTemplate/Index
      */
     popupFooterTemplate?: String | Function;
-
     /**
-     * @name  Controls/_toolbars/IToolbarOptions#itemActions
      * @cfg {Array<ItemAction>} Конфигурация опций записи.
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActions?: IItemAction[];
     /**
-     * @name Controls/_toolbars/IToolbarOptions#itemActionVisibilityCallback
      * @cfg {function} Функция управления видимостью операций над записью.
      * @param {ItemAction} action Объект с настройкой действия.
      * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
@@ -105,9 +97,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @demo Controls-demo/Toolbar/ItemActions/Index
      */
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
-
     /**
-     * @name Controls/_toolbars/IToolbarOptions#menuSource
      * @cfg {Types/source:ICrudPlus} Объект реализующий интерфейс {@link Types/source:ICrud},
      * необходимый для работы с источником данных выпадающего меню тулбара.
      * Данные будут загружены отложенно, при взаимодействии с меню.
@@ -115,9 +105,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @link items
      */
     menuSource?: ICrudPlus;
-
     /**
-     * @name Controls/_toolbars/IToolbarOptions#contrastBackground
      * @cfg {Boolean} Определяет наличие подложки у кнопки открытия выпадающего меню тулбара.
      */
     contrastBackground?: true;
@@ -128,21 +116,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex">демо-пример</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toolbars.less">переменные тем оформления</a>
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex демо-пример}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toolbars.less переменные тем оформления}
  *
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
- * @mixes Controls/interface:IHierarchy
- * @mixes Controls/interface:IIconSize
- * @mixes Controls/_toolbars/IToolbarOptions
- * @mixes Controls/_toolbars/IToolbarSource
- * @mixes Controls/interface:IItemTemplate
- * @mixes Controls/interface:IItems
- * @mixes Controls/interface:IIconStyle
- * @mixes Controls/interface:IFontColorStyle
- *
+ * @implements Controls/interface/IItemTemplate
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
@@ -154,7 +134,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
      * Used in template
      */
     protected _needShowMenu: boolean = null;
-    protected _fullItemsList: TItems = null;
     protected _items: TItems = null;
     protected _source: ICrudPlus = null;
     protected _sourceByItems: Memory = null;
@@ -164,7 +143,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     protected _isLoadMenuItems: boolean = false;
     protected _firstItem: TItem = null;
     protected _buttonTemplate: TemplateFunction = getButtonTemplate();
-    protected _actualItems: TItems = null;
     private _menuItems: {
         [key: number]: TItems
     } = {};
@@ -235,9 +213,10 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             filter[this._options.parentProperty] = itemKey;
             const sourceController = new SourceController({
                 source: this._options.menuSource,
-                keyProperty: this._options.keyProperty
+                keyProperty: this._options.keyProperty,
+                filter
             });
-            return sourceController.load(filter).then((items) => {
+            return sourceController.load().then((items) => {
                 this._menuItems[itemKey] = items;
                 const menuSource = this._createPrefetchProxy(this._options.menuSource, items);
                 return menuSource;
@@ -350,7 +329,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 
     private _setMenuSource(): void {
-        const menuItems = Toolbar._calcMenuItems(this._actualItems);
+        const menuItems = Toolbar._calcMenuItems(this._items);
 
         if (this._options.menuSource) {
             this._menuSource = this._options.menuSource;
@@ -360,17 +339,14 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    private _setStateByItems(items: TItems, isNewOptions: boolean, source?: ICrudPlus,): void {
-        this._fullItemsList = items;
-        // TODO: Удалить ActualAPI https://online.sbis.ru/opendoc.html?guid=d6fb9444-66f5-481d-8fd3-636b4d4ab676
-        this._actualItems = isNewOptions ? items : ActualAPI.items(items.clone());
-        this._items = this._actualItems;
+    private _setStateByItems(items: TItems, source?: ICrudPlus): void {
+        this._items = items;
         // у первой записи тулбара не требуется показывать отступ слева
         this._firstItem = this._getFirstToolbarItem() as TItem;
         if (source) {
-            this._source = this._createPrefetchProxy(source, this._actualItems);
+            this._source = this._createPrefetchProxy(source, this._items);
         }
-        this._needShowMenu = needShowMenu(this._actualItems);
+        this._needShowMenu = needShowMenu(this._items);
     }
 
     private _needChangeState(newOptions: IToolbarOptions): boolean {
@@ -409,12 +385,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
         if (options.source) {
             if (receivedItems) {
-                this._setStateByItems(receivedItems, options.isNewOptions, options.source);
+                this._setStateByItems(receivedItems, options.source);
             } else {
-                return this.setStateBySource(options.source, options.isNewOptions);
+                return this.setStateBySource(options.source);
             }
         } else if (options.items) {
-            this._setStateByItems(options.items, options.isNewOptions);
+            this._setStateByItems(options.items);
         }
     }
 
@@ -425,12 +401,12 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         if (hasSourceChanged(newOptions.source, this._options.source)) {
             this._isLoadMenuItems = false;
             this._sticky?.close();
-            this.setStateBySource(newOptions.source, newOptions.isNewOptions);
+            this.setStateBySource(newOptions.source);
         }
         if (this._options.items !== newOptions.items) {
             this._isLoadMenuItems = false;
             this._sourceByItems = null;
-            this._setStateByItems(newOptions.items, newOptions.isNewOptions);
+            this._setStateByItems(newOptions.items);
         }
         if (this._options.menuSource !== newOptions.menuSource) {
             this._menuItems = {};
@@ -458,16 +434,16 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
     }
 
-    protected setStateBySource(source: ICrudPlus, isNewOptions: boolean): Promise<TItems> {
+    protected setStateBySource(source: ICrudPlus): Promise<TItems> {
         return loadItems(source).then((items) => {
-            this._setStateByItems(items, isNewOptions, source);
+            this._setStateByItems(items, source);
             return items;
         });
     }
 
     protected _closeHandler(): void {
         this._notify('menuClosed', [], {bubbling: true});
-        this._setStateByItems(this._fullItemsList, this._options.isNewOptions, this._options.source);
+        this._setStateByItems(this._items, this._options.source);
         this._setMenuSource();
     }
 

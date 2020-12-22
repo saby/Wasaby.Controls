@@ -1,7 +1,7 @@
 import {SearchResolver} from 'Controls/search';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
-import {ISearchResolverOptions} from 'Controls/_search/interface';
+import {ISearchResolverOptions} from 'Controls/_search/SearchResolver';
 
 const defaultOptions = {
    searchCallback: () => null,
@@ -23,7 +23,7 @@ const initSearchDelay = (options?: Partial<ISearchResolverOptions>) => {
 describe('Controls/search:SearchDelay', () => {
    const now = new Date().getTime();
 
-   describe('delayTime', () => {
+   describe('searchDelay', () => {
       it('should callback when delay is undefined', () => {
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3
@@ -36,7 +36,7 @@ describe('Controls/search:SearchDelay', () => {
       it('should callback when delay is 0', () => {
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 0
+            searchDelay: 0
          });
 
          searchResolver.resolve('test');
@@ -49,7 +49,7 @@ describe('Controls/search:SearchDelay', () => {
          });
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 1000
+            searchDelay: 1000
          });
 
          searchResolver.resolve('test');
@@ -65,7 +65,7 @@ describe('Controls/search:SearchDelay', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 1000,
+            searchDelay: 1000,
             searchResetCallback
          });
          searchResolver.resolve('');
@@ -81,7 +81,7 @@ describe('Controls/search:SearchDelay', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 1000,
+            searchDelay: 1000,
             searchResetCallback
          });
          searchResolver.resolve('te');
@@ -95,11 +95,11 @@ describe('Controls/search:SearchDelay', () => {
          clock.restore();
       });
 
-      it('searchStarted = true when delayTime = 0, length > minLength', () => {
+      it('searchStarted = true when searchDelay = 0, length > minLength', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 0,
+            searchDelay: 0,
             searchResetCallback
          });
          searchResolver.resolve('test');
@@ -118,7 +118,7 @@ describe('Controls/search:SearchDelay', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 1000,
+            searchDelay: 1000,
             searchResetCallback
          });
          searchResolver._searchStarted = true;
@@ -139,7 +139,7 @@ describe('Controls/search:SearchDelay', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 3,
-            delayTime: 1000,
+            searchDelay: 1000,
             searchResetCallback
          });
 
@@ -158,7 +158,7 @@ describe('Controls/search:SearchDelay', () => {
             now, toFake: ['setTimeout', 'clearTimeout']
          });
          const {searchResolver, searchCallback} = initSearchDelay({
-            delayTime: 1000
+            searchDelay: 1000
          });
 
          searchResolver.resolve('test');
@@ -171,7 +171,7 @@ describe('Controls/search:SearchDelay', () => {
       it('shouldn\'t callback when minSearchValueLength is null and valueLength is 0', () => {
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
-            delayTime: 1000,
+            searchDelay: 1000,
             minSearchLength: null,
             searchResetCallback
          });
@@ -189,7 +189,7 @@ describe('Controls/search:SearchDelay', () => {
          });
          const searchResetCallback = sinon.stub();
          const {searchResolver, searchCallback} = initSearchDelay({
-            delayTime: 1000,
+            searchDelay: 1000,
             minSearchLength: null,
             searchResetCallback
          });
@@ -209,7 +209,7 @@ describe('Controls/search:SearchDelay', () => {
          });
          const {searchResolver, searchCallback} = initSearchDelay({
             minSearchLength: 0,
-            delayTime: 1000
+            searchDelay: 1000
          });
 
          searchResolver.resolve('t');

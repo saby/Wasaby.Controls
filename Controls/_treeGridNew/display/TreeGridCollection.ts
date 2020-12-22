@@ -1,5 +1,5 @@
 import { mixin } from 'Types/util';
-import TreeGridRow, {IOptions as ITreeGridRowOptions} from './TreeGridRow';
+import TreeGridDataRow, {IOptions as ITreeGridRowOptions} from './TreeGridDataRow';
 import {
     TreeItem,
     GridGroupItem,
@@ -33,9 +33,9 @@ function itemIsVisible<T>(item: TreeItem<T>): boolean  {
 
 export default class TreeGridCollection<
     S,
-    T extends TreeGridRow<S> = TreeGridRow<S>
+    T extends TreeGridDataRow<S> = TreeGridDataRow<S>
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
-    readonly '[Controls/_treeGrid/TreeGridCollection]': boolean;
+    readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
     constructor(options: any) {
         super(options);
@@ -86,6 +86,7 @@ export default class TreeGridCollection<
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
             options.columns = this._$columns;
+            options.colspanCallback = this._$colspanCallback;
             return superFactory.call(this, options);
         };
     }
@@ -93,6 +94,8 @@ export default class TreeGridCollection<
     protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
         return GridGroupItem;
     }
+
+    // endregion
 
     // TODO по идее нужно это добавлять в Tree,
     //  но т.к. Tree используется в старой модели, чтобы ничего не сломать, добавляю здесь
@@ -108,12 +111,10 @@ export default class TreeGridCollection<
 
         return composer;
     }
-
-    // endregion
 }
 
 Object.assign(TreeGridCollection.prototype, {
-    '[Controls/_treeGrid/TreeGridCollection]': true,
+    '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
-    _itemModule: 'Controls/treeGrid:TreeGridRow'
+    _itemModule: 'Controls/treeGrid:TreeGridDataRow'
 });

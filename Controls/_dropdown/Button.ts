@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {loadItems} from 'Controls/_dropdown/Util';
@@ -30,31 +30,33 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @remark
  * Полезные ссылки:
  *
- * * <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less">переменные тем оформления dropdown</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less">переменные тем оформления dropdownPopup</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/button/ руководство разработчика}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less переменные тем оформления dropdown}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less переменные тем оформления dropdownPopup}
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
  * @extends Controls/_buttons/Button
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
- * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_dropdown/interface/IBaseDropdown
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/IIcon
  * @mixes Controls/_dropdown/interface/IFooterTemplate
  * @mixes Controls/_dropdown/interface/IHeaderTemplate
  * @mixes Controls/_dropdown/interface/IIconSize
+ * @mixes Controls/_dropdown/interface/IBaseDropdown
+ * @mixes Controls/_dropdown/interface/IGrouped
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/IFontColorStyle
+ * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IHeight
- * @mixes Controls/_buttons/interface/IButton
- * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/_interface/ICaption
+ * @mixes Controls/_interface/ITooltip
+ * @mixes Controls/_interface/IIcon
  * @mixes Controls/_interface/ISearch
+ * @mixes Controls/_buttons/interface/IButton
+ *
  *
  * @public
  * @author Герасимов А.М.
@@ -81,7 +83,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @mixes Controls/_dropdown/interface/IIconSize
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_dropdown/interface/IGrouped
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/dropdown_new/Button/Source/Index
@@ -89,7 +91,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
 
 export default class Button extends BaseDropdown {
    protected _template: TemplateFunction = template;
-   protected _tmplNotify: Function = tmplNotify;
+   protected _tmplNotify: Function = EventUtils.tmplNotify;
    protected _hasItems: boolean = true;
 
    _beforeMount(options: IButtonOptions,

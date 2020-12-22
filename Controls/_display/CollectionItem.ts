@@ -21,7 +21,7 @@ import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 
-export interface IOptions<T> {
+export interface IOptions<T extends Model = Model> {
     contents?: T;
     selected?: boolean;
     marked?: boolean;
@@ -32,10 +32,11 @@ export interface IOptions<T> {
     owner?: ICollection<T, CollectionItem<T>>;
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
-    multiSelectVisibility: string;
+    multiSelectVisibility?: string;
+    checkboxState?: boolean|null;
 }
 
-export interface ISerializableState<T> extends IDefaultSerializableState {
+export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
     $options: IOptions<T>;
     ci: number;
     iid: string;
@@ -60,7 +61,7 @@ const ITEMACTIONS_POSITION_CLASSES = {
  * @public
  * @author Мальцев А.А.
  */
-export default class CollectionItem<T> extends mixin<
+export default class CollectionItem<T extends Model = Model> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -79,6 +80,7 @@ export default class CollectionItem<T> extends mixin<
     readonly '[Types/_entity/IInstantiable]': boolean;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
+    readonly DraggableItem: boolean = true;
 
     getInstanceId: () => string;
 
@@ -123,6 +125,8 @@ export default class CollectionItem<T> extends mixin<
     protected _$multiSelectVisibility: string;
 
     protected _$dragged: boolean;
+
+    protected _$checkboxState: boolean|null;
 
     protected _instancePrefix: string;
 
@@ -280,6 +284,18 @@ export default class CollectionItem<T> extends mixin<
     }
 
     // endregion
+
+    // region CheckboxState
+
+    isReadonlyCheckbox(): boolean {
+        return this._$checkboxState !== true;
+    }
+
+    isVisibleCheckbox(): boolean {
+        return this._$checkboxState !== null;
+    }
+
+    // endregion CheckboxState
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
@@ -542,17 +558,28 @@ export default class CollectionItem<T> extends mixin<
                       style: string = 'default'): string {
         const hoverBackgroundStyle = this.getOwner().getHoverBackgroundStyle() || style;
         const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
-        return `controls-ListView__itemV ${this._getCursorClasses(cursor)}
-            controls-ListView__item_${style}
-            controls-ListView__item_${style}_theme-${theme}
-            controls-ListView__item_showActions
-            js-controls-ItemActions__swipeMeasurementContainer
-            controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}
-            ${templateHighlightOnHover && !this.isEditing() ? `controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}` : ''}
-            ${this.isEditing() ? (` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`) : ''}
-            ${this.isDragged() ? ` controls-ListView__item_dragging_theme-${theme}` : ''}
-            ${backgroundColorStyle ? ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}` : ''}
-            ${templateHighlightOnHover && this.isActive() ? ` controls-ListView__item_active_theme-${theme}` : ''}`;
+        let wrapperClasses = `controls-ListView__itemV ${this._getCursorClasses(cursor)}`;
+        wrapperClasses += ` controls-ListView__item_${style}`;
+        wrapperClasses += ` controls-ListView__item_${style}_theme-${theme}`;
+        wrapperClasses += ' controls-ListView__item_showActions';
+        wrapperClasses += ' js-controls-ItemActions__swipeMeasurementContainer';
+        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
+        if (templateHighlightOnHover && !this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}`;
+        }
+        if (this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
+        }
+        if (this.isDragged()) {
+            wrapperClasses += ` controls-ListView__item_dragging_theme-${theme}`;
+        }
+        if (backgroundColorStyle) {
+            wrapperClasses += ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}`;
+        }
+        if (templateHighlightOnHover && this.isActive()) {
+            wrapperClasses += ` controls-ListView__item_active_theme-${theme}`;
+        }
+        return wrapperClasses;
     }
 
     getItemActionClasses(itemActionsPosition: string, theme?: string, isLastRow?: boolean, rowSeparatorSize?: string): string {
@@ -587,10 +614,16 @@ export default class CollectionItem<T> extends mixin<
     getContentClasses(theme: string, style: string = 'default'): string {
         const isAnimatedForSelection = this.isAnimatedForSelection();
         const rowSeparatorSize = this.getRowSeparatorSize();
-        return `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}
-        ${rowSeparatorSize ? ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}` : ''}
-        ${isAnimatedForSelection ? ' controls-ListView__item_rightSwipeAnimation' : ''}
-        controls-ListView__itemContent_${style}_theme-${theme}`;
+        let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
+        contentClasses += ` controls-ListView__itemContent_${style}_theme-${theme}`;
+
+        if (rowSeparatorSize) {
+            contentClasses += ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}`;
+        }
+        if (isAnimatedForSelection) {
+            contentClasses += ' controls-ListView__item_rightSwipeAnimation';
+        }
+        return contentClasses;
     }
 
     /**
@@ -772,6 +805,7 @@ export default class CollectionItem<T> extends mixin<
 Object.assign(CollectionItem.prototype, {
     '[Controls/_display/CollectionItem]': true,
     _moduleName: 'Controls/display:CollectionItem',
+    _instancePrefix: 'collection-item-',
     _$owner: null,
     _$contents: null,
     _$selected: false,
@@ -783,9 +817,9 @@ Object.assign(CollectionItem.prototype, {
     _$active: false,
     _$hovered: false,
     _$dragged: false,
-    _instancePrefix: 'collection-item-',
+    _$checkboxState: true,
+    _$multiSelectVisibility: null,
     _contentsIndex: undefined,
     _version: 0,
-    _counters: null,
-    _$multiSelectVisibility: null
+    _counters: null
 });

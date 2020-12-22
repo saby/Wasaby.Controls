@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_explorer/View/View');
 import cInstance = require('Core/core-instance');
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
 import {factory} from 'Types/chain';
@@ -14,7 +14,7 @@ import {
    INavigationSourceConfig,
    INavigationPositionSourceConfig as IPositionSourceConfig,
    INavigationOptionValue as INavigation
-}  from '../_interface/INavigation';
+} from 'Controls/interface';
 import {JS_SELECTORS as EDIT_IN_PLACE_JS_SELECTORS} from 'Controls/editInPlace';
 import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
@@ -221,6 +221,14 @@ var
                self._itemTemplate = self._newItemTemplate;
                self._newItemTemplate = null;
             }
+            if (self._newBackgroundStyle) {
+               self._backgrounStyle = self._newBackgroundStyle;
+               self._newBackgroundStyle = null;
+            }
+            if (self._newHeader) {
+               self._header = self._newHeader;
+               self._newHeader = null;
+            }
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -361,9 +369,9 @@ var
     * Сортировка применяется к запросу к источнику данных. Полученные от источника записи дополнительно не сортируются.
     *
     * Полезные ссылки:
-    * * <a href="/doc/platform/developmentapl/interface-development/controls/list/explorer/">руководство разработчика</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less">переменные тем оформления explorer</a>
-    * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления list</a>
+    * * {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/ руководство разработчика}
+    * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_explorer.less переменные тем оформления explorer}
+    * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less переменные тем оформления list}
     *
     * @demo Controls-demo/Explorer/Explorer
     * @demo Controls-demo/Explorer/Search
@@ -382,7 +390,7 @@ var
     * @mixes Controls/_list/interface/IList
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
@@ -392,7 +400,7 @@ var
     * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
-    * @mixes Controls/_marker/interface/IMarkerListOptions
+    * @mixes Controls/_marker/interface/IMarkerList
     *
     * @public
     * @author Авраменко А.С.
@@ -420,7 +428,7 @@ var
     * @mixes Controls/_itemActions/interface/IItemActionsOptions
     * @mixes Controls/_interface/ISorting
     * @mixes Controls/_interface/IHierarchy
-    * @mixes Controls/_tree/interface/ITreeControlOptions
+    * @implements Controls/_tree/interface/ITreeControl
     * @mixes Controls/_explorer/interface/IExplorer
     * @mixes Controls/_interface/IDraggable
     * @mixes Controls/_tile/interface/ITile
@@ -429,7 +437,7 @@ var
     * @mixes Controls/_grid/interface/IGridControl
     * @mixes Controls/_list/interface/IMovableList
     * @mixes Controls/_list/interface/IRemovableList
-    * @mixes Controls/_marker/interface/IMarkerListOptions
+    * @mixes Controls/_marker/interface/IMarkerList
     *
     * @public
     * @author Авраменко А.С.
@@ -464,6 +472,12 @@ var
          }
          if (cfg.itemTemplate) {
             this._itemTemplate = cfg.itemTemplate;
+         }
+         if (cfg.backgroundStyle) {
+            this._backgroundStyle = cfg.backgroundStyle;
+         }
+         if (cfg.header) {
+            this._header = cfg.viewMode === 'tile' ? undefined : cfg.header;;
          }
          this._dataLoadErrback = _private.dataLoadErrback.bind(null, this, cfg);
          this._serviceDataLoadCallback = _private.serviceDataLoadCallback.bind(null, this);
@@ -517,6 +531,14 @@ var
 
          if (cfg.itemTemplate !== this._options.itemTemplate) {
             this._newItemTemplate = cfg.itemTemplate;
+         }
+
+         if (cfg.backgroundStyle !== this._options.backgroundStyle) {
+            this._newBackgroundStyle = cfg.backgroundStyle;
+         }
+
+         if (cfg.header !== this._options.header || isViewModeChanged) {
+            this._newHeader = cfg.viewMode === 'tile' ? undefined : cfg.header;
          }
          /*
          * Позиция скрола при выходе из папки восстанавливается через скроллирование к отмеченной записи.
@@ -572,7 +594,7 @@ var
          }
 
       },
-      _beforePaint: function() {
+       _componentDidUpdate: function() {
          if (this._markerForRestoredScroll !== null) {
             this.scrollToItem(this._markerForRestoredScroll);
             this._markerForRestoredScroll = null;
@@ -683,7 +705,7 @@ var
          }
       },
       _onExplorerKeyDown: function(event) {
-         keysHandler(event, HOT_KEYS, _private, this);
+         EventUtils.keysHandler(event, HOT_KEYS, _private, this);
       },
       _updateHeadingPath() {
           this._breadCrumbsItems = calculatePath(this._items).path;
@@ -756,7 +778,7 @@ var
          let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
          this._notifyHandler(e, 'arrowClick', item);
       },
-      _notifyHandler: tmplNotify
+      _notifyHandler: EventUtils.tmplNotify
    });
 
    Explorer._private = _private;
@@ -819,9 +841,9 @@ var
     *
     * Также шаблон Controls/tile:ItemTemplate поддерживает {@link Controls/tile:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *
-    * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
+    * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию tileItemTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/tile:ItemTemplate.
     *
-    * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
+    * Дополнительно о работе с шаблоном вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/controls/list/explorer/templates/ руководстве разработчика}.
     * @example
     * <pre class="brush: html;">
     * <Controls.explorer:View>

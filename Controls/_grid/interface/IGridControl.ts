@@ -464,9 +464,9 @@ export interface IGridControl extends IList {
  * @remark
  * Позволяет установить пользовательский шаблон отображения строки итогов (именно шаблон, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона Controls/grid:ResultsTemplate.
  *
- * В разделе "Примеры" показано как с помощью директивы {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию resultsTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultTemplate.
+ * В разделе "Примеры" показано как с помощью директивы {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} задать пользовательский шаблон. Также в опцию resultsTemplate можно передавать и более сложные шаблоны, которые содержат иные директивы, например {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-if ws:if}. В этом случае каждая ветка вычисления шаблона должна заканчиваться директивой ws:partial, которая встраивает Controls/grid:ResultTemplate.
  *
- * Дополнительно о работе с шаблоном вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/grid/results/row/ руководстве разработчика}.
+ * Дополнительно о работе с шаблоном вы можете прочитать в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/row/ руководстве разработчика}.
  *
  * Для отображения строки итогов необходимо задать значение в опции {@link resultsPosition}.
  * @example
@@ -554,6 +554,19 @@ export interface IGridControl extends IList {
  * @param {Controls/_itemActions/interface/IItemAction/TEditArrowVisibilityCallback.typedef} TEditArrowVisibilityCallback
  * @remark
  * Первый и единственный аргумент - текущая запись, на которой открывается свайп.
+ */
+
+/**
+ * @name Controls/_grid/interface/IGridControl#colspanCallback
+ * @cfg {TColspanCallback} Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @remark
+ * Параметры функции:
+ * * {Types/entity:Model} item Элемент, для которого рассчитывается объединение
+ * * {Controls/grid:IColumn} column Колонка грида
+ * * {Number} columnIndex Индекс колонки грида
+ * * {Boolean} isEditing Актуальное состояние редактирования элемента
+ * Функция возвращает {number} - количество объединяемых колонок, учитывая текущую.
+ * @markdown
  */
 
 /**

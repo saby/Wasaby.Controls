@@ -1,5 +1,8 @@
+import {IMoneyOptions} from 'Controls/decorator';
+import IEditingTemplateOptions from './EditingTemplate'
+
 /**
- * Шаблон для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту} денежных полей в {@link Controls/list:View плоских списках}.
+ * Шаблон для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту} денежных полей в {@link Controls/list:View плоских списках}.
  * В режиме чтения выводит значение с помощью {@link Controls/decorator:Money}.
  * 
  * @class Controls/_list/interface/MoneyEditingTemplate
@@ -25,10 +28,6 @@
  * </pre>
  * @public
  */
-
-import {IMoneyOptions} from 'Controls/decorator';
-import IEditingTemplateOptions from './EditingTemplate'
-
 export default interface IMoneyEditingTemplateOptions extends IEditingTemplateOptions, IMoneyOptions {
     readonly '[Controls/_list/interface/IMoneyEditingTemplateOptions]': boolean;
 };

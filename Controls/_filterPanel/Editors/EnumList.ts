@@ -35,7 +35,7 @@ class ListEditor extends ListEditorBase {
     }
 
     protected _handleSelectedKeysChanged(): void {
-        //
+        //Для списка с еденичным выбором не приходит событие selectedKeysChanged
     }
 
     protected _handleSelectorResult(result: Model[]): void {

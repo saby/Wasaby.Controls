@@ -9,7 +9,7 @@ import {
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
 import { IFilterControllerOptions } from 'Controls/_filter/ControllerClass';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {RecordSet} from 'Types/collection';
 import {ContextOptions} from 'Controls/context';
 
@@ -25,7 +25,7 @@ import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
-import {ISearchControllerOptions} from 'Controls/_search/interface';
+import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
@@ -77,10 +77,12 @@ type IFilterControllerOptions = Pick<IBrowserOptions,
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IHierarchySearch
+ *
+ * @demo Controls-demo/Search/FlatList/Index
  */
 export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _template: TemplateFunction = template;
-    protected _notifyHandler: Function = tmplNotify;
+    protected _notifyHandler: Function = EventUtils.tmplNotify;
 
     private _isMounted: boolean;
     private _selectedKeysCount: number | null;
@@ -159,10 +161,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
 
-        if (options.root !== undefined) {
-            this._root = options.root;
-        }
-
         if (receivedState) {
             if ('filterItems' in receivedState && 'items' in receivedState) {
                 this._setFilterItems(receivedState.filterItems as IFilterItem[]);
@@ -235,6 +233,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = newOptions.source;
         }
 
+        if (newOptions.root !== this._options.root) {
+            this._root = newOptions.root;
+        }
+
         const sourceController = this._getSourceController(newOptions);
 
         const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
@@ -257,9 +259,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                    return error;
                })
                .then((result) => {
-                   this._updateSearchController(newOptions);
-
-                   return result;
+                   return this._updateSearchController(newOptions).then(() => result);
                });
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
@@ -269,7 +269,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
-            methodResult = this._updateSearchController(newOptions);
+            if (!methodResult) {
+                methodResult = this._updateSearchController(newOptions);
+            }
         }
 
         return methodResult;
@@ -286,6 +288,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                         this._searchDataLoad(result, newOptions.searchValue);
                     })
                     .catch((error) => error);
+            } else if (updateResult) {
+                this._filterChanged(null, updateResult as QueryWhereExpression<unknown>);
             }
         });
     }
@@ -370,10 +374,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
         if (!this._searchController) {
             return import('Controls/search').then((result) => {
-                this._searchController = new result.ControllerClass({
-                    ...(options ?? this._options),
-                    sourceController: this._getSourceController(options ?? this._options)
-                });
+                this._searchController = new result.ControllerClass(
+                   this._getSearchControllerOptions(options ?? this._options));
 
                 return this._searchController;
             });
@@ -634,6 +636,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _search(event: SyntheticEvent, validatedValue: string): void {
         this._startSearch(validatedValue).then((result) => {
             this._searchDataLoad(result, validatedValue);
+        }).catch((error: Error & {
+            isCancelled?: boolean;
+        }) => {
+            if (!error?.isCancelled) {
+                return error;
+            }
         });
     }
 

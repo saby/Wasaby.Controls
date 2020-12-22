@@ -6,8 +6,9 @@ import { TreeSelectionStrategy } from 'Controls/multiselection';
 import { Model } from 'Types/entity';
 import * as ListData from 'ControlsUnit/ListData';
 import { RecordSet } from 'Types/collection';
-import { Tree, TreeItem } from 'Controls/display';
+import { Search, Tree, TreeItem } from 'Controls/display';
 import GroupItem from 'Controls/_display/GroupItem';
+import { SearchGridViewModel } from 'Controls/treeGrid';
 
 describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    const model = new Tree({
@@ -26,14 +27,16 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
       selectDescendants: false,
       selectAncestors: false,
       rootId: null,
-      model: model
+      model: model,
+      selectionType: 'all'
    });
 
    const strategyWithDescendantsAndAncestors = new TreeSelectionStrategy({
       selectDescendants: true,
       selectAncestors: true,
       rootId: null,
-      model: model
+      model: model,
+      selectionType: 'all'
    });
 
    function toArray(array: TreeItem<Model>[]): object[] {
@@ -202,11 +205,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
       it('with ENTRY_PATH', () => {
          // если есть ENTRY_PATH то удаляется только текущий корень и его дети
-         strategy._entryPath = [];
+         strategy._entryPath = [{}];
          strategy._rootId = 2;
          let selection = { selected: [2, 5], excluded: [2, 3] };
          selection = strategy.unselectAll(selection);
          assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.excluded, []);
+      });
+
+      it('with empty ENTRY_PATH', () => {
+         // если есть ENTRY_PATH то удаляется только текущий корень и его дети
+         strategy._entryPath = [];
+         strategy._rootId = 2;
+         let selection = { selected: [2, 5], excluded: [2, 3] };
+         selection = strategy.unselectAll(selection);
+         assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
       });
    });
@@ -316,7 +329,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
               selectDescendants: true,
               selectAncestors: true,
               rootId: null,
-              model: model
+              model: model,
+             selectionType: 'all'
           });
           const entryPath = [
               {parent: 6, id: 10},
@@ -360,6 +374,77 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)));
          assert.deepEqual(toArray(res.get(null)), ListData.getItems().filter((it) => ![4, 5, 7].includes(it.id)));
          assert.deepEqual(toArray(res.get(false)), []);
+      });
+
+      it('search model', () => {
+         const items = new RecordSet({
+            rawData: [{
+               id: 1,
+               parent: null,
+               nodeType: true,
+               title: 'test_node1'
+            }, {
+               id: 11,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf11'
+            }, {
+               id: 12,
+               parent: 1,
+               nodeType: null,
+               title: 'test_leaf12'
+            },
+            {
+               id: 2,
+               parent: null,
+               nodeType: true,
+               title: 'test_node2'
+            }, {
+               id: 21,
+               parent: 2,
+               nodeType: null,
+               title: 'test_leaf21'
+            }, {
+               id: 22,
+               parent: 2,
+               nodeType: null,
+               title: 'test_leaf22'
+            }],
+            keyProperty: 'id'
+         });
+
+         const searchModel = new SearchGridViewModel({
+            items,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            columns: [{}]
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: searchModel,
+            selectionType: 'all'
+         });
+
+         let res = strategy.getSelectionForModel({selected: [null], excluded: [null]}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12), searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(2)]);
+         assert.deepEqual(res.get(false), []);
+
+         // Изменилось состояние хлебной крошки, когда сняли чекбокс с одного из ее детей
+         res = strategy.getSelectionForModel({selected: [null], excluded: [null, 11, 12]}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), [searchModel.getItemBySourceKey(2)]);
+         assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
+
+         // Выбирается хлебная крошка
+         res = strategy.getSelectionForModel({selected: [2], excluded: []}, undefined, undefined, 'sad');
+         assert.deepEqual(res.get(true), [searchModel.getItemBySourceKey(2), searchModel.getItemBySourceKey(21), searchModel.getItemBySourceKey(22)]);
+         assert.deepEqual(res.get(null), []);
+         assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
       });
    });
 
@@ -413,7 +498,8 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
              selectAncestors: true,
              selectDescendants: true,
              rootId: null,
-             model: model
+             model: model,
+             selectionType: 'all'
          });
          assert.isNull(treeStrategyWithNodesMoreData.getCount(selection, false));
       });
@@ -501,10 +587,145 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             selectDescendants: false,
             selectAncestors: false,
             rootId: null,
-            model: model
+            model: model,
+            selectionType: 'all'
          });
          const selection = { selected: [], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
+      });
+   });
+
+   describe('selectionType', () => {
+      describe('leaf', () => {
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: model,
+            selectionType: 'leaf'
+         });
+
+         it('select', () => {
+            let result = strategy.select({ selected: [], excluded: [] }, 1);
+            assert.deepEqual(result, { selected: [], excluded: [] });
+
+            result = strategy.select({ selected: [], excluded: [] }, 7);
+            assert.deepEqual(result, { selected: [7], excluded: [] });
+         });
+
+         it('unselect', () => {
+            let result = strategy.unselect({ selected: [1], excluded: [] }, 1);
+            assert.deepEqual(result, { selected: [1], excluded: [] });
+
+            result = strategy.unselect({ selected: [7], excluded: [] }, 7);
+            assert.deepEqual(result, { selected: [], excluded: [] });
+         });
+
+         it('getSelectionForModel', () => {
+            const selection = { selected: [null], excluded: [null] };
+            const res = strategy.getSelectionForModel(selection);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![4, 5, 7].includes(it.id)));
+         });
+
+         it('with readonly items', () => {
+            const data = ListData.getItems();
+            data[3].checkboxState = false;
+
+            const model = new Tree({
+               collection: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: data
+               }),
+               root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+               keyProperty: ListData.KEY_PROPERTY,
+               parentProperty: ListData.PARENT_PROPERTY,
+               nodeProperty: ListData.NODE_PROPERTY,
+               hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
+               multiSelectAccessibilityProperty: 'checkboxState'
+            });
+
+            const strategy = new TreeSelectionStrategy({
+               selectDescendants: true,
+               selectAncestors: true,
+               rootId: null,
+               model: model,
+               selectionType: 'leaf'
+            });
+
+            const selection = { selected: [null], excluded: [null] };
+            const res = strategy.getSelectionForModel(selection);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![4, 5, 7].includes(it.id)));
+         });
+      });
+
+      describe('node', () => {
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: model,
+            selectionType: 'node'
+         });
+
+         it('select', () => {
+            let result = strategy.select({ selected: [], excluded: [] }, 1);
+            assert.deepEqual(result, { selected: [1], excluded: [] });
+
+            result = strategy.select({ selected: [], excluded: [] }, 7);
+            assert.deepEqual(result, { selected: [], excluded: [] });
+         });
+
+         it('unselect', () => {
+            let result = strategy.unselect({ selected: [1], excluded: [] }, 1);
+            assert.deepEqual(result, { selected: [], excluded: [] });
+
+            result = strategy.unselect({ selected: [7], excluded: [] }, 7);
+            assert.deepEqual(result, { selected: [7], excluded: [] });
+         });
+
+         it('getSelectionForModel', () => {
+            const selection = { selected: [null], excluded: [null] };
+            const res = strategy.getSelectionForModel(selection);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 3, 6].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => [4, 5, 7].includes(it.id)));
+         });
+
+         it('with readonly items', () => {
+            const data = ListData.getItems();
+            data[0].checkboxState = false;
+
+            const model = new Tree({
+               collection: new RecordSet({
+                  keyProperty: ListData.KEY_PROPERTY,
+                  rawData: data
+               }),
+               root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+               keyProperty: ListData.KEY_PROPERTY,
+               parentProperty: ListData.PARENT_PROPERTY,
+               nodeProperty: ListData.NODE_PROPERTY,
+               hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
+               multiSelectAccessibilityProperty: 'checkboxState'
+            });
+
+            const strategy = new TreeSelectionStrategy({
+               selectDescendants: true,
+               selectAncestors: true,
+               rootId: null,
+               model: model,
+               selectionType: 'node'
+            });
+
+            const selection = { selected: [null], excluded: [null] };
+            const res = strategy.getSelectionForModel(selection);
+            assert.deepEqual(toArray(res.get(true)), ListData.getItems().filter((it) => [1, 2, 3, 6].includes(it.id)) );
+            assert.deepEqual(toArray(res.get(null)), []);
+            assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3, 6].includes(it.id)));
+         });
       });
    });
 });

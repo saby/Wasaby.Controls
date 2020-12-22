@@ -3,7 +3,8 @@ import Collection, {
     IOptions as ICollectionOptions,
     ISessionItemState,
     ISerializableState as IDefaultSerializableState,
-    ISplicedArray
+    ISplicedArray,
+    StrategyConstructor
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
@@ -20,6 +21,10 @@ import {Object as EventObject} from 'Env/Event';
 import { TemplateFunction } from 'UI/Base';
 import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
+import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
+import { Model } from 'Types/entity';
+import { IDragPosition } from './interface/IDragPosition';
+import TreeDrag from './itemsStrategy/TreeDrag';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -50,8 +55,8 @@ export interface IOptions<S, T> extends ICollectionOptions<S, T> {
     root?: T | any;
     rootEnumerable?: boolean;
     hasMoreStorage?: Record<string, boolean>;
-    expandedItems: CrudEntityKey[];
-    collapsedItems: CrudEntityKey[];
+    expandedItems?: CrudEntityKey[];
+    collapsedItems?: CrudEntityKey[];
 }
 
 /**
@@ -122,7 +127,7 @@ function validateOptions<S, T>(options: IOptions<S, T>): IOptions<S, T> {
  * @public
  * @author Мальцев А.А.
  */
-export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
+export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeItem<S>> extends Collection<S, T> {
     /**
      * @cfg {String} Название свойства, содержащего идентификатор родительского узла. Дерево в этом случае строится
      * по алгоритму Adjacency List (список смежных вершин). Также требуется задать {@link keyProperty}
@@ -180,6 +185,16 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      */
     protected _$expanderVisibility: string;
 
+    /**
+     * Иконка экспандера
+     */
+    protected _$expanderIcon: string;
+
+    /**
+     * Размер экспандера
+     */
+    protected _$expanderSize: string;
+
     protected _$nodeFooterTemplateMoreButton: TemplateFunction;
 
     /**
@@ -224,6 +239,12 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
      * @protected
      */
     protected _$footerVisibilityCallback: (nodeContents: S) => boolean;
+
+    /**
+     * Стратегия перетаскивания записей
+     * @protected
+     */
+    protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
 
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
@@ -291,7 +312,60 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         return this._$expanderVisibility;
     }
 
+    getExpanderIcon(): string {
+        return this._$expanderIcon;
+    }
+
+    getExpanderSize(): string {
+        return this._$expanderSize;
+    }
+
     // endregion Expander
+
+    // region Drag-n-drop
+
+    setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number | string>): void {
+        if (draggableItem.isExpanded()) {
+            this.toggleExpanded(draggableItem);
+        }
+        super.setDraggedItems(draggableItem, draggedItemsKeys);
+    }
+
+    setDragPosition(position: IDragPosition<T>): void {
+        const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
+
+        if (dragStrategy) {
+            const currentPosition = dragStrategy.getCurrentPosition();
+            if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
+                currentPosition.dispItem.setDragTargetNode(false);
+                this._nextVersion();
+            }
+
+            if (position.position === 'on') {
+                if (dragStrategy.avatarItem !== position.dispItem && !position.dispItem.isDragTargetNode()) {
+                    position.dispItem.setDragTargetNode(true);
+                    this._nextVersion();
+                }
+                return;
+            }
+
+            super.setDragPosition(position);
+        }
+    }
+
+    resetDraggedItems(): void {
+        const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
+
+        if (dragStrategy) {
+            const currentPosition = dragStrategy.getCurrentPosition();
+            if (currentPosition) {
+                currentPosition.dispItem.setDragTargetNode(false);
+            }
+            super.resetDraggedItems();
+        }
+    }
+
+    // endregion Drag-n-drop
 
     getNodeFooterTemplate(): TemplateFunction {
         return this._$nodeFooterTemplate;
@@ -574,7 +648,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
         this._reCountNodeFooters();
     }
 
-    toggleExpanded(item: TreeItem<T>): void {
+    toggleExpanded(item: T): void {
         const newExpandedState = !item.isExpanded();
         item.setExpanded(newExpandedState);
 
@@ -751,7 +825,7 @@ export default class Tree<S, T extends TreeItem<S> = TreeItem<S>> extends Collec
                 let item;
                 while (enumerator.moveNext()) {
                     item = enumerator.getCurrent();
-                    if (!(item instanceof TreeItem)) {
+                    if (!(item instanceof TreeItem) && !(item instanceof BreadcrumbsItem)) {
                         continue;
                     }
                     if (item.getParent() === parent) {
@@ -847,6 +921,8 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
+    _$expanderSize: undefined,
+    _$expanderIcon: undefined,
     _$root: undefined,
     _$rootEnumerable: false,
     _$nodeFooterTemplate: null,

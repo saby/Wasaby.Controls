@@ -2,7 +2,7 @@ import {ControllerClass} from 'Controls/search';
 import {assert} from 'chai';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
-import {createSandbox, SinonSpy, stub} from 'sinon';
+import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
 
 const getMemorySource = (): Memory => {
@@ -34,7 +34,9 @@ const getSourceController = (options: Partial<IControllerOptions>) => {
       parentProperty: null,
       root: null,
       sorting: [],
-      filter: {},
+      filter: {
+         payload: 'something'
+      },
       keyProperty: 'id',
       source: getMemorySource(),
       navigation: {
@@ -88,7 +90,8 @@ describe('Controls/search:ControllerClass', () => {
 
    it('search method', () => {
       const filter: QueryWhereExpression<unknown> = {
-         testParam: 'testValue'
+         testParam: 'testValue',
+         payload: 'something'
       };
       controllerClass.search('testValue');
 
@@ -100,6 +103,7 @@ describe('Controls/search:ControllerClass', () => {
          const filter: QueryWhereExpression<unknown> = {
             testParam: 'testValue',
             testParent: 'testRoot',
+            payload: 'something',
             'Разворот': 'С разворотом',
             'usePages': 'full'
          };
@@ -114,13 +118,14 @@ describe('Controls/search:ControllerClass', () => {
 
          controllerClass.reset();
          assert.isTrue(getFilterSpy.withArgs({
-            testParam: ''
+            payload: 'something'
          }).called);
       });
 
       it('without parent property', () => {
          const filter: QueryWhereExpression<unknown> = {
-            testParam: 'testValue'
+            testParam: 'testValue',
+            payload: 'something'
          };
          controllerClass._root = 'testRoot';
          controllerClass._options.startingWith = 'current';
@@ -132,14 +137,15 @@ describe('Controls/search:ControllerClass', () => {
 
          controllerClass.reset();
          assert.isTrue(getFilterSpy.withArgs({
-            testParam: ''
+            payload: 'something'
          }).called);
       });
    });
 
    it('search and reset', () => {
       const filter: QueryWhereExpression<unknown> = {
-         testParam: 'testValue'
+         testParam: 'testValue',
+         payload: 'something'
       };
       controllerClass.search('testValue');
 
@@ -148,16 +154,18 @@ describe('Controls/search:ControllerClass', () => {
       controllerClass.reset();
 
       assert.isTrue(getFilterSpy.withArgs({
-         testParam: ''
+         payload: 'something'
       }).called);
    });
 
    it('search and update', () => {
       const filter: QueryWhereExpression<unknown> = {
-         testParam: 'testValue'
+         testParam: 'testValue',
+         payload: 'something'
       };
       const updatedFilter: QueryWhereExpression<unknown> = {
-         testParam: 'updatedValue'
+         testParam: 'updatedValue',
+         payload: 'something'
       };
       controllerClass.search('testValue');
 
@@ -174,8 +182,8 @@ describe('Controls/search:ControllerClass', () => {
 
    describe('update', () => {
       it('shouldn\'t call when searchValue is null', () => {
-         const searchStub = stub(controllerClass, 'search');
-         const resetStub = stub(controllerClass, 'reset');
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
 
          controllerClass._options.searchValue = null;
 
@@ -188,14 +196,55 @@ describe('Controls/search:ControllerClass', () => {
       });
 
       it('shouldn\'t call when searchValue is not in options object', () => {
-         const searchStub = stub(controllerClass, 'search');
-         const resetStub = stub(controllerClass, 'reset');
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
 
          controllerClass._options.searchValue = null;
 
          controllerClass.update({});
 
          assert.isFalse(searchStub.called);
+         assert.isFalse(resetStub.called);
+      });
+
+      it('should call reset when new sourceController in options', () => {
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = '';
+         controllerClass._sourceController = sandbox.mock({
+            ver: 'old'
+         });
+
+         controllerClass.update({
+            sourceController: sandbox.mock({
+               ver: 'new'
+            })
+         });
+
+         assert.isFalse(searchStub.called);
+         assert.isTrue(resetStub.called);
+      });
+
+      it('should call search when new sourceController and new SearchValue in options', () => {
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
+         const sourceControllerMock = sandbox.mock({
+            ver: 'new'
+         });
+
+         controllerClass._options.searchValue = '';
+         controllerClass._sourceController = sandbox.mock({
+            ver: 'old'
+         });
+
+         controllerClass.update({
+            sourceController: sourceControllerMock,
+            searchValue: 'test123'
+         });
+
+         assert.isTrue(searchStub.withArgs('test123').calledOnce);
+         assert.equal(controllerClass._sourceController, sourceControllerMock);
          assert.isFalse(resetStub.called);
       });
    });

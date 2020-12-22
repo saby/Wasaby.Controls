@@ -8,6 +8,7 @@ import Tree from './Tree';
 import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -30,7 +31,7 @@ interface ISerializableState<T> extends ICollectionItemSerializableState<T> {
  * @public
  * @author Мальцев А.А.
  */
-export default class TreeItem<T> extends mixin<
+export default class TreeItem<T extends Model = Model> extends mixin<
     CollectionItem<any>,
     ExpandableMixin
     >(
@@ -61,16 +62,12 @@ export default class TreeItem<T> extends mixin<
     protected _$childrenProperty: string;
 
     /**
-     * Иконка экспандера
+     * Признак, что узел является целью при перетаскивании
+     * @private
      */
-    protected _$expanderIcon: string;
+    private _isDragTargetNode: boolean = false;
 
-    /**
-     * Размер экспандера
-     */
-    protected _$expanderSize: string;
-
-    constructor(options?: IOptions<T>) {
+    constructor(options: IOptions<T>) {
         super(options);
         ExpandableMixin.call(this);
 
@@ -115,7 +112,10 @@ export default class TreeItem<T> extends mixin<
      * @param parent Новый родительский узел
      */
     setParent(parent: TreeItem<T>): void {
-        this._$parent = parent;
+        if (this._$parent !== parent) {
+            this._$parent = parent;
+            this._nextVersion();
+        }
     }
 
     /**
@@ -174,6 +174,24 @@ export default class TreeItem<T> extends mixin<
     }
 
     /**
+     * Устанавливаем признак, что узел является целью при перетаскивании
+     * @param isTarget Является ли узел целью при перетаскивании
+     */
+    setDragTargetNode(isTarget: boolean): void {
+        if (this._isDragTargetNode !== isTarget) {
+            this._isDragTargetNode = isTarget;
+            this._nextVersion();
+        }
+    }
+
+    /**
+     * Возвращает признак, что узел является целью при перетаскивании
+     */
+    isDragTargetNode(): boolean {
+        return this._isDragTargetNode;
+    }
+
+    /**
      * Возвращает признак наличия детей у узла
      */
     isHasChildren(): boolean {
@@ -224,11 +242,11 @@ export default class TreeItem<T> extends mixin<
     }
 
     getExpanderIcon(expanderIcon?: string): string {
-        return expanderIcon || this._$expanderIcon;
+        return expanderIcon || this._$owner.getExpanderIcon();
     }
 
     getExpanderSize(expanderSize?: string): string {
-        return expanderSize || this._$expanderSize;
+        return expanderSize || this._$owner.getExpanderSize();
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
@@ -254,10 +272,10 @@ export default class TreeItem<T> extends mixin<
         return expanderPaddingClasses;
     }
 
-    getLevelIndentClasses(theme: string = 'default', expanderSize: string = 's', levelIndentSize: string = 's'): string {
-        // TODO нужно поддержать expanderSize и levelIndentSize, они не передаются в темплейт сейчас
+    getLevelIndentClasses(expanderSizeTmpl: string, levelIndentSize: string, theme: string = 'default'): string {
         const sizes = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
         let resultLevelIndentSize;
+        const expanderSize = this.getExpanderSize(expanderSizeTmpl);
 
         if (expanderSize && levelIndentSize) {
             if (sizes.indexOf(expanderSize) >= sizes.indexOf(levelIndentSize)) {
@@ -371,7 +389,5 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
-    _$expanderIcon: undefined,
-    _$expanderSize: undefined,
     _instancePrefix: 'tree-item-'
 });

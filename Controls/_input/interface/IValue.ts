@@ -36,16 +36,9 @@ export interface ICallbackData<T> extends IFieldData {
  */
 export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
 
-/**
- * Интерфейс управления значением поля ввода.
- *
- * @interface Controls/_input/interface/IValueOptions
- * @author Красильников А.С.
- * @public
- */
 export interface IValueOptions<T> {
     /**
-     * Значение поля ввода.
+     * @cfg {*|null} Значение поля ввода.
      * @remark
      * При установке опции value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
      * 
@@ -63,7 +56,7 @@ export interface IValueOptions<T> {
      * }
      * </pre>
      * 
-     * Пример можно упростить, воспользовавшись синтаксисом шаблонизатора {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
+     * Пример можно упростить, воспользовавшись синтаксисом шаблонизатора {@link /doc/platform/developmentapl/interface-development/ui-library/options/#two-way-binding bind}:
      * 
      * <pre class="brush: html">
      * <Controls:input:Text bind:value="_value"/>
@@ -155,12 +148,19 @@ export interface IValueOptions<T> {
     inputCallback: ICallback<T>;
 }
 
+/**
+ * Интерфейс управления значением поля ввода.
+ *
+ * @interface Controls/_input/interface/IValue
+ * @author Красильников А.С.
+ * @public
+ */
 export interface IValue {
     readonly '[Controls/_input/interface/IValue]': boolean;
 }
 
 /**
- * @name Controls/_input/interface/IValueOptions#valueChanged
+ * @name Controls/_input/interface/IValue#valueChanged
  * @event Происходит при изменении отображаемого значения контрола ввода.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} value Значение контрола ввода.
@@ -204,7 +204,7 @@ export interface IValue {
  * @see inputCompleted
  */
 /**
- * @name Controls/_input/interface/IValueOptions#inputCompleted
+ * @name Controls/_input/interface/IValue#inputCompleted
  * @event Происходит при завершении ввода. Завершение ввода — это контрол потерял фокус, или пользователь нажал клавишу "Enter".
  * @param {String} value Значение контрола ввода.
  * @param {String} displayValue Отображаемое значение контрола ввода.

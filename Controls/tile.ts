@@ -1,13 +1,11 @@
 /**
  * Библиотека контролов, которые реализуют иерархический список, отображающийся в виде плитки.
  * @library Controls/tile
- * @includes View Controls/_tile/View
  * @includes ItemTemplate Controls/_tile/interface/ItemTemplate
  * @includes ITile Controls/_tile/interface/ITile
- * @includes SmallItemTemplate Controls/_tile/interface/SmallTemplate
- * @includes MediumTemplate Controls/_tile/interface/MediumTemplate
- * @includes PreviewTemplate Controls/_tile/interface/PreviewTemplate
- * @includes RichTemplate Controls/_tile/interface/RichTemplate
+ * @includes SmallItemTemplate Controls/_tile/interface/ISmallTemplate
+ * @includes PreviewTemplate Controls/_tile/interface/IPreviewTemplate
+ * @includes RichTemplate Controls/_tile/interface/IRichTemplate
  * @public
  * @author Крайнов Д.О.
  */
@@ -15,12 +13,10 @@
 /*
  * tile library
  * @library Controls/tile
- * @includes View Controls/_tile/View
  * @includes ItemTemplate Controls/_tile/interface/ItemTemplate
  * @includes ITile Controls/_tile/interface/ITile
  * @includes IDraggable Controls/_interface/IDraggable
  * @includes SmallItemTemplate Controls/_tile/interface/SmallTemplate
- * @includes MediumTemplate Controls/_tile/interface/MediumTemplate
  * @includes PreviewTemplate Controls/_tile/interface/PreviewTemplate
  * @includes RichTemplate Controls/_tile/interface/RichTemplate
  * @public

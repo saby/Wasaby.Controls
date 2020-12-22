@@ -13,8 +13,9 @@ import ScrollModel from './Utils/ScrollModel';
 import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
 import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {isHidden} from './StickyHeader/Utils';
+import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
 export interface IContainerBaseOptions extends IControlOptions {
     scrollMode?: SCROLL_MODE;
@@ -22,7 +23,7 @@ export interface IContainerBaseOptions extends IControlOptions {
 
 const KEYBOARD_SHOWING_DURATION: number = 500;
 
-export default class ContainerBase extends Control<IContainerBaseOptions> {
+export default class ContainerBase<T extends IContainerBaseOptions> extends Control<IContainerBaseOptions> {
     protected _template: TemplateFunction = template;
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
@@ -38,9 +39,9 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     private _scrollLockedPosition: number = null;
     protected _scrollCssClass: string;
     private _oldScrollState: ScrollState;
-    private _scrollModel: ScrollModel;
+    protected _scrollModel: ScrollModel;
 
-    protected _tmplNotify: Function = tmplNotify;
+    protected _tmplNotify: Function = EventUtils.tmplNotify;
 
     // Виртуальный скролл
     private _topPlaceholderSize: number = 0;
@@ -51,7 +52,7 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
 
     private _virtualNavigationRegistrar: RegisterClass;
 
-    _beforeMount(options: IContainerBaseOptions): void {
+    _beforeMount(options: IContainerBaseOptions, context?, receivedState?) {
         this._virtualNavigationRegistrar = new RegisterClass({register: 'virtualNavigation'});
         this._resizeObserver = new ResizeObserverUtil(this, this._resizeObserverCallback, this._resizeHandler);
         this._resizeObserverSupported = this._resizeObserver.isResizeObserverSupported();
@@ -228,21 +229,30 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Возвращает true если есть возможность вроскролить к позиции offset.
+     * Возвращает true, если можно прокрутить к позиции offset.
      * @name Controls/_scroll/Container#canScrollTo
      * @function
      * @param {Number} offset Позиция в пикселях
-     * @noshow
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToLeft
+     * @see scrollToRight
+     * @see horizontalScrollTo
      */
     canScrollTo(offset: number): boolean {
         return offset <= this._scrollModel.scrollHeight - this._scrollModel.clientHeight;
     }
 
     /**
-     * Скроллит к выбранной позиции по горизонтале. Позиция определяется в пикселях от левого края контейнера.
+     * Прокручивает к выбранной позиции по горизонтали. Позиция определяется в пикселях от левого края контейнера.
      * @name Controls/_scroll/Container#horizontalScrollTo
      * @function
      * @param {Number} offset Позиция в пикселях.
+     * @see scrollToTop
+     * @see scrollToBottom
+     * @see scrollToLeft
+     * @see scrollToRight
+     * @see canScrollTo
      */
 
     /*
@@ -255,12 +265,14 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к верху контейнера.
+     * Прокручивает к верху контейнера.
      * @name Controls/_scroll/Container#scrollToTop
      * @function
      * @see scrollToBottom
      * @see scrollToLeft
      * @see scrollToRight
+     * @see horizontalScrollTo
+     * @see canScrollTo
      */
 
     /*
@@ -273,12 +285,14 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к левому краю контейнера.
+     * Прокручивает к левому краю контейнера.
      * @name Controls/_scroll/Container#scrollToLeft
      * @function
      * @see scrollToTop
      * @see scrollToBottom
      * @see scrollToRight
+     * @see horizontalScrollTo
+     * @see canScrollTo
      */
 
     /*
@@ -291,12 +305,14 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к низу контейнера.
+     * Прокручивает к низу контейнера.
      * @name Controls/_scroll/Container#scrollToBottom
      * @function
      * @see scrollToTop
      * @see scrollToLeft
      * @see scrollToRight
+     * @see horizontalScrollTo
+     * @see canScrollTo
      */
 
     /*
@@ -310,12 +326,14 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
     }
 
     /**
-     * Скроллит к правому краю контейнера.
+     * Прокручивает к правому краю контейнера.
      * @name Controls/_scroll/Container#scrollToRight
      * @function
      * @see scrollToTop
      * @see scrollToBottom
      * @see scrollToLeft
+     * @see horizontalScrollTo
+     * @see canScrollTo
      */
 
     /*
@@ -527,7 +545,8 @@ export default class ContainerBase extends Control<IContainerBaseOptions> {
             this._setScrollTop(0);
         } else {
             const
-                clientHeight = this._scrollModel.clientHeight,
+                headersHeight = getHeadersHeight(this._container, 'top', 'allFixed') || 0,
+                clientHeight = this._scrollModel.clientHeight - headersHeight,
                 scrollHeight = this._scrollModel.scrollHeight,
                 currentScrollTop = this._scrollModel.scrollTop + (this._isVirtualPlaceholderMode() ? this._topPlaceholderSize : 0);
             if (scrollParam === 'bottom') {

@@ -3,11 +3,19 @@ import {ListView, CssClassList} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
-import {JS_SELECTORS as COLUMN_SCROLL_JS_SELECTORS, ColumnScroll} from './resources/ColumnScroll';
-import {JS_SELECTORS as DRAG_SCROLL_JS_SELECTORS, DragScroll} from './resources/DragScroll';
-import {shouldAddActionsCell, shouldDrawColumnScroll, isInLeftSwipeRange} from 'Controls/_grid/utils/GridColumnScrollUtil';
+import {
+    COLUMN_SCROLL_JS_SELECTORS,
+    DRAG_SCROLL_JS_SELECTORS,
+    ColumnScrollController as ColumnScroll,
+    DragScrollController as DragScroll,
+    isInLeftSwipeRange
+} from 'Controls/columnScroll';
+import {
+    shouldAddActionsCell,
+    shouldDrawColumnScroll,
+} from 'Controls/_grid/utils/GridColumnScrollUtil';
 
 import {getDimensions} from 'Controls/sizeUtils';
 
@@ -174,6 +182,7 @@ var
         },
         createColumnScroll(self, options): void {
             self._columnScrollController = new ColumnScroll({
+                isFullGridSupport: GridLayoutUtil.isFullGridSupport(),
                 needBottomPadding: options._needBottomPadding,
                 stickyColumnsCount: options.stickyColumnsCount,
                 hasMultiSelect: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition === 'default',
@@ -279,6 +288,15 @@ var
                 self._viewGrabbingClasses = isGrabbing ? DRAG_SCROLL_JS_SELECTORS.CONTENT_GRABBING : '';
             }
         },
+        /**
+         * Скроллит к ближайшему краю колонки
+         * @param self
+         */
+        scrollToColumn(self): void {
+            self._columnScrollController.scrollToColumnWithinContainer(self._children.header || self._children.results);
+            self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
+            self._updateColumnScrollData();
+        },
         applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
             // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             self._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
@@ -336,13 +354,14 @@ var
         _defaultItemTemplate: GridItemTemplate,
         _headerContentTemplate: HeaderContentTpl,
 
-        _notifyHandler: tmplNotify,
+        _notifyHandler: EventUtils.tmplNotify,
         _columnScrollContainerClasses: '',
         _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
         _containerSize: 0,
+        _itemClickTarget: null,
 
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
@@ -591,6 +610,7 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
+                this._itemClickTarget = e.target;
                 this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
             }
         },
@@ -630,8 +650,11 @@ var
         /* COLUMN SCROLL */
         _isColumnScrollVisible(): boolean {
             if (this._columnScrollController && this._columnScrollController.isVisible()) {
-                const items = this._options.listModel.getItems();
-                return this._options.headerInEmptyListVisible || (!!items && (!!items.getCount() || !!this._options.listModel.isEditing()));
+                const hasItems = !!this._options.listModel.getItems()?.getCount();
+                const isEditing = !!this._options.listModel.isEditing();
+                const hasVisibleHeader = this._options.headerVisibility === 'visible' || this._options.headerInEmptyListVisible === true;
+
+                return hasItems || isEditing || hasVisibleHeader;
             } else {
                 return false;
             }
@@ -681,15 +704,15 @@ var
                 if (options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom') {
                     classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${options.theme} `;
                 }
-                return classes + ColumnScroll.getShadowClasses({
-                    position,
+                return classes + ColumnScroll.getShadowClasses(position, {
                     isVisible: position === 'start',
                     theme: options.theme,
                     backgroundStyle: options.backgroundStyle,
-                    needBottomPadding: options.needBottomPadding
                 });
             }
-            return this._columnScrollController.getShadowClasses(position);
+            return this._columnScrollController.getShadowClasses(position, {
+                needBottomPadding: options.needBottomPadding
+            });
         },
 
         _getColumnScrollFakeShadowStyles(options, position: 'start' | 'end'): string {
@@ -721,8 +744,7 @@ var
         _columnScrollWheelHandler(e): void {
             if (this._isColumnScrollVisible()) {
                 this._columnScrollController.scrollByWheel(e);
-                this._setHorizontalScrollPosition(this._columnScrollController.getScrollPosition());
-                this._updateColumnScrollData();
+                _private.scrollToColumn(this);
             }
         },
         _updateColumnScrollData(): void {
@@ -776,11 +798,21 @@ var
                 }
             }
         },
+
+        beforeActivateRow(): void {
+            if (this._itemClickTarget && this._isColumnScrollVisible()) {
+                this._scrollToCellIfNeed(this._itemClickTarget as HTMLElement);
+                this._itemClickTarget = null;
+            }
+        },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
             if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
                 return;
             }
-            this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
+            this._scrollToCellIfNeed(e.target as HTMLElement);
+        },
+        _scrollToCellIfNeed(target: HTMLElement): void {
+            this._columnScrollController.scrollToElementIfHidden(target);
             this._updateColumnScrollData();
         },
         _onNewHorizontalPositionRendered(e, newPosition) {
@@ -834,6 +866,7 @@ var
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
+                _private.scrollToColumn(this);
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -862,14 +895,20 @@ var
             }
         },
         _onDragScrollOverlayMouseUp(e) {
+            _private.scrollToColumn(this);
             this._dragScrollController?.onOverlayMouseUp(e);
         },
         _onDragScrollOverlayTouchEnd(e) {
+            _private.scrollToColumn(this);
             this._dragScrollController?.onOverlayTouchEnd(e);
             this._leftSwipeCanBeStarted = false;
         },
         _onDragScrollOverlayMouseLeave(e) {
             this._dragScrollController?.onOverlayMouseLeave(e);
+        },
+        _onScrollWrapperMouseUp(e) {
+            e.stopPropagation();
+            _private.scrollToColumn(this);
         },
         _onItemSwipe(event, itemData) {
             const direction = event.nativeEvent.direction;

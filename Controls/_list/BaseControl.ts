@@ -22,7 +22,7 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
-import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController, isEqualItems} from 'Controls/dataSource';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -34,7 +34,7 @@ import { Sticky } from 'Controls/popup';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
@@ -95,7 +95,7 @@ import 'wml!Controls/_list/BaseControl/Footer';
 
 import {IList} from './interface/IList';
 import { IScrollControllerResult } from './ScrollContainer/interfaces';
-import { EdgeIntersectionObserver } from 'Controls/scroll';
+import { EdgeIntersectionObserver, getStickyHeadersHeight } from 'Controls/scroll';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import {IMoveControllerOptions, MoveController} from './Controllers/MoveController';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
@@ -486,34 +486,6 @@ const _private = {
         return resDeferred;
     },
 
-    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
-        const items1Model = items1.getModel();
-        const items2Model = items2.getModel();
-        let isModelEqual = items1Model === items2Model;
-
-        function getModelModuleName(model: string|Function): string {
-            let name;
-
-            if (typeof model === 'function') {
-                name = model.prototype._moduleName;
-            } else {
-                name = model;
-            }
-
-            return name;
-        }
-
-        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
-            isModelEqual = true;
-        }
-        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            isModelEqual &&
-            (items1.getKeyProperty() === items2.getKeyProperty()) &&
-            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
-            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
-                Object.getPrototypeOf(items2.getAdapter()).constructor);
-    },
-
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -522,7 +494,7 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
-            if (!_private.isEqualItemsFormat(listModel.getCollection(), items)) {
+            if (!isEqualItems(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
                 if (self._options.itemsReadyCallback) {
                     self._options.itemsReadyCallback(listModel.getCollection());
@@ -782,7 +754,7 @@ const _private = {
                 // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
-                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getChildren(options.useNewModel ? display.getRoot() : options.root).length :
                     self._listViewModel.getCount();
             } else {
                 loadedDataCount = 0;
@@ -1193,11 +1165,7 @@ const _private = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
             };
-            const scrollParams = {
-                scrollTop: self._scrollTop,
-                clientHeight: viewportSize,
-                scrollHeight: viewSize
-            };
+
             // если естьЕще данные, мы не знаем сколько их всего, превышают два вьюпорта или нет и покажем пэйдджинг
             // но если загрузка все еще идет (а ее мы смотрим по наличию триггера) не будем показывать пэджинг
             // далее может быть два варианта. След запрос вернет данные, тогда произойдет ресайз и мы проверим еще раз
@@ -1215,7 +1183,7 @@ const _private = {
                 self._recalcPagingVisible = true;
             }
             if (!self._scrollPagingCtr && result && _private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self, scrollParams, hasMoreData);
+                _private.createScrollPagingController(self, hasMoreData);
             }
         }
 
@@ -1238,12 +1206,7 @@ const _private = {
             self._updateItemsHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
-                const scrollParams = {
-                    scrollTop: self._scrollTop,
-                    scrollHeight: params.scrollHeight,
-                    clientHeight: params.clientHeight
-                };
-                _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPagingCtr) => {
+                _private.getScrollPagingControllerWithCallback(self, (scrollPagingCtr) => {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
@@ -1264,7 +1227,7 @@ const _private = {
             self._isScrollShown = false;
         });
     },
-    getScrollPagingControllerWithCallback(self, scrollParams, callback) {
+    getScrollPagingControllerWithCallback(self, callback) {
         if (self._scrollPagingCtr) {
             callback(self._scrollPagingCtr);
         } else {
@@ -1273,15 +1236,16 @@ const _private = {
                     up: _private.hasMoreData(self, self._sourceController, 'up'),
                     down: _private.hasMoreData(self, self._sourceController, 'down')
                 };
-                _private.createScrollPagingController(self, scrollParams, hasMoreData).then((scrollPaging) => {
+                _private.createScrollPagingController(self, hasMoreData).then((scrollPaging) => {
                         self._scrollPagingCtr = scrollPaging;
                         callback(scrollPaging);
                     });
                 }
         }
     },
-    createScrollPagingController(self, scrollParams, hasMoreData) {
+    createScrollPagingController(self, hasMoreData) {
         let elementsCount;
+        const scrollParams = self._getScrollParams();
         if (self._sourceController) {
             elementsCount = _private.getAllDataCount(self);
             if (typeof elementsCount !== 'number') {
@@ -1395,7 +1359,7 @@ const _private = {
     },
 
     updateScrollPagingButtons(self, scrollParams) {
-        _private.getScrollPagingControllerWithCallback(self, scrollParams, (scrollPaging) => {
+        _private.getScrollPagingControllerWithCallback(self, (scrollPaging) => {
             const hasMoreData = {
                 up: _private.hasMoreData(self, self._sourceController, 'up'),
                 down: _private.hasMoreData(self, self._sourceController, 'down')
@@ -1434,6 +1398,7 @@ const _private = {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+                self._pagingVisibilityChanged = self._pagingVisible;
                 if (detection.isMobilePlatform) {
                     self._recalcPagingVisible = !self._pagingVisible;
                 }
@@ -2468,12 +2433,12 @@ const _private = {
     getSelectionStrategyOptions(options: any, collection: Collection<CollectionItem<Model>>, entryPath: []): ITreeSelectionStrategyOptions | IFlatSelectionStrategyOptions {
         if (options.parentProperty) {
             return {
-                nodesSourceControllers: options.nodesSourceControllers,
                 selectDescendants: options.selectDescendants,
                 selectAncestors: options.selectAncestors,
                 rootId: options.root,
                 model: collection,
-                entryPath
+                entryPath,
+                selectionType: options.selectionType
             };
         } else {
             return { model: collection };
@@ -2576,17 +2541,23 @@ const _private = {
                 self._notifyPlaceholdersChanged = () => {
                     self._notify('updatePlaceholdersSize', [result.placeholders], {bubbling: true});
                 }
-                if (result.placeholders.top > 0) {
+                if (result.shadowVisibility?.up || result.placeholders.top > 0 || _private.hasMoreData(self, self._sourceController, 'up')) {
                     self._notify('enableVirtualNavigation', [], { bubbling: true });
                 } else {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
-                self._notify('activeElementChanged', [result.activeElement]);
+            if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+                // activeElement запишется в result только, когда он изменится
+                if (result.activeElement) {
+                    self._notify('activeElementChanged', [result.activeElement]);
+                }
+
+                // Скроллить к активному элементу нужно только, когда в опции передали activeElement
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                    self._keepScrollAfterReload = true;
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
@@ -3073,6 +3044,9 @@ const _private = {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
+            if (self._children.listView.beforeActivateRow) {
+                self._children.listView.beforeActivateRow();
+            }
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
@@ -3150,6 +3124,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _pagingVisibilityChanged: false,
     _actualPagingVisible: false,
     _pagingPadding: null,
 
@@ -3211,7 +3186,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _prevRootId: null,
     _loadedBySourceController: false,
 
-    _notifyHandler: tmplNotify,
+    _notifyHandler: EventUtils.tmplNotify,
 
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
     _showActions: false,
@@ -3249,6 +3224,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
+    _useServerSideColumnScroll: false,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3278,6 +3255,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.initializeNavigation(this, newOptions);
         this._loadTriggerVisibility = {};
 
+        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+            if (typeof newOptions.preventServerSideColumnScroll === 'boolean') {
+                this._useServerSideColumnScroll = !newOptions.preventServerSideColumnScroll;
+            } else {
+                this._useServerSideColumnScroll = true;
+            }
+        }
+
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
@@ -3293,7 +3278,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         })).then((res) => {
             const editingConfig = this._getEditingConfig(newOptions);
-            return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
+            if (editingConfig.item) {
+                if (newOptions.task1180668135) {
+                    this._createEditInPlaceController(newOptions);
+                }
+                return this._startInitialEditing(editingConfig);
+            } else {
+                return res;
+            }
         }).then((res) => {
             const needInitModelState =
                 this._listViewModel &&
@@ -3532,7 +3524,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
         }
-        if (this._viewportSize < this._viewSize) {
+        if (this._viewportSize >= this._viewSize) {
             this._pagingVisible = false;
         }
         if (this._pagingVisible && this._scrollPagingCtr) {
@@ -3639,10 +3631,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _getScrollParams(): IScrollParams {
+        let headersHeight = 0;
+        if (detection.isBrowserEnv) {
+            headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
+        }
         const scrollParams = {
             scrollTop: this._scrollTop,
             scrollHeight: _private.getViewSize(this, true),
-            clientHeight: this._viewportSize
+            clientHeight: this._viewportSize - headersHeight
         };
         /**
          * Для pagingMode numbers нужно знать реальную высоту списка и scrollTop (включая то, что отсечено виртуальным скроллом)
@@ -3671,6 +3667,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
+
+        if (this._useServerSideColumnScroll) {
+            this._useServerSideColumnScroll = false;
+        }
+
+        if (_private.hasMoreData(this, this._sourceController, 'up')) {
+            this._notify('enableVirtualNavigation', [], { bubbling: true });
+        } else {
+            this._notify('disableVirtualNavigation', [], { bubbling: true });
+        }
 
         if (this._needScrollCalculation && !this.__error) {
             this._registerObserver();
@@ -3991,8 +3997,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || !isEqual(self._options.excludedKeys, newOptions.excludedKeys)
                 || self._options.selectedKeysCount !== newOptions.selectedKeysCount);
 
+            const visibilityChangedFromHidden = this._options.multiSelectVisibility === 'hidden' &&  newOptions.multiSelectVisibility !== 'hidden';
+
             // В browser когда скрывают видимость чекбоксов, еще и сбрасывают selection
-            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this))) {
+            if (selectionChanged && (newOptions.multiSelectVisibility !== 'hidden' || _private.hasSelectionController(this)) || visibilityChangedFromHidden && newOptions.selectedKeys?.length || this._options.selectionType !== newOptions.selectionType) {
                 const newSelection = {
                     selected: newOptions.selectedKeys,
                     excluded: newOptions.excludedKeys
@@ -4026,7 +4034,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const isPortionedLoad = _private.isPortionedLoad(this);
             const hasMoreData = _private.hasMoreData(this, this._sourceController, 'down');
             const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
-            const needCheckLoadToDirection = hasMoreData && isSearchReturnsEmptyResult && !this._sourceController.isLoading();
+            const needCheckLoadToDirection =
+                hasMoreData &&
+                isSearchReturnsEmptyResult &&
+                !this._sourceController.isLoading() &&
+                this._options.loading !== newOptions.loading;
 
             // После нажатии на enter или лупу в строке поиска, будут загружены данные и установлены в recordSet,
             // если при этом в списке кол-во записей было 0 (ноль) и поисковой запрос тоже вернул 0 записей,
@@ -4296,7 +4308,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beforePaint(): void {
+    _componentDidUpdate(): void {
         let positionRestored = false
 
         // TODO: https://online.sbis.ru/opendoc.html?guid=2be6f8ad-2fc2-4ce5-80bf-6931d4663d64
@@ -4312,7 +4324,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
-
+        if (this._pagingVisibilityChanged) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pagingVisibilityChanged = false;
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -4634,11 +4649,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         //При выборе первой или последней страницы крутим в край.
         if (page === 1) {
+            this._currentPage = page;
             _private.scrollToEdge(this, 'up');
-            this._currentPage = page;
         } else if (page === this._pagingCfg.pagesCount) {
-            _private.scrollToEdge(this, 'down');
             this._currentPage = page;
+            _private.scrollToEdge(this, 'down');
         } else {
 
             // При выборе некрайней страницы, проверяем,
@@ -4667,11 +4682,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return emptyTemplate && noEdit && notHasMore && (isLoading ? noData && noDataBeforeReload : noData);
     },
 
-    _onCheckBoxClick(e, key, status, readOnly) {
+    _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, readOnly: boolean): void {
+        const contents = _private.getPlainItemContents(item);
+        const key = contents.getKey();
         if (!readOnly) {
             const newSelection = _private.getSelectionController(this).toggleItem(key);
+            this._notify('checkboxClick', [key, item.isSelected()]);
             _private.changeSelection(this, newSelection);
-            this._notify('checkboxClick', [key, status]);
         }
         // если чекбокс readonly, то мы все равно должны проставить маркер
         this.setMarkedKey(key);
@@ -4713,6 +4730,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onGroupClick(e, groupId, baseEvent, dispItem) {
+        const collapseGroupAfterEndEdit = (collection) => {
+            const display = this._options.useNewModel ? collection : collection.getDisplay();
+
+            if (groupId === display.getGroup()(display.find((i) => i.isEditing()).contents)) {
+                this._cancelEdit().then((result) => {
+                    if (!(result && result.canceled)) {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
+                });
+            } else {
+                GroupingController.toggleGroup(collection, groupId);
+            }
+        };
+
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             const collection = this._listViewModel;
             const groupingLoader = this._groupingLoader;
@@ -4725,6 +4756,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     groupingLoader.loadGroup(collection, groupId, source, filter, sorting).then(() => {
                         dispItem.setExpanded(needExpandGroup);
                     });
+                } else if (!needExpandGroup && this.isEditing()) {
+                    collapseGroupAfterEndEdit(collection);
                 } else {
                     dispItem.setExpanded(needExpandGroup);
                 }
@@ -4755,7 +4788,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                         GroupingController.toggleGroup(collection, groupId);
                     });
                 } else {
-                    GroupingController.toggleGroup(collection, groupId);
+                    if (!needExpandGroup && this.isEditing()) {
+                        collapseGroupAfterEndEdit(collection);
+                    } else {
+                        GroupingController.toggleGroup(collection, groupId);
+                    }
                 }
             }
         }
@@ -4805,12 +4842,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._editInPlaceController = this._createEditInPlaceController();
+            this._editInPlaceController = this._createEditInPlaceController(this._options);
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(): EditInPlaceController {
+    _createEditInPlaceController(options = {}): EditInPlaceController {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
         // При создании редактирования по мсесту до маунта, регистрация в formController
@@ -4821,6 +4858,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return new EditInPlaceController({
+            task1180668135: options.task1180668135,
+
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
@@ -4909,7 +4948,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         })
     },
 
-    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean) {
+    _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
+        if (this._options.task1180668135 && force) {
+            this._notify('beforeEndEdit', [item, willSave, isAdd]);
+            return;
+        }
         return Promise.resolve().then(() => {
             if (willSave) {
                 // Валидайция запускается не моментально, а после заказанного для нее цикла синхронизации.
@@ -5469,7 +5512,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 34 // PageDown
                 || key === 35 // End
                 || key === 36; // Home
-            keysHandler(event, HOT_KEYS, _private, this, dontStop);
+            EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
 
@@ -6059,7 +6102,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _processItemMouseEnterWithDragNDrop(itemData): void {
         let dragPosition;
-        if (this._dndListController.isDragging()) {
+        const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
+        if (this._dndListController.isDragging() && !targetIsNode) {
             const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {

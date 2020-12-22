@@ -7,13 +7,12 @@ import {RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import { MouseButtons, MouseUp } from 'Controls/popup';
-import { Controller as SourceController } from 'Controls/source';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
-import { Collection, TreeItem } from 'Controls/display';
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { Collection, Tree, TreeItem } from 'Controls/display';
+
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 import {ISelectionObject, TKey} from 'Controls/interface';
@@ -25,7 +24,7 @@ const HOT_KEYS = {
     collapseMarkedItem: Env.constants.key.left
 };
 
-const DRAG_MAX_OFFSET = 10;
+const DRAG_MAX_OFFSET = 0.3;
 const EXPAND_ON_DRAG_DELAY = 1000;
 const DEFAULT_COLUMNS_VALUE = [];
 
@@ -44,10 +43,69 @@ const _private = {
             self._errorViewConfig = viewConfig;
         });
     },
-    toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
-        listViewModel.toggleExpanded(dispItem, expanded);
-        self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [dispItem.getContents()]);
+    toggleExpandedOnNewModel(options: any, model: Tree<TreeItem<Model>>, item: TreeItem<Model>): void {
+        if (!options.hasOwnProperty('expandedItems') && !options.hasOwnProperty('collapsedItems')) {
+            if (options.singleExpand) {
+                model.each((it) => {
+                    if (it !== item && it.getLevel() === item.getLevel()) {
+                        it.setExpanded(false, true);
+                    }
+                });
+            }
+            model.toggleExpanded(item);
+            return;
+        }
 
+        const newExpandedState = !!item.isExpanded();
+        const itemKey = item.getContents().getKey();
+
+        const newExpandedItems = cClone(options.expandedItems) || [];
+        const newCollapsedItems = cClone(options.collapsedItems) || [];
+
+        if (newExpandedState) {
+            // развернули узел
+
+            if (options.singleExpand) {
+                for (let i = 0; i < newExpandedItems.length; i++) {
+                    const it = model.getItemBySourceKey(newExpandedItems[i]);
+                    if (it && it.getLevel() === item.getLevel()) {
+                        newCollapsedItems.push(newExpandedItems.shift());
+                    }
+                }
+            }
+
+            if (!newExpandedItems.includes(itemKey)) {
+                newExpandedItems.push(itemKey);
+            }
+            if (newCollapsedItems.includes(itemKey)) {
+                newCollapsedItems.splice(newCollapsedItems.indexOf(itemKey), 1);
+            }
+        } else {
+            // свернули узел
+
+            if (newExpandedItems.includes(itemKey)) {
+                newExpandedItems.push(itemKey);
+                newExpandedItems.splice(newExpandedItems.indexOf(itemKey), 1);
+            }
+
+            if (!newCollapsedItems.includes(itemKey)) {
+                newCollapsedItems.push(itemKey);
+            }
+        }
+
+        this._notify('expandedItemsChanged', newExpandedItems);
+        this._notify('collapsedItemsChanged', newCollapsedItems);
+    },
+    toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
+        if (self._options.useNewModel) {
+            // TODO нужно зарефакторить логику работы с expanded/collapsed, написав единию логику в контроллере
+            //  https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
+            _private.toggleExpandedOnNewModel(self._options, listViewModel, dispItem);
+        } else {
+            listViewModel.toggleExpanded(dispItem, expanded);
+        }
+
+        self._notify(expanded ? 'afterItemExpand' : 'afterItemCollapse', [dispItem.getContents()]);
         // todo: удалить события itemExpanded и itemCollapsed в 20.2000.
         self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
     },
@@ -196,6 +254,7 @@ const _private = {
             if (self._options.dataLoadCallback) {
                 self._options.dataLoadCallback(list);
             }
+            self._children.baseControl.stopBatchAdding();
         }, (error) => {
             if (typeof self._options.dataLoadErrback === 'function') {
                 self._options.dataLoadErrback(error);
@@ -443,7 +502,7 @@ const _private = {
      * @remark это нужно для того, чтобы когда event.target это содержимое строки, которое по высоте меньше 20 px,
      *  то проверка на 10px сверху и снизу сработает неправильно и нельзя будет навести на узел(position='on')
      */
-    getTargetRow(event: SyntheticEvent): Element {
+    getTargetRow(self: any, event: SyntheticEvent): Element {
         if (!event.target || !event.target.classList || !event.target.parentNode || !event.target.parentNode.classList) {
             return event.target;
         }
@@ -451,12 +510,22 @@ const _private = {
         const startTarget = event.target;
         let target = startTarget;
 
-        while (!target.parentNode.classList.contains('controls-ListView__itemV')) {
+        const condition = () => {
+            // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
+            // а в обычном списке данный элемент будет иметь размер 0x0
+            if (self._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                return !target.classList.contains('controls-ListView__itemV');
+            } else {
+                return !target.parentNode.classList.contains('controls-ListView__itemV');
+            }
+        };
+
+        while (condition()) {
             target = target.parentNode;
 
             // Условие выхода из цикла, когда controls-ListView__itemV не нашелся в родительских блоках
             if (!target.classList || !target.parentNode || !target.parentNode.classList
-                || target.classList.contains('controls-BaseControl')) {
+               || target.classList.contains('controls-BaseControl')) {
                 target = startTarget;
                 break;
             }
@@ -488,7 +557,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
-    _notifyHandler: tmplNotify,
+    _notifyHandler: EventUtils.tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
     _editingItem: null,
@@ -781,9 +850,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _draggingItemMouseMove(e, itemData, nativeEvent): void {
         e.stopPropagation();
         const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
-        if (dispItem.isNode()) {
+        const dndListController = this._children.baseControl.getDndListController();
+        if (dispItem.isNode() && dndListController.getDraggableItem().getContents().getKey() !== dispItem.getContents().getKey()) {
             const dndListController = this._children.baseControl.getDndListController();
-            const targetElement = _private.getTargetRow(nativeEvent);
+            const targetElement = _private.getTargetRow(this, nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
             const dragTargetPosition = dndListController.calculateDragPosition({
                 targetItem: dispItem,
@@ -804,7 +874,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!dispItem.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!dispItem.isExpanded() && dndListController.getDraggableItem().getContents() !== dispItem.getContents() && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }
@@ -869,7 +939,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _onTreeViewKeyDown: function(event) {
-        keysHandler(event, HOT_KEYS, _private, this);
+        EventUtils.keysHandler(event, HOT_KEYS, _private, this);
     },
 
     _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
@@ -913,8 +983,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const dragTargetRect = targetElement.getBoundingClientRect();
 
             result = { top: null, bottom: null };
-            result.top = event.nativeEvent.pageY - dragTargetRect.top;
-            result.bottom = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
+
+            // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
+            if (this._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+                result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
+                result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
+            } else {
+                result.top = (event.nativeEvent.pageY - dragTargetRect.top) / dragTargetRect.height;
+                result.bottom = (dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY) / dragTargetRect.height;
+            }
         }
 
         return result;
@@ -942,7 +1019,8 @@ TreeControl.getDefaultOptions = () => {
         columns: DEFAULT_COLUMNS_VALUE,
         selectDescendants: true,
         selectAncestors: true,
-        expanderPosition: 'default'
+        expanderPosition: 'default',
+        selectionType: 'all'
     };
 };
 

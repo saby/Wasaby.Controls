@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 13.11.2017.
  */
-import {TNavigationPagingMode} from '../../_interface/INavigation';
+import {TNavigationPagingMode} from 'Controls/interface';
 
 /**
  *
@@ -80,11 +80,11 @@ export default class ScrollPagingController {
 
     }
 
-    viewPortResize(clientHeight: number): void {
-        var pagesCount = Math.round(this._pagingData.totalHeight / clientHeight);
+    viewportResize(clientHeight: number): void {
+        const pagesCount = Math.round(this._pagingData.totalHeight / clientHeight);
         this._pagingData.pagesCount = pagesCount;
         this._curState = null;
-    };
+    }
 
     shiftToEdge(state: 'up' | 'down', hasMoreData: IHasMoreData): void {
         if (this._options.pagingMode === 'numbers') {

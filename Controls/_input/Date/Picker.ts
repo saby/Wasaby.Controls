@@ -3,7 +3,7 @@ import * as coreMerge from 'Core/core-merge';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
 import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
 
 import template = require('wml!Controls/_input/Date/Picker/Picker');
@@ -12,8 +12,8 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * Поле ввода даты. Поддерживает как ввод с клавиатуры, так и выбор даты из всплывающего календаря с помощью мыши. Не поддерживает ввод времени.
  * @remark
  * Полезные ссылки:
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления input</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_datePicker.less">переменные тем оформления dateRange</a>
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less переменные тем оформления input}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_datePicker.less переменные тем оформления dateRange}
  *
  * @class Controls/_input/Date/Picker
  * @extends Core/Control
@@ -33,7 +33,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
 
 class Picker extends Control<IControlOptions> {
     _template: TemplateFunction = template;
-    _proxyEvent: Function = tmplNotify;
+    _proxyEvent: Function = EventUtils.tmplNotify;
     _shouldValidate: boolean = false;
 
     openPopup(event: SyntheticEvent<MouseEvent>): void {

@@ -3,7 +3,7 @@ import { IDragPosition } from 'Controls/display';
 import { IDraggableItem, IDragStrategyParams, TPosition } from '../interface';
 import { List } from 'Types/collection';
 
-const DRAG_MAX_OFFSET = 10;
+const DRAG_MAX_OFFSET = 0.3;
 
 interface IDraggableTreeItem extends IDraggableItem {
     isNode(): boolean;
@@ -36,14 +36,14 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         {currentPosition, targetItem, mouseOffsetInTargetItem}: ITreeDragStrategyParams
     ): IDragPosition<IDraggableTreeItem> {
         if (this._draggableItem && this._draggableItem === targetItem) {
-            return this._model.getPrevDragPosition() || null;
+            return this._model.getPrevDragPosition && this._model.getPrevDragPosition() || null;
         }
 
         let result;
 
         const moveTileNodeToLeaves = this._model['[Controls/_tile/TreeTileViewModel]'] && this._draggableItem.isNode()
             && targetItem && !targetItem.isNode();
-        if (targetItem && targetItem.isNode() && !moveTileNodeToLeaves) {
+        if (targetItem && targetItem.isNode() && !moveTileNodeToLeaves && mouseOffsetInTargetItem) {
             result = this._calculatePositionRelativeNode(targetItem, mouseOffsetInTargetItem);
         } else {
             // В плитке нельзя смешивать узлы и листья, если перетаскивают узел в листья, то мы не меняем позицию
@@ -78,11 +78,16 @@ export default class Tree extends Flat<IDraggableTreeItem, IDraggableTreeCollect
         let newPosition;
         if (relativePosition === 'after' && targetItem.isExpanded() && targetItem.getChildren().getCount()) {
             const firstChild = targetItem.getChildren().at(0);
-            newPosition = {
-                index: this._model.getIndex(targetItem),
-                position: 'before',
-                dispItem: firstChild
-            };
+
+            if (firstChild === this._draggableItem) {
+                newPosition = this._startPosition;
+            } else {
+                newPosition = {
+                    index: this._model.getIndex(firstChild),
+                    position: 'before',
+                    dispItem: firstChild
+                };
+            }
         } else {
             newPosition = {
                 index: this._model.getIndex(targetItem),

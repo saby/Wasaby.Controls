@@ -5,6 +5,7 @@ import {throttle} from 'Types/function';
 import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {default as Store} from 'Controls/Store';
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
@@ -26,14 +27,15 @@ let _private = {
  *
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less переменные тем оформления}
  *
  * @class Controls/_search/Input/Search
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IText
+ * @implements Controls/interface:IContrastBackground
  *
  * @ignoreOptions style
  *
@@ -57,6 +59,7 @@ let _private = {
  * @extends Controls/_input/Base
  *
  * @mixes Controls/_input/interface/IText
+ * @implements Controls/interface:IContrastBackground
  *
  * @ignoreOptions style
  *
@@ -68,11 +71,24 @@ let _private = {
  */
 class Search extends Base {
     protected _wasActionUser: boolean = false;
+    protected _resetCommandCallbackId: string = '';
 
     protected _beforeMount(options): void {
         this._notifySearchClick = throttle(this._notifySearchClick, SEARCH_BY_CLICK_THROTTLE, false);
         generateStates(this, options);
         return super._beforeMount.apply(this, arguments);
+    }
+
+    protected _afterMount(): void {
+        if (this._options.useStore) {
+            this._resetCommandCallbackId = Store.declareCommand('resetSearch', this._resetSearch.bind(this));
+        }
+    }
+
+    protected _beforeUnmount(): void {
+        if (this._resetCommandCallbackId) {
+            Store.unsubscribe(this._resetCommandCallbackId);
+        }
     }
 
     protected _renderStyle(): string {
@@ -121,19 +137,23 @@ class Search extends Base {
         super._notifyInputCompleted.apply(this, arguments);
     }
 
-    protected _resetClick(): void {
-        if (this._options.readOnly) {
-            return;
-        }
+   protected _resetSearch(): void {
+      this._notify('resetClick');
 
-        this._notify('resetClick');
+      this._viewModel.displayValue = '';
+      this._notifyValueChanged();
 
-        this._viewModel.displayValue = '';
-        this._notifyValueChanged();
+      // move focus from clear button to input
+      this.activate();
+   }
 
-        // move focus from clear button to input
-        this.activate();
-    }
+   protected _resetClick(): void {
+      if (this._options.readOnly) {
+         return;
+      }
+
+      this._resetSearch();
+   }
 
     protected _resetMousedown(event): void {
         event.stopPropagation();
@@ -280,11 +300,9 @@ class Search extends Base {
 
 /**
  * @name Controls/_search/Input/Search#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+ * @cfg
  * @default false
  * @remark
- * * true - контрастный фон.
- * * false - фон, гармонично сочетающийся с окружением.
  * Опция используется для визуального выделения контрола, относительно окружения.
  * Например в ситуации когда цвет окружения, близкий к цвету самого контрола.
  * @demo Controls-demo/Search/Input/Base/Index

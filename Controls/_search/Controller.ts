@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Controller';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {ContextOptions as DataOptions} from 'Controls/context';
 import {RecordSet} from 'Types/collection';
 import {default as SearchController} from 'Controls/_search/ControllerClass';
@@ -12,6 +12,7 @@ import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
 import {
    NewSourceController as SourceController
 } from 'Controls/dataSource';
+import {QueryWhereExpression} from 'Types/source';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -20,11 +21,12 @@ import {
  * С помощью этого контрола можно настроить: временную задержку между вводом символа и началом поиска, количество символов, с которых начинается поиск, параметры фильтрации и другое.
  * @remark
  * Полезные ссылки:
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/">руководство разработчика по организации поиска и фильтрации в реестре</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/">руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less">переменные тем оформления</a>
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less переменные тем оформления}
  *
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
@@ -51,6 +53,7 @@ import {
  *
  * <a href="/materials/demo/demo-ws4-explorer-with-search">Here</a>. you a demo with search in Controls/Explorer.
  *
+ * @deprecated
  * @class Controls/_search/Controller
  * @extends Core/Control
  * @mixes Controls/_interface/ISearch
@@ -76,7 +79,7 @@ type Key = string | number | null;
 export default class Container extends Control<IContainerOptions> {
    protected _template: TemplateFunction = template;
 
-   private _tmplNotify: Function = tmplNotify;
+   private _tmplNotify: Function = EventUtils.tmplNotify;
    private _dataOptions: typeof DataOptions = null;
    private _previousViewMode: string = null;
    private _viewMode: string = null;
@@ -119,8 +122,18 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
-      if (this._searchController) {
-         this._searchController.update({...newOptions, ...context.dataOptions});
+      const options = {...newOptions, ...context.dataOptions};
+
+      if (this._searchController && options.sourceController) {
+         if (this._sourceController !== options.sourceController) {
+            this._sourceController = options.sourceController;
+         }
+         const updateResult = this._searchController.update(options);
+
+         if (updateResult && !(updateResult instanceof Promise)) {
+            this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
+            this._notify('filterChanged', [updateResult]);
+         }
       }
    }
 

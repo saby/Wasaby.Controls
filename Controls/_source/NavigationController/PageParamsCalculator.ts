@@ -1,8 +1,12 @@
-import {IQueryParams, Direction} from 'Controls/_interface/IQueryParams';
 import {QueryNavigationType} from 'Types/source';
 import {default as PageNavigationStore, IPageNavigationState} from './PageNavigationStore';
-import {IBasePageSourceConfig, IBaseSourceConfig, INavigationPageSourceConfig} from 'Controls/interface';
-import {TNavigationDirection, TNavigationPagingMode} from 'Controls/_interface/INavigation';
+import {
+    TNavigationDirection,
+    TNavigationPagingMode,
+    IQueryParams,
+    IBasePageSourceConfig,
+    INavigationPageSourceConfig
+} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import IParamsCalculator from './interface/IParamsCalculator';
 
@@ -11,7 +15,8 @@ class PageParamsCalculator implements IParamsCalculator {
         store: PageNavigationStore,
         config: INavigationPageSourceConfig,
         direction?: TNavigationDirection,
-        paramsCallback?: Function
+        paramsCallback?: Function,
+        reset?: boolean
     ): IQueryParams {
         const addParams: IQueryParams = {};
         addParams.meta = {navigationType: QueryNavigationType.Page};
@@ -22,12 +27,17 @@ class PageParamsCalculator implements IParamsCalculator {
         switch (direction) {
             case 'forward': page = storeParams.nextPage; break;
             case 'backward': page = storeParams.prevPage; break;
-            default: page = config.page ? config.page : storeParams.page;
+            default: page = typeof config.page === 'number' ? config.page : storeParams.page;
         }
         const pageSize = config.pageSize ? config.pageSize : storeParams.pageSize;
 
         addParams.offset = page * pageSize;
-        addParams.limit = pageSize;
+
+        if (reset) {
+            addParams.limit = pageSize;
+        } else {
+            addParams.limit = pageSize * storeParams.nextPage;
+        }
 
         if (storeParams.hasMore === false) {
             addParams.meta.hasMore = false;
@@ -129,13 +139,13 @@ class PageParamsCalculator implements IParamsCalculator {
 
             if (typeof metaMore === 'number') {
                 config.page = Math.ceil(metaMore / store.getState().pageSize) - 1;
-                
-                // если записей на последней странице будет мало, то загружаем еще и предыдущую. 
-                // Например, если есть 4 полные страницы и последняя с одной записью: 
-                // 0..9, 10..19, 20..29, 30..39, 40..44. 
-                // При переходе в конец, нужно получить загрузку с 30..44, 
+
+                // если записей на последней странице будет мало, то загружаем еще и предыдущую.
+                // Например, если есть 4 полные страницы и последняя с одной записью:
+                // 0..9, 10..19, 20..29, 30..39, 40..44.
+                // При переходе в конец, нужно получить загрузку с 30..44,
                 // так как offset рассчитается как page*pageSize.
-                // ставим page = 1 
+                // ставим page = 1
                 // а pageSize = 30
                 //TODO: https://online.sbis.ru/opendoc.html?guid=53c4e82d-8e21-4fc8-81dc-ccf2a8c6ba9f
                 if ((metaMore / store.getState().pageSize) % 1 > 0) {

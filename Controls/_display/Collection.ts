@@ -36,13 +36,34 @@ import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import SearchSeparator from "./SearchSeparator";
-import {INavigationOptionValue} from '../_interface/INavigation';
+import {INavigationOptionValue} from 'Controls/interface';
 
 // tslint:disable-next-line:ban-comma-operator
 const GLOBAL = (0, eval)('this');
 const LOGGER = GLOBAL.console;
 const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the source collection instead.';
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
+
+/**
+ * Возможные значения доступности чекбокса
+ * @class
+ * @public
+ */
+const MultiSelectAccessibility = {
+    /**
+     * Чекбокс виден и с ним можно взаимодействовать
+     */
+    enabled: true,
+    /**
+     * Чекбокс виден, но с ним нельзя взаимодействовать
+     */
+    disabled: false,
+    /**
+     * Чекбокс скрыт
+     */
+    hidden: null
+};
+export {MultiSelectAccessibility};
 
 export interface ISplicedArray<T> extends Array<T> {
     start?: number;
@@ -71,6 +92,12 @@ export type SortFunction<S, T> = (a: ISortItem<S, T>, b: ISortItem<S, T>) => num
 
 export type ItemsFactory<T> = (options: object) => T;
 
+export type StrategyConstructor<
+   F extends IItemsStrategy<S, T>,
+   S extends EntityModel = EntityModel,
+   T extends CollectionItem<S> = CollectionItem<S>
+   > = new() => F;
+
 interface ISessionItems<T> extends Array<T> {
     properties?: object;
 }
@@ -92,6 +119,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
+    multiSelectPosition?: 'default'|'custom';
     itemPadding?: IItemPadding;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
@@ -107,6 +135,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     importantItemProperties?: string[];
     itemActionsProperty?: string;
     navigation?: INavigationOptionValue;
+    multiSelectAccessibilityProperty?: string;
 }
 
 export interface ICollectionCounters {
@@ -401,7 +430,7 @@ function functorToImportantProperties(func: Function, add: boolean): void {
  * @public
  * @author Мальцев А.А.
  */
-export default class Collection<S, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
+export default class Collection<S extends EntityModel = EntityModel, T extends CollectionItem<S> = CollectionItem<S>> extends mixin<
     Abstract<any, any>,
     SerializableMixin,
     VersionableMixin,
@@ -636,6 +665,15 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     protected _$navigation: INavigationOptionValue;
 
     /**
+     * Задает состояние чекбокса
+     * @variant true Чекбокс виден и включен
+     * @variant false Чекбокс виден и задизейблен
+     * @variant null Чекбокс скрыт
+     * @protected
+     */
+    protected _$multiSelectAccessibilityProperty: boolean|null;
+
+    /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
      * игнорироваться). Работает только если задано {@link keyProperty}.
      * @name Controls/_display/Collection#unique
@@ -744,7 +782,8 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
 
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
-    protected _dragStrategy: Function = DragStrategy;
+    protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
+    private _wasNotifyAddEventOnStartDrag: boolean = false;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -1474,6 +1513,10 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
      */
     getFilter(): Array<FilterFunction<S>> {
         return this._$filter.slice();
+    }
+
+    getFilterMap(): boolean[] {
+        return this._filterMap;
     }
 
     /**
@@ -2228,26 +2271,28 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     getItemsDragNDrop(): boolean {
         return this._$itemsDragNDrop;
     }
+
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
         // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
-        const avatarStartIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
+        const targetIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
 
-        this.appendStrategy(this._dragStrategy, {
+        this.appendStrategy(this._dragStrategy as StrategyConstructor<any>, {
             draggedItemsKeys,
             draggableItem,
-            avatarIndex: avatarStartIndex
+            targetIndex
         });
         this._reIndex();
 
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
 
         if (!this.getItemBySourceKey(draggableItem.getContents().getKey())) {
+            this._wasNotifyAddEventOnStartDrag = true;
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
                 IObservable.ACTION_ADD,
                 [strategy.avatarItem],
-                avatarStartIndex,
+                targetIndex,
                 [],
                 0
             );
@@ -2256,35 +2301,44 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setDragPosition(position: IDragPosition<T>): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy && position) {
-            strategy.setAvatarPosition(position.index, position.position);
+            strategy.setPosition(position);
             this._reIndex();
+            this._reFilter();
             this.nextVersion();
         }
     }
 
     resetDraggedItems(): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy<unknown>;
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
             const avatarItem = strategy.avatarItem;
             const avatarIndex = this.getIndex(strategy.avatarItem as T);
-            const avatarKey = avatarItem.getContents().getKey();
 
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
+            this._reFilter();
 
-            // Событие remove нужно слать, только когда мы закончили перетаскивание в другом списке,
-            // т.к. только в этом случае мы отправим событие add на начало перетаскивания
-            if (!this.getCollection().getRecordById(avatarKey)) {
+            if (this._wasNotifyAddEventOnStartDrag) {
+                this._wasNotifyAddEventOnStartDrag = false;
                 this._notifyBeforeCollectionChange();
-                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [strategy.avatarItem], avatarIndex);
+                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [avatarItem], avatarIndex);
                 this._notifyAfterCollectionChange();
             }
         }
     }
 
-    // endregion
+    isDragging(): boolean {
+        return !!this.getStrategyInstance(this._dragStrategy);
+    }
+
+    getDraggableItem(): T {
+        const strategy = this.getStrategyInstance(this._dragStrategy);
+        return strategy?.avatarItem as T;
+    }
+
+    // endregion Drag-N-Drop
 
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
@@ -2447,13 +2501,13 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         if (this._$collection['[Types/_collection/RecordSet]']) {
             if (key !== undefined) {
                 const record = (this._$collection as unknown as RecordSet).getRecordById(key);
-                if (!record) {   
+                if (!record) {
 
                     // Если записи нет в наборе данных, то, возможно запрашивается добавляемая в данный момент запись.
                     // Такой записи еще нет в наборе данных.
                     if (this._$isEditing) {
                         return this.find((item) => item.isEditing() && item.isAdd && item.contents.getKey() === key);
-                    } 
+                    }
 
                     // Или требуется найти группу
                     return this.find((item) => item['[Controls/_display/GroupItem]'] && item.key === key);
@@ -2767,7 +2821,7 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         this.nextVersion();
     }
 
-    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: new() => F): F {
+    getStrategyInstance<F extends IItemsStrategy<S, T>>(strategy: StrategyConstructor<F>): F {
         return this._composer.getInstance(strategy);
     }
 
@@ -3109,6 +3163,9 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
+            if (options.contents instanceof EntityModel && options.contents.has(this._$multiSelectAccessibilityProperty)) {
+                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
+            }
             return create(this._itemModule, options);
         };
     }
@@ -3931,6 +3988,7 @@ Object.assign(Collection.prototype, {
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
     _$markerVisibility: 'onactivated',
+    _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

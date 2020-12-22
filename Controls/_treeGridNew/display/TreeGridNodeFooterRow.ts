@@ -1,10 +1,12 @@
-import TreeGridRow from 'Controls/_treeGridNew/display/TreeGridRow';
+import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { TemplateFunction } from 'UI/Base';
 import { TreeItem } from 'Controls/display';
 import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFooterCell';
 
-export default class TreeGridNodeFooterRow<S> extends TreeGridRow<S> {
+export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
     readonly Markable: boolean = false;
+    readonly DraggableItem: boolean = false;
+    readonly SelectableItem: boolean = false;
 
     readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
 

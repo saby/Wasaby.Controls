@@ -10,7 +10,7 @@ import {
     getDefaultOptions as getValueValidatorsDefaultOptions,
     getOptionTypes as getValueValidatorsOptionTypes
 } from 'Controls/_input/interface/IValueValidators';
-import {proxyModelEvents, tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
 import template = require('wml!Controls/_input/DateTime/DateTime');
 
@@ -25,9 +25,9 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * </ol>
  *
  * Полезные ссылки:
- * * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime">демо-пример</a>
- * * <a href="/doc/platform/developmentapl/interface-development/controls/input/date/">руководство разработчика</a>
- * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less">переменные тем оформления</a>
+ * * {@link /materials/Controls-demo/app/Controls-demo%2FInput%2FDateTime%2FDateTime демо-пример}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/input/date/ руководство разработчика}
+ * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less переменные тем оформления}
  *
  * @class Controls/_input/DateTime
  * @extends Core/Control
@@ -49,7 +49,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
 class DateTime extends Control {
     protected _template: TemplateFunction = template;
     protected _validationContainer: InputContainer | Container;
-    protected _proxyEvent: Function = tmplNotify;
+    protected _proxyEvent: Function = EventUtils.tmplNotify;
     protected _dateConstructor: Date | WSDate;
     protected _controlName: string = 'DateBase';
 
@@ -74,7 +74,7 @@ class DateTime extends Control {
             ...options,
             dateConstructor: this._dateConstructor
         });
-        proxyModelEvents(this, this._model, ['valueChanged']);
+        EventUtils.proxyModelEvents(this, this._model, ['valueChanged']);
         this._model.subscribe('valueChanged', () => {
             this._updateValidators();
         });
