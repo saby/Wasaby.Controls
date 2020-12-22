@@ -22,7 +22,7 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
-import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController, isEqualItems} from 'Controls/dataSource';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -486,34 +486,6 @@ const _private = {
         return resDeferred;
     },
 
-    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
-        const items1Model = items1.getModel();
-        const items2Model = items2.getModel();
-        let isModelEqual = items1Model === items2Model;
-
-        function getModelModuleName(model: string|Function): string {
-            let name;
-
-            if (typeof model === 'function') {
-                name = model.prototype._moduleName;
-            } else {
-                name = model;
-            }
-
-            return name;
-        }
-
-        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
-            isModelEqual = true;
-        }
-        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            isModelEqual &&
-            (items1.getKeyProperty() === items2.getKeyProperty()) &&
-            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
-            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
-                Object.getPrototypeOf(items2.getAdapter()).constructor);
-    },
-
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -522,7 +494,7 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
-            if (!_private.isEqualItemsFormat(listModel.getCollection(), items)) {
+            if (!isEqualItems(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
                 if (self._options.itemsReadyCallback) {
                     self._options.itemsReadyCallback(listModel.getCollection());
@@ -3072,6 +3044,9 @@ const _private = {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
+            if (self._children.listView.beforeActivateRow) {
+                self._children.listView.beforeActivateRow();
+            }
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }

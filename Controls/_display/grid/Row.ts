@@ -2,7 +2,7 @@ import CollectionItem from '../CollectionItem';
 import Collection from './Collection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
-import {TemplateFunction} from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -42,6 +42,14 @@ export default class Row<T>
         return isChangedMultiSelectVisibility;
     }
 
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        super.setEditing(editing, editingContents, silent);
+        const colspanCallback = this._$owner.getColspanCallback();
+        if (colspanCallback) {
+            this._reinitializeColumns();
+        }
+    }
+
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);
@@ -65,7 +73,6 @@ export default class Row<T>
             this._redrawColumns('all');
         }
     }
-
     // endregion
 }
 
