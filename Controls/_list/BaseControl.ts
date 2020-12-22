@@ -4683,7 +4683,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, readOnly: boolean): void {
-        const key = item.getContents().getKey();
+        const contents = _private.getPlainItemContents(item);
+        const key = contents.getKey();
         if (!readOnly) {
             const newSelection = _private.getSelectionController(this).toggleItem(key);
             this._notify('checkboxClick', [key, item.isSelected()]);
