@@ -140,7 +140,7 @@ describe('Controls/propertyGrid:CollectionItem', () => {
         });
 
         it('returns validator from validateTemplateName property', () => {
-            const template = collection.getItemBySourceKey('customValidateTemplate').getEditorTemplateName();
+            const template = collection.getItemBySourceKey('customValidateTemplate').getValidateTemplateName();
             assert.equal(template, 'validateTemplate');
         });
     });

@@ -40,7 +40,7 @@ import {TemplateFunction} from 'UI/Base';
  *    ]
  * }
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.propertyGrid:PropertyGrid
@@ -75,7 +75,7 @@ import {TemplateFunction} from 'UI/Base';
  *    ]
  * }
  * </pre>
- * 
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.propertyGrid:PropertyGrid
@@ -97,7 +97,7 @@ import {TemplateFunction} from 'UI/Base';
  */
 
 /**
- * @name Controls/_propertyGrid/IProperty#editorTemplate.wml
+ * @name Controls/_propertyGrid/IProperty#editorTemplateName
  * @cfg {String} Имя контрола, который будет использоваться в качестве редактора. Если параметр не задан, будет использоваться редактор по-умолчанию.
  */
 
