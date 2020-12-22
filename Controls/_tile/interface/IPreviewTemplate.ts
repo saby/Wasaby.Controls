@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * Шаблон для отображения элементов в режиме превью в {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/IPreviewTemplate
- * @mixes Controls/_tile/interface/ItemTemplate
+ * @mixes Controls/tile:ItemTemplate
  * @author Михайлов С.Е
  * @see Controls/tile:View
  * @example

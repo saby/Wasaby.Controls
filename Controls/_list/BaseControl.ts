@@ -22,7 +22,7 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
-import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController, isEqualItems} from 'Controls/dataSource';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -34,7 +34,7 @@ import { Sticky } from 'Controls/popup';
 
 // Utils imports
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
@@ -486,34 +486,6 @@ const _private = {
         return resDeferred;
     },
 
-    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
-        const items1Model = items1.getModel();
-        const items2Model = items2.getModel();
-        let isModelEqual = items1Model === items2Model;
-
-        function getModelModuleName(model: string|Function): string {
-            let name;
-
-            if (typeof model === 'function') {
-                name = model.prototype._moduleName;
-            } else {
-                name = model;
-            }
-
-            return name;
-        }
-
-        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
-            isModelEqual = true;
-        }
-        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            isModelEqual &&
-            (items1.getKeyProperty() === items2.getKeyProperty()) &&
-            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
-            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
-                Object.getPrototypeOf(items2.getAdapter()).constructor);
-    },
-
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -522,7 +494,7 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
-            if (!_private.isEqualItemsFormat(listModel.getCollection(), items)) {
+            if (!isEqualItems(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
                 if (self._options.itemsReadyCallback) {
                     self._options.itemsReadyCallback(listModel.getCollection());
@@ -782,7 +754,7 @@ const _private = {
                 // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
-                    self._listViewModel.getChildren(options.root).length :
+                    self._listViewModel.getChildren(options.useNewModel ? display.getRoot() : options.root).length :
                     self._listViewModel.getCount();
             } else {
                 loadedDataCount = 0;
@@ -1426,6 +1398,7 @@ const _private = {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+                self._pagingVisibilityChanged = self._pagingVisible;
                 if (detection.isMobilePlatform) {
                     self._recalcPagingVisible = !self._pagingVisible;
                 }
@@ -2574,11 +2547,17 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
-                self._notify('activeElementChanged', [result.activeElement]);
+            if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+                // activeElement запишется в result только, когда он изменится
+                if (result.activeElement) {
+                    self._notify('activeElementChanged', [result.activeElement]);
+                }
+
+                // Скроллить к активному элементу нужно только, когда в опции передали activeElement
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                    self._keepScrollAfterReload = true;
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
@@ -3065,6 +3044,9 @@ const _private = {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
+            if (self._children.listView.beforeActivateRow) {
+                self._children.listView.beforeActivateRow();
+            }
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
@@ -3142,6 +3124,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _pagingVisibilityChanged: false,
     _actualPagingVisible: false,
     _pagingPadding: null,
 
@@ -3203,7 +3186,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _prevRootId: null,
     _loadedBySourceController: false,
 
-    _notifyHandler: tmplNotify,
+    _notifyHandler: EventUtils.tmplNotify,
 
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
     _showActions: false,
@@ -4341,7 +4324,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
-
+        if (this._pagingVisibilityChanged) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pagingVisibilityChanged = false;
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -4697,7 +4683,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onCheckBoxClick(e: SyntheticEvent, item: CollectionItem<Model>, readOnly: boolean): void {
-        const key = item.getContents().getKey();
+        const contents = _private.getPlainItemContents(item);
+        const key = contents.getKey();
         if (!readOnly) {
             const newSelection = _private.getSelectionController(this).toggleItem(key);
             this._notify('checkboxClick', [key, item.isSelected()]);
@@ -5525,7 +5512,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 34 // PageDown
                 || key === 35 // End
                 || key === 36; // Home
-            keysHandler(event, HOT_KEYS, _private, this, dontStop);
+            EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
 
@@ -6115,7 +6102,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _processItemMouseEnterWithDragNDrop(itemData): void {
         let dragPosition;
-        if (this._dndListController.isDragging()) {
+        const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
+        const targetIsNode = targetItem && targetItem['[Controls/_display/TreeItem]'] && targetItem.isNode();
+        if (this._dndListController.isDragging() && !targetIsNode) {
             const targetItem = this._options.useNewModel ? itemData : itemData.dispItem;
             dragPosition = this._dndListController.calculateDragPosition({targetItem});
             if (dragPosition) {

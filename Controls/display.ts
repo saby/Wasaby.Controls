@@ -110,6 +110,8 @@ import GridTableHeader from './_display/grid/TableHeader';
 export {GridTableHeader};
 import GridTableHeaderRow from './_display/grid/TableHeaderRow';
 export {GridTableHeaderRow};
+import {TColspanCallbackResult, TColspanCallback} from './_display/grid/mixins/Grid';
+export {TColspanCallbackResult, TColspanCallback};
 
 import GridDataRow, {IOptions as IGridDataRowOptions} from './_display/grid/DataRow';
 export {GridDataRow, IGridDataRowOptions};
@@ -135,7 +137,7 @@ export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
-export {checkboxStateConstants} from './_display/Collection';
+export {MultiSelectAccessibility} from './_display/Collection';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
