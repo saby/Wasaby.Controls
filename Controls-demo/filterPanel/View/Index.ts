@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/filterPanel/View/Index';
-import * as stackTemplate from 'wml!Controls-demo/filterPanel/View/stackTemplate/StackTemplate';
+import * as stackTemplate from 'wml!Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate';
 import {isEqual} from 'Types/object';
 import {Memory} from 'Types/source';
 import {departments} from 'Controls-demo/filterPanel/resources/DataStorage';
@@ -95,7 +95,7 @@ export default class extends Control {
                     additionalTextProperty: 'id',
                     displayProperty: 'title',
                     selectorTemplate: {
-                        templateName: 'Controls-demo/filterPanel/resources/StackTemplate',
+                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
                         templateOptions: {items: this._filterItems},
                         popupOptions: {
                             width: 500

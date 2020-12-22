@@ -54,7 +54,7 @@ export default class extends Control {
                 caption: '',
                 value: null,
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
+                editorTemplateName: 'Controls/filterPanel:MultiSelectList',
                 editorOptions: {
                     navigation: {
                         source: 'page',

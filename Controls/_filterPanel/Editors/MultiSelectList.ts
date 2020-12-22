@@ -34,14 +34,14 @@ export default class MultiSelectList extends ListEditorBase {
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
         this._selectedKeys = keys;
-        this._notifyPropertyValueChanged(this._getTextValue());
+        this._notifyPropertyValueChanged();
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
         const contentClick = nativeEvent.target.closest('.controls-EditorList__columns');
         if (contentClick) {
             this._selectedKeys = [item.get(this._options.keyProperty)];
-            this._notifyPropertyValueChanged(this._getTextValue(), true);
+            this._notifyPropertyValueChanged(true);
         }
     }
 
@@ -50,7 +50,7 @@ export default class MultiSelectList extends ListEditorBase {
         result.forEach((item) => {
             this._selectedKeys.push(item.get(this._options.keyProperty));
         });
-        this._notifyPropertyValueChanged(this._getTextValue());
+        this._notifyPropertyValueChanged();
     }
 
     protected _getTemplateOptions(selectorOptions: ISelectorTemplate): object {
@@ -64,10 +64,10 @@ export default class MultiSelectList extends ListEditorBase {
         };
     }
 
-    protected _notifyPropertyValueChanged(textValue: string, needColapse?: boolean): void {
+    protected _notifyPropertyValueChanged(needColapse?: boolean): void {
         const extendedValue = {
             value: this._selectedKeys,
-            textValue,
+            textValue: this._getTextValue(),
             needColapse
         };
         this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.multiSelectVisibility, this._options.additionalTextProperty);
@@ -78,7 +78,7 @@ export default class MultiSelectList extends ListEditorBase {
         const selectedItems = [];
         factory(this._selectedKeys).each((key) => {
             const record = this._items.getRecordById(key);
-            if (key !== undefined && key !== null && record) {
+            if (record) {
                 selectedItems.push(record);
             }
         });
