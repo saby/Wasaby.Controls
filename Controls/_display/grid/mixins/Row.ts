@@ -265,7 +265,7 @@ export default abstract class Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const createMultiSelectColumn = this.needMultiSelectColumn();
+            const createMultiSelectColumn = this.hasMultiSelectColumn();
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
             const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
@@ -308,7 +308,8 @@ export default abstract class Row<T> {
                 this._$columnItems = ([
                     new CheckboxCell({
                         column: {} as IColumn,
-                        owner: this
+                        owner: this,
+                        isFixed: true
                     })
                 ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
             }
@@ -346,8 +347,8 @@ export default abstract class Row<T> {
         };
     }
 
-    needMultiSelectColumn(): boolean {
-        return this._$owner.needMultiSelectColumn();
+    hasMultiSelectColumn(): boolean {
+        return this._$owner.hasMultiSelectColumn();
     }
 
     getIndex(): number {

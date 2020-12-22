@@ -222,7 +222,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
-        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.needMultiSelectColumn() ? 2 : 1);
+        const shouldFixAlignment = this._$owner.getColumns().length === (this._$owner.hasMultiSelectColumn() ? 2 : 1);
 
         return 'controls-Grid__table__relative-cell-wrapper ' +
             `controls-Grid__table__relative-cell-wrapper_rowSeparator-${rowSeparatorSize}_theme-${theme} ` +
@@ -420,7 +420,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     // region Аспект "Множественный выбор"
     isMultiSelectColumn(): boolean {
-        return this._$owner.needMultiSelectColumn() && this.isFirstColumn();
+        return this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
     }
     // endregion
 

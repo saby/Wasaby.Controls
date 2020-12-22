@@ -33,6 +33,7 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
         if (this._$columns && this.hasItemActionsSeparatedCell()) {
             this._$columnItems.push(new ItemActionsCell({
                 owner: this,
+                isFixed: true,
                 column: {}
             }))
         }
