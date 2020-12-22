@@ -7,7 +7,7 @@ import {RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import { MouseButtons, MouseUp } from 'Controls/popup';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
@@ -557,7 +557,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
-    _notifyHandler: tmplNotify,
+    _notifyHandler: EventUtils.tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
     _editingItem: null,
@@ -938,7 +938,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _onTreeViewKeyDown: function(event) {
-        keysHandler(event, HOT_KEYS, _private, this);
+        EventUtils.keysHandler(event, HOT_KEYS, _private, this);
     },
 
     _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
