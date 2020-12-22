@@ -818,7 +818,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         this._$theme = options.theme;
 
-        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        if (options.hoverBackgroundStyle) {
+            this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        }
 
         this._$collapsedGroups = options.collapsedGroups;
 
