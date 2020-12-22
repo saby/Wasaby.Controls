@@ -577,7 +577,6 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._itemClickTarget = e.target;
                 this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
             }
         },
@@ -714,22 +713,14 @@ var
             }
         },
 
-        beforeActivateRow(): void {
-            if (this._itemClickTarget && this._isColumnScrollVisible()) {
-                this._scrollToCellIfNeed(this._itemClickTarget as HTMLElement);
-                this._itemClickTarget = null;
-            }
-        },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
             if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
                 return;
             }
-            this._scrollToCellIfNeed(e.target as HTMLElement);
-        },
-        _scrollToCellIfNeed(target: HTMLElement): void {
-            this._columnScrollController.scrollToElementIfHidden(target);
+            this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
             this._updateColumnScrollData();
         },
+
         _startDragScrolling(e, startBy: 'mouse' | 'touch'): void {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
                 let isGrabbing: boolean;
