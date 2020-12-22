@@ -800,18 +800,18 @@ var
         },
 
         beforeActivateRow(): void {
-            if (this._itemClickTarget) {
+            if (this._itemClickTarget && this._isColumnScrollVisible()) {
                 this._scrollToCellIfNeed(this._itemClickTarget as HTMLElement);
                 this._itemClickTarget = null;
             }
         },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
+            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
+                return;
+            }
             this._scrollToCellIfNeed(e.target as HTMLElement);
         },
         _scrollToCellIfNeed(target: HTMLElement): void {
-            if (!this._isColumnScrollVisible() || target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
-                return;
-            }
             this._columnScrollController.scrollToElementIfHidden(target);
             this._updateColumnScrollData();
         },
