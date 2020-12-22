@@ -305,8 +305,10 @@ const GridView = ListView.extend({
     },
 
     _onHorizontalPositionChangedHandler(e, newScrollPosition: number): void {
-        this._columnScrollViewController.onPositionChanged(newScrollPosition);
-        this._applyColumnScrollChanges();
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
+            this._columnScrollViewController.onPositionChanged(newScrollPosition);
+            this._applyColumnScrollChanges();
+        }
     },
 
     _onGridWrapperWheel(e) {
@@ -318,17 +320,21 @@ const GridView = ListView.extend({
 
     _onScrollBarMouseUp(e) {
         e.stopPropagation();
-        this._columnScrollViewController.onScrollEnded();
-        this._applyColumnScrollChanges();
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
+            this._columnScrollViewController.onScrollEnded();
+            this._applyColumnScrollChanges();
+        }
     },
 
     _onStartDragScrolling(e, startBy: 'mouse' | 'touch'): void {
-        this._columnScrollViewController?.startDragScrolling(e, startBy);
-        this._applyColumnScrollChanges();
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
+            this._columnScrollViewController?.startDragScrolling(e, startBy);
+            this._applyColumnScrollChanges();
+        }
     },
 
     _onMoveDragScroll(e, startBy: 'mouse' | 'touch') {
-        if (this._columnScrollViewController) {
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
             const oldPosition = this._columnScrollViewController.getScrollPosition();
             const newPosition = this._columnScrollViewController.moveDragScroll(e, startBy);
 
@@ -339,8 +345,10 @@ const GridView = ListView.extend({
     },
 
     _onStopDragScrolling(e, startBy: 'mouse' | 'touch') {
-        this._columnScrollViewController?.stopDragScrolling(e, startBy);
-        this._applyColumnScrollChanges();
+        if (this._columnScrollViewController && this.isColumnScrollVisible()) {
+            this._columnScrollViewController?.stopDragScrolling(e, startBy);
+            this._applyColumnScrollChanges();
+        }
     },
 
     _resizeHandler(): void {
