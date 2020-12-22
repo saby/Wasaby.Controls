@@ -3971,7 +3971,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         const shouldProcessMarker = newOptions.markerVisibility === 'visible'
-            || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined;
+            || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined || this._modelRecreated;
 
         // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
         if (shouldProcessMarker && !needReload) {
