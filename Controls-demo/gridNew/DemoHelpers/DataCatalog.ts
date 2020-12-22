@@ -1178,6 +1178,166 @@ const getTasks = () => {
     };
 };
 
+const getTasksWithHiddenGroup = () => {
+    return {
+        getData: (): IData[] => [
+            {
+                id: 1,
+                message: 'Регламент: Ошибка в разработку. Автор: Дубенец Д.А. Описание: (reg-chrome-presto) 3.18.150 controls - Поехала верстка кнопок когда они задизейблены prestocarry',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Review кода (нач. отдела)',
+                group: 'CONTROLS_HIDDEN_GROUP'
+            },
+            {
+                id: 2,
+                message: 'Регламент: Ошибка в разработку. Автор: Волчихина Л.С. Описание: Отображение колонок. При снятии галки с колонки неверная всплывающая подсказка',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Review кода (нач. отдела)',
+                group: 'CONTROLS_HIDDEN_GROUP'
+            },
+            {
+                id: 3,
+                message: 'Смотри надошибку. Нужно сделать тесты, чтобы так в будущем не разваливалось',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '6 мар',
+                state: 'Выполнение',
+                group: 'CONTROLS_HIDDEN_GROUP'
+            },
+            {
+                id: 4,
+                message: 'Регламент: Ошибка в разработку. Автор: Оборевич К.А. Описание: Розница. Замечания к шрифтам в окнах Что сохранить в PDF/Excel и Что напечатать',
+                fullName: 'Крайнов Дмитрий',
+                photo: getImages().krainov,
+                date: '12 ноя',
+                state: 'Review кода (нач. отдела)',
+                group: 'Крайнов Дмитрий'
+            },
+            {
+                id: 5,
+                message: 'Пустая строка при сканировании в упаковку Тест-онлайн adonis1/adonis123 1) Создать документ списания 2) отсканировать в него наименование/открыть РР/+Упаковка 3) Заполнить данные по упаковке/отсканировать еще 2 марки',
+                fullName: 'Корбут Антон',
+                photo: getImages().korbyt,
+                date: '5 мар',
+                state: 'Выполнение',
+                group: 'Корбут Антон'
+            },
+            {
+                id: 6,
+                message: 'Разобраться с getViewModel - либо наследование, либо создавать модель прямо в TreeControl и передавать в BaseControl, либо ещё какой то вариант придумать.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение',
+                group: 'Кесарева Дарья'
+            },
+            {
+                id: 7,
+                message: 'Научить reload обновлять табличное представление VDOM с сохранением набранных данных (например загруженных по кнопке "еще"). В данный момент есть deepReload, но он не сохраняет набранные данные.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение',
+                group: 'Кесарева Дарья'
+            },
+            {
+                id: 8,
+                message: 'Лесенка на VDOM. Перевести алгоритм на предварительный расчет в модели. Сделать демку.',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение',
+                group: 'Кесарева Дарья'
+            },
+            {
+                id: 9,
+                message: 'Прошу сделать возможность отключения: 1) ховера на айтемах  у Controls/List, 2) курсор: поинтер',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение',
+                group: 'Кесарева Дарья'
+            },
+            {
+                id: 10,
+                message: 'через шаблон ячейки должна быть возможность управлять colspan (или rowspan) отдельной ячейки. <ws:partial template="standartCellTemplate" colspan="2"> типа такого если я напишу, то у меня будет ячейка на две колонки',
+                fullName: 'Кесарева Дарья',
+                photo: getImages().kesareva,
+                date: '12 сен',
+                state: 'Выполнение',
+                group: 'Кесарева Дарья'
+            },
+            {
+                id: 11,
+                message: 'Не работают хлебные крошки и навигация по' +
+                'ним если идентификатор записи равен 0 Как повторить',
+                fullName: 'Догадкин Владимир',
+                photo: getImages().dogadkin,
+                date: '28 фев',
+                state: 'Выполнение',
+                group: 'Догадкин Владимир'
+            },
+            {
+                id: 12,
+                message: 'Не работает collapse в группировке в дереве test-online.sbis.ru сталин/Сталин123',
+                fullName: 'Догадкин Владимир',
+                photo: getImages().dogadkin,
+                date: '26 фев',
+                state: 'Выполнение',
+                group: 'Догадкин Владимир'
+            }
+        ],
+        getColumns: () => [
+            {
+                template: 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksPhoto',
+                width: '98px'
+            },
+            {
+                template: 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksDescription',
+                width: '1fr'
+            },
+            {
+                template: 'wml!Controls-demo/gridNew/resources/CellTemplates/LadderTasksReceived',
+                width: '200px'
+            }
+        ],
+        getDefaultColumns: (): IColumn[] => [
+            {
+                displayProperty: 'id',
+                width: '30px'
+            },
+            {
+                displayProperty: 'state',
+                width: '200px'
+            },
+            {
+                displayProperty: 'date',
+                width: '100px'
+            }
+        ],
+        getDefaultWithEditingColumns: (): IColumn[] => [
+            {
+                displayProperty: 'id',
+                width: '30px'
+            },
+            {
+                displayProperty: 'state',
+                width: '200px',
+                template: 'wml!Controls-demo/gridNew/Grouped/WithEditing/_cellEditor'
+            },
+            {
+                displayProperty: 'date',
+                width: '100px',
+                template: 'wml!Controls-demo/gridNew/Grouped/WithEditing/_cellEditor'
+            }
+        ]
+    };
+};
+
 function getImages(): IImages {
     return {
         dogadkin: constants.resourceRoot + 'Controls-demo/gridNew/resources/images/dogadkin.png',
@@ -1906,6 +2066,7 @@ const countries: string[] = ["Afghanistan","Albania","Algeria","Andorra","Angola
 export {
     getCountriesStats,
     getTasks,
+    getTasksWithHiddenGroup,
     getPorts,
     forShowWidths,
     getEditing,
