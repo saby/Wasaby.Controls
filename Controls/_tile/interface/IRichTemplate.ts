@@ -3,7 +3,7 @@ import {TemplateFunction} from 'UI/Base';
 /**
  * "Богатый" шаблон отображения элементов в  {@link Controls/tile:View плитке}.
  * @class Controls/_tile/interface/IRichTemplate
- * @mixes Controls/_tile/interface/ItemTemplate
+ * @mixes Controls/tile:ItemTemplate
  * @author Михайлов С.Е
  * @see Controls/tile:View
  * @example
