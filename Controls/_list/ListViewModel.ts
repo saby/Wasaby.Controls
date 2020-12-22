@@ -78,12 +78,15 @@ const _private = {
         return self.isEditing() ? undefined : self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    getMultiSelectClassList(current, checkboxOnHover: boolean): string {
+    getMultiSelectClassList(current, checkboxOnHover: boolean, theme: string): string {
         const isSelected = current.isSelected();
         const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add(EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE)
+                           .add('controls-List_DragNDrop__notDraggable')
+                           .add('js-controls-ColumnScroll__notDraggable')
+                           .add(`controls-Checkbox__iconWrapper_inList_theme-${theme}`)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
@@ -219,7 +222,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options.itemPadding);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
-            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover') : '';
+            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover', theme) : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         // Из Controls/scroll:Container прилетает backgroundStyle='default', нужно применять его только если style тоже default
         itemsModelCurrent.backgroundStyle = this._options.style === 'default' && this._options.backgroundStyle ? this._options.backgroundStyle : this._options.style;

@@ -36,13 +36,17 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string,
-                      backgroundColorStyle: string,
-                      cursor: string = 'pointer',
-                      templateHighlightOnHover: boolean = true): string {
+    getMultiSelectClasses(
+       theme: string,
+       backgroundColorStyle: string,
+       cursor: string = 'pointer',
+       templateHighlightOnHover: boolean = true
+    ): string {
         const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
 
-        let contentClasses = '';
+        let contentClasses = `js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
+                              js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
+                              controls-Checkbox__iconWrapper_inList_theme-${theme}`;
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
             contentClasses += ' controls-ListView__checkbox-onhover';
         }

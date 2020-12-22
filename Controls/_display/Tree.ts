@@ -371,6 +371,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return this._$nodeFooterTemplate;
     }
 
+    setNodeFooterTemplate(nodeFooterTemplate: TemplateFunction): void {
+        if (this._$nodeFooterTemplate !== nodeFooterTemplate) {
+            this._$nodeFooterTemplate = nodeFooterTemplate;
+            this._nextVersion();
+        }
+    }
+
     getIndexBySourceItem(item: any): number {
         if (this._$rootEnumerable && this.getRoot().getContents() === item) {
             return 0;

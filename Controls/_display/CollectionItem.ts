@@ -352,7 +352,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getMultiSelectClasses(theme: string): string {
-        let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme} `;
+        let classes = `js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
+                       js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
+                       controls-Checkbox__iconWrapper_inList_theme-${theme}
+                       controls-ListView__checkbox_theme-${theme}`;
         classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
 
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
