@@ -31,7 +31,6 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Cell
 
     getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         let contentClasses = 'controls-Grid__row-main_ladderWrapper';
-        contentClasses += this._getContentSeparatorClasses(theme);
         return contentClasses;
     }
 
