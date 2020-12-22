@@ -1,4 +1,4 @@
-<div class="controlsDemo__cell" xmlns:ws="http://www.w3.org/1999/html">
+<div class="controlsDemo__cell">
     <Controls.gridNew:View
             keyProperty="id"
             source="{{_viewSource}}"
