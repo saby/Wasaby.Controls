@@ -2,8 +2,10 @@
  * Библиотека контролов, которые реализуют плоский список. Список может строиться по данным, полученным из источника. Также можно организовать удаление и перемещение данных.
  * @library Controls/list
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
+ * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
+ * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
@@ -16,8 +18,10 @@
  * List library
  * @library Controls/list
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
+ * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
+ * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
@@ -143,7 +147,7 @@ const editing = {
 };
 
 import {groupConstants} from './display';
-import {checkboxStateConstants} from './display';
+import {MultiSelectAccessibility} from './display';
 import {CursorDirection} from './interface';
 
-export {CursorDirection, groupConstants, editing, checkboxStateConstants};
+export {CursorDirection, groupConstants, editing, MultiSelectAccessibility};
