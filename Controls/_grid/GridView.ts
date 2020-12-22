@@ -715,7 +715,7 @@ var
         },
 
         beforeActivateRow(): void {
-            if (this._itemClickTarget) {
+            if (this._itemClickTarget && this._isColumnScrollVisible()) {
                 this._scrollToCellIfNeed(this._itemClickTarget as HTMLElement);
                 this._itemClickTarget = null;
             }
