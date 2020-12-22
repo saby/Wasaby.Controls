@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/OtherControl/OtherControl';
 import {Memory} from 'Types/source';
 import {generateData} from '../../../DemoHelpers/DataCatalog';
+import {SyntheticEvent} from 'Vdom/Vdom';
 
 interface IItem {
     title: string;
@@ -34,8 +35,8 @@ export default class extends Control {
         };
     }
 
-    _updatePagingArrow(event, key) {
-        if (key > 0) {
+    _updatePagingArrow(event: SyntheticEvent, key: string): void {
+        if (Number(key) > 0) {
             this._arrowState.begin = 'visible';
         } else {
             this._arrowState.begin = 'readonly';
@@ -48,7 +49,7 @@ export default class extends Control {
         this._arrowState = {...this._arrowState};
     }
 
-    protected _onPagingArrowClick(event, arrow) {
+    protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): void {
         switch (arrow) {
             case 'Begin':
                 this._children.list.scrollToItem(0, true, true);
