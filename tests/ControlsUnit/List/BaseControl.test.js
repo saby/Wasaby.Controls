@@ -8134,15 +8134,17 @@ define([
 
                const notifySpy = sinon.spy(baseControl, '_notify');
 
+               baseControl.setMarkedKey(3);
                baseControl._listViewModel = searchViewModel;
+               baseControl._modelRecreated = true;
                baseControl._beforeUpdate(cfg);
 
 
-               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
-               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [2]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [2]).called);
 
-               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });

@@ -3849,11 +3849,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasMarkerController(this)) {
-            const newMarkedKey = _private.getMarkerController(this).updateOptions({
+            _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
                 markerVisibility: newOptions.markerVisibility
             });
-            _private.changeMarkedKey(this, newMarkedKey, true);
         }
 
         if (_private.hasSelectionController(this)) {
@@ -3980,7 +3979,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // могут скрыть маркер и занового показать, тогда markedKey из опций нужно проставить даже если он не изменился
             if (this._options.markedKey !== newOptions.markedKey || this._options.markerVisibility === 'hidden' && newOptions.markerVisibility === 'visible' && newOptions.markedKey !== undefined) {
                 markerController.setMarkedKey(newOptions.markedKey);
-            } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible') {
+            } else if (this._options.markerVisibility !== newOptions.markerVisibility && newOptions.markerVisibility === 'visible' || this._modelRecreated) {
+                // Когда модель пересоздается, то возможен такой вариант:
+                // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
+                // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,
+                // поэтому нужно пересчитать markedKey
+
                 const newMarkedKey = markerController.calculateMarkedKeyForVisible();
                 _private.changeMarkedKey(self, newMarkedKey);
             }

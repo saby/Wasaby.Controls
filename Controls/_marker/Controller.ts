@@ -25,23 +25,9 @@ export class Controller {
     * @param {IOptions} options Новые опции
     * @void
     */
-   updateOptions(options: IOptions): CrudEntityKey {
-      const modelChanged = this._model !== options.model;
-
-      if (modelChanged) {
-         this._model = options.model;
-
-         // Когда модель пересоздается, то возможен такой вариант:
-         // Маркер указывает на папку, TreeModel -> SearchViewModel, после пересоздания markedKey
-         // будет указывать на хлебную крошку, но маркер не должен ставиться на нее,
-         // поэтому нужно пересчитать markedKey
-         const markedKey = this.calculateMarkedKeyForVisible();
-         this.setMarkedKey(markedKey);
-      }
-
+   updateOptions(options: IOptions): void {
+      this._model = options.model;
       this._markerVisibility = options.markerVisibility;
-
-      return this.getMarkedKey();
    }
 
    /**

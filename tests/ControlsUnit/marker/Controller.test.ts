@@ -38,26 +38,6 @@ describe('Controls/marker/Controller', () => {
           assert.equal(controller._markerVisibility, 'onactivated');
           model.each((item) => assert.isFalse(item.isMarked()));
       });
-
-      it('model changed', () => {
-         const newModel = new ListViewModel({
-            items
-         });
-         controller.updateOptions({
-            model: newModel, markerVisibility: 'onactivated'
-         });
-
-         assert.equal(controller._model, newModel);
-         assert.equal(controller._markerVisibility, 'onactivated');
-         assert.isTrue(newModel.getItemBySourceKey(1).isMarked());
-         assert.isFalse(newModel.getItemBySourceKey(2).isMarked());
-         assert.isFalse(newModel.getItemBySourceKey(3).isMarked());
-
-         assert.equal(newModel.getVersion(), 1);
-         assert.equal(newModel.getItemBySourceKey(1).getVersion(), 1);
-         assert.equal(newModel.getItemBySourceKey(2).getVersion(), 0);
-         assert.equal(newModel.getItemBySourceKey(3).getVersion(), 0);
-      });
    });
 
    describe('setMarkedKey', () => {
