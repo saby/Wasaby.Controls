@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import { TColumns } from 'Controls/_grid/interface/IColumn';
+import {IColumn, TColumns} from 'Controls/_grid/interface/IColumn';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 
 import { IViewIterator } from '../../Collection';
@@ -29,6 +29,18 @@ type TResultsVisibility = 'visible' | 'hasdata';
  */
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
+/**
+ * @typedef {Function} TColspanCallback
+ * @description
+ * Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @param {Types/entity:Model} item Элемент, для которого рассчитывается объединение
+ * @param {Controls/grid:IColumn} column Колонка грида
+ * @param {Number} columnIndex Индекс колонки грида
+ * @param {Boolean} isEditing Актуальное состояние редактирования элемента
+ * @returns number Количество объединяемых колонок, учитывая текущую
+ */
+export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => number;
+
 export interface IOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
@@ -42,6 +54,7 @@ export interface IOptions {
     ladderProperties?: string[];
     stickyColumn?: {};
     showEditArrow?: boolean;
+    colspanCallback?: TColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
     stickyColumnsCount?: number
@@ -64,6 +77,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$resultsVisibility: TResultsVisibility;
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    protected _$colspanCallback: TColspanCallback;
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
@@ -106,6 +120,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$header;
     }
 
+    hasHeader(): boolean {
+        return !!this.getHeader();
+    }
+
     getFooter(): FooterRow<S> {
         return this._$footer;
     }
@@ -116,6 +134,20 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     getResultsPosition(): TResultsPosition {
         return this._$resultsPosition;
+    }
+
+    setColspanCallback(colspanCallback: TColspanCallback): void {
+        this._$colspanCallback = colspanCallback;
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            if (item.setColspanCallback) {
+                item.setColspanCallback(colspanCallback);
+            }
+        });
+        this._nextVersion();
+    }
+
+    getColspanCallback(): Function {
+        return this._$colspanCallback;
     }
 
     isFullGridSupport(): boolean {
@@ -307,6 +339,7 @@ Object.assign(Grid.prototype, {
     _$isFullGridSupport: true,
     _$showEditArrow: false,
     _$editArrowVisibilityCallback: null,
+    _$colspanCallback: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1
 });
