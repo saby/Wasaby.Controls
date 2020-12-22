@@ -44,7 +44,7 @@ export default class extends Control {
         if (item.get('type') === true) {
             return;
         }
-        return 'all';
+        return 'end';
     }
 
     protected _beforeMount(): void {
