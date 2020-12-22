@@ -269,7 +269,7 @@ export interface IColumn extends IColspanParams, IRowspanParams {
      * <!-- ExampleColumn.wml -->
      * <Controls.grid:ColumnTemplate itemData="{{itemData}}">
      *     <ws:contentTemplate>
-     *         <div class="controls-text-{{_options.style}}_theme-{{_options.theme}}">{{itemData.item[_options.displayProperty]}}</div>
+     *         <div class="controls-text-{{style}}_theme-{{_options.theme}}">{{itemData.item[displayProperty]}}</div>
      *     </ws:contentTemplate>
      * </Controls.grid:ColumnTemplate>
      * </pre>
