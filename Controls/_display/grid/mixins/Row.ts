@@ -9,7 +9,7 @@ import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
 import { THeader } from '../../../_grid/interface/IHeaderCell';
-import { TColspanCallback } from './Grid';
+import {TColspanCallback, TColspanCallbackResult} from './Grid';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -232,7 +232,7 @@ export default abstract class Row<T> {
         }
     }
 
-    protected _getColspan(column: IColumn, columnIndex: number): number {
+    protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
         const colspanCallback = this._$colspanCallback;
         if (colspanCallback) {
             return colspanCallback(this.getContents(), column, columnIndex, this.isEditing());
@@ -244,13 +244,19 @@ export default abstract class Row<T> {
         const columnItems = [];
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const column = columns[columnIndex];
-            const colspan = this._getColspan(column, columnIndex);
+            let colspan = this._getColspan(column, columnIndex);
+            if (colspan === 'end') {
+                colspan = columns.length - columnIndex;
+            }
+            if (colspan === 1) {
+                colspan = 0;
+            }
             if (colspan) {
                 columnIndex += colspan - 1;
             }
             columnItems.push(factory({
                 column,
-                colspan,
+                colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount()
             }));
         }
