@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import { GridCollection } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
+import { TColspanCallbackResult } from 'Controls/display';
 
 const rawData = [
     {
@@ -34,7 +35,7 @@ const columns = [
     { displayProperty: 'col3' }
 ];
 
-function colspanCallback(item, column, columnIndex, isEditing): number {
+function colspanCallback(item, column, columnIndex, isEditing): TColspanCallbackResult {
     if (item.getKey() === 1) {
         if (isEditing) {
             return 3;
@@ -137,6 +138,42 @@ describe('Controls/grid_clean/Display/Colspan', () => {
         assert.strictEqual(columnItems.length, 2);
         assert.strictEqual(columnItems[0].getColspan(), '');
         assert.strictEqual(columnItems[1].getColspan(), 'grid-column: 2 / 4;');
+
+        // fourth item
+        columnItems = gridCollection.at(3).getColumns();
+        assert.strictEqual(columnItems.length, 1);
+        assert.strictEqual(columnItems[0].getColspan(), 'grid-column: 1 / 4;');
+
+        // first item with editing
+        gridCollection.at(0).setEditing(true)
+        columnItems = gridCollection.at(0).getColumns();
+        assert.strictEqual(columnItems.length, 1);
+        assert.strictEqual(columnItems[0].getColspan(), 'grid-column: 1 / 4;');
+    });
+
+    it('Initialize with colspanCallback() => "all"', () => {
+        const gridCollection = new GridCollection({
+            collection,
+            keyProperty: 'key',
+            columns,
+            multiSelectVisibility: 'hidden',
+            colspanCallback: () => 'all'
+        });
+
+        // first item
+        let columnItems = gridCollection.at(0).getColumns();
+        assert.strictEqual(columnItems.length, 1);
+        assert.strictEqual(columnItems[0].getColspan(), 'grid-column: 1 / 4;');
+
+        // second item
+        columnItems = gridCollection.at(1).getColumns();
+        assert.strictEqual(columnItems.length, 1);
+        assert.strictEqual(columnItems[0].getColspan(), 'grid-column: 1 / 4;');
+
+        // third item
+        columnItems = gridCollection.at(2).getColumns();
+        assert.strictEqual(columnItems.length, 1);
+        assert.strictEqual(columnItems[0].getColspan(), 'grid-column: 1 / 4;');
 
         // fourth item
         columnItems = gridCollection.at(3).getColumns();

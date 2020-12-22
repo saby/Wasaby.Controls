@@ -4,6 +4,7 @@ import { TColumns } from 'Controls/grid';
 import RawData from 'Controls-demo/grid/data/Colspan';
 import * as Template from 'wml!Controls-demo/grid/Colspan/Colspan';
 import * as FirstColumnTemplate from 'wml!Controls-demo/grid/Colspan/FirstColumn';
+import { TColspanCallbackResult } from 'Controls/display';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -39,11 +40,11 @@ export default class extends Control {
         }
     ];
 
-    protected _colspanCallback(item, column, columnIndex, isEditing): number {
+    protected _colspanCallback(item, column, columnIndex, isEditing): TColspanCallbackResult {
         if (item.get('type') === true) {
             return;
         }
-        return 7;
+        return 'all';
     }
 
     protected _beforeMount(): void {
