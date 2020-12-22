@@ -9,8 +9,9 @@
 
 .controls-Button_buttonGroup_style-buttonGroupUnselected_theme-@{themeName} {
   background-color: @background-color;
-  border-color: transparent;
   box-shadow: @box-shadow_ToolbarBox;
+  border-radius: @border-radius_m_button;
+  border: @border-thickness_button solid transparent;
 }
 
 .controls-Button_buttonGroup_style-buttonGroupUnselected_theme-@{themeName}:hover {
@@ -24,22 +25,10 @@
   flex-direction: row;
 }
 
-.controls-Button_buttonGroup_m_theme-@{themeName} {
-  border-radius: 12px;
-}
-
-.controls-Button_buttonGroup {
-  border-style: solid;
-}
-
-.controls-Button_button_m_theme-@{themeName} {
-  min-width: 48px;
-}
-
 .controls-Button_buttonGroup_theme-@{themeName} {
-  border-width: 1px;
+  min-width: @min-width_button_button;
 }
 
 .controls-Button__wrapper_buttonGroup_m_theme-@{themeName} {
-  padding: 0 11px;
+  padding: 0 @padding-horizontal_m_button - @border-thickness_button;
 }
