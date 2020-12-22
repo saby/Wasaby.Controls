@@ -335,9 +335,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            // Выполняем поиск, т.к. позиция может смениться сразу на несколько элементов
+            // и не факт, что в предыдущей позиции был targetNode
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
                 this._nextVersion();
             }
 
@@ -357,9 +359,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
             }
             super.resetDraggedItems();
         }

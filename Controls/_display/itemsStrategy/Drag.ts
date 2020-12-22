@@ -91,10 +91,6 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         this.invalidate();
     }
 
-    getCurrentPosition(): IDragPosition<T> {
-        return this._currentPosition;
-    }
-
     at(index: number): T {
         const itemsOrder = this._getItemsOrder();
         const itemIndex = itemsOrder[index];
