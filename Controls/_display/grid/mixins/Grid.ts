@@ -33,7 +33,7 @@ export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
  * @description
  * Тип результата, возвращаемого из функции colspanCallback (функции обратного вызова для расчёта объединения колонок строки).
  */
-export type TColspanCallbackResult = number | 'all';
+export type TColspanCallbackResult = number | 'end';
 
 /**
  * @typedef {Function} TColspanCallback
@@ -43,7 +43,7 @@ export type TColspanCallbackResult = number | 'all';
  * @param {Controls/grid:IColumn} column Колонка грида
  * @param {Number} columnIndex Индекс колонки грида
  * @param {Boolean} isEditing Актуальное состояние редактирования элемента
- * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок из функции нужно вернуть специальное значение 'all'.
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  */
 export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 

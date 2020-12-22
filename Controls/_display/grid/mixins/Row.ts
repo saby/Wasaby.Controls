@@ -245,10 +245,13 @@ export default abstract class Row<T> {
         for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
             const column = columns[columnIndex];
             let colspan = this._getColspan(column, columnIndex);
+            if (colspan === 'end') {
+                colspan = columns.length - columnIndex;
+            }
+            if (colspan === 1) {
+                colspan = 0;
+            }
             if (colspan) {
-                if (colspan === 'all') {
-                    colspan = columns.length;
-                }
                 columnIndex += colspan - 1;
             }
             columnItems.push(factory({
