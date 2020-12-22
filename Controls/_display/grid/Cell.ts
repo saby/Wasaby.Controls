@@ -123,7 +123,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Стилевое оформление"
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hasColumnScroll = this._$owner.hasColumnScroll();
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
 
@@ -241,7 +241,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
                       backgroundColorStyle: string,
                       cursor: string = 'pointer',
                       templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
 
         let contentClasses = 'controls-Grid__row-cell__content';
 

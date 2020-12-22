@@ -44,12 +44,13 @@ export default class Row<T>
        itemPadding: IItemPadding = {},
        markerPosition: 'left' | 'right' = 'left'
     ): string {
-        return `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme}
-            controls-GridView__itemV_marker-${style}_theme-${theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme}
-            controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}
-            controls-ListView__itemV_marker-${markerPosition}`;
+        let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme} `;
+        classes += `controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)} `;
+        classes += `controls-ListView__itemV_marker-${markerPosition} `;
+        return classes;
     }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {

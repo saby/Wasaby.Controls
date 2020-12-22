@@ -1,8 +1,8 @@
 import { mixin } from 'Types/util';
 import { IGridRowOptions, GridCell, GridRowMixin, ITreeItemOptions, TreeItem } from 'Controls/display';
 import TreeGridCollection from './TreeGridCollection';
+import { IItemPadding } from 'Controls/_display/Collection';
 import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
-import { IItemPadding } from 'Controls/_list/interface/IList';
 
 export interface IOptions<T> extends IGridRowOptions<T>, ITreeItemOptions<T> {
     owner: TreeGridCollection<T>;
@@ -52,12 +52,13 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
        itemPadding: IItemPadding = {},
        markerPosition: 'left' | 'right' = 'left'
     ): string {
-        return `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme}
-            controls-GridView__itemV_marker-${style}_theme-${theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom || 'default'}_theme-${theme}
-            controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top || 'default'}_theme-${theme}
-            controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)}
-            controls-ListView__itemV_marker-${markerPosition}`;
+        let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme} `;
+        classes += `controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)} `;
+        classes += `controls-ListView__itemV_marker-${markerPosition} `;
+        return classes;
     }
 
     setMarked(marked: boolean, silent?: boolean): void {

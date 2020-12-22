@@ -7,7 +7,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
     readonly Markable: boolean = true;
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
         const topPadding = this._$owner.getTopPadding();
 
         let wrapperClasses = '';
@@ -42,17 +42,17 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
        cursor: string = 'pointer',
        templateHighlightOnHover: boolean = true
     ): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
 
-        let contentClasses = `js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
-                              js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
-                              controls-Checkbox__iconWrapper_inList_theme-${theme}`;
+        let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        contentClasses += `controls-Checkbox__iconWrapper_inList_theme-${theme} `;
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
-            contentClasses += ' controls-ListView__checkbox-onhover';
+            contentClasses += 'controls-ListView__checkbox-onhover ';
         }
 
         if (templateHighlightOnHover !== false) {
-            contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
+            contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
         }
         return contentClasses;
     }
