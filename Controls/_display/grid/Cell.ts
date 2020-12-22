@@ -8,7 +8,7 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import {IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize} from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
