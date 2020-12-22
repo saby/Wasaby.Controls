@@ -1,4 +1,4 @@
-import {THeader} from 'Controls/grid';
+import {IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize, THeader} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import Header from './Header';
 import ItemActionsCell from './ItemActionsCell';
@@ -41,7 +41,8 @@ export default class HeaderRow<T> extends Row<T> {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
             this._$columnItems = this._$header.map((column) => factory({
-                column
+                column,
+                columnSeparatorSize: this._getColumnSeparatorSize(column)
             }));
             this._addCheckBoxColumnIfNeed();
 
@@ -65,6 +66,35 @@ export default class HeaderRow<T> extends Row<T> {
                 }
             }));
         }
+    }
+
+    protected _getColumnSeparatorSize(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
+        const currentColumn = {
+            ...column,
+            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column)
+        } as IColumn;
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = {
+                ...this._$columns[columnIndex - 1],
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$columns[columnIndex - 1])
+            } as IColumn;
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell): IColumnSeparatorSizeConfig {
+        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
+        const columns = this.getColumnsConfig();
+        const columnLeft = columns[headerColumn.startColumn - 1];
+        const columnRight = columns[headerColumn.endColumn - 2];
+        if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
+        }
+        if (columnRight?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
     }
 }
 
