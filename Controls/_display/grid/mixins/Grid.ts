@@ -30,6 +30,12 @@ type TResultsVisibility = 'visible' | 'hasdata';
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
 /**
+ * @description
+ * Тип результата, возвращаемого из функции colspanCallback (функции обратного вызова для расчёта объединения колонок строки).
+ */
+export type TColspanCallbackResult = number | 'end';
+
+/**
  * @typedef {Function} TColspanCallback
  * @description
  * Функция обратного вызова для расчёта объединения колонок строки (колспана).
@@ -37,9 +43,9 @@ export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
  * @param {Controls/grid:IColumn} column Колонка грида
  * @param {Number} columnIndex Индекс колонки грида
  * @param {Boolean} isEditing Актуальное состояние редактирования элемента
- * @returns number Количество объединяемых колонок, учитывая текущую
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  */
-export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => number;
+export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 
 export interface IOptions {
     columns: TColumns;
@@ -146,7 +152,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
-    getColspanCallback(): Function {
+    getColspanCallback(): TColspanCallback {
         return this._$colspanCallback;
     }
 
