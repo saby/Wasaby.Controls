@@ -117,11 +117,12 @@
                             </ws:for>
                         </ws:if>
                         <ws:if data="{{!isSearchSeparator && itemData.isDrawExpander(currentColumn.columnIndex, expanderIcon, 'default')}}">
-                            <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
+                            <ws:partial template="{{itemData.expanderTemplate}}"
+                                        itemData="{{itemData}}"
+                                        expanderIcon="{{itemData.getExpanderIcon(expanderIcon)}}"
                                         expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
                         </ws:if>
-                        <ws:else
-                                data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
+                        <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
                             <div class="{{itemData.getExpanderPaddingClasses(itemData, expanderSize)}} js-controls-ListView__notEditable"></div>
                         </ws:else>
                     </ws:if>
