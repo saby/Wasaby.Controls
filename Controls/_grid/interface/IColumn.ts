@@ -62,22 +62,8 @@ export type TOverflow = 'ellipsis' | 'none';
  */
 export type TColumnSeparatorSize = 's' | null;
 
-/**
- * Ширина линии-разделителя колонок слева и справа.
- * @interface Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig
- * @public
- * @author Аверкиев П.А.
- */
 export interface IColumnSeparatorSizeConfig {
-    /**
-     * @name Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig#left
-     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок слева.
-     */
     left?: TColumnSeparatorSize;
-    /**
-     * @name Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig#right
-     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок справа.
-     */
     right?: TColumnSeparatorSize;
 }
 
