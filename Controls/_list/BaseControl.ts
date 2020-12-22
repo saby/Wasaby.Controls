@@ -2705,9 +2705,9 @@ const _private = {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
 
-    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, afterMount: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
+    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !afterMount) {
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
             return newMarkedKey;
         }
 
@@ -3849,10 +3849,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasMarkerController(this)) {
-            _private.getMarkerController(this).updateOptions({
+            const newMarkedKey = _private.getMarkerController(this).updateOptions({
                 model: this._listViewModel,
                 markerVisibility: newOptions.markerVisibility
             });
+            _private.changeMarkedKey(this, newMarkedKey, true);
         }
 
         if (_private.hasSelectionController(this)) {

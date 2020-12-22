@@ -8112,6 +8112,38 @@ define([
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
+
+            it('updateOptions with new model', () => {
+               const searchViewModel = new treeGrid.SearchGridViewModel({
+                  items: new collection.RecordSet({
+                     rawData: [{
+                        id: 1,
+                        type: true,
+                        parent: null
+                     }, {
+                        id: 2,
+                        type: null,
+                        parent: 1
+                     }],
+                     keyProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  keyProperty: 'id'
+               });
+
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
+               baseControl._listViewModel = searchViewModel;
+               baseControl._beforeUpdate(cfg);
+
+
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [1]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
          });
       });
 

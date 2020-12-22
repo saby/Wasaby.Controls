@@ -25,7 +25,7 @@ export class Controller {
     * @param {IOptions} options Новые опции
     * @void
     */
-   updateOptions(options: IOptions): void {
+   updateOptions(options: IOptions): CrudEntityKey {
       const modelChanged = this._model !== options.model;
 
       if (modelChanged) {
@@ -40,6 +40,8 @@ export class Controller {
       }
 
       this._markerVisibility = options.markerVisibility;
+
+      return this.getMarkedKey();
    }
 
    /**
