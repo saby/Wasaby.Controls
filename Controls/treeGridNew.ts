@@ -1,7 +1,7 @@
 import { default as View } from 'Controls/_treeGridNew/TreeGrid';
 
 import * as GridItemTemplate from 'wml!Controls/_treeGridNew/render/grid/Item';
-import * as TableItemTemplate from 'wml!Controls/_treeGridNew/render/ефиду/Item';
+import * as TableItemTemplate from 'wml!Controls/_treeGridNew/render/table/Item';
 import * as NodeFooterTemplate from 'wml!Controls/_treeGridNew/render/NodeFooterTemplate';
 
 // FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз присвоится значение и не будет меняться.
