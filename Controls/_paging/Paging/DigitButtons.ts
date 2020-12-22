@@ -44,9 +44,8 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
     static _theme: string[] = ['Controls/paging'];
 
     // получаем граничные цифры, окружающие выбранный элемент, по условия +-3 в обе стороны (4 5 6 [7] 8 9 10)
-    private static _getSurroundElemens(
-        digitsCount: number, currentDigit: number,
-        mode: string = 'standard'): ISurroundElements {
+    private static _getSurroundElemens(digitsCount: number, currentDigit: number,
+                                       mode: string = 'standard'): ISurroundElements {
         let firstElem: number;
         let lastElem: number;
         if (mode === 'standard') {
