@@ -4,7 +4,9 @@ import { TemplateFunction } from 'UI/Base';
 import { descriptor } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
 import TreeGridView from 'Controls/_treeGridNew/TreeGridView';
+import TreeGridViewTable from 'Controls/_treeGridNew/TreeGridViewTable';
 import { Model } from 'Types/entity';
+import { isFullGridSupport } from 'Controls/display';
 
 export default class TreeGrid extends Grid {
     protected _viewName: TemplateFunction = null;
@@ -12,7 +14,7 @@ export default class TreeGrid extends Grid {
 
     _beforeMount(options: any): Promise<void> {
         const superResult = super._beforeMount(options);
-        this._viewName = TreeGridView;
+        this._viewName = isFullGridSupport() ? TreeGridView : TreeGridViewTable;
         return superResult;
     }
 

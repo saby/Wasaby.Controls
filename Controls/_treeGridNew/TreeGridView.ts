@@ -14,7 +14,7 @@ export default class TreeGridView extends GridView {
         }
     }
 
-    protected _resolveBaseItemTemplate(): TemplateFunction {
+    protected _resolveBaseItemTemplate(options: any): TemplateFunction {
         return Item;
     }
 
