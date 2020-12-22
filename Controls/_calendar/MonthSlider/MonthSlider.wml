@@ -7,13 +7,6 @@
       <span attr:class="controls-MonthSlider__header-title controls-MonthSlider__header-title_theme-{{_options.theme}}">{{ _formatDate(_month, 'MMMM, YYYY') }}</span>
       <span attr:class="controls-MonthSlider__header-button_theme-{{_options.theme}} controls-MonthSlider__header-button icon-size icon-MarkCRightLight" on:click="_slideMonth(1)"></span>
    </div>
-
-   <div attr:class="controls-MonthSlider__weekdays-container">
-      <div for="day in _days" attr:class="controls-MonthSlider__weekdays-item">
-         {{ day.caption }}
-      </div>
-   </div>
-
    <Controls._calendar.MonthSlider.Slider
       data="{{_month}}"
       animation="{{_animation}}"
@@ -25,6 +18,7 @@
          attr:class="controls-MonthSlider__month"
          month="{{content.data}}"
          mode="{{_options.mode}}"
+         dayTemplate="{{ _options.dayTemplate }}"
          on:itemClick="_itemClickHandler()"
          startValue="{{_options.startValue}}"
          endValue="{{_options.endValue}}"
@@ -36,8 +30,17 @@
 
          on:startValueChanged="_onStartValueChanged()"
          on:endValueChanged="_onEndValueChanged()"
-
-         showWeekdays="{{false}}"
-      />
+      >
+         <ws:dayHeaderTemplate>
+            <ws:if data="{{ !_options.dayHeaderTemplate }}">
+               <div class="controls-MonthSlider__weekdays-item">
+                  {{ dayHeaderTemplate.value.caption}}
+               </div>
+            </ws:if>
+            <ws:else>
+               <ws:partial template="{{ _options.dayHeaderTemplate }}"/>
+            </ws:else>
+         </ws:dayHeaderTemplate>
+      </Controls._calendar.Month>
    </Controls._calendar.MonthSlider.Slider>
 </div>
