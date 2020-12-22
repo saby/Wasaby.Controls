@@ -70,11 +70,11 @@ export type TColumnSeparatorSize = 's' | null;
  */
 export interface IColumnSeparatorSizeConfig {
     /**
-     * @cfg {TColumnSeparatorSize} Линия-разделитель колонок слева.
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок слева.
      */
     left?: TColumnSeparatorSize;
     /**
-     * @cfg {TColumnSeparatorSize} Линия-разделитель колонок справа.
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок справа.
      */
     right?: TColumnSeparatorSize;
 }
