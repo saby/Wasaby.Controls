@@ -3,7 +3,6 @@ import Collection from './Collection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams } from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -41,6 +40,14 @@ export default class Row<T>
             this._reinitializeColumns();
         }
         return isChangedMultiSelectVisibility;
+    }
+
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        super.setEditing(editing, editingContents, silent);
+        const colspanCallback = this._$owner.getColspanCallback();
+        if (colspanCallback) {
+            this._reinitializeColumns();
+        }
     }
 
     setMarked(marked: boolean, silent?: boolean): void {

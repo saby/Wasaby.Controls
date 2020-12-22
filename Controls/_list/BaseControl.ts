@@ -22,7 +22,7 @@ import {ControllerClass, Container as ValidateContainer} from 'Controls/validate
 import {Logger} from 'UI/Utils';
 
 import {TouchContextField} from 'Controls/context';
-import {error as dataSourceError, NewSourceController as SourceController, ISourceControllerOptions} from 'Controls/dataSource';
+import {error as dataSourceError, NewSourceController as SourceController, isEqualItems} from 'Controls/dataSource';
 import {
     INavigationOptionValue,
     INavigationSourceConfig,
@@ -486,34 +486,6 @@ const _private = {
         return resDeferred;
     },
 
-    isEqualItemsFormat(items1: RecordSet, items2: RecordSet): boolean {
-        const items1Model = items1.getModel();
-        const items2Model = items2.getModel();
-        let isModelEqual = items1Model === items2Model;
-
-        function getModelModuleName(model: string|Function): string {
-            let name;
-
-            if (typeof model === 'function') {
-                name = model.prototype._moduleName;
-            } else {
-                name = model;
-            }
-
-            return name;
-        }
-
-        if (!isModelEqual && (getModelModuleName(items1Model) === getModelModuleName(items2Model))) {
-            isModelEqual = true;
-        }
-        return items1 && cInstance.instanceOfModule(items1, 'Types/collection:RecordSet') &&
-            isModelEqual &&
-            (items1.getKeyProperty() === items2.getKeyProperty()) &&
-            (Object.getPrototypeOf(items1).constructor === Object.getPrototypeOf(items2).constructor) &&
-            (Object.getPrototypeOf(items1.getAdapter()).constructor ===
-                Object.getPrototypeOf(items2.getAdapter()).constructor);
-    },
-
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -522,7 +494,7 @@ const _private = {
             // TODO restore marker + maybe should recreate the model completely
             // Делаем assign только если формат текущего рекордсета и нового полностью совпадает, иначе необходима
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
-            if (!_private.isEqualItemsFormat(listModel.getCollection(), items)) {
+            if (!isEqualItems(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
                 if (self._options.itemsReadyCallback) {
                     self._options.itemsReadyCallback(listModel.getCollection());
@@ -1426,6 +1398,7 @@ const _private = {
             if (self._viewportSize) {
                 self._recalcPagingVisible = false;
                 self._pagingVisible = _private.needShowPagingByScrollSize(self, _private.getViewSize(self), self._viewportSize);
+                self._pagingVisibilityChanged = self._pagingVisible;
                 if (detection.isMobilePlatform) {
                     self._recalcPagingVisible = !self._pagingVisible;
                 }
@@ -2574,11 +2547,17 @@ const _private = {
                     self._notify('disableVirtualNavigation', [], { bubbling: true });
                 }
             }
-            if (result.activeElement && (self._items && typeof self._items.getRecordById(result.activeElement) !== 'undefined')) {
-                self._notify('activeElementChanged', [result.activeElement]);
+            if (self._items && typeof self._items.getRecordById(result.activeElement || self._options.activeElement) !== 'undefined') {
+                // activeElement запишется в result только, когда он изменится
+                if (result.activeElement) {
+                    self._notify('activeElementChanged', [result.activeElement]);
+                }
+
+                // Скроллить к активному элементу нужно только, когда в опции передали activeElement
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
-                self._keepScrollAfterReload = true;_private.doAfterUpdate(self, () => { _private.scrollToItem(self, result.activeElement, false, true); });
+                    self._keepScrollAfterReload = true;
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
@@ -3065,6 +3044,9 @@ const _private = {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
         // В новом рендере эона не нужна
         if (self._children.listView.activateEditingRow) {
+            if (self._children.listView.beforeActivateRow) {
+                self._children.listView.beforeActivateRow();
+            }
             const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
             self._editInPlaceInputHelper.activateInput(rowActivator);
         }
@@ -3142,6 +3124,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _pagingCfg: null,
     _pagingVisible: false,
+    _pagingVisibilityChanged: false,
     _actualPagingVisible: false,
     _pagingPadding: null,
 
@@ -3241,7 +3224,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyNavigationParamsChanged: null,
     _dataLoadCallback: null,
 
-    _preventServerSideColumnScroll: false,
+    _useServerSideColumnScroll: false,
 
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
@@ -3271,6 +3254,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.initializeNavigation(this, newOptions);
         this._loadTriggerVisibility = {};
+
+        if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
+            if (typeof newOptions.preventServerSideColumnScroll === 'boolean') {
+                this._useServerSideColumnScroll = !newOptions.preventServerSideColumnScroll;
+            } else {
+                this._useServerSideColumnScroll = true;
+            }
+        }
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
@@ -3676,6 +3667,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterMount(): void {
         this._isMounted = true;
+
+        if (this._useServerSideColumnScroll) {
+            this._useServerSideColumnScroll = false;
+        }
 
         if (_private.hasMoreData(this, this._sourceController, 'up')) {
             this._notify('enableVirtualNavigation', [], { bubbling: true });
@@ -4329,7 +4324,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._pagingVisible) {
             this._updatePagingPadding();
         }
-
+        if (this._pagingVisibilityChanged) {
+            this._notify('controlResize', [], { bubbling: true });
+            this._pagingVisibilityChanged = false;
+        }
         // todo KINGO.
         // При вставке новых записей в DOM браузер сохраняет текущую позицию скролла.
         // Таким образом триггер загрузки данных срабатывает ещё раз и происходит зацикливание процесса загрузки.
@@ -4543,7 +4541,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterUpdate(oldOptions): void {
         this._loadedBySourceController = false;
-        this._preventServerSideColumnScroll = true;
         if (this._needScrollCalculation && !this.__error && !this._observerRegistered) {
             this._registerObserver();
             this._registerIntersectionObserver();

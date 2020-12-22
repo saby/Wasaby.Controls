@@ -49,7 +49,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     // endregion
 
     getGroupWrapperStyles() {
-        return this.getColspanStyles();
+        return this.getColspan();
     }
 
     getGroupWrapperClasses(expanderVisible?: boolean, theme): string {

@@ -1,7 +1,7 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <Controls.gridNew:View
             keyProperty="key"
-            colspanCalculationCallback="{{ _colspanCalculationCallback }}"
+            colspanCallback="{{ _colspanCallback }}"
             source="{{_viewSource}}"
             columns="{{_columns}}"/>
 </div>
