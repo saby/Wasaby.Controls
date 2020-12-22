@@ -2799,8 +2799,7 @@ const _private = {
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
-            forceInitVirtualScroll: options?.navigation?.view === 'infinity',
-            list: self
+            forceInitVirtualScroll: options?.navigation?.view === 'infinity'
         });
         const result = self._scrollController.handleResetItems();
         _private.handleScrollControllerResult(self, result);
