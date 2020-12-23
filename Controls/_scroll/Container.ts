@@ -130,7 +130,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
         // Если есть заголовки, фиксирующиеся снизу, то при построении нужно обновить им позицию,
         // т.к. они будут зафиксированы.
-        if (compatibility.touch || hasBottomHeaders()) {
+        // Если тени принудительно включены, то надо инициализировать заголовки, что бы отрисовать тени на них.
+        if (compatibility.touch || hasBottomHeaders() || this._shadows.hasVisibleShadow()) {
             this._initHeaderController();
         }
     }
@@ -306,9 +307,15 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         }
         const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
+
+        // Если принудительно включили тени изнутри, то надо инициализировать заголовки что бы отрисовать тени на них.
+        if (this._shadows.hasVisibleShadow()) {
+            this._initHeaderController();
+        }
         this._stickyHeaderController.setShadowVisibility(
                 this._shadows.top.isStickyHeadersShadowsEnabled(),
                 this._shadows.bottom.isStickyHeadersShadowsEnabled());
+
         this._updateStateAndGenerateEvents(this._state);
     }
 
