@@ -445,7 +445,7 @@ export function receiveLinksArray(stringNode: string): string[] {
    let linkParseExec = linkParseRegExp.exec(stringNode);
 
    while (linkParseExec !== null) {
-      let [match, email, emailDomain, link, simpleLinkPrefix, simpleLinkDomain, ending, noLink] = linkParseExec;
+      let [match, , , link, simpleLinkPrefix, simpleLinkDomain, ending] = linkParseExec;
       linkParseExec = linkParseRegExp.exec(stringNode);
       let nodeToPush: string[] | string;
       if (link) {
