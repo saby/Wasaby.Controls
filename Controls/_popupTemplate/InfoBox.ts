@@ -24,11 +24,11 @@ export interface IInfoboxTemplateOptions extends IControlOptions, IValidationSta
  *
  * @class Controls/_popupTemplate/InfoBox
  * @extends Core/Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @mixes Controls/_interface/IValidationStatus
- * @demo Controls-demo/Popup/TestInfoBox
+ * @demo Controls-demo/PopupTemplate/Infobox/Index
  */
 export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
     protected _template: TemplateFunction = template;
