@@ -194,7 +194,9 @@ const _private = {
         }
 
         if (eventResult instanceof Promise) {
+            self._children.baseControl.showIndicator('all');
             return eventResult.then(() => {
+                self._children.baseControl.hideIndicator();
                 return doExpand();
             });
         } else {
