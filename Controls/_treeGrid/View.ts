@@ -131,7 +131,7 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @name Controls/_treeGrid/View#expanderPosition
  * @cfg {Position} Расположение иконки для узла и скрытого узла.
  * @remark
- * Чтобы отобразить иконку узла в произвольном месте пользовательского шаблона, сделайте следующее:
+ * Чтобы разместить иконку узла в произвольном месте пользовательского шаблона, сделайте следующее:
  * 
  * 1. Опцию **expanderPosition** установите в значение "custom".
  * 2. В пользовательском шаблоне отображения элемента в опции contentTemplate укажите позицию для отображения иконки узла. Для этого поместите директиву {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} и в качестве встраиваемого шаблона укажите **expanderTemplate**.
@@ -141,6 +141,7 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Right/Index В следующем примере для контрола опция expanderPosition установлена в значение right.
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/RightWithColumnTemplate/Index В следующем примере для контрола опция expanderPosition установлена в значение right, а также задан шаблон отображения колонки.
+ * @markdown
  */
 /**
  * @name Controls/_treeGrid/View#root

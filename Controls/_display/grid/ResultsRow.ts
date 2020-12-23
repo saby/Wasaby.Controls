@@ -68,7 +68,7 @@ export default class ResultsRow<T> extends Row<T> {
                 this._$columnItems = this._prepareColumnItems(this._$columns, factory);
             }
 
-            if (this._$owner.needMultiSelectColumn()) {
+            if (this._$owner.hasMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}
                 }));
