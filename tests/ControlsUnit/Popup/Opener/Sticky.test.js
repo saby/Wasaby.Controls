@@ -535,6 +535,7 @@ define(
 
          it('Sticky protect from wrong config', () => {
             let popupCfg = { ...getPositionConfig() };
+            popupCfg.fittingMode.horizontal = 'fixed';
             popupCfg.offset.horizontal = -50;
             let targetC = {
                top: 200,
