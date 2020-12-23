@@ -49,7 +49,7 @@ export default class extends Control {
         this._arrowState = {...this._arrowState};
     }
 
-    protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): void {
+    protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): boolean {
         switch (arrow) {
             case 'Begin':
                 this._children.list.scrollToItem(0, true, true);

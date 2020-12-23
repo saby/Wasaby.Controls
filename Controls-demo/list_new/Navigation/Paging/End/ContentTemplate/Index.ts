@@ -19,6 +19,7 @@ export default class extends Control {
             item.title = `Запись с ключом ${item.id}.`;
         }
     });
+    protected _textInfo: string = '';
     protected _count: number;
 
     protected _beforeMount(): void {
