@@ -3,7 +3,7 @@ import { Model as EntityModel } from 'Types/entity';
 import Collection from './Collection';
 import Row from './Row';
 import { IColumn } from 'Controls/grid';
-import {TColspanCallbackResult, TResultsColspanCallback} from './mixins/Grid';
+import { TColspanCallbackResult, TResultsColspanCallback } from './mixins/Grid';
 
 
 export type TResultsPosition = 'top' | 'bottom';
@@ -12,7 +12,7 @@ export interface IOptions<T> {
     owner: Collection<T>;
     resultsTemplate: TemplateFunction;
     results: EntityModel;
-    resultsColspanCallback: TResultsColspanCallback;
+    resultsColspanCallback?: TResultsColspanCallback;
 }
 
 export default class ResultsRow<T> extends Row<T> {
@@ -40,10 +40,15 @@ export default class ResultsRow<T> extends Row<T> {
         return this._$results;
     }
 
+    setResultsColspanCallback(resultsColspanCallback: TResultsColspanCallback): void {
+        this._$resultsColspanCallback = resultsColspanCallback;
+        this._reinitializeColumns();
+    }
+
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
         const colspanCallback = this._$resultsColspanCallback;
         if (colspanCallback) {
-            return colspanCallback(column, columnIndex, this._$owner.isEditing());
+            return colspanCallback(column, columnIndex);
         }
         return undefined;
     }
