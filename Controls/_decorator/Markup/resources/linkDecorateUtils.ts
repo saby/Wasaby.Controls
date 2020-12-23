@@ -452,6 +452,18 @@ export function receiveLinksArray(stringNode: string): string[] {
    return result;
 }
 
+/**
+ * Функция для обработки ссылок. Проверяет корректность ссылки и возвращает параметр,
+ * показывающий, есть ли корректная ссылка и саму ссылку
+ * @param {string} link
+ * @param {string} simpleLinkDomain
+ * @param {string} ending
+ * @param {boolean} hasAnyLink
+ * @param {string} simpleLinkPrefix
+ * @param {string} match
+ * @param {boolean} onlyLinks
+ * @return {boolean, string | string[]}
+ */
 function processLink(link: string, simpleLinkDomain: string, ending: string,
    hasAnyLink: boolean, simpleLinkPrefix: string, match: string, onlyLinks: boolean):
    [boolean, string | string[]] {
