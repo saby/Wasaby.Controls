@@ -1236,7 +1236,7 @@ define([
             assert.deepEqual(result, checkResultNode);
          });
 
-         it('without protocol - 4', function() {
+         it('without protocol - 4, get multiple links', function() {
             var str = 'my page on vk.com is vk.com/id0';
             var result = ['http://vk.com', 'http://vk.com/id0'];
             var checkResultNode = linkDecorateUtils.receiveLinksArray(str);
