@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/End/Cont
 import {Memory} from 'Types/source';
 import {generateData} from '../../../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import {CrudEntityKey} from 'Types/source';
 
 interface IItem {
     title: string;
@@ -30,7 +31,7 @@ export default class extends Control {
         });
     }
 
-    protected _updateCount(e: SyntheticEvent, key: number): void {
+    protected _updateCount(e: SyntheticEvent, key: CrudEntityKey): void {
         this._count = 99 - key;
     }
 
