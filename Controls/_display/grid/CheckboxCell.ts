@@ -42,21 +42,8 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
        cursor: string = 'pointer',
        templateHighlightOnHover: boolean = true
     ): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
-
-        let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
-        contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
-        contentClasses += `controls-Checkbox__iconWrapper_inList_theme-${theme} `;
-
-        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
-            contentClasses += 'controls-ListView__checkbox-onhover ';
-        }
-
-        if (templateHighlightOnHover !== false) {
-            contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
-        }
-
-        return contentClasses;
+        // Навешиваем классы в Row::getMultiSelectClasses, т.к. если позиция custom, то мы не создадим CheckboxCell
+        return '';
     }
 
     getTemplate(multiSelectTemplate: TemplateFunction): TemplateFunction|string {

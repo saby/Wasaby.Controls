@@ -384,9 +384,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         // left <-> right
         const cellPadding = this._$column.cellPadding;
 
+        const isFirstColumnAfterCheckbox = this.getColumnIndex() === 1 && this._$owner.hasMultiSelectColumn();
         if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
-        } else if (!this.isFirstColumn()) {
+        } else if (!this.isFirstColumn() && !isFirstColumnAfterCheckbox) {
             classes += ' controls-Grid__cell_spacingLeft';
             if (cellPadding?.left) {
                 classes += `_${cellPadding.left}`;

@@ -149,6 +149,33 @@ export default abstract class Row<T> {
         return stickyProperties as string[];
     }
 
+    getMultiSelectClasses(
+       theme: string,
+       backgroundColorStyle: string,
+       cursor: string = 'pointer',
+       templateHighlightOnHover: boolean = true
+    ): string {
+        // TODO должно быть super.getMultiSelectPosition, но мы внутри миксина
+        const hoverBackgroundStyle = this.getHoverBackgroundStyle();
+
+        let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        contentClasses += `controls-Checkbox__iconWrapper_inList_theme-${theme} `;
+
+        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+            contentClasses += 'controls-ListView__checkbox-onhover ';
+        }
+
+        if (templateHighlightOnHover !== false) {
+            contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
+        }
+
+        contentClasses += ` controls-GridView__checkbox_theme-${theme}`;
+        contentClasses += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
+
+        return contentClasses;
+    }
+
     shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
         const stickyLadder = this.getStickyLadder();
         const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
@@ -380,6 +407,7 @@ export default abstract class Row<T> {
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;
     abstract isEditing(): boolean;
+    abstract isSelected(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
 }
