@@ -11,9 +11,10 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
-    readonly Markable = true;
-    readonly SelectableItem = true;
-    readonly LadderSupport = true;
+    readonly Markable: boolean = true;
+    readonly SelectableItem: boolean = true;
+    readonly LadderSupport: boolean = true;
+    readonly DraggableItem: boolean = true;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -24,7 +25,7 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
 
     shouldDisplayExpanderBlock(column: GridCell<T, TreeGridDataRow<T>>): boolean {
         const columnIndex = column.getColumnIndex();
-        const hasMultiSelect = this._$owner.needMultiSelectColumn();
+        const hasMultiSelect = this._$owner.hasMultiSelectColumn();
         return columnIndex === 0 && !hasMultiSelect || columnIndex === 1 && hasMultiSelect;
     }
 

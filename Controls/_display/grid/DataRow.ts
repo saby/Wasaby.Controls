@@ -16,6 +16,7 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
     readonly LadderSupport = true;
     readonly Markable = true;
     readonly SelectableItem = true;
+    readonly DraggableItem = true;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -32,9 +33,15 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
         if (this._$columns && this.hasItemActionsSeparatedCell()) {
             this._$columnItems.push(new ItemActionsCell({
                 owner: this,
+                isFixed: true,
                 column: {}
             }))
         }
+    }
+
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        super.setEditing(editing, editingContents, silent);
+        this._reinitializeColumns();
     }
 }
 
