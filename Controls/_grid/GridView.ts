@@ -3,7 +3,7 @@ import {ListView, CssClassList} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
 import {
     COLUMN_SCROLL_JS_SELECTORS,
@@ -354,7 +354,7 @@ var
         _defaultItemTemplate: GridItemTemplate,
         _headerContentTemplate: HeaderContentTpl,
 
-        _notifyHandler: tmplNotify,
+        _notifyHandler: EventUtils.tmplNotify,
         _columnScrollContainerClasses: '',
         _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
@@ -610,7 +610,6 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._itemClickTarget = e.target;
                 this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
             }
         },
@@ -799,20 +798,11 @@ var
             }
         },
 
-        beforeActivateRow(): void {
-            if (this._itemClickTarget) {
-                this._scrollToCellIfNeed(this._itemClickTarget as HTMLElement);
-                this._itemClickTarget = null;
-            }
-        },
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
-            this._scrollToCellIfNeed(e.target as HTMLElement);
-        },
-        _scrollToCellIfNeed(target: HTMLElement): void {
-            if (!this._isColumnScrollVisible() || target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
+            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
                 return;
             }
-            this._columnScrollController.scrollToElementIfHidden(target);
+            this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
             this._updateColumnScrollData();
         },
         _onNewHorizontalPositionRendered(e, newPosition) {

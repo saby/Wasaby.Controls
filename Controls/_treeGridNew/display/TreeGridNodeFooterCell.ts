@@ -26,7 +26,7 @@ export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeF
             /*if (!this.isFirstColumn()) {
                 classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}_theme-${theme}`;
             }*/
-            if (!this._$owner.needMultiSelectColumn() && this.isFirstColumn()) {
+            if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
                 classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme}`;
             }
 
@@ -34,7 +34,7 @@ export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeF
                 classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme}`;
             }
         } else {
-            if (!this._$owner.needMultiSelectColumn()) {
+            if (!this._$owner.hasMultiSelectColumn()) {
                 classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme}`;
             }
             classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme}`;

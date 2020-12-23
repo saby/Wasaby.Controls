@@ -86,6 +86,7 @@ export default class _Controller implements IDropdownController {
       };
       return this._loadItems(config).then((newItems) => {
          this._selectedItems = newItems;
+         this._sourceController = null;
          this._setItems(null);
          return {
             items: newItems,
@@ -254,7 +255,7 @@ export default class _Controller implements IDropdownController {
          return Promise.resolve();
       }
       if (popupOptions) {
-         this._popupOptions =  popupOptions;
+         this._popupOptions = popupOptions;
       }
       const openPopup = () => {
          return this._sticky.open(this._getPopupOptions(this._popupOptions));

@@ -74,6 +74,17 @@ export default class ShadowsModel extends mixin<VersionableMixin>(VersionableMix
         }
     }
 
+    hasVisibleShadow(): boolean {
+        let hasVisible: boolean = false;
+        for (const position in this._models) {
+            if (this._models[position].isVisible) {
+                hasVisible = true;
+                break;
+            }
+        }
+        return hasVisible;
+    }
+
     get top(): ShadowModel {
         return this._models.top;
     }

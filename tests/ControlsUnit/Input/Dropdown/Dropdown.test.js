@@ -5,9 +5,10 @@ define(
       'Types/source',
       'Types/collection',
       'Types/entity',
-      'Controls/popup'
-   ],
-   (dropdown, Clone, sourceLib, collection, entity, popup) => {
+      'Controls/popup',
+      'Controls/_dropdown/Util'
+],
+   (dropdown, Clone, sourceLib, collection, entity, popup, dropdownUtil) => {
       describe('Input/Dropdown', () => {
          let items = [
             {
@@ -75,6 +76,24 @@ define(
             assert.equal(ddl._icon, 'icon-16 icon-Admin icon-primary');
             ddl._prepareDisplayState(config, [{ id: null }]);
             assert.equal(ddl._icon, null);
+         });
+
+         it('_beforeMount loadSelectedItems', function() {
+            const ddl = getDropdown(config);
+            let isSelectedItemsLoad = false;
+            dropdownUtil.loadSelectedItems = () => {
+               isSelectedItemsLoad = true;
+            };
+            ddl._beforeMount({
+               navigation: true
+            });
+            assert.isFalse(isSelectedItemsLoad);
+
+            ddl._beforeMount({
+               navigation: true,
+               selectedKeys: [1, 2, 3]
+            });
+            assert.isTrue(isSelectedItemsLoad);
          });
 
          it('_prepareDisplayState hasMoreText', () => {

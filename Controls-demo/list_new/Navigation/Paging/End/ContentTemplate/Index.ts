@@ -2,6 +2,8 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/End/ContentTemplate/ContentTemplate';
 import {Memory} from 'Types/source';
 import {generateData} from '../../../../DemoHelpers/DataCatalog';
+import {SyntheticEvent} from 'Vdom/Vdom';
+import {CrudEntityKey} from 'Types/source';
 
 interface IItem {
     title: string;
@@ -18,6 +20,7 @@ export default class extends Control {
             item.title = `Запись с ключом ${item.id}.`;
         }
     });
+    protected _textInfo: string = '';
     protected _count: number;
 
     protected _beforeMount(): void {
@@ -28,11 +31,11 @@ export default class extends Control {
         });
     }
 
-    protected _updateCount(e, key) {
+    protected _updateCount(e: SyntheticEvent, key: CrudEntityKey): void {
         this._count = 99 - key;
     }
 
-    protected _onPagingArrowClick(event, arrow) {
+    protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): boolean {
         switch (arrow) {
             case 'End':
                 this._textInfo = 'Нажали кнопку "в конец" скролим к 95 элементу';
@@ -42,7 +45,7 @@ export default class extends Control {
         return false;
     }
 
-    protected _clear() {
+    protected _clear(): void {
         this._textInfo = '';
     }
 

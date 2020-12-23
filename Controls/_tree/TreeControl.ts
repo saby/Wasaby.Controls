@@ -7,7 +7,7 @@ import {RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 
 import { saveConfig } from 'Controls/Application/SettingsController';
-import {tmplNotify, keysHandler} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import { MouseButtons, MouseUp } from 'Controls/popup';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
 import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
@@ -134,59 +134,75 @@ const _private = {
         const baseSourceController = self._children.baseControl.getSourceController();
         const expanded = self._options.useNewModel ? !dispItem.isExpanded() : !listViewModel.isExpanded(dispItem);
         const options = self._options;
-        self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
-        // todo: удалить события itemExpand и itemCollapse в 20.2000.
-        self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-        if (
-            !_private.isExpandAll(self._options.expandedItems) &&
-            !baseSourceController.hasLoaded(nodeKey) &&
-            !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, nodeKey)
-        ) {
-            self._children.baseControl.showIndicator();
-            return baseSourceController
-                .load(undefined, nodeKey)
-                .addCallbacks((list) => {
-                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-                    listViewModel.setHasMoreStorage(
-                        _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
-                    );
-                    if (options.nodeLoadCallback) {
-                        options.nodeLoadCallback(list, nodeKey);
-                    }
-                }, (error) => {
-                    _private.processError(self, error);
-                    // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
-                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
-                })
-                .addCallback(() => {
-                    self._children.baseControl.hideIndicator();
-                });
-        } else {
+        const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
-            // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
-            let shouldCancelEditing = false;
-            if (self._editingItem) {
-                shouldCancelEditing = _private.hasInParents(
-                    self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
-                    self._editingItem.getKey(),
-                    dispItem.contents.getKey()
-                );
-            }
+        function doExpand() {
 
-            // TODO: Переписать
-            //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
-            if (shouldCancelEditing) {
-                return self.cancelEdit().then((result) => {
-                    if (!(result && result.canceled)) {
+            // todo: удалить события itemExpand и itemCollapse в 20.2000.
+            self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
+            if (
+                !_private.isExpandAll(self._options.expandedItems) &&
+                !baseSourceController.hasLoaded(nodeKey) &&
+                !dispItem.isRoot() &&
+                _private.shouldLoadChildren(self, nodeKey)
+            ) {
+                self._children.baseControl.showIndicator();
+                return baseSourceController
+                    .load(undefined, nodeKey)
+                    .addCallbacks((list) => {
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-                    }
-                    return result;
-                });
+                        listViewModel.setHasMoreStorage(
+                            _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
+                        );
+                        if (options.nodeLoadCallback) {
+                            options.nodeLoadCallback(list, nodeKey);
+                        }
+                    }, (error) => {
+                        _private.processError(self, error);
+                        // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
+                        _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
+                    })
+                    .addCallback(() => {
+                        self._children.baseControl.hideIndicator();
+                    });
             } else {
-                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+                // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
+                let shouldCancelEditing = false;
+                if (self._editingItem) {
+                    shouldCancelEditing = _private.hasInParents(
+                        self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
+                        self._editingItem.getKey(),
+                        dispItem.contents.getKey()
+                    );
+                }
+
+                // TODO: Переписать
+                //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
+                if (shouldCancelEditing) {
+                    return self.cancelEdit().then((result) => {
+                        if (!(result && result.canceled)) {
+                            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                        }
+                        return result;
+                    });
+                } else {
+                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                }
             }
+        }
+
+        if (eventResult instanceof Promise) {
+            self._children.baseControl.showIndicator('all');
+            return eventResult.then(() => {
+                self._children.baseControl.hideIndicator();
+                return doExpand();
+            }, () => {
+                self._children.baseControl.hideIndicator();
+            });
+        } else {
+            return doExpand();
         }
     },
     hasInParents(collection: Collection, childKey, stepParentKey): boolean {
@@ -557,7 +573,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _getHasMoreData: null,
     _expandOnDragData: null,
     _updateExpandedItemsAfterReload: false,
-    _notifyHandler: tmplNotify,
+    _notifyHandler: EventUtils.tmplNotify,
     _errorController: null,
     _errorViewConfig: null,
     _editingItem: null,
@@ -850,7 +866,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _draggingItemMouseMove(e, itemData, nativeEvent): void {
         e.stopPropagation();
         const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
-        if (dispItem.isNode()) {
+        const dndListController = this._children.baseControl.getDndListController();
+        if (dispItem.isNode() && dndListController.getDraggableItem().getContents().getKey() !== dispItem.getContents().getKey()) {
             const dndListController = this._children.baseControl.getDndListController();
             const targetElement = _private.getTargetRow(this, nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
@@ -873,7 +890,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!dispItem.isExpanded() && dndListController.getDraggableItem() !== dispItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!dispItem.isExpanded() && dndListController.getDraggableItem().getContents() !== dispItem.getContents() && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }
@@ -938,7 +955,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _onTreeViewKeyDown: function(event) {
-        keysHandler(event, HOT_KEYS, _private, this);
+        EventUtils.keysHandler(event, HOT_KEYS, _private, this);
     },
 
     _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
