@@ -47,6 +47,17 @@ export type TColspanCallbackResult = number | 'end';
  */
 export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 
+/**
+ * @typedef {Function} TResultsColspanCallback
+ * @description
+ * Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @param {Controls/grid:IColumn} column Колонка грида
+ * @param {Number} columnIndex Индекс колонки грида
+ * @param {Boolean} isEditing Актуальное состояние редактирования по месту
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
+ */
+export type TResultsColspanCallback = (column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
+
 export interface IOptions {
     columns: TColumns;
     // TODO: Написать интерфейс и доку для TFooter
@@ -61,6 +72,7 @@ export interface IOptions {
     stickyColumn?: {};
     showEditArrow?: boolean;
     colspanCallback?: TColspanCallback;
+    resultsColspanCallback: TResultsColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
     stickyColumnsCount?: number
@@ -249,6 +261,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             results: this.getMetaResults(),
+            resultsColspanCallback: options.resultsColspanCallback,
             resultsTemplate: options.resultsTemplate
         });
     }

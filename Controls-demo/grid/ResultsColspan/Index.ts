@@ -1,5 +1,6 @@
 import { Control, TemplateFunction } from 'UI/Base';
 import { Memory } from 'Types/source';
+import { Model } from 'Types/entity';
 import { TColumns, THeader } from 'Controls/grid';
 /*import RawData from 'Controls-demo/grid/data/ResultsColspan';*/
 import * as Template from 'wml!Controls-demo/grid/ResultsColspan/ResultsColspan';
@@ -52,7 +53,7 @@ export default class extends Control {
     protected _columns: TColumns = [
         {
             displayProperty: 'name',
-            width: '200px'
+            width: '250px'
         },
         {
             displayProperty: 'count',
@@ -61,12 +62,14 @@ export default class extends Control {
         },
         {
             displayProperty: 'price',
-            width: '50px',
+            width: '75px',
+            align: 'right',
             resultTemplate: TotalResult
         },
         {
             displayProperty: 'total',
-            width: '50px'
+            width: '75px',
+            align: 'right'
         }
     ];
 
@@ -85,11 +88,9 @@ export default class extends Control {
         }
     ];
 
-    protected _metaData: {} = {
-        results: {
-            count: 8,
-            total: 726.38
-        }
+    protected _resultsData: {} = {
+        count: 8,
+        total: 726.38
     };
 
     protected _resultsColspanCallback(column, columnIndex, hasEditing): TColspanCallbackResult {
@@ -107,7 +108,12 @@ export default class extends Control {
     }
 
     protected _itemsReadyCallbackFn(items): void {
-        items.setMetaData(this._metaData);
+        const results = new Model({
+            rawData: this._resultsData
+        });
+        items.setMetaData({
+            results
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
