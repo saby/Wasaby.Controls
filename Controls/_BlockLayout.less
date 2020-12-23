@@ -70,8 +70,12 @@
  * Убрать body:not(.ws-is-ie10), когда откажемся от e10.
  * Страницы в IE11 перестали отображаться, проблема комплексная,
  * удалось выяснить что отключение данных стилей решает проблему.
+ * В chrome на android есть баг, из-за которого контейнер даже с pointer-events: none
+ * перекрывающий скроллируемую область приводит к тому, что скроллбар не показывается
+ * https://codepen.io/ondanila-the-flexboxer/pen/dypVbBX
+ * В хф делаем временное решение, в 21.1000 согласовываем ошибку со ссылкой на багрепорт в хром
  */
-body:not(.ws-is-ie10):not(.ws-is-ie11) .controls-BlockLayout__block_theme-@{themeName}:after {
+body:not(.ws-is-ie10):not(.ws-is-ie11) .controls-BlockLayout__block_theme-@{themeName}:after when not (@themeName = default) {
    content: '';
    position: absolute;
    pointer-events: none;
