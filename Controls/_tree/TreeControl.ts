@@ -198,6 +198,8 @@ const _private = {
             return eventResult.then(() => {
                 self._children.baseControl.hideIndicator();
                 return doExpand();
+            }, () => {
+                self._children.baseControl.hideIndicator();
             });
         } else {
             return doExpand();
