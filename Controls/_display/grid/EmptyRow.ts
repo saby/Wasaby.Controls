@@ -49,7 +49,7 @@ export default class EmptyRow<T> extends Row<T> {
             this._$columnItems = this._prepareColumnItems(this._$emptyTemplateColumns, factory);
         }
 
-        if (this._$owner.needMultiSelectColumn()) {
+        if (this._$owner.hasMultiSelectColumn()) {
             this._$columnItems.unshift(new factory({
                 column: {}
             }));
