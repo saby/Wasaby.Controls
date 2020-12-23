@@ -4,7 +4,7 @@
              class="controls-Checkbox__wrapper
                     controls-Checkbox__wrapper_theme-{{_options.theme}}
                     {{_options.readOnly ? 'controls-Checkbox__disabled' : 'controls-Checkbox__enabled'}}
-                    {{_options.value ? ' controls-Checked__checked'}}
+                    {{_options.value ? ' controls-Checked__checked' : ' controls-Checked__unchecked'}}
                     {{_options.value === null && _options.triState ? ' controls-ToggleButton__null'}}"
              title="{{_options.tooltip}}">
             <Controls._toggle.Checkbox.resources.CheckboxMarker
