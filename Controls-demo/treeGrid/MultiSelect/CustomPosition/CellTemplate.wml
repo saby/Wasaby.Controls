@@ -2,7 +2,7 @@
     <ws:contentTemplate>
         <div>
             {{ contentTemplate.itemData.item.get('title') }}
-            <ws:partial template="{{ multiSelectTemplate }}" attr:style="margin-top: -1px"/>
+            <ws:partial template="{{ multiSelectTemplate }}"/>
         </div>
     </ws:contentTemplate>
 </ws:partial>
