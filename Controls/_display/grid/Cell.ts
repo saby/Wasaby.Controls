@@ -202,21 +202,26 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getBackgroundColorColumnScrollClasses(backgroundColorStyle: string, theme: string): string {
-        if (backgroundColorStyle) {
-            return `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`
-        }
-
         // TODO: Брать от родителя
         // return options.backgroundStyle || options.style || 'default';
         return `controls-background-${'default'}_theme-${theme}`;
     }
-    _getBackgroundColorWrapperClasses(theme: string, templateHighlightOnHover?: boolean, backgroundColorStyle?: string, hoverBackgroundStyle?: string) {
+    protected _getBackgroundColorWrapperClasses(
+       theme: string,
+       templateHighlightOnHover?: boolean,
+       backgroundColorStyle?: string,
+       hoverBackgroundStyle?: string
+    ): string {
         let wrapperClasses = '';
         if (this._$owner.isEditing()) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
-            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
         } else if (templateHighlightOnHover !== false) {
-            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
+
+            if (backgroundColorStyle !== 'default') {
+                wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
+            }
             if (this._$owner.hasColumnScroll()) {
                 wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
             }

@@ -42,7 +42,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getContentClasses(theme: string): string {
-        return `controls-Grid__footer-cell__content`;
+        return 'controls-Grid__footer-cell__content';
     }
 
     getTemplate(): TemplateFunction|string {

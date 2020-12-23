@@ -126,6 +126,8 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from './_display/g
 export {GridResultsCell, IGridResultsCellOptions};
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from './_display/grid/FooterCell';
 export {GridFooterCell, IGridFooterCellOptions};
+import GridFooterRow, {IOptions as IGridFooterRowOptions} from './_display/grid/FooterRow';
+export {GridFooterRow, IGridFooterRowOptions};
 import GridGroupItem from './_display/grid/GroupItem';
 export {GridGroupItem};
 

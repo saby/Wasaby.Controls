@@ -10,6 +10,8 @@ import {
     itemsStrategy
 } from 'Controls/display';
 import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
+import { IOptions } from 'Controls/_display/grid/mixins/Grid';
+import TreeGridFooterRow from 'Controls/_treeGridNew/display/TreeGridFooterRow';
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
@@ -96,6 +98,15 @@ export default class TreeGridCollection<
     }
 
     // endregion
+
+    protected _initializeFooter(options: IOptions): TreeGridFooterRow<S> {
+        return new TreeGridFooterRow({
+            ...options,
+            owner: this,
+            footer: options.footer,
+            footerTemplate: options.footerTemplate
+        });
+    }
 
     // TODO по идее нужно это добавлять в Tree,
     //  но т.к. Tree используется в старой модели, чтобы ничего не сломать, добавляю здесь
