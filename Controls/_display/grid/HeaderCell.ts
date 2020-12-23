@@ -191,8 +191,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this._$align}`;
         }
 
-        contentClasses += this._getContentPaddingClasses(theme);
-
         return contentClasses;
     }
 

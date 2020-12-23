@@ -16,7 +16,7 @@ export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeF
         templateHighlightOnHover: boolean = true,
         colspan?: boolean
     ): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize() || 'null';
+        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
 
         let classes =
             'controls-TreeGrid__nodeFooterContent ' +

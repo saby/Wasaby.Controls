@@ -253,11 +253,8 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderPosition = this._$owner.getExpanderPosition();
 
-        if (this._$owner.getExpanderVisibility() === 'hasChildren') {
-            return !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
-        } else {
-            return expanderIcon !== 'none' && expanderPosition === 'default';
-        }
+        return this._$owner.getExpanderVisibility() === 'hasChildren'
+           && !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
     }
 
     getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {

@@ -3993,6 +3993,7 @@ Object.assign(Collection.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _$hoverBackgroundStyle: 'default',
+    _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
