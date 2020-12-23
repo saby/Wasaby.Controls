@@ -89,6 +89,19 @@ describe('Controls/scroll:Container', () => {
             sinon.assert.called(component._stickyHeaderController.init);
             compatibility.touch = touch
         });
+
+        it('should init sticky header controller if shadows are forced enabled.', () => {
+            component = createComponent(Container, { topShadowVisibility: SHADOW_VISIBILITY.VISIBLE });
+            sinon.stub(component._stickyHeaderController, 'init');
+            component._children = {
+                content: {
+                    getBoundingClientRect: () => undefined,
+                    children: []
+                }
+            };
+            component._afterMount({ topShadowVisibility: SHADOW_VISIBILITY.VISIBLE }, {});
+            sinon.assert.called(component._stickyHeaderController.init);
+        });
     });
 
     describe('_afterUpdate', () => {
@@ -495,6 +508,17 @@ describe('Controls/scroll:Container', () => {
             assert.isTrue(component._stickyHeaderController._isShadowVisible.top);
             assert.isTrue(component._stickyHeaderController._isShadowVisible.bottom);
             assert.strictEqual(component._shadows.getVersion(), version);
+            sinon.restore();
+        });
+        it('should init headers if mouse has not been hover and shadows are forced enabled.', () => {
+            const component = createComponent(Container, {});
+            sinon.stub(component, '_updateStateAndGenerateEvents');
+            sinon.stub(component._stickyHeaderController, 'init');
+            component._shadows._models.top._scrollState.canVerticalScroll = true;
+            component._shadows._models.bottom._scrollState.canVerticalScroll = true;
+            component._updateShadowVisibility(
+                event, { top: SHADOW_VISIBILITY.VISIBLE, bottom: SHADOW_VISIBILITY.VISIBLE });
+            sinon.assert.called(component._stickyHeaderController.init);
             sinon.restore();
         });
         it('should set always invisible', () => {
