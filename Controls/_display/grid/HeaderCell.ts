@@ -85,15 +85,16 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     isCheckBoxCell(): boolean {
-        return this._$owner.needMultiSelectColumn() && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
+        return this._$owner.hasMultiSelectColumn() && this._$owner.getHeaderConfig().indexOf(this._$column) === -1;
     }
 
     // region Аспект "Объединение колонок"
     _getColspanParams(): IColspanParams {
         if (this._$column.startColumn && this._$column.endColumn) {
+            const multiSelectOffset = this.isCheckBoxCell() ? 0 : +this._$owner.hasMultiSelectColumn();
             return {
-                startColumn: this._$column.startColumn,
-                endColumn: this._$column.endColumn
+                startColumn: this._$column.startColumn + multiSelectOffset,
+                endColumn: this._$column.endColumn + multiSelectOffset
             };
         }
         return super._getColspanParams();
@@ -170,7 +171,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
         if (this._$owner.hasColumnScroll()){
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, theme)}`;
+            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
 
         // _private.getBackgroundStyle(this._options, true);

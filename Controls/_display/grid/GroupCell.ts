@@ -36,7 +36,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
 
     // region Аспект "Объединение колонок"
     _getColspanParams(): IColspanParams {
-        const hasMultiSelect = this._$owner.needMultiSelectColumn();
+        const hasMultiSelect = this._$owner.hasMultiSelectColumn();
         const ladderStickyColumn = this._$owner.getStickyColumn();
         const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const startColumn = hasMultiSelect ? 2 : 1;

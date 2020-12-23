@@ -27,7 +27,7 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
 
     shouldDisplayExpanderBlock(column: GridCell<T, TreeGridDataRow<T>>): boolean {
         const columnIndex = column.getColumnIndex();
-        const hasMultiSelect = this._$owner.needMultiSelectColumn();
+        const hasMultiSelect = this._$owner.hasMultiSelectColumn();
         return columnIndex === 0 && !hasMultiSelect || columnIndex === 1 && hasMultiSelect;
     }
 

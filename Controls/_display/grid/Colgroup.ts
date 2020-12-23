@@ -42,8 +42,8 @@ export default class Colgroup<T> extends mixin<
         return this._$owner.getMultiSelectVisibility();
     }
 
-    needMultiSelectColumn(): boolean {
-        return this._$owner.needMultiSelectColumn();
+    hasMultiSelectColumn(): boolean {
+        return this._$owner.hasMultiSelectColumn();
     }
 
     reBuild(): void {
@@ -54,7 +54,7 @@ export default class Colgroup<T> extends mixin<
     protected _prepareCells(columns: TColumns): TColgroupCells<T> {
         const cells = [];
 
-        if (this.needMultiSelectColumn()) {
+        if (this.hasMultiSelectColumn()) {
             cells.push(new ColgroupCell({
                 owner: this
             }));
