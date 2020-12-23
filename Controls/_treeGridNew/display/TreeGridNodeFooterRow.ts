@@ -14,7 +14,7 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
         return this.getParent();
     }
 
-    getColumns(colspan: boolean|undefined): Array<TreeGridNodeFooterCell<S, TreeGridNodeFooterRow<S>>> {
+    getColumns(colspan?: boolean): Array<TreeGridNodeFooterCell<S, TreeGridNodeFooterRow<S>>> {
         const columns = super.getColumns();
         return colspan !== false ? [columns[0]] : columns;
     }

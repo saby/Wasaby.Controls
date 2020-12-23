@@ -78,7 +78,7 @@ export default abstract class Row<T> {
         return this._$owner.isFullGridSupport();
     }
 
-    getColumns(): Array<Cell<T, Row<T>>> {
+    getColumns(colspan?: boolean): Array<Cell<T, Row<T>>> {
         if (!this._$columnItems) {
             this._initializeColumns();
         }
@@ -93,12 +93,12 @@ export default abstract class Row<T> {
         return this._$owner.getHeaderConfig();
     }
 
-    getColumnsCount(): number {
-        return this.getColumns().length;
+    getColumnsCount(colspan?: boolean): number {
+        return this.getColumns(colspan).length;
     }
 
-    getColumnIndex(column: Cell<T, Row<T>>): number {
-        return this.getColumns().indexOf(column);
+    getColumnIndex(column: Cell<T, Row<T>>, colspan?: boolean): number {
+        return this.getColumns(colspan).indexOf(column);
     }
 
     getTopPadding(): string {

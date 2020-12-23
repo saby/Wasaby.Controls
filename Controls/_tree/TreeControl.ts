@@ -87,7 +87,10 @@ const _private = {
                 }
             });
         }
-        model.toggleExpanded(item);
+
+        if (!options.hasOwnProperty('expandedItemsChanged')) {
+            model.toggleExpanded(item);
+        }
 
         self._notify('expandedItemsChanged', [newExpandedItems]);
         self._notify('collapsedItemsChanged', [newCollapsedItems]);

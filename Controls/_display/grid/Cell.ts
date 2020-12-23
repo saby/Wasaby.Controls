@@ -412,16 +412,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return this._$column;
     }
 
-    getColumnIndex(): number {
-        return this._$owner.getColumnIndex(this);
+    getColumnIndex(colspan?: boolean): number {
+        return this._$owner.getColumnIndex(this, colspan);
     }
 
-    isFirstColumn(): boolean {
-        return this.getColumnIndex() === 0;
+    isFirstColumn(colspan?: boolean): boolean {
+        return this.getColumnIndex(colspan) === 0;
     }
 
-    isLastColumn(): boolean {
-        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
+    isLastColumn(colspan?: boolean): boolean {
+        return this.getColumnIndex(colspan) === this._$owner.getColumnsCount(colspan) - 1;
     }
 
     // endregion

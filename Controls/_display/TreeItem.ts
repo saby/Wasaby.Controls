@@ -249,16 +249,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return expanderSize || this._$owner.getExpanderSize();
     }
 
-    shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
+    shouldDisplayExpanderPadding(tmplExpanderIcon: string): boolean {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
-        const expanderSize = this.getExpanderSize(tmplExpanderSize);
         const expanderPosition = this._$owner.getExpanderPosition();
 
         if (this._$owner.getExpanderVisibility() === 'hasChildren') {
             return !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
         } else {
-            // TODO по идее в expanderSize должно быть дефолтное значение 's' и тогда проверка !expanderSize неправильная
-            return !expanderSize && (expanderIcon !== 'none' && expanderPosition === 'default');
+            return expanderIcon !== 'none' && expanderPosition === 'default';
         }
     }
 

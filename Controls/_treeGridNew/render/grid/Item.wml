@@ -15,7 +15,7 @@
                      expanderIcon="{{item.getExpanderIcon(expanderIcon)}}"
                      expanderSize="{{item.getExpanderSize(expanderSize)}}"/>
       </ws:if>
-      <ws:else data="{{item.shouldDisplayExpanderPadding(expanderIcon, expanderSize)}}">
+      <ws:else data="{{item.shouldDisplayExpanderPadding(expanderIcon)}}">
          <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
       </ws:else>
    </ws:if>
