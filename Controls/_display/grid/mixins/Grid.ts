@@ -16,6 +16,7 @@ import DataRow from '../DataRow';
 import FooterRow from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
+import EmptyRow from '../EmptyRow';
 
 
 type THeaderVisibility = 'visible' | 'hasdata';
@@ -30,6 +31,12 @@ type TResultsVisibility = 'visible' | 'hasdata';
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
 
 /**
+ * @description
+ * Тип результата, возвращаемого из функции colspanCallback (функции обратного вызова для расчёта объединения колонок строки).
+ */
+export type TColspanCallbackResult = number | 'end';
+
+/**
  * @typedef {Function} TColspanCallback
  * @description
  * Функция обратного вызова для расчёта объединения колонок строки (колспана).
@@ -37,9 +44,23 @@ export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
  * @param {Controls/grid:IColumn} column Колонка грида
  * @param {Number} columnIndex Индекс колонки грида
  * @param {Boolean} isEditing Актуальное состояние редактирования элемента
- * @returns number Количество объединяемых колонок, учитывая текущую
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  */
-export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => number;
+export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
+
+/**
+ * @typedef {Object} IEmptyTemplateColumn
+ * @description
+ * Объект конфигурации колонки представления пустой таблицы.
+ * @param {TemplateFunction} template Элемент, для которого рассчитывается объединение
+ * @param {Number} startColumn Начальный индекс колонки.
+ * @param {Number} endColumn Конечный индекс колонки.
+ */
+export interface IEmptyTemplateColumn {
+    template: TemplateFunction;
+    startColumn?: number;
+    endColumn?: number;
+}
 
 export interface IOptions {
     columns: TColumns;
@@ -57,7 +78,9 @@ export interface IOptions {
     colspanCallback?: TColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
-    stickyColumnsCount?: number
+    stickyColumnsCount?: number;
+    emptyTemplate?: TemplateFunction;
+    emptyTemplateColumns?: IEmptyTemplateColumn[];
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -81,6 +104,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
+    protected _$emptyGridRow: EmptyRow<S>;
+    protected _$emptyTemplate: TemplateFunction;
+    protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
@@ -102,6 +128,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
         }
+
+        if (this._$emptyTemplate || this._$emptyTemplateColumns) {
+            this._$emptyGridRow = new EmptyRow<S>({
+                owner: this,
+                emptyTemplate: this._$emptyTemplate,
+                emptyTemplateColumns: this._$emptyTemplateColumns
+            });
+        }
     }
 
     getColumnsConfig(): TColumns {
@@ -122,6 +156,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     hasHeader(): boolean {
         return !!this.getHeader();
+    }
+
+    getEmptyGridRow(): EmptyRow<S> {
+        return this._$emptyGridRow;
     }
 
     getFooter(): FooterRow<S> {
@@ -146,7 +184,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
-    getColspanCallback(): Function {
+    getColspanCallback(): TColspanCallback {
         return this._$colspanCallback;
     }
 
@@ -290,7 +328,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    needMultiSelectColumn(): boolean {
+    hasMultiSelectColumn(): boolean {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
     }
 
@@ -341,5 +379,7 @@ Object.assign(Grid.prototype, {
     _$editArrowVisibilityCallback: null,
     _$colspanCallback: null,
     _$columnScroll: false,
-    _$stickyColumnsCount: 1
+    _$stickyColumnsCount: 1,
+    _$emptyTemplate: null,
+    _$emptyTemplateColumns: null
 });

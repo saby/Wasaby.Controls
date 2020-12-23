@@ -12,7 +12,7 @@ export interface IDigitButtonsOptions extends IControlOptions {
 
 const SUR_STANDARD_ELEMENTS_STEP = 3;
 const SUR_NUMBERS_ELEMENTS_STEP = 1;
-const DOTS = '. . .'
+const DOTS = '. . .';
 
 type DigitElem = number | '. . .';
 
@@ -26,12 +26,14 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
     _digits: DigitElem[] | null = null;
 
     protected _beforeMount(newOptions: IDigitButtonsOptions): void {
-        this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey, (newOptions.mode === 'numbers' ? 'numbers' : 'standard'));
+        this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey,
+            (newOptions.mode === 'numbers' ? 'numbers' : 'standard'));
     }
 
     protected _beforeUpdate(newOptions: IDigitButtonsOptions): void {
         if (newOptions.count !== this._options.count || newOptions.selectedKey !== this._options.selectedKey) {
-            this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey, (newOptions.mode === 'numbers' ? 'numbers' : 'standard'));
+            this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey,
+                (newOptions.mode === 'numbers' ? 'numbers' : 'standard'));
         }
     }
 
@@ -42,7 +44,8 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
     static _theme: string[] = ['Controls/paging'];
 
     // получаем граничные цифры, окружающие выбранный элемент, по условия +-3 в обе стороны (4 5 6 [7] 8 9 10)
-    private static _getSurroundElemens(digitsCount: number, currentDigit: number, mode: string = 'standard'): ISurroundElements {
+    private static _getSurroundElemens(digitsCount: number, currentDigit: number,
+                                       mode: string = 'standard'): ISurroundElements {
         let firstElem: number;
         let lastElem: number;
         if (mode === 'standard') {
