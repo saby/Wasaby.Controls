@@ -43,7 +43,8 @@ const GridView = ListView.extend({
             // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
             // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
             // списочного контрола.
-            this._showFakeGridWithColumnScroll = !options.preventServerSideColumnScroll;
+            // TODO: Включить по задаче https://online.sbis.ru/opendoc.html?guid=07aaefb8-3790-4e8b-bd58-6ac7613a1c8b
+            this._showFakeGridWithColumnScroll = false && !options.preventServerSideColumnScroll;
         }
 
         if (options.columnScroll) {

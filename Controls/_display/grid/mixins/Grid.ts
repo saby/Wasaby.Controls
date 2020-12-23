@@ -328,7 +328,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    needMultiSelectColumn(): boolean {
+    hasMultiSelectColumn(): boolean {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
     }
 

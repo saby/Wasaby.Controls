@@ -16,10 +16,11 @@ describe('Controls/_display:GridHeaderRow', () => {
         const headerRow = new GridHeaderRow({
             owner: {
                 hasItemActionsSeparatedCell: () => false,
-                needMultiSelectColumn: () => true,
+                hasMultiSelectColumn: () => true,
                 getHeaderConfig: () => header,
                 getColumnsConfig: () => [{}],
-                isFullGridSupport: () => true
+                isFullGridSupport: () => true,
+                getStickyColumnsCount: () => {}
             },
             header,
             columns: [{}],

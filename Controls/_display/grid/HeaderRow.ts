@@ -41,9 +41,15 @@ export default class HeaderRow<T> extends Row<T> {
         if (this._$header) {
             this._$columnItems = [];
             const factory = this._getColumnsFactory();
-            this._$columnItems = this._$header.map((column) => factory({
-                column
-            }));
+            this._$columnItems = this._$header.map((column, index) => {
+                const isFixed = typeof column.endColumn !== 'undefined' ?
+                    (column.endColumn - 1) <= this.getStickyColumnsCount() : index < this.getStickyColumnsCount();
+
+                return factory({
+                    column,
+                    isFixed
+                })
+            });
             this._addCheckBoxColumnIfNeed();
 
             if (this.hasItemActionsSeparatedCell()) {
@@ -57,13 +63,16 @@ export default class HeaderRow<T> extends Row<T> {
 
     protected _addCheckBoxColumnIfNeed(): void {
         const factory = this._getColumnsFactory();
-        if (this._$owner.needMultiSelectColumn()) {
+        if (this._$owner.hasMultiSelectColumn()) {
             const {start, end} = this._$headerModel.getBounds().row;
             this._$columnItems.unshift(factory({
                 column: {
                     startRow: start,
-                    endRow: end
-                }
+                    endRow: end,
+                    startColumn: 1,
+                    endColumn: 2
+                },
+                isFixed: true
             }));
         }
     }
