@@ -741,6 +741,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       let result;
 
       if (!this._searchResolverController) {
+         if (this._searchLibraryLoader) {
+            this._searchLibraryLoader.cancel();
+            this._searchLibraryLoader = null;
+         }
          result = this._getSearchLibrary()
              .then((searchLibrary) => {
                 this._searchResolverController = new searchLibrary.SearchResolver(
