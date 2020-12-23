@@ -36,7 +36,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
         return wrapperClasses;
     }
 
-    getMultiSelectClasses(
+    getContentClasses(
        theme: string,
        backgroundColorStyle: string,
        cursor: string = 'pointer',
@@ -47,6 +47,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
         let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
         contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
         contentClasses += `controls-Checkbox__iconWrapper_inList_theme-${theme} `;
+
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
             contentClasses += 'controls-ListView__checkbox-onhover ';
         }
@@ -54,6 +55,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
         if (templateHighlightOnHover !== false) {
             contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
         }
+
         return contentClasses;
     }
 

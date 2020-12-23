@@ -27,7 +27,7 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
         return templateFromProperty || userTemplate || this.getDefaultTemplate();
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         super._initializeColumns();
 
         if (this._$columns && this.hasItemActionsSeparatedCell()) {
