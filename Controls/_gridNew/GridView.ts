@@ -6,7 +6,6 @@ import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
-import { prepareEmptyEditingColumns, prepareEmptyColumns } from 'Controls/Utils/GridEmptyTemplateUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -31,8 +30,6 @@ const GridView = ListView.extend({
 
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
-        this._prepareColumnsForEmptyEditingTemplate = this._prepareColumnsForEmptyEditingTemplate.bind(this);
-        this._prepareColumnsForEmptyTemplate = this._prepareColumnsForEmptyTemplate.bind(this);
 
         if (options.columnScroll && options.columnScrollStartPosition === 'end' && options.isFullGridSupport) {
             // В таблице с горизонтальным скроллом изначально прокрученным в конец используется фейковая таблица.
@@ -152,6 +149,10 @@ const GridView = ListView.extend({
         return this._getGridTemplateColumns(options);
     },
 
+    _isEmpty(): boolean {
+        return !this._listModel?.getCount();
+    },
+
     _onItemMouseMove(event, collectionItem) {
         GridView.superclass._onItemMouseMove.apply(this, arguments);
         this._setHoveredCell(collectionItem.item, event.nativeEvent);
@@ -210,54 +211,6 @@ const GridView = ListView.extend({
             }
             this._notify('hoveredCellChanged', [item, container, hoveredCellIndex, hoveredCellContainer]);
         }
-    },
-
-    // todo Переписать, сделать аналогично Footer/Header/Results
-    _prepareColumnsForEmptyEditingTemplate(columns, topSpacing, bottomSpacing) {
-        return prepareEmptyEditingColumns({
-            gridColumns: this._options.columns,
-            emptyTemplateSpacing: {
-                top: topSpacing,
-                bottom: bottomSpacing
-            },
-            isFullGridSupport: this._options.isFullGridSupport,
-            hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-            colspanColumns: columns,
-            itemPadding: this._options.itemPadding || {},
-            theme: this._options.theme,
-            editingBackgroundStyle: (this._options.editingConfig ? this._options.editingConfig.backgroundStyle : 'default')
-        });
-    },
-
-    _prepareColumnsForEmptyTemplate(columns, content, topSpacing, bottomSpacing, theme) {
-        const ladderStickyColumn = GridLadderUtil.getStickyColumn({
-            columns: this._options.columns
-        });
-        let gridColumns;
-        if (ladderStickyColumn) {
-            gridColumns = (ladderStickyColumn.property.length === 2 ? [{}, {}] : [{}]).concat(this._options.columns);
-        } else {
-            gridColumns = this._options.columns;
-        }
-
-        return prepareEmptyColumns({
-            gridColumns,
-            emptyTemplateSpacing: {
-                top: topSpacing,
-                bottom: bottomSpacing
-            },
-            isFullGridSupport: this._options.isFullGridSupport,
-            hasMultiSelect: this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default',
-            colspanColumns: content ? [{template: content}] : columns,
-            itemPadding: this._options.itemPadding || {},
-            theme: this._options.theme,
-            afterPrepareCallback(column, index, columns): void {
-                column.classes = 'controls-ListView__empty ' +
-                    'controls-ListView__empty_theme-default ' +
-                    `controls-ListView__empty_topSpacing_${topSpacing}_theme-${theme} ` +
-                    `controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
-            }
-        });
     },
 
     _onWrapperMouseEnter: function() {

@@ -170,7 +170,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
         if (this._$owner.hasColumnScroll()){
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, theme)}`;
+            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
 
         // _private.getBackgroundStyle(this._options, true);
