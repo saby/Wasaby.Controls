@@ -126,66 +126,81 @@ const _private = {
         const expanded = !listViewModel.isExpanded(dispItem);
         const options = self._options;
         const nodeSourceControllers = _private.getNodesSourceControllers(self);
-        self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
+        const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
-        // todo: удалить события itemExpand и itemCollapse в 20.2000.
-        self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-        if (
-            !_private.isExpandAll(self._options.expandedItems) &&
-            !nodeSourceControllers.has(nodeKey) &&
-            !dispItem.isRoot() &&
-            _private.shouldLoadChildren(self, nodeKey)
-        ) {
-            self._children.baseControl.showIndicator();
-            filter[options.parentProperty] = nodeKey;
-            return _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
-                .load(filter, options.sorting, null, null, nodeKey)
-                .addCallbacks((list) => {
-                    listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
-                    baseSourceController.calculateState(list, null, nodeKey);
-                    if (options.uniqueKeys) {
-                        listViewModel.mergeItems(list);
-                    } else {
-                        listViewModel.appendItems(list);
-                    }
-                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-                    if (options.nodeLoadCallback) {
-                        options.nodeLoadCallback(list, nodeKey);
-                    }
-                }, (error) => {
-                    _private.processError(self, error);
-                    // Нужно удалить sourceController для узла, чтоб содержимое узла считалось незагруженным.
-                    _private.clearNodeSourceController(self, nodeKey);
-                    // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
-                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
-                })
-                .addCallback(() => {
-                    self._children.baseControl.hideIndicator();
-                });
-        } else {
+        function doExpand() {
 
-            // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
-            let shouldCancelEditing = false;
-            if (self._editingItem) {
-                shouldCancelEditing = _private.hasInParents(
-                    self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
-                    self._editingItem.getKey(),
-                    dispItem.contents.getKey()
-                );
-            }
-
-            // TODO: Переписать
-            //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
-            if (shouldCancelEditing) {
-                return self.cancelEdit().then((result) => {
-                    if (!(result && result.canceled)) {
+            // todo: удалить события itemExpand и itemCollapse в 20.2000.
+            self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
+            if (
+                !_private.isExpandAll(self._options.expandedItems) &&
+                !nodeSourceControllers.has(nodeKey) &&
+                !dispItem.isRoot() &&
+                _private.shouldLoadChildren(self, nodeKey)
+            ) {
+                self._children.baseControl.showIndicator();
+                filter[options.parentProperty] = nodeKey;
+                return _private.createSourceControllerForNode(self, nodeKey, options.source, options.navigation)
+                    .load(filter, options.sorting, null, null, nodeKey)
+                    .addCallbacks((list) => {
+                        listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
+                        baseSourceController.calculateState(list, null, nodeKey);
+                        if (options.uniqueKeys) {
+                            listViewModel.mergeItems(list);
+                        } else {
+                            listViewModel.appendItems(list);
+                        }
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-                    }
-                    return result;
-                });
+                        if (options.nodeLoadCallback) {
+                            options.nodeLoadCallback(list, nodeKey);
+                        }
+                    }, (error) => {
+                        _private.processError(self, error);
+                        // Нужно удалить sourceController для узла, чтоб содержимое узла считалось незагруженным.
+                        _private.clearNodeSourceController(self, nodeKey);
+                        // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
+                        _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
+                    })
+                    .addCallback(() => {
+                        self._children.baseControl.hideIndicator();
+                    });
             } else {
-                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+                // Если сворачивается узел, внутри которого запущено редактирование, то его следует закрыть
+                let shouldCancelEditing = false;
+                if (self._editingItem) {
+                    shouldCancelEditing = _private.hasInParents(
+                        self._options.useNewModel ? listViewModel : listViewModel.getDisplay(),
+                        self._editingItem.getKey(),
+                        dispItem.contents.getKey()
+                    );
+                }
+
+                // TODO: Переписать
+                //  https://online.sbis.ru/opendoc.html?guid=974ac162-4ee4-48b5-a2b7-4ff75dccb49c
+                if (shouldCancelEditing) {
+                    return self.cancelEdit().then((result) => {
+                        if (!(result && result.canceled)) {
+                            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                        }
+                        return result;
+                    });
+                } else {
+                    _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+                }
             }
+        }
+
+        if (eventResult instanceof Promise) {
+            self._children.baseControl.showIndicator('all');
+            return eventResult.then(() => {
+                self._children.baseControl.hideIndicator();
+                return doExpand();
+            }, () => {
+                self._children.baseControl.hideIndicator();
+            });
+        } else {
+            return doExpand();
         }
     },
     hasInParents(collection: Collection, childKey, stepParentKey): boolean {
