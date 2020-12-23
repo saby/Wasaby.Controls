@@ -59,7 +59,7 @@ import {IHashMap} from 'Types/declarations';
  * 
  * @public
  * @author Герасимов А.М.
- * @demo Controls-demo/Buttons/SelectorButtonPG
+ * @demo Controls-demo/Lookup/Selector/Index
  */
 /*
  * @name Controls/_lookup/Button#showSelectorCaption

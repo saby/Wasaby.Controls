@@ -1,6 +1,5 @@
-import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Adapter/Mask/Mask');
+import controlTemplate = require('wml!Controls-demo/Input/AdapterMask/Template');
 
 class Mask extends Control<IControlOptions> {
     protected _valueAdapterMask: string = '874998';
