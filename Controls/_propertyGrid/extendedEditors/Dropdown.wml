@@ -1,0 +1,9 @@
+<div class="controls-PropertyGrid__editor_dropdown_control ws-flexbox">
+   <Controls.Container.Async templateName="{{_templateName}}">
+      <ws:partial template="{{content.resolvedTemplate}}"
+                  scope="{{_options}}"
+                  bind:selectedKeys="_selectedKeys"
+                  on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
+   </Controls.Container.Async>
+
+</div>
