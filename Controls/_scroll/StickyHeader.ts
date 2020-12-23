@@ -537,7 +537,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
                 }
                 if (this._minHeight) {
                     if (isTop && this._stickyHeadersHeight.top) {
-                        style += `top: ${this._stickyHeadersHeight.top}px;`;
+                        style = `top: ${this._stickyHeadersHeight.top}px;`;
                     }
                     style += 'min-height:' + this._minHeight + 'px;';
                 }
