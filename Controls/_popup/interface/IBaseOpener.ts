@@ -4,9 +4,8 @@ import {List} from 'Types/collection';
 import {IControlOptions} from 'UI/Base';
 import {ILoadingIndicatorOptions} from 'Controls/LoadingIndicator';
 
-
 /**
- * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IBaseOpener здесь}. 
+ * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IBaseOpener здесь}.
  * @public
  */
 export interface IBasePopupOptions {
@@ -589,11 +588,13 @@ export interface IBaseOpener {
  *       _getKeyByParams(params) {
  *           // Нужно получить из параметров уникальное значение для данного набора параметров, чтобы закэшировать ответ.
  *       }
- *       loadData(params) {
+ *       loadData(params, depsData) {
+ *           const paramFromDependency = depsData[0].getRow();
  *           return new SbisService({
  *               endpoint: myEndpoint
  *           }).call('myMethod', {
- *               key: params.param1
+ *               key: params.param1,
+ *               rec: paramFromDependency
  *           }).then((result) => {
  *               // Кэшируем результат
  *               this.setState(this._getKeyByParams(params), result);
@@ -614,13 +615,18 @@ export interface IBaseOpener {
  *             template: 'MyPopupTemplate',
  *             dataLoaders: [
  *                 [{
+ *                      key: 'loaderForDependencies',
+ *                      module: 'MyLoaderForDeps'
+ *                 }],
+ *                 [{
  *                     key: 'myLoaderKey',
  *                     module: 'MyLoader',
+ *                     dependencies: ['loaderForDependencies'],
  *                     params: {
  *                         param1: 'data1'
  *                     }
  *                 }]
-*              ],
+ *             ],
  *             templateOptions: {
  *                 record: null
  *             }
@@ -655,6 +661,10 @@ export interface IBaseOpener {
  * @description Описание загрузчика данных
  * @property {String} module Имя модуля загрузчика, который реализует метод loadData.
  * @property {String} key Имя загрузчика. По умолчанию имя загрузчика берется из поля module.
+ * @property {String[]} dependencies массив ключей загрузчиков от которых зависит данный.
+ * Он будет вызван только после того, как отработают загрузичики из данного списка.
+ * Их результаты придут в функцию загрузчика вторым аргументом.
+ * Загрузчики из данного списка должны идти по порядку раньше текущего.
  * @property {Object} params Параметры, передающиеся в метод loadData.
  */
 export interface IDataLoader {
