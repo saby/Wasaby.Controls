@@ -592,6 +592,7 @@ define(
                assert.equal(dropdownController._selectedItems.getCount(), 1);
                assert.equal(dropdownController._selectedItems.at(0).getKey(), '8');
                assert.isNull(dropdownController._items);
+               assert.isNull(dropdownController._sourceController);
             });
 
             it('_resolveLoadedItems', () => {

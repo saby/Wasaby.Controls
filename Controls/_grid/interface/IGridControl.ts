@@ -570,6 +570,12 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#emptyTemplateColumns
+ * @cfg {Array.<IEmptyTemplateColumn>} Описывает колонки пустой таблицы.
+ * @markdown
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#showEditArrow
  * @cfg {Boolean} Позволяет отображать по ховеру кнопку в первой колонке и в меню по свайпу.
  * @remark
