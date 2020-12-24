@@ -82,7 +82,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
                 endColumn
             };
         }
-    };
+    }
 
     getColspan(): string {
         const colspanParams = this._getColspanParams();

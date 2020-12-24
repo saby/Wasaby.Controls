@@ -114,8 +114,7 @@ import GridTableHeader from './_display/grid/TableHeader';
 export {GridTableHeader};
 import GridTableHeaderRow from './_display/grid/TableHeaderRow';
 export {GridTableHeaderRow};
-export {TColspanCallbackResult, TColspanCallback} from './_display/grid/mixins/Grid';
-export {IEmptyTemplateColumn} from './_display/grid/mixins/Grid';
+export { TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from './_display/grid/mixins/Grid';
 
 import GridDataRow, {IOptions as IGridDataRowOptions} from './_display/grid/DataRow';
 export {GridDataRow, IGridDataRowOptions};

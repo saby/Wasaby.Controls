@@ -8,7 +8,7 @@ define([
    'Controls/tree',
    'Controls/treeGrid',
    'Controls/grid',
-   'Controls/Utils/Toolbar',
+   'Controls/toolbars',
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
