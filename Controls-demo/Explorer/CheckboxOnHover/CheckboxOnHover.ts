@@ -3,7 +3,7 @@ import template = require('wml!Controls-demo/Explorer/CheckboxOnHover/CheckboxOn
 import {groupConstants as constView} from 'Controls/list';
 import ExplorerImages = require('Controls-demo/Explorer/ExplorerImages');
 import {HierarchicalMemory} from 'Types/source';
-import {showType} from 'Controls/Utils/Toolbar';
+import {showType} from 'Controls/toolbars';
 
 class Demo extends Control {
 
