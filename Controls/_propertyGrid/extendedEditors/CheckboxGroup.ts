@@ -5,7 +5,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 
 /**
- * Контрол используют в качестве редактора для выбора в группе флагов.
+ * Редактор для массива в виде группы чекбоксов.
  * @class Controls/_propertyGrid/extendedEditors/CheckboxGroup
  * @extends Core/Control
  * @author Мельникова Е.А.

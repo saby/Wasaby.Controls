@@ -5,7 +5,7 @@ import IEditor from 'Controls/_propertyGrid/IEditor';
 import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 
 /**
- * Контрол используют в качестве редактора для выбора временного интервала.
+ * Редактор для временного интервала.
  * @class Controls/_propertyGrid/extendedEditors/TimeInterval
  * @extends Core/Control
  * @author Мельникова Е.А.
