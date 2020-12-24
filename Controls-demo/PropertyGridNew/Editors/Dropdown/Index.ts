@@ -31,7 +31,6 @@ export default class Index extends Control<IControlOptions> {
                     filter: MemorySourceFilter()
                 }),
                 keyProperty: 'key',
-                editorMode: 'Input',
                 displayProperty: 'title',
                 searchParam: 'title'
             }

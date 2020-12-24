@@ -50,9 +50,9 @@ import EnumEditor = require("Controls/_propertyGrid/defaultEditors/Enum");
 import NumberEditor = require("Controls/_propertyGrid/defaultEditors/Number");
 import BooleanGroupEditor = require("Controls/_propertyGrid/extendedEditors/BooleanGroup");
 import FlatEnumEditor = require("Controls/_propertyGrid/extendedEditors/FlatEnum");
-import TimeIntervalEditor = require("Controls/_propertyGrid/extendedEditors/TimeInterval");
-import CheckboxGroupEditor = require("Controls/_propertyGrid/extendedEditors/CheckboxGroup");
-import DropdownEditor = require("Controls/_propertyGrid/extendedEditors/Dropdown");
+import {default as DropdownEditor} from 'Controls/_propertyGrid/extendedEditors/Dropdown';
+import {default as CheckboxGroupEditor} from 'Controls/_propertyGrid/extendedEditors/CheckboxGroup';
+import {default as TimeIntervalEditor} from 'Controls/_propertyGrid/extendedEditors/TimeInterval';
 
 import IPropertyGrid = require("Controls/_propertyGrid/IPropertyGrid");
 import IEditor = require("Controls/_propertyGrid/IEditor");

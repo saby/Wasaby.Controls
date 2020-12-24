@@ -10,28 +10,18 @@ interface IDropdownEditorOptions extends IEditorOptions{
 }
 
 /**
- * Контрол используют в качестве редактора для выбора из выпадающего списка.
+ * Редактор для массива в виде выпадающего списка.
  * @class Controls/_propertyGrid/extendedEditors/Dropdown
  * @extends Core/Control
  * @author Мельникова Е.А.
  * @public
  */
 
-/**
- * @name Controls/_propertyGrid/extendedEditors/Dropdown#editorMode
- * @cfg {String} Режим отображения редактора.
- * @variant Input В качестве редактора используется {@link Controls/dropdown:Input}.
- * @variant Button В качестве редактора используется {@link Controls/dropdown:Button}.
- * @variant Combobox В качестве редактора используется {@link Controls/dropdown:Combobox}.
- * @default Input
- */
 class DropdownEditor extends Control implements IEditor {
     protected _template: TemplateFunction = CheckboxGroupTemplate;
-    protected _templateName: string = '';
     protected _selectedKeys: string[]|number[] = null;
 
     protected _beforeMount(options?: IDropdownEditorOptions): void {
-        this._templateName = 'Controls/dropdown:' + options.editorMode;
         this._selectedKeys = options.propertyValue;
     }
 
