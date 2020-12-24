@@ -160,7 +160,7 @@ export default abstract class Row<T> {
 
         let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
         contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
-        contentClasses += `controls-Checkbox__iconWrapper_inList_theme-${theme} `;
+        contentClasses += `controls-CheckboxMarker_inList_theme-${theme} `;
 
         if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             contentClasses += 'controls-ListView__checkbox-onhover ';

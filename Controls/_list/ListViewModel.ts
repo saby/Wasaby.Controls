@@ -86,7 +86,7 @@ const _private = {
                            .add(EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE)
                            .add('controls-List_DragNDrop__notDraggable')
                            .add('js-controls-ColumnScroll__notDraggable')
-                           .add(`controls-Checkbox__iconWrapper_inList_theme-${theme}`)
+                           .add(`controls-CheckboxMarker_inList_theme-${theme}`)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
