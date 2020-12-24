@@ -5525,39 +5525,21 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _displayItemActionsOutside(itemData: CollectionItem<Model>): void {
+    _setDisplayItemActionsOutsideStyles(itemData: CollectionItem<Model>): void {
         const stylesContainer = this._children.itemActionsOutsideStyle as HTMLDivElement;
         const uniqueClass = _private.getViewUniqueClass(this);
-        const index = this._listViewModel.getIndex(itemData) + 1;
-        //     .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell  > .controls-itemActionsV_outside_theme-default,
-        //               .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper  > .controls-itemActionsV_outside_theme-default,
-        //               .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell .controls-Grid__row-cell__content  > .controls-itemActionsV_outside_theme-default,
-        //               .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-itemActionsV__container > .controls-itemActionsV_outside_theme-default {
-        //                 opacity: 1;
-        //                 visibility: visible;
-        //               }
-        stylesContainer.innerHTML = `
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) > .controls-itemActionsV_outside_theme-default {
-                opacity: 1;
-                visibility: visible;
-              }
-              `;
+        const index = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
+        stylesContainer.innerHTML = this._listViewModel.getDisplayItemActionsOutsideStyles(uniqueClass, index);
     },
 
     _setFreezeHoverStyles(itemData: CollectionItem<Model>): void {
         const stylesContainer = this._children.itemActionsOutsideStyle as HTMLDivElement;
         const uniqueClass = _private.getViewUniqueClass(this);
-        const index = this._listViewModel.getIndex(itemData) + 1;
-        const itemContainer = (this._container as HTMLDivElement).querySelector(`.controls-ListView__itemV:nth-child(${index})`) as HTMLDivElement;
+        const index = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
+        const hoveredContainer = this._listViewModel.getItemHoveredContainerSelector(uniqueClass, index);
+        const itemContainer = (this._container as HTMLDivElement).querySelector(hoveredContainer) as HTMLDivElement;
         const backgroundColor = getComputedStyle(itemContainer).backgroundColor;
-        stylesContainer.innerHTML += `
-              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})).controls-ListView__item_highlightOnHover_default_theme_${this._options.theme}:hover {
-                background-color: transparent;
-              }
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}).controls-ListView__item_highlightOnHover_default_theme_${this._options.theme} {
-                background-color: ${backgroundColor};
-              }
-              `;
+        stylesContainer.innerHTML += this._listViewModel.getItemFreezeHoverStyles(uniqueClass, index, backgroundColor);
     },
 
     _hideItemActionsOutside(): void {
@@ -5616,7 +5598,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             // Генерим новые стили показа itemActions
-            this._displayItemActionsOutside(itemData);
+            this._setDisplayItemActionsOutsideStyles(itemData);
             // Далее, выставляем новую запись как залипшую:
             this._freezeHover();
             this._setFreezeHoverStyles(itemData);
@@ -5644,7 +5626,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // стиль и отобразится безусловно следующее ухо, вместо текущего.
             // Полагаем, что если мы не залипли, то именно это поведение нам и нужно.
             if (!this._isItemHoverFrozen) {
-                this._displayItemActionsOutside(itemData);
+                this._setDisplayItemActionsOutsideStyles(itemData);
             }
 
             this._startFreezeHoverTimeout(itemData);
