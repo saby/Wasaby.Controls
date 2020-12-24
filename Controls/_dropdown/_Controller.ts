@@ -245,9 +245,10 @@ export default class _Controller implements IDropdownController {
       const preparedItem = this._prepareItem(item, this._options.keyProperty, this._source);
       this._source.update(preparedItem.clone(), {
          $_pinned: !preparedItem.get('pinned')
+      }).then(() => {
+         this._setItems(null);
+         this._open();
       });
-      this._setItems(null);
-      this._open();
    }
 
    private _open(popupOptions?: object): Promise<unknown[]> {
