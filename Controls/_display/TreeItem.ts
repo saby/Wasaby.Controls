@@ -76,17 +76,11 @@ export default class TreeItem<T extends Model = Model> extends mixin<
             this._$node = false;
         }
 
-        if (this._$node) {
-            this._$hasChildren = true;
-        }
-
-        if (options) {
-            // Если hasChildren не задали, то для узла по дефолту есть дети
-            if (options.hasChildren === undefined) {
-                this._$hasChildren = this._$node || this._$node === false;
-            } else {
-                this._$hasChildren = !!options.hasChildren;
-            }
+        // Если hasChildren не задали, то для узла по дефолту есть дети
+        if (options && options.hasChildren === undefined) {
+            this._$hasChildren = this._$node || this._$node === false;
+        } else if (options) {
+            this._$hasChildren = !!options.hasChildren;
         }
     }
 
@@ -229,14 +223,6 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     //  он используется для группы, но можно от него унаследоваться и расширить вот этим кодом
     // region Expandable
 
-    shouldDisplayExpander(expanderIcon: string): boolean {
-        if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
-            return false;
-        }
-
-        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
-    }
-
     getExpanderTemplate(expanderTemplate?: TemplateFunction): TemplateFunction {
         return this._$owner.getExpanderTemplate(expanderTemplate);
     }
@@ -247,6 +233,14 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     getExpanderSize(expanderSize?: string): string {
         return expanderSize || this._$owner.getExpanderSize();
+    }
+
+    shouldDisplayExpander(expanderIcon: string): boolean {
+        if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
+            return false;
+        }
+
+        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
