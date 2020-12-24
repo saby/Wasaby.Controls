@@ -257,7 +257,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         if (this._$owner.getExpanderVisibility() === 'hasChildren') {
             return !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
         } else {
-            return expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
+            return !expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
         }
     }
 
