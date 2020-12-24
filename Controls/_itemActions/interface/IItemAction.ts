@@ -224,7 +224,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#parent
      * @cfg {String|Number} Идентификатор родительской опции записи.
      * @remark
-     * Используется для создания {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/hierarchy/ многоуровневого контекстного меню}.
+     * Используется для создания {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ многоуровневого контекстного меню}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#parent

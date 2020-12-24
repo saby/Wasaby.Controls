@@ -60,7 +60,7 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
 
         if (this._$column.align) {
-            wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$align}`;
+            wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
         }
 
         if (!this._$owner.isSticked()) {

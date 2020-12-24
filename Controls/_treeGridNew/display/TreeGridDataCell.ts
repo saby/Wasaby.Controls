@@ -1,5 +1,6 @@
 import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { GridDataCell } from 'Controls/display';
+import { GridLayoutUtil } from 'Controls/grid';
 
 export default class TreeGridDataCell<T> extends GridDataCell<T, TreeGridDataRow<T>> {
     readonly '[Controls/treeGrid:TreeGridDataCell]': boolean;
@@ -23,6 +24,16 @@ export default class TreeGridDataCell<T> extends GridDataCell<T, TreeGridDataRow
 
             // controls-Grid__no-rowSeparator перебивает стили dragTargetNode
             classes = classes.replace('controls-Grid__no-rowSeparator', '');
+        }
+
+        return classes;
+    }
+
+    getRelativeCellWrapperClasses(theme: string): string {
+        let classes = super.getRelativeCellWrapperClasses(theme);
+
+        if (!GridLayoutUtil.isFullGridSupport()) {
+            classes = 'controls-TreeGridView__row-cell_innerWrapper ' + classes;
         }
 
         return classes;

@@ -49,6 +49,16 @@ export type TColspanCallbackResult = number | 'end';
 export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
 
 /**
+ * @typedef {Function} TResultsColspanCallback
+ * @description
+ * Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @param {Controls/grid:IColumn} column Колонка грида
+ * @param {Number} columnIndex Индекс колонки грида
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
+ */
+export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
+
+/**
  * @typedef {Object} IEmptyTemplateColumn
  * @description
  * Объект конфигурации колонки представления пустой таблицы.
@@ -76,6 +86,7 @@ export interface IOptions {
     stickyColumn?: {};
     showEditArrow?: boolean;
     colspanCallback?: TColspanCallback;
+    resultsColspanCallback?: TResultsColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
     stickyColumnsCount?: number;
@@ -101,6 +112,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$colspanCallback: TColspanCallback;
+    protected _$resultsColspanCallback: TResultsColspanCallback;
+    protected _$resultsTemplate: TemplateFunction;
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
@@ -181,6 +194,15 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 item.setColspanCallback(colspanCallback);
             }
         });
+        this._nextVersion();
+    }
+
+    setResultsColspanCallback(resultsColspanCallback: TResultsColspanCallback): void {
+        this._$resultsColspanCallback = resultsColspanCallback;
+        const results = this.getResults();
+        if (results) {
+            results.setResultsColspanCallback(resultsColspanCallback);
+        }
         this._nextVersion();
     }
 
@@ -281,6 +303,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             results: this.getMetaResults(),
+            resultsColspanCallback: options.resultsColspanCallback,
             resultsTemplate: options.resultsTemplate
         });
     }
@@ -378,6 +401,8 @@ Object.assign(Grid.prototype, {
     _$showEditArrow: false,
     _$editArrowVisibilityCallback: null,
     _$colspanCallback: null,
+    _$resultsColspanCallback: null,
+    _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,
     _$emptyTemplate: null,
