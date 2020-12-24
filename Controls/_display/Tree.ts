@@ -245,6 +245,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * @protected
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
+    private _expandedItems: CrudEntityKey[] = [];
 
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
@@ -602,16 +603,16 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // region Expanded/Collapsed
 
     isExpandAll(): boolean {
-        // TODO нужна опция expandedItems
-        return false;
+        return this._expandedItems[0] === null;
     }
 
     // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
     getExpandedItems(): CrudEntityKey[] {
-        return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+        return this._expandedItems;
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        this._expandedItems = expandedKeys;
         if (expandedKeys[0] === null) {
             const expandAllChildesNodes = (parent) => {
                 if (!parent['[Controls/_display/TreeItem]']) {
@@ -930,7 +931,7 @@ Object.assign(Tree.prototype, {
     _$expanderTemplate: null,
     _$expanderPosition: 'default',
     _$expanderVisibility: 'visible',
-    _$expanderSize: 'default',
+    _$expanderSize: 's',
     _$expanderIcon: undefined,
     _$root: undefined,
     _$rootEnumerable: false,
