@@ -28,12 +28,36 @@ function getBaseControlOptionsWithEmptyItems(): object {
     };
 }
 
+function getCorrectBaseControlConfig(cfg): object {
+    let sourceController;
+
+    if (cfg.source) {
+        sourceController = new NewSourceController({
+            source: cfg.source,
+            keyProperty: cfg.keyProperty || cfg.source.getKeyProperty(),
+            navigation: cfg.navigation,
+            sorting: cfg.sorting
+        });
+
+        if (cfg.source._$data) {
+            sourceController.setItems(new RecordSet({
+                rawData: cfg.source._$data,
+                keyProperty: cfg.keyProperty || cfg.source.getKeyProperty()
+            }));
+        }
+
+        cfg.sourceController = sourceController;
+    }
+
+    return cfg;
+}
+
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
 
         const GROUP_HISTORY_ID_NAME: string = 'MY_NEWS';
 
-        const baseControlCfg = {
+        const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
@@ -41,7 +65,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 keyProperty: 'id',
                 rawData: []
             })
-        };
+        });
         let baseControl;
 
         beforeEach(() => {
@@ -82,7 +106,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
     describe('BaseControl watcher paging', () => {
-        const baseControlCfg = {
+        const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
@@ -96,7 +120,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     pagingMode: 'page'
                 }
             }
-        };
+        });
         let baseControl;
 
         beforeEach(() => {
@@ -196,7 +220,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
     });
     describe('BaseControl paging', () => {
-        const baseControlCfg = {
+        const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
@@ -211,7 +235,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     showEndButton: false
                 }
             }
-        };
+        });
         let baseControl;
         const heightParams = {
             scrollHeight: 1000,
@@ -625,7 +649,7 @@ describe('Controls/list_clean/BaseControl', () => {
     });
     describe('beforeUnmount', () => {
         let baseControl;
-        const baseControlCfg = {
+        const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
@@ -633,7 +657,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 keyProperty: 'id',
                 rawData: []
             })
-        };
+        });
         beforeEach(() => {
             baseControl = new BaseControl(baseControlCfg);
         });
@@ -823,24 +847,25 @@ describe('Controls/list_clean/BaseControl', () => {
 
     describe('_beforeMount', () => {
         it('_beforeMount with prefetchProxy', async () => {
-            const baseControlOptions = getBaseControlOptionsWithEmptyItems();
+            let baseControlOptions = getBaseControlOptionsWithEmptyItems();
             baseControlOptions.source = new PrefetchProxy({
                 target: new Memory(),
                 data: {
                     query: new DataSet()
                 }
             });
+            baseControlOptions = getCorrectBaseControlConfig(getCorrectBaseControlConfig);
             const baseControl = new BaseControl(baseControlOptions);
             const mountResult = await baseControl._beforeMount(baseControlOptions);
             assert.isTrue(!mountResult);
         });
         it('_beforeMount keyProperty', async () => {
-            const baseControlOptions = {
+            const baseControlOptions = getCorrectBaseControlConfig({
                 source: new Memory({
                     keyProperty: 'keyProperty',
                     data: []
                 })
-            };
+            });
             const baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyProperty');
@@ -859,7 +884,7 @@ describe('Controls/list_clean/BaseControl', () => {
     describe('Edit in place', () => {
         type TEditingConfig = IEditableListOption['editingConfig'];
 
-        const baseControlCfg = {
+        const baseControlCfg = getCorrectBaseControlConfig({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
@@ -867,7 +892,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 keyProperty: 'id',
                 rawData: []
             })
-        };
+        });
         let baseControl;
 
         beforeEach(() => {

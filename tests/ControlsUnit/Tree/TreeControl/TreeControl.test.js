@@ -37,7 +37,26 @@ define([
             viewModelConstructor: treeGrid.ViewModel
          }),
          createPromise;
+
       cfgTreeControl = Object.assign(tree.TreeControl.getDefaultOptions(), cfgTreeControl);
+      // Костыль с получением данных из источника по приватному полю
+      // Т.к. сейчас все тесты ожидают построение по источнику, а не по sourceController'у
+      // Единственный способ оживить массово тесты
+      if (cfgTreeControl.source) {
+         cfgTreeControl.sourceController = new dataSource.NewSourceController({
+            source: cfgTreeControl.source,
+            navigation: cfgTreeControl.navigation,
+            expandedItems: cfgTreeControl.expandedItems,
+            root: cfgTreeControl.root,
+            keyProperty: cfgTreeControl.keyProperty || (cfgTreeControl.source && cfgTreeControl.source.getKeyProperty())
+         });
+
+         if (cfgTreeControl.source._$data) {
+            cfgTreeControl.sourceController.setItems(new collection.RecordSet({
+               rawData: cfgTreeControl.source._$data
+            }));
+         }
+      }
       treeControl = new tree.TreeControl(cfgTreeControl);
       treeControl.saveOptions(cfgTreeControl);
       treeControl._beforeMount(cfgTreeControl);
@@ -993,7 +1012,6 @@ define([
             reloadCalled = false,
             setRootCalled = false,
             filterOnOptionChange = null,
-            isSourceControllerDestroyed = false,
             source = new sourceLib.Memory({
                data: [],
                keyProperty: 'id'
@@ -1063,33 +1081,31 @@ define([
                treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
                filterOnOptionChange = filter;
             };
-            treeControl._children.baseControl._sourceController._loadPromise.promise.addCallback(function(result) {
-               treeControl._children.baseControl.reload().addCallback(function(res) {
-                  const configClone = {...config};
-                  configClone.root = 'testRoot';
-                  treeControl._beforeUpdate(configClone);
-                  treeControl._options.root = 'testRoot';
+            treeControl._children.baseControl.reload().addCallback(function(res) {
+               const configClone = {...config};
+               configClone.root = 'testRoot';
+               treeControl._beforeUpdate(configClone);
+               treeControl._options.root = 'testRoot';
+               try {
+                  assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+               } catch (e) {
+                  reject(e);
+               }
+
+               let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
+               treeControl._children.baseControl._afterUpdate({});
+               treeControl._children.baseControl._componentDidUpdate();
+               afterUpdatePromise.then(function() {
                   try {
-                     assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
+                     assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                     assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                     resolve();
                   } catch (e) {
                      reject(e);
                   }
-
-                  let afterUpdatePromise = treeControl._afterUpdate({root: null, filter: {}, source: source});
-                  treeControl._children.baseControl._afterUpdate({});
-                  treeControl._children.baseControl._componentDidUpdate();
-                  afterUpdatePromise.then(function() {
-                     try {
-                        assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-                        assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-                        resolve();
-                     } catch (e) {
-                        reject(e);
-                     }
-                  });
-                  return res;
                });
-               return result;
+               return res;
+            });
             });
          });
       });
@@ -1442,6 +1458,10 @@ define([
                rawData: rawData,
                keyProperty: 'id'
             }),
+            sourceController = new dataSource.NewSourceController({
+               source: source,
+               keyProperty: 'id'
+            }),
             cfg = {
                source: source,
                markerVisibility: 'visible',
@@ -1460,6 +1480,10 @@ define([
             },
             treeControl = new tree.TreeControl(cfg),
             treeGridViewModel = new treeGrid.ViewModel(cfg);
+         sourceController.setItems(new collection.RecordSet({
+            rawData: rawData,
+            keyProperty: 'id'
+         }))
          treeControl.saveOptions(cfg);
          treeGridViewModel.setItems(new collection.RecordSet({
             rawData: rawData,
@@ -1561,8 +1585,16 @@ define([
                return true;
             }
          });
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: [{id: 0, 'Раздел@': false, "Раздел": null}]
+         }));
          var cfg = {
             source: source,
+            sourceController: sourceController,
             columns: [],
             keyProperty: 'id',
             parentProperty: 'Раздел',

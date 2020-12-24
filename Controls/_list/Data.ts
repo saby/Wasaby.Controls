@@ -9,7 +9,7 @@ import {
    ISourceControllerOptions,
    NewSourceController as SourceController
 } from 'Controls/dataSource';
-import {IControllerState} from 'Controls/_dataSource/Controller';
+import {ISourceControllerState} from 'Controls/dataSource';
 import {ContextOptions} from 'Controls/context';
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
@@ -84,6 +84,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    private _sourceController: SourceController = null;
    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
    private _dataOptionsContext: typeof ContextOptions;
+   private _sourceControllerState: ISourceControllerState;
 
    private _items: RecordSet;
    private _filter: QueryWhereExpression<unknown>;
@@ -152,7 +153,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._filter = newOptions.filter;
       }
 
-      if (sourceChanged) {
+      if (sourceChanged && !newOptions.sourceController) {
          const currentRoot = this._sourceController.getRoot();
          this._fixRootForMemorySource(newOptions);
 
@@ -260,11 +261,11 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       event.stopPropagation();
    }
 
-   private _createContext(options?: IControllerState): typeof ContextOptions {
+   private _createContext(options?: ISourceControllerState): typeof ContextOptions {
       return new ContextOptions(options);
    }
 
-   private _updateContext(sourceControllerState: IControllerState): void {
+   private _updateContext(sourceControllerState: ISourceControllerState): void {
       const curContext = this._dataOptionsContext;
 
       for (const i in sourceControllerState) {
@@ -273,6 +274,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          }
       }
       curContext.updateConsumers();
+      this._sourceControllerState = sourceControllerState;
    }
 
    // https://online.sbis.ru/opendoc.html?guid=e5351550-2075-4550-b3e7-be0b83b59cb9

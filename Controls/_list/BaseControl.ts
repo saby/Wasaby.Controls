@@ -264,12 +264,12 @@ const _private = {
     },
     checkDeprecated(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            Logger.warn('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Logger.error('IGrouped: Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
         if (cfg.navigation &&
             cfg.navigation.viewConfig &&
             cfg.navigation.viewConfig.pagingMode === 'direct') {
-            Logger.warn('INavigation: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
+            Logger.error('INavigation: The "direct" value in "pagingMode" was deprecated and removed in 21.1000. Use the value "basic".');
         }
     },
 
@@ -3263,8 +3263,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
-        } else if (newOptions.source) {
-            this._sourceController = _private.getSourceController(this, newOptions);
         }
 
         if (this._sourceController) {
@@ -3334,11 +3332,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
         if (self._sourceController) {
-            if (receivedData) {
-                self._sourceController.setItems(receivedData);
-            } else {
-                receivedData = self._sourceController.getItems();
-            }
+            receivedData = self._sourceController.getItems();
         }
 
         if (collapsedGroups) {
@@ -3419,42 +3413,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve(_private.showError(self, receivedError));
             }
-            return _private.reload(self, newOptions).addCallback((result) => {
-
-                // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
-                const data = result.data || (new RecordSet<Model>({
-                    keyProperty: self._keyProperty,
-                    rawData: []
-                }));
-
-                this._sourceController.setItems(data);
-
-                if (newOptions.useNewModel && !self._listViewModel) {
-                    self._initNewModel(newOptions, data, viewModelConfig);
-                }
-
-                if (viewModelConfig.collapsedGroups) {
-                    self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
-                }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
-
-                    _private.createScrollController(self, newOptions);
-
-                _private.initVisibleItemActions(self, newOptions);
-
-                    // TODO Kingo.
-                    // если в опции передан sourceController, не надо из _beforeMount
-                    // возврашать полученный recordSet, иначе он будет сериализоваться
-                    // и на уровне Container/Data и на уровне BaseControl'a
-                    if (result.errorConfig ||
-                        !(newOptions.sourceController ||
-                        // FIXME https://online.sbis.ru/opendoc.html?guid=fe106611-647d-4212-908f-87b81757327b
-                        // Иначе список построится по receivedState, а в PrefetchProxy останется кэш,
-                        // и любой запрос к источнику вернёт данные из кэша
-                        cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy'))) {
-                        return Promise.resolve(getState(result));
-                    }
-                });
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
@@ -3792,7 +3750,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
-
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
@@ -3923,12 +3880,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if ((recreateSource || sourceChanged) && !newOptions.sourceController) {
-            if (this._sourceController) {
-                this.updateSourceController(newOptions);
-            } else {
-                this._sourceController = _private.getSourceController(this, newOptions);
-            }
+        if (newOptions.sourceController !== this._options.sourceController) {
+            this._sourceController = newOptions.sourceController;
         }
 
         if (filterChanged && !newOptions.sourceController && this._sourceController) {

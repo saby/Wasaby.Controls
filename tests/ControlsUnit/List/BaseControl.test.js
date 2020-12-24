@@ -25,6 +25,31 @@ define([
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs, sandbox;
 
+      var getCorrectBaseControlConfig = function(cfg) {
+         var sourceController;
+
+         if (cfg.source) {
+            sourceController = new dataSource.NewSourceController({
+               source: cfg.source,
+               keyProperty: cfg.keyProperty || cfg.source.getKeyProperty(),
+               navigation: cfg.navigation,
+               sorting: cfg.sorting
+            });
+
+            if (cfg.source._$data) {
+               sourceController.setItems(new collection.RecordSet({
+                  rawData: cfg.source._$data,
+                  keyProperty: cfg.keyProperty || cfg.source.getKeyProperty()
+               }));
+            }
+
+            cfg.sourceController = sourceController;
+         }
+         return cfg;
+      }
+      var correctCreateBaseControl = function(cfg) {
+         return new lists.BaseControl(getCorrectBaseControlConfig(cfg));
+      };
       beforeEach(function() {
          data = [
             {
@@ -98,7 +123,7 @@ define([
                rawData: data
             })
          };
-         var baseControl = new lists.BaseControl(cfg);
+         var baseControl = correctCreateBaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          assert.equal(baseControl._listViewModel.getItems(), null);
@@ -120,9 +145,12 @@ define([
             },
             viewModelConstructor: lists.ListViewModel,
             source: source,
-            filter: filter
+            filter: filter,
+            sourceController: new dataSource.NewSourceController({
+               source
+            })
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          var mountResult = ctrl._beforeMount(cfg);
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
@@ -174,8 +202,6 @@ define([
             // https://online.sbis.ru/opendoc.html?guid=72ff25df-ff7a-4f3d-8ce6-f19a666cbe98
             assert.equal(ctrl._items, ctrl.getViewModel()
                .getItems());
-            assert.isTrue(ctrl._sourceController.getState().source === cfg.source, '_dataSourceController wasn\'t changed before updating');
-            assert.deepEqual(ctrl._sourceController.getState().filter, cfg.filter, 'incorrect filter before updating');
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, tree.TreeViewModel);
@@ -202,6 +228,14 @@ define([
       });
 
       it('beforeMount: right indexes with virtual scroll and receivedState', function() {
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+                rawData: data
+             })
+         );
          var cfg = {
             viewName: 'Controls/List/ListView',
             viewConfig: {
@@ -224,9 +258,10 @@ define([
                pageSize: 100
             },
             viewModelConstructor: lists.ListViewModel,
-            source: source
+            source: source,
+            sourceController: sourceController
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          return new Promise(function(resolve) {
             ctrl._beforeMount(cfg, null).then((res) => {
@@ -411,12 +446,19 @@ define([
                'balance': 15
             },
          ];
+         var source = new sourceLib.Memory({
+            idProperty: 'id',
+            data: gridData,
+         });
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({ rawData: gridData }));
          var cfg = {
             viewName: 'Controls/Grid/GridView',
-            source: new sourceLib.Memory({
-               idProperty: 'id',
-               data: gridData,
-            }),
+            source: source,
+            sourceController: sourceController,
             displayProperty: 'title',
             columns: gridColumns,
             resultsPosition: 'top',
@@ -435,7 +477,7 @@ define([
             },
             viewModelConstructor: grid.GridViewModel,
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.equal(undefined, ctrl.getViewModel()
@@ -476,7 +518,7 @@ define([
                viewModelConstructor: lists.ListViewModel
             };
 
-            var ctrl = new lists.BaseControl(cfg);
+            var ctrl = correctCreateBaseControl(cfg);
 
 
             ctrl.saveOptions(cfg);
@@ -513,12 +555,19 @@ define([
       });
 
       it('check dataLoadCallback and afterReloadCallback calling order', async function() {
+         var source = new sourceLib.Memory({});
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet());
          var
             dataLoadCallbackCalled = false,
             afterReloadCallbackCalled = false,
             cfg = {
                viewName: 'Controls/List/ListView',
-               source: new sourceLib.Memory({}),
+               source: source,
+               sourceController: sourceController,
                viewModelConstructor: lists.ListViewModel,
                 keyProperty: 'id',
                dataLoadCallback: function() {
@@ -529,7 +578,7 @@ define([
                   assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called before afterReloadCallback.');
                }
             },
-            ctrl = new lists.BaseControl(cfg);
+            ctrl = correctCreateBaseControl(cfg);
 
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
@@ -560,12 +609,19 @@ define([
       });
 
       it('save loaded items into the controls\' state', async function () {
+         var source = new sourceLib.Memory({});
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet());
          var
              cfg = {
                 viewName: 'Controls/List/ListView',
-                source: new sourceLib.Memory({}),
+                source: source,
+                sourceController: sourceController,
                 viewModelConstructor: lists.ListViewModel,
-                 keyProperty: 'id'
+                keyProperty: 'id'
              },
              loadedItems = new collection.RecordSet({
                 keyProperty: 'id',
@@ -576,7 +632,7 @@ define([
                    }
                 ]
              }),
-             ctrl = new lists.BaseControl(cfg);
+             ctrl = correctCreateBaseControl(cfg);
 
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
@@ -635,7 +691,7 @@ define([
             viewModelConstructor: lists.ListViewModel
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          assert.isNotOk(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
@@ -670,17 +726,24 @@ define([
             done();
          }, 1);
 
-         ctrl = new lists.BaseControl(cfg);
+         ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after mounting');
       });
 
       it('loadToDirection down', async function() {
-         const source = new sourceLib.Memory({
+         let source = new sourceLib.Memory({
             keyProperty: 'id',
             data: data
          });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
 
          let dataLoadFired = false;
 
@@ -690,6 +753,7 @@ define([
                dataLoadFired = true;
             },
             source: source,
+            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -710,7 +774,7 @@ define([
             searchValue: 'test'
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {
@@ -745,6 +809,13 @@ define([
             keyProperty: 'id',
             data: data
          });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
          let isIterativeSearch = false;
          let ladingIndicatorTimer;
          const setIterativeMetaData = (items) => {
@@ -768,6 +839,7 @@ define([
                setIterativeMetaData(loadedItems);
             },
             source: source,
+            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -785,7 +857,7 @@ define([
                }
             }
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {
@@ -820,6 +892,14 @@ define([
             data: data
          });
 
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
+
          let dataLoadFired = false;
          let beforeLoadToDirectionCalled = false;
 
@@ -829,6 +909,7 @@ define([
                dataLoadFired = true;
             },
             source: source,
+            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -850,7 +931,7 @@ define([
             }
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {
@@ -960,6 +1041,13 @@ define([
             keyProperty: 'id',
             data: data
          });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
 
          var dataLoadFired = false;
          var beforeLoadToDirectionCalled = false;
@@ -974,6 +1062,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             source: source,
+            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -994,7 +1083,7 @@ define([
             searchValue: 'test'
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
@@ -1045,10 +1134,15 @@ define([
             keyProperty: 'id',
             data: data
          });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
 
          var dataLoadFired = false;
-         var portionSearchTimerReseted = false;
-         var portionSearchReseted = false;
          var beforeLoadToDirectionCalled = false;
 
          var cfg = {
@@ -1060,6 +1154,7 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             source: source,
+            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -1080,7 +1175,7 @@ define([
             searchValue: 'test'
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {
@@ -1276,7 +1371,7 @@ define([
                }),
                markedKey: 2
             },
-            baseControl = new lists.BaseControl(cfg),
+            baseControl = correctCreateBaseControl(cfg),
             originalScrollToItem = lists.BaseControl._private.scrollToItem;
 
          lists.BaseControl._private.scrollToItem = function() {};
@@ -1309,23 +1404,33 @@ define([
       });
 
       it('moveMarkerToNext && moveMarkerToPrevious while loading', async function() {
+         var data = [{
+            key: 1
+         }, {
+            key: 2
+         }, {
+            key: 3
+         }];
+         var source = new sourceLib.Memory({
+            keyProperty: 'id',
+            data: data
+         });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data
+         }));
          var
             cfg = {
                viewModelConstructor: lists.ListViewModel,
                markerVisibility: 'visible',
                keyProperty: 'key',
-               source: new sourceLib.Memory({
-                  idProperty: 'key',
-                  data: [{
-                     key: 1
-                  }, {
-                     key: 2
-                  }, {
-                     key: 3
-                  }]
-               })
+               source: source,
+               sourceController: sourceController
             },
-            baseControl = new lists.BaseControl(cfg);
+            baseControl = correctCreateBaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._listViewModel.setMarkedKey(1);
@@ -1387,7 +1492,7 @@ define([
                selectedKeys: [],
                excludedKeys: []
             },
-            baseControl = new lists.BaseControl(cfg),
+            baseControl = correctCreateBaseControl(cfg),
             notified = false;
 
          baseControl.saveOptions(cfg);
@@ -1553,7 +1658,7 @@ define([
                selectedKeys: [1],
                excludedKeys: []
             },
-            baseControl = new lists.BaseControl(lnCfg);
+            baseControl = correctCreateBaseControl(lnCfg);
 
 
          baseControl.saveOptions(lnCfg);
@@ -1590,7 +1695,7 @@ define([
                }
             }
          };
-         const baseControl = new lists.BaseControl(cfg);
+         const baseControl = correctCreateBaseControl(cfg);
          baseControl.saveOptions(cfg);
          await baseControl._beforeMount(cfg);
          baseControl._container = {
@@ -1631,7 +1736,7 @@ define([
             }
          };
 
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          ctrl._container = {
@@ -1704,7 +1809,7 @@ define([
                }
             }
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -1726,7 +1831,7 @@ define([
 
       it('indicator', function() {
          var cfg = {};
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl._container =  {getElementsByClassName: () => ([{
                getBoundingClientRect: () => ({})
             }]), getBoundingClientRect: () => ({})};
@@ -1919,51 +2024,6 @@ define([
          });
       });
 
-      it('scrollToEdge_load', function(done) {
-         var rs = new collection.RecordSet({
-            keyProperty: 'id',
-            rawData: data
-         });
-
-         var source = new sourceLib.Memory({
-            keyProperty: 'id',
-            data: data
-         });
-
-         var cfg = {
-            viewName: 'Controls/List/ListView',
-            source: source,
-            viewConfig: {
-               keyProperty: 'id'
-            },
-            viewModelConfig: {
-               items: rs,
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            navigation: {
-               source: 'page',
-               sourceConfig: {
-                  pageSize: 3,
-                  page: 0,
-                  hasMore: false
-               }
-            }
-         };
-         var ctrl = new lists.BaseControl(cfg);
-         ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
-
-         // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
-         setTimeout(function() {
-            lists.BaseControl._private.scrollToEdge(ctrl, 'down');
-            setTimeout(function() {
-               assert.equal(3, ctrl._listViewModel.getCount(), 'Items wasn\'t load');
-               done();
-            }, 100);
-         }, 100);
-      });
-
       let triggers = {
          topVirtualScrollTrigger: {
             style: {
@@ -2028,7 +2088,7 @@ define([
                   }
                }
             };
-            var ctrl = new lists.BaseControl(cfg);
+            var ctrl = correctCreateBaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
 
@@ -2145,7 +2205,7 @@ define([
                }
             },
          };
-         const ctrl = new lists.BaseControl(cfg);
+         const ctrl = correctCreateBaseControl(cfg);
          let shadowMode;
          let iterativeSearchAborted;
          ctrl.saveOptions(cfg);
@@ -2209,7 +2269,7 @@ define([
             scrollHeight: 400,
             clientHeight: 1000
          };
-         var baseControl = new lists.BaseControl(cfg);
+         var baseControl = correctCreateBaseControl(cfg);
          baseControl._container = {
             getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
             getBoundingClientRect: function() { return {}; }
@@ -2251,7 +2311,7 @@ define([
                }
             }
          };
-         var baseControl = new lists.BaseControl(cfg);
+         var baseControl = correctCreateBaseControl(cfg);
          baseControl._sourceController = {
             nav: false,
             hasMoreData: function() {
@@ -2310,7 +2370,7 @@ define([
                }
             }
          };
-         var baseControl = new lists.BaseControl(cfg);
+         var baseControl = correctCreateBaseControl(cfg);
          baseControl._sourceController = {
             nav: false,
             hasMoreData: function() {
@@ -2370,7 +2430,7 @@ define([
                }
             }
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
@@ -2443,7 +2503,7 @@ define([
             scrollHeight: 400,
             clientHeight: 1000
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
          ctrl._children = triggers;
@@ -2654,7 +2714,7 @@ define([
                 markedKey: 3,
                 viewModelConstructor: lists.ListViewModel
              },
-             lnBaseControl = new lists.BaseControl(lnCfg);
+             lnBaseControl = correctCreateBaseControl(lnCfg);
 
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
@@ -2755,7 +2815,7 @@ define([
                   }
                }
             },
-            baseControl = new lists.BaseControl(cfg);
+            baseControl = correctCreateBaseControl(cfg);
 
          baseControl.saveOptions(cfg);
          baseControl._beforeMount(cfg);
@@ -2826,7 +2886,7 @@ define([
          });
 
          it('should not init when __error is occurred', async () => {
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
             lists.BaseControl._private.showError(instance, {
@@ -2836,21 +2896,21 @@ define([
          });
 
          it('should not init when _listViewModel is not set', async () => {
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
          });
 
          it('should not init when there are no itemActions, no itemActionsProperty and no editingConfig.toolbarVisibility',  async () => {
             cfg.itemActions = undefined;
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
             assert.notExists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
          });
 
          it('should return existing controller instance despite errors', async () => {
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
             lists.BaseControl._private.updateItemActions(instance, instance._options);
@@ -2861,7 +2921,7 @@ define([
          });
 
          it('should init when itemActions are set, but, there are no itemActionsProperty and toolbarVisibility is false', async () => {
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             await instance._beforeMount(cfg);
             assert.exists(lists.BaseControl._private.getItemActionsController(instance, instance._options));
@@ -3013,7 +3073,7 @@ define([
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel
             },
-            baseControl = new lists.BaseControl(cfg),
+            baseControl = correctCreateBaseControl(cfg),
             doScrollNotified = false;
 
          baseControl._viewportRect = {top: 0}
@@ -3140,7 +3200,7 @@ define([
                   }
                }
             };
-            ctrl = new lists.BaseControl(cfg);
+            ctrl = correctCreateBaseControl(cfg);
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
             lists.BaseControl._private.updateItemActions(ctrl, ctrl._options);
@@ -3200,7 +3260,7 @@ define([
             viewModelConstructor: lists.ListViewModel,
             source: source,
          };
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
          assert.isTrue(ctrl._needBottomPadding);
@@ -3226,7 +3286,7 @@ define([
             ...cfg,
             source: source
          }
-         var ctrl = new lists.BaseControl(cfg);
+         var ctrl = correctCreateBaseControl(cfg);
          ctrl.saveOptions(cfg);
          return new Promise((resolve) => {
             ctrl._beforeMount(cfg);
@@ -3263,7 +3323,7 @@ define([
             viewModelConstructor: 'Controls/display:Collection',
             source: source,
          };
-         let ctrl = new lists.BaseControl(cfg);
+         let ctrl = correctCreateBaseControl(cfg);
          let setHasMoreDataCalled = false;
          let origSHMD = lists.BaseControl._private.setHasMoreData;
          let origNBP = lists.BaseControl._private.needBottomPadding;
@@ -3386,7 +3446,7 @@ define([
                sandbox.replace(lists.BaseControl._private, 'closeSwipe', (self) => {
                   isCloseSwipeCalled = true;
                });
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   edit: () => Promise.resolve(),
@@ -3494,7 +3554,7 @@ define([
                });
                sandbox.replace(lists.BaseControl._private, 'hideIndicator', () => {
                });
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                ctrl.saveOptions(cfg);
                ctrl._container = {
                   clientHeight: 100
@@ -3554,7 +3614,7 @@ define([
                   selectedKeys: [1],
                   excludedKeys: []
                };
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                await ctrl._beforeMount(cfg);
                ctrl._editInPlaceController = {
                   cancel: () => Promise.resolve(),
@@ -3699,7 +3759,7 @@ define([
                      }
                   }
                };
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                ctrl._editInPlaceController = {
                   cancel: () => Promise.resolve(),
                   commit: () => Promise.resolve(),
@@ -3785,7 +3845,7 @@ define([
                },
                viewModelConstructor: lists.ListViewModel
             };
-            const baseControl = new lists.BaseControl(cfg);
+            const baseControl = correctCreateBaseControl(cfg);
             let isRegistered = false;
 
             baseControl._notify = (eName) => {
@@ -3818,7 +3878,7 @@ define([
                   },
                   viewModelConstructor: lists.ListViewModel
                };
-               const baseControl = new lists.BaseControl(cfg);
+               const baseControl = correctCreateBaseControl(cfg);
                let isRegistered = false;
 
                baseControl._notify = (eName) => {
@@ -3867,7 +3927,7 @@ define([
 
             beforeEach(async () => {
                cancelCalled = false;
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                ctrl.saveOptions(cfg);
                await ctrl._beforeMount(cfg);
                ctrl._listViewModel.getDisplay = () => ({
@@ -4183,7 +4243,7 @@ define([
                readOnly: false,
                itemsDragNDrop: true
             },
-            ctrl = new lists.BaseControl(),
+            ctrl = correctCreateBaseControl(cfg),
             fakeMouseDown = {
                nativeEvent: {
                   button: 0
@@ -4341,7 +4401,7 @@ define([
                itemsDragNDrop: true,
                itemActions: [{id: 1}, {id: 2}]
             };
-            ctrl = new lists.BaseControl(cfg);
+            ctrl = correctCreateBaseControl(cfg);
             ctrl.saveOptions(cfg);
 
             ctrl._itemActionsController = {
@@ -4417,7 +4477,7 @@ define([
                excludedKeys: [],
                ...options
             };
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
             instance._children = {
                itemActionsOpener: {
                   close: function() {
@@ -4696,7 +4756,7 @@ define([
                source: source,
                keyProperty: 'id'
             };
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
             item =  item = {
                _$active: false,
                getContents: () => ({
@@ -5199,7 +5259,7 @@ define([
             keyProperty: 'id',
             source: source
          };
-         const instance = new lists.BaseControl(cfg);
+         const instance = correctCreateBaseControl(cfg);
          const sandbox = sinon.createSandbox();
          let isCloseSwipeCalled = false;
          sandbox.replace(lists.BaseControl._private, 'closeSwipe', () => {
@@ -5280,7 +5340,7 @@ define([
                }
             }
          };
-         var baseCtrl = new lists.BaseControl(cfg);
+         var baseCtrl = correctCreateBaseControl(cfg);
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
@@ -5338,7 +5398,7 @@ define([
                }
             }
          };
-         var baseCtrl = new lists.BaseControl(cfg);
+         var baseCtrl = correctCreateBaseControl(cfg);
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
@@ -5367,7 +5427,7 @@ define([
                 keyProperty: 'id',
                 source: source
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          let newKeyProperty;
@@ -5395,7 +5455,7 @@ define([
                 keyProperty: 'id',
                 source: source
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
          let cancelClosed = false;
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -5473,7 +5533,7 @@ define([
                 viewModelConstructor: lists.ListViewModel,
                 source: source
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
          let eName;
          await instance._beforeMount(cfg);
          instance.saveOptions(cfg);
@@ -5509,7 +5569,7 @@ define([
                 viewModelConstructor: lists.ListViewModel,
                 source: source
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
          let eName;
          await instance._beforeMount(cfg);
          instance.saveOptions(cfg);
@@ -5543,7 +5603,7 @@ define([
                 keyProperty: 'id',
                 source: source
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._container = {};
@@ -5565,7 +5625,7 @@ define([
                keyProperty: 'id',
                source: source
             },
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
@@ -5600,7 +5660,7 @@ define([
                    source
                 })
              },
-             instance = new lists.BaseControl(cfg);
+             instance = correctCreateBaseControl(cfg);
 
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
@@ -5622,7 +5682,7 @@ define([
                keyProperty: 'id',
                source: source
             },
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
@@ -5673,7 +5733,7 @@ define([
                keyProperty: 'id',
                source: source
             },
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
@@ -5727,7 +5787,7 @@ define([
                   pageSize: 100
                }
             },
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._beforeUpdate(cfg);
@@ -5840,7 +5900,7 @@ define([
             keyProperty: 'id',
             source: source
          };
-         var instance = new lists.BaseControl(cfg);
+         var instance = correctCreateBaseControl(cfg);
          var cfgClone = { ...cfg };
 
          instance.saveOptions(cfg);
@@ -5878,7 +5938,7 @@ define([
             keyProperty: 'id',
             source: source
          };
-         let instance = new lists.BaseControl(cfg);
+         let instance = correctCreateBaseControl(cfg);
          let cfgClone = { ...cfg };
          let portionSearchReseted = false;
 
@@ -5933,7 +5993,7 @@ define([
             source: source,
             getHasMoreData: () => true
          };
-         let instance = new lists.BaseControl(cfg);
+         let instance = correctCreateBaseControl(cfg);
 
          instance.saveOptions(cfg);
          return instance._beforeMount(cfg).then(() => {
@@ -5954,7 +6014,7 @@ define([
             keyProperty: 'id',
             source: source
          };
-         let instance = new lists.BaseControl(cfg);
+         let instance = correctCreateBaseControl(cfg);
          let cfgClone = { ...cfg };
          let portionSearchReseted = false;
 
@@ -5998,7 +6058,7 @@ define([
             keyProperty: 'id',
             source: source
          };
-         let instance = new lists.BaseControl(cfg);
+         let instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
 
@@ -6048,7 +6108,7 @@ define([
                keyProperty: 'id',
                source
             };
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             instance._viewModelConstructor = cfg.viewModelConstructor;
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
@@ -6229,7 +6289,7 @@ define([
                })
             })
          };
-         let instance = new lists.BaseControl(cfg);
+         let instance = correctCreateBaseControl(cfg);
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg, null, {
             data: new collection.RecordSet({
@@ -6273,7 +6333,7 @@ define([
                selectedKeys: [],
                excludedKeys: []
             };
-            instance = new lists.BaseControl(cfg);
+            instance = correctCreateBaseControl(cfg);
             instance.saveOptions(cfg);
             instance._listViewModel = new lists.ListViewModel(cfg.viewModelConfig);
          });
@@ -6529,7 +6589,7 @@ define([
             };
             let dataLoadFired = false;
 
-            const ctrl = new lists.BaseControl(cfg);
+            const ctrl = correctCreateBaseControl(cfg);
 
             ctrl.saveOptions(cfg);
             await ctrl._beforeMount(cfg);
@@ -6568,7 +6628,7 @@ define([
                source: source,
                selectedKeysCount: 1
             };
-            const instance = new lists.BaseControl(cfg);
+            const instance = correctCreateBaseControl(cfg);
             const enterItemData = {
                item: {}
             };
@@ -6617,7 +6677,7 @@ define([
                }
             };
 
-            const ctrl = new lists.BaseControl(cfg);
+            const ctrl = correctCreateBaseControl(cfg);
 
             ctrl._setLoadOffset = lists.BaseControl._private.startScrollEmitter = function() {
             };
@@ -6730,7 +6790,7 @@ define([
                      }
                   };
 
-               ctrl = new lists.BaseControl(cfg);
+               ctrl = correctCreateBaseControl(cfg);
                ctrl.saveOptions(cfg);
                ctrl._beforeMount(cfg);
             });
@@ -6874,7 +6934,7 @@ define([
                      }
                   }
                };
-               let baseControl = new lists.BaseControl(cfg);
+               let baseControl = correctCreateBaseControl(cfg);
                let expectedSourceConfig = {};
                let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
@@ -6920,7 +6980,7 @@ define([
                   }
                }
             };
-            var baseControl = new lists.BaseControl(cfg);
+            var baseControl = correctCreateBaseControl(cfg);
             baseControl.saveOptions(cfg);
             baseControl._children = triggers;
             it('infinity navigation', function() {
@@ -6972,7 +7032,7 @@ define([
             };
 
             it('call check', async function() {
-               bc = new lists.BaseControl(cfg);
+               bc = correctCreateBaseControl(cfg);
                bc.saveOptions(cfg);
                await bc._beforeMount(cfg);
                bc._loadTriggerVisibility = {
@@ -7381,7 +7441,7 @@ define([
                   rawData: data
                })
             };
-            const baseControl = new lists.BaseControl(cfg);
+            const baseControl = correctCreateBaseControl(cfg);
             baseControl.saveOptions(cfg);
             stubCreate.callsFake(() => {
                done();
@@ -7421,7 +7481,7 @@ define([
                activeElement: 4
             };
             let scrolledToItem = false;
-            const baseControl = new lists.BaseControl(cfg);
+            const baseControl = correctCreateBaseControl(cfg);
             baseControl._container = {};
             baseControl.saveOptions(cfg);
             stubScrollToItem.callsFake(() => {
@@ -7450,7 +7510,7 @@ define([
          let registerIntersectionObserver = () => { registered = true; }
          beforeEach(() => {
             registered = false;
-            baseControl = new lists.BaseControl(cfg);
+            baseControl = correctCreateBaseControl(cfg);
             baseControl._registerIntersectionObserver = registerIntersectionObserver;
          });
          afterEach(() => {
@@ -7734,7 +7794,7 @@ define([
                items,
                source
             };
-            baseControl = new lists.BaseControl(cfg);
+            baseControl = correctCreateBaseControl(cfg);
             baseControl.saveOptions(cfg);
             baseControl._beforeMount(cfg);
             baseControl._moveController = moveController;
@@ -8189,10 +8249,20 @@ define([
       // region Multiselection
 
       describe('multiselection', () => {
+         const data = [{ id: 1 }, { id: 2 }, { id: 3 }];
          const source = new sourceLib.Memory({
             keyProperty: 'id',
-            data: [{ id: 1 }, { id: 2 }, { id: 3 }]
+            data: data
          });
+         const sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+
+         sourceController.setItems(new collection.RecordSet({
+            rawData: data,
+            keyProperty: 'id'
+         }));
          const cfg = {
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
@@ -8292,7 +8362,7 @@ define([
                   keyProperty: 'id',
                   data: []
                });
-               const newCfg = { ...cfg, source, selectedKeys: [] };
+               const newCfg = getCorrectBaseControlConfig({ ...cfg, source, selectedKeys: [] });
                baseControl.saveOptions(newCfg);
                return baseControl._beforeMount(newCfg).then(() => {
                   assert.isNotOk(baseControl._selectionController);
@@ -8346,9 +8416,10 @@ define([
          });
 
          it('spaceHandler and multiselection hidden', () => {
-            const baseControl = new lists.BaseControl();
-            baseControl.saveOptions({ ...cfg, multiSelectVisibility: 'hidden' });
-            return baseControl._beforeMount({ ...cfg, multiSelectVisibility: 'hidden' })
+            const baseControlConfig = { ...cfg, multiSelectVisibility: 'hidden' };
+            const baseControl = correctCreateBaseControl(baseControlConfig);
+            baseControl.saveOptions(baseControlConfig);
+            return baseControl._beforeMount(baseControlConfig)
                .then(() => {
                      const result = lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
                      assert.isUndefined(result);
@@ -8414,9 +8485,9 @@ define([
 
          describe('onCollectionChanged', () => {
             beforeEach(() => {
-               baseControl = new lists.BaseControl();
-               baseControl.saveOptions({ ...cfg, selectedKeys: [1] });
-               return baseControl._beforeMount({ ...cfg, selectedKeys: [1] })
+               const baseControlConfig = { ...cfg, selectedKeys: [1] };
+               baseControl = correctCreateBaseControl(baseControlConfig);
+               return baseControl._beforeMount(baseControlConfig)
                   .then(() => viewModel = baseControl.getViewModel());
             });
 
