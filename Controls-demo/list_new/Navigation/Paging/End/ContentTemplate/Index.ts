@@ -12,11 +12,14 @@ interface IItem {
     count: number;
 }
 
+const MAX_ELEMENTS_COUNT: number = 100;
+const SCROLL_TO_ITEM: number = 95;
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     private _dataArray: unknown = generateData({
-        count: 100, beforeCreateItemCallback: (item: IItem) => {
+        count: MAX_ELEMENTS_COUNT, beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с ключом ${item.id}.`;
         }
     });
@@ -24,7 +27,7 @@ export default class extends Control {
     protected _count: number;
 
     protected _beforeMount(): void {
-        this._count = 99;
+        this._count = MAX_ELEMENTS_COUNT - 1;
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: this._dataArray
@@ -32,16 +35,16 @@ export default class extends Control {
     }
 
     protected _updateCount(e: SyntheticEvent, key: CrudEntityKey): void {
-        this._count = 99 - key;
+        this._count = MAX_ELEMENTS_COUNT - 1 - Number(key);
     }
 
     protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): boolean {
         switch (arrow) {
             case 'End':
-                this._textInfo = 'Нажали кнопку "в конец" скролим к 95 элементу';
+                this._textInfo = `Нажали кнопку "в конец" скролим к ${SCROLL_TO_ITEM} элементу`;
                 break;
         }
-        this._children.list.scrollToItem(95, true, true);
+        this._children.list.scrollToItem(SCROLL_TO_ITEM, true, true);
         return false;
     }
 
