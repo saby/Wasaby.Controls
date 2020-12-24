@@ -28,10 +28,49 @@ import 'wml!Controls/_buttons/ButtonBase';
 
 export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
 
+/**
+ * Интерфейс опций для Button.
+ * @public
+ */
 export interface IButtonControlOptions extends IControlOptions, IHrefOptions, ICaptionOptions, IIconOptions,
     IIconStyleOptions, IIconSizeOptions, IFontColorStyleOptions, IFontSizeOptions, IHeightOptions, ITooltipOptions,
     IButtonOptions {
+    /**
+     * Режим отображения кнопки.
+     * @variant button В виде обычной кнопки по-умолчанию.
+     * @variant link В виде гиперссылки.
+     * @variant linkButton В виде гиперссылки, имеет высоту.
+     * @variant toolButton В виде кнопки для панели инструментов.
+     * @variant functionalButton В виде кнопки выполняющей определенную функцию. Например добавление или сохранение.
+     * @default button
+     * @demo Controls-demo/Buttons/ViewModes/Index
+     * @example
+     * Кнопка в режиме отображения 'linkButton'.
+     * <pre class="brush: html">
+     * <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="linkButton" fontSize="3xl"/>
+     * </pre>
+     * Кнопка в режиме отображения 'toolButton'.
+     * <pre class="brush: html">
+     * <Controls.buttons:Button caption="Send document" buttonStyle="danger" viewMode="toolButton"/>
+     * </pre>
+     * Кнопка в режиме отображения 'button'.
+     * <pre class="brush: html">
+     * <Controls.buttons:Button caption="Send document" buttonStyle="success" viewMode="button"/>
+     * </pre>
+     *  * Кнопка в режиме отображения 'link'.
+     * <pre class="brush: html">
+     * <Controls.buttons:Button caption="Send document" viewMode="link"/>
+     * </pre>
+     * @see Size
+     */
     viewMode?: IViewMode;
+    /**
+     * Определяет, с какой стороны расположен текст кнопки относительно иконки.
+     * @variant left Текст расположен перед иконкой.
+     * @variant right Текст расположен после иконки.
+     * @default right
+     * @demo Controls-demo/Buttons/CaptionPosition/Index
+     */
     captionPosition: 'left' | 'right';
 }
 
@@ -134,17 +173,6 @@ export function getDefaultOptions(): object {
  *
  * @class Controls/_buttons/Button
  * @extends Core/Control
- * @mixes Controls/interface:IHref
- * @mixes Controls/_buttons/interface/IButton
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_buttons/interface/IClick
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/_interface/IIconSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/ITooltip
  *
  * @public
  * @author Красильников А.С.
@@ -220,36 +248,6 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
     }
 }
 
-/**
- * @name Controls/_buttons/Button#viewMode
- * @cfg {Enum} Режим отображения кнопки.
- * @variant button В виде обычной кнопки по-умолчанию.
- * @variant link В виде гиперссылки.
- * @variant linkButton В виде гиперссылки, имеет высоту.
- * @variant toolButton В виде кнопки для панели инструментов.
- * @variant functionalButton В виде кнопки выполняющей определенную функцию. Например добавление или сохранение.
- * @default button
- * @demo Controls-demo/Buttons/ViewModes/Index
- * @example
- * Кнопка в режиме отображения 'linkButton'.
- * <pre class="brush: html">
- * <Controls.buttons:Button caption="Send document" buttonStyle="primary" viewMode="linkButton" fontSize="3xl"/>
- * </pre>
- * Кнопка в режиме отображения 'toolButton'.
- * <pre class="brush: html">
- * <Controls.buttons:Button caption="Send document" buttonStyle="danger" viewMode="toolButton"/>
- * </pre>
- * Кнопка в режиме отображения 'button'.
- * <pre class="brush: html">
- * <Controls.buttons:Button caption="Send document" buttonStyle="success" viewMode="button"/>
- * </pre>
- *  * Кнопка в режиме отображения 'link'.
- * <pre class="brush: html">
- * <Controls.buttons:Button caption="Send document" viewMode="link"/>
- * </pre>
- * @see Size
- */
-
 /*
  * @name Controls/_buttons/Button#viewMode
  * @cfg {Enum} Button view mode.
@@ -271,15 +269,6 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
  *    <Controls.buttons:Button caption="Send document" buttonStyle="success" viewMode="button"/>
  * </pre>
  * @see Size
- */
-
-/**
- * @name Controls/_buttons/Button#captionPosition
- * @cfg {String} Определяет, с какой стороны расположен текст кнопки относительно иконки.
- * @variant left Текст расположен перед иконкой.
- * @variant right Текст расположен после иконки.
- * @default right
- * @demo Controls-demo/Buttons/CaptionPosition/Index
  */
 
 /*

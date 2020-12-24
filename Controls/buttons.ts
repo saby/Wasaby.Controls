@@ -10,7 +10,17 @@
 
 import * as ButtonTemplate from 'wml!Controls/_buttons/ButtonBase';
 
-export {default as Button, cssStyleGeneration, simpleCssStyleGeneration, IViewMode, defaultHeight, defaultFontColorStyle, getDefaultOptions} from './_buttons/Button';
+export {
+    default as Button,
+    cssStyleGeneration,
+    simpleCssStyleGeneration,
+    IViewMode,
+    defaultHeight,
+    defaultFontColorStyle,
+    getDefaultOptions,
+    IButtonControlOptions,
+
+} from './_buttons/Button';
 export {default as ArrowButton} from './_buttons/ArrowButton';
 export {default as ActualApi} from './_buttons/ActualApi';
 export {IClick as IClick} from './_buttons/interface/IClick';

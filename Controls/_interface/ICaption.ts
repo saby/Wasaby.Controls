@@ -1,16 +1,24 @@
 import {TemplateFunction} from 'UI/Base';
+
+/**
+ * Интерфейс опций контролов, которые поддерживают заголовок.
+ *
+ * @public
+ * @author Красильников А.С.
+ */
 export interface ICaptionOptions {
+   /**
+    * Определяет текст заголовка контрола.
+    * @example
+    * <pre class="brush: html">
+    *    <Controls.buttons:Button caption="Hello Wasaby"/>
+    * </pre>
+    */
    caption?: string | TemplateFunction;
 }
 
 /**
- * Текст заголовка.
- * @public
- * @author Красильников А.С.
- */
-
-/*
- * Caption text.
+ * Интерфейс для контролов, которые поддерживают заголовок.
  *
  * @public
  * @author Красильников А.С.
@@ -18,13 +26,12 @@ export interface ICaptionOptions {
 export default interface ICaption {
    readonly '[Controls/_interface/ICaption]': boolean;
 }
-/**
- * @name Controls/_interface/ICaption#caption
- * @cfg {String} Определяет текст заголовка контрола.
- * @example
- * <pre class="brush: html">
- *    <Controls.buttons:Button caption="Hello Wasaby"/>
- * </pre>
+
+/*
+ * Caption text.
+ *
+ * @public
+ * @author Красильников А.С.
  */
 
 /*

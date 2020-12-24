@@ -13,7 +13,34 @@
  */
 type TFontColorStyle = 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'unaccented' | 'link' | 'label' | 'info' | 'default'  | string;
 
+/**
+ * Интерфейс опций контролов, которые поддерживают разные цвета текста.
+ *
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IFontColorStyleOptions {
+   /**
+    * Стиль цвета текста контрола.
+    * @demo Controls-demo/Buttons/FontStyles/Index
+    * @demo Controls-demo/Input/FontStyles/Index
+    * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
+    * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
+    * @remark
+    * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
+    * @example
+    * Кнопка со стилем шрифта по умолчанию.
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.buttons:Button icon="icon-Add" viewMode="button"/>
+    * </pre>
+    * Кнопка со стилем шрифта "success".
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.buttons:Button icon="icon-Add" fontColorStyle="success" viewMode="button"/>
+    * </pre>
+    * @see Icon
+    */
    fontColorStyle?: TFontColorStyle;
 }
 
@@ -23,36 +50,14 @@ export interface IFontColorStyleOptions {
  * @public
  * @author Красильников А.С.
  */
+export default interface IFontColorStyle {
+   readonly '[Controls/_interface/IFontColorStyle]': boolean;
+}
 
 /*APPROVED
  * Interface for controls, which support different colors of text
  *
  * @public
- */
-export default interface IFontColorStyle {
-   readonly '[Controls/_interface/IFontColorStyle]': boolean;
-}
-/**
- * @name Controls/_interface/IFontColorStyle#fontColorStyle
- * @cfg {TFontColorStyle} Стиль цвета текста контрола.
- * @demo Controls-demo/Buttons/FontStyles/Index
- * @demo Controls-demo/Input/FontStyles/Index
- * @demo Controls-demo/Decorator/Money/FontColorStyle/Index
- * @demo Controls-demo/breadCrumbs_new/FontColorStyle/Index
- * @remark
- * Стиль цвета текста задается константой из стандартного набора цветов, который определен для текущей темы оформления.
- * @example
- * Кнопка со стилем шрифта по умолчанию.
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.buttons:Button icon="icon-Add" viewMode="button"/>
- * </pre>
- * Кнопка со стилем шрифта "success".
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.buttons:Button icon="icon-Add" fontColorStyle="success" viewMode="button"/>
- * </pre>
- * @see Icon
  */
 
 /*

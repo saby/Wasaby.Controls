@@ -1,4 +1,31 @@
+/**
+ * Интерфейс опций контролов, которые поддерживают разные размеры иконок
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IIconSizeOptions {
+   /**
+    * Размер иконки.
+    * @variant s малый
+    * @variant m средний
+    * @variant l большой
+    * @variant default по-умолчанию
+    * @remark
+    * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
+    * @demo Controls-demo/Buttons/SizesAndHeights/Index
+    * @example
+    * Кнопка с размером иконки по умолчанию.
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.buttons:Button icon="icon-Add" viewMode="button"/>
+    * </pre>
+    * Кнопка с иконкой большого размера (l).
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.buttons:Button icon="icon-Add" iconSize="l" viewMode="button"/>
+    * </pre>
+    * @see Icon
+    */
    iconSize?: string;
 }
 
@@ -7,38 +34,15 @@ export interface IIconSizeOptions {
  * @public
  * @author Красильников А.С.
  */
+export default interface IIconSize {
+   readonly '[Controls/_interface/IIconSize]': boolean;
+}
 
 /*
  * Interface for button icon.
  *
  * @interface Controls/_interface/IIconSize
  * @public
- */
-export default interface IIconSize {
-   readonly '[Controls/_interface/IIconSize]': boolean;
-}
-/**
- * @name Controls/_interface/IIconSize#iconSize
- * @cfg {Enum} Размер иконки.
- * @variant s малый
- * @variant m средний
- * @variant l большой
- * @variant default по-умолчанию
- * @remark
- * Размер иконки задается константой из стандартного набора размеров, который определен для текущей темы оформления.
- * @demo Controls-demo/Buttons/SizesAndHeights/Index
- * @example
- * Кнопка с размером иконки по умолчанию.
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.buttons:Button icon="icon-Add" viewMode="button"/>
- * </pre>
- * Кнопка с иконкой большого размера (l).
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.buttons:Button icon="icon-Add" iconSize="l" viewMode="button"/>
- * </pre>
- * @see Icon
  */
 
 /*

@@ -1,4 +1,24 @@
+/**
+ * Интерфейс опций контролов, который имеют возможность отображения иконки.
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IIconOptions {
+   /**
+    * Определяет иконку, которая будет отображена в контроле.
+    * @default undefined
+    * @remark Все иконки — символы специального шрифта иконок.
+    * Список всех иконок можно увидеть {@link /docs/js/icons/ здесь}.
+    * Данная опция задает только символ шрифта иконки. Размер и цвет задаются другими соответствующими опциями iconSize iconStyle
+    * @example
+    * Кнопка со стилем primary и иконкой Add.
+    * <pre class="brush: html">
+    * <!-- WML -->
+    * <Controls.buttons:Button icon="icon-Add" buttonStyle="primary" viewMode="button"/>
+    * </pre>
+    * @see Controls/interface/IIconSize
+    * @see Controls/interface/IIconStyle
+    */
    icon?: string;
 }
 
@@ -7,31 +27,15 @@ export interface IIconOptions {
  * @public
  * @author Красильников А.С.
  */
+export default interface IIcon {
+   readonly '[Controls/_interface/IIcon]': boolean;
+}
 
 /*
  * Interface for button icon.
  *
  * @interface Controls/_interface/IIcon
  * @public
- */
-export default interface IIcon {
-   readonly '[Controls/_interface/IIcon]': boolean;
-}
-/**
- * @name Controls/_interface/IIcon#icon
- * @cfg {String} Определяет иконку, которая будет отображена в контроле.
- * @default undefined
- * @remark Все иконки — символы специального шрифта иконок.
- * Список всех иконок можно увидеть {@link /docs/js/icons/ здесь}.
- * Данная опция задает только символ шрифта иконки. Размер и цвет задаются другими соответствующими опциями iconSize iconStyle
- * @example
- * Кнопка со стилем primary и иконкой Add.
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.buttons:Button icon="icon-Add" buttonStyle="primary" viewMode="button"/>
- * </pre>
- * @see Controls/interface/IIconSize
- * @see Controls/interface/IIconStyle
  */
 
 /*
@@ -47,5 +51,3 @@ export default interface IIcon {
  * </pre>
  * @see iconStyle
  */
-
-

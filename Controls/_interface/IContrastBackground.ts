@@ -1,4 +1,14 @@
+/**
+ * Интерфейс опций контролов, которые поддерживают настройку контрастности фона.
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IContrastBackgroundOptions {
+    /**
+     * @cfg {Boolean} Определяет контрастность фона контрола по отношению к его окружению.
+     * @variant true Контрастный фон.
+     * @variant false Фон, гармонично сочетающийся с окружением.
+     */
     contrastBackground: boolean;
 }
 
@@ -10,13 +20,6 @@ export interface IContrastBackgroundOptions {
 export default interface IContrastBackground {
     readonly '[Controls/_interface/IContrastBackground]': boolean;
 }
-
-/**
- * @name Controls/interface/IContrastBackground#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона контрола по отношению к его окружению.
- * @variant true Контрастный фон.
- * @variant false Фон, гармонично сочетающийся с окружением.
- */
 
 /*
  * @name Controls/interface/IContrastBackground#contrastBackground
