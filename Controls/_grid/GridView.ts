@@ -567,7 +567,14 @@ var
                 this._resultsTemplate =  options.resultsTemplate || this._baseResultsTemplate;
             }
         },
-
+        beforeRowActivated(): void {
+            if (!this._isColumnScrollVisible() || !this._targetPosition) {
+                return;
+            }
+            this._columnScrollController.scrollToElementIfHidden(this._targetPosition);
+            this._updateColumnScrollData();
+            this._targetPosition = null;
+        },
         _onItemClick(e, dispItem): void {
             e.stopImmediatePropagation();
             // Флаг preventItemEvent выставлен, если нужно предотвратить возникновение
@@ -577,7 +584,14 @@ var
             // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
             if (!e.preventItemEvent) {
                 const item = dispItem.getContents();
-                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);
+                this._notify('itemClick', [item, e, this._getCellIndexByEventTarget(e)]);let target = e.target;
+                if (!target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
+                    const clientRect = target.getBoundingClientRect();
+                    this._targetPosition = {right: clientRect.right, left: clientRect.left};
+                } else {
+                    this._targetPosition = null;
+                }
+
             }
         },
 
@@ -714,10 +728,14 @@ var
         },
 
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
-            if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
-                return;
+            const target = e.target as HTMLElement;
+            if (!this._isColumnScrollVisible()
+                || e.target.tagName !== 'INPUT'
+                || !this._options.listModel.isEditing()
+                || !!target.closest(`.${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT}`)) {
+                    return;
             }
-            this._columnScrollController.scrollToElementIfHidden(e.target as HTMLElement);
+            this._columnScrollController.scrollToElementIfHidden(target.getBoundingClientRect());
             this._updateColumnScrollData();
         },
 
