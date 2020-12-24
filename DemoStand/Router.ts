@@ -72,11 +72,7 @@ export default class RootRouterDemo extends Control<IControlOptions> {
     }
 
     goHomeHandler(): void {
-        const demoLocation = this._getLocation();
-
-        if (demoLocation) {
-            demoLocation.href = this._options.appRoot + this.pathName;
-        }
+        window.location.replace(this._options.appRoot + this.pathName);
     }
 
     _getLocation(): typeof location {
