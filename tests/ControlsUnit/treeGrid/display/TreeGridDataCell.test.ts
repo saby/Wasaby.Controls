@@ -108,7 +108,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
       it('support grid', () => {
          const expected = 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-null_theme-default ';
          const cell = treeGridCollection.at(0).getColumns()[1];
-         assert.equal(cell.getRelativeCellWrapperClasses('default'), expected);
+         CssClassesAssert.isSame(cell.getRelativeCellWrapperClasses('default'), expected);
       });
 
       it('not support grid', () => {
@@ -117,7 +117,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
 
          const expected = 'controls-TreeGridView__row-cell_innerWrapper controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-null_theme-default ';
          const cell = treeGridCollection.at(0).getColumns()[1];
-         assert.equal(cell.getRelativeCellWrapperClasses('default'), expected);
+         CssClassesAssert.isSame(cell.getRelativeCellWrapperClasses('default'), expected);
 
          GridLayoutUtil.isFullGridSupport = originalFullGridSupport;
       });
