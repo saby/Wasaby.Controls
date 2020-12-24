@@ -110,6 +110,23 @@ define(['Controls/_suggestPopup/Layer/__ContentLayer'], function(__ContentLayer)
          assert.equal(__ContentLayer.default._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });
 
+      it('updateMaxHeight when resized', function() {
+         const layer = new __ContentLayer.default();
+         let maxHeightUpdated = false;
+         const updateMaxHeight = __ContentLayer.default._private.updateMaxHeight;
+         layer._container = getContainer({top: 0});
+         __ContentLayer.default._private.getDropDownContainerSize = () => {
+            return {height: 500};
+         };
+         __ContentLayer.default._private.updateMaxHeight = (self) => {
+            maxHeightUpdated = true;
+            updateMaxHeight(self);
+         };
+         __ContentLayer.default._private.determineOpenDirection = () => {};
+         layer._resize();
+         assert.isTrue(maxHeightUpdated);
+      });
+
       it('Suggest::_private.getSizes', function() {
          var self = getComponentObject();
 
