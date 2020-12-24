@@ -3593,6 +3593,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
+        if (this._attachLoadTopTriggerToNull && this._children.topVirtualScrollTrigger) {
+            (this._children.topVirtualScrollTrigger as HTMLElement).style.marginTop = '-1px';
+        }
     },
     _viewResize(): void {
         if (this._isMounted) {
@@ -5944,14 +5947,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter'): boolean {
+    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'topTrigger'): boolean {
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
         // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        if (position === 'beforeEmptyTemplate') {
+        if (position === 'topTrigger') {
+            return this._attachLoadTopTriggerToNull;
+        } else if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
                 this._loadingIndicatorState === 'all' && (
                     this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||

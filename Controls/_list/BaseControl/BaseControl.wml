@@ -1,7 +1,7 @@
 <ws:template name="loadingIndicator">
     <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}" name="{{indicatorName}}LoadingIndicator">
         <ws:partial template="{{_options.loadingIndicatorTemplate}}"
-                    showLoadingIndicator="{{_showLoadingIndicatorImage}}"
+                    showLoadingIndicator="{{showLoadingIndicator || _showLoadingIndicatorImage}}"
                     portionedSearchInProgress="{{_portionedSearchInProgress}}">
             <ws:contentTemplate>
                 <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
@@ -89,10 +89,11 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController" name="viewContainer">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? 'display: none;'}}"></div>
+        <!-- Ещё один индикатор - необходимая жертва для того, чтобы отобразить его вместо 1px и не задеть другие части системы -->
+        <ws:partial if="{{_shouldShowLoadingIndicator('topTrigger')}}" template="loadingIndicator" showLoadingIndicator="{{true}}" loadingIndicatorState="topTrigger"/>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;  margin-top: -1px; {{_hideTopTrigger ? ' display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
-                attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
                 name="{{name}}"
                 template="{{ _options.content }}"
                 scope="{{_options}}"
@@ -194,12 +195,12 @@
 
             <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
 
-            <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
+            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
 
             <ws:partial template="fullView" name="listView"
                         attr:class="{{_isVisibleItemActions(_showActions, _itemActionsMenuId) ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
-            <ws:partial template="loadingIndicator" _showLoadingIndicatorImage="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
+            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
         </ws:if>
 
         <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
