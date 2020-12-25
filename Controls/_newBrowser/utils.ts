@@ -1,7 +1,7 @@
 import {RecordSet} from 'Types/collection';
-import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguration';
-import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
-import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
+import {IListConfiguration} from 'Controls/_newBrowser/interfaces/IListConfiguration';
+import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
  * Из метаданных RecordSet возвращает конфигурацию отображения списка
@@ -14,7 +14,7 @@ export function getListConfiguration(items: RecordSet): IListConfiguration {
 /**
  * На основании переданных опиций собирает полный набор ISourceOptions для master- или detail-колонки
  */
-export function compileSourceOptions(options: ICatalogOptions, forDetail: boolean): ISourceOptions {
+export function compileSourceOptions(options: IOptions, forDetail: boolean): ISourceOptions {
     const specific = forDetail ? options.detail : options.master;
 
     return {

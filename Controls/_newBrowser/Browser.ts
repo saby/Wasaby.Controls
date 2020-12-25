@@ -2,16 +2,16 @@ import {Logger} from 'UI/Utils';
 import {RecordSet} from 'Types/collection';
 import {Control, TemplateFunction} from 'UI/Base';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
-import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {ICatalogOptions} from 'Controls/_catalog/interfaces/ICatalogOptions';
-import {compileSourceOptions, getListConfiguration} from 'Controls/_catalog/utils';
-import {IListConfiguration} from 'Controls/_catalog/interfaces/IListConfiguration';
-import {IImageItemTemplateCfg} from 'Controls/_catalog/interfaces/IImageItemTemplateCfg';
-import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
+import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
+import {compileSourceOptions, getListConfiguration} from 'Controls/_newBrowser/utils';
+import {IListConfiguration} from 'Controls/_newBrowser/interfaces/IListConfiguration';
+import {IImageItemTemplateCfg} from 'Controls/_newBrowser/interfaces/IImageItemTemplateCfg';
+import {CatalogDetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
-import * as ViewTemplate from 'wml!Controls/_catalog/View';
+import * as ViewTemplate from 'wml!Controls/_newBrowser/Browser';
 
 interface IReceivedState {
     masterItems: RecordSet;
@@ -25,12 +25,12 @@ interface IReceivedState {
  * 'listConfiguration', в котором ожидается объект реализующий интерфейст {@link IListConfiguration},
  * и применяет полученную конфиругицию к списку.
  *
- * @class Controls/catalog:View
+ * @class Controls/newBrowser:Browser
  * @extends Core/Control
  * @public
  * @author Уфимцев Д.Ю.
  */
-export default class View extends Control<ICatalogOptions, IReceivedState> {
+export default class Browser extends Control<IOptions, IReceivedState> {
 
     //region fields
     /**
@@ -173,7 +173,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
 
     // region life circle hooks
     protected _beforeMount(
-        options?: ICatalogOptions,
+        options?: IOptions,
         contexts?: object,
         receivedState?: IReceivedState
     ): Promise<IReceivedState> | void {
@@ -206,7 +206,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         }
     }
 
-    protected _beforeUpdate(newOptions?: ICatalogOptions, contexts?: unknown): void {
+    protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
         this.updateState(newOptions);
     }
 
@@ -219,8 +219,8 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
     /**
      * Обновляет текущее состояние контрола в соответствии с переданными опциями
      */
-    private updateState(options: ICatalogOptions = this._options): void {
-        View.validateOptions(options);
+    private updateState(options: IOptions = this._options): void {
+        Browser.validateOptions(options);
 
         this._detailSourceOptions = compileSourceOptions(options, true);
         this._masterSourceOptions = compileSourceOptions(options, false);
@@ -229,7 +229,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         // базовую часть нашего идентификатора для того, что бы в дальнейшем использовать
         // её для генерации ключей в которых будем хранить свои настройки
         if (typeof options.propStorageId === 'string') {
-            this._basePropStorageId = `Controls/catalog:View_${options.propStorageId}_`;
+            this._basePropStorageId = `Controls/newBrowser:Browser_${options.propStorageId}_`;
         }
 
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
@@ -258,8 +258,8 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         // На основании полученного состояния соберем опции для detail-explorer
         this._detailExplorerOptions = this.buildDetailExplorerOptions(options);
 
-        this._listItemTemplate = options.detail.listItemTemplate || 'wml!Controls/_catalog/templates/ListItemTemplate';
-        this._tileItemTemplate = options.detail.tileItemTemplate || 'wml!Controls/_catalog/templates/TileItemTemplate';
+        this._listItemTemplate = options.detail.listItemTemplate || 'wml!Controls/_newBrowser/templates/ListItemTemplate';
+        this._tileItemTemplate = options.detail.tileItemTemplate || 'wml!Controls/_newBrowser/templates/TileItemTemplate';
         //endregion
     }
 
@@ -267,7 +267,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
      * расположенном в master-колонке.
      */
-    private buildMasterExplorerOption(options: ICatalogOptions = this._options): unknown {
+    private buildMasterExplorerOption(options: IOptions = this._options): unknown {
         const defaultCfg = {
             style: 'master',
             backgroundStyle: 'master',
@@ -287,7 +287,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         return defaultCfg;
     }
 
-    private buildDetailExplorerOptions(options: ICatalogOptions = this._options): unknown {
+    private buildDetailExplorerOptions(options: IOptions = this._options): unknown {
         return {
             // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
             // а список всеравно в первую очередь смотрит на sourceController
@@ -298,7 +298,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         };
     }
 
-    private loadDetailData(options: ICatalogOptions = this._options): Promise<RecordSet> {
+    private loadDetailData(options: IOptions = this._options): Promise<RecordSet> {
         return this._detailSourceController
             .load()
             .then((items: RecordSet) => {
@@ -322,7 +322,7 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
      */
     private applyListConfiguration(
         cfg: IListConfiguration,
-        options: ICatalogOptions = this._options
+        options: IOptions = this._options
     ): void {
         if (!cfg) {
             return;
@@ -342,10 +342,10 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
     //region static utils
     static _theme: string[] = [
         'Controls/listTemplates',
-        'Controls/catalog'
+        'Controls/newBrowser'
     ];
 
-    static getDefaultOptions(): ICatalogOptions {
+    static getDefaultOptions(): IOptions {
         return {
             viewMode: CatalogDetailViewMode.list,
             master: {
@@ -355,23 +355,25 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         };
     }
 
-    static validateOptions(options: ICatalogOptions): void {
+    static validateOptions(options: IOptions): void {
         // Если базовый источник данных не задан, то проверим
         // заданы ли источники данных для master и detail колонок
         if (!options.source) {
             if (options.master && !options.master.source) {
                 Logger.error(
-                    'Controls/catalog:View: Не задан источник данных для master-колонки. ' +
+                    'Не задан источник данных для master-колонки. ' +
                     'Необходимо указать либо базовый источник данных в опции listSource либо источник данных ' +
-                    'для master-колонки в опции master.listSource.'
+                    'для master-колонки в опции master.listSource.',
+                    this
                 );
             }
 
             if (options.detail && !options.detail.source) {
                 Logger.error(
-                    'Controls/catalog:View: Не задан источник данных для detail-колонки. ' +
+                    'Не задан источник данных для detail-колонки. ' +
                     'Необходимо указать либо базовый источник данных в опции listSource либо источник данных ' +
-                    'для detail-колонки в опции detail.listSource.'
+                    'для detail-колонки в опции detail.listSource.',
+                    this
                 );
             }
         }
@@ -381,17 +383,19 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
         if (!options.keyProperty) {
             if (options.master && !options.master.keyProperty) {
                 Logger.error(
-                    'Controls/catalog:View: Не задано keyProperty для master-колонки. ' +
+                    'Не задано keyProperty для master-колонки. ' +
                     'Необходимо указать либо базовый keyProperty в опции keyProperty либо keyProperty ' +
-                    'для master-колонки в опции master.keyProperty.'
+                    'для master-колонки в опции master.keyProperty.',
+                    this
                 );
             }
 
             if (options.detail && !options.detail.keyProperty) {
                 Logger.error(
-                    'Controls/catalog:View: Не задано keyProperty для detail-колонки. ' +
+                    'Не задано keyProperty для detail-колонки. ' +
                     'Необходимо указать либо базовый keyProperty в опции keyProperty либо keyProperty ' +
-                    'для detail-колонки в опции detail.keyProperty.'
+                    'для detail-колонки в опции detail.keyProperty.',
+                    this
                 );
             }
         }
@@ -402,12 +406,12 @@ export default class View extends Control<ICatalogOptions, IReceivedState> {
 
 /**
  * @event Событие об изменении режима отображения списка в detail-колонке
- * @name Controls/catalog:View#viewModeChanged
+ * @name Controls/newBrowser:Browser#viewModeChanged
  * @param {CatalogDetailViewMode} viewMode Текущий режим отображения списка
  */
 
 /**
  * @event Событие об изменении текущей корнево папки в detail-колонке
- * @name Controls/catalog:View#detailRootChanged
+ * @name Controls/newBrowser:Browser#detailRootChanged
  * @param {string} root Текущая корневая папка
  */

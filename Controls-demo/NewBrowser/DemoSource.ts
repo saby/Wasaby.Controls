@@ -5,7 +5,7 @@ import {
     IListConfiguration, ImageEffect,
     ImagePosition, ImageViewMode,
     ItemViewMode, TileSize
-} from 'Controls/catalog';
+} from 'Controls/newBrowser';
 
 export class DemoSource extends HierarchicalMemory {
     query(query?: Query): Promise<DataSet> {

@@ -1,16 +1,16 @@
 import {ICrudPlus} from 'Types/source';
 import {IControlOptions} from 'UI/Base';
-import {ICatalogMasterOptions} from 'Controls/_catalog/interfaces/ICatalogMasterOptions';
-import {CatalogDetailViewMode, ICatalogDetailOptions} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
-import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
+import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
+import {CatalogDetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
- * Интерфейс описывает структуру настроек компонента {@link Controls/catalog:View}
- * @interface Controls/catalog:ICatalogOptions
+ * Интерфейс описывает структуру настроек компонента {@link Controls/newBrowser:Browser}
+ * @interface Controls/newBrowser:IOptions
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogOptions extends IControlOptions, ISourceOptions {
+export interface IOptions extends IControlOptions, ISourceOptions {
     /**
      * Базовый источник данных, который будет использован по умолчанию для списков, отображаемых в каталоге.
      * Может быть перекрыт на уровне конкретного блока каталога.
@@ -19,8 +19,8 @@ export interface ICatalogOptions extends IControlOptions, ISourceOptions {
      * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках используют
      * один и тот же источник данных
      *
-     * @see ICatalogMasterOptions.source
-     * @see ICatalogDetailOptions.source
+     * @see IMasterOptions.source
+     * @see IDetailOptions.source
      */
     source?: ICrudPlus;
 
@@ -33,8 +33,8 @@ export interface ICatalogOptions extends IControlOptions, ISourceOptions {
      * Актуально использовать для уменьшения кол-ва задаваемых опций. Например, когда списки в обоих колонках
      * используют один и тот же источник данных или в качестве идентификации записей используют одно и тоже поле.
      *
-     * @see ICatalogMasterOptions.keyProperty
-     * @see ICatalogDetailOptions.keyProperty
+     * @see IMasterOptions.keyProperty
+     * @see IDetailOptions.keyProperty
      */
     keyProperty?: string;
 
@@ -57,14 +57,14 @@ export interface ICatalogOptions extends IControlOptions, ISourceOptions {
     /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.
      * Также видимость мастер колонки можно регулировать опцией
-     * {@link ICatalogMasterOptions.visibility}
+     * {@link IMasterOptions.visibility}
      *
-     * @see ICatalogMasterOptions.visibility
+     * @see IMasterOptions.visibility
      */
-    master?: ICatalogMasterOptions;
+    master?: IMasterOptions;
 
     /**
      * Конфигурация detail-колонки.
      */
-    detail?: ICatalogDetailOptions;
+    detail?: IDetailOptions;
 }

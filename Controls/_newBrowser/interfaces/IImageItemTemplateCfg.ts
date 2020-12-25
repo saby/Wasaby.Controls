@@ -1,4 +1,4 @@
-import {ImagePosition, ImageViewMode} from 'Controls/_catalog/interfaces/IListConfiguration';
+import {ImagePosition, ImageViewMode} from 'Controls/_newBrowser/interfaces/IListConfiguration';
 
 /**
  * Интерфейс описывает структуну конфигурации картинки внутри итема списка

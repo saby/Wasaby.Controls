@@ -1,11 +1,11 @@
 import {Memory} from 'Types/source';
 import {Control, TemplateFunction} from 'UI/Base';
-import {CatalogDetailViewMode} from 'Controls/catalog';
+import {CatalogDetailViewMode} from 'Controls/newBrowser';
 import {FlatHierarchy} from 'Controls-demo/_DemoData/Data';
-import {DemoSource} from 'Controls-demo/Catalog/DemoSource';
+import {DemoSource} from 'Controls-demo/NewBrowser/DemoSource';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
-import * as Template from 'wml!Controls-demo/Catalog/Index';
+import * as Template from 'wml!Controls-demo/NewBrowser/Index';
 
 const baseSource = new DemoSource({
     keyProperty: 'id',

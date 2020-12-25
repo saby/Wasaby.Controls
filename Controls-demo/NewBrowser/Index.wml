@@ -16,7 +16,7 @@
       />
    </div>
 
-   <Controls.catalog:View
+   <Controls.newBrowser:Browser
       source="{{_baseSource}}"
       keyProperty="id"
       nodeProperty="type"
@@ -32,12 +32,12 @@
          minWidth="{{200}}"
          maxWidth="{{500}}"
          filter="{{_masterFilter}}"
+         columns="{{_masterTableColumns}}"
          visibility="{{_isMasterVisible ? 'visible' : 'hidden'}}"
       >
          <!-- Настраиваем отображение списка -->
          <ws:treeGridView
             expanderVisibility="hasChildren"
-            columns="{{_masterTableColumns}}"
          />
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
@@ -45,7 +45,7 @@
          imageProperty="photo"
          columns="{{_detailTableColumns}}"
       />
-   </Controls.catalog:View>
+   </Controls.newBrowser:Browser>
 
    <svg class="clip-svg" width="0" height="0">
       <defs>

@@ -1,15 +1,15 @@
 import {ICrudPlus} from 'Types/source';
 import {ITreeControlOptions} from 'Controls/tree';
 import {IHierarchyOptions} from 'Controls/interface';
-import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
- * Интерфейс описывает структуру настроек master-колонки компонента {@link Controls/catalog:View}
- * @interface Controls/catalog:ICatalogMasterOptions
+ * Интерфейс описывает структуру настроек master-колонки компонента {@link Controls/catalog:Browser}
+ * @interface Controls/catalog:IMasterOptions
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogMasterOptions extends ISourceOptions {
+export interface IMasterOptions extends ISourceOptions {
 
     //region source options
     /**

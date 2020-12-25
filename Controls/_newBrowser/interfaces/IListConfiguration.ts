@@ -1,4 +1,4 @@
-import {CatalogDetailViewMode} from 'Controls/_catalog/interfaces/ICatalogDetailOptions';
+import {CatalogDetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 
 export enum BackgroundStyle {
     default = 'default',
@@ -38,7 +38,7 @@ export enum TileSize {
 
 /**
  * Интерфейс описывает структуру конфигурации списка в detail-колонки
- * @interface Controls/catalog:IListConfiguration
+ * @interface Controls/newBrowser:IListConfiguration
  * @public
  * @author Уфимцев Д.Ю.
  */

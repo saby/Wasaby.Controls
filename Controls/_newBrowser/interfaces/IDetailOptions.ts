@@ -1,6 +1,6 @@
 import {ICrudPlus} from 'Types/source';
 import {TemplateFunction} from 'UI/Base';
-import {ISourceOptions} from 'Controls/_catalog/interfaces/ISourceOptions';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
  * Enum со списком доступных вариантов отображения контента в detail-колонке
@@ -12,12 +12,12 @@ export enum CatalogDetailViewMode {
 }
 
 /**
- * Интерфейс описывает структуру настроек detail-колонки компонента {@link Controls/catalog:View}
- * @interface Controls/catalog:ICatalogDetailOptions
+ * Интерфейс описывает структуру настроек detail-колонки компонента {@link Controls/newBrowser:Browser}
+ * @interface Controls/newBrowser:IDetailOptions
  * @public
  * @author Уфимцев Д.Ю.
  */
-export interface ICatalogDetailOptions extends ISourceOptions {
+export interface IDetailOptions extends ISourceOptions {
     //region source options
     /**
      * Источник данных, который будет использован списочным представлением внутри detail-колонки.
