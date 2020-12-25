@@ -3593,9 +3593,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
         this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
-        if (this._attachLoadTopTriggerToNull && this._children.topVirtualScrollTrigger) {
-            (this._children.topVirtualScrollTrigger as HTMLElement).style.marginTop = '-1px';
-        }
     },
     _viewResize(): void {
         if (this._isMounted) {
