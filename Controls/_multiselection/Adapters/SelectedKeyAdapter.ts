@@ -1,8 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_filterPanel/Editors/Container/EditorContainer';
+import * as template from 'wml!Controls/_multiselection/Adapters/SelectedKeyAdapter';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
-class EditorContainer extends Control<IControlOptions> {
+class SelectedKeyAdapter extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: number[]|string[], added: number[]|string[], deleted: number[]|string[]): void {
@@ -16,4 +16,4 @@ class EditorContainer extends Control<IControlOptions> {
         this._notify('selectedKeysChanged', [selectedKeys], {bubbling: true});
     }
 }
-export default EditorContainer;
+export default SelectedKeyAdapter;

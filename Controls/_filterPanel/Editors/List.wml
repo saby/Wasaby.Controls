@@ -1,7 +1,6 @@
 <ws:template name="listBase">
-   <ws:partial template="{{'Controls/filterPanel:EditorContainer'}}"
-               on:selectedKeysChanged="_handleSelectedKeysChanged()"
-               multiSelect="{{_options.multiSelect}}">
+   <Controls.multiselection:SelectedKeyAdapter on:selectedKeysChanged="_handleSelectedKeysChanged()"
+                                               multiSelect="{{_options.multiSelect}}">
       <Controls.grid:View source="{{_options.source}}"
                           columns="{{_columns}}"
                           keyProperty="{{_options.keyProperty}}"
@@ -19,7 +18,7 @@
             <ws:partial template="{{_circleTemplate}}" style="{{_options.style}}"/>
          </ws:multiSelectTemplate>
       </Controls.grid:View>
-   </ws:partial>
+   </Controls.multiselection:SelectedKeyAdapter>
 </ws:template>
 
 <div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
