@@ -38,7 +38,7 @@ function getItemsElements(itemsContainer: HTMLElement, useQuerySelector: boolean
 export function getElementByKey(itemsContainer: HTMLElement, key: number | string): HTMLElement {
     let result = null;
     for (let i = 0, len = itemsContainer.children.length; i < len; i++) {
-        if (itemsContainer.children[i].getAttribute('key') === key) {
+        if (itemsContainer.children[i].getAttribute('key') == key) {
             result = itemsContainer.children[i];
             break;
         }
