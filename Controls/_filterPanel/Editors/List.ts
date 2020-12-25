@@ -174,12 +174,12 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     private _getTextValue(selectedKeys: number[]|string[]): string {
-        let text = '';
+        const textArray = [];
         selectedKeys.forEach((item, index) => {
             const record = this._items.getRecordById(item);
-            text = text + record.get(this._options.displayProperty) + (index === selectedKeys.length - 1 ? '' : ', ');
+            textArray.push(record.get(this._options.displayProperty));
         });
-        return text;
+        return textArray.join(', ');
     }
 
     private _getStackOpener(): StackOpener {

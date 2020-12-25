@@ -7,12 +7,7 @@ class SelectedKeyAdapter extends Control<IControlOptions> {
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: number[]|string[], added: number[]|string[], deleted: number[]|string[]): void {
         event.stopPropagation();
-        let selectedKeys;
-        if (this._options.multiSelect) {
-            selectedKeys = keys;
-        } else {
-            selectedKeys = [added[0] || deleted[0]];
-        }
+        const selectedKeys = [added[0] || deleted[0]];
         this._notify('selectedKeysChanged', [selectedKeys], {bubbling: true});
     }
 }
