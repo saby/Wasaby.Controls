@@ -5758,14 +5758,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             } else {
                 // After the right swipe the item should get selected.
                 if (_private.isItemsSelectionAllowed(this._options)) {
+                    this._notify('checkboxClick', [key, item.isSelected()]);
                     const newSelection = _private.getSelectionController(this).toggleItem(key);
                     _private.changeSelection(this, newSelection);
-                }
-                this._notify('checkboxClick', [key, item.isSelected()]);
-
-                // Animation should be played only if checkboxes are visible.
-                if (_private.hasSelectionController(this)) {
-                    _private.getSelectionController(this).startItemAnimation(key);
+                    // Animation should be played only if checkboxes are visible.
+                    if (_private.hasSelectionController(this)) {
+                        _private.getSelectionController(this).startItemAnimation(key);
+                    }
                 }
                 this.setMarkedKey(key);
             }
