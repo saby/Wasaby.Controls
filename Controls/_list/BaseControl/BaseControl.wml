@@ -89,11 +89,14 @@
 </ws:template>
 <ws:template name="viewTpl">
     <div class="controls-ScrollController" name="viewContainer">
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? ' display: none;'}}"></div>
         <!-- Ещё один индикатор - необходимая жертва для того, чтобы отобразить его вместо 1px и не задеть другие части системы -->
-        <ws:partial if="{{_shouldShowLoadingIndicator('topTrigger')}}" template="loadingIndicator" showLoadingIndicator="{{true}}" loadingIndicatorState="topTrigger"/>
+        <ws:partial if="{{_shouldShowLoadingIndicator('topTrigger')}}"
+                    attr:style="{{_attachLoadTopTriggerToNull ? 'margin-top: 1px;'}}"
+                    template="loadingIndicator" showLoadingIndicator="{{true}}" loadingIndicatorState="topTrigger"/>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? ' display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
+                attr:style="{{_attachLoadTopTriggerToNull ? 'padding-top: 1px;'}}"
                 name="{{name}}"
                 template="{{ _options.content }}"
                 scope="{{_options}}"
