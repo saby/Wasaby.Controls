@@ -146,7 +146,7 @@ export default {
              * @default undefined
              * @example
              * <pre class="brush: html">
-             *  <Controls.calendar:MonthView daysData="{{ _getArray() }}">
+             *  <Controls.calendar:MonthView daysData="{{ _daysArray }}">
              *       <ws:dayTemplate>
              *          {{ dayTemplate.value.doubledDay}}
              *       </ws:dayTemplate>
@@ -162,7 +162,7 @@ export default {
              *                  doubledDay: i * 2
              *              }];
              *          }
-             *          return array;
+             *          this._daysArray = array;
              *      }
              *      ...
              *  </pre>

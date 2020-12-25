@@ -59,7 +59,6 @@ const SCALE_ROUNDING_ERROR_FIX = 1.5;
  * @extends Core/Control
  * @mixes Controls/_calendar/interfaces/IMonthListSource
  * @mixes Controls/_interface/IDayTemplate
- * @mixes Controls/_calendar/interfaces/IMonth
  *
  * @public
  * @author Красильников А.С.
