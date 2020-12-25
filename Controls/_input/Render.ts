@@ -2,10 +2,9 @@ import {detection} from 'Env/Env';
 import {descriptor} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as ActualAPI from 'Controls/_input/ActualAPI';
 import {
     IHeight, IHeightOptions, IFontColorStyle,
-    IFontColorStyleOptions, IFontSize, IFontSizeOptions,
+    IFontColorStyleOptions, IFontSize, IFontSizeOptions, IFontWeightOptions, IFontWeight,
     IBorderStyle, IBorderStyleOptions, IValidationStatus,
     IValidationStatusOptions, IContrastBackground
 } from 'Controls/interface';
@@ -38,7 +37,7 @@ export interface IBorder {
 }
 
 export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorderVisibilityOptions,
-    IFontColorStyleOptions, IFontSizeOptions, IValidationStatusOptions, IBorderStyleOptions {
+    IFontColorStyleOptions, IFontSizeOptions, IFontWeightOptions, IValidationStatusOptions, IBorderStyleOptions {
     /**
      * @name Controls/_input/Render#multiline
      * @cfg {Boolean} Определяет режим рендеринга текстового поля.
@@ -94,6 +93,7 @@ export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorder
  *
  * @mixes Controls/interface:IHeight
  * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IFontWeight
  * @mixes Controls/interface:IBorderStyle
  * @mixes Controls/interface:IFontColorStyle
  * @mixes Controls/interface:IValidationStatus
@@ -105,7 +105,12 @@ export interface IRenderOptions extends IControlOptions, IHeightOptions, IBorder
  * @private
  */
 
-class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize,
+/**
+ * @name Controls/_input/Render#fontWeight
+ * @demo Controls-demo/Input/FontWeight/Index
+ */
+
+class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle, IFontSize, IFontWeight,
                                                         IValidationStatus, IBorderStyle,
                                                         IBorderVisibility, IContrastBackground {
     protected _tag: SVGElement | null = null;
@@ -115,12 +120,14 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
     protected _state: string;
     protected _statePrefix: string;
     protected _fontSize: string;
+    protected _fontWeight: string;
     protected _inlineHeight: string;
     protected _fontColorStyle: string;
     protected _template: TemplateFunction = template;
 
     readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
+    readonly '[Controls/_interface/IFontWeight]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
     readonly '[Controls/_interface/IValidationStatus]': boolean = true;
     readonly '[Controls/interface/IBorderStyle]': boolean = true;
@@ -165,12 +172,16 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
 
     protected _beforeMount(options: IRenderOptions): void {
         this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
         this._setState(options);
     }
 
     protected _beforeUpdate(options: IRenderOptions): void {
         if (options.borderVisibility !== this._options.borderVisibility) {
             this._border = Render._detectToBorder(options.borderVisibility, options.multiline);
+        }
+        if (options.fontWeight !== this._options.fontWeight || options.fontSize !== this._options.fontSize) {
+            this._fontWeight = Render._getFontWeight(options.fontWeight, options.fontSize);
         }
         this._setState(options);
     }
@@ -211,6 +222,16 @@ class Render extends Control<IRenderOptions> implements IHeight, IFontColorStyle
                     left: false
                 };
         }
+    }
+
+    private static _getFontWeight(fontWeight: string, fontSize: string): string {
+        if (fontWeight) {
+            return fontWeight;
+        } else if (fontSize === '3xl') {
+            return 'bold';
+        }
+
+        return 'default';
     }
 
     static getDefaultTypes(): object {
