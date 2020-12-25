@@ -13,7 +13,7 @@ import {RecordSet} from 'Types/collection';
 
 export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
     IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
-    propertyValue: number|string;
+    propertyValue: number[]|string[];
     showSelectorCaption?: string;
     additionalTextProperty: string;
 }
@@ -28,12 +28,11 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
     private _itemsReadyCallback: Function = null;
 
     protected abstract _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void;
-    protected abstract _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void;
     protected abstract _handleSelectorResult(result: Model[]): void;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
-        this._setColumns(options.displayProperty, options.propertyValue, options.multiSelectVisibility, options.additionalTextProperty);
+        this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
     }
 
@@ -43,7 +42,7 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
-            this._setColumns(options.displayProperty, options.propertyValue, options.multiSelectVisibility, options.additionalTextProperty);
+            this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
         }
     }
 
@@ -70,12 +69,18 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         this._items = items;
     }
 
-    protected _setColumns(displayProperty: string, propertyValue: number|string|string[]|number[], multiSelectVisibility: string, additionalTextProperty?: string): void {
+    protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
+        const contentClick = nativeEvent.target.closest('.controls-EditorList__columns');
+        if (contentClick) {
+            this._notifyPropertyValueChanged([item.get(this._options.keyProperty)], true);
+        }
+    }
+
+    protected _setColumns(displayProperty: string, propertyValue: number|string|string[]|number[], additionalTextProperty?: string): void {
         this._columns = [{
             template: ColumnTemplate,
             selected: propertyValue,
-            displayProperty,
-            multiSelect: multiSelectVisibility && multiSelectVisibility !== 'hidden'
+            displayProperty
         }];
         if (additionalTextProperty) {
             this._columns.push({align: 'right', displayProperty: additionalTextProperty, width: 'auto'});
@@ -86,6 +91,26 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
         if (this._stackOpener) {
             this._stackOpener.destroy();
         }
+    }
+
+    protected _notifyPropertyValueChanged(value: string[]|number[], needColapse?: boolean): void {
+        const extendedValue = {
+            value,
+            textValue: this._getTextValue(value),
+            needColapse
+        };
+        this._selectedKeys = value;
+        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.additionalTextProperty);
+        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _getTextValue(selectedKeys: number[]|string[]): string {
+        let text = '';
+        selectedKeys.forEach((item, index) => {
+            const record = this._items.getRecordById(item);
+            text = text + record.get(this._options.displayProperty) + (index === selectedKeys.length - 1 ? '' : ', ');
+        });
+        return text;
     }
 
     private _getStackOpener(): StackOpener {
@@ -99,7 +124,11 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
 
     static getDefaultOptions(): object {
         return {
-            showSelectorCaption: rk('Другие')
+            showSelectorCaption: rk('Другие'),
+            circleStyle: 'default',
+            itemPadding: {
+                right: 'm'
+            }
         };
     }
 }

@@ -26,35 +26,24 @@ import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
  * @demo Controls-demo/filterPanel/EnumListEditor/AdditionalTextProperty/Index
  */
 
+/**
+ * @name Controls/_filterPanel/Editors/EnumList#circleStyle
+ * @cfg {String} Стиль отображения маркера в списке.
+ * @variant default
+ * @variant master
+ * @default default
+ */
+
 class ListEditor extends ListEditorBase {
     protected _columns: object[] = null;
 
-    protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
-        const value = item.get(this._options.keyProperty);
-        this._notifyPropertyValueChanged(value, this._getTextValue(value));
-    }
-
-    protected _handleSelectedKeysChanged(): void {
-        //Для списка с еденичным выбором не приходит событие selectedKeysChanged
+    protected _handleSelectedKeysChanged(event: SyntheticEvent, value: string[]|number[]): void {
+        this._notifyPropertyValueChanged(value, true);
     }
 
     protected _handleSelectorResult(result: Model[]): void {
         const item = result.at(0);
-        this._notifyPropertyValueChanged(item.get(this._options.keyProperty), item.get(this._options.displayProperty));
-    }
-
-    protected _notifyPropertyValueChanged(value: string|number, textValue: string): void {
-        const extendedValue = {
-            value,
-            textValue,
-            needColapse: true
-        };
-        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
-    }
-
-    private _getTextValue(value: string|number): string {
-        const record = this._items.getRecordById(value);
-        return record.get(this._options.displayProperty);
+        this._notifyPropertyValueChanged([item.get(this._options.keyProperty)], true);
     }
 }
 export default ListEditor;

@@ -35,20 +35,14 @@ export default class extends Control {
             filter: (item, queryFilter) => {
                 let addToData = true;
                 const emptyFields = {
-                    owner: null,
+                    owner: [],
                     amount: []
                 };
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
-
-                        if (typeof itemValue === 'string') {
-                            addToData = itemValue === filterValue;
-                        }
-                        if (Array.isArray(filterValue)) {
-                            addToData = itemValue >= filterValue[0] && itemValue <= filterValue[1];
-                        }
+                        addToData = (itemValue >= filterValue[0] && itemValue <= filterValue[1]) || filterValue.includes(itemValue);
 
                         if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
                             addToData = true;
@@ -76,12 +70,14 @@ export default class extends Control {
             {
                 group: 'Ответственный',
                 name: 'owner',
-                resetValue: null,
+                resetValue: [],
                 caption: '',
-                value: null,
+                value: [],
                 textValue: '',
                 editorTemplateName: 'Controls/filterPanel:EnumListEditor',
                 editorOptions: {
+                    style: 'master',
+                    circleStyle: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',

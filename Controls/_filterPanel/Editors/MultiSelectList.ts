@@ -29,28 +29,27 @@ import {ISelectorTemplate} from 'Controls/interface';
  * @demo Controls-demo/filterPanel/MultiSelectListEditor/AdditionalTextProperty/Index
  */
 
+/**
+ * @name ontrols/_filterPanel/Editors/MultiSelectList#circleStyle
+ * @cfg {String} Стиль отображения чекбокса в списке.
+ * @variant default
+ * @variant master
+ * @default default
+ */
+
 export default class MultiSelectList extends ListEditorBase {
     protected _columns: object[] = null;
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
-        this._selectedKeys = keys;
-        this._notifyPropertyValueChanged();
-    }
-
-    protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
-        const contentClick = nativeEvent.target.closest('.controls-EditorList__columns');
-        if (contentClick) {
-            this._selectedKeys = [item.get(this._options.keyProperty)];
-            this._notifyPropertyValueChanged(true);
-        }
+        this._notifyPropertyValueChanged(keys);
     }
 
     protected _handleSelectorResult(result: Model[]): void {
-        this._selectedKeys = [];
+        const selectedKeys = [];
         result.forEach((item) => {
-            this._selectedKeys.push(item.get(this._options.keyProperty));
+            selectedKeys.push(item.get(this._options.keyProperty));
         });
-        this._notifyPropertyValueChanged();
+        this._notifyPropertyValueChanged(selectedKeys);
     }
 
     protected _getTemplateOptions(selectorOptions: ISelectorTemplate): object {
@@ -62,16 +61,6 @@ export default class MultiSelectList extends ListEditorBase {
                 multiSelect: true
             }
         };
-    }
-
-    protected _notifyPropertyValueChanged(needColapse?: boolean): void {
-        const extendedValue = {
-            value: this._selectedKeys,
-            textValue: this._getTextValue(),
-            needColapse
-        };
-        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.multiSelectVisibility, this._options.additionalTextProperty);
-        this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
     private _getSelectedItems(): List<Model> {
@@ -87,20 +76,11 @@ export default class MultiSelectList extends ListEditorBase {
         });
     }
 
-    private _getTextValue(): string {
-        let text = '';
-        this._selectedKeys.forEach((item, index) => {
-            const record = this._items.getRecordById(item);
-            text = text + record.get(this._options.displayProperty) + (index === this._selectedKeys.length - 1 ? '' : ', ');
-        });
-        return text;
-    }
-
     static getDefaultOptions(): object {
         return {
             ...ListEditorBase.getDefaultOptions(),
             ...{
-                multiSelectVisibility: 'onhover'
+                multiSelect: true
             }
         };
     }

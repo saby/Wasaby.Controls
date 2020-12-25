@@ -44,6 +44,8 @@ export default class extends Control {
                 textValue: 'Новиков Д.В., Кошелев А.Е.',
                 editorTemplateName: 'Controls/filterPanel:MultiSelectList',
                 editorOptions: {
+                    style: 'master',
+                    circleStyle: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',

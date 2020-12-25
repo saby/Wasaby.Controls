@@ -1,23 +1,25 @@
 <ws:template name="listBase">
-   <Controls.grid:View source="{{_options.source}}"
-                       columns="{{_columns}}"
-                       keyProperty="{{_options.keyProperty}}"
-                       markedKey="{{_options.propertyValue}}"
-                       selectedKeys="{{_selectedKeys}}"
-                       scope="{{_options}}"
-                       markerVisibility="{{false}}"
-                       navigation="{{_options.navigation}}"
-                       backgroundStyle="transparent"
-                       hoverBackgroundStyle="listEditor"
-                       footerTemplate="{{footerTemplate}}"
-                       itemsReadyCallback="{{_itemsReadyCallback}}"
-                       on:selectedKeysChanged="_handleSelectedKeysChanged()"
-                       on:itemClick="_handleItemClick()">
-      <ws:itemPadding left="xxl" right="m"/>
-      <ws:multiSelectTemplate>
-         <ws:partial template="{{_circleTemplate}}" multiSelectVisibility="{{_options.multiSelectVisibility}}"/>
-      </ws:multiSelectTemplate>
-   </Controls.grid:View>
+   <ws:partial template="{{'Controls/filterPanel:EditorContainer'}}"
+               on:selectedKeysChanged="_handleSelectedKeysChanged()"
+               multiSelect="{{_options.multiSelect}}">
+      <Controls.grid:View source="{{_options.source}}"
+                          columns="{{_columns}}"
+                          keyProperty="{{_options.keyProperty}}"
+                          selectedKeys="{{_selectedKeys}}"
+                          scope="{{_options}}"
+                          markerVisibility="hidden"
+                          navigation="{{_options.navigation}}"
+                          backgroundStyle="transparent"
+                          hoverBackgroundStyle="listEditor"
+                          footerTemplate="{{footerTemplate}}"
+                          multiSelectVisibility="onhover"
+                          itemsReadyCallback="{{_itemsReadyCallback}}"
+                          on:itemClick="_handleItemClick()">
+         <ws:multiSelectTemplate>
+            <ws:partial template="{{_circleTemplate}}" circleStyle="{{_options.circleStyle}}"/>
+         </ws:multiSelectTemplate>
+      </Controls.grid:View>
+   </ws:partial>
 </ws:template>
 
 <div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
@@ -27,7 +29,8 @@
             <Controls.buttons:Button viewMode="linkButton"
                                      caption="{{_options.showSelectorCaption}}"
                                      fontColorStyle="label"
-                                     on:click="_handleFooterClick()"/>
+                                     on:click="_handleFooterClick()"
+                                     attr:class="controls-EditorList__footer_theme-{{_options.theme}}"/>
          </ws:footerTemplate>
       </ws:partial>
    </ws:if>
