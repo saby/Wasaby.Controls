@@ -20,14 +20,16 @@
 
 <ws:template name="DEFAULT_CONTENT_WRAPPER">
     <ws:if data="{{itemData.column.tooltip}}">
-        <Controls.popup:InfoboxTarget>
-            <ws:content>
-                <ws:partial template="DEFAULT_CONTENT"/>
-            </ws:content>
-            <ws:template>
-                <div>{{itemData.column.tooltip}}</div>
-            </ws:template>
-        </Controls.popup:InfoboxTarget>
+        <Controls.Container.Async templateName="Controls/popup:InfoboxTarget">
+            <ws:partial template="{{content.resolvedTemplate}}">
+                <ws:content>
+                    <ws:partial template="DEFAULT_CONTENT"/>
+                </ws:content>
+                <ws:template>
+                    <div>{{itemData.column.tooltip}}</div>
+                </ws:template>
+            </ws:partial>
+        </Controls.Container.Async>
     </ws:if>
     <ws:else>
         <ws:partial template="DEFAULT_CONTENT"/>

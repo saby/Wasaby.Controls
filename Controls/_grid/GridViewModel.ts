@@ -37,9 +37,9 @@ import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspan
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
-const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
-const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
-const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
+const MONEY_RENDER = 'wml!Controls/_grid/layout/types/money';
+const NUMBER_RENDER = 'wml!Controls/_grid/layout/types/number';
+const STRING_RENDER = 'wml!Controls/_grid/layout/types/string';
 
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
