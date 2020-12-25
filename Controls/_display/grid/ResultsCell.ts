@@ -60,7 +60,7 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
 
         if (this._$column.align) {
-            wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$align}`;
+            wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
         }
 
         if (!this._$owner.isSticked()) {
@@ -87,7 +87,7 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
         if (this._$owner.hasColumnScroll()){
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(backgroundColorStyle, theme)}`;
+            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
 
         return wrapperClasses;

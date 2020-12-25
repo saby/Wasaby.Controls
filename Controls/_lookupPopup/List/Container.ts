@@ -1,13 +1,18 @@
 import rk = require('i18n!Controls');
 import Control = require('Core/Control');
 import template = require('wml!Controls/_lookupPopup/List/Container');
-import {showType} from 'Controls/Utils/Toolbar';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import { IItemAction } from 'Controls/itemActions';
 
 type Key = string|number;
 type SelectionChangedEventResult = [Key[], Key[], Key[]];
+
+export enum showType {
+   MENU,
+   MENU_TOOLBAR,
+   TOOLBAR
+}
 
 let SELECT_ACTION_ID = 'selector.action';
 let ACTION_TITLE = rk('Выбрать');
