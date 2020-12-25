@@ -1919,6 +1919,7 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
+                _private.showActions(self);
             }
         }
     },
@@ -5333,6 +5334,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 const item = _private.getItemActionsController(this, this._options).getActiveItem();
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
+        } else if (eventName === 'menuOpened') {
+            _private.hideActions(this);
         }
     },
 
@@ -5668,9 +5671,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * Возвращает видимость опций записи.
      * @private
      */
-    _isVisibleItemActions(showActions: boolean, itemActionsMenuId: number): boolean {
-        return (showActions || this._options.useNewModel) &&
-            (!itemActionsMenuId || this._options.itemActionsVisibility === 'visible');
+    _isVisibleItemActions(showActions: boolean): boolean {
+        return showActions || this._options.itemActionsVisibility === 'visible';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {

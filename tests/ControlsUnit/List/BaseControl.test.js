@@ -4847,6 +4847,22 @@ define([
             stubHandleItemActionClick.restore();
          });
 
+         // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)
+         it('should hide ItemActions on menuOpened event', () => {
+            const fakeEvent = initFakeEvent();
+            const spyHideActions = sinon.spy(lists.BaseControl._private, 'hideActions');
+            instance._onItemActionsMenuResult('menuOpened', null, fakeEvent);
+            sinon.assert.called(spyHideActions);
+         });
+
+         // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)
+         it('should show ItemActions on menu close event', () => {
+            instance._itemActionsMenuId = 'popupId_1';
+            const showHideActions = sinon.spy(lists.BaseControl._private, 'showActions');
+            instance._onItemActionsMenuClose({id: 'popupId_1'});
+            sinon.assert.called(showHideActions);
+         });
+
          // должен открывать меню, соответствующее новому id Popup
          it('should open itemActionsMenu according to its id', () => {
             const fakeEvent = initFakeEvent();
