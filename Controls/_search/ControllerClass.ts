@@ -27,13 +27,14 @@ const SERVICE_FILTERS = {
  * Имеется возможность поиска в дереве и плоском списке.
  * @remark
  * Если при инициализации экземпляра класса не передавать опцию sourceController,
- * то рекомендуется его передать в опциях в метод ControllerClass#update, иначе при попытке поиска или сброса возникнут ошибки.
+ * то рекомендуется его передать в опциях в метод {@link /docs/js/Controls/search/ControllerClass/methods/update/ ControllerClass#update}, иначе при попытке поиска или сброса возникнут ошибки.
  * Если в методе update в опциях передать новые sourceController и searchValue, то поиск или сброс будут произведены
  * на новом sourceController.
  * Если же передать только новый sourceController, то будет произведен поиск или сброс по старому searchValue.
+ * Поле, переданное через опцию searchParam, при сбросе поиска будет удалено из фильтра.
  *
  * @example
- * При создании экзепмляра класса можно передать опцией sourceController - {@link Controls/dataSource:NewSourceController}
+ * При создании экзепмляра класса можно передать опцией {@link Controls/source:Controller sourceController}
  * <pre>
  * const controllerClass = new ControllerClass({
  *   sourceController: new SourceController(...)
@@ -58,8 +59,8 @@ const SERVICE_FILTERS = {
  * </pre>
  *
  * @class Controls/_search/ControllerClass
- * @implements Controls/interface/ISearch
- * @implements Controls/interface/IHierarchy
+ * @implements Controls/_interface/ISearch
+ * @implements Controls/_interface/IHierarchy
  * @implements Controls/interface/IHierarchySearch
  * @public
  * @demo Controls-demo/Search/FlatList/Index Поиск в плоском списке
@@ -100,7 +101,8 @@ export default class ControllerClass {
       this._checkSourceController();
 
       const filter = {...this._sourceController.getFilter()};
-      filter[this._options.searchParam] = this._searchValue = '';
+      delete filter[this._options.searchParam];
+      this._searchValue = '';
 
       if (this._options.parentProperty) {
          for (const i in SERVICE_FILTERS.HIERARCHY) {
@@ -198,6 +200,7 @@ export default class ControllerClass {
             updateResult = this.reset(true);
          }
       }
+      // TODO: Должны ли использоваться новые опции в reset или search?
       this._options = {
          ...this._options,
          ...options

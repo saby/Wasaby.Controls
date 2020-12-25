@@ -1,5 +1,5 @@
-import {images} from './Images';
-import {BrandsImages} from './images/Brands';
+import {BrandsImages} from './images/brands';
+import {GadgetsImages} from './images/gadgets';
 
 interface IHierarchyData {
     id: number;
@@ -38,7 +38,7 @@ export const FlatHierarchy = {
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: BrandsImages.mac
+                    photo: GadgetsImages.mac
                 },
                     {
                         id: 111,
@@ -46,7 +46,7 @@ export const FlatHierarchy = {
                         parent: 11,
                         rating: '9.2',
                         type: null,
-                        photo: BrandsImages.macBookAir
+                        photo: GadgetsImages.macBookAir
                     },
                 {
                     id: 12,
@@ -55,7 +55,7 @@ export const FlatHierarchy = {
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: BrandsImages.iPad
+                    photo: GadgetsImages.iPad
                 },
                 {
                     id: 13,
@@ -64,7 +64,7 @@ export const FlatHierarchy = {
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: BrandsImages.iPhone
+                    photo: GadgetsImages.iPhone
                 },
                 {
                     id: 14,
@@ -73,7 +73,7 @@ export const FlatHierarchy = {
                     rating: '9.2',
                     type: true,
                     hasChild: true,
-                    photo: BrandsImages.appleWathc
+                    photo: GadgetsImages.appleWathc
                 },
                     {
                         id: 141,
@@ -156,7 +156,7 @@ export const FlatHierarchy = {
                         note: '2 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: images[3]
+                        photo: BrandsImages.apple
                     },
                     {
                         id: 162,
@@ -168,7 +168,7 @@ export const FlatHierarchy = {
                         note: '',
                         parent: 16,
                         type: null,
-                        photo: images[3]
+                        photo: BrandsImages.apple
                     },
                     {
                         id: 163,
@@ -180,7 +180,7 @@ export const FlatHierarchy = {
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: images[3]
+                        photo: BrandsImages.apple
                     },
                     {
                         id: 164,
@@ -192,7 +192,7 @@ export const FlatHierarchy = {
                         note: '',
                         parent: 16,
                         type: null,
-                        photo: images[3]
+                        photo: BrandsImages.apple
                     },
                     {
                         id: 165,
@@ -204,7 +204,7 @@ export const FlatHierarchy = {
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: images[3]
+                        photo: BrandsImages.apple
                     },
                 {
                 id: 17,

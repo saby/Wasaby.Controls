@@ -284,6 +284,18 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
+ * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
+ * @cfg {String} Имя свойства, содержащего информацию о доступности чекбокса элемента.
+ * @remark Определяет возможность изменения состояния чекбокса и его видимость.
+ * Для указания значения в {Types/entity:Record рекорде} рекомендуется использовать константу {@link Controls/list:MultiSelectAccessibility MultiSelectAccessibility}.
+ * Возможные значения свойства {Types/entity:Record рекорда}:
+ * * {@link Controls/list:MultiSelectAccessibility#enabled enabled} Чекбокс виден и с ним можно взаимодействовать
+ * * {@link Controls/list:MultiSelectAccessibility#disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
+ * * {@link Controls/list:MultiSelectAccessibility#hidden hidden} Чекбокс скрыт
+ * @demo Controls-demo/list_new/ItemTemplate/MultiSelectAccessibilityProperty/Index
+ */
+
+/**
  * @event Происходит в момент, когда курсор оказывается над элементом списка.
  * @name Controls/_list/interface/IList#itemMouseEnter
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.

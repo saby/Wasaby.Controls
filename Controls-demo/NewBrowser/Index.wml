@@ -44,7 +44,16 @@
       <ws:detail
          imageProperty="photo"
          columns="{{_detailTableColumns}}"
-      />
+      >
+         <ws:itemContent>
+            {{itemContent.itemData.item.description}}
+         </ws:itemContent>
+         <ws:itemFooter>
+            <span style="color: grey">
+               {{ itemContent.itemData.item.rating || itemContent.itemData.item.year }}
+            </span>
+         </ws:itemFooter>
+      </ws:detail>
    </Controls.newBrowser:Browser>
 
    <svg class="clip-svg" width="0" height="0">

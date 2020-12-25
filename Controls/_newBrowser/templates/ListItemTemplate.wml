@@ -14,9 +14,19 @@
       />
    </ws:captionTemplate>
    <ws:contentTemplate>
-      <ws:partial template="{{itemContent}}" scope="{{contentTemplate}}"/>
+      <ws:if data="{{itemContent}}">
+         <ws:partial template="{{itemContent}}" scope="{{contentTemplate}}"/>
+      </ws:if>
+      <ws:else>
+         <invisible-node/>
+      </ws:else>
    </ws:contentTemplate>
    <ws:footerTemplate>
-      <div>Дополнительное описани</div>
+      <ws:if data="{{itemFooter}}">
+         <ws:partial template="{{itemFooter}}" scope="{{footerTemplate}}"/>
+      </ws:if>
+      <ws:else>
+         <invisible-node/>
+      </ws:else>
    </ws:footerTemplate>
 </ws:partial>

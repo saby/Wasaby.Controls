@@ -8,7 +8,7 @@ define([
    'Controls/tree',
    'Controls/treeGrid',
    'Controls/grid',
-   'Controls/Utils/Toolbar',
+   'Controls/toolbars',
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
@@ -8147,6 +8147,40 @@ define([
 
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
+
+            it('updateOptions with new model', () => {
+               const searchViewModel = new treeGrid.SearchGridViewModel({
+                  items: new collection.RecordSet({
+                     rawData: [{
+                        id: 1,
+                        type: true,
+                        parent: null
+                     }, {
+                        id: 2,
+                        type: null,
+                        parent: 1
+                     }],
+                     keyProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  keyProperty: 'id'
+               });
+
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
+               baseControl.setMarkedKey(3);
+               baseControl._listViewModel = searchViewModel;
+               baseControl._modelRecreated = true;
+               baseControl._beforeUpdate(cfg);
+
+
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [2]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [2]).called);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
          });
       });
 
@@ -8272,7 +8306,7 @@ define([
             it('select', () => {
                const notifySpy = sinon.spy(baseControl, '_notify');
 
-               baseControl._onCheckBoxClick({}, 1 );
+               baseControl._onCheckBoxClick({}, baseControl._listViewModel.getItemBySourceKey(1) );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
@@ -8289,7 +8323,7 @@ define([
                };
 
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({}, 1 );
+               baseControl._onCheckBoxClick({}, baseControl._listViewModel.getItemBySourceKey(1) );
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[2], [2], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
 
@@ -8298,7 +8332,7 @@ define([
 
             it('readonly checkbox', () => {
                const notifySpy = sinon.spy(baseControl, '_notify');
-               baseControl._onCheckBoxClick({}, 1, false, true );
+               baseControl._onCheckBoxClick({}, baseControl._listViewModel.getItemBySourceKey(1), true );
                assert.isFalse(notifySpy.withArgs('selectedKeysChanged').calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });

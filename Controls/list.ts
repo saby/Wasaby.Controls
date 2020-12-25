@@ -1,14 +1,12 @@
 /**
  * Библиотека контролов, которые реализуют плоский список. Список может строиться по данным, полученным из источника. Также можно организовать удаление и перемещение данных.
  * @library Controls/list
- * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
+ * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
- * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
+ * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
- * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
@@ -19,14 +17,12 @@
 /*
  * List library
  * @library Controls/list
- * @includes BaseItemTemplate Controls/_list/interface/BaseItemTemplate
- * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
+ * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
- * @includes BaseGroupTemplate Controls/_list/interface/BaseGroupTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
+ * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
  * @includes EditingTemplate Controls/_list/interface/EditingTemplate
- * @includes BaseEditingTemplate Controls/_list/interface/BaseEditingTemplate
  * @includes NumberEditingTemplate Controls/_list/interface/NumberEditingTemplate
  * @includes MoneyEditingTemplate Controls/_list/interface/MoneyEditingTemplate
  * @includes LoadingIndicatorTemplate Controls/_list/interface/LoadingIndicatorTemplate
@@ -86,7 +82,6 @@ export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
-export {IBaseGroupTemplateOptions} from 'Controls/_list/interface/BaseGroupTemplate';
 export {IContentTemplateOptions} from 'Controls/_list/interface/IContentTemplate';
 export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
 
@@ -138,7 +133,7 @@ export {
 /**
  * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактированием по месту}.
  * @public
- */ 
+ */
 const editing = {
     /**
      * С помощью этой константы можно отменить запуск {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
@@ -151,6 +146,7 @@ const editing = {
 };
 
 import {groupConstants} from './display';
+import {MultiSelectAccessibility} from './display';
 import {CursorDirection} from './interface';
 
-export {CursorDirection, groupConstants, editing};
+export {CursorDirection, groupConstants, editing, MultiSelectAccessibility};

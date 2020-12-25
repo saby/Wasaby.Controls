@@ -31,6 +31,7 @@
                      template="{{_listItemTemplate}}"
                      imageCfg="{{_imageItemTemplateCfg}}"
                      itemContent="{{_options.detail.itemContent}}"
+                     itemFooter="{{_options.detail.itemFooter}}"
                   />
                </ws:itemTemplate>
                <ws:tileItemTemplate>

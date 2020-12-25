@@ -3,7 +3,7 @@ import {ListView, CssClassList} from 'Controls/list';
 import * as GridLayoutUtil from 'Controls/_grid/utils/GridLayoutUtil';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import {TouchContextField as isTouch} from 'Controls/context';
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {prepareEmptyEditingColumns} from 'Controls/Utils/GridEmptyTemplateUtil';
 import {
     COLUMN_SCROLL_JS_SELECTORS,
@@ -354,13 +354,14 @@ var
         _defaultItemTemplate: GridItemTemplate,
         _headerContentTemplate: HeaderContentTpl,
 
-        _notifyHandler: tmplNotify,
+        _notifyHandler: EventUtils.tmplNotify,
         _columnScrollContainerClasses: '',
         _dragScrollOverlayClasses: '',
         _horizontalScrollPosition: 0,
         _contentSizeForHScroll: 0,
         _horizontalScrollWidth: 0,
         _containerSize: 0,
+        _itemClickTarget: null,
 
         _beforeMount(cfg) {
             _private.checkDeprecated(cfg, this);
@@ -407,7 +408,7 @@ var
                 // preventServerSideColumnScroll - запрещает построение с помощью данного механизма. Нужно например при поиске, когда
                 // таблица перемонтируется. Простая проверка на window нам не подходит, т.к. нас интересует только первая отрисовка view
                 // списочного контрола.
-                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScrollOld;
+                this._showFakeGridWithColumnScroll = !cfg.preventServerSideColumnScroll;
             }
 
             return resultSuper;
@@ -796,6 +797,7 @@ var
                 }
             }
         },
+
         _onFocusInEditingCell(e: SyntheticEvent<FocusEvent>): void {
             if (!this._isColumnScrollVisible() || e.target.tagName !== 'INPUT' || !this._options.listModel.isEditing()) {
                 return;

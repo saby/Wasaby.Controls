@@ -2,18 +2,18 @@ import { TemplateFunction } from 'UI/Base';
 import { create } from 'Types/di';
 import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
 import { IOptions as IBaseOptions } from '../../CollectionItem';
-import HeaderRow from '../HeaderRow';
 import Collection from '../Collection';
 import Cell, { IOptions as ICellOptions } from '../Cell';
 import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
-import prepareColumns from '../../utils/GridColspanUtil';
 import {Model as EntityModel} from 'Types/entity';
+import { THeader } from '../../../_grid/interface/IHeaderCell';
+import {TColspanCallback, TColspanCallbackResult} from './Grid';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
-interface IItemTemplateParams {
+export interface IItemTemplateParams {
     highlightOnHover?: boolean,
     style?: string,
     cursor?: 'default' | 'pointer',
@@ -25,6 +25,7 @@ interface IItemTemplateParams {
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
+    colspanCallback: TColspanCallback;
 }
 
 export default abstract class Row<T> {
@@ -35,6 +36,7 @@ export default abstract class Row<T> {
 
     protected _$columns: TColumns;
     protected _$columnItems: Array<Cell<T, Row<T>>>;
+    protected _$colspanCallback: TColspanCallback;
     protected _$ladder: {};
 
     getDefaultTemplate(): string {
@@ -42,22 +44,30 @@ export default abstract class Row<T> {
     }
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        let itemClasses = `${this._getBaseItemClasses(params.style, params.theme)} `
+                        + `${this._getCursorClasses(params.cursor, params.clickable)} `
+                        + `${this._getItemHighlightClasses(params.style, params.theme, params.highlightOnHover)}`;
+
         const navigation = this.getOwner().getNavigation();
         const isLastItem = (!navigation || navigation.view !== 'infinity' || !this.getOwner().getHasMoreData())
             && this.isLastItem();
-        let itemClasses = `controls-ListView__itemV ${this._getCursorClasses(params.cursor, params.clickable)}`;
-
-        itemClasses += ` controls-Grid__row controls-Grid__row_${params.style}_theme-${params.theme}`;
-
-        if (params.highlightOnHover !== false && !this.isEditing()) {
-            itemClasses += ` controls-Grid__row_highlightOnHover_${params.style}_theme-${params.theme}`;
-        }
 
         if (isLastItem) {
             itemClasses += ' controls-Grid__row_last';
         }
 
         return itemClasses;
+    }
+
+    protected _getBaseItemClasses(style: string, theme: string): string {
+        return `controls-ListView__itemV controls-Grid__row controls-Grid__row_${style}_theme-${theme}`
+    }
+
+    protected _getItemHighlightClasses(style: string, theme: string, highlightOnHover?: boolean): string {
+        if (highlightOnHover !== false && !this.isEditing()) {
+            return `controls-Grid__row_highlightOnHover_${style}_theme-${theme}`;
+        }
+        return '';
     }
 
     isLastItem(): boolean {
@@ -123,8 +133,8 @@ export default abstract class Row<T> {
         return this._$owner.getEditingBackgroundStyle();
     }
 
-    getHeader(): HeaderRow<T> {
-        return this._$owner.getHeader();
+    hasHeader(): boolean {
+        return this._$owner.hasHeader();
     }
 
     getResultsPosition(): TResultsPosition {
@@ -197,6 +207,12 @@ export default abstract class Row<T> {
         }
     }
 
+    setColspanCallback(colspanCallback: TColspanCallback): void {
+        this._$colspanCallback = colspanCallback;
+        this._nextVersion();
+        this._reinitializeColumns();
+    }
+
     getLadder(): {} {
         let result;
         if (this._$ladder && this._$ladder.ladder) {
@@ -224,18 +240,49 @@ export default abstract class Row<T> {
         }
     }
 
+    protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
+        const colspanCallback = this._$colspanCallback;
+        if (colspanCallback) {
+            return colspanCallback(this.getContents(), column, columnIndex, this.isEditing());
+        }
+        return undefined;
+    }
+
+    protected _prepareColumnItems(columns: IColspanParams[], factory: (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>>): Array<Cell<T, Row<T>>> {
+        const columnItems = [];
+        for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
+            const column = columns[columnIndex];
+            let colspan = this._getColspan(column, columnIndex);
+            if (colspan === 'end') {
+                colspan = columns.length - columnIndex;
+            }
+            if (colspan === 1) {
+                colspan = 0;
+            }
+            if (colspan) {
+                columnIndex += colspan - 1;
+            }
+            columnItems.push(factory({
+                column,
+                colspan: colspan as number,
+                isFixed: columnIndex < this.getStickyColumnsCount()
+            }));
+        }
+        return columnItems;
+    }
+
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const createMultiSelectColumn = this.needMultiSelectColumn();
+            const createMultiSelectColumn = this.hasMultiSelectColumn();
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
             const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
                 this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
             const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
                 this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
-            const factory = this._getColumnsFactory();
 
-            this._$columnItems = this._$columns.map((column) => factory({ column }));
+            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+
 
             if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
                 this._$columnItems[0].setHiddenForLadder(true);
@@ -269,7 +316,8 @@ export default abstract class Row<T> {
                 this._$columnItems = ([
                     new CheckboxCell({
                         column: {} as IColumn,
-                        owner: this
+                        owner: this,
+                        isFixed: true
                     })
                 ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
             }
@@ -297,14 +345,6 @@ export default abstract class Row<T> {
         }
     }
 
-    prepareColspanedColumns<TColumn>(columns: TColumn & IColspanParams[]): Array<TColumn & Required<IColspanParams>> {
-        return prepareColumns({
-            columns,
-            hasMultiSelect: this.needMultiSelectColumn(),
-            gridColumnsCount: this._$owner.getColumnsConfig().length
-        });
-    }
-
     protected _getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
         if (!this._cellModule) {
             throw new Error('Controls/_display/Row:_getColumnsFactory can not resolve cell module!');
@@ -315,8 +355,8 @@ export default abstract class Row<T> {
         };
     }
 
-    needMultiSelectColumn(): boolean {
-        return this._$owner.needMultiSelectColumn();
+    hasMultiSelectColumn(): boolean {
+        return this._$owner.hasMultiSelectColumn();
     }
 
     getIndex(): number {
@@ -335,6 +375,7 @@ export default abstract class Row<T> {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
+    abstract getContents(): T;
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;
@@ -347,5 +388,6 @@ Object.assign(Row.prototype, {
     '[Controls/_display/grid/mixins/Row]': true,
     _cellModule: null,
     _$columns: null,
+    _$colspanCallback: null,
     _$columnItems: null
 });

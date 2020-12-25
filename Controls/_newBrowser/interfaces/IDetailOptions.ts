@@ -60,14 +60,26 @@ export interface IDetailOptions extends ISourceOptions {
 
     //region item templates
     /**
-     * Шаблон отображения итема плоского списка
+     * Кастомный шаблон отображения итема плоского списка
      */
     listItemTemplate?: TemplateFunction | string;
 
     /**
-     * Шаблон отображения итема плитки
+     * Кастомный шаблон отображения итема плитки
      */
     tileItemTemplate?: TemplateFunction | string;
+
+    /**
+     * Шаблон отображения контента, который будет внедрен в дефолтный
+     * шаблон отображения итема.
+     */
+    itemContent: TemplateFunction | string;
+
+    /**
+     * Шаблон отображения футера, который будет внедрен в дефолтный
+     * шаблон отображения итема.
+     */
+    itemFooter: TemplateFunction | string;
     //endregion
 
     /**

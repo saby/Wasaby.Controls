@@ -177,8 +177,8 @@ define('Controls/interface/IEditableList', [
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
-    *    * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
-    *    * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
+    *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
+    *     * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @returns {ItemEditResult}
     * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
     * @example
@@ -239,6 +239,7 @@ define('Controls/interface/IEditableList', [
     * @see beforeEndEdit
     * @see afterEndEdit
     * @see editingConfig
+    * @markdown
     */
 
    /*
@@ -317,8 +318,8 @@ define('Controls/interface/IEditableList', [
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
-    *    * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
-    *    * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
+    *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd}).
+    *     * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
     * @remark
     * Подпишитесь на событие, если необходимо что-либо сделать после начала редактирования (например, скрыть кнопку "Добавить").
     * Событие запускается, когда подготовка данных успешно завершена и возможно безопасно обновить пользовательский интерфейс.
@@ -340,6 +341,7 @@ define('Controls/interface/IEditableList', [
     * @see beforeBeginEdit
     * @see beforeEndEdit
     * @see afterEndEdit
+    * @markdown
     */
 
    /*
@@ -413,6 +415,7 @@ define('Controls/interface/IEditableList', [
     * @see beforeBeginEdit
     * @see afterBeginEdit
     * @see afterEndEdit
+    * @markdown
     */
 
    /*
@@ -481,6 +484,7 @@ define('Controls/interface/IEditableList', [
     * @see beforeBeginEdit
     * @see afterBeginEdit
     * @see beforeEndEdit
+    * @markdown
     */
 
    /*

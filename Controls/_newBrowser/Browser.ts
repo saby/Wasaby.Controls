@@ -328,9 +328,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             return;
         }
 
-        /*this._listConfiguration = cfg;
+        this._listConfiguration = cfg;
         this._imageItemTemplateCfg = {};
-        this.currentViewMode = cfg.settings.clientViewMode;*/
+        this.currentViewMode = cfg.settings.clientViewMode;
 
         if (this.currentViewMode === CatalogDetailViewMode.list) {
             this._imageItemTemplateCfg.viewMode = cfg.list.photo.viewMode;

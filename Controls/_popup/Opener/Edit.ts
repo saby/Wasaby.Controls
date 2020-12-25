@@ -15,11 +15,7 @@ interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
  * * {@link /materials/Controls-demo/app/Controls-demo%2FPopup%2FEdit%2FOpener демо-пример}
  * * {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4 руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
- * 
- * @class Controls/_popup/Opener/Edit
- * @mixes Controls/_popup/interface/IBaseOpener
- * @mixes Controls/_popup/interface/IEditOptions
- * 
+ * @extends Controls/_popup/Opener
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Edit/Opener
@@ -27,12 +23,12 @@ interface IEditOpenerOptions extends IEditOptions, IControlOptions {}
 class Edit extends Control<IEditOpenerOptions> implements IEditOpener {
     readonly '[Controls/_popup/interface/IEditOpener]': boolean;
     protected _template: TemplateFunction = template;
-    private _resultHandler: Function;
     protected _openerTemplate: Control;
-    private _linkedKey: string = null; // key to obtain a synchronized record
-    private _children: {
+    protected _children: {
         Opener: BaseOpener
     };
+    private _resultHandler: Function;
+    private _linkedKey: string = null; // key to obtain a synchronized record
 
     protected _beforeMount(options: IEditOpenerOptions): void {
         this._onResult = this._onResult.bind(this);
