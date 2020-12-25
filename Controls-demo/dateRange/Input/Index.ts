@@ -4,5 +4,5 @@ import * as Template from 'wml!Controls-demo/dateRange/Input/dateRangeInput';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
 
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/dateRange/Input/dateRangeInput'];
 }
