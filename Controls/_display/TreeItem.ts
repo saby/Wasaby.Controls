@@ -257,8 +257,8 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {
         // expanderSize по дефолту undefined, т.к. есть логика, при которой если он задан,
-        // то скрытый экспандер для отступа не рисуем, но по факту дефолтное значение 's'
-        const expanderSize = this.getExpanderSize(tmplExpanderSize) || 's';
+        // то скрытый экспандер для отступа не рисуем, но по факту дефолтное значение 'default'
+        const expanderSize = this.getExpanderSize(tmplExpanderSize) || 'default';
         let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__row-expanderPadding_theme-${theme}`;
         expanderPaddingClasses += ` controls-TreeGrid__row-expanderPadding_size_${expanderSize}_theme-${theme}`;
         expanderPaddingClasses += ' js-controls-ListView__notEditable';
