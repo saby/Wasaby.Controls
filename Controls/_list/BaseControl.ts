@@ -6089,15 +6089,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
-                const lastItem = this._listViewModel.getLast();
-                const startPosition = {
-                    index: this._listViewModel.getIndex(lastItem),
-                    dispItem: lastItem,
-                    position: 'after'
-                };
-
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
                 this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+
+                let startPosition;
+                if (this._listViewModel.getCount()) {
+                    const lastItem = this._listViewModel.getLast();
+                    startPosition = {
+                        index: this._listViewModel.getIndex(lastItem),
+                        dispItem: lastItem,
+                        position: 'after'
+                    };
+                } else {
+                    startPosition = {
+                        index: 0,
+                        dispItem: draggingItemProjection,
+                        position: 'before'
+                    };
+                }
 
                 // задаем изначальную позицию в другом списке
                 this._dndListController.setDragPosition(startPosition);
