@@ -973,13 +973,6 @@ define([
             keyProperty: 'id',
             data: data
          });
-         const sourceController = new dataSource.NewSourceController({
-            source: source,
-            keyProperty: 'id'
-         });
-         sourceController.setItems(new collection.RecordSet({
-            rawData: data
-         }));
 
          var dataLoadFired = false;
          var beforeLoadToDirectionCalled = false;
@@ -994,7 +987,6 @@ define([
                beforeLoadToDirectionCalled = true;
             },
             source: source,
-            sourceController: sourceController,
             viewConfig: {
                keyProperty: 'id'
             },
@@ -1015,10 +1007,13 @@ define([
             searchValue: 'test'
          };
 
-         var ctrl = correctCreateBaseControl(cfg);
-         ctrl.saveOptions(cfg);
+         var ctrl = await correctCreateBaseControlAsync(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._container = {getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}])};
+         ctrl.saveOptions(cfg);
+         ctrl._container = {
+            getElementsByClassName: () => ([{clientHeight: 100, offsetHeight:0}]),
+            getBoundingClientRect: () => {}
+         };
          ctrl._afterMount(cfg);
          ctrl._loadTriggerVisibility = {
             up: false,
