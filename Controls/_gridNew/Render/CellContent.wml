@@ -28,14 +28,16 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{ (gridColumn || itemData).getColumnConfig().tooltip }}">
-            <Controls.popup:InfoboxTarget>
-                <ws:content>
-                    <ws:partial template="content"/>
-                </ws:content>
-                <ws:template>
-                    <div>{{ (gridColumn || itemData).getColumnConfig().tooltip }}</div>
-                </ws:template>
-            </Controls.popup:InfoboxTarget>
+            <Controls.Container.Async templateName="Controls/popup:InfoboxTarget">
+                <ws:partial template="{{content.resolvedTemplate}}">
+                    <ws:content>
+                        <ws:partial template="content"/>
+                    </ws:content>
+                    <ws:template>
+                        <div>{{ (gridColumn || itemData).getColumnConfig().tooltip }}</div>
+                    </ws:template>
+                </ws:partial>
+            </Controls.Container.Async>
         </ws:if>
         <ws:else>
             <ws:partial template="content"/>
