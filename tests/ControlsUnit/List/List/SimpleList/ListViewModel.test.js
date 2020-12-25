@@ -683,7 +683,7 @@ define([
             lvm._options.multiSelectVisibility = 'visible';
             lvm._options.theme = 'default';
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
-            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default');
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default');
          });
 
 
@@ -692,14 +692,14 @@ define([
             lvm._options.theme = 'default';
             lvm.setSelectedItems([lvm.getItemById(2, 'id')], true);
             var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
-            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default');
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default');
          });
 
          it('getMultiSelectClassList onhover unselected', function() {
             lvm._options.multiSelectVisibility = 'onhover';
             lvm._options.theme = 'default';
             var item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
-            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default controls-ListView__checkbox-onhover');
+            assert.equal(item.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-ListView__checkbox-onhover');
          });
 
 
@@ -709,22 +709,22 @@ define([
             };
 
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, false, 'default'),
-               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default');
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default');
 
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true, 'default'),
-               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default controls-ListView__checkbox-onhover');
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-ListView__checkbox-onhover');
 
             current.isSelected = () => true;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true, 'default'),
-               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default');
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default');
 
             current.isSelected = () => null;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true, 'default'),
-               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default');
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default');
 
             current.isSelected = () => undefined;
             assert.equal(lists.ListViewModel._private.getMultiSelectClassList(current, true, 'default'),
-               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-Checkbox__iconWrapper_inList_theme-default controls-ListView__checkbox-onhover');
+               'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-ListView__checkbox-onhover');
          });
 
          it('setDragTargetPosition', function() {
