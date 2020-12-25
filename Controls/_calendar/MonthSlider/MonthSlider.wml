@@ -19,6 +19,8 @@
          month="{{content.data}}"
          mode="{{_options.mode}}"
          dayTemplate="{{ _options.dayTemplate }}"
+         dayFormatter="{{ _options.dayFormatter }}"
+         daysData="{{ _options.daysData }}"
          on:itemClick="_itemClickHandler()"
          startValue="{{_options.startValue}}"
          endValue="{{_options.endValue}}"

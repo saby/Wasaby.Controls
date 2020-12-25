@@ -18,7 +18,7 @@ import MonthViewModel from 'Controls/_calendar/Month/Model';
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Date/Month
@@ -29,15 +29,6 @@ var Component = BaseControl.extend({
     _template: monthTmpl,
     _monthViewModel: MonthViewModel,
 
-    // constructor: function() {
-    //    this._dayFormatter = this._dayFormatter.bind(this);
-    //    Component.superclass.constructor.apply(this, arguments);
-    // },
-
-    // _beforeMount: function(options) {
-    //    this._view = options.view || 'Controls/Date/MonthView';
-    // },
-
     _onRangeChangedHandler: function (event, startValue, endValue) {
         this._notify('startValueChanged', [startValue]);
         this._notify('endValueChanged', [endValue]);
@@ -46,14 +37,6 @@ var Component = BaseControl.extend({
     _itemClickHandler(event, item) {
         this._notify('itemClick', [item]);
     }
-
-    // _startValueChangedHandler: function(event, value) {
-    //    this._notify('startValueChanged', [value]);
-    // },
-    //
-    // _endValueChangedHandler: function(event, value) {
-    //    this._notify('endValueChanged', [value]);
-    // }
 
 });
 
