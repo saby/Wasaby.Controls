@@ -16,7 +16,7 @@
                           itemsReadyCallback="{{_itemsReadyCallback}}"
                           on:itemClick="_handleItemClick()">
          <ws:multiSelectTemplate>
-            <ws:partial template="{{_circleTemplate}}" circleStyle="{{_options.circleStyle}}"/>
+            <ws:partial template="{{_circleTemplate}}" style="{{_options.style}}"/>
          </ws:multiSelectTemplate>
       </Controls.grid:View>
    </ws:partial>

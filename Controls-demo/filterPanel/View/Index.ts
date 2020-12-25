@@ -74,10 +74,9 @@ export default class extends Control {
                 caption: '',
                 value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
                     style: 'master',
-                    circleStyle: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',

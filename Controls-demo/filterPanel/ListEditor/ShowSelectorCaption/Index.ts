@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanel/EnumListEditor/ShowSelectorCaption/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/ListEditor/ShowSelectorCaption/Index';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -23,8 +23,9 @@ export default class extends Control {
                 caption: '',
                 value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    style: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',

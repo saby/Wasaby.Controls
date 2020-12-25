@@ -7,6 +7,6 @@
             cx="6" cy="6" r="5"/>
     <rect xmlns="http://www.w3.org/2000/svg"
           class="controls-EnumList_Editor__innerCircle
-                  controls-EnumList_Editor__innerCircle_{{_options.selected || value ? 'selected-' + circleStyle : 'unselected'}}_theme-{{_options.theme}}"
+                  controls-EnumList_Editor__innerCircle_{{_options.selected || value ? 'selected-' + style : 'unselected'}}_theme-{{_options.theme}}"
           x="2" y="2" width="8" height="8" rx="4" ry="4"/>
 </svg>

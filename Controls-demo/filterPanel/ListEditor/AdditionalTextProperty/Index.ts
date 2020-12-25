@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanel/MultiSelectListEditor/AdditionalTextProperty/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/ListEditor/AdditionalTextProperty/Index';
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -25,7 +25,7 @@ export default class extends Control {
                 caption: '',
                 value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:MultiSelectList',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
                     navigation: {
                         source: 'page',
@@ -54,8 +54,9 @@ export default class extends Control {
                 caption: '',
                 value: null,
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:MultiSelectList',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    style: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',

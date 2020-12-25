@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/filterPanel/MultiSelectListEditor/Source/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/ListEditor/MultiSelect/Index';
 import {Memory} from 'Types/source';
 import {departments} from 'Controls-demo/Filter_new/resources/DataStorage';
 import {isEqual} from 'Types/object';
@@ -42,10 +42,10 @@ export default class extends Control {
                 caption: '',
                 value: ['Новиков Д.В.', 'Кошелев А.Е.'],
                 textValue: 'Новиков Д.В., Кошелев А.Е.',
-                editorTemplateName: 'Controls/filterPanel:MultiSelectList',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    multiSelect: true,
                     style: 'master',
-                    circleStyle: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',
