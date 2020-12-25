@@ -42,7 +42,7 @@ define([
       // Костыль с получением данных из источника по приватному полю
       // Т.к. сейчас все тесты ожидают построение по источнику, а не по sourceController'у
       // Единственный способ оживить массово тесты
-      if (cfgTreeControl.source) {
+      if (cfgTreeControl.source && !cfgTreeControl.sourceController) {
          cfgTreeControl.sourceController = new dataSource.NewSourceController({
             source: cfgTreeControl.source,
             navigation: cfgTreeControl.navigation,
@@ -87,6 +87,25 @@ define([
       }
    }
 
+   async function correctCreateTreeControlAsync(cfg) {
+      let cloneCfg = {...cfg};
+      if (cloneCfg.source) {
+         cloneCfg.sourceController = new dataSource.NewSourceController({
+            source: cloneCfg.source,
+            navigation: cloneCfg.navigation,
+            expandedItems: cloneCfg.expandedItems,
+            parentProperty: cloneCfg.parentProperty,
+            root: cloneCfg.root,
+            keyProperty: cloneCfg.keyProperty || (cloneCfg.source && cloneCfg.source.getKeyProperty())
+         });
+
+         await cloneCfg.sourceController.reload();
+      }
+      const createResult = correctCreateTreeControl(cloneCfg, true);
+      await createResult.createPromise;
+      return createResult.treeControl;
+   }
+
    function getHierarchyData() {
       return [
          {id: 0, 'Раздел@': true, "Раздел": null},
@@ -98,15 +117,15 @@ define([
    }
 
    describe('Controls.tree.TreeControl', function() {
-      it('TreeControl creating with expandedItems', function() {
-         return new Promise(function(resolve, reject) {
-            correctCreateTreeControl({
-               columns: [],
-               source: new sourceLib.Memory({
-                  data: [{
-                     id: 111,
-                     parent: null
-                  },
+      it('TreeControl creating with expandedItems', async function() {
+         let loadResult;
+         const treeControlConfig = {
+            columns: [],
+            source: new sourceLib.Memory({
+               data: [{
+                  id: 111,
+                  parent: null
+               },
                   {
                      id: 111111,
                      parent: 111
@@ -119,40 +138,36 @@ define([
                      id: 777777,
                      parent: 777
                   }],
-                  keyProperty: 'id',
-                  filter: function(item, filter) {
-                     for (var i = 0; i < filter.parent.length; i++) {
-                        if (item.get('parent') === filter.parent[i]) {
-                           return true;
-                        }
-                     }
-                     return false;
-                  }
-               }),
-               expandedItems: [777],
                keyProperty: 'id',
-               parentProperty: 'parent',
-               dataLoadCallback: function(items) {
-                  try {
-                     assert.deepEqual(items.getRawData(), [{
-                        id: 111,
-                        parent: null
-                     },
-                     {
-                        id: 777,
-                        parent: null
-                     },
-                     {
-                        id: 777777,
-                        parent: 777
-                     }], 'Invalid items value after reload with expandedItems');
-                     resolve();
-                  } catch(e) {
-                     reject(e);
+               filter: function(item, filter) {
+                  for (var i = 0; i < filter.parent.length; i++) {
+                     if (item.get('parent') === filter.parent[i]) {
+                        return true;
+                     }
                   }
+                  return false;
                }
-            });
-         });
+            }),
+            expandedItems: [777],
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            dataLoadCallback: function(items) {
+               loadResult = items;
+            }
+         };
+         await correctCreateTreeControlAsync(treeControlConfig);
+         assert.deepEqual(loadResult.getRawData(), [{
+            id: 111,
+            parent: null
+         },
+            {
+               id: 777,
+               parent: null
+            },
+            {
+               id: 777777,
+               parent: 777
+            }], 'Invalid items value after reload with expandedItems');
       });
 
       it('afterReloadCallback before mounting should not cause errors', function() {
@@ -351,6 +366,7 @@ define([
       });
 
       it('_private.shouldLoadChildren', async function() {
+         let treeControl;
          const
             source = new sourceLib.Memory({
                keyProperty: 'id',
@@ -429,35 +445,34 @@ define([
                return items;
             });
          };
-         const
-            createResult = correctCreateTreeControl({
-               columns: [],
-               parentProperty: 'parent',
-               nodeProperty: 'nodeType',
-               hasChildrenProperty: 'hasChildren',
-               source: source,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 10,
-                     page: 0,
-                     hasMore: true
-                  }
+         const treeControlConfig = {
+            columns: [],
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            hasChildrenProperty: 'hasChildren',
+            source: source,
+            navigation: {
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  hasMore: true
                }
-            }, true),
-            shouldLoadChildrenResult = {
-               'node_has_loaded_children': false,
-               'node_has_unloaded_children': true,
-               'node_has_no_children': false
-            };
+            }
+         };
+         const shouldLoadChildrenResult = {
+            'node_has_loaded_children': false,
+            'node_has_unloaded_children': true,
+            'node_has_no_children': false
+         };
 
-         await createResult.createPromise;
+         treeControl = await correctCreateTreeControlAsync(treeControlConfig);
 
          for (const nodeKey in shouldLoadChildrenResult) {
             const
                 expectedResult = shouldLoadChildrenResult[nodeKey];
             assert.strictEqual(
-                tree.TreeControl._private.shouldLoadChildren(createResult.treeControl, nodeKey),
+                tree.TreeControl._private.shouldLoadChildren(treeControl, nodeKey),
                 expectedResult,
                 '_private.shouldLoadChildren returns unexpected result for ' + nodeKey
             );
@@ -1106,7 +1121,6 @@ define([
                });
                return res;
             });
-            });
          });
       });
 
@@ -1304,47 +1318,34 @@ define([
          treeControl.reload();
          assert.deepEqual([2246, 452815, 457244, 471641], treeControl._children.baseControl.getViewModel().getExpandedItems());
       });
-      it('Expand all', function() {
-         var
-            treeControl = correctCreateTreeControl({
-               source: new sourceLib.Memory({
-                  data: [
-                     { id: 1, type: true, parent: null },
-                     { id: 2, type: true, parent: null },
-                     { id: 11, type: null, parent: 1 }
-                  ],
-                  keyProperty: 'id'
-               }),
-               columns: [],
-               keyProperty: 'id',
-               parentProperty: 'parent',
-               nodeProperty: 'type',
-               expandedItems: [null]
+      it('Expand all', async function() {
+         const treeControlConfig = {
+            source: new sourceLib.Memory({
+               data: [
+                  { id: 1, type: true, parent: null },
+                  { id: 2, type: true, parent: null },
+                  { id: 11, type: null, parent: 1 }
+               ],
+               keyProperty: 'id'
             }),
-            treeGridViewModel = treeControl._children.baseControl.getViewModel();
-         return new Promise(function(resolve, reject) {
-            setTimeout(function () {
-               try {
-                  assert.deepEqual([null], treeGridViewModel._model._expandedItems);
-                  assert.deepEqual([], treeGridViewModel._model._collapsedItems);
-                  treeGridViewModel.toggleExpanded(treeGridViewModel._model._display.at(0));
-               } catch(e) {
-                  reject(e);
-               }
-               setTimeout(function() {
-                  try {
-                     assert.deepEqual([null], treeGridViewModel._model._expandedItems);
-                     assert.deepEqual([1], treeGridViewModel._model._collapsedItems);
-                     resolve();
-                  } catch(e) {
-                     reject(e);
-                  }
-               }, 10);
-            }, 10);
-         });
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'type',
+            expandedItems: [null]
+         };
+         const treeControl = await correctCreateTreeControlAsync(treeControlConfig);
+         const treeGridViewModel = treeControl._children.baseControl.getViewModel();
+
+         assert.deepEqual([null], treeGridViewModel._model._expandedItems);
+         assert.deepEqual([], treeGridViewModel._model._collapsedItems);
+
+         treeGridViewModel.toggleExpanded(treeGridViewModel._model._display.at(0));
+         assert.deepEqual([null], treeGridViewModel._model._expandedItems);
+         assert.deepEqual([1], treeGridViewModel._model._collapsedItems);
       });
 
-      it('expandedItems bindind 1', function(done){
+      it('expandedItems bindind 1', async function(done){
          var _cfg = {
             source: new sourceLib.Memory({
                data: [
@@ -1360,19 +1361,16 @@ define([
             nodeProperty: 'type',
             expandedItems: [1]
          };
-         var createObject = correctCreateTreeControl(_cfg, true);
-         var treeControl1 = createObject.treeControl;
+         const treeControl = await correctCreateTreeControlAsync(_cfg,);
+         const treeGridViewModel1 = treeControl._children.baseControl.getViewModel();
 
-         createObject.createPromise.then(() => {
-            var treeGridViewModel1 = treeControl1._children.baseControl.getViewModel();
-            assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong expandedItems');
-            treeControl1.toggleExpanded(1);
-            treeControl1._beforeUpdate(_cfg);
-            setTimeout(()=>{
-               assert.deepEqual([], treeControl1._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
-               done();
-            }, 10);
-         });
+         assert.deepEqual([1], treeGridViewModel1._model._expandedItems,'wrong expandedItems');
+
+         await treeControl.toggleExpanded(1);
+         treeControl._beforeUpdate(_cfg);
+         assert.deepEqual([], treeControl._children.baseControl.getViewModel()._model._expandedItems,'wrong expandedItems after _breforeUpdate');
+      });
+
       });
       it('expandedItems binding 2', function(done){
 

@@ -3343,10 +3343,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             self._groupingLoader = new GroupingLoader({});
         }
 
-        if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
-            newOptions.dataLoadCallback(receivedData);
-        }
-
         if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
             if (receivedData) {
@@ -3395,7 +3391,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     newOptions.serviceDataLoadCallback(null, self._items);
                 }
 
-                    _private.createScrollController(self, newOptions);
+                if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
+                    newOptions.dataLoadCallback(receivedData);
+                }
+
+                _private.createScrollController(self, newOptions);
 
                 _private.prepareFooter(self, newOptions, self._sourceController);
 
@@ -3747,7 +3747,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
-        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
             // При смене страницы, должно закрыться редактирование записи.
@@ -3879,14 +3878,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.resetScrollAfterLoad(self);
             }
         }
+        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
 
-        if (newOptions.sourceController !== this._options.sourceController) {
-            this._sourceController = newOptions.sourceController;
-        }
-
-        if (filterChanged && !newOptions.sourceController && this._sourceController) {
-            this.updateSourceController(newOptions);
-        }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }

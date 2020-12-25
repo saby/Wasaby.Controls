@@ -52,6 +52,25 @@ function getCorrectBaseControlConfig(cfg): object {
     return cfg;
 }
 
+async function getCorrectBaseControlConfigAsync(cfg): Promise<object> {
+    // Эмулируем, что в baseControl передан sourceController
+    let sourceController;
+    if (cfg.source) {
+        sourceController = new NewSourceController({
+            source: cfg.source,
+            keyProperty: cfg.keyProperty || cfg.source.getKeyProperty(),
+            navigation: cfg.navigation,
+            sorting: cfg.sorting,
+            root: cfg.root !== undefined ? cfg.root : null
+        });
+
+        await sourceController.load();
+        cfg.sourceController = sourceController;
+    }
+
+    return cfg;
+}
+
 describe('Controls/list_clean/BaseControl', () => {
     describe('BaseControl watcher groupHistoryId', () => {
 
@@ -471,7 +490,7 @@ describe('Controls/list_clean/BaseControl', () => {
         });
 
         it('paging mode is numbers', async () => {
-            const cfgClone = {...baseControlCfg};
+            let cfgClone = {...baseControlCfg};
             cfgClone.navigation.viewConfig.pagingMode = 'numbers';
             cfgClone.navigation.sourceConfig = {
                 pageSize: 100,
@@ -482,6 +501,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 keyProperty: 'id',
                 data: getData(1000)
             });
+            cfgClone = await getCorrectBaseControlConfigAsync(cfgClone);
             let expectedScrollTop = 400;
             await baseControl._beforeMount(cfgClone);
             baseControl.saveOptions(cfgClone);
@@ -709,6 +729,7 @@ describe('Controls/list_clean/BaseControl', () => {
                 keyProperty: 'key'
             });
             baseControlOptions.sourceController.hasMoreData = () => true;
+            await baseControlOptions.sourceController.load();
             baseControlOptions.sourceController.load = () => {
                 loadStarted = true;
                 return Promise.reject();
@@ -860,11 +881,12 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(!mountResult);
         });
         it('_beforeMount keyProperty', async () => {
-            const baseControlOptions = getCorrectBaseControlConfig({
+            const baseControlOptions = await getCorrectBaseControlConfigAsync({
                 source: new Memory({
                     keyProperty: 'keyProperty',
                     data: []
-                })
+                }),
+                viewModelConstructor: ListViewModel
             });
             const baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
