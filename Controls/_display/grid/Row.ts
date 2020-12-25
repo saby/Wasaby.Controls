@@ -3,6 +3,7 @@ import Collection from './Collection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
+import {IColumn, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -75,6 +76,27 @@ export default class Row<T>
         }
     }
     // endregion
+
+    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
+        const columns = this._$owner.getColumnsConfig();
+        const columnIndex = this.getColumnIndex() - +(this._$owner.needMultiSelectColumn());
+        const currentColumn = columns[columnIndex];
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = columns[columnIndex - 1];
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize = this._$owner.getColumnSeparatorSize();
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
 }
 
 Object.assign(Row.prototype, {

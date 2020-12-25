@@ -356,27 +356,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
-    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
-        const columns = this._$owner.getColumnsConfig();
-        const columnIndex = this.getColumnIndex() - +(this._$owner.needMultiSelectColumn());
-        const currentColumn = columns[columnIndex];
-        let previousColumn: IColumn;
-        if (columnIndex !== 0) {
-            previousColumn = columns[columnIndex - 1];
-        }
-        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
-    }
-
-    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
-        let columnSeparatorSize: TColumnSeparatorSize = this._$owner.getColumnSeparatorSize();
-        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
-            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
-        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
-            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
-        }
-        return columnSeparatorSize;
-    }
-
     protected _getColumnScrollWrapperClasses(theme: string): string {
         if (this._$isFixed) {
             return `${COLUMN_SCROLL_JS_SELECTORS.FIXED_ELEMENT} js-controls-ColumnScroll__notDraggable controls-GridNew__cell_fixed controls-GridNew__cell_fixed_theme-${theme}`;
