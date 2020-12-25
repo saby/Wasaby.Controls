@@ -25,7 +25,7 @@
          bind:selectionProcessing="selectionProcessing"
          bind:selectionBaseValue="selectionBaseValue"
          bind:selectionHoveredValue="selectionHoveredValue"
-         quantum="{{_options.quantum}}"
+         ranges="{{_options.ranges}}"
          selectionType="{{_options.selectionType}}"
 
          on:startValueChanged="_onStartValueChanged()"

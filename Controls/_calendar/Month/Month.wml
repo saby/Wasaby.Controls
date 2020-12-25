@@ -2,7 +2,7 @@
    name="selectionController"
 
    selectionType="{{_options.selectionType}}"
-   quantum="{{_options.quantum}}"
+   quantum="{{_options.ranges}}"
 
    startValue="{{_options.startValue}}"
    endValue="{{_options.endValue}}"
