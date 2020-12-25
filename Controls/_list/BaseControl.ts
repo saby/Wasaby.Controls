@@ -4371,7 +4371,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             let itemsUpdated = false;
             if (this._listViewModel && !this._modelRecreated && this._viewReady) {
-                itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer()));
+                itemsUpdated = this._scrollController.updateItemsHeights(getItemsHeightsData(this._getItemsContainer(), !this._options.plainItemsContainer === false));
             }
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
@@ -5788,7 +5788,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _updateItemsHeights(): void {
         if (this._scrollController) {
-            const itemsHeights = getItemsHeightsData(this._getItemsContainer());
+            const itemsHeights = getItemsHeightsData(this._getItemsContainer(), this._options.plainItemsContainer === false);
             this._scrollController.updateItemsHeights(itemsHeights);
             const result = this._scrollController.update({
                 params: {
@@ -6205,6 +6205,7 @@ BaseControl.getDefaultOptions = function() {
         continueSearchTemplate: 'Controls/list:ContinueSearchTemplate',
         stickyHeader: true,
         virtualScrollConfig: {},
+        plainItemsContainer: true,
         filter: {},
         itemActionsVisibility: 'onhover',
         searchValue: ''
