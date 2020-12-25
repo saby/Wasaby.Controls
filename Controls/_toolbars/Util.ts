@@ -1,10 +1,12 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {ActualApi} from 'Controls/buttons';
 import {ButtonTemplate, cssStyleGeneration, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
+import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {ICrudPlus} from "Types/source";
 import {Record} from 'Types/entity';
 import {RecordSet} from 'Types/collection';
 import {CrudWrapper} from 'Controls/dataSource';
+import {showType} from './interfaces/IShowType';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -109,4 +111,21 @@ export function getTemplateByItem(item: TItem, options): TemplateFunction {
     }
 
     return options.itemTemplate;
+}
+
+export function getMenuItems<T extends Record>(items: RecordSet<T> | T[]): ChainAbstract<T> {
+   return factory(items).filter((item) => {
+      return item.get('showType') !== showType.TOOLBAR;
+   });
+}
+
+export function needShowMenu(items: RecordSet): boolean {
+    const enumerator = items.getEnumerator();
+    while (enumerator.moveNext()) {
+        if (enumerator.getCurrent().get('showType') !== showType.TOOLBAR) {
+            return true;
+        }
+    }
+
+    return false;
 }

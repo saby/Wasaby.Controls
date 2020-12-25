@@ -139,6 +139,34 @@ export default {
              * @see showCaption
              * @see captionFormat
              */
+
+            /**
+             * @name Controls/_calendar/interfaces/IMonth#daysData
+             * @cfg {Array<Object>} Массив данных, который используется для отображения дней.
+             * @default undefined
+             * @example
+             * <pre class="brush: html">
+             *  <Controls.calendar:MonthView daysData="{{ _daysArray }}">
+             *       <ws:dayTemplate>
+             *          {{ dayTemplate.value.doubledDay}}
+             *       </ws:dayTemplate>
+             *  </Controls.calendar:MonthView>
+             *  </pre>
+             *  <pre class="brush: js">
+             *      ...
+             *      _getArray() {
+             *          const array = [];
+             *          const amountOfDays = 31;
+             *          for (let i = 0; i < amountOfDays; i ++) {
+             *              array.push[{
+             *                  doubledDay: i * 2
+             *              }];
+             *          }
+             *          this._daysArray = array;
+             *      }
+             *      ...
+             *  </pre>
+             */
         };
     },
 

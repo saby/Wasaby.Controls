@@ -466,12 +466,16 @@ describe('Controls/browser:Browser', () => {
             };
             const options = getBrowserOptions();
             const browser = getBrowser(options);
+            const sandbox = sinon.createSandbox();
+            const notifyStub = sandbox.stub(browser, '_notify');
             await browser._beforeMount(options);
+
             browser._sourceController.getState = () => { return {filter}; };
             browser._itemsChanged = () => {};
 
             browser._afterSearch(null, 'test');
             assert.deepEqual(browser._filter, filter);
+            assert.isTrue(notifyStub.calledWith('filterChanged', [filter]));
         });
     });
 

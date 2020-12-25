@@ -212,6 +212,9 @@ export default class Drag<S extends Model = Model, T extends CollectionItem<S> =
         options: ISortOptions
     ): number[] {
         const itemsCount = items.length;
+        if (!itemsCount) {
+            return [];
+        }
 
         const itemsOrder = new Array(itemsCount - 1);
         for (let i = 0; i < itemsCount; i++) {
