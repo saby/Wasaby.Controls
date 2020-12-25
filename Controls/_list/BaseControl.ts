@@ -135,7 +135,7 @@ const
         keyDownDel: constants.key.del
     };
 
-const LOAD_TRIGGER_OFFSET = 100;
+const ATTACHED_TO_NULL_LOAD_TOP_TRIGGER_OFFSET = 1;
 const INDICATOR_DELAY = 2000;
 const INITIAL_PAGES_COUNT = 1;
 const SET_MARKER_AFTER_SCROLL_DELAY = 100;
@@ -3107,6 +3107,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     iWantVDOM: true,
 
     _attachLoadTopTriggerToNull: false,
+
+    // расстояние, на которое поднят верхний триггер, если _attachLoadTopTriggerToNull === true
+    _attachedToNullLoadTopTriggerOffset: ATTACHED_TO_NULL_LOAD_TOP_TRIGGER_OFFSET,
     _hideTopTrigger: false,
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -5944,14 +5947,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter'): boolean {
+    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
         // В таком случае выводим индикатор над списком.
         // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        if (position === 'beforeEmptyTemplate') {
+        if (position === 'attachToNull') {
+            return this._attachLoadTopTriggerToNull;
+        } else if (position === 'beforeEmptyTemplate') {
             return this._loadingIndicatorState === 'up' || (
                 this._loadingIndicatorState === 'all' && (
                     this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||

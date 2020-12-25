@@ -28,8 +28,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
 
-    private _registrars: any = [];
-
+    private _registrars: {
+        [key: string]: RegisterClass
+    } = {};
     private _resizeObserver: ResizeObserverUtil;
     private _observedElements: HTMLElement[] = [];
 
@@ -114,8 +115,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             UnregisterUtil(this, 'controlResize', {listenAll: true});
         }
         this._resizeObserver.terminate();
-        for (const registrar of this._registrars) {
-            registrar.destroy();
+        for (const registrar in this._registrars) {
+            this._registrars[registrar].destroy();
         }
         this._scrollModel = null;
         this._oldScrollState = null;
