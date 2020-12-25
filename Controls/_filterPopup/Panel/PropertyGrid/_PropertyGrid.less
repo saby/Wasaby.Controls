@@ -7,8 +7,14 @@
    min-height: @basic_item_height_filterPanel;
 }
 
+.controls-FilterPanel__PropertyGrid__item_theme-@{themeName}::before {
+   content: "\200b";
+   height: @basic_item_height_filterPanel;
+}
+
 .controls-FilterPanel__PropertyGrid__item_theme-@{themeName}:empty {
    min-height: 0;
+   max-height: 0;
    margin-bottom: 0;
 }
 
