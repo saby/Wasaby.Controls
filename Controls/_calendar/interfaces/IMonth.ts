@@ -143,8 +143,8 @@ export default {
             /**
              * @name Controls/_calendar/interfaces/IMonth#daysData
              * @cfg {Array<Object>} Массив данных, который используется для отображения дней.
-             * @example
              * @default undefined
+             * @example
              * <pre class="brush: html">
              *  <Controls.calendar:MonthView daysData="{{ _getArray() }}">
              *       <ws:dayTemplate>
