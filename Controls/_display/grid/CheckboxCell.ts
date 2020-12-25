@@ -51,7 +51,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
     }
 
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
-        return markerPosition !== 'right' && marker !== false && this._$owner.isMarked();
+        return markerPosition !== 'right' && this._$owner.shouldDisplayMarker(marker);
     }
 
     shouldDisplayItemActions(): boolean {

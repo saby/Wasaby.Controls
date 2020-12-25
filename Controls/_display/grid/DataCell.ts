@@ -39,9 +39,9 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
-            return marker !== false && this._$owner.isMarked() && this.isLastColumn();
+            return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {
-            return marker !== false && this._$owner.isMarked() &&
+            return this._$owner.shouldDisplayMarker(marker) &&
                 this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
         }
     }
