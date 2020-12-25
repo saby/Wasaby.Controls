@@ -5,6 +5,9 @@
 </ws:template>
 
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
+    <div class="controlsDemo__cell">
+        <Controls.toggle:Checkbox caption="Всегда скролить к 95 элементу" bind:value="_isScrollToElement"/>
+    </div>
     <Controls.scroll:Container attr:class="controlsDemo__height400">
         <Controls.list:HotKeysContainer>
             <Controls.list:View
