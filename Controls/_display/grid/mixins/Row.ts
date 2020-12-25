@@ -8,7 +8,7 @@ import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
-import { THeader } from '../../../_grid/interface/IHeaderCell';
+import {IHeaderCell, THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
@@ -265,7 +265,8 @@ export default abstract class Row<T> {
             columnItems.push(factory({
                 column,
                 colspan: colspan as number,
-                isFixed: columnIndex < this.getStickyColumnsCount()
+                isFixed: columnIndex < this.getStickyColumnsCount(),
+                separatorSize: this._getColumnSeparatorSize(column, columnIndex)
             }));
         }
         return columnItems;
@@ -377,10 +378,6 @@ export default abstract class Row<T> {
 
     abstract getContents(): T;
 
-    getColumnSeparatorSize(): TColumnSeparatorSize {
-        return this._$owner.getColumnSeparatorSize();
-    }
-
     nextVersion(): void {
         this._nextVersion();
     }
@@ -391,6 +388,7 @@ export default abstract class Row<T> {
     abstract isEditing(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
+    protected abstract _getColumnSeparatorSize(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize;
 }
 
 Object.assign(Row.prototype, {

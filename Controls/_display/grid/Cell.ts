@@ -24,6 +24,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    separatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -45,6 +46,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
+    protected _$separatorSize: string;
 
     getInstanceId: () => string;
 
@@ -347,11 +349,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getColumnSeparatorClasses(theme: string): string {
-        if (this.getColumnIndex() > (this._$owner.needMultiSelectColumn() ? 1 : 0)) {
-            const columnSeparatorSize = this._getColumnSeparatorSize();
-            const normalizedColumnSeparatorSize: TColumnSeparatorSize = (typeof columnSeparatorSize === 'string' ?
-                columnSeparatorSize.toLowerCase() : null) as TColumnSeparatorSize;
-            return ` controls-Grid__columnSeparator_size-${normalizedColumnSeparatorSize}_theme-${theme}`;
+        if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = typeof this._$separatorSize === 'string' ?
+                this._$separatorSize.toLowerCase() :
+                null;
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
         }
         return '';
     }
@@ -482,5 +484,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
+    _$separatorSize: null,
     _$isFixed: null
 });

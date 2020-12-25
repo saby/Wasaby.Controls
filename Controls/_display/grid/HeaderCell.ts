@@ -224,37 +224,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
     // todo <<< END >>>
 
-    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
-        const columnIndex = this.getColumnIndex();
-        const headerColumns = this._$owner.getColumns().map((headerColumn) => headerColumn.getColumnConfig());
-        const currentColumn = {
-            ...headerColumns[columnIndex],
-            columnSeparatorSize: this._getHeaderColumnSeparatorSize(headerColumns[columnIndex])
-        } as IColumn;
-        let previousColumn: IColumn;
-        if (columnIndex !== 0) {
-            previousColumn = {
-                ...headerColumns[columnIndex - 1],
-                columnSeparatorSize: this._getHeaderColumnSeparatorSize(headerColumns[columnIndex - 1])
-            } as IColumn;
-        }
-        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
-    }
-
-    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell): IColumnSeparatorSizeConfig {
-        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
-        const columns = this._$owner.getColumnsConfig();
-        const columnLeft = columns[headerColumn.startColumn - 1];
-        const columnRight = columns[headerColumn.endColumn - 2];
-        if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
-            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
-        }
-        if (columnRight?.columnSeparatorSize?.hasOwnProperty('right')) {
-            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
-        }
-        return columnSeparatorSize;
-    }
-
     protected _getWrapperPaddingClasses(theme: string): string {
         let paddingClasses = '';
         const leftPadding = this._$owner.getLeftPadding();

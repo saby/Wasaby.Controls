@@ -4,6 +4,7 @@ import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
 import {IColumn, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
+import {IHeaderCell} from 'Controls/_grid/interface/IHeaderCell';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -77,9 +78,8 @@ export default class Row<T>
     }
     // endregion
 
-    protected _getColumnSeparatorSize(): TColumnSeparatorSize {
+    protected _getColumnSeparatorSize(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
         const columns = this._$owner.getColumnsConfig();
-        const columnIndex = this.getColumnIndex() - +(this._$owner.needMultiSelectColumn());
         const currentColumn = columns[columnIndex];
         let previousColumn: IColumn;
         if (columnIndex !== 0) {

@@ -47,8 +47,8 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
-                	columnSeparatorSize: this._getColumnSeparatorSize(column)
-                })
+                    separatorSize: this._getColumnSeparatorSize(column, index)
+                });
             });
             this._addCheckBoxColumnIfNeed();
 
@@ -85,8 +85,8 @@ export default class HeaderRow<T> extends Row<T> {
         let previousColumn: IColumn;
         if (columnIndex !== 0) {
             previousColumn = {
-                ...this._$columns[columnIndex - 1],
-                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$columns[columnIndex - 1])
+                ...this._$header[columnIndex - 1],
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1])
             } as IColumn;
         }
         return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
