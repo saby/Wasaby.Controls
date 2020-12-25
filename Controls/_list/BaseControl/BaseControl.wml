@@ -91,7 +91,7 @@
     <div class="controls-ScrollController" name="viewContainer">
         <!-- Ещё один индикатор - необходимая жертва для того, чтобы отобразить его вместо 1px и не задеть другие части системы -->
         <ws:partial if="{{_shouldShowLoadingIndicator('topTrigger')}}" template="loadingIndicator" showLoadingIndicator="{{true}}" loadingIndicatorState="topTrigger"/>
-        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;  margin-top: -1px; {{_hideTopTrigger ? ' display: none;'}}"></div>
+        <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_attachLoadTopTriggerToNull ? ' margin-top: -1px;'}}{{_hideTopTrigger ? ' display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
                 name="{{name}}"
