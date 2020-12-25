@@ -3,6 +3,7 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import * as ListTemplate from 'wml!Controls/_filterPanel/Editors/ListBase';
 import * as ColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/ColumnTemplate';
+import * as AdditionalColumnTemplate from 'wml!Controls/_filterPanel/Editors/resources/AdditionalColumnTemplate';
 import * as CircleTemplate from 'wml!Controls/_filterPanel/Editors/resources/CircleTemplate';
 import {StackOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
@@ -83,7 +84,11 @@ abstract class ListEditorBase extends Control<IListEditorOptions> {
             displayProperty
         }];
         if (additionalTextProperty) {
-            this._columns.push({align: 'right', displayProperty: additionalTextProperty, width: 'auto'});
+            this._columns.push({
+                template: AdditionalColumnTemplate,
+                align: 'right',
+                displayProperty: additionalTextProperty,
+                width: 'auto'});
         }
     }
 
