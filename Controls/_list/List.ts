@@ -10,7 +10,7 @@ import Deferred = require('Core/Deferred');
 import {EventUtils} from 'UI/Events';
 import viewName = require('Controls/_list/ListView');
 import {default as ListControl} from 'Controls/_list/ListControl';
-import {ISelectionObject} from 'Controls/interface';
+import {ISelectionObject, IBaseSourceConfig} from 'Controls/interface';
 import { CrudEntityKey, LOCAL_MOVE_POSITION } from 'Types/source';
 import {IMovableList} from './interface/IMovableList';
 import {IRemovableList} from './interface/IRemovableList';
@@ -116,12 +116,12 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
         return 'Controls/display:Collection';
     }
 
-    reload(keepScroll, sourceConfig) {
+    reload(keepScroll: boolean = false, sourceConfig?: IBaseSourceConfig) {
         return this._children.listControl.reload(keepScroll, sourceConfig);
     }
 
-    reloadItem():Deferred {
-        var listControl = this._children.listControl;
+    reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Deferred {
+        const listControl = this._children.listControl;
         return listControl.reloadItem.apply(listControl, arguments);
     }
 
