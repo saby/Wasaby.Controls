@@ -5,13 +5,9 @@ import {IControlOptions} from 'UI/Base';
 import {ILoadingIndicatorOptions} from 'Controls/LoadingIndicator';
 
 /**
- * Интерфейс базовых опций опенеров.
- *
- * @interface Controls/_popup/interface/IBaseOpener
+ * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IBaseOpener здесь}.
  * @public
- * @author Красильников А.С.
  */
-
 export interface IBasePopupOptions {
     id?: string;
     className?: string;
@@ -41,6 +37,11 @@ export interface IOpener {
     isOpened(): boolean;
 }
 
+/**
+ * Интерфейс базовых опций опенеров.
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IBaseOpener {
     readonly '[Controls/_popup/interface/IBaseOpener]': boolean;
 }
@@ -558,6 +559,8 @@ export interface IBaseOpener {
  * Полученные данные будут переданы в опцию prefetchPromise.
  * @remark
  * **Обратите внимение: модуль загрузчика данных - синглтон.**
+ * **Внимание. Функционал является экспериментальным и не должен использоваться повсеместно.**
+ * **Перед использованием проконсультируйтесь с ответственным за функционал.**
  * @example
  *
  * Описание модуля предзагрузки
@@ -566,23 +569,35 @@ export interface IBaseOpener {
  *   import {SbisService} from 'Types/source';
  *
  *   const STORE_KEY = 'MyStoreKey';
- *   const LOADER_KEY = 'MyLoaderKey';
  *
  *   class MyLoader {
  *       init(): void {
  *           // Инициализация, если необходимо, вызывается перед вызовом loadData
  *       }
- *       getState() {
- *           return getStore(STORE_KEY).get(LOADER_KEY);
+ *       getState(key) {
+ *           return getStore(STORE_KEY).get(key);
  *       }
- *       setState(data) {
- *           getStore(STORE_KEY).set(LOADER_KEY, data);
+ *       setState(key, data) {
+ *           getStore(STORE_KEY).set(key, data);
  *       }
- *       loadData(params) {
+ *
+ *       // Возвращаем закэшированные данные, чтобы не запрашивать еще раз при построении на сервере.
+ *       getReceivedData(params) {
+ *           return this.getState(this._getKeyByParams(params));
+ *       }
+ *       _getKeyByParams(params) {
+ *           // Нужно получить из параметров уникальное значение для данного набора параметров, чтобы закэшировать ответ.
+ *       }
+ *       loadData(params, depsData) {
+ *           const paramFromDependency = depsData[0].getRow();
  *           return new SbisService({
  *               endpoint: myEndpoint
  *           }).call('myMethod', {
- *               key: params.param1
+ *               key: params.param1,
+ *               rec: paramFromDependency
+ *           }).then((result) => {
+ *               // Кэшируем результат
+ *               this.setState(this._getKeyByParams(params), result);
  *           });
  *       }
  *   }
@@ -600,13 +615,18 @@ export interface IBaseOpener {
  *             template: 'MyPopupTemplate',
  *             dataLoaders: [
  *                 [{
+ *                      key: 'loaderForDependencies',
+ *                      module: 'MyLoaderForDeps'
+ *                 }],
+ *                 [{
  *                     key: 'myLoaderKey',
  *                     module: 'MyLoader',
+ *                     dependencies: ['loaderForDependencies'],
  *                     params: {
  *                         param1: 'data1'
  *                     }
  *                 }]
-*              ],
+ *             ],
  *             templateOptions: {
  *                 record: null
  *             }
@@ -641,6 +661,10 @@ export interface IBaseOpener {
  * @description Описание загрузчика данных
  * @property {String} module Имя модуля загрузчика, который реализует метод loadData.
  * @property {String} key Имя загрузчика. По умолчанию имя загрузчика берется из поля module.
+ * @property {String[]} dependencies массив ключей загрузчиков от которых зависит данный.
+ * Он будет вызван только после того, как отработают загрузичики из данного списка.
+ * Их результаты придут в функцию загрузчика вторым аргументом.
+ * Загрузчики из данного списка должны идти по порядку раньше текущего.
  * @property {Object} params Параметры, передающиеся в метод loadData.
  */
 export interface IDataLoader {

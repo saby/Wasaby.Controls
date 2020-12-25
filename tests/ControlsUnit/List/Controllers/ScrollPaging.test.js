@@ -115,7 +115,8 @@ define("ControlsUnit/List/Controllers/ScrollPaging.test", ["require", "exports",
                 }
             });
             it('initPagingData', () => {
-                chai.assert.deepEqual(spInstance._pagingData, {totalHeight: 2500, pagesCount: 50, averageElementHeight: 25});
+                chai.assert.deepEqual(spInstance._pagingData,
+                    {totalHeight: 2500, pagesCount: 50, averageElementHeight: 25});
             });
             it('getItemsCountOnPage', () => {
                 chai.assert.deepEqual(spInstance.getItemsCountOnPage(), 2);

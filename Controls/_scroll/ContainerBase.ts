@@ -13,7 +13,7 @@ import ScrollModel from './Utils/ScrollModel';
 import {IScrollState} from './Utils/ScrollState';
 import {SCROLL_MODE} from './Container/Type';
 import template = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
-import {tmplNotify} from 'Controls/eventUtils';
+import {EventUtils} from 'UI/Events';
 import {isHidden} from './StickyHeader/Utils';
 import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
@@ -28,8 +28,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     protected _container: HTMLElement = null;
     protected _options: IContainerBaseOptions;
 
-    private _registrars: any = [];
-
+    private _registrars: {
+        [key: string]: RegisterClass
+    } = {};
     private _resizeObserver: ResizeObserverUtil;
     private _observedElements: HTMLElement[] = [];
 
@@ -41,7 +42,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     private _oldScrollState: ScrollState;
     protected _scrollModel: ScrollModel;
 
-    protected _tmplNotify: Function = tmplNotify;
+    protected _tmplNotify: Function = EventUtils.tmplNotify;
 
     // Виртуальный скролл
     private _topPlaceholderSize: number = 0;
@@ -114,8 +115,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             UnregisterUtil(this, 'controlResize', {listenAll: true});
         }
         this._resizeObserver.terminate();
-        for (const registrar of this._registrars) {
-            registrar.destroy();
+        for (const registrar in this._registrars) {
+            this._registrars[registrar].destroy();
         }
         this._scrollModel = null;
         this._oldScrollState = null;

@@ -107,7 +107,7 @@ export default class ScrollPagingController {
                 }, hasMoreData);
                 pagingCfg.selectedPage = this._pagingData.pagesCount;
             }
-            this._options.pagingCfgTrigger(pagingCfg)
+            this._options.pagingCfgTrigger(pagingCfg);
         }
     }
 
@@ -116,7 +116,8 @@ export default class ScrollPagingController {
     }
 
     protected updateStateByScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData): void {
-        const canScrollForward = Math.ceil(scrollParams.clientHeight + scrollParams.scrollTop) < scrollParams.scrollHeight;
+        const canScrollForward = Math.ceil(
+            scrollParams.clientHeight + scrollParams.scrollTop) < scrollParams.scrollHeight;
         const canScrollBackward = scrollParams.scrollTop > 0;
         if (canScrollForward && canScrollBackward) {
             this.handleScrollMiddle(hasMoreData);
@@ -127,13 +128,13 @@ export default class ScrollPagingController {
         }
     }
 
-    getItemsCountOnPage() {
+    getItemsCountOnPage(): number {
         if (this._pagingData.averageElementHeight) {
             return Math.ceil(this._options.scrollParams.clientHeight / this._pagingData.averageElementHeight);
         }
     }
 
-    protected getNeededItemsCountForPage(page: number) {
+    protected getNeededItemsCountForPage(page: number): number {
         if (this._options.pagingMode === 'numbers') {
             const itemsOnPage = this.getItemsCountOnPage();
             let neededItems;
@@ -142,7 +143,7 @@ export default class ScrollPagingController {
             } else {
                 neededItems = (this._pagingData.pagesCount - page + 1) * itemsOnPage;
             }
-            return Math.min(neededItems, this._options.totalElementsCount)
+            return Math.min(neededItems, this._options.totalElementsCount);
         }
     }
 
@@ -182,14 +183,17 @@ export default class ScrollPagingController {
 
                 pagingCfg.pagesCount = this._pagingData.pagesCount;
                 if (this._numbersState === 'up') {
-                    if (this._options.scrollParams.scrollTop + this._options.scrollParams.clientHeight >= this._options.scrollParams.scrollHeight && !hasMoreData.down) {
+                    if (this._options.scrollParams.scrollTop + this._options.scrollParams.clientHeight >=
+                        this._options.scrollParams.scrollHeight && !hasMoreData.down) {
                         pagingCfg.selectedPage = pagingCfg.pagesCount;
                         this._numbersState = 'down';
                     } else {
-                        pagingCfg.selectedPage = Math.round(this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
+                        pagingCfg.selectedPage = Math.round(
+                            this._options.scrollParams.scrollTop / this._options.scrollParams.clientHeight) + 1;
                     }
                 } else {
-                    let scrollBottom = this._options.scrollParams.scrollHeight - this._options.scrollParams.scrollTop - this._options.scrollParams.clientHeight;
+                    let scrollBottom = this._options.scrollParams.scrollHeight - this._options.scrollParams.scrollTop -
+                        this._options.scrollParams.clientHeight;
                     if (scrollBottom < 0) {
                         scrollBottom = 0;
                     }
@@ -197,7 +201,8 @@ export default class ScrollPagingController {
                         pagingCfg.selectedPage = 1;
                         this._numbersState = 'up';
                     } else {
-                        pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(scrollBottom / this._options.scrollParams.clientHeight);
+                        pagingCfg.selectedPage = pagingCfg.pagesCount - Math.round(
+                            scrollBottom / this._options.scrollParams.clientHeight);
                     }
 
                 }
@@ -211,14 +216,15 @@ export default class ScrollPagingController {
         return pagingCfg;
     }
 
-    getScrollTopByPage(page: number) {
+    getScrollTopByPage(page: number): number {
         if (this._options.pagingMode === 'numbers') {
             let scrollTop;
             if (this._numbersState === 'up') {
                 scrollTop = (page - 1) * this._options.scrollParams.clientHeight;
             } else {
                 const scrollBottom = (this._pagingData.pagesCount - page) * this._options.scrollParams.clientHeight;
-                scrollTop = this._options.scrollParams.scrollHeight - scrollBottom - this._options.scrollParams.clientHeight;
+                scrollTop = this._options.scrollParams.scrollHeight - scrollBottom -
+                    this._options.scrollParams.clientHeight;
             }
             return scrollTop;
         }
@@ -260,7 +266,7 @@ export default class ScrollPagingController {
         }
     }
 
-    public updateScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData = {up: false, down: false}): void {
+    updateScrollParams(scrollParams: IScrollParams, hasMoreData: IHasMoreData = {up: false, down: false}): void {
         this._options.scrollParams = scrollParams;
         this.updateStateByScrollParams(scrollParams, hasMoreData);
     }

@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import { TColumns, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 
 import { IViewIterator } from '../../Collection';
@@ -16,6 +16,7 @@ import DataRow from '../DataRow';
 import FooterRow from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
+import EmptyRow from '../EmptyRow';
 
 
 type THeaderVisibility = 'visible' | 'hasdata';
@@ -28,6 +29,48 @@ type TResultsVisibility = 'visible' | 'hasdata';
  * @param item Model
  */
 export type TEditArrowVisibilityCallback = (item: EntityModel) => boolean;
+
+/**
+ * @description
+ * Тип результата, возвращаемого из функции colspanCallback (функции обратного вызова для расчёта объединения колонок строки).
+ */
+export type TColspanCallbackResult = number | 'end';
+
+/**
+ * @typedef {Function} TColspanCallback
+ * @description
+ * Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @param {Types/entity:Model} item Элемент, для которого рассчитывается объединение
+ * @param {Controls/grid:IColumn} column Колонка грида
+ * @param {Number} columnIndex Индекс колонки грида
+ * @param {Boolean} isEditing Актуальное состояние редактирования элемента
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
+ */
+export type TColspanCallback = (item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => TColspanCallbackResult;
+
+/**
+ * @typedef {Function} TResultsColspanCallback
+ * @description
+ * Функция обратного вызова для расчёта объединения колонок строки (колспана).
+ * @param {Controls/grid:IColumn} column Колонка грида
+ * @param {Number} columnIndex Индекс колонки грида
+ * @returns {Controls/display:TColspanCallbackResult} Количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
+ */
+export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => TColspanCallbackResult;
+
+/**
+ * @typedef {Object} IEmptyTemplateColumn
+ * @description
+ * Объект конфигурации колонки представления пустой таблицы.
+ * @param {TemplateFunction} template Элемент, для которого рассчитывается объединение
+ * @param {Number} startColumn Начальный индекс колонки.
+ * @param {Number} endColumn Конечный индекс колонки.
+ */
+export interface IEmptyTemplateColumn {
+    template: TemplateFunction;
+    startColumn?: number;
+    endColumn?: number;
+}
 
 export interface IOptions {
     columns: TColumns;
@@ -42,9 +85,13 @@ export interface IOptions {
     ladderProperties?: string[];
     stickyColumn?: {};
     showEditArrow?: boolean;
+    colspanCallback?: TColspanCallback;
+    resultsColspanCallback?: TResultsColspanCallback;
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
-    stickyColumnsCount?: number
+    stickyColumnsCount?: number;
+    emptyTemplate?: TemplateFunction;
+    emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
 }
 
@@ -65,10 +112,16 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$resultsVisibility: TResultsVisibility;
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
+    protected _$colspanCallback: TColspanCallback;
+    protected _$resultsColspanCallback: TResultsColspanCallback;
+    protected _$resultsTemplate: TemplateFunction;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
+    protected _$emptyGridRow: EmptyRow<S>;
+    protected _$emptyTemplate: TemplateFunction;
+    protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
@@ -90,6 +143,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
         }
+
+        if (this._$emptyTemplate || this._$emptyTemplateColumns) {
+            this._$emptyGridRow = new EmptyRow<S>({
+                owner: this,
+                emptyTemplate: this._$emptyTemplate,
+                emptyTemplateColumns: this._$emptyTemplateColumns
+            });
+        }
     }
 
     getColumnsConfig(): TColumns {
@@ -108,6 +169,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$header;
     }
 
+    hasHeader(): boolean {
+        return !!this.getHeader();
+    }
+
+    getEmptyGridRow(): EmptyRow<S> {
+        return this._$emptyGridRow;
+    }
+
     getFooter(): FooterRow<S> {
         return this._$footer;
     }
@@ -118,6 +187,29 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     getResultsPosition(): TResultsPosition {
         return this._$resultsPosition;
+    }
+
+    setColspanCallback(colspanCallback: TColspanCallback): void {
+        this._$colspanCallback = colspanCallback;
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            if (item.setColspanCallback) {
+                item.setColspanCallback(colspanCallback);
+            }
+        });
+        this._nextVersion();
+    }
+
+    setResultsColspanCallback(resultsColspanCallback: TResultsColspanCallback): void {
+        this._$resultsColspanCallback = resultsColspanCallback;
+        const results = this.getResults();
+        if (results) {
+            results.setResultsColspanCallback(resultsColspanCallback);
+        }
+        this._nextVersion();
+    }
+
+    getColspanCallback(): TColspanCallback {
+        return this._$colspanCallback;
     }
 
     isFullGridSupport(): boolean {
@@ -226,6 +318,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             results: this.getMetaResults(),
+            resultsColspanCallback: options.resultsColspanCallback,
             resultsTemplate: options.resultsTemplate
         });
     }
@@ -273,7 +366,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    needMultiSelectColumn(): boolean {
+    hasMultiSelectColumn(): boolean {
         return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
     }
 
@@ -322,7 +415,12 @@ Object.assign(Grid.prototype, {
     _$isFullGridSupport: true,
     _$showEditArrow: false,
     _$editArrowVisibilityCallback: null,
+    _$colspanCallback: null,
+    _$resultsColspanCallback: null,
+    _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,
-    _$columnSeparatorSize: null
+    _$columnSeparatorSize: null,
+    _$emptyTemplate: null,
+    _$emptyTemplateColumns: null
 });
