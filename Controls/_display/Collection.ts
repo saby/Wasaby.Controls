@@ -3990,6 +3990,7 @@ Object.assign(Collection.prototype, {
     _$markerVisibility: 'onactivated',
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
+    _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',
     _itemsFactory: null,
