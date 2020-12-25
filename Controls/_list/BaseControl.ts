@@ -2394,6 +2394,7 @@ const _private = {
             selectedKeys: options.selectedKeys,
             excludedKeys: options.excludedKeys,
             searchValue: options.searchValue,
+            filter: options.filter,
             strategy
         });
 
@@ -2422,6 +2423,7 @@ const _private = {
         selectionController.updateOptions({
             model: collection,
             searchValue: newOptions.searchValue,
+            filter: newOptions.filter,
             strategyOptions: _private.getSelectionStrategyOptions(
                 newOptions,
                 collection,
