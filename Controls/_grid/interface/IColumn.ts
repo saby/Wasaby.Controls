@@ -1,4 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
+import {TFontSize, TFontColorStyle} from 'Controls/interface';
 
 /**
  * @typedef {IColumn[]}
@@ -104,6 +105,9 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
  * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
  * @interface Controls/_grid/interface/IColumn
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:ITooltip
  * @public
  * @author Авраменко А.С.
  */
@@ -414,4 +418,61 @@ export interface IColumn extends IColspanParams {
      * @cfg {String} Name of the property that contains tag style
      */
     tagStyleProperty?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#displayType
+     * @cfg {string} Тип отображаемых данных.
+     * @example
+     * В следующем примере показано как отобразить поле записи типа "число"
+     *
+     * TS:
+     * <pre class="brush: js">
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         displayProperty: 'price',
+     *         displayType: 'number'
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     */
+    displayType?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#displayTypeOptions
+     * @cfg {string} Настройки для типа отображаемых данных.
+     * @example
+     * В следующем примере показано как отобразить поле записи типа "деньги" без группировки триад цифр.
+     *
+     * TS:
+     * <pre class="brush: js">
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         displayProperty: 'price',
+     *         displayType: 'money',
+     *         displayTypeOptions: {
+     *             useGrouping: false
+     *         }
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     */
+    displayTypeOptions?: object;
+    fontColorStyle?: TFontColorStyle;
+    /**
+     * @name Controls/_grid/interface/IColumn#backgroundColorStyle
+     * @cfg {string} Цвет колонки.
+     */
+    backgroundColorStyle?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#hoverBackgroundStyle
+     * @cfg {string} Цвет колонки при наведении мыши.
+     *
+     * @remark Для определения собственных цветов при наведении, необходимо указать специальный hoverBackgroundStyle, а
+     * также определить в своем less-файле стиль controls-Grid__item_background-hover_@{yourBackgroundStyle}_theme-@{themeName}
+     */
+    hoverBackgroundStyle?: string;
+    tooltip?: string;
+    fontSize?: TFontSize;
 }

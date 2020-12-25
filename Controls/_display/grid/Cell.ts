@@ -15,6 +15,9 @@ import Row from './Row';
 import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
+const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
+const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
+const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
@@ -55,6 +58,23 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
         return this._$column.template || DEFAULT_CELL_TEMPLATE;
+    }
+
+    hasCellContentRender(): boolean {
+        return Boolean(
+            this._$column.displayType ||
+            this._$column.textOverflow ||
+            this._$column.fontColorStyle ||
+            this._$column.fontSize
+        );
+    }
+
+    getCellContentRender(): string {
+        switch (this._$column.displayType) {
+            case 'money': return MONEY_RENDER;
+            case 'number': return NUMBER_RENDER;
+            default: return STRING_RENDER;
+        }
     }
 
     shouldDisplayItemActions(): boolean {
@@ -238,10 +258,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     getContentClasses(theme: string,
-                      backgroundColorStyle: string,
+                      backgroundColorStyle: string = this._$column.backgroundColorStyle,
                       cursor: string = 'pointer',
                       templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || this._$column.hoverBackgroundStyle || 'default';
 
         let contentClasses = 'controls-Grid__row-cell__content';
 

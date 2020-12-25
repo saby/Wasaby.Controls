@@ -37,6 +37,10 @@ import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspan
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
+const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
+const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
+const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
+
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
     columnSeparatorSize?: null | 's';
@@ -1685,6 +1689,25 @@ var
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
+            current.hasCellContentRender = (column) => {
+                return Boolean(
+                    column.displayType ||
+                    column.textOverflow ||
+                    column.fontColorStyle ||
+                    column.fontSize
+                );
+            };
+
+            current.getCellContentRender = (column) => {
+                const displayType = column.displayType;
+
+                switch (displayType) {
+                    case 'money': return MONEY_RENDER;
+                    case 'number': return NUMBER_RENDER;
+                    default: return STRING_RENDER;
+                }
+            };
+
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
             // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
             if (stickyColumn &&
@@ -1829,6 +1852,8 @@ var
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
                         _preferVersionAPI: true,
+                        getCellContentRender: current.getCellContentRender,
+                        hasCellContentRender: current.hasCellContentRender,
                         gridCellStyles: '',
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,
