@@ -3059,7 +3059,7 @@ const _private = {
 
     hideActions(self) {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
-        if (!detection.isMobilePlatform) {
+        if (!detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
             self._showActions = false;
         }
     }
@@ -3273,6 +3273,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._sourceController) {
             this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+        }
+
+        if (newOptions.useNewModel) {
+            _private.showActions(this);
         }
 
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -5534,7 +5538,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
-        if (!this._showActions && (!this._dndListController || !this._dndListController.isDragging())) {
+        if (!this._showActions &&
+            (!this._dndListController || !this._dndListController.isDragging()) &&
+            !this._itemActionsMenuId) {
             _private.showActions(this);
         }
 
@@ -5668,14 +5674,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     updateSourceController(options): void {
         this._sourceController?.updateOptions(options);
-    },
-
-    /**
-     * Возвращает видимость опций записи.
-     * @private
-     */
-    _isVisibleItemActions(showActions: boolean): boolean {
-        return showActions || this._options.itemActionsVisibility === 'visible';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
