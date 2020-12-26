@@ -50,6 +50,7 @@
                      showWeekdays="{{false}}"
                      month="{{month}}"
                      captionFormat="%B"
+                     fontWeight="unset"
 
                      newMode="{{true}}"
                   >

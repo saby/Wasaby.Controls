@@ -122,7 +122,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }, this);
    },
 
-   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle, fontWeight) {
+   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle, fontWeight = 'auto') {
 
       let textColorClass = 'controls-MonthView__textColor',
          backgroundColorClass = 'controls-MonthView__backgroundColor',
