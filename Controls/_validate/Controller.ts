@@ -70,8 +70,8 @@ export default Form;
  * @function
  * @return {Deferred<Controls/_validate/interfaces/IValidateResult>}
  * @example
- * WML
  * <pre>
+ * <!-- WML -->
  * <Controls.validate:Controller name="formController">
  *    <ws:content>
  *       <Controls.validate:Container>
@@ -88,6 +88,7 @@ export default Form;
  * </pre>
  * JavaScript
  * <pre>
+ * // TypeScript
  * Control.extend({
  *     ...
  *     _clickHandler: function() {
