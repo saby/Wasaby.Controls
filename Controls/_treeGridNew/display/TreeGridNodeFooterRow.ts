@@ -1,7 +1,7 @@
-import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { TemplateFunction } from 'UI/Base';
 import { TreeItem } from 'Controls/display';
 import { Model } from 'Types/entity';
+import TreeGridDataRow from './TreeGridDataRow';
 
 export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     readonly Markable: boolean = false;

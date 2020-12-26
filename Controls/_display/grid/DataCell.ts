@@ -20,10 +20,10 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     DataCellCompatibility
 ) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
 
-    readonly Markable = true;
-    readonly TagCell = true;
-    readonly ItemActionsCell = true;
-    readonly LadderContentCell = true;
+    readonly Markable: boolean = true;
+    readonly TagCell: boolean = true;
+    readonly ItemActionsCell: boolean = true;
+    readonly LadderContentCell: boolean = true;
 
     // region Аспект "Рендер"
     getDefaultDisplayValue(): T {

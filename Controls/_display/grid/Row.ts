@@ -4,7 +4,7 @@ import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
 import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
-import { IItemPadding } from 'Controls/_list/interface/IList';
+import { IItemPadding } from 'Controls/list';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -22,9 +22,9 @@ export default class Row<T>
     //  (базовый элемент -> элемент данных / элемент группы /...)
     //  Интерфейс должен имплементироваться только у элементов, которые поддерживает отметку маркером.
     //  Сейчас, т.к. нет элемента данных, его имплементирует CollectionItem.
-    readonly Markable = false;
-    readonly SelectableItem = false;
-    readonly DraggableItem = false;
+    readonly Markable: boolean = false;
+    readonly SelectableItem: boolean = false;
+    readonly DraggableItem: boolean = false;
 
     constructor(options?: IOptions<T>) {
         super(options);

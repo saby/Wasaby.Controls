@@ -39,6 +39,7 @@ import {register} from 'Types/di';
 export {default as IBind} from './_display/IBind';
 import {default as TreeChildren} from './_display/TreeChildren';
 export {TreeChildren};
+export {IOptions as ITreeCollectionOptions} from './_display/Tree';
 export {default as Abstract} from './_display/Abstract';
 import {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory} from './_display/Collection';
 export {Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory};
@@ -116,6 +117,7 @@ import GridTableHeaderRow from './_display/grid/TableHeaderRow';
 export {GridTableHeaderRow};
 export { TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from './_display/grid/mixins/Grid';
 
+export {IOptions as IGridCollectionOptions} from './_display/grid/Collection';
 import GridDataRow, {IOptions as IGridDataRowOptions} from './_display/grid/DataRow';
 export {GridDataRow, IGridDataRowOptions};
 import GridDataCell, {IOptions as IGridDataCellOptions} from './_display/grid/DataCell';

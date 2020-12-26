@@ -10,7 +10,7 @@ import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
 
-export interface IOptions<T> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
+export interface IOptions<T extends Model> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
     node?: boolean;
     childrenProperty?: string;
