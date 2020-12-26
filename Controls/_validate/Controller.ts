@@ -97,7 +97,7 @@ export default Form;
  *             });
  *         }
  *     });
- * });
+ * };
  * </pre>
  */
 
