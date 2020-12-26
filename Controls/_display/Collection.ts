@@ -2276,8 +2276,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
-        // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
-        const targetIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
+
+        let targetIndex;
+        if (!this.getCount()) {
+            targetIndex = 0;
+        } else if (draggableItemIndex > -1) {
+            targetIndex = draggableItemIndex;
+        } else {
+            // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
+            targetIndex = this.getCount() - 1;
+        }
 
         this.appendStrategy(this._dragStrategy as StrategyConstructor<any>, {
             draggedItemsKeys,

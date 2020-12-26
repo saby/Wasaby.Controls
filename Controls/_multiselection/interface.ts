@@ -106,6 +106,7 @@ export interface ISelectionModel extends IBaseCollection<Model, ISelectionItem> 
  * @author Панихин К.А.
  */
 export interface ISelectionControllerOptions {
+   filter: any;
    model: ISelectionModel;
    selectedKeys: TKeys;
    excludedKeys: TKeys;
