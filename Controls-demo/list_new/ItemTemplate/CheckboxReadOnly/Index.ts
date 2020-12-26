@@ -6,7 +6,7 @@ import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _selectedKeys: [] = [];
+    protected _selectedKeys: [] = [1, 3, 5];
     protected _excludedKeys: [] = [];
 
     protected _beforeMount(): void {
