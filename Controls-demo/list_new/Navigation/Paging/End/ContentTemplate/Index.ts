@@ -18,7 +18,6 @@ const SCROLL_TO_ITEM: number = 95;
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _isScrollToElement: boolean = false;
     private _dataArray: unknown = generateData({
         count: MAX_ELEMENTS_COUNT, beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с ключом ${item.id}.`;
@@ -42,17 +41,11 @@ export default class extends Control {
     protected _onPagingArrowClick(event: SyntheticEvent, arrow: string): boolean {
         switch (arrow) {
             case 'End':
-                if (this._isScrollToElement) {
-                    this._textInfo = `Нажали кнопку "в конец" скролим к ${SCROLL_TO_ITEM} элементу`;
-                } else {
-                    this._textInfo = 'Нажали кнопку "в конец" скролим к последнему элементу';
-                }
+                this._textInfo = `Нажали кнопку "в конец" скролим к ${SCROLL_TO_ITEM} элементу`;
                 break;
         }
-        if (this._isScrollToElement) {
-            this._children.list.scrollToItem(SCROLL_TO_ITEM, true, true);
-            return false;
-        }
+        this._children.list.scrollToItem(SCROLL_TO_ITEM, true, true);
+        return false;
     }
 
     protected _clear(): void {

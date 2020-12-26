@@ -6,7 +6,9 @@
 
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
     <div class="controlsDemo__cell">
-        <Controls.toggle:Checkbox caption="Всегда скролить к 95 элементу" bind:value="_isScrollToElement"/>
+        <div class="controls-text-label_theme-{{_options.theme}}">
+            Имитируем прокрутку к первой непрочитанной записи
+        </div>
     </div>
     <Controls.scroll:Container attr:class="controlsDemo__height400">
         <Controls.list:HotKeysContainer>
