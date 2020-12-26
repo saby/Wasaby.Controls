@@ -120,6 +120,12 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
    getPrevItem(key: CrudEntityKey): Model {
       return this._children.listControl.getPrevItem(key);
    }
+
+   static getDefaultOptions(): object {
+      return {
+         root: null
+      };
+   }
 }
 /**
  * @typedef {String} Position
