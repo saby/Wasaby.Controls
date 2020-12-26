@@ -436,12 +436,7 @@ export class ColumnScroll {
      *  #rea_columnnScroll
      * @param element
      */
-    scrollToElementIfHidden(element: HTMLElement): void {
-        // Не скроллим к зафиксированным ячейкам.
-        if (!!element.closest(`.${JS_SELECTORS.FIXED_ELEMENT}`)) {
-            return;
-        }
-        const { right: activeElementRight, left: activeElementLeft  } = element.getBoundingClientRect();
+    scrollToElementIfHidden({left, right}: {left: number, right: number}): void {
 
         const containerRect = this._scrollContainer.getBoundingClientRect();
         const scrollableRect = {
@@ -449,10 +444,10 @@ export class ColumnScroll {
             left: containerRect.left + this._fixedColumnsWidth
         };
 
-        if (activeElementRight > scrollableRect.right) {
-            this._setScrollPosition(this._scrollPosition + (activeElementRight - scrollableRect.right));
-        } else if (activeElementLeft < scrollableRect.left) {
-            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - activeElementLeft));
+        if (right > scrollableRect.right) {
+            this._setScrollPosition(this._scrollPosition + (right - scrollableRect.right));
+        } else if (left < scrollableRect.left) {
+            this._setScrollPosition(this._scrollPosition - (scrollableRect.left - left));
         }
     }
 

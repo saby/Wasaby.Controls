@@ -7,6 +7,10 @@ ColumnScroll.prototype._createGuid = () => '12345';
 function mockScrollContainer(params: { offsetWidth: number }): HTMLElement {
     return {
         getClientRects: () => [null, null],
+        getBoundingClientRect: () => ({
+            left: 10,
+            right: 500
+        }),
         offsetWidth: params.offsetWidth
     } as unknown as HTMLElement;
 }
@@ -109,17 +113,14 @@ describe('Controls/grid_clean/Controllers/ColumnScroll', () => {
         assert.isFalse(isCallbackCalled, 'Callback wasCalled for destroyed controller.');
     });
 
-    it('shouldn\'t scroll to fixed element', () => {
+    it('should scroll to position', () => {
         const target = {
-            closest: (selector: string) => selector === '.controls-Grid_columnScroll__fixed' ? {} : null,
-            getBoundingClientRect: () => ({
-                left: -100,
-                right: 100
-            })
-        } as HTMLElement;
+                left: 0,
+                right: 200
+            };
         assert.equal(columnScroll.getScrollPosition(), 0);
         columnScroll.scrollToElementIfHidden(target);
-        assert.equal(columnScroll.getScrollPosition(), 0);
+        assert.equal(columnScroll.getScrollPosition(), -10);
     });
 
     it('getShadowClasses', () => {
