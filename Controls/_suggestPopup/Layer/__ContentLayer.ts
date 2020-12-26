@@ -156,6 +156,7 @@ var __ContentLayer = BaseLayer.extend({
    },
 
    _resize(): void {
+      _private.updateMaxHeight(this);
       _private.updateHeight(this);
       _private.determineOpenDirection(this);
    },
