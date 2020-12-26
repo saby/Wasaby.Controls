@@ -86,22 +86,17 @@ export default Form;
  * </Controls.validate:Controller>
  * <Controls.buttons:Button caption="Submit" on:click="_clickHandler()"
  * </pre>
- * JavaScript
  * <pre>
- * // JavaScript
- * Control.extend({
- *     ...
- *     _clickHandler: function() {
- *         this._children.formController.submit().then((result) => {
- *             if (!result.hasErrors) {
- *                 self._children.Confirmation.open({
- *                     message: 'Валидация прошла успешно',
- *                     type: 'ok'
- *                 });
- *             }
- *         });
- *     }
- *     ...
+ * // TypeScript
+ * _clickHandler(): void {
+ *     this._children.formController.submit().then((result) => {
+ *         if (!result.hasErrors) {
+ *             self._children.Confirmation.open({
+ *                 message: 'Валидация прошла успешно',
+ *                 type: 'ok'
+ *             });
+ *         }
+ *     });
  * });
  * </pre>
  */
