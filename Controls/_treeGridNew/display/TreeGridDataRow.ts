@@ -43,6 +43,14 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
         return isChangedMultiSelectVisibility;
     }
 
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        super.setEditing(editing, editingContents, silent);
+        const colspanCallback = this._$owner.getColspanCallback();
+        if (colspanCallback) {
+            this._reinitializeColumns();
+        }
+    }
+
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();
         super.setMarked(marked, silent);
