@@ -4856,7 +4856,7 @@ define([
             spyHideActions.restore();
          });
 
-         // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)
+         // после закрытия меню ItemActions должны появиться снова
          it('should show ItemActions on menu close event', () => {
             instance._itemActionsMenuId = 'popupId_1';
             const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
