@@ -2,7 +2,7 @@
     <Controls.gridNew:View
             keyProperty="id"
             source="{{_viewSource}}"
-            colspanCalculationCallback="{{ _colspanCalculationCallback }}"
+            colspanCallback="{{ _colspanCallback }}"
             on:beforeBeginEdit="_onBeforeBeginEdit()">
         <ws:editingConfig editOnClick="{{true}}" sequentialEditing="{{true}}" autoAdd="{{true}}" toolbarVisibility="{{true}}"/>
         <ws:columns>
