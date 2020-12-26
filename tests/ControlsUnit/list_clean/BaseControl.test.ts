@@ -875,7 +875,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     query: new DataSet()
                 }
             });
-            baseControlOptions = getCorrectBaseControlConfig(getCorrectBaseControlConfig);
+            baseControlOptions = await getCorrectBaseControlConfigAsync(baseControlOptions);
             const baseControl = new BaseControl(baseControlOptions);
             const mountResult = await baseControl._beforeMount(baseControlOptions);
             assert.isTrue(!mountResult);

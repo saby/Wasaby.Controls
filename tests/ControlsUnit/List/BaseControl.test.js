@@ -973,6 +973,8 @@ define([
             keyProperty: 'id',
             data: data
          });
+         const sandbox = sinon.createSandbox();
+         sandbox.replace(lists.BaseControl._private, 'updateIndicatorContainerHeight', () => {});
 
          var dataLoadFired = false;
          var beforeLoadToDirectionCalled = false;
@@ -1054,6 +1056,7 @@ define([
          ctrl._sourceController.isLoading = () => true;
          ctrl.triggerVisibilityChangedHandler('down', false);
          assert.isTrue(ctrl._hideIndicatorOnTriggerHideDirection === 'down');
+         sandbox.restore();
       });
 
       it('loadToDirection hides indicator with false navigation', async () => {
