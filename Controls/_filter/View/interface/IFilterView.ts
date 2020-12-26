@@ -103,8 +103,10 @@ export interface IFilterItem {
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста у кнопки фильтра.
- * @property {String} emptyText Текст пункта, значение которого является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка с заданным текстом.
+ * @property {String} emptyText Добавляет элемент в список с заданным текстом.
+ * Значение элемента является значением "по-умолчанию" для фильтра. Пункт будет добавлен в начало списка.
  * @property {String|Number} emptyKey Первичный ключ для пункта выпадающего списка, который создаётся при установке опции emptyText.
+ * По-умолчанию ключ равен null.
  * @property {Controls/_filter/View/interface/IFilterItem/EditorOptions.typedef} editorOptions Опции для редактора.
  * @property {Controls/_filter/View/interface/IFilterItem/FilterViewMode.typedef} viewMode Режим отображения фильтра.
  * @property {Boolean} doNotSaveToHistory Флаг для отмены сохранения фильтра в истории.

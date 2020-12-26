@@ -36,7 +36,6 @@ const SUB_DROPDOWN_DELAY = 400;
 const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
 /**
  * Контрол меню.
- * @class Controls/menu:Control
  * @public
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_dropdown/interface/IDropdownSource
@@ -101,15 +100,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             return this._createViewModel(options.sourceController.getItems(), options);
         } else if (options.source) {
             return this._loadItems(options).then(() => {
-                if (options.markerVisibility !== MarkerVisibility.Hidden) {
-                    this._markerController = this._getMarkerController(options);
-                    const markedKey = this._markerController.calculateMarkedKeyForVisible();
-                    this._markerController.setMarkedKey(markedKey);
-                }
-                if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
-                    this._selectionController = this._createSelectionController(options);
-                    this._selectionController.setSelection(this._selectionController.getSelection());
-                }
+                this._createControllers(options);
             }, (error) => {
                 return error;
             });
@@ -604,6 +595,18 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             markedKey,
             model: this._listModel
         };
+    }
+
+    private _createControllers(options: IMenuControlOptions): void {
+        if (options.markerVisibility !== MarkerVisibility.Hidden) {
+            this._markerController = this._getMarkerController(options);
+            const markedKey = this._markerController.calculateMarkedKeyForVisible();
+            this._markerController.setMarkedKey(markedKey);
+        }
+        if (options.selectedKeys && options.selectedKeys.length && options.multiSelect) {
+            this._selectionController = this._createSelectionController(options);
+            this._selectionController.setSelection(this._selectionController.getSelection());
+        }
     }
 
     private _getMarkerController(options: IMenuControlOptions): MarkerController {
