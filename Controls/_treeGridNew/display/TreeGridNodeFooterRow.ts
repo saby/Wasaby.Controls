@@ -1,20 +1,21 @@
 import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { TemplateFunction } from 'UI/Base';
 import { TreeItem } from 'Controls/display';
-import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFooterCell';
+import { Model } from 'Types/entity';
 
-export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
+export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
     readonly Markable: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly SelectableItem: boolean = false;
 
     readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
 
-    getNode(): TreeItem<S> {
+    getNode(): TreeItem<Model> {
         return this.getParent();
     }
 
-    getColumns(colspan?: boolean): Array<TreeGridNodeFooterCell<S, TreeGridNodeFooterRow<S>>> {
+    // TODO нужно указывать тип TreeGridNodeFooterCell[], но тогда получается циклическая зависимость
+    getColumns(colspan?: boolean): any[] {
         const columns = super.getColumns();
         return colspan !== false ? [columns[0]] : columns;
     }
@@ -35,7 +36,7 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
         return 'controls-Grid__row controls-TreeGrid__nodeFooter';
     }
 
-    getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {
+    getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
         let classes = super.getExpanderPaddingClasses(tmplExpanderSize, theme);
 
         classes = classes.replace(

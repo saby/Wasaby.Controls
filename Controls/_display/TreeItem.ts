@@ -235,7 +235,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return expanderSize || this._$owner.getExpanderSize();
     }
 
-    shouldDisplayExpander(expanderIcon: string): boolean {
+    shouldDisplayExpander(expanderIcon?: string): boolean {
         if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
             return false;
         }
@@ -243,19 +243,19 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
     }
 
-    shouldDisplayExpanderPadding(tmplExpanderIcon: string, tmplExpanderSize: string): boolean {
+    shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderPosition = this._$owner.getExpanderPosition();
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
 
         if (this._$owner.getExpanderVisibility() === 'hasChildren') {
-            return !this.isHasChildren() && (expanderIcon !== 'none' && expanderPosition === 'default');
+            return !this.isHasChildren() && expanderIcon !== 'none' && expanderPosition === 'default';
         } else {
             return !expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
         }
     }
 
-    getExpanderPaddingClasses(tmplExpanderSize: string, theme: string = 'default'): string {
+    getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
         // expanderSize по дефолту undefined, т.к. есть логика, при которой если он задан,
         // то скрытый экспандер для отступа не рисуем, но по факту дефолтное значение 'default'
         const expanderSize = this.getExpanderSize(tmplExpanderSize) || 'default';
@@ -265,7 +265,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return expanderPaddingClasses;
     }
 
-    getLevelIndentClasses(expanderSizeTmpl: string, levelIndentSize: string, theme: string = 'default'): string {
+    getLevelIndentClasses(expanderSizeTmpl?: string, levelIndentSize?: string, theme: string = 'default'): string {
         const sizes = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'];
         let resultLevelIndentSize;
         const expanderSize = this.getExpanderSize(expanderSizeTmpl);
@@ -285,7 +285,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return `controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_${resultLevelIndentSize}_theme-${theme}`;
     }
 
-    getExpanderClasses(tmplExpanderIcon: string, tmplExpanderSize: string, theme: string = 'default', style: string = 'default'): string {
+    getExpanderClasses(tmplExpanderIcon?: string, tmplExpanderSize?: string, theme: string = 'default', style: string = 'default'): string {
         const expanderIcon = this.getExpanderIcon(tmplExpanderIcon);
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
         const expanderPosition = this._$owner.getExpanderPosition();
@@ -302,9 +302,6 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
         expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${this.getOwner().getTopPadding()}_theme-${theme}`;
         expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${this.getOwner().getBottomPadding()}_theme-${theme}`;
-
-        expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_default_theme-${theme}`;
-        expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_default_theme-${theme}`;
 
         if (expanderIcon) {
             expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;

@@ -144,6 +144,8 @@ export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
 
+export { IItemPadding } from 'Controls/_display/Collection';
+
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
 register('Controls/display:ColumnsCollection', ColumnsCollection, {instantiate: false});
