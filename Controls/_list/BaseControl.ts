@@ -3528,7 +3528,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._pagingVisible = false;
         }
         if (this._pagingVisible && this._scrollPagingCtr) {
-            this._scrollPagingCtr.viewPortResize(viewportHeight);
+            this._scrollPagingCtr.viewportResize(viewportHeight);
             _private.updateScrollPagingButtons(this, this._getScrollParams());
         }
         if (this._recalcPagingVisible) {

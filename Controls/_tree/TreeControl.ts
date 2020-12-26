@@ -10,7 +10,7 @@ import { saveConfig } from 'Controls/Application/SettingsController';
 import {EventUtils} from 'UI/Events';
 import { MouseButtons, MouseUp } from 'Controls/popup';
 import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
-import selectionToRecord = require('Controls/_operations/MultiSelector/selectionToRecord');
+import {selectionToRecord} from 'Controls/operations';
 import { Collection, Tree, TreeItem } from 'Controls/display';
 
 
