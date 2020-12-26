@@ -1,20 +1,21 @@
 import {Logger} from 'UI/Utils';
 import {RecordSet} from 'Types/collection';
+import {ContextOptions} from 'Controls/context';
 import {Control, TemplateFunction} from 'UI/Base';
-import {IControllerOptions} from 'Controls/_dataSource/Controller';
-import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
+import {IControllerOptions} from 'Controls/_dataSource/Controller';
+import {NewSourceController as SourceController} from 'Controls/dataSource';
+import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
+import {CatalogDetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 import {compileSourceOptions, getListConfiguration} from 'Controls/_newBrowser/utils';
 import {IListConfiguration} from 'Controls/_newBrowser/interfaces/IListConfiguration';
 import {IImageItemTemplateCfg} from 'Controls/_newBrowser/interfaces/IImageItemTemplateCfg';
-import {CatalogDetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as ViewTemplate from 'wml!Controls/_newBrowser/Browser';
 
 interface IReceivedState {
-    masterItems: RecordSet;
+    masterItems?: RecordSet;
     detailItems: RecordSet;
 }
 
@@ -168,6 +169,11 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Идентификатор записи, выбранной в master списке
      */
     private _masterMarkedKey: string = null;
+
+    /**
+     * Контекст, через который синхронизируются итмы detail-списка
+     */
+    private _dataOptionsContext: typeof ContextOptions;
     //endregion
     //endregion
 
@@ -177,33 +183,48 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         contexts?: object,
         receivedState?: IReceivedState
     ): Promise<IReceivedState> | void {
+        let result = Promise.resolve(undefined);
 
         this.updateState(options);
+        // Создаем контекст, через который будем синхронизировать итемы detail-списка
+        this._dataOptionsContext = new ContextOptions(
+            this._detailSourceController.getState()
+        );
 
         if (receivedState) {
-            this._masterSourceController.setItems(receivedState.masterItems);
+            // Итемов master-списка может не быть если master-колонка скрыта
+            if (receivedState.masterItems) {
+                this._masterSourceController.setItems(receivedState.masterItems);
+            }
+
             this._detailSourceController.setItems(receivedState.detailItems);
             this.applyListConfiguration(
                 getListConfiguration(receivedState.detailItems),
                 options
             );
-            this._isMounted = true;
         } else {
             const detailDataPromise = this.loadDetailData(options);
-            const masterDataPromise = this._masterSourceController.load() as Promise<RecordSet>;
+            // Если master-колонка скрыта, то незачем запрашивать данные для неё
+            const masterDataPromise = options.master.visibility === 'visible'
+                ? this._masterSourceController.load() as Promise<RecordSet>
+                : Promise.resolve(undefined);
 
-            return Promise
+            result = Promise
                 .all([
                     masterDataPromise,
                     detailDataPromise
                 ])
                 .then(
-                    ([masterItems, detailItems]) => {
-                        this._isMounted = true;
-                        return {masterItems, detailItems};
-                    }
+                    ([masterItems, detailItems]) => ({masterItems, detailItems})
                 );
         }
+
+        return result.then((state) => {
+            this.updateContext();
+            this._isMounted = true;
+
+            return state;
+        });
     }
 
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
@@ -216,6 +237,65 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
+    //region context
+    _getChildContext(): object {
+        return {
+            dataOptions: this._dataOptionsContext
+        };
+    }
+
+    private updateContext(): void {
+        const curContext = this._dataOptionsContext;
+        const currState = this._detailSourceController.getState();
+
+        for (const i in currState) {
+            if (currState.hasOwnProperty(i)) {
+                curContext[i] = currState[i];
+            }
+        }
+        curContext.updateConsumers();
+    }
+    //endregion
+
+    private loadDetailData(options: IOptions = this._options): Promise<RecordSet> {
+        return this._detailSourceController
+            .load()
+            .then((items: RecordSet) => {
+                // Применим новую конфигурацию к отображению detail-списка
+                this.applyListConfiguration(getListConfiguration(items), options);
+                // Обновим данные detail-списка
+                this.updateContext();
+                return items;
+            })
+            .catch((error) => {
+                Logger.error('Возникла ошибка при загрузке данных detail-колонки', this, error);
+                return error;
+            });
+    }
+
+    /**
+     * Обновляет состояние контрола в соответствии с переданной настройкой отображения списков
+     */
+    private applyListConfiguration(
+        cfg: IListConfiguration,
+        options: IOptions = this._options
+    ): void {
+        if (!cfg) {
+            return;
+        }
+
+        this._listConfiguration = cfg;
+        this._imageItemTemplateCfg = {};
+        this.currentViewMode = cfg.settings.clientViewMode;
+
+        if (this.currentViewMode === CatalogDetailViewMode.list) {
+            this._imageItemTemplateCfg.viewMode = cfg.list.photo.viewMode;
+            this._imageItemTemplateCfg.position = cfg.list.photo.imagePosition;
+            this._imageItemTemplateCfg.imageProperty = options.detail.imageProperty;
+        }
+    }
+
+    //region update state
     /**
      * Обновляет текущее состояние контрола в соответствии с переданными опциями
      */
@@ -264,7 +344,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     /**
-     * По переданным опциям собирает конфигурацию для Controls/treeGrid:View,
+     * По переданным опциям собирает конфигурацию для Controls/explorer:View,
      * расположенном в master-колонке.
      */
     private buildMasterExplorerOption(options: IOptions = this._options): unknown {
@@ -287,6 +367,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         return defaultCfg;
     }
 
+    /**
+     * По переданным опциям собирает конфигурацию для Controls/explorer:View,
+     * расположенном в detail-колонке.
+     */
     private buildDetailExplorerOptions(options: IOptions = this._options): unknown {
         return {
             // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
@@ -297,47 +381,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             columns: options.detail.columns
         };
     }
-
-    private loadDetailData(options: IOptions = this._options): Promise<RecordSet> {
-        return this._detailSourceController
-            .load()
-            .then((items: RecordSet) => {
-                // Применим новую конфигурацию к отображению detail-списка
-                this.applyListConfiguration(getListConfiguration(items), options);
-                this._detailSourceController.setItems(items);
-
-                // Обновим данные detail-списка
-                // this._updateContext(this._detailSourceController.getState());
-
-                return items;
-            })
-            .catch((error) => {
-                Logger.error('Возникла ошибка при загрузке данных detail-колонки', this, error);
-                return error;
-            });
-    }
-
-    /**
-     * Обновляет состояние контрола в соответствии с переданной настройкой отображения списков
-     */
-    private applyListConfiguration(
-        cfg: IListConfiguration,
-        options: IOptions = this._options
-    ): void {
-        if (!cfg) {
-            return;
-        }
-
-        this._listConfiguration = cfg;
-        this._imageItemTemplateCfg = {};
-        this.currentViewMode = cfg.settings.clientViewMode;
-
-        if (this.currentViewMode === CatalogDetailViewMode.list) {
-            this._imageItemTemplateCfg.viewMode = cfg.list.photo.viewMode;
-            this._imageItemTemplateCfg.position = cfg.list.photo.imagePosition;
-            this._imageItemTemplateCfg.imageProperty = options.detail.imageProperty;
-        }
-    }
+    //endregion
 
     //region static utils
     static _theme: string[] = [
