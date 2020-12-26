@@ -4598,6 +4598,19 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(notifyLaterSpy.called);
         });
 
+        it('setDraggedItems to empty model', () => {
+            const emptyDisplay = new CollectionDisplay({
+                collection: new RecordSet({
+                    rawData: [],
+                    keyProperty: 'id'
+                })
+            });
+
+            const draggedItem = emptyDisplay.createItem({contents: {getKey: () => '123'}});
+            emptyDisplay.setDraggedItems(draggedItem, ['123']);
+            assert.equal(emptyDisplay.getItems()[0].getContents().getKey(), '123');
+        });
+
         it('setDraggedItems and was not add item', () => {
             const draggedItem = display.getItemBySourceKey(1);
             display.setDraggedItems(draggedItem, [1]);

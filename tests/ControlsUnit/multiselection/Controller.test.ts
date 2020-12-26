@@ -33,6 +33,7 @@ describe('Controls/_multiselection/Controller', () => {
       controller = new SelectionController({
          model: model.getDisplay(),
          strategy,
+         filter: {},
          selectedKeys: [],
          excludedKeys: []
       });
@@ -112,12 +113,38 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    it('selectAll', () => {
-      const result = controller.selectAll();
+      let result = controller.selectAll();
+      assert.deepEqual(result, { selected: [null], excluded: [] });
+
+      controller.setSelection({ selected: [null], excluded: [3] });
+      controller.updateOptions({
+         model: model.getDisplay(),
+         strategy,
+         filter: {searchValue: 'a'},
+         strategyOptions: {
+            model: model.getDisplay()
+         }
+      });
+
+      result = controller.selectAll();
       assert.deepEqual(result, { selected: [null], excluded: [] });
    });
 
    it('toggleAll', () => {
-      const result = controller.toggleAll();
+      let result = controller.toggleAll();
+      assert.deepEqual(result, { selected: [null], excluded: [] });
+
+      controller.setSelection({ selected: [3], excluded: [] });
+      controller.updateOptions({
+         model: model.getDisplay(),
+         strategy,
+         filter: {searchValue: 'a'},
+         strategyOptions: {
+            model: model.getDisplay()
+         }
+      });
+
+      result = controller.selectAll();
       assert.deepEqual(result, { selected: [null], excluded: [] });
    });
 

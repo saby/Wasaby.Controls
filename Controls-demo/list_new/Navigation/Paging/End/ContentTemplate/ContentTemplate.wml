@@ -5,6 +5,11 @@
 </ws:template>
 
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth800">
+    <div class="controlsDemo__cell">
+        <div class="controls-text-label_theme-{{_options.theme}}">
+            Имитируем прокрутку к первой непрочитанной записи
+        </div>
+    </div>
     <Controls.scroll:Container attr:class="controlsDemo__height400">
         <Controls.list:HotKeysContainer>
             <Controls.list:View
