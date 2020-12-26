@@ -122,7 +122,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
       }, this);
    },
 
-   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle, fontWeight = 'auto') {
+   _prepareClass: function(scope, theme, fontColorStyle, backgroundStyle, borderStyle, fontWeight) {
 
       let textColorClass = 'controls-MonthView__textColor',
          backgroundColorClass = 'controls-MonthView__backgroundColor',
@@ -149,7 +149,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             if (scope.selectionProcessing) {
                backgroundColorClass += '-startend-unfinished';
             }
-            if (fontWeight !== 'unset') {
+            if (fontWeight !== 'normal') {
                css.push('controls-MonthView__fontWeight_theme-' + theme);
             }
          }

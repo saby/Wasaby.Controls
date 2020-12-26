@@ -50,7 +50,6 @@
                      showWeekdays="{{false}}"
                      month="{{month}}"
                      captionFormat="%B"
-                     fontWeight="unset"
 
                      newMode="{{true}}"
                   >
@@ -59,7 +58,7 @@
                                     sizeStyle="monthRangeItem"
                                     backgroundStyle="monthRangeItem"
                                     borderStyle="monthRangeItem"
-                                    fontWeight="unset">
+                                    fontWeight="normal">
                         </ws:partial>
                      </ws:dayTemplate>
                   </Controls.calendar:MonthView>
