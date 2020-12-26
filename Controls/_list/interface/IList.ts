@@ -98,7 +98,16 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
     pagingContentTemplate?: TemplateFunction | string;
     moreFontColorStyle?: IFontColorStyle;
+    stickyHeader?: boolean;
 }
+
+/**
+ * @name Controls/_list/interface/IList#stickyHeader
+ * @cfg {Boolean} Закрепляет заголовок списка.
+ * @demo Controls-demo/list_new/Grouped/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
+ * @demo Controls-demo/list_new/Grouped/Sticky/Index В демо-примере опция stickyHeader установлена в значение true.
+ * @default true
+ */
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
