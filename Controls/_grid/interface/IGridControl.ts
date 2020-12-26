@@ -570,6 +570,17 @@ export interface IGridControl extends IList {
  */
 
 /**
+ * @name Controls/_grid/interface/IGridControl#resultsColspanCallback
+ * @cfg {TResultsColspanCallback} Функция обратного вызова для расчёта объединения колонок строки результатов.
+ * @remark
+ * Параметры функции:
+ * * {Controls/grid:IColumn} column Колонка грида
+ * * {Number} columnIndex Индекс колонки грида
+ * Функция возвращает {Controls/display:TColspanCallbackResult} - количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
+ * @markdown
+ */
+
+/**
  * @name Controls/_grid/interface/IGridControl#emptyTemplateColumns
  * @cfg {Array.<IEmptyTemplateColumn>} Описывает колонки пустой таблицы.
  * @markdown

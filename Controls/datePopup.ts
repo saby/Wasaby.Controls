@@ -32,6 +32,33 @@ const MONTH_STATE_SELECTION_DAYS = 30;
 const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
 
 /**
+ * @event Происходит при завершении ввода (поле ввода периода потеряло фокус или пользователь нажал клавишу "Enter").
+ * @name Controls/datePopup#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Date} startValue Начальное значение периода.
+ * @param {Date} endValue Конечное значение периода.
+ * @param {String} displayedStartValue Текстовое значение начала периода.
+ * @param {String} displayedEndValue Текстовое значение конца периода.
+ * @remark
+ * Это событие можно использовать в качестве триггера для проверки периода или отправки введенных данных в какой-либо другой контрол.
+ * @example
+ * В этом примере мы подписываемся на событие inputCompleted и сохраняем значение периода в первой базе данных и отображаемое значение периода во второй базе данных.
+ * <pre>
+ *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
+ * </pre>
+ * <pre>
+ *    Base.Control.extend({
+ *       ....
+ *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
+ *          this._saveEnteredValueToDabase1(startValue, endValue);
+ *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
+ *       },
+ *       ...
+ *    })
+ * </pre>
+ */
+
+/**
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
  *
  * @class Controls/datePopup
@@ -39,7 +66,7 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IDateMask
- * @mixes Controls/_datePopup/interfaces/IDatePopup
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_interface/IDateRangeValidators
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
  *
@@ -57,7 +84,7 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IDateMask
- * @mixes Controls/datePopup/interfaces/IDatePopup
+ * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_interface/IDateRangeValidators
  *
  * @public

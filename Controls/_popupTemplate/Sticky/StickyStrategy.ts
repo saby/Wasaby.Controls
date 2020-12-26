@@ -99,16 +99,14 @@ interface IPosition {
       },
 
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
-         var isHorizontal = direction === 'horizontal';
+         const isHorizontal = direction === 'horizontal';
          if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
-            //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
-            if (_private._isMobileDevices() && position[isHorizontal ? 'right' : 'bottom'] < 0) {
+            if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
                return -(position[isHorizontal ? 'right' : 'bottom']);
             }
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
          }
-         //TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=41b3a01c-72e1-418b-937f-ca795dacf508
-         if (_private._isMobileDevices() && position[isHorizontal ? 'left' : 'top'] < 0) {
+         if (position[isHorizontal ? 'left' : 'top'] < 0) {
             return -(position[isHorizontal ? 'left' : 'top']);
          }
          let taskBarKeyboardIosHeight = 0;

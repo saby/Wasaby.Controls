@@ -6,7 +6,8 @@ import {descriptor, Record} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {StickyOpener} from 'Controls/popup';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
-import {showType, getMenuItems, needShowMenu} from 'Controls/Utils/Toolbar';
+import {getMenuItems, needShowMenu} from './Util';
+import {showType} from './interfaces/IShowType';
 
 import {
     getButtonTemplate, hasSourceChanged,

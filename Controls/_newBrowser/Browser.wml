@@ -1,0 +1,72 @@
+<Controls.masterDetail:Base
+   propStorageId="{{_basePropStorageId + 'masterWidth'}}"
+   masterWidth="{{_options.master ? _options.master.width}}"
+   masterMinWidth="{{_options.master ? _options.master.minWidth}}"
+   masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
+   masterVisibility="{{!_options.master ? 'hidden' : _options.master.visibility}}"
+>
+
+   <ws:master>
+      <Controls.scroll:Container>
+         <Controls.explorer:View
+            bind:root="masterRoot"
+            bind:markedKey="detailRoot"
+            scope="{{_masterExplorerOptions}}"
+         />
+      </Controls.scroll:Container>
+   </ws:master>
+
+   <ws:detail>
+      <div class="controls-Catalog__detail">
+
+         <Controls.list:Container>
+            <Controls.explorer:View
+               bind:root="detailRoot"
+               viewMode="{{currentViewMode}}"
+               scope="{{_detailExplorerOptions}}"
+            >
+               <ws:itemTemplate>
+                  <ws:partial
+                     scope="{{itemTemplate}}"
+                     template="{{_listItemTemplate}}"
+                     imageCfg="{{_imageItemTemplateCfg}}"
+                     itemContent="{{_options.detail.itemContent}}"
+                     itemFooter="{{_options.detail.itemFooter}}"
+                  />
+               </ws:itemTemplate>
+               <ws:tileItemTemplate>
+                  <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
+                     <ws:partial
+                        template="{{_tileItemTemplate}}"
+                        scope="{{tileItemTemplate}}"
+                        imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
+                        imageViewMode="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.photoNode.viewMode
+                              : _listConfiguration.tile.photoLeaf.viewMode
+                        }}"
+                        imageEffect="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.photoNode.effect
+                              : _listConfiguration.tile.photoLeaf.effect
+                        }}"
+                        imageSize="{{_listConfiguration.tile.tile.size}}"
+                        description="{{tileItemTemplate.itemData.item.description}}"
+                        descriptionLines="{{
+                           tileItemTemplate.itemData.dispItem.isNode()
+                              ? _listConfiguration.tile.node.countLines
+                              : _listConfiguration.tile.leaf.countLines
+                        }}"
+                     />
+                  </ws:if>
+                  <ws:else>
+                     <invisible-node/>
+                  </ws:else>
+
+               </ws:tileItemTemplate>
+            </Controls.explorer:View>
+         </Controls.list:Container>
+      </div>
+   </ws:detail>
+
+</Controls.masterDetail:Base>

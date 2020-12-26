@@ -135,7 +135,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             historySaveCallback: this._historySaveCallback.bind(this)
         } as IFilterControllerOptions);
 
-        this._filter = options.filter;
+        this._filter = options.filter || {};
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
         this._viewMode = options.viewMode;
@@ -649,7 +649,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (result instanceof RecordSet) {
             this._handleDataLoad(result);
             this._afterSearch(result, searchValue);
-
             this._getSourceController().setItems(result);
         } else {
             this._handleError(result);
@@ -679,6 +678,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._dataLoadCallback(recordSet);
 
         this._itemsChanged(null, recordSet);
+        this._filterChanged(null, this._sourceController.getFilter());
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
