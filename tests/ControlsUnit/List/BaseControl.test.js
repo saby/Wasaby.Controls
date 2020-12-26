@@ -4549,6 +4549,7 @@ define([
                   multiSelectVisibility: 'visible',
                   selectedKeys: [1],
                   excludedKeys: [],
+                  selectedKeysCount: 0,
                   itemActions: [
                      {
                         id: 1,
@@ -4572,8 +4573,37 @@ define([
                   instance._onItemSwipe({}, item, swipeEvent);
                   assert.notExists(instance._itemActionsController.getSwipeItem());
                   assert.equal(item, instance._selectionController.getAnimatedItem());
-               })
+               });
             });
+             it('_onItemSwipe() animated item null', () => {
+                 return initTest({
+                     multiSelectVisibility: 'visible',
+                     selectedKeys: [1],
+                     excludedKeys: [],
+                     itemActions: [
+                         {
+                             id: 1,
+                             showType: 2,
+                             'parent@': true
+                         },
+                         {
+                             id: 2,
+                             showType: 0,
+                             parent: 1
+                         },
+                         {
+                             id: 3,
+                             showType: 0,
+                             parent: 1
+                         }
+                     ]
+                 }).then(() => {
+                     lists.BaseControl._private.updateItemActions(instance, instance._options);
+                     const item = instance._listViewModel.at(0);
+                     instance._onItemSwipe({}, item, swipeEvent);
+                     assert.isNull(instance._selectionController.getAnimatedItem());
+                 });
+             });
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
