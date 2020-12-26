@@ -15,11 +15,11 @@ export type IDirection = 'up' | 'down';
  * @author Авраменко А.С.
  */
 export interface IVirtualScrollConfig {
-    pageSize: number;
-    segmentSize: number;
-    itemHeightProperty: string;
-    viewportHeight: number;
-    mode: 'hide'|'remove';
+    pageSize?: number;
+    segmentSize?: number;
+    itemHeightProperty?: string;
+    viewportHeight?: number;
+    mode?: 'hide'|'remove';
 }
 
 /**

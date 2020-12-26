@@ -1,10 +1,11 @@
 import { Control, TemplateFunction } from 'UI/Base';
-import template = require('wml!Controls-demo/list_new/ColumnsView/Default/Default');
+import template = require('wml!Controls-demo/list_new/ColumnsView/VirtualScroll/VirtualScroll');
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
 import { INavigation } from 'Controls-demo/types';
 import { SyntheticEvent } from 'UI/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
+import {IVirtualScrollConfig} from 'Controls/list';
 
 const NUMBER_OF_ITEMS = 1000;
 
@@ -15,7 +16,9 @@ export default class RenderDemo extends Control {
 
     protected _navigation: INavigation;
 
-    private _dataArray: Array<{id: number, title: string}>;
+    protected _dataArray: Array<{id: number, title: string}>;
+
+    protected _virtualScrollConfig: IVirtualScrollConfig;
 
     protected _beforeMount(): void {
         this._dataArray = generateData<{id: number, title: string}>({
@@ -37,6 +40,11 @@ export default class RenderDemo extends Control {
                 pageSize: 100,
                 hasMore: false
             }
+        };
+        this._virtualScrollConfig = {
+            pageSize: 100,
+            segmentSize: 25,
+            mode: 'remove'
         };
     }
 
