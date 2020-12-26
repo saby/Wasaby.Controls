@@ -88,7 +88,7 @@ export default Form;
  * </pre>
  * JavaScript
  * <pre>
- * // TypeScript
+ * // JavaScript
  * Control.extend({
  *     ...
  *     _clickHandler: function() {
