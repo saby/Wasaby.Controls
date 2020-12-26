@@ -79,7 +79,7 @@ export const Gadgets = {
                 id: 111, title: 'Leaf', Раздел: 11, 'Раздел@': null, Раздел$: null
             },
             {
-                id: 12, title: 'Hidden node', Раздел: 1, 'Раздел@': false, Раздел$: true
+                id: 12, title: 'Hidden node', Раздел: 1, 'Раздел@': false, Раздел$: true, hasChild: false
             },
             {
                 id: 13, title: 'Leaf', Раздел: 1, 'Раздел@': null, Раздел$: null

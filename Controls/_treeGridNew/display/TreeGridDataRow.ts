@@ -1,12 +1,15 @@
 import { mixin } from 'Types/util';
-import { IGridRowOptions, GridCell, GridRowMixin, ITreeItemOptions, TreeItem } from 'Controls/display';
+import { IGridRowOptions, GridCell, GridRowMixin, ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
 import TreeGridCollection from './TreeGridCollection';
+import { TMarkerClassName } from 'Controls/grid';
+import { Model } from 'Types/entity';
 
-export interface IOptions<T> extends IGridRowOptions<T>, ITreeItemOptions<T> {
+export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T> {
     owner: TreeGridCollection<T>;
 }
 
-export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
+export default class TreeGridDataRow<T extends Model>
+   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
@@ -49,6 +52,22 @@ export default class TreeGridDataRow<T> extends mixin<TreeItem<any>, GridRowMixi
         if (colspanCallback) {
             this._reinitializeColumns();
         }
+    }
+
+    getMarkerClasses(
+       theme: string,
+       style: string = 'default',
+       markerClassName: TMarkerClassName = 'default',
+       itemPadding: IItemPadding = {},
+       markerPosition: 'left' | 'right' = 'left'
+    ): string {
+        let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme} `;
+        classes += `controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)} `;
+        classes += `controls-ListView__itemV_marker-${markerPosition} `;
+        return classes;
     }
 
     setMarked(marked: boolean, silent?: boolean): void {

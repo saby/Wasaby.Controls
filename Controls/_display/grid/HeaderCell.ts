@@ -169,7 +169,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
             wrapperClasses += ` controls-Grid__header-cell__content_valign-${this._$valign}`;
         }
 
-        if (this._$owner.hasColumnScroll()){
+        if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
             wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
@@ -190,6 +190,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (this._$align) {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this._$align}`;
         }
+
         return contentClasses;
     }
 
