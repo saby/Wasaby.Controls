@@ -1919,7 +1919,7 @@ const _private = {
                 const itemActionsController = _private.getItemActionsController(self, self._options);
                 itemActionsController.setActiveItem(null);
                 itemActionsController.deactivateSwipe();
-                _private.showActions(self);
+                _private.addShowActionsClass(self);
             }
         }
     },
@@ -2832,7 +2832,7 @@ const _private = {
      */
     initVisibleItemActions(self, options: IList): void {
         if (options.itemActionsVisibility === 'visible') {
-            _private.showActions(this);
+            _private.addShowActionsClass(this);
             _private.updateItemActions(self, options);
         }
     },
@@ -3050,17 +3050,17 @@ const _private = {
         }
     },
 
-    showActions(self) {
+    addShowActionsClass(self) {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform) {
-            self._showActions = true;
+            self._addShowActionsClass = true;
         }
     },
 
-    hideActions(self) {
+    removeShowActionsClass(self) {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
-            self._showActions = false;
+            self._addShowActionsClass = false;
         }
     }
 };
@@ -3190,7 +3190,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _notifyHandler: EventUtils.tmplNotify,
 
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
-    _showActions: false,
+    _addShowActionsClass: false,
 
     // Идентификатор текущего открытого popup
     _itemActionsMenuId: null,
@@ -3276,7 +3276,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.useNewModel) {
-            _private.showActions(this);
+            _private.addShowActionsClass(this);
         }
 
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
@@ -5342,7 +5342,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         } else if (eventName === 'menuOpened') {
-            _private.hideActions(this);
+            _private.removeShowActionsClass(this);
         }
     },
 
@@ -5538,10 +5538,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
-        if (!this._showActions &&
+        if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
             !this._itemActionsMenuId) {
-            _private.showActions(this);
+            _private.addShowActionsClass(this);
         }
 
         // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
@@ -6134,7 +6134,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             // После окончания DnD, не нужно показывать операции, до тех пор, пока не пошевелим мышкой.
             // Задача: https://online.sbis.ru/opendoc.html?guid=9877eb93-2c15-4188-8a2d-bab173a76eb0
-            _private.hideActions(this);
+            _private.removeShowActionsClass(this);
         }
 
         const endDrag = () => {
