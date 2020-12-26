@@ -46,6 +46,14 @@ export default class TreeGridDataRow<T extends Model>
         return isChangedMultiSelectVisibility;
     }
 
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+        super.setEditing(editing, editingContents, silent);
+        const colspanCallback = this._$owner.getColspanCallback();
+        if (colspanCallback) {
+            this._reinitializeColumns();
+        }
+    }
+
     getMarkerClasses(
        theme: string,
        style: string = 'default',
