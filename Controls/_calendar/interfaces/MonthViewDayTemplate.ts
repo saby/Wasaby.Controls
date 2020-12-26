@@ -101,8 +101,8 @@
 
 /**
  * @name Controls/calendar:MonthViewDayTemplate#fontWeight
- * @cfg {String} Позволяет управлять тощиной шрифта в ячейках.
+ * @cfg {String} Позволяет управлять толщиной шрифта в ячейках.
  * @variant auto Толщина шрифта будет выставляться по стандарту
- * @variant unset Тощина шрифта не будет выставляться
+ * @variant unset Толщина шрифта не будет выставляться
  * @see Controls/_calendar/interfaces/IMonthListSource#dayTemplate
  */
