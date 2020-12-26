@@ -3,8 +3,8 @@ import template = require('wml!Controls-demo/list_new/ColumnsView/VirtualScroll/
 import {Memory as MemorySource, Memory} from 'Types/source';
 import {generateData} from '../../DemoHelpers/DataCatalog';
 import { INavigation } from 'Controls-demo/types';
-import { SyntheticEvent } from 'wasaby-cli/store/_repos/saby-ui/UI/Vdom';
-import { ItemsEntity } from '../../../../Controls/dragnDrop';
+import { SyntheticEvent } from 'UI/Vdom';
+import { ItemsEntity } from 'Controls/dragnDrop';
 import {IVirtualScrollConfig} from 'Controls/list';
 
 const NUMBER_OF_ITEMS = 1000;
