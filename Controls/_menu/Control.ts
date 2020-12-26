@@ -97,7 +97,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._stack = new StackOpener();
 
         if (options.sourceController) {
-            return this._createViewModel(options.sourceController.getItems(), options);
+            const items = options.sourceController.getItems();
+            this._setButtonVisibleState(items, options);
+            this._createViewModel(items, options);
+            return this._createControllers(options);
         } else if (options.source) {
             return this._loadItems(options).then(() => {
                 this._createControllers(options);
@@ -609,6 +612,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
     }
 
+    private _setButtonVisibleState(items: RecordSet, options: IMenuControlOptions): void {
+        this._moreButtonVisible = options.selectorTemplate &&
+            this._getSourceController(options).hasMoreData('down');
+        this._expandButtonVisible = this._isExpandButtonVisible(items, options);
+    }
+
     private _getMarkerController(options: IMenuControlOptions): MarkerController {
         if (!this._markerController) {
             const markedKey = this._getMarkedKey(options.selectedKeys, options.emptyKey, options.multiSelect);
@@ -724,9 +733,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSourceController(
-        {source, navigation, keyProperty}: IMenuControlOptions): SourceController {
+        {source, navigation, keyProperty, sourceController}: IMenuControlOptions): SourceController {
         if (!this._sourceController) {
-            this._sourceController = new SourceController({
+            this._sourceController = sourceController || new SourceController({
                 source,
                 navigation,
                 keyProperty
@@ -758,11 +767,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 if (options.dataLoadCallback) {
                     options.dataLoadCallback(items);
                 }
-                this._moreButtonVisible = options.selectorTemplate &&
-                    this._getSourceController(options).hasMoreData('down');
-                this._expandButtonVisible = this._isExpandButtonVisible(
-                    items,
-                    options);
+                this._setButtonVisibleState(items, options);
                 this._createViewModel(items, options);
 
                 return items;
