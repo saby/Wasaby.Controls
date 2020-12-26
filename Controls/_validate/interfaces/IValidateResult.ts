@@ -7,5 +7,6 @@ export default interface IValidateResult {
  * Интерфейс ответа после валидации
  *
  * @interface Controls/_validate/interfaces/IValidateResult
+ * @return {Deferred<IValidateResult>}
  * @public
  */

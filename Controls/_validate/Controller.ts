@@ -88,14 +88,20 @@ export default Form;
  * </pre>
  * JavaScript
  * <pre>
- *     Control.extend({
- *        ...
- *
- *        _clickHandler: function() {
- *           this._children.formController.submit();
- *        }
- *        ...
- *    });
+ * Control.extend({
+ *     ...
+ *     _clickHandler: function() {
+ *         this._children.formController.submit().then((result) => {
+ *             if (!result.hasErrors) {
+ *                 self._children.Confirmation.open({
+ *                     message: 'Валидация прошла успешно',
+ *                     type: 'ok'
+ *                 });
+ *             }
+ *         });
+ *     }
+ *     ...
+ * });
  * </pre>
  */
 
