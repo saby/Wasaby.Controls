@@ -13,6 +13,7 @@ import {ISourceControllerState} from 'Controls/dataSource';
 import {ContextOptions} from 'Controls/context';
 import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
+import {isEqual} from 'Types/object';
 
 export interface IDataOptions extends IControlOptions,
     ISourceOptions,
@@ -121,7 +122,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._sourceController.setItems(receivedState);
          this._setItemsAndUpdateContext();
       } else if (options.source) {
-         return this._sourceController.load().then((items) => {
+         return this._sourceController.reload().then((items) => {
             if (items instanceof RecordSet) {
                // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
                this._items = this._sourceController.setItems(items);
@@ -139,7 +140,23 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._isMounted = true;
    }
 
-   _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
+   protected _beforeUpdate(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
+      let updateResult;
+
+      if (this._options.sourceController !== newOptions.sourceController) {
+         this._sourceController = newOptions.sourceController;
+      }
+
+      if (newOptions.sourceController) {
+         updateResult = this._updateWithSourceControllerInOptions(newOptions);
+      } else {
+         updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
+      }
+
+      return updateResult;
+   }
+
+   _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
       const sourceChanged = this._options.source !== newOptions.source;
 
       if (sourceChanged) {
@@ -190,6 +207,14 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
          this._filter = controllerState.filter;
          this._updateContext(controllerState);
+      }
+   }
+
+   _updateWithSourceControllerInOptions(newOptions: IDataOptions): void {
+      const sourceControllerState = this._sourceController.getState();
+
+      if (!isEqual(sourceControllerState, this._sourceControllerState)) {
+         this._sourceControllerState = sourceControllerState;
       }
    }
 
