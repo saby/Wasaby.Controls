@@ -427,13 +427,13 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
 
 /**
  * Ищет в строке ссылки и возвращает массив найденных ссылок
- * @param {string} stringNode
+ * @param {string} string
  * @return {string[]}
  */
-export function getLinks(stringNode: string): string[] {
+export function getLinks(string: string): string[] {
    const result: string[] = [];
    let isCorrectLink: boolean = false;
-   let linkParseResult = linkParseRegExp.exec(stringNode);
+   let linkParseResult = linkParseRegExp.exec(string);
 
    while (linkParseResult !== null) {
       let [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
@@ -448,7 +448,7 @@ export function getLinks(stringNode: string): string[] {
          }
       }
 
-      linkParseResult = linkParseRegExp.exec(stringNode);
+      linkParseResult = linkParseRegExp.exec(string);
    }
 
    return result;
