@@ -397,8 +397,8 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
             if (match.length >= linkMaxLenght) {
                 nodeToPush = match;
             } else if (link) {
-               [hasAnyLink, nodeToPush] = processLink(link, simpleLinkDomain, ending,
-                  hasAnyLink, simpleLinkPrefix, match, false);
+               [hasAnyLink, nodeToPush] = getCorrectLink(link, simpleLinkDomain, ending,
+                  simpleLinkPrefix, match, true);
             } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
                 if (isEndingPartOfEmail) {
@@ -430,60 +430,62 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
  * @param {string} stringNode
  * @return {string[]}
  */
-export function receiveLinksArray(stringNode: string): string[] {
+export function getLinks(stringNode: string): string[] {
    const result: string[] = [];
-   let hasAnyLink: boolean = false;
-   let linkParseExec = linkParseRegExp.exec(stringNode);
+   let isCorrectLink: boolean = false;
+   let linkParseResult = linkParseRegExp.exec(stringNode);
 
-   while (linkParseExec !== null) {
-      let [match, , , link, simpleLinkPrefix, simpleLinkDomain, ending] = linkParseExec;
-      linkParseExec = linkParseRegExp.exec(stringNode);
-      let nodeToPush: string[] | string;
-      if (link) {
-         [hasAnyLink, nodeToPush] = processLink(link, simpleLinkDomain, ending,
-            hasAnyLink, simpleLinkPrefix, match, true);
+   while (linkParseResult !== null) {
+      let [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
+      let linkToPush: string[] | string;
 
-         if (hasAnyLink && typeof nodeToPush === 'string') {
-            result.push(nodeToPush);
+      if (linkToCheck) {
+         [isCorrectLink, linkToPush] = getCorrectLink(linkToCheck, linkDomain, ending,
+            linkPrefix, match, false);
+
+         if (isCorrectLink && typeof linkToPush === 'string') {
+            result.push(linkToPush);
          }
       }
+
+      linkParseResult = linkParseRegExp.exec(stringNode);
    }
 
    return result;
 }
 
 /**
- * Функция для обработки ссылок. Проверяет корректность ссылки и возвращает параметр,
- * показывающий, есть ли корректная ссылка и саму ссылку
- * @param {string} link
- * @param {string} simpleLinkDomain
+ * Функция проверяет, является ли ссылка корректной (содержит верный домен верхнего уровня,
+ * не содержит некорректные символы), если ссылка корректна, добаляется протокол (если его нет)
+ * и возвращает аргумент, показывающий, является ли ссылка корректной и саму ссылку
+ * @param {string} linkToCheck
+ * @param {string} linkDomain
  * @param {string} ending
- * @param {boolean} hasAnyLink
- * @param {string} simpleLinkPrefix
+ * @param {string} linkPrefix
  * @param {string} match
- * @param {boolean} onlyLinks
+ * @param {boolean} needToCreateLinkNode
  * @return {boolean, string | string[]}
  */
-function processLink(link: string, simpleLinkDomain: string, ending: string,
-   hasAnyLink: boolean, simpleLinkPrefix: string, match: string, onlyLinks: boolean):
+export function getCorrectLink(linkToCheck: string, linkDomain: string, ending: string,
+   linkPrefix: string, match: string, needToCreateLinkNode: boolean):
    [boolean, string | string[]] {
-   const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
+   const isEndingPartOfDomain = characterRegExp.test(ending) && linkToCheck === linkPrefix;
    if (isEndingPartOfDomain) {
-      simpleLinkDomain += ending;
+      linkDomain += ending;
    }
-   const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
-   hasAnyLink = hasAnyLink || !wrongDomain;
-   link = link + ending;
+   const isWrongDomain = linkDomain && correctTopLevelDomainNames.indexOf(linkDomain) === -1;
+   const isCorrectLink = !isWrongDomain;
+   linkToCheck = linkToCheck + ending;
 
-   if (onlyLinks) {
-      const result = wrongDomain ? match : simpleLinkPrefix ? 'http://' + link : '' + link;
-      return [hasAnyLink, result];
+   if (needToCreateLinkNode) {
+      const result = isWrongDomain ? match : createLinkNode(
+         (linkPrefix ? 'http://' : '') + linkToCheck, linkToCheck);
+   
+      return [isCorrectLink, result];
    }
 
-   const result = wrongDomain ? match : createLinkNode(
-      (simpleLinkPrefix ? 'http://' : '') + link, link);
-
-   return [hasAnyLink, result];
+   const result = isWrongDomain ? match : linkPrefix ? 'http://' + linkToCheck : '' + linkToCheck;
+   return [isCorrectLink, result];
 }
 
 export function clearNeedDecorateGlobals() {
