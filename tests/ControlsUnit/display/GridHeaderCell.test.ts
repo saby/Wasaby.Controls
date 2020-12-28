@@ -157,7 +157,7 @@ describe('Controls/display:HeaderCell', () => {
         it('should add separatorClass according to the previous column right columnSeparatorSize config', () => {
             columns[1].columnSeparatorSize = {left: null, right: 's'};
             const cells = getGridHeader().getRow().getColumns();
-            const wrapperClasses = cells[2].getWrapperClasses('default', 'default', 'default', false);
+            const wrapperClasses = cells[3].getWrapperClasses('default', 'default', 'default', false);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
         });
     });
