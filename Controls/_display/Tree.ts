@@ -25,6 +25,7 @@ import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { Model } from 'Types/entity';
 import { IDragPosition } from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -246,6 +247,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
     private _expandedItems: CrudEntityKey[] = [];
+    private _collapsedItems: CrudEntityKey[] = [];
 
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
@@ -606,12 +608,20 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return this._expandedItems[0] === null;
     }
 
-    // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
     getExpandedItems(): CrudEntityKey[] {
         return this._expandedItems;
     }
 
+    getCollapsedItems(): CrudEntityKey[] {
+        return this._collapsedItems;
+    }
+
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
+
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
+        diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(false));
+
         this._expandedItems = expandedKeys;
         if (expandedKeys[0] === null) {
             const expandAllChildesNodes = (parent) => {
@@ -642,6 +652,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
+        diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(true));
+
+        this._collapsedItems = collapsedKeys;
+
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item) {

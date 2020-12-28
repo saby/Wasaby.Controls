@@ -88,7 +88,7 @@ const _private = {
             });
         }
 
-        if (!options.hasOwnProperty('expandedItemsChanged') || !newExpandedState && !options.hasOwnProperty('collapsedItemsChanged')) {
+        if (!options.hasOwnProperty('expandedItems')) {
             model.toggleExpanded(item);
         }
 
