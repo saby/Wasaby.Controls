@@ -15,8 +15,6 @@
     isActionCell Поле, для определения ячейки действий
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
-
-import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
 import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
@@ -24,6 +22,7 @@ import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    cellPadding?: IItemPadding;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -237,8 +236,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding}` : (leftPadding === 'default' ? '' : leftPadding);
-        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding}` : (rightPadding === 'default' ? '' : rightPadding);
+        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : `_${leftPadding}`);
+        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : `_${rightPadding}`);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {
