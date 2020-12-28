@@ -7,15 +7,22 @@ import {
     Tree,
     GridLadderUtil,
     ItemsFactory,
-    itemsStrategy
+    itemsStrategy,
+    IGridCollectionOptions,
+    ITreeCollectionOptions
 } from 'Controls/display';
-import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
+import TreeGridFooterRow from './TreeGridFooterRow';
+import { Model } from 'Types/entity';
+import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
+
+export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
+   extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {}
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
  * @param {TreeItem<T>} item
  */
-function itemIsVisible<T>(item: TreeItem<T>): boolean  {
+function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean  {
     if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
         return true;
     }
@@ -32,16 +39,16 @@ function itemIsVisible<T>(item: TreeItem<T>): boolean  {
 }
 
 export default class TreeGridCollection<
-    S,
+    S extends Model,
     T extends TreeGridDataRow<S> = TreeGridDataRow<S>
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
-    constructor(options: any) {
+    constructor(options: IOptions<S, T>) {
         super(options);
         GridMixin.call(this, options);
 
-        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую стратегии TreeGrid.
+        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
         //  Если сразу в Tree положим, то все разломаем
         this.addFilter(
             (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
@@ -96,6 +103,15 @@ export default class TreeGridCollection<
     }
 
     // endregion
+
+    protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
+        return new TreeGridFooterRow({
+            ...options,
+            owner: this,
+            footer: options.footer,
+            footerTemplate: options.footerTemplate
+        });
+    }
 
     // TODO по идее нужно это добавлять в Tree,
     //  но т.к. Tree используется в старой модели, чтобы ничего не сломать, добавляю здесь

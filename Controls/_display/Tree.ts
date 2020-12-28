@@ -245,6 +245,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * @protected
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
+    private _expandedItems: CrudEntityKey[] = [];
 
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
@@ -335,9 +336,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            // Выполняем поиск, т.к. позиция может смениться сразу на несколько элементов
+            // и не факт, что в предыдущей позиции был targetNode
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
                 this._nextVersion();
             }
 
@@ -357,9 +360,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
             }
             super.resetDraggedItems();
         }
@@ -369,6 +372,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     getNodeFooterTemplate(): TemplateFunction {
         return this._$nodeFooterTemplate;
+    }
+
+    setNodeFooterTemplate(nodeFooterTemplate: TemplateFunction): void {
+        if (this._$nodeFooterTemplate !== nodeFooterTemplate) {
+            this._$nodeFooterTemplate = nodeFooterTemplate;
+            this._nextVersion();
+        }
     }
 
     getIndexBySourceItem(item: any): number {
@@ -593,16 +603,16 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // region Expanded/Collapsed
 
     isExpandAll(): boolean {
-        // TODO нужна опция expandedItems
-        return false;
+        return this._expandedItems[0] === null;
     }
 
     // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
     getExpandedItems(): CrudEntityKey[] {
-        return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+        return this._expandedItems;
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        this._expandedItems = expandedKeys;
         if (expandedKeys[0] === null) {
             const expandAllChildesNodes = (parent) => {
                 if (!parent['[Controls/_display/TreeItem]']) {

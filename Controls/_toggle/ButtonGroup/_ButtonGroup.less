@@ -15,9 +15,11 @@
 .controls-Button_buttonGroup_style-buttonGroupUnselected_theme-@{themeName}:hover {
   background-color: @hover_background-color;
 }
+
 .controls-ButtonGroup__button_withMargin_theme-@{themeName} {
   margin-right: @offset_m;
 }
+
 .controls-ButtonGroup__wrapper {
   display: inline-flex;
   flex-direction: row;
@@ -34,4 +36,8 @@
 .controls-Button_buttonGroup_m_theme-@{themeName} {
   border-radius: @border-radius_m_button;
   border: @border-thickness_button solid transparent;
+}
+
+.controls-Button__wrapper_viewMode-buttonGroup {
+  justify-content: center;
 }

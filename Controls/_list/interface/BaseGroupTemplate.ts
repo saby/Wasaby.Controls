@@ -13,6 +13,7 @@ export default interface IBaseGroupTemplateOptions {
     */
 
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#expanderAlign
     * @cfg {ExpanderAlign} Расположение кнопки-экспандера относительно названия группы.
     * @default left
     * @remark
@@ -21,11 +22,13 @@ export default interface IBaseGroupTemplateOptions {
     */
    expanderAlign?: string;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#separatorVisibility
     * @cfg {Boolean} Когда опция установлена в значение false, горизонтальная линия-разделитель будет скрыта.
     * @default true
     */
    separatorVisibility?: boolean;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#expanderVisible
     * @cfg {Boolean} Когда опция установлена в значение false, кнопка-экспандер будет скрыта.
     * @default true
     * @remark
@@ -42,11 +45,13 @@ export default interface IBaseGroupTemplateOptions {
     */
 
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#textAlign
     * @cfg {TextAlign} Горизонтальное выравнивание названия группы.
     * @default center
     */
    textAlign?: string;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#rightTemplate
     * @cfg {String|Function|undefined} Пользовательский шаблон, отображаемый на горизонтальной линии-разделителе в правой части.
     * @default undefined
     * @remark
@@ -114,6 +119,7 @@ export default interface IBaseGroupTemplateOptions {
     */
    rightTemplate?: string;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#contentTemplate
     * @cfg {String|Function|undefined} Пользовательский шаблон, описывающий заголовок группы.
     * @remark
     * В области видимости шаблона доступна переменная **itemData** со следующими свойствами:
@@ -186,11 +192,13 @@ export default interface IBaseGroupTemplateOptions {
     */
    contentTemplate?: string;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#fontSize
     * @cfg {String} Размер текста в названии группы/шаблоне.
     * @default xs
     */
    fontSize?: string;
    /**
+    * @name Controls/_list/interface/IBaseGroupTemplate#iconSize
     * @cfg {String} Размер экспандера в названии группы/шаблоне.
     * @default s
     */
