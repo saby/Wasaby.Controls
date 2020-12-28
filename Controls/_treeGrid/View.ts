@@ -20,6 +20,7 @@ import { Model } from 'Types/entity';
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
+    * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_interface/INavigation

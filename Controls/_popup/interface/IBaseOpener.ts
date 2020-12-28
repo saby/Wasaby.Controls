@@ -554,6 +554,7 @@ export interface IBaseOpener {
 
 /**
  * @name Controls/_popup/interface/IBaseOpener#dataLoaders
+ * @demo Controls-demo/Popup/Loader/Index
  * @cfg {DataLoader[]} Задает массив предзагрузчиков данных, необходимых для построения {@link template шаблона}.
  * Опция используется для ускорения открытия окна, за счет распараллеливания получения данных и построения верстки.
  * Полученные данные будут переданы в опцию prefetchPromise.

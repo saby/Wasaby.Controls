@@ -1,0 +1,22 @@
+<div class="controlsDemo__wrapper">
+   <Controls.scroll:Container attr:class="controlsDemo__height400 controlsDemo__minWidth600 controlsDemo__maxWidth800">
+      <Controls.columns:View
+         keyProperty="id"
+         useNewModel="{{true}}"
+         source="{{ _viewSource }}"
+         itemActions="{{_itemActions}}"
+         markerVisibility="visible"
+         name="listView2"
+         virtualScrollConfig="{{_virtualScrollConfig}}"
+         itemsDragNDrop="{{true}}"
+         on:dragStart="_dragStart()">
+         <ws:navigation source="page" view="infinity">
+            <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
+            <ws:viewConfig pagingMode="direct"/>
+         </ws:navigation>
+         <ws:itemTemplate>
+            <ws:partial template="Controls/listRender:ColumnsItemTemplate" attr:class="controlsDemo__height18_item"></ws:partial>
+         </ws:itemTemplate>
+      </Controls.columns:View>
+   </Controls.scroll:Container>
+</div>

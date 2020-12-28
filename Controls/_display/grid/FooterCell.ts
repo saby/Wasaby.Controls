@@ -22,7 +22,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
 
         if (this.isMultiSelectColumn()) {
             wrapperClasses += ` controls-ListView__footer__paddingLeft_withCheckboxes_theme-${theme}`;
-        } else {
+        } else if (this.isFirstColumn()) {
             wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
@@ -42,7 +42,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getContentClasses(theme: string): string {
-        return `controls-Grid__footer-cell__content`;
+        return 'controls-Grid__footer-cell__content';
     }
 
     getTemplate(): TemplateFunction|string {

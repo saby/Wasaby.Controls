@@ -21,6 +21,7 @@ const SEARCH_DEPS = ['Controls/list:DataContainer', 'Controls/search:Controller'
  * @class Controls/menu:Popup
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
+ * @mixes Controls/_menu/interface/IMenuBase
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_interface/INavigation

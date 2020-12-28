@@ -15,6 +15,8 @@ function createComponent(Component, cfg) {
     return cmp;
 }
 
+const classList = { contains: () => false };
+
 describe('Controls/scroll:Container', () => {
     describe('constructor', () => {
         it('should initialize by default', () => {
@@ -72,7 +74,14 @@ describe('Controls/scroll:Container', () => {
                 content: {
                     getBoundingClientRect: () => undefined,
                     children: []
-                }
+                },
+                userContent: {
+                    children: [{
+                        classList: {
+                            contains: () => true
+                        }
+                    }]
+               }
             };
         });
         afterEach(() => {
@@ -97,7 +106,14 @@ describe('Controls/scroll:Container', () => {
                 content: {
                     getBoundingClientRect: () => undefined,
                     children: []
-                }
+                },
+                userContent: {
+                    children: [{
+                        classList: {
+                            contains: () => true
+                        }
+                    }]
+               }
             };
             component._afterMount({ topShadowVisibility: SHADOW_VISIBILITY.VISIBLE }, {});
             sinon.assert.called(component._stickyHeaderController.init);
@@ -111,7 +127,14 @@ describe('Controls/scroll:Container', () => {
                 content: {
                     getBoundingClientRect: () => undefined,
                     children: []
-                }
+                },
+                userContent: {
+                    children: [{
+                        classList: {
+                            contains: () => true
+                        }
+                    }]
+               }
             };
             component._afterUpdate({}, {});
             assert.strictEqual(component._stickyHeaderController._container, component._children.content);
