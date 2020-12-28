@@ -18,7 +18,7 @@
  * </pre>
  *
  * @remark
- * show возвращается id, который нужно обязательно передать в hide.
+ * Метод show возвращает id, который нужно передавать в метод hide для закрытия определенного индикатора.
  *
  * @module Controls/LoadingIndicator/IndicatorOpener
  * @author Красильников А.С.
