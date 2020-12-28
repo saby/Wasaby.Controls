@@ -13,5 +13,4 @@
             filter="{{_sourceControllerState.filter}}"
             navigation="{{_sourceControllerState.navigation}}"
             sorting="{{_sourceControllerState.sorting}}"
-            keyProperty="{{_sourceControllerState.keyProperty}}"
             source="{{_sourceControllerState.source}}"/>
