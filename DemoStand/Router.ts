@@ -23,6 +23,8 @@ export default class RootRouterDemo extends Control<IControlOptions> {
 
     protected _options: IDemoRouter;
 
+    static _styles: string[] = ['DemoStand/Router'];
+
     reload(): void {
         this.isReloading = true;
 
