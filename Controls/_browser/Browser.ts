@@ -215,6 +215,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
+        const sourceChanged = this._options.source !== newOptions.source;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -228,7 +229,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilterAndFilterItems();
         }
 
-        const sourceChanged = this._options.source !== newOptions.source;
         if (sourceChanged) {
             this._source = newOptions.source;
         }
@@ -237,8 +237,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._root = newOptions.root;
         }
 
-        const sourceController = this._getSourceController(newOptions);
+        if (this._options.viewMode !== newOptions.viewMode) {
+            if (this._isSearchViewMode()) {
+                this._previousViewMode = newOptions.viewMode;
+            } else {
+                this._updateViewMode(newOptions.viewMode);
+            }
+        }
 
+        const sourceController = this._getSourceController(newOptions);
         const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
         if (sourceChanged) {
