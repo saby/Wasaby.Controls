@@ -1,9 +1,8 @@
-<ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}" attr:class="controls-EnumList__columns">
+<ws:partial template="Controls/grid:ColumnTemplate" scope="{{_options}}" attr:class="controls-ListEditor__columns">
     <ws:contentTemplate>
-        <ws:partial template="wml!Controls/_filterPanel/Editors/resources/CircleTemplate"
-                    selected="{{itemData.item[itemData.column.displayProperty] === itemData.column.selected}}"/>
-        <div class="{{itemData.column.selected && itemData.item[itemData.column.displayProperty] !== itemData.column.selected ?
-                    'controls-EnumList__column_unselected-title_theme-' + theme}}">
+        <div class="{{itemData.column.selected && itemData.column.selected.length && !itemData.column.selected.includes(itemData.item[itemData.column.displayProperty]) ?
+                    'controls-ListEditor__column_unselected-title_theme-' + theme}}
+                    controls-ListEditor__column_theme-{{theme}}">
             {{itemData.item[itemData.column.displayProperty]}}
         </div>
     </ws:contentTemplate>

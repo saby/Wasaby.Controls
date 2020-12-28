@@ -1,11 +1,13 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/Filter_new/ViewPanel/Index';
+import * as Template from 'wml!Controls-demo/filterPanel/View/Index';
+import * as stackTemplate from 'wml!Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate';
 import {isEqual} from 'Types/object';
 import {Memory} from 'Types/source';
-import {departments} from 'Controls-demo/Filter_new/resources/DataStorage';
+import {departments} from 'Controls-demo/filterPanel/resources/DataStorage';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
+    protected _stackTemplate: TemplateFunction = stackTemplate;
     protected _filterButtonData: unknown[] = [];
     protected _source: Memory = null;
     protected _navigation: object = null;
@@ -33,20 +35,14 @@ export default class extends Control {
             filter: (item, queryFilter) => {
                 let addToData = true;
                 const emptyFields = {
-                    owner: null,
+                    owner: [],
                     amount: []
                 };
                 for (const filterField in queryFilter) {
                     if (queryFilter.hasOwnProperty(filterField) && item.get(filterField) && addToData) {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
-
-                        if (typeof itemValue === 'string') {
-                            addToData = itemValue === filterValue;
-                        }
-                        if (Array.isArray(filterValue)) {
-                            addToData = itemValue >= filterValue[0] && itemValue <= filterValue[1];
-                        }
+                        addToData = (itemValue >= filterValue[0] && itemValue <= filterValue[1]) || filterValue.includes(itemValue);
 
                         if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
                             addToData = true;
@@ -66,7 +62,7 @@ export default class extends Control {
                 value: [],
                 textValue: '',
                 editorOptions: {
-                    afterEditorTemplate: 'wml!Controls-demo/Filter_new/resources/Editors/AfterEditorTemplate',
+                    afterEditorTemplate: 'wml!Controls-demo/filterPanel/resources/AfterEditorTemplate',
                     minValueInputPlaceholder: '0',
                     maxValueInputPlaceholder: '1 000 000'
                 }
@@ -74,12 +70,13 @@ export default class extends Control {
             {
                 group: 'Ответственный',
                 name: 'owner',
-                resetValue: null,
+                resetValue: [],
                 caption: '',
-                value: null,
+                value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:EnumListEditor',
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
                 editorOptions: {
+                    style: 'master',
                     navigation: {
                         source: 'page',
                         view: 'page',
@@ -93,7 +90,7 @@ export default class extends Control {
                     additionalTextProperty: 'id',
                     displayProperty: 'title',
                     selectorTemplate: {
-                        templateName: 'Controls-demo/Filter_new/ViewPanel/stackTemplate/StackTemplate',
+                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
                         templateOptions: {items: this._filterItems},
                         popupOptions: {
                             width: 500
