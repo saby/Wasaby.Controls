@@ -3,6 +3,8 @@ import Collection from './Collection';
 import { mixin } from 'Types/util';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
+import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
+import { IItemPadding } from 'Controls/list';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -20,9 +22,9 @@ export default class Row<T>
     //  (базовый элемент -> элемент данных / элемент группы /...)
     //  Интерфейс должен имплементироваться только у элементов, которые поддерживает отметку маркером.
     //  Сейчас, т.к. нет элемента данных, его имплементирует CollectionItem.
-    readonly Markable = false;
-    readonly SelectableItem = false;
-    readonly DraggableItem = false;
+    readonly Markable: boolean = false;
+    readonly SelectableItem: boolean = false;
+    readonly DraggableItem: boolean = false;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -33,6 +35,22 @@ export default class Row<T>
 
     getTemplate(): TemplateFunction | string {
         return this.getDefaultTemplate();
+    }
+
+    getMarkerClasses(
+       theme: string,
+       style: string = 'default',
+       markerClassName: TMarkerClassName = 'default',
+       itemPadding: IItemPadding = {},
+       markerPosition: 'left' | 'right' = 'left'
+    ): string {
+        let classes = `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingBottom-${itemPadding.bottom}_theme-${theme} `;
+        classes += `controls-GridView__itemV_marker-${style}_rowSpacingTop-${itemPadding.top}_theme-${theme} `;
+        classes += `controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemPadding.top || 'l') + '_' + markerClassName)} `;
+        classes += `controls-ListView__itemV_marker-${markerPosition} `;
+        return classes;
     }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {

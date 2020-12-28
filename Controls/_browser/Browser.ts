@@ -135,7 +135,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             historySaveCallback: this._historySaveCallback.bind(this)
         } as IFilterControllerOptions);
 
-        this._filter = options.filter;
+        this._filter = options.filter || {};
         this._groupHistoryId = options.groupHistoryId;
         this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
         this._viewMode = options.viewMode;

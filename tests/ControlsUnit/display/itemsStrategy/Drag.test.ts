@@ -99,10 +99,6 @@ describe('Controls/_display/itemsStrategy/Drag', () => {
       assert.equal(strategy.source, source);
    });
 
-   it('.getCurrentPosition', () => {
-      assert.isNotOk(strategy.getCurrentPosition());
-   });
-
    it('.getDisplayIndex', () => {
       assert.equal(strategy.getDisplayIndex(1), 1);
    });

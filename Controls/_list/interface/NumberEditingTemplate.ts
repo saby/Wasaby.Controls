@@ -6,7 +6,7 @@ import IEditingTemplateOptions from './EditingTemplate'
  * В режиме чтения выводит значение с помощью {@link Controls/decorator:Number}.
  * 
  * @class Controls/_list/interface/NumberEditingTemplate
- * @mixes Controls/_list/interface/EditingTemplate
+ * @mixes Controls/list:EditingTemplate
  * @author Авраменко А.С.
  * @see Controls/list:View
  * @example

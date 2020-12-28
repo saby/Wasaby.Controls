@@ -1,9 +1,7 @@
 <ws:if data="{{item.isVisibleCheckbox()}}">
   <ws:template name="multiSelectContent">
       <ws:partial template="{{multiSelectTemplate}}"
-                  attr:class="js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable
-                             js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable
-                             controls-CheckboxMarker_inList_theme-{{_options.theme}}"
+                  attr:class="{{ itemData && itemData.multiSelectClassList ? itemData.multiSelectClassList : item.getMultiSelectClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
                   triState="{{ triState }}"
                   readOnly="{{ item.isReadonlyCheckbox() || checkboxReadOnly || readOnly }}"
                   value="{{ item.isSelected() }}"
