@@ -15,8 +15,6 @@
     isActionCell Поле, для определения ячейки действий
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
-
-import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
 import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
@@ -24,6 +22,7 @@ import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    cellPadding?: IItemPadding;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -237,14 +236,14 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding}` : (leftPadding === 'default' ? '' : leftPadding);
-        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding}` : (rightPadding === 'default' ? '' : rightPadding);
+        const compatibleLeftPadding = cellLeftPadding ? `${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : leftPadding);
+        const compatibleRightPadding = cellRightPadding ? `${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : rightPadding);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {
             if (!isFirstColumn) {
                 if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getColumnIndex() > 1) {
-                    paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
+                    paddingClasses += ` controls-Grid__cell_spacingLeft_${compatibleLeftPadding}_theme-${theme}`;
                 }
             } else {
                 paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
@@ -255,7 +254,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (isLastColumn) {
             paddingClasses += ` controls-Grid__cell_spacingLastCol_${rightPadding}_theme-${theme}`;
         } else {
-            paddingClasses += ` controls-Grid__cell_spacingRight${compatibleRightPadding}_theme-${theme}`;
+            paddingClasses += ` controls-Grid__cell_spacingRight_${compatibleRightPadding}_theme-${theme}`;
         }
 
         return paddingClasses;

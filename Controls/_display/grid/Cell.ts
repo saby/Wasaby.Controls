@@ -390,7 +390,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         } else if (!this.isFirstColumn() && !isFirstColumnAfterCheckbox) {
             classes += ' controls-Grid__cell_spacingLeft';
             if (cellPadding?.left) {
-                classes += `_${cellPadding.left}`;
+                classes += `_${cellPadding.left.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         }
@@ -398,7 +398,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (!this.isLastColumn()) {
             classes += ' controls-Grid__cell_spacingRight';
             if (cellPadding?.right) {
-                classes += `_${cellPadding.right}`;
+                classes += `_${cellPadding.right.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         } else {
