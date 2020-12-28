@@ -236,14 +236,14 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = cellLeftPadding ? `${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : leftPadding);
-        const compatibleRightPadding = cellRightPadding ? `${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : rightPadding);
+        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : `_${leftPadding}`);
+        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : `_${rightPadding}`);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {
             if (!isFirstColumn) {
                 if (this._$owner.getMultiSelectVisibility() === 'hidden' || this.getColumnIndex() > 1) {
-                    paddingClasses += ` controls-Grid__cell_spacingLeft_${compatibleLeftPadding}_theme-${theme}`;
+                    paddingClasses += ` controls-Grid__cell_spacingLeft${compatibleLeftPadding}_theme-${theme}`;
                 }
             } else {
                 paddingClasses += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
@@ -254,7 +254,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (isLastColumn) {
             paddingClasses += ` controls-Grid__cell_spacingLastCol_${rightPadding}_theme-${theme}`;
         } else {
-            paddingClasses += ` controls-Grid__cell_spacingRight_${compatibleRightPadding}_theme-${theme}`;
+            paddingClasses += ` controls-Grid__cell_spacingRight${compatibleRightPadding}_theme-${theme}`;
         }
 
         return paddingClasses;
