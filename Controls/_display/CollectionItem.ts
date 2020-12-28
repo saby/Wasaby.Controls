@@ -122,7 +122,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$rendered: boolean;
 
-    protected _$multiSelectVisibility: string;
+    protected _$multiSelectVisibility: string = 'hidden';
 
     protected _$dragged: boolean;
 

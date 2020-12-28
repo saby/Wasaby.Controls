@@ -398,7 +398,7 @@ export default abstract class Row<T> {
         return this._$owner.getStickyColumnsCount();
     }
 
-    protected hasItemActionsSeparatedCell(): boolean {
+    hasItemActionsSeparatedCell(): boolean {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
