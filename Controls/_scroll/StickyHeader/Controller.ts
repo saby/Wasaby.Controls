@@ -162,7 +162,8 @@ class StickyHeaderController {
                 if (this._fixedHeadersStack[position].includes(headerId)) {
                     const header: TRegisterEventData = this._headers[headerId];
                     let visibility: boolean = this._isShadowVisible[position];
-                    if (header.inst.shadowVisibility === SHADOW_VISIBILITY.lastVisible) {
+                    if (header.inst.shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                        header.inst.shadowVisibility === SHADOW_VISIBILITY.initial) {
                         visibility = visibility && (headerId === lastHeaderId);
                     }
                     header.inst.updateShadowVisibility(visibility);

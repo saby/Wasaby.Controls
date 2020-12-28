@@ -499,6 +499,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         offset = opts.backgroundStyle !== 'transparent' ? getGapFixSize() : 0;
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
+        if (!this._initialized && !fixedPosition && opts.shadowVisibility === SHADOW_VISIBILITY.initial &&
+            opts.position !== POSITION.topbottom) {
+            fixedPosition = opts.position;
+        }
+
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
         const isIosOptimizedMode = this._isMobileIOS;
 
@@ -634,15 +639,21 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _isShadowVisible(shadowPosition: POSITION): boolean {
+    protected _isShadowVisible(headerPosition: POSITION, shadowPosition: POSITION): boolean {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+        const shadowVisibility = this._options.shadowVisibility;
 
+        if (!this._initialized && shadowVisibility === SHADOW_VISIBILITY.initial && headerPosition === fixedPosition) {
+            return true;
+        }
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
         return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
-            (this._options.shadowVisibility === SHADOW_VISIBILITY.visible || this._options.shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
+            (shadowVisibility === SHADOW_VISIBILITY.visible ||
+                shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                shadowVisibility === SHADOW_VISIBILITY.initial) &&
             (this._options.mode === MODE.stackable || this._isFixed));
     }
 
@@ -714,7 +725,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return {
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
             fixedZIndex: 2,
-            shadowVisibility: SHADOW_VISIBILITY.visible,
+            shadowVisibility: SHADOW_VISIBILITY.initial,
             backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
             position: POSITION.top
@@ -726,7 +737,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             shadowVisibility: descriptor(String).oneOf([
                 SHADOW_VISIBILITY.visible,
                 SHADOW_VISIBILITY.hidden,
-                SHADOW_VISIBILITY.lastVisible
+                SHADOW_VISIBILITY.lastVisible,
+                SHADOW_VISIBILITY.initial
             ]),
             backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([

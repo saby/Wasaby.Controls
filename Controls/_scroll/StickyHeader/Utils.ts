@@ -5,13 +5,15 @@ let lastId = 0;
 
 export const enum POSITION {
     top = 'top',
-    bottom = 'bottom'
+    bottom = 'bottom',
+    topbottom = 'topbottom'
 }
 
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
     hidden = 'hidden',
-    lastVisible = 'lastVisible'
+    lastVisible = 'lastVisible',
+    initial = 'initial'
 }
 
 /**
