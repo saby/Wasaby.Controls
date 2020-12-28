@@ -675,8 +675,27 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     toggleExpanded(item: T): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
         const newExpandedState = !item.isExpanded();
+        const itemKey = item.getContents().getKey();
         item.setExpanded(newExpandedState);
+
+        if (newExpandedState) {
+            if (!this._expandedItems.includes(itemKey)) {
+                this._expandedItems.push(itemKey);
+            }
+            if (this._collapsedItems.includes(itemKey)) {
+                this._collapsedItems.splice(this._collapsedItems.indexOf(itemKey), 1);
+            }
+        } else {
+            if (this._expandedItems.includes(itemKey)) {
+                this._expandedItems.splice(this._expandedItems.indexOf(itemKey), 1);
+            }
+
+            if (!this._collapsedItems.includes(itemKey)) {
+                this._collapsedItems.push(itemKey);
+            }
+        }
 
         this._reCountNodeFooters();
     }
