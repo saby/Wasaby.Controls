@@ -1,6 +1,25 @@
 /**
  * Хэлпер для открытия глобального индикатора загрузки
  *
+ * @example
+ * <pre class="brush: js">
+ *    import {IndicatorOpener} from 'Controls/LoadingIndicator';
+ *
+ *    function showIndicator() {
+ *       const config = {
+ *           ...
+ *       };
+ *       this.id = IndicatorOpener.show(this.config);
+ *    }
+ *
+ *    function hideIndicator() {
+ *       IndicatorOpener.hide(this.id);
+ *    }
+ * </pre>
+ *
+ * @remark
+ * show возвращается id, который нужно обязательно передать в hide.
+ *
  * @module Controls/LoadingIndicator/IndicatorOpener
  * @author Красильников А.С.
  * @public
