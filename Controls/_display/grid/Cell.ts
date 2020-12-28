@@ -427,7 +427,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     isLastColumn(colspan?: boolean): boolean {
-        return this.getColumnIndex(colspan) === this._$owner.getColumnsCount(colspan) - 1;
+        let dataColumnsCount = this._$owner.getColumnsCount(colspan) - 1;
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            dataColumnsCount -= 1;
+        }
+        return this.getColumnIndex(colspan) === dataColumnsCount;
     }
 
     // endregion
