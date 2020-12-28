@@ -1,5 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/DragNDrop/DragNDrop';
+import * as FirstColumn from 'wml!Controls-demo/gridNew/EditInPlace/DragNDrop/FirstColumn';
 import {Memory} from 'Types/source';
 import {getPorts} from '../../DemoHelpers/DataCatalog';
 import 'wml!Controls-demo/gridNew/EditInPlace/DragNDrop/_rowEditor';
@@ -7,7 +8,7 @@ import { IColumn } from 'Controls/grid';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import * as Dnd from '../../../../Controls/dragnDrop';
-import {Collection} from '../../../../Controls/display';
+import {Collection, TColspanCallbackResult} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import {TItemsReadyCallback} from '../../../types';
 
@@ -44,6 +45,8 @@ export default class extends Control {
             keyProperty: 'id',
             data: getPorts().getDocumentSigns()
         });
+
+        this._columns[0].template = FirstColumn;
     }
 
     private onChange = (_: SyntheticEvent, name: string, item: Model, value: number): void => {
@@ -52,6 +55,10 @@ export default class extends Control {
 
     private _itemsReady(items: RecordSet): void {
         this._itemsFirst = items;
+    }
+
+    protected _colspanCallback(item, column, columnIndex, isEditing): TColspanCallbackResult {
+        return isEditing ? 'end' : undefined;
     }
 
     protected _dragStart(_: SyntheticEvent, items: number[]): void {
