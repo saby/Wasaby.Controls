@@ -46,7 +46,8 @@ class Store implements IStore {
     get(propertyName: string): unknown {
         const state = Store._getState()[Store._getActiveContext()] || {};
 
-        return state[propertyName] || (Store._getState()[GLOBAL_CONTEXT_NAME] || {})[propertyName];
+        return state.hasOwnProperty(propertyName) ? state[propertyName] :
+            (Store._getState()[GLOBAL_CONTEXT_NAME] || {})[propertyName];
     }
 
     /**
