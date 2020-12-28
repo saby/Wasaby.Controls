@@ -122,7 +122,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _itemActionVisibilityCallback(itemAction, item): boolean {
         const index = this._getSourceItemIndex(this._source, item);
         if (index === 0 && itemAction.title === 'Переместить вверх' ||
-            index === 7 && itemAction.title === 'Переместить вниз') {
+            index === 4 && itemAction.title === 'Переместить вниз') {
             return false;
         }
         return true;
