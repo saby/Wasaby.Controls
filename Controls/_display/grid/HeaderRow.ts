@@ -47,8 +47,9 @@ export default class HeaderRow<T> extends Row<T> {
 
                 return factory({
                     column,
-                    isFixed
-                })
+                    isFixed,
+                    cellPadding: this._$columns[typeof column.startColumn !== 'undefined' ? column.startColumn : index].cellPadding
+                });
             });
             this._addCheckBoxColumnIfNeed();
 

@@ -25,10 +25,19 @@ type ValidResult = boolean|null|Promise<boolean>|string[];
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  */
+
+/**
+ * @event Происходит после заверешения валидации контейнера.
+ * @name Controls/_validate/Container#validateFinished
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {null|Boolean|Array.<String>} validationResult Результат валидации.
+ * @see validate
+ */
+
 class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
@@ -81,6 +90,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                 if (this._isOpened && isValid) {
                     this._forceCloseInfoBox();
                 }
+                this._notify('validateFinished', [validationResult]);
                 resolve(validationResult);
             });
         });

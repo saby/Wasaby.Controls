@@ -1,44 +1,39 @@
 import { TemplateFunction } from 'UI/Base';
 import { GridCell } from 'Controls/display';
-import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
+import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
 
 export default class TreeGridNodeFooterCell<T> extends GridCell<T, TreeGridNodeFooterRow<T>> {
     readonly '[Controls/treeGrid:TreeGridNodeFooterCell]': boolean;
 
     getTemplate(content?: TemplateFunction): TemplateFunction|string {
-        return this._$owner.getNode().hasMoreStorage() ? this._$owner.getNodeFooterTemplateMoreButton() : content;
+        return this._$owner.hasMoreStorage() ? this._$owner.getNodeFooterTemplateMoreButton() : content;
     }
 
     getContentClasses(
         theme: string,
         backgroundColorStyle: string,
         cursor: string = 'pointer',
-        templateHighlightOnHover: boolean = true
+        templateHighlightOnHover: boolean = true,
+        colspan?: boolean
     ): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize() || 'null';
+        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
 
         let classes =
             'controls-TreeGrid__nodeFooterContent ' +
             `controls-TreeGrid__nodeFooterContent_theme-${theme} ` +
-            `controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}_theme-${theme}`;
+            `controls-TreeGrid__nodeFooterContent_rowSeparatorSize-${rowSeparatorSize}_theme-${theme} ` +
+            'controls-Grid_columnScroll__fixed js-controls-ColumnScroll__notDraggable ';
 
-        if (this._$owner.getColumns().length === 1) {
-            /*if (!this.isFirstColumn()) {
-                classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}_theme-${theme}`;
-            }*/
-            if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn()) {
-                classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme}`;
-            }
+        /*if (!this.isFirstColumn()) {
+            classes += ` controls-TreeGrid__nodeFooterCell_columnSeparator-size_${current.getSeparatorForColumn(columns, index, current.columnSeparatorSize)}_theme-${theme}`;
+        }*/
 
-            if (this.isLastColumn()) {
-                classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme}`;
-            }
-        } else {
-            if (!this._$owner.hasMultiSelectColumn()) {
-                classes += ` controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme}`;
-            }
-            classes += ` controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme}`;
-            classes += ' controls-Grid_columnScroll__fixed js-controls-ColumnScroll__notDraggable';
+        if (!this._$owner.hasMultiSelectColumn() && this.isFirstColumn(colspan)) {
+            classes += `controls-TreeGrid__nodeFooterContent_spacingLeft-${this._$owner.getLeftPadding()}_theme-${theme} `;
+        }
+
+        if (this.isLastColumn(colspan)) {
+            classes += `controls-TreeGrid__nodeFooterContent_spacingRight-${this._$owner.getRightPadding()}_theme-${theme} `;
         }
 
         return classes;

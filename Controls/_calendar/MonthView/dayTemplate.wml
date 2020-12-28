@@ -10,7 +10,8 @@
     </ws:if>
 </ws:if>
 <ws:else>
-    <div class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item{{sizeStyle? '_style-' + sizeStyle}}_theme-{{theme}} {{ monthViewModel._prepareClass(value, theme, fontColorStyle, backgroundStyle, borderStyle) }}">
+    <div class="controls-MonthViewVDOM__item controls-MonthViewVDOM__item{{sizeStyle? '_style-' + sizeStyle}}_theme-{{theme}}
+    {{ monthViewModel._prepareClass(value, theme, fontColorStyle, backgroundStyle, borderStyle, fontWeight) }}">
         <ws:if data="{{value.clickable}}">
             <div if="{{value.today}}"
                  class="controls-MonthViewVDOM__item-today-background

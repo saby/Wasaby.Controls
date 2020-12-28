@@ -91,11 +91,11 @@ var Component = BaseControl.extend([EventProxyMixin], {
             this._quarterSelectionEnabled = false;
             this._halfyearSelectionEnabled = false;
             this._yearSelectionEnabled = false;
-        } else if (options.quantum && !isEmpty(options.quantum)) {
-            this._monthsSelectionEnabled = 'months' in options.quantum;
-            this._quarterSelectionEnabled = 'quarters' in options.quantum;
-            this._halfyearSelectionEnabled = 'halfyears' in options.quantum;
-            this._yearSelectionEnabled = 'years' in options.quantum;
+        } else if (options.ranges && !isEmpty(options.ranges)) {
+            this._monthsSelectionEnabled = 'months' in options.ranges;
+            this._quarterSelectionEnabled = 'quarters' in options.ranges;
+            this._halfyearSelectionEnabled = 'halfyears' in options.ranges;
+            this._yearSelectionEnabled = 'years' in options.ranges;
         }
         this._months = [];
         for (let i = 0; i < 12; i++) {

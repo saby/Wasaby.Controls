@@ -5,16 +5,24 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
 import * as clone from 'Core/core-clone';
+import rk = require('i18n!Controls');
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
  *
  * @class Controls/_filterPanel/View
  * @extends UI/Base:Control
- *
+ * @demo Controls-demo/filterPanel/View/Index
  * @public
  * @author Мельникова Е.А.
  *
+ */
+
+/**
+ * @name Controls/_filterPanel/View#source
+ * @cfg {Array.<Controls/_filter/View/interface/IFilterItem/FilterItem.typedef>} Устанавливает список полей фильтра и их конфигурацию.
+ * В числе прочего, по конфигурации определяется визуальное представление поля фильтра в составе контрола.
+ * @demo Controls-demo/filterPanel/View/Index
  */
 
 interface IViewPanelOptions {
@@ -27,6 +35,7 @@ export default class View extends Control<IControlOptions> {
     protected _editingObject: object = {};
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
+    protected _resetCaption: string = rk('все');
 
     protected _beforeMount(options: IViewPanelOptions): void {
         this._source = clone(options.source);
@@ -57,12 +66,15 @@ export default class View extends Control<IControlOptions> {
         this._updateFilterParams();
     }
 
-    protected _itemClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
-        const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        if (displayItem['[Controls/_display/GroupItem]']) {
+    protected _groupClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
+        const itemContents = displayItem.getContents();
+        if (displayItem.isExpanded()) {
             const index = this._collapsedGroups.indexOf(displayItem.getContents());
             this._collapsedGroups.splice(index, 1);
+        } else {
+            this._collapsedGroups.push(itemContents);
         }
+        const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
         if (isResetClick) {
             this._resetFilterItem(displayItem);
         }

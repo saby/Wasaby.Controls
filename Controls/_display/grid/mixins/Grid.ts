@@ -122,13 +122,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
-        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+        const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
+        if (supportLadder) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
         this._$resultsPosition = options.resultsPosition;
 
-        if (this._headerIsVisible(options)) {
+        if (this._headerIsVisible(options.header)) {
             this._$headerConfig = options.header;
             this._$header = this._initializeHeader(options);
         }
@@ -148,6 +149,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 emptyTemplate: this._$emptyTemplate,
                 emptyTemplateColumns: this._$emptyTemplateColumns
             });
+        }
+        if (supportLadder) {
+            this._updateItemsLadder();
         }
     }
 
@@ -229,6 +233,18 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
+    setHeader(header: THeader): void {
+        this._$headerConfig = header;
+        if (this._headerIsVisible(header)) {
+            this._$headerConfig = header;
+            this._$header = this._initializeHeader({
+                columns: this._$columns,
+                owner: this,
+                header: header
+            } as IOptions);
+        }
+    }
+
     setColumns(newColumns: TColumns): void {
         this._$columns = newColumns;
         this._$colgroup?.reBuild();
@@ -269,8 +285,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
-    protected _headerIsVisible(options: IOptions): boolean {
-        const hasHeader = options.header && options.header.length;
+    protected _headerIsVisible(header: THeader): boolean {
+        const hasHeader = header && header.length;
         return hasHeader && (this._$headerVisibility === 'visible' || this.getCollectionCount() > 0);
     }
 
@@ -368,7 +384,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
-    protected hasItemActionsSeparatedCell(): boolean {
+    hasItemActionsSeparatedCell(): boolean {
         return !!this.getColumnsConfig() && this.hasColumnScroll() && (this.getActionsTemplateConfig()?.itemActionsPosition !== 'custom');
     }
 

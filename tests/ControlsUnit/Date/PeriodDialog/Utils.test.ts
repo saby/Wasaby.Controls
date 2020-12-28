@@ -22,13 +22,13 @@ describe('Controls/_datePopup/Utils', function() {
             options: { minRange: 'day' },
             isEnabled: true
         }, {
-            options: { quantum: {}, minRange: 'day' },
+            options: { ranges: {}, minRange: 'day' },
             isEnabled: true
         }, {
-            options: { quantum: { days: [1] } },
+            options: { ranges: { days: [1] } },
             isEnabled: true
         }, {
-            options: { quantum: { weeks: [1] } },
+            options: { ranges: { weeks: [1] } },
             isEnabled: true
         }, {
             options: { minRange: 'month' },
@@ -53,13 +53,13 @@ describe('Controls/_datePopup/Utils', function() {
         }, {
             options: {
                 selectionType: IDateRangeSelectable.SELECTION_TYPES.range,
-                quantum: {}
+                ranges: {}
             },
             isEnabled: true
         }, {
             options: {
                 selectionType: IDateRangeSelectable.SELECTION_TYPES.range,
-                quantum: { months: [1] }
+                ranges: { months: [1] }
             },
             isEnabled: true
         }].forEach((test) => {

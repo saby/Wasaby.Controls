@@ -119,12 +119,18 @@ define(
             it('searchValue is changed', async() => {
                let isClosed = false;
                let isViewModelCreated = false;
+               let isSelectionControllerUpdated = false;
                const menuControl = getMenu();
                const newMenuOptions = { ...defaultOptions, searchParam: 'title' };
 
                menuControl._closeSubMenu = () => { isClosed = true; };
                menuControl._createViewModel = () => {
                   isViewModelCreated = true;
+               };
+               menuControl._selectionController = {
+                  updateOptions: () => {
+                     isSelectionControllerUpdated = true;
+                  }
                };
                newMenuOptions.sourceController = {
                   getItems: () => 'test'
@@ -134,6 +140,7 @@ define(
                assert.isTrue(menuControl._notifyResizeAfterRender);
                assert.isTrue(isClosed);
                assert.isTrue(isViewModelCreated);
+               assert.isTrue(isSelectionControllerUpdated);
             });
          });
 

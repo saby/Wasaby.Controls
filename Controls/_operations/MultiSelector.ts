@@ -7,8 +7,7 @@ export interface IMultiSelectorOptions extends IMultiSelectableOptions, IControl
     selectedKeysCount: number | null;
 }
 /**
- * Контрол, который отображает выпадающий список,
- * позволяющий производить массовую отметку записей в списке: отмечать все записи, инвертировать, снимать отметку.
+ * Контрол, отображающий чекбокс для массовой отметки записей и выпадающий список, позволяющий отмечать все записи, инвертировать, снимать с них отметку.
  * @remark
  * Полезные ссылки:
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ руководство разработчика}
@@ -16,7 +15,7 @@ export interface IMultiSelectorOptions extends IMultiSelectableOptions, IControl
  *
  * @class Controls/_operations/MultiSelector
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/operations/MultiSelector/Index

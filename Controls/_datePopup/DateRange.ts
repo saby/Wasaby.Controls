@@ -15,8 +15,8 @@ const _private = {
     updateView: function (self, options, dontUpdateScroll) {
         self._rangeModel.update(options);
         self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
-            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.quantum) &&
-                options.quantum.months[0] === 1));
+            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.ranges) &&
+                options.ranges.months[0] === 1));
         self._position = options.position;
     },
 

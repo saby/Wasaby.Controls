@@ -21,6 +21,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
@@ -49,7 +50,7 @@ class Picker extends Control<IControlOptions> {
                 dayTemplate: this._options.dayTemplate,
                 headerType: 'input',
                 closeButtonEnabled: true,
-                range: this._options.range,
+                ranges: this._options.ranges,
                 startValueValidators: this._options.valueValidators
             }
         };

@@ -237,6 +237,9 @@ export default class _Controller implements IDropdownController {
    }
 
    handleClose(): void {
+      if (this._options.searchParam) {
+         this._setItems(null);
+      }
       this._isOpened = false;
       this._menuSource = null;
    }

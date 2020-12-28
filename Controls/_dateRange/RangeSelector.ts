@@ -98,10 +98,9 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
                 emptyCaption: this._options.emptyCaption,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
-                quantum: this._options.ranges,
+                ranges: this._options.ranges,
                 minRange: this._options.minRange,
                 clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
-                range: this._options.range,
                 _displayDate: this._options._displayDate,
                 rangeSelectedCallback: this._options.rangeSelectedCallback
             }

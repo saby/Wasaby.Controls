@@ -39,6 +39,7 @@ import {register} from 'Types/di';
 export {default as IBind} from './_display/IBind';
 import {default as TreeChildren} from './_display/TreeChildren';
 export {TreeChildren};
+export {IOptions as ITreeCollectionOptions} from './_display/Tree';
 export {default as Abstract} from './_display/Abstract';
 import {default as Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory} from './_display/Collection';
 export {Collection, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory};
@@ -116,6 +117,7 @@ import GridTableHeaderRow from './_display/grid/TableHeaderRow';
 export {GridTableHeaderRow};
 export { TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from './_display/grid/mixins/Grid';
 
+export {IOptions as IGridCollectionOptions} from './_display/grid/Collection';
 import GridDataRow, {IOptions as IGridDataRowOptions} from './_display/grid/DataRow';
 export {GridDataRow, IGridDataRowOptions};
 import GridDataCell, {IOptions as IGridDataCellOptions} from './_display/grid/DataCell';
@@ -125,6 +127,8 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from './_display/g
 export {GridResultsCell, IGridResultsCellOptions};
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from './_display/grid/FooterCell';
 export {GridFooterCell, IGridFooterCellOptions};
+import GridFooterRow, {IOptions as IGridFooterRowOptions} from './_display/grid/FooterRow';
+export {GridFooterRow, IGridFooterRowOptions};
 import GridGroupItem from './_display/grid/GroupItem';
 export {GridGroupItem};
 
@@ -141,6 +145,8 @@ import {IDragPosition} from './_display/interface/IDragPosition';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
+
+export { IItemPadding } from 'Controls/_display/Collection';
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
