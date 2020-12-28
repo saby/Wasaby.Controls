@@ -1,7 +1,7 @@
 import rk = require('i18n!Controls');
 
 // Core imports
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
@@ -3073,7 +3073,7 @@ const _private = {
 /**
  * Компонент плоского списка, с произвольным шаблоном отображения каждого элемента. Обладает возможностью загрузки/подгрузки данных из источника.
  * @class Controls/_list/BaseControl
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @implements Controls/_interface/IErrorController
  * @mixes Controls/interface/IItemTemplate

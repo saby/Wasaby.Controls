@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_lookupPopup/Container');
 import ControllerContext = require('Controls/_lookupPopup/__ControllerContext');
 import chain = require('Types/chain');
@@ -323,7 +323,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
        * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
        *
        * @class Controls/_lookupPopup/Container
-       * @extends Core/Control
+       * @extends UI/Base:Control
        * 
        * @mixes Controls/_interface/ISource
        * @mixes Controls/_interface/ISelectionType
@@ -342,7 +342,7 @@ interface IFilterConfig extends IFilterOptions, IHierarchyOptions {
       * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
       *
       * @class Controls/_lookupPopup/Container
-      * @extends Core/Control
+      * @extends UI/Base:Control
       * 
       * @mixes Controls/_interface/ISource
       * @public

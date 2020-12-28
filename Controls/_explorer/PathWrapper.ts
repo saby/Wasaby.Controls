@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import {EventUtils} from 'UI/Events';
 import template = require('wml!Controls/_explorer/PathController/PathWrapper');
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';

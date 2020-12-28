@@ -8,7 +8,7 @@ import ListEditorBase from 'Controls/_filterPanel/Editors/ListBase';
 /**
  * Контрол используют в качестве редактора для выбора единичного значения из списка на {@link /doc/platform/developmentapl/interface-development/controls/list-environment/filter-search/filter-view/base-settings/#step-3 панели фильтров}.
  * @class Controls/_filterPanel/Editors/EnumList
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Мельникова Е.А.
  * @public
  */

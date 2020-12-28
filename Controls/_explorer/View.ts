@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_explorer/View/View');
 import cInstance = require('Core/core-instance');
 import {EventUtils} from 'UI/Events';
@@ -377,7 +377,7 @@ var
     * @demo Controls-demo/Explorer/Search
     *
     * @class Controls/_explorer/View
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
@@ -413,7 +413,7 @@ var
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate

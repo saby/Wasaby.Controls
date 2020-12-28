@@ -12,7 +12,7 @@ import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
  * Подробнее о классификации контролов Wasaby и схеме их взаимодействия читайте {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ здесь}.
  *
  * @class Controls/_filter/View/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  * @public
  */
@@ -26,7 +26,7 @@ import {IFilterItem} from "Controls/_filter/View/interface/IFilterView";
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
  *
  * @class Controls/_filter/View/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  * 
  * @public

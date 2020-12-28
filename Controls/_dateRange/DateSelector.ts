@@ -12,7 +12,7 @@ import {descriptor} from "Types/entity";
  * Контрол позволяющий пользователю выбирать дату из календаря.
  *
  * @class Controls/_dateRange/DateSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IDateRange
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_interface/IOpenPopup
@@ -32,7 +32,7 @@ import {descriptor} from "Types/entity";
  * Control that allows user to select date value in calendar.
  *
  * @class Controls/_dateRange/DateSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IDateRange
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_interface/IOpenPopup

@@ -20,7 +20,7 @@ import {descriptor} from "Types/entity";
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less переменные тем оформления}
  *
  * @class Controls/_dateRange/RangeSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
@@ -40,7 +40,7 @@ import {descriptor} from "Types/entity";
  * Controls that allows user to select date with start and end values in calendar.
  *
  * @class Controls/_dateRange/RangeSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable

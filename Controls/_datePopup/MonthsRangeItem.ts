@@ -1,4 +1,4 @@
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
@@ -20,7 +20,7 @@ const MONTHS_RANGE_CSS_CLASS_PREFIX = 'controls-PeriodDialog-MonthsRange__';
  * Item for the period selection component of multiple months.
  *
  * @class Controls/_datePopup/MonthsRangeItem
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Красильников А.С.
  * @private

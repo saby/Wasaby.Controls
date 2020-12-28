@@ -1,16 +1,16 @@
 define('Controls-demo/Decorators/Highlight/Highlight',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/Decorators/Highlight/Highlight',
 
       'Controls/input',
       'Controls/decorator'
    ],
-   function(Control, template) {
+   function(Base, template) {
 
       'use strict';
 
-      return Control.extend({
+      return Base.Control.extend({
          _template: template,
 
          _wrapText: null,

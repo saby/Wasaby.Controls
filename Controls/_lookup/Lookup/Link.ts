@@ -1,7 +1,7 @@
 /**
  * Created by ia.kapustin on 27.09.2018.
  */
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
 
 /**
@@ -12,7 +12,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less переменные тем оформления}
  *
  * @class Controls/_lookup/Lookup/Link
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IHeight
  * 
@@ -23,7 +23,7 @@ import template = require('wml!Controls/_lookup/Lookup/Link/LookUp_Link');
  * Label for use within the link field.
  *
  * @class Controls/_lookup/Lookup/Link
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_interface/IHeight
  * 

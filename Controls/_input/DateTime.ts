@@ -13,8 +13,7 @@ import {
 import {EventUtils} from 'UI/Events';
 import {isValidDate, Container, InputContainer} from 'Controls/validate';
 import template = require('wml!Controls/_input/DateTime/DateTime');
-
-/**
+/**
  * Базовое универсальное поле ввода даты и времени. Позволяет вводить дату и время одновременно или по отдельности. Данные вводятся только с помощью клавиатуры.
  * @remark
  * В зависимости от маски может использоваться для ввода:
@@ -30,7 +29,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less переменные тем оформления}
  *
  * @class Controls/_input/DateTime
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
  * @mixes Controls/interface/IInputTag
@@ -44,7 +43,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @public
  * @demo Controls-demo/Input/DateTime/DateTime
  * @author Красильников А.С.
- */
+ *//
 
 class DateTime extends Control {
     protected _template: TemplateFunction = template;

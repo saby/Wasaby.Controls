@@ -19,7 +19,7 @@ interface IContainerContext {
  * 
  * @class Controls/_popup/Opener/Edit/Container
  * 
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @see Controls/popup:Edit
  * @see Controls/list:DataContainer
  * @see Controls/popupTemplate:Stack

@@ -16,7 +16,7 @@ import { TSelectionType } from 'Controls/interface';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IPromisedSelectable
  *
  * @author Авраменко А.С.
@@ -29,7 +29,7 @@ import { TSelectionType } from 'Controls/interface';
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/actions/operations/'>here</a>.
  *
  * @class Controls/_operations/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IPromisedSelectable
  *
  * @author Авраменко А.С.

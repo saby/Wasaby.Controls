@@ -1,18 +1,18 @@
 define('Controls-demo/Decorators/Money/Money',
    [
-      'Core/Control',
+      'UI/Base',
       'json!Controls-demo/Decorators/Money/Money',
       'tmpl!Controls-demo/PropertyGrid/DemoPG'
    ],
 
-   function(Control, config, template) {
+   function(Base, config, template) {
       'use strict';
 
       var _private = {
          CONTENT: 'Controls/_decorator/Money'
       };
 
-      var Money = Control.extend({
+      var Money = Base.Control.extend({
          _template: template,
 
          _metaData: null,

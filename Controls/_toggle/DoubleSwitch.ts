@@ -22,7 +22,7 @@ const CAPTIONS_LENGTH = 2;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less переменные тем оформления}
  *
  * @class Controls/_toggle/DoubleSwitch
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
  * 
@@ -36,7 +36,7 @@ const CAPTIONS_LENGTH = 2;
  * Switch with two captions and with support two orientation.
  *
  * @class Controls/_toggle/DoubleSwitch
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/ITooltip
  * 

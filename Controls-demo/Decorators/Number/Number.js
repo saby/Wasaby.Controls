@@ -1,16 +1,16 @@
 define('Controls-demo/Decorators/Number/Number',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/Decorators/Number/Number',
 
       'Controls/input',
       'Controls/decorator',
    ],
-   function(Control, template) {
+   function(Base, template) {
 
       'use strict';
 
-      var ModuleClass = Control.extend({
+      var ModuleClass = Base.Control.extend({
          _template: template,
 
          _number: 0,

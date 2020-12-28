@@ -1,6 +1,6 @@
 define('Controls-demo/List/NoScrollPaging', [
    'Env/Env',
-   'Core/Control',
+   'UI/Base',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/NoScrollPaging/NoScrollPaging',
    'Types/source',
@@ -8,7 +8,7 @@ define('Controls-demo/List/NoScrollPaging', [
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoName'
-], function (Env, BaseControl,
+], function (Env, Base,
              GridData,
              template,
              source,
@@ -268,7 +268,7 @@ define('Controls-demo/List/NoScrollPaging', [
          return mySource.superclass.query.apply(this, arguments);
       }
    });
-   var ModuleClass = BaseControl.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _footerPagingOptions: null,

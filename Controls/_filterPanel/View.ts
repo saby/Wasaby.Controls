@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPanel/View/View');
 import {FilterUtils} from 'Controls/filter';
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -10,7 +10,7 @@ import * as clone from 'Core/core-clone';
  * Контрол "Панель фильтра с набираемыми параметрами".
  *
  * @class Controls/_filterPanel/View
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
  * @author Мельникова Е.А.

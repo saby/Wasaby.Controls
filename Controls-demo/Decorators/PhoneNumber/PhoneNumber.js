@@ -3,16 +3,16 @@
  */
 define('Controls-demo/Decorators/PhoneNumber/PhoneNumber',
    [
-      'Core/Control',
+      'UI/Base',
       'Controls/decorator',
       'wml!Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls/input'
    ],
-   function(Control, decorator, template) {
+   function(Base, decorator, template) {
 
       'use strict';
 
-      return Control.extend({
+      return Base.Control.extend({
          _template: template,
 
          _number: '',

@@ -71,7 +71,7 @@ const isTemplateObject = (tmpl: any): boolean => {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less переменные тем оформления}
  *
  * @class Controls/_tabs/Buttons
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface:ISingleSelectable
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems

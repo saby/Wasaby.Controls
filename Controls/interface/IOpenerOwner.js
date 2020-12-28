@@ -20,11 +20,11 @@ define('Controls/interface/IOpenerOwner', [], function() {
 
    /**
     * @name Controls/interface/IOpenerOwner#opener
-    * @cfg {Core/Control} Контрол, который инициирует открытие текущего контрола, реализующий интерфейс IHasOpener.
+    * @cfg {UI/Base:Control} Контрол, который инициирует открытие текущего контрола, реализующий интерфейс IHasOpener.
     */
    /*
     * @name Controls/interface/IOpenerOwner#opener
-    * @cfg {Core/Control} Control that opens current control expended by IHasOpener interface.
+    * @cfg {UI/Base:Control} Control that opens current control expended by IHasOpener interface.
     */
 
 });

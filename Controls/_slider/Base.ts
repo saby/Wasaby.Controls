@@ -25,7 +25,7 @@ const maxPercentValue = 100;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less переменные тем оформления}
  *
  * @public
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Красильников А.С.
@@ -37,7 +37,7 @@ const maxPercentValue = 100;
  *
  * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">Demo-example</a>.
  * @public
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.

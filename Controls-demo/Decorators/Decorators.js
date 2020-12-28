@@ -1,6 +1,6 @@
 define('Controls-demo/Decorators/Decorators',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/Decorators/Decorators',
 
       'Controls-demo/Decorators/Money/Money',
@@ -8,11 +8,11 @@ define('Controls-demo/Decorators/Decorators',
       'Controls-demo/Decorators/PhoneNumber/PhoneNumber',
       'Controls-demo/Decorators/WrapURLs/WrapURLs',
    ],
-   function(Control, template) {
+   function(Base, template) {
 
       'use strict';
 
-      var ModuleClass = Control.extend({
+      var ModuleClass = Base.Control.extend({
          _template: template
       })
    

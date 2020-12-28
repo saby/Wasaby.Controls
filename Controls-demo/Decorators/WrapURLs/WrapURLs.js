@@ -1,16 +1,16 @@
 define('Controls-demo/Decorators/WrapURLs/WrapURLs',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/Decorators/WrapURLs/WrapURLs',
 
       'Controls/input',
       'Controls/decorator',
    ],
-   function(Control, template) {
+   function(Base, template) {
 
       'use strict';
 
-      var ModuleClass = Control.extend({
+      var ModuleClass = Base.Control.extend({
          _template: template,
 
          _wrapText: null,

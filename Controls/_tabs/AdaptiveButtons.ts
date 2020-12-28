@@ -44,7 +44,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * Контрол предоставляет пользователю возможность выбрать между двумя или более адаптивными под ширину вкладками.
  *
  * @class Controls/_tabs/AdaptiveButtons
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/tabs:ITabsButtons
  * @mixes Controls/tabs:ITabsAdaptiveButtonsOptions
  * @mixes Controls/interface:ISource
