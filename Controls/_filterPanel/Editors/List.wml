@@ -11,7 +11,6 @@
                        footerTemplate="{{footerTemplate}}"
                        multiSelectVisibility="onhover"
                        itemsReadyCallback="{{_itemsReadyCallback}}"
-                       on:selectedKeysChanged="_handleSelectedKeysChanged()"
                        on:itemClick="_handleItemClick()">
       <ws:multiSelectTemplate>
          <ws:partial template="{{_circleTemplate}}" style="{{_options.style}}"/>
@@ -38,13 +37,12 @@
 
 <div class="controls-FilterEditors__list controls-FilterEditors__list_theme-{{_options.theme}}">
    <ws:if data="{{_options.multiSelect}}">
-      <ws:partial template="listEditor"/>
+      <ws:partial template="listEditor" on:selectedKeysChanged="_handleSelectedKeysChanged()"/>
    </ws:if>
    <ws:else>
-      <Controls.Container.Async templateName="Controls/multiselection:SelectedKeyAdapter">
-         <ws:partial
-                 template="{{content.resolvedTemplate}}"
-                 on:selectedKeyChanged="_handleSelectedKeysChanged()">
+      <Controls.Container.Async templateName="Controls/multiselection:SingleSelection">
+         <ws:partial template="{{content.resolvedTemplate}}"
+                     on:selectedKeyChanged="_handleSelectedKeyChanged()">
             <ws:partial template="listEditor"/>
          </ws:partial>
       </Controls.Container.Async>

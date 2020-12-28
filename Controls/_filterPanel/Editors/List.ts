@@ -34,14 +34,14 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 /**
  * @name Controls/_filterPanel/Editors/List#showSelectorCaption
  * @cfg {String} Заголовок для кнопки в подвале списка, которая открывает окно выбора из справочника.
- * @demo Controls-demo/filterPanel/MultiSelectListEditor/ShowSelectorCaption/Index
+ * @demo Controls-demo/filterPanel/ListEditor/ShowSelectorCaption/Index
  * @default Другие
  */
 
 /**
  * @name Controls/_filterPanel/Editors/List#additionalTextProperty
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе дополнительного столбца в списке.
- * @demo Controls-demo/filterPanel/MultiSelectListEditor/AdditionalTextProperty/Index
+ * @demo Controls-demo/filterPanel/ListEditor/AdditionalTextProperty/Index
  */
 
 /**
@@ -55,6 +55,7 @@ export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISo
 /**
  * @name ontrols/_filterPanel/Editors/List#multiSelect
  * @cfg {boolean} Определяет, установлен ли множественный выбор.
+ * @demo Controls-demo/filterPanel/ListEditor/MultiSelect/Index
  * @default false
  */
 
@@ -88,7 +89,7 @@ class ListEditor extends Control<IListEditorOptions> {
     }
 
     protected _handleItemClick(event: SyntheticEvent, item: Model, nativeEvent: SyntheticEvent): void {
-        const contentClick = nativeEvent.target.closest('.controls-EditorList__columns');
+        const contentClick = nativeEvent.target.closest('.controls-ListEditor__columns');
         if (contentClick) {
             this._notifyPropertyValueChanged([item.get(this._options.keyProperty)], true);
         }
@@ -96,6 +97,10 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _handleSelectedKeysChanged(event: SyntheticEvent, keys: string[]|number[]): void {
         this._notifyPropertyValueChanged(keys, !this._options.multiSelect);
+    }
+
+    protected _handleSelectedKeyChanged(event: SyntheticEvent, key: string|number): void {
+        this._notifyPropertyValueChanged([key], !this._options.multiSelect);
     }
 
     protected _handleSelectorResult(result: Model[]): void {
