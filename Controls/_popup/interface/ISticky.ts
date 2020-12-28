@@ -133,7 +133,7 @@ export interface IStickyOpener extends IOpener {
  */
 
 /**
- * Метод открытия диалогового окна.
+ * Метод открытия всплывающего окна.
  * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
  * @function Controls/_popup/interface/IStickyOpener#open
  * @param {Controls/_popup/interface/IStickyOpener/PopupOptions.typedef} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
@@ -173,6 +173,14 @@ export interface IStickyOpener extends IOpener {
  * @see openPopup
  * @see closePopup
  */
+
+/**
+ * Метод для закрытия всплывающего окна.
+ * @name Controls/_popup/interface/IStickyOpener#close
+ * @function
+ */
+
+
 
 /**
  * @name Controls/_popup/interface/IStickyOpener#minWidth
