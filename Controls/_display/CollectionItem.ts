@@ -292,7 +292,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null;
+        return this._$checkboxState !== null && !this.isAdd;
     }
 
     // endregion CheckboxState
