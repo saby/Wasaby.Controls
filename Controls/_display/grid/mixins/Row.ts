@@ -38,6 +38,8 @@ export default abstract class Row<T> {
     protected _$columnItems: Array<Cell<T, Row<T>>>;
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: {};
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -266,7 +268,7 @@ export default abstract class Row<T> {
                 column,
                 colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount(),
-                separatorSize: this._getColumnSeparatorSize(column, columnIndex)
+                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex)
             }));
         }
         return columnItems;
@@ -376,11 +378,55 @@ export default abstract class Row<T> {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
-    abstract getContents(): T;
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
 
-    nextVersion(): void {
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        const changed = this._$rowSeparatorSize !== rowSeparatorSize;
+        this._$rowSeparatorSize = rowSeparatorSize;
+        if (changed) {
+            this._redrawColumns('all');
+        }
         this._nextVersion();
     }
+
+    getColumnSeparatorSize(): TColumnSeparatorSize {
+        return this._$columnSeparatorSize;
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        const changed = this._$columnSeparatorSize !== columnSeparatorSize;
+        this._$columnSeparatorSize = columnSeparatorSize;
+        if (changed && this._$columnItems) {
+            this._$columnItems.forEach((column, columnIndex) => {
+                column.setColumnSeparatorSize(this._getColumnSeparatorSizeForColumn(column.getColumnConfig(), columnIndex));
+                column.nextVersion();
+            });
+        }
+        this._nextVersion();
+    }
+
+    protected _getColumnSeparatorSizeForColumn(currentColumn: IColumn, columnIndex: number): TColumnSeparatorSize {
+        const columns = this.getColumnsConfig();
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = columns[columnIndex - 1];
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize = this.getColumnSeparatorSize();
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
+
+    abstract getContents(): T;
 
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
@@ -388,7 +434,6 @@ export default abstract class Row<T> {
     abstract isEditing(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
-    protected abstract _getColumnSeparatorSize(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize;
 }
 
 Object.assign(Row.prototype, {

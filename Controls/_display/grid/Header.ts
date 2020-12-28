@@ -1,6 +1,7 @@
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
 import { create } from 'Types/di';
+import {TColumns, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IHeaderRowOptions<T> {}
 
@@ -39,9 +40,15 @@ export default class Header<T> {
         return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
     }
 
-    nextVersion(): void {
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$rows.forEach((row) => {
-            row.nextVersion();
+            row.setColumnSeparatorSize(columnSeparatorSize);
+        });
+    }
+
+    setColumns(newColumns: TColumns): void {
+        this._$rows.forEach((row) => {
+            row.setColumns(newColumns);
         });
     }
 

@@ -24,7 +24,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
-    separatorSize?: string;
+    columnSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -46,7 +46,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
-    protected _$separatorSize: string;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getInstanceId: () => string;
 
@@ -296,6 +296,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+    }
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
 
@@ -350,8 +354,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     protected _getColumnSeparatorClasses(theme: string): string {
         if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
-            const columnSeparatorSize = typeof this._$separatorSize === 'string' ?
-                this._$separatorSize.toLowerCase() :
+            const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
+                this._$columnSeparatorSize.toLowerCase() :
                 null;
             return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
         }
@@ -484,6 +488,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
-    _$separatorSize: null,
+    _$columnSeparatorSize: null,
     _$isFixed: null
 });

@@ -93,6 +93,7 @@ export interface IOptions {
     emptyTemplate?: TemplateFunction;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
+    rowSeparatorSize?: string;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -115,7 +116,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$colspanCallback: TColspanCallback;
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
-    protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$isFullGridSupport: boolean;
     protected _$columnScroll: boolean;
     protected _$stickyColumnsCount: number;
@@ -142,6 +142,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
+        }
+
+        if (options.columnSeparatorSize) {
+            this.setColumnSeparatorSize(options.columnSeparatorSize);
+        }
+
+        if (options.rowSeparatorSize) {
+            this.setRowSeparatorSize(options.rowSeparatorSize);
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
@@ -235,8 +243,11 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$columns = newColumns;
         this._$colgroup?.reBuild();
         this._nextVersion();
-        this._$header?.nextVersion();
         this._updateItemsColumns();
+        const header = this.getHeader();
+        if (header) {
+            header.setColumns(newColumns);
+        }
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
@@ -246,15 +257,25 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return this._$editArrowVisibilityCallback(item);
     }
 
-    getColumnSeparatorSize(): TColumnSeparatorSize {
-        return this._$columnSeparatorSize;
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            if (item.LadderSupport) {
+                item.setRowSeparatorSize(rowSeparatorSize);
+            }
+        });
+        this._nextVersion();
     }
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
-        this._$columnSeparatorSize = columnSeparatorSize;
-        this._$header?.nextVersion();
+        const header = this.getHeader();
+        if (header) {
+            header.setColumnSeparatorSize(columnSeparatorSize);
+        }
+        this._nextVersion();
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            item.nextVersion();
+            if (item.LadderSupport) {
+                item.setColumnSeparatorSize(columnSeparatorSize);
+            }
         });
     }
 
@@ -420,7 +441,6 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,
-    _$columnSeparatorSize: null,
     _$emptyTemplate: null,
     _$emptyTemplateColumns: null
 });

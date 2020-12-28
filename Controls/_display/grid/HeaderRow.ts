@@ -47,7 +47,7 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
-                    separatorSize: this._getColumnSeparatorSize(column, index)
+                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
                 });
             });
             this._addCheckBoxColumnIfNeed();
@@ -77,7 +77,7 @@ export default class HeaderRow<T> extends Row<T> {
         }
     }
 
-    protected _getColumnSeparatorSize(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
+    protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
         const currentColumn = {
             ...column,
             columnSeparatorSize: this._getHeaderColumnSeparatorSize(column)
