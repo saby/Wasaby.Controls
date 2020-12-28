@@ -24,6 +24,8 @@ import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    shadowVisibility?: string;
+    backgroundStyle?: string;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -37,7 +39,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
+    protected _$shadowVisibility?: string;
+    protected _$backgroundStyle?: string;
 
+    get shadowVisibility(): string {
+        return this._$shadowVisibility;
+    }
+    get backgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
     constructor(options?: IOptions<T>) {
         super(options);
         if (!this.isCheckBoxCell()) {
@@ -266,5 +276,7 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null
+    _$cellPadding: null,
+    _$shadowVisibility: null,
+    _$backgroundStyle: null
 });

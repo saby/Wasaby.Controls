@@ -24,6 +24,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    ladderCell?: boolean;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -45,6 +46,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
+    protected _$ladderCell: boolean;
 
     getInstanceId: () => string;
 
@@ -485,5 +487,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
-    _$isFixed: null
+    _$isFixed: null,
+    _$ladderCell: null
 });

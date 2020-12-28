@@ -17,6 +17,7 @@ import FooterRow from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
 import EmptyRow from '../EmptyRow';
+import {ILadderObject} from '../../utils/GridLadderUtil';
 
 
 type THeaderVisibility = 'visible' | 'hasdata';
@@ -103,7 +104,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$header: Header<S>;
     protected _$footer: FooterRow<S>;
     protected _$results: ResultsRow<S>;
-    protected _$ladder: {};
+    protected _$ladder: ILadderObject;
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
@@ -263,6 +264,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 item.setLadder(this._$ladder);
             }
         });
+        this.getHeader()?.getRow()?.setLadder(this._$ladder);
+        this.getResults()?.setLadder(this._$ladder);
     }
 
     protected _updateItemsColumns(): void {
