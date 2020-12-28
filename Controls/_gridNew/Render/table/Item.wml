@@ -25,6 +25,7 @@
                             cursor="{{ cursor }}"
                             backgroundColorStyle="{{ backgroundColorStyle }}"
                             highlightOnHover="{{ highlightOnHover }}"
+                            itemActionsTemplate="{{ itemActionsTemplate }}"
                             templateHighlightOnHover="{{ templateHighlightOnHover }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"

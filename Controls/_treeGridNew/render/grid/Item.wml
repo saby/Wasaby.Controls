@@ -30,6 +30,7 @@
                theme="{{ theme }}"
                style="{{ style }}"
                cursor="{{ cursor }}"
+               itemActionsTemplate="{{ itemActionsTemplate }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
