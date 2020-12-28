@@ -1,6 +1,6 @@
 <!-- Не выводим подвал, если это не кнопка еще и при этом не был переопределен контент. -->
 <!-- В таком случае подвал просто не ожидается прикладным разработчиком. -->
-<ws:if data="{{ !(!item.getNode().hasMoreStorage() && !content) }}">
+<ws:if data="{{ !(!item.hasMoreStorage() && !content) }}">
     <div class="{{item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'theme': theme,
@@ -23,7 +23,7 @@
                         </ws:if>
                     </ws:if>
 
-                    <ws:partial template="{{column.getTemplate(content)}}" item="{{item}}" itemData="{{item}}"/>
+                    <ws:partial template="{{column.getTemplate(content)}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}"/>
                 </ws:if>
             </div>
         </ws:for>

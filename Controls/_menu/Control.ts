@@ -37,7 +37,6 @@ const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
 /**
  * Контрол меню.
  * @public
- * @class Controls/menu:Control
  * @mixes Controls/_interface/IIconSize
  * @mixes Controls/_dropdown/interface/IDropdownSource
  * @mixes Controls/_interface/INavigation
