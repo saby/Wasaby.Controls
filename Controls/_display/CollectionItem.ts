@@ -122,7 +122,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$rendered: boolean;
 
-    protected _$multiSelectVisibility: string;
+    protected _$multiSelectVisibility: string = 'hidden';
 
     protected _$dragged: boolean;
 
@@ -292,7 +292,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null;
+        return this._$checkboxState !== null && !this.isAdd;
     }
 
     // endregion CheckboxState
@@ -352,11 +352,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getMultiSelectClasses(theme: string): string {
-        let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme} `;
-        classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
+        let classes = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        classes += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        classes += `controls-CheckboxMarker_inList_theme-${theme} controls-ListView__checkbox_theme-${theme} `;
+        classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme} `;
 
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
-            classes += ' controls-ListView__checkbox-onhover';
+            classes += 'controls-ListView__checkbox-onhover';
         }
         return classes;
     }

@@ -76,6 +76,7 @@ import {Model} from 'Types/entity';
             itemConfig.multiSelect = properties.multiSelect;
             itemConfig.emptyText = properties.emptyText;
             itemConfig.selectorTemplate = properties.selectorTemplate;
+            itemConfig.navigation = properties.navigation;
             return itemConfig;
          },
 

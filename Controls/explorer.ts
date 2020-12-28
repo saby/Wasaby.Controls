@@ -7,7 +7,7 @@
  */
 
 import View = require('Controls/_explorer/View');
-import SearchItemTemplate = require('wml!Controls/_treeGrid/SearchView/Item');
+import {SearchItemTpl as SearchItemTemplate} from 'Controls/treeGrid';
 import {TExplorerViewMode} from 'Controls/_explorer/interface/IExplorer';
 
 export {

@@ -9,6 +9,7 @@
                         textAlign="{{_options.textAlign}}"
                         placeholder="{{_options.placeholder}}"
                         fontSize="{{_fontSize || _options.fontSize}}"
+                        fontWeight="{{_options.fontWeight}}"
                         inlineHeight="{{_inlineHeight || _options.inlineHeight}}"
                         fontColorStyle="{{_fontColorStyle || _options.fontColorStyle}}"
                         borderStyle="{{_options.borderStyle}}"

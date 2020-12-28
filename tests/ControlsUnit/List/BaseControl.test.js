@@ -4549,6 +4549,7 @@ define([
                   multiSelectVisibility: 'visible',
                   selectedKeys: [1],
                   excludedKeys: [],
+                  selectedKeysCount: 0,
                   itemActions: [
                      {
                         id: 1,
@@ -4572,8 +4573,37 @@ define([
                   instance._onItemSwipe({}, item, swipeEvent);
                   assert.notExists(instance._itemActionsController.getSwipeItem());
                   assert.equal(item, instance._selectionController.getAnimatedItem());
-               })
+               });
             });
+             it('_onItemSwipe() animated item null', () => {
+                 return initTest({
+                     multiSelectVisibility: 'visible',
+                     selectedKeys: [1],
+                     excludedKeys: [],
+                     itemActions: [
+                         {
+                             id: 1,
+                             showType: 2,
+                             'parent@': true
+                         },
+                         {
+                             id: 2,
+                             showType: 0,
+                             parent: 1
+                         },
+                         {
+                             id: 3,
+                             showType: 0,
+                             parent: 1
+                         }
+                     ]
+                 }).then(() => {
+                     lists.BaseControl._private.updateItemActions(instance, instance._options);
+                     const item = instance._listViewModel.at(0);
+                     instance._onItemSwipe({}, item, swipeEvent);
+                     assert.isNull(instance._selectionController.getAnimatedItem());
+                 });
+             });
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
@@ -4845,6 +4875,24 @@ define([
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
             sinon.assert.called(stubHandleItemActionClick);
             stubHandleItemActionClick.restore();
+         });
+
+         // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)
+         it('should hide ItemActions on menuOpened event', () => {
+            const fakeEvent = initFakeEvent();
+            const spyHideActions = sinon.spy(lists.BaseControl._private, 'removeShowActionsClass');
+            instance._onItemActionsMenuResult('menuOpened', null, fakeEvent);
+            sinon.assert.called(spyHideActions);
+            spyHideActions.restore();
+         });
+
+         // после закрытия меню ItemActions должны появиться снова
+         it('should show ItemActions on menu close event', () => {
+            instance._itemActionsMenuId = 'popupId_1';
+            const spyShowActions = sinon.spy(lists.BaseControl._private, 'addShowActionsClass');
+            instance._onItemActionsMenuClose({id: 'popupId_1'});
+            sinon.assert.called(spyShowActions);
+            spyShowActions.restore();
          });
 
          // должен открывать меню, соответствующее новому id Popup
@@ -8074,6 +8122,40 @@ define([
                assert.equal(baseControl._markerController._markerVisibility, 'onactivated');
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
+
+            it('updateOptions with new model', () => {
+               const searchViewModel = new treeGrid.SearchGridViewModel({
+                  items: new collection.RecordSet({
+                     rawData: [{
+                        id: 1,
+                        type: true,
+                        parent: null
+                     }, {
+                        id: 2,
+                        type: null,
+                        parent: 1
+                     }],
+                     keyProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  keyProperty: 'id'
+               });
+
+               const notifySpy = sinon.spy(baseControl, '_notify');
+
+               baseControl.setMarkedKey(3);
+               baseControl._listViewModel = searchViewModel;
+               baseControl._modelRecreated = true;
+               baseControl._beforeUpdate(cfg);
+
+
+               assert.isTrue(notifySpy.withArgs('beforeMarkedKeyChanged', [2]).called);
+               assert.isTrue(notifySpy.withArgs('markedKeyChanged', [2]).called);
+
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
 
             it('setMarkedKey', () => {

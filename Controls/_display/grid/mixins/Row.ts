@@ -79,7 +79,7 @@ export default abstract class Row<T> {
         return this._$owner.isFullGridSupport();
     }
 
-    getColumns(): Array<Cell<T, Row<T>>> {
+    getColumns(colspan?: boolean): Array<Cell<T, Row<T>>> {
         if (!this._$columnItems) {
             this._initializeColumns();
         }
@@ -94,12 +94,12 @@ export default abstract class Row<T> {
         return this._$owner.getHeaderConfig();
     }
 
-    getColumnsCount(): number {
-        return this.getColumns().length;
+    getColumnsCount(colspan?: boolean): number {
+        return this.getColumns(colspan).length;
     }
 
-    getColumnIndex(column: Cell<T, Row<T>>): number {
-        return this.getColumns().indexOf(column);
+    getColumnIndex(column: Cell<T, Row<T>>, colspan?: boolean): number {
+        return this.getColumns(colspan).indexOf(column);
     }
 
     getTopPadding(): string {
@@ -148,6 +148,33 @@ export default abstract class Row<T> {
             stickyProperties = [stickyProperties];
         }
         return stickyProperties as string[];
+    }
+
+    getMultiSelectClasses(
+       theme: string,
+       backgroundColorStyle: string,
+       cursor: string = 'pointer',
+       templateHighlightOnHover: boolean = true
+    ): string {
+        // TODO должно быть super.getMultiSelectPosition, но мы внутри миксина
+        const hoverBackgroundStyle = this.getHoverBackgroundStyle();
+
+        let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        contentClasses += `controls-CheckboxMarker_inList_theme-${theme} `;
+
+        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+            contentClasses += 'controls-ListView__checkbox-onhover ';
+        }
+
+        if (templateHighlightOnHover !== false) {
+            contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
+        }
+
+        contentClasses += ` controls-GridView__checkbox_theme-${theme}`;
+        contentClasses += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
+
+        return contentClasses;
     }
 
     shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
@@ -373,7 +400,7 @@ export default abstract class Row<T> {
         return this._$owner.getStickyColumnsCount();
     }
 
-    protected hasItemActionsSeparatedCell(): boolean {
+    hasItemActionsSeparatedCell(): boolean {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
@@ -418,6 +445,7 @@ export default abstract class Row<T> {
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;
     abstract isEditing(): boolean;
+    abstract isSelected(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
 }

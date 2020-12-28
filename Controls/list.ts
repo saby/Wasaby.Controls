@@ -2,8 +2,9 @@
  * Библиотека контролов, которые реализуют плоский список. Список может строиться по данным, полученным из источника. Также можно организовать удаление и перемещение данных.
  * @library Controls/list
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
- * @includes Controls/_list/interface/IClickableView
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
+ * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
@@ -19,7 +20,9 @@
  * List library
  * @library Controls/list
  * @includes ItemTemplate Controls/_list/interface/ItemTemplate
+ * @includes IClickableView Controls/_list/interface/IClickableView
  * @includes IBaseItemTemplate Controls/_list/interface/IBaseItemTemplate
+ * @includes IContentTemplate Controls/_list/interface/IContentTemplate
  * @includes EmptyTemplate Controls/_list/interface/EmptyTemplate
  * @includes GroupTemplate Controls/_list/interface/GroupTemplate
  * @includes IBaseGroupTemplate Controls/_list/interface/IBaseGroupTemplate
@@ -83,8 +86,6 @@ export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list
 
 export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
-export {IContentTemplateOptions} from 'Controls/_list/interface/IContentTemplate';
-export {IBaseItemTemplateOptions} from 'Controls/_list/interface/BaseItemTemplate';
 
 export {
     AddButton,
