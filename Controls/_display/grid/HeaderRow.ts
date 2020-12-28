@@ -47,6 +47,7 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
+                    cellPadding: this._$columns[typeof column.startColumn !== 'undefined' ? column.startColumn : index].cellPadding,
                     columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
                 });
             });

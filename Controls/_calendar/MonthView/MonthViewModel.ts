@@ -149,7 +149,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             if (scope.selectionProcessing) {
                backgroundColorClass += '-startend-unfinished';
             }
-            if (fontWeight !== 'unset') {
+            if (fontWeight !== 'normal') {
                css.push('controls-MonthView__fontWeight_theme-' + theme);
             }
          }

@@ -3,7 +3,7 @@
         <ws:partial template="Controls/list:BaseEditingTemplate" itemData="{{itemData}}">
             <ws:viewTemplate>{{ itemData.item.get('invoice') }}</ws:viewTemplate>
             <ws:editorTemplate>
-                <div style="padding-left: 6px;">
+                <div>
                     <div class="demo-EditableGrid__editor-flexWrapper" style="width: 100%;">
                         <div class="demo-EditableGrid__editor-flexWrapper">
                             <Controls.input:Text value="{{itemData.item.get('documentNum')}}" on:valueChanged="onChange1('documentNum', itemData.item)"

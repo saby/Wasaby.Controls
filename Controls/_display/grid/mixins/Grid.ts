@@ -123,7 +123,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
-        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+        const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
+        if (supportLadder) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
@@ -153,6 +154,9 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 emptyTemplate: this._$emptyTemplate,
                 emptyTemplateColumns: this._$emptyTemplateColumns
             });
+        }
+        if (supportLadder) {
+            this._updateItemsLadder();
         }
     }
 

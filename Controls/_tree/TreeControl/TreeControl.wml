@@ -37,7 +37,7 @@
                                fontColorStyle="{{moreFontColorStyle}}"
                                caption="{{rk('Еще') + '...'}}"
                                readOnly="{{false}}"
-                               on:click="_onLoadMoreClick(nodeFooterTemplateMoreButton.item.getNode())"
+                               on:click="_onLoadMoreClick(nodeFooterTemplateMoreButton.item)"
       />
    </ws:nodeFooterTemplateMoreButton>
    <ws:content>
