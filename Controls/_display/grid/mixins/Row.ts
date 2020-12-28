@@ -39,7 +39,6 @@ export default abstract class Row<T> {
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: {};
     protected _$columnSeparatorSize: TColumnSeparatorSize;
-    protected _$rowSeparatorSize: string;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -376,19 +375,6 @@ export default abstract class Row<T> {
 
     protected hasItemActionsSeparatedCell(): boolean {
         return this._$owner.hasItemActionsSeparatedCell();
-    }
-
-    getRowSeparatorSize(): string {
-        return this._$rowSeparatorSize;
-    }
-
-    setRowSeparatorSize(rowSeparatorSize: string): void {
-        const changed = this._$rowSeparatorSize !== rowSeparatorSize;
-        this._$rowSeparatorSize = rowSeparatorSize;
-        if (changed) {
-            this._redrawColumns('all');
-        }
-        this._nextVersion();
     }
 
     getColumnSeparatorSize(): TColumnSeparatorSize {

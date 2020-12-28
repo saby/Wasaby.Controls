@@ -93,7 +93,6 @@ export interface IOptions {
     emptyTemplate?: TemplateFunction;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
-    rowSeparatorSize?: string;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -146,10 +145,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
         if (options.columnSeparatorSize) {
             this.setColumnSeparatorSize(options.columnSeparatorSize);
-        }
-
-        if (options.rowSeparatorSize) {
-            this.setRowSeparatorSize(options.rowSeparatorSize);
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
@@ -255,15 +250,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
-    }
-
-    setRowSeparatorSize(rowSeparatorSize: string): void {
-        this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item.LadderSupport) {
-                item.setRowSeparatorSize(rowSeparatorSize);
-            }
-        });
-        this._nextVersion();
     }
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
