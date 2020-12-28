@@ -26,6 +26,7 @@ import { Model } from 'Types/entity';
 import { IDragPosition } from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { isEqual } from 'Types/object';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -648,7 +649,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             });
         }
 
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
@@ -666,12 +667,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         });
 
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     resetExpandedItems(): void {
         this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     toggleExpanded(item: T): void {
@@ -697,14 +698,17 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         }
 
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     // endregion Expanded/Collapsed
 
     setHasMoreStorage(storage: Record<string, boolean>): void {
-        this._$hasMoreStorage = storage;
-        this._nextVersion();
+        if (!isEqual(this._$hasMoreStorage, storage)) {
+            this._$hasMoreStorage = storage;
+            this._nextVersion();
+            this._reBuildNodeFooters();
+        }
     }
 
     getHasMoreStorage(): Record<string, boolean> {
@@ -775,7 +779,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._childrenMap = {};
     }
 
-    protected _reCountNodeFooters(): void {
+    protected _reBuildNodeFooters(): void {
         const session = this._startUpdateSession();
         this.getStrategyInstance(NodeFooter)?.invalidate();
         this._reSort();
