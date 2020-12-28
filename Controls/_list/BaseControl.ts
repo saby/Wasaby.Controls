@@ -359,7 +359,7 @@ const _private = {
         const navigation = cClone(cfg.navigation);
         const resDeferred = new Deferred();
 
-        self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
+        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -536,6 +536,10 @@ const _private = {
                 self._hideTopTrigger = true;
             }
         }
+    },
+
+    hasDataBeforeLoad(self): boolean {
+        return self._isMounted && self._listViewModel && self._listViewModel.getCount();
     },
 
     resolveIndicatorStateAfterReload(self, list, navigation): void {
@@ -3858,6 +3862,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
+            }
+
+            if (newOptions.loading) {
+                this._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
