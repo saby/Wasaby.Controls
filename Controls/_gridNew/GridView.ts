@@ -146,6 +146,14 @@ const GridView = ListView.extend({
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ' controls-Grid_support-ladder';
         }
+
+        if (options.itemActionsPosition === 'outside' &&
+            !this._listModel.getFooter() &&
+            !(this._listModel.getResults() && this._listModel.getResultsPosition() === 'bottom')
+        ) {
+            classes += ` controls-GridView__paddingBottom__itemActionsV_outside_theme-${options.theme}`;
+        }
+
         classes += ` ${this._columnScrollContentClasses}`;
         return classes;
     },
