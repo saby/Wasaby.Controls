@@ -38,6 +38,7 @@ export type ICallback<T> = (data: ICallbackData<T>) => IFieldData;
 
 export interface IValueOptions<T> {
     /**
+     * @name Controls/_input/interface/IValue#value
      * @cfg {*|null} Значение поля ввода.
      * @remark
      * При установке опции value в контроле ввода, отображаемое значение всегда будет соответствовать её значению. В этом случае родительский контрол управляет отображаемым значением. Например, вы можете менять значение по событию {@link valueChanged}:
@@ -139,6 +140,7 @@ export interface IValueOptions<T> {
     value: T | null;
 
     /**
+     * @name Controls/_input/interface/IValue#inputCallback
      * @cfg {Controls/input:ICallbackData} Функция обратного вызова, вызывается после основного процесса обработки входных данных.
      * @remark
      * Метод используется, когда требуется изменить поведение обработки ввода.

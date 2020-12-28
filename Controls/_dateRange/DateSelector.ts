@@ -65,8 +65,7 @@ export default class DateSelector extends BaseSelector<IControlOptions> {
             closeButtonEnabled: true,
             rangeselect: false,
             selectionType: 'single',
-            range: this._options.range,
-            quantum: null
+            ranges: null
          }
       };
    }

@@ -39,6 +39,13 @@ export interface IBaseOptions extends IControlOptions, IValidationStatusOptions,
  *
  * @author Красильников А.С.
  */
+
+/**
+ * @name Controls/_jumpingLabel/Base#required
+ * @cfg {Boolean} В значении true справа от метки отображается символ "*" (поле обязательно к заполнению).
+ * @demo Controls-demo/JumpingLabel/Required/Index
+ */
+
 abstract class Base<T extends IBaseOptions = IBaseOptions>
     extends Control<T> implements IValidationStatus, ICaption {
     protected _showFromAbove: boolean = null;
@@ -111,6 +118,7 @@ abstract class Base<T extends IBaseOptions = IBaseOptions>
     static getDefaultOptions(): object {
         return {
             validationStatus: 'valid',
+            required: false,
             validationFontColorStyle: 'default'
         };
     }

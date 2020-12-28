@@ -664,6 +664,18 @@ describe('Controls/_display/CollectionItem', () => {
 
             assert.isAbove(item.getVersion(), prevVersion);
         });
+
+        it('show checkbox for editing item', () => {
+            const editingItem = new CollectionItem({
+                editing: true
+            });
+            assert.isTrue(editingItem.isVisibleCheckbox());
+        });
+
+        it('hide checkbox for adding item', () => {
+            const addingItem = new CollectionItem({isAdd: true});
+            assert.isFalse(addingItem.isVisibleCheckbox());
+        });
     });
 
     describe('testing of ICollectionItemStyled styling methods', () => {
