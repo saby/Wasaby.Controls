@@ -275,7 +275,8 @@ define([
                keyProperty: 'key',
                nodeProperty: 'type',
                parentProperty: 'parent',
-               markedKey: 1
+               markedKey: 1,
+               markerVisiblity: 'visible'
             },
             treeControl = correctCreateTreeControl(cfg);
          treeControl.toggleExpanded = function(key) {
@@ -292,7 +293,7 @@ define([
          tree.TreeControl._private.expandMarkedItem(treeControl);
          model.setMarkedKey(3);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         assert.deepEqual(toggleExpandedStack, [1, 2]);
+         assert.deepEqual(toggleExpandedStack, []);
       });
 
       it('_private.getTargetRow', () => {

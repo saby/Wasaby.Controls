@@ -68,6 +68,10 @@ const GridView = ListView.extend({
             this._listModel.setColumns(newOptions.columns, false);
         }
 
+        if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
+            this._listModel.setHeader(newOptions.header);
+        }
+
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
         if (this._columnScrollViewController) {

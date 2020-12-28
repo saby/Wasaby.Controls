@@ -1,6 +1,6 @@
 import { RecordSet } from 'Types/collection';
-import { assert } from 'chai';
 import { TreeGridCollection } from 'Controls/treeGridNew';
+import { CssClassesAssert } from 'ControlsUnit/CustomAsserts';
 import { GridLayoutUtil } from 'Controls/grid';
 
 describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
@@ -69,7 +69,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
             'controls-TreeGrid__row-cell_default_theme-default controls-TreeGrid__row-cell__node_theme-default controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
             'controls-Grid__row-cell-background-hover-default_theme-default controls-Grid__cell_spacingFirstCol_default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[0];
-         assert.equal(cell.getWrapperClasses('default', 'default'), expected);
+         CssClassesAssert.isSame(cell.getWrapperClasses('default', 'default'), expected);
       });
 
       it('with multiselect && first column', () => {
@@ -79,7 +79,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
             'controls-Grid__row-cell_withRowSeparator_size-null js-controls-ListView__notEditable js-controls-ColumnScroll__notDraggable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default ' +
             'controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-default controls-Grid__row-cell-background-hover-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[0];
-         assert.equal(cell.getWrapperClasses('default', 'default'), expected);
+         CssClassesAssert.isSame(cell.getWrapperClasses('default', 'default'), expected);
       });
 
       it('with multiselect && not first column', () => {
@@ -89,7 +89,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
             'controls-TreeGrid__row-cell_default_theme-default controls-TreeGrid__row-cell__node_theme-default controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
             'controls-Grid__row-cell-background-hover-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[1];
-         assert.equal(cell.getWrapperClasses('default', 'default'), expected);
+         CssClassesAssert.isSame(cell.getWrapperClasses('default', 'default'), expected);
       });
 
       it('with multiselect && first column && custom checkbox position', () => {
@@ -100,7 +100,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
             'controls-Grid__row-cell_withRowSeparator_size-null js-controls-ListView__notEditable js-controls-ColumnScroll__notDraggable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default ' +
             'controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-default controls-Grid__row-cell-background-hover-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[0];
-         assert.equal(cell.getWrapperClasses('default', 'default'), expected);
+         CssClassesAssert.isSame(cell.getWrapperClasses('default', 'default'), expected);
       });
    });
 
@@ -108,7 +108,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
       it('support grid', () => {
          const expected = 'controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-null_theme-default ';
          const cell = treeGridCollection.at(0).getColumns()[1];
-         assert.equal(cell.getRelativeCellWrapperClasses('default'), expected);
+         CssClassesAssert.isSame(cell.getRelativeCellWrapperClasses('default'), expected);
       });
 
       it('not support grid', () => {
@@ -117,7 +117,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
 
          const expected = 'controls-TreeGridView__row-cell_innerWrapper controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-null_theme-default ';
          const cell = treeGridCollection.at(0).getColumns()[1];
-         assert.equal(cell.getRelativeCellWrapperClasses('default'), expected);
+         CssClassesAssert.isSame(cell.getRelativeCellWrapperClasses('default'), expected);
 
          GridLayoutUtil.isFullGridSupport = originalFullGridSupport;
       });
