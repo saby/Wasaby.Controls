@@ -773,31 +773,27 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
-         const searchController = await this._getSearchController();
+         return this._getSearchController()
+             .then((controller) => {
+                controller.search(value)
+                    .then((recordSet) => {
+                       this._loadEnd(recordSet);
 
-         if (searchController instanceof SearchController) {
-            return searchController.search(value).then((recordSet) => {
-               this._loadEnd(recordSet);
+                       if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+                          this._setItems(recordSet);
+                          if (this._options.dataLoadCallback) {
+                             this._options.dataLoadCallback(recordSet);
+                          }
+                          this._setFilter(this._options.filter, this._options);
+                          this._open();
+                          this._markerVisibility = 'visible';
+                       }
 
-               if (recordSet instanceof RecordSet &&
-                  this._shouldShowSuggest(recordSet) &&
-                  (this._inputActive || this._tabsSelectedKey !== null)) {
-
-                  this._setItems(recordSet);
-                  if (this._options.dataLoadCallback) {
-                     this._options.dataLoadCallback(recordSet);
-                  }
-                  this._setFilter(this._options.filter, this._options);
-                  this._open();
-                  this._markerVisibility = 'visible';
-               }
-
-               return recordSet;
-            }, (error) => {
-               this._loadEnd();
-               return error;
-            });
-         }
+                       return recordSet;
+                    })
+                    .catch((error) => error);
+             })
+             .catch((error) => error);
       } else {
          return this._performLoad(options);
       }
