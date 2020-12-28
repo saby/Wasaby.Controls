@@ -155,7 +155,7 @@ const GridView = ListView.extend({
     },
 
     _isEmpty(): boolean {
-        return !this._listModel?.getCount();
+        return this._options.needShowEmptyTemplate;
     },
 
     _onItemMouseMove(event, collectionItem) {
