@@ -447,17 +447,7 @@ const _private = {
                     });
 
                     _private.resetScrollAfterLoad(self);
-
-                    // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                    if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
-                        if (self._isMounted) {
-                            _private.checkLoadToDirectionCapability(self, filter, navigation);
-                        }
-                    } else if (!self._wasScrollToEnd) {
-                        if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
-                            self._hideTopTrigger = true;
-                        }
-                    }
+                    _private.resolveIsLoadNeededByNavigationAfterReload(self, cfg, list);
                 });
             }).addErrback(function(error: Error) {
                 _private.hideIndicator(self);
@@ -531,6 +521,20 @@ const _private = {
             // scrollTop, догружая новые записи после сброса.
             self._resetScrollAfterReload = !self._keepScrollAfterReload;
             self._keepScrollAfterReload = false;
+        }
+    },
+
+    resolveIsLoadNeededByNavigationAfterReload(self, options, loadedList): void {
+        // If received list is empty, make another request. If it’s not empty,
+        // the following page will be requested in resize event handler after current items are rendered on the page.
+        if (_private.needLoadNextPageAfterLoad(loadedList, self._listViewModel, options.navigation)) {
+            if (self._isMounted) {
+                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            }
+        } else if (!self._wasScrollToEnd) {
+            if (_private.attachLoadTopTriggerToNullIfNeed(self, options) && !self._isMounted) {
+                self._hideTopTrigger = true;
+            }
         }
     },
 
@@ -3876,6 +3880,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
+                _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);

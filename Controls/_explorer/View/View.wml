@@ -1,5 +1,5 @@
 <div class="controls-Explorer" on:keyDown="_onExternalKeyDown()">
-   <Controls._list.Data scope="{{_options}}">
+   <Controls._list.Data scope="{{_options}}" root="{{_getRoot()}}">
       <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
          <Controls._explorer.PathController
                                     scope="{{_options}}"

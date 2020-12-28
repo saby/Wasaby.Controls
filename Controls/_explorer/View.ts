@@ -798,8 +798,7 @@ var
          backButtonFontColorStyle: 'secondary',
          stickyHeader: true,
          searchStartingWith: 'root',
-         showActionButton: false,
-         root: null
+         showActionButton: false
       };
    };
 

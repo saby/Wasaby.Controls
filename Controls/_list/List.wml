@@ -2,7 +2,6 @@
     <ws:partial
         name="listControl"
         template="{{_viewTemplate}}"
-        scope="{{_options}}"
         viewName="{{_viewName}}"
         useNewModel="{{_supportNewModel || _options.useNewModel}}"
         viewModelConstructor="{{_viewModelConstructor}}">
