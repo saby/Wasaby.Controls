@@ -111,18 +111,18 @@ export default class HeaderRow<T> extends Row<T> {
     }
 
     protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
-        const currentColumn = {
-            ...column,
-            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
-        } as IColumn;
-        let previousColumn: IColumn;
         if (columnIndex > 0) {
-            previousColumn = {
+            const currentColumn = {
+                ...column,
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
+            } as IColumn;
+            const previousColumn: IColumn = {
                 ...this._$header[columnIndex - 1],
                 columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1], columnIndex - 1)
             } as IColumn;
+            return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
         }
-        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+        return null;
     }
 
     private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell, columnIndex: number): IColumnSeparatorSizeConfig {

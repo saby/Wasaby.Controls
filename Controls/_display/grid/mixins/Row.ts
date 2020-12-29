@@ -416,13 +416,23 @@ export default abstract class Row<T> {
     }
 
     protected _updateColumnSeparatorSizeInColumns(): void {
-        this._$columns.forEach((column, columnIndex) => {
-            const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
-            const cell = this._$columnItems[columnIndex + multiSelectOffset];
+        const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
+        this._$columnItems.forEach((cell, cellIndex) => {
+            const column = cell.getColumnConfig();
+            const columnIndex = cellIndex - multiSelectOffset;
             cell.setColumnSeparatorSize(
                 this._getColumnSeparatorSizeForColumn(column, columnIndex)
             );
         });
+    }
+
+    protected _getColumnSeparatorSizeForColumn(column: IColumn, columnIndex: number): TColumnSeparatorSize {
+        if (columnIndex > 0) {
+            const columns = this.getColumnsConfig();
+            const previousColumn = columns[columnIndex - 1];
+            return this._resolveColumnSeparatorSize(column, previousColumn);
+        }
+        return null;
     }
 
     protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
@@ -433,15 +443,6 @@ export default abstract class Row<T> {
             columnSeparatorSize = previousColumn.columnSeparatorSize.right;
         }
         return columnSeparatorSize;
-    }
-
-    private _getColumnSeparatorSizeForColumn(column: IColumn, columnIndex: number): TColumnSeparatorSize {
-        if (columnIndex > 0) {
-            const columns = this.getColumnsConfig();
-            const previousColumn = columns[columnIndex - 1];
-            return this._resolveColumnSeparatorSize(column, previousColumn);
-        }
-        return null;
     }
 
     abstract getContents(): T;
