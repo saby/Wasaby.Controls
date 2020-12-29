@@ -1,6 +1,4 @@
-<!-- Не выводим подвал, если это не кнопка еще и при этом не был переопределен контент. -->
-<!-- В таком случае подвал просто не ожидается прикладным разработчиком. -->
-<ws:if data="{{ !(!item.hasMoreStorage() && !content) }}">
+<ws:if data="{{ item.shouldDisplayVisibleFooter(content) }}">
     <div class="{{item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'theme': theme,
@@ -29,4 +27,6 @@
         </ws:for>
     </div>
 </ws:if>
-
+<ws:else>
+   <div style="display: none"></div>
+</ws:else>

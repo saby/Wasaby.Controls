@@ -1,6 +1,6 @@
 import { TemplateFunction } from 'UI/Base';
 import { create } from 'Types/di';
-import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { IOptions as IBaseOptions } from '../../CollectionItem';
 import Collection from '../Collection';
 import Cell, { IOptions as ICellOptions } from '../Cell';
@@ -8,7 +8,7 @@ import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
-import { THeader } from '../../../_grid/interface/IHeaderCell';
+import {IHeaderCell, THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
@@ -38,6 +38,7 @@ export default abstract class Row<T> {
     protected _$columnItems: Array<Cell<T, Row<T>>>;
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: {};
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -292,7 +293,8 @@ export default abstract class Row<T> {
             columnItems.push(factory({
                 column,
                 colspan: colspan as number,
-                isFixed: columnIndex < this.getStickyColumnsCount()
+                isFixed: columnIndex < this.getStickyColumnsCount(),
+                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex)
             }));
         }
         return columnItems;
@@ -402,7 +404,43 @@ export default abstract class Row<T> {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
+    getColumnSeparatorSize(): TColumnSeparatorSize {
+        return this._$columnSeparatorSize;
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        const changed = this._$columnSeparatorSize !== columnSeparatorSize;
+        this._$columnSeparatorSize = columnSeparatorSize;
+        if (changed && this._$columnItems) {
+            this._$columnItems.forEach((column, columnIndex) => {
+                column.setColumnSeparatorSize(this._getColumnSeparatorSizeForColumn(column.getColumnConfig(), columnIndex));
+                column.nextVersion();
+            });
+        }
+        this._nextVersion();
+    }
+
+    protected _getColumnSeparatorSizeForColumn(currentColumn: IColumn, columnIndex: number): TColumnSeparatorSize {
+        const columns = this.getColumnsConfig();
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = columns[columnIndex - 1];
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize = this.getColumnSeparatorSize();
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
+
     abstract getContents(): T;
+
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;

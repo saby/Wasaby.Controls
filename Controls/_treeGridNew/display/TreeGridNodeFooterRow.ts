@@ -46,6 +46,10 @@ export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
 
         return classes;
     }
+
+    shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
+        return this.hasMoreStorage() || !!content;
+    }
 }
 
 Object.assign(TreeGridNodeFooterRow.prototype, {
