@@ -7,7 +7,7 @@ import {
     THeader
 } from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import Header from './Header';
+import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
 import StickyLadderCell from 'Controls/_display/grid/StickyLadderCell';
 import Cell from 'Controls/_display/grid/Cell';
@@ -72,6 +72,9 @@ export default class HeaderRow<T> extends Row<T> {
                 })
             ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
         }
+    }
+    getBounds(): IHeaderBounds {
+        return this._$headerModel.getBounds();
     }
 
     protected _initializeColumns(): void {

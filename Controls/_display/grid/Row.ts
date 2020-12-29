@@ -65,7 +65,7 @@ export default class Row<T>
 
     setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
         super.setEditing(editing, editingContents, silent);
-        const colspanCallback = this._$owner.getColspanCallback();
+        const colspanCallback = this._$colspanCallback;
         if (colspanCallback) {
             this._reinitializeColumns();
         }

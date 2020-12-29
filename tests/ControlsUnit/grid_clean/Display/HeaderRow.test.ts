@@ -94,20 +94,20 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
             const columnItems = headerRow.getColumns();
             assert.strictEqual(columnItems.length, 3);
 
-            assert.isTrue(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol_s_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft`) !== -1);
-            assert.isFalse(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol`) !== -1);
-            assert.isTrue(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight_l_theme-${THEME}`) !== -1);
+            assert.include(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol_s_theme-${THEME}`);
+            assert.notInclude(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingLeft`);
+            assert.notInclude(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol`);
+            assert.include(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight_l_theme-${THEME}`);
 
-            assert.isFalse(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol`) !== -1);
-            assert.isTrue(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft_xl_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol`) !== -1);
-            assert.isTrue(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight_xl_theme-${THEME}`) !== -1);
+            assert.notInclude(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol`);
+            assert.include(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingLeft_xl_theme-${THEME}`);
+            assert.notInclude(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol`);
+            assert.include(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight_xl_theme-${THEME}`);
 
-            assert.isFalse(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol`) !== -1);
-            assert.isTrue(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft_xs_theme-${THEME}`) !== -1);
-            assert.isTrue(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol_s_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight`) !== -1);
+            assert.notInclude(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol`);
+            assert.include(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingLeft_xs_theme-${THEME}`);
+            assert.include(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol_s_theme-${THEME}`);
+            assert.notInclude(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight`);
         });
         it('Padding set default value', () => {
             const columns = [{}, {}, {}];
@@ -138,20 +138,77 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
             const columnItems = headerRow.getColumns();
             assert.strictEqual(columnItems.length, 3);
 
-            assert.isTrue(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol_default_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft`) !== -1);
-            assert.isFalse(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol`) !== -1);
-            assert.isTrue(columnItems[0].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight_theme-${THEME}`) !== -1);
+            assert.include(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol_default_theme-${THEME}`);
+            assert.notInclude(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingLeft`);
+            assert.notInclude(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol`);
+            assert.include(columnItems[0].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight_theme-${THEME}`);
 
-            assert.isFalse(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol`) !== -1);
-            assert.isTrue(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol`) !== -1);
-            assert.isTrue(columnItems[1].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight_theme-${THEME}`) !== -1);
+            assert.notInclude(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol`);
+            assert.include(columnItems[1].getWrapperClasses(THEME),`controls-Grid__cell_spacingLeft_theme-${THEME}`);
+            assert.notInclude(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol`);
+            assert.include(columnItems[1].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight_theme-${THEME}`);
 
-            assert.isFalse(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingFirstCol`) !== -1);
-            assert.isTrue(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLeft_theme-${THEME}`) !== -1);
-            assert.isTrue(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingLastCol_default_theme-${THEME}`) !== -1);
-            assert.isFalse(columnItems[2].getWrapperClasses(THEME).indexOf(`controls-Grid__cell_spacingRight`) !== -1);
+            assert.notInclude(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingFirstCol`);
+            assert.include(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingLeft_theme-${THEME}`);
+            assert.include(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingLastCol_default_theme-${THEME}`);
+            assert.notInclude(columnItems[2].getWrapperClasses(THEME), `controls-Grid__cell_spacingRight`);
+        });
+    });
+
+    describe('Controls/grid_clean/Display/HeaderRow/MultilineHeader', () => {
+        it('Build multiline cells', () => {
+            const columns = [{}, {}, {}];
+
+            /* |             |   Two columns                                                |
+               |  Two rows   |   --------------------------------------------------------   |
+               |             |   Second row, first column   |   Second row, second column   | */
+            const header = [
+                { startRow: 1, endRow: 3, startColumn: 1, endColumn: 2, caption: 'Two rows' },
+                { startRow: 1, endRow: 2, startColumn: 2, endColumn: 4, caption: 'Two columns'},
+                { startRow: 2, endRow: 3, startColumn: 2, endColumn: 3, caption: 'Second row, first column' },
+                { startRow: 1, endRow: 3, startColumn: 3, endColumn: 4, caption: 'Second row, second column' }];
+
+            const mockedHeaderOwner = {
+                getStickyColumnsCount: () => 0,
+                hasMultiSelectColumn: () => false,
+                getColumnsConfig: () => columns,
+                getHeaderConfig: () => header,
+                hasItemActionsSeparatedCell: () => false,
+                getLeftPadding: () => 's',
+                getRightPadding: () => 's',
+                isStickyHeader: () => false,
+                hasColumnScroll: () => false
+            };
+
+            const mockedHeaderModel = {
+                isMultiline: () => true,
+                getBounds: () => {
+                    return {
+                        column: {
+                            start: 1,
+                            end: 4
+                        },
+                        row: {
+                            start: 1,
+                            end: 3
+                        }
+                    }
+                }
+            }
+
+            const headerRow = new GridHeaderRow({
+                header,
+                headerModel: mockedHeaderModel,
+                columns,
+                owner: mockedHeaderOwner
+            });
+            const columnItems = headerRow.getColumns();
+            assert.strictEqual(columnItems.length, 4);
+
+            assert.isFalse(columnItems[0].isLastColumn());
+            assert.isTrue(columnItems[1].isLastColumn());
+            assert.isFalse(columnItems[2].isLastColumn());
+            assert.isTrue(columnItems[3].isLastColumn());
         });
     });
 });
