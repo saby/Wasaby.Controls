@@ -388,9 +388,7 @@ const GridView = ListView.extend({
            (!oldOptions.footer && newOptions.footer) ||
            (oldOptions.footer && !newOptions.footer) ||
            (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
-           (oldOptions.footerTemplate && !newOptions.footerTemplate) ||
-           (!oldOptions._shouldShowLoadingIndicatorInFooter && newOptions._shouldShowLoadingIndicatorInFooter) ||
-           (oldOptions._shouldShowLoadingIndicatorInFooter && !newOptions._shouldShowLoadingIndicatorInFooter)
+           (oldOptions.footerTemplate && !newOptions.footerTemplate)
         ) {
             return true;
         } else if (

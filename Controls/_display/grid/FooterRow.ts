@@ -22,7 +22,7 @@ export default class FooterRow<T> extends Row<T> {
     }
 
     getContents(): T {
-        return 'footer' as unknown as T
+        return 'footer' as unknown as T;
     }
 
     setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {

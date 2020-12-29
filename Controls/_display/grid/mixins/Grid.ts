@@ -290,6 +290,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
+    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+    showLoadingIndicator(): void {
+        this._nextVersion();
+        if (this.getFooter()) {
+            this.getFooter()._nextVersion();
+        }
+    }
+
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
         this._$ladder = GridLadderUtil.prepareLadder({
             columns,
