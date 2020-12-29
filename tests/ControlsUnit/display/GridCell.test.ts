@@ -22,15 +22,15 @@ describe('Controls/display:Cell', () => {
     describe('isMultiSelectColumn', () => {
         const grid = new GridCollection({collection: [{id: 1}], keyProperty: 'id', multiSelectVisibility: 'visible', multiSelectPosition: 'default' });
         const gridRow = new GridRow({owner: grid});
-        const gridCell = new GridCell({owner: gridRow});
+        const gridCell = new GridCell({owner: gridRow, column: {}});
         gridRow._$columnItems = [gridCell];
 
         assert.isTrue(gridCell.isMultiSelectColumn());
 
-        gridRow.getColumns().unshift({});
+        gridRow.getColumns().unshift(new GridCell({owner: gridRow, column: {}}));
         assert.isFalse(gridCell.isMultiSelectColumn());
 
-        gridRow.getColumns().shift({});
+        gridRow.getColumns().shift(new GridCell({owner: gridRow, column: {}}));
         grid.setMultiSelectVisibility('hidden');
         assert.isFalse(gridCell.isMultiSelectColumn());
 

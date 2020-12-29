@@ -46,7 +46,7 @@
               mode="stackable"
               task1177692247="{{true}}"
               fixedZIndex="{{headerColumn.zIndex}}"
-              shadowVisibility="{{headerColumn.shadowVisibility || 'lastVisible'}}">
+              shadowVisibility="{{headerColumn.shadowVisibility}}">
          <!-- Set the headerModel option only in order for the update of the internal templates to update -->
          <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
          <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->

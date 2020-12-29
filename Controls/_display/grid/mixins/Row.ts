@@ -100,7 +100,9 @@ export default abstract class Row<T> {
     }
 
     getColumnIndex(column: Cell<T, Row<T>>, colspan?: boolean): number {
-        return this.getColumns(colspan).findIndex((columnItem) => columnItem.getColumnConfig() === column.getColumnConfig());
+        return this.getColumns(colspan).findIndex((columnItem) => {
+            return columnItem.getColumnConfig() === column.getColumnConfig();
+        });
     }
 
     getTopPadding(): string {
