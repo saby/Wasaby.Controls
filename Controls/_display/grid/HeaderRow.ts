@@ -1,4 +1,11 @@
-import {IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize, THeader} from 'Controls/grid';
+import {
+    ICellPadding,
+    IColumn,
+    IColumnSeparatorSizeConfig,
+    IHeaderCell,
+    TColumnSeparatorSize,
+    THeader
+} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import Header from './Header';
 import ItemActionsCell from './ItemActionsCell';
@@ -47,7 +54,7 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
-                    cellPadding: this._$columns[typeof column.startColumn !== 'undefined' ? column.startColumn : index].cellPadding,
+                    cellPadding: this._getCellPaddingForHeaderColumn(column, index),
                     columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
                 });
             });
@@ -78,26 +85,37 @@ export default class HeaderRow<T> extends Row<T> {
         }
     }
 
+    protected _getCellPaddingForHeaderColumn(headerColumn: IHeaderCell, columnIndex: number): ICellPadding {
+        const columns = this.getColumnsConfig();
+        const headerColumnIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        return columns[headerColumnIndex].cellPadding;
+    }
+
     protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
         const currentColumn = {
             ...column,
-            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column)
+            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
         } as IColumn;
         let previousColumn: IColumn;
         if (columnIndex !== 0) {
             previousColumn = {
                 ...this._$header[columnIndex - 1],
-                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1])
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1], columnIndex - 1)
             } as IColumn;
         }
         return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
     }
 
-    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell): IColumnSeparatorSizeConfig {
+    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell, columnIndex: number): IColumnSeparatorSizeConfig {
         const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
         const columns = this.getColumnsConfig();
-        const columnLeft = columns[headerColumn.startColumn - 1];
-        const columnRight = columns[headerColumn.endColumn - 2];
+        const columnLeftIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        const columnRightIndex =
+            typeof headerColumn.endColumn !== 'undefined' ? headerColumn.endColumn - 2 : columnIndex;
+        const columnLeft = columns[columnLeftIndex];
+        const columnRight = columns[columnRightIndex];
         if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
             columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
         }
