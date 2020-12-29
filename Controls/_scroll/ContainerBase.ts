@@ -132,7 +132,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         }
         this._resizeObserver.terminate();
         for (const registrar in this._registrars) {
-            this._registrars[registrar].destroy();
+            if (this._registrars.hasOwnProperty(registrar)) {
+                this._registrars[registrar].destroy();
+            }
         }
         this._scrollModel = null;
         this._oldScrollState = null;
