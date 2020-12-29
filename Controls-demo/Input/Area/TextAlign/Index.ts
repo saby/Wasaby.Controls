@@ -1,5 +1,5 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Input/AreaAlignments/AreaAlignments');
+import controlTemplate = require('wml!Controls-demo/Input/Area/TextAlign/Index');
 
 class TextAlignments extends Control<IControlOptions> {
     static _theme: string[] = ['Controls/Classes'];
