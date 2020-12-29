@@ -79,6 +79,13 @@ export default class FooterRow<T> extends Row<T> {
             } else {
                 this._$columnItems = this._prepareColumnItems(this._$footer, factory);
             }
+
+            if (this._$owner.hasMultiSelectColumn()) {
+                this._$columnItems.unshift(factory({
+                    column: {},
+                    isFixed: true
+                }));
+            }
         }
     }
 }

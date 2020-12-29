@@ -20,9 +20,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
                           + ` controls-GridView__footer__cell_theme-${theme}`
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
-        if (this.isMultiSelectColumn()) {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_withCheckboxes_theme-${theme}`;
-        } else if (this.isFirstColumn()) {
+        if (!this.getOwner().hasMultiSelectColumn() && this.isFirstColumn()) {
             wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
@@ -37,8 +35,14 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
         return wrapperClasses;
     }
 
-    getWrapperStyles(): string {
-        return `${this.getColspan()}`;
+    getWrapperStyles(containerSize?: number): string {
+        let styles = `${this.getColspan()} `;
+
+        if (containerSize) {
+            styles += `width: ${containerSize}px`;
+        }
+
+        return styles;
     }
 
     getContentClasses(theme: string): string {
