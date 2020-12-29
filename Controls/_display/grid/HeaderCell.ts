@@ -254,6 +254,9 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (isMultilineHeader) {
             let headerEndColumn = this._$owner.getBounds().column.end;
             const currentEndColumn = this._getColspanParams().endColumn;
+            if (this._$owner.hasMultiSelectColumn()) {
+                headerEndColumn += 1;
+            }
             if (this._$owner.hasItemActionsSeparatedCell()) {
                 headerEndColumn -= 1;
             }
