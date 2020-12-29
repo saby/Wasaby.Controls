@@ -51,28 +51,31 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
-    <ws:if data="{{_options.footerTemplate}}">
-        <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
-            <ws:partial template="{{_options.footerTemplate}}"/>
-        </div>
-    </ws:if>
-    <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
-        <div class="controls-BaseControl__footerPaging_wrapper">
-            <ws:if data="{{_options.columnScroll}}">
-                <div class="controls-BaseControl_paging-wrapper_theme-{{_options.theme}}">
+    <div>
+        <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
+        <ws:if data="{{_options.footerTemplate}}">
+            <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
+                <ws:partial template="{{_options.footerTemplate}}"/>
+            </div>
+        </ws:if>
+        <ws:if data="{{_pagingNavigation && _pagingNavigationVisible}}">
+            <div class="controls-BaseControl__footerPaging_wrapper">
+                <ws:if data="{{_options.columnScroll}}">
+                    <div class="controls-BaseControl_paging-wrapper_theme-{{_options.theme}}">
+                        <ws:partial template="pagingTpl" />
+                    </div>
+                </ws:if>
+                <ws:else>
                     <ws:partial template="pagingTpl" />
-                </div>
-            </ws:if>
-            <ws:else>
-                <ws:partial template="pagingTpl" />
-            </ws:else>
-        </div>
-    </ws:if>
-    <ws:if data="{{_shouldDrawFooter}}">
-        <ws:partial template="wml!Controls/_list/BaseControl/Footer" moreFontColorStyle="{{_options.moreFontColorStyle}}" loadMoreCaption="{{_loadMoreCaption}}" theme="{{_options.theme}}"/>
-    </ws:if>
+                </ws:else>
+            </div>
+        </ws:if>
+        <ws:if data="{{_shouldDrawFooter}}">
+            <ws:partial template="wml!Controls/_list/BaseControl/Footer" moreFontColorStyle="{{_options.moreFontColorStyle}}" loadMoreCaption="{{_loadMoreCaption}}" theme="{{_options.theme}}"/>
+        </ws:if>
+    </div>
 </ws:template>
+
 <ws:template name="multiSelectTplIf">
     <ws:if data="{{_options.multiSelectVisibility}}">
         <ws:partial template="wml!Controls/_list/BaseControl/multiSelect" scope="{{multiSelectTpl.templateOptions}}" multiSelectTemplate="{{_options.multiSelectTemplate}}" triState="{{true}}"/>

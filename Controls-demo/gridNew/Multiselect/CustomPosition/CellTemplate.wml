@@ -3,4 +3,3 @@
         <ws:partial template="{{ multiSelectTemplate }}"/>
     </ws:contentTemplate>
 </ws:partial>
-
