@@ -542,7 +542,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
         this._notify('fixed', [stickyHeaderOffsetTop, stickyHeaderOffsetBottom]);
 
-        if (this._options.task1180722812 && !stickyHeaderOffsetTop && this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE) {
+        if (!stickyHeaderOffsetTop && this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE) {
             // Если отклеился последний заголовок, и списками установлено, что сверху еще есть данные, то единственный
             // на данный момент известный сценарий, который может привести к этому, это полная перерисовка списка.
             // В этом случае мигает тень над заголовками из-за того, что после отклеивания старых заголовков,
