@@ -53,13 +53,6 @@
       <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
    </ws:if>
 
-   <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
-      <ws:partial template="{{ tagTemplate }}"
-                  tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
-                  dispItem="{{ item || itemData }}"
-                  columnIndex="{{ gridColumn.getColumnIndex() }}"/>
-   </div>
-
    <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
       <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
          <ws:partial template="{{ swipeTemplate }}"
