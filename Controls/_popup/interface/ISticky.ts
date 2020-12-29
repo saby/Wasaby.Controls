@@ -134,7 +134,7 @@ export interface IStickyOpener extends IOpener {
 
 /**
  * Метод открытия всплывающего окна.
- * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
+ * При повторном вызове этого метода происходит перерисовка окна с новыми опциями.
  * @function Controls/_popup/interface/IStickyOpener#open
  * @param {Controls/_popup/interface/IStickyOpener/PopupOptions.typedef} popupOptions Конфигурация прилипающего блока {@link /docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
  * @remark Если требуется открыть окно, без создания popup:Sticky в верстке, следует использовать статический метод {@link openPopup}
@@ -169,6 +169,7 @@ export interface IStickyOpener extends IOpener {
  *    }
  * });
  * </pre>
+ * @return Promise<string|indefined>
  * @see close
  * @see openPopup
  * @see closePopup
