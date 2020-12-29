@@ -1,10 +1,11 @@
 import Collection from './Collection';
 import HeaderRow, {IOptions as IHeaderRowOptions} from './HeaderRow';
 import { create } from 'Types/di';
+import {TColumns, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IHeaderRowOptions<T> {}
 
-interface IHeaderBounds {
+export interface IHeaderBounds {
     row: {start: number, end: number},
     column: {start: number, end: number}
 }
@@ -37,6 +38,18 @@ export default class Header<T> {
 
     isSticked(): boolean {
         return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$rows.forEach((row) => {
+            row.setColumnSeparatorSize(columnSeparatorSize);
+        });
+    }
+
+    setColumns(newColumns: TColumns): void {
+        this._$rows.forEach((row) => {
+            row.setColumns(newColumns);
+        });
     }
 
     protected _initializeRows(options: IOptions<T>): Array<HeaderRow<T>> {
