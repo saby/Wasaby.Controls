@@ -5,7 +5,7 @@ import {TColumns, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IHeaderRowOptions<T> {}
 
-interface IHeaderBounds {
+export interface IHeaderBounds {
     row: {start: number, end: number},
     column: {start: number, end: number}
 }
