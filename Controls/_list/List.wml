@@ -4,5 +4,6 @@
     scope="{{_options}}"
     viewName="{{_viewName}}"
     useNewModel="{{_supportNewModel || _options.useNewModel}}"
+    on:getActionsMenuConfig="_getActionsMenuConfig()"
     viewModelConstructor="{{_viewModelConstructor}}">
 </ws:partial>
