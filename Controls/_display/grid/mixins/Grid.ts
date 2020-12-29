@@ -364,7 +364,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             footer: options.footer,
-            footerTemplate: options.footerTemplate
+            footerTemplate: options.footerTemplate,
+            multiSelectVisibility: this.getMultiSelectVisibility()
         });
     }
 
