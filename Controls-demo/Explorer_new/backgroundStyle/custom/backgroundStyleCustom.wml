@@ -1,7 +1,8 @@
 <div class="controlsDemo__wrapper__padding-left controls-background-custom_theme-default">
     <div class="controlsDemo__cell controlsDemo__inline-block demo-ItemPaddingAll__vertical">
         <div class="ws-flexbox ws-flex-wrap">
-            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_backgroundStyle-first" style="width: 485px">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_backgroundStyle-first"
+                 style="width: 485px">
                 <Controls.explorer:View
                         source="{{_headerSource}}"
                         bind:root="_headerRoot"
@@ -15,10 +16,13 @@
                         header="{{_header}}"
                         showEditArrow="{{true}}"
                         showActionButton="{{true}}"
-                        columns="{{_columns}}">
+                        columns="{{_columns}}"
+                        theme="default"
+                >
                 </Controls.explorer:View>
             </div>
-            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_backgroundStyle-second" style="width: 475px">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_backgroundStyle-second"
+                 style="width: 475px">
                 <Controls.explorer:View
                         source="{{_viewSource}}"
                         bind:root="_root"
@@ -31,7 +35,9 @@
                         markerVisibility="hidden"
                         showEditArrow="{{true}}"
                         showActionButton="{{true}}"
-                        columns="{{_columns}}">
+                        columns="{{_columns}}"
+                        theme="default"
+                >
                 </Controls.explorer:View>
             </div>
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_fixedWidth800">
@@ -53,7 +59,9 @@
                                         viewMode="search"
                                         showEditArrow="{{true}}"
                                         showActionButton="{{true}}"
-                                        columns="{{_columns}}">
+                                        columns="{{_columns}}"
+                                        theme="default"
+                                >
                                 </Controls.explorer:View>
                             </Controls.list:Container>
                         </div>
