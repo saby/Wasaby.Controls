@@ -84,6 +84,10 @@ const GridView = ListView.extend({
         } else if (newOptions.columnScroll) {
             this._columnScrollViewController = this._createColumnScroll(newOptions);
         }
+
+        if (this._options.columnSeparatorSize !== newOptions.columnSeparatorSize) {
+            this._listModel.setColumnSeparatorSize(newOptions.columnSeparatorSize);
+        }
     },
 
     _afterUpdate(oldOptions): void {

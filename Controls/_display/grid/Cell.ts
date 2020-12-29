@@ -8,7 +8,7 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
@@ -24,6 +24,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    columnSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -45,6 +46,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getInstanceId: () => string;
 
@@ -299,6 +301,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+    }
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
 
@@ -347,15 +353,18 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
-            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
-
-            if (columnSeparatorSize !== null) {
-                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
-                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-            }
-        }*/
+        classes += this._getColumnSeparatorClasses(theme);
         return classes;
+    }
+
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
+                this._$columnSeparatorSize.toLowerCase() :
+                null;
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
@@ -489,5 +498,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
+    _$columnSeparatorSize: null,
     _$isFixed: null
 });

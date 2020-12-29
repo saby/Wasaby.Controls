@@ -16,7 +16,7 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
+import {IColspanParams, IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize, IRowspanParams} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
 import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
@@ -146,7 +146,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
                           + ` controls-Grid__header-cell_theme-${theme}`
-                          + ` ${this._getWrapperPaddingClasses(theme)}`;
+                          + ` ${this._getWrapperPaddingClasses(theme)}`
+                          + ` ${this._getColumnSeparatorClasses(theme)}`;
 
         const isMultiHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
