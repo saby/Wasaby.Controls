@@ -1,6 +1,6 @@
 import { RecordSet } from 'Types/collection';
 import { TreeGridCollection } from 'Controls/treeGridNew';
-import * as assert from 'assert';
+import { assert } from 'chai';
 import { CssClassesAssert } from 'ControlsUnit/CustomAsserts';
 import TreeGridNodeFooterRow from 'Controls/_treeGridNew/display/TreeGridNodeFooterRow';
 
@@ -86,5 +86,13 @@ describe('Controls/_treeGridNew/display/TreeGridNodeFooterRow', () => {
       CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses(), 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__node-footer-expanderPadding_theme-default controls-TreeGrid__row-expanderPadding_size_default_theme-default js-controls-ListView__notEditable');
       CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses('s'), 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__node-footer-expanderPadding_theme-default controls-TreeGrid__row-expanderPadding_size_s_theme-default js-controls-ListView__notEditable');
       CssClassesAssert.isSame(nodeFooterRow.getExpanderPaddingClasses('s', 'custom'), 'controls-TreeGrid__row-expanderPadding controls-TreeGrid__node-footer-expanderPadding_theme-custom controls-TreeGrid__row-expanderPadding_size_s_theme-custom js-controls-ListView__notEditable');
+   });
+
+   it('.shouldDisplayVisibleFooter()', () => {
+      assert.isFalse(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
+      assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter({}));
+
+      treeGridCollection.setHasMoreStorage({ 3: true });
+      assert.isTrue(nodeFooterRow.shouldDisplayVisibleFooter(undefined));
    });
 });
