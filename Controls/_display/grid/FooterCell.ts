@@ -27,7 +27,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
         }
 
         if (this.isLastColumn()) {
-            wrapperClasses += ` controls-GridView__footer__cell__paddingRight_${this._$owner.getRightPadding()}_theme-${theme}`
+            wrapperClasses += ` controls-GridView__footer__cell__paddingRight_${this._$owner.getRightPadding()}_theme-${theme}`;
         }
 
         if (this._$owner.hasColumnScroll()) {
