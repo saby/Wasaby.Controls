@@ -397,7 +397,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
             if (match.length >= linkMaxLenght) {
                 nodeToPush = match;
             } else if (link) {
-               [hasAnyLink, nodeToPush] = getNormalizedLink(link, simpleLinkDomain, ending,
+               [hasAnyLink, nodeToPush] = normalizeLink(link, simpleLinkDomain, ending,
                   simpleLinkPrefix, match, true);
             } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
@@ -440,7 +440,7 @@ export function getLinks(string: string): string[] {
       let linkToPush: string[] | string;
 
       if (linkToCheck) {
-         [isCorrectLink, linkToPush] = getNormalizedLink(linkToCheck, linkDomain, ending,
+         [isCorrectLink, linkToPush] = normalizeLink(linkToCheck, linkDomain, ending,
             linkPrefix, match, false);
 
          if (isCorrectLink && typeof linkToPush === 'string') {
@@ -455,9 +455,8 @@ export function getLinks(string: string): string[] {
 }
 
 /**
- * Функция проверяет, является ли ссылка корректной (содержит верный домен верхнего уровня,
- * не содержит некорректные символы), если ссылка корректна, добаляется протокол (если его нет)
- * и возвращает аргумент, показывающий, является ли ссылка корректной и саму ссылку
+ * Функция проверяет корректность параметров для формирования ссылки
+ * и формирует на их основе верную ссылку
  * @param {string} linkToCheck
  * @param {string} linkDomain
  * @param {string} ending
@@ -466,7 +465,7 @@ export function getLinks(string: string): string[] {
  * @param {boolean} needToCreateLinkNode
  * @return {boolean, string | string[]}
  */
-export function getNormalizedLink(linkToCheck: string, linkDomain: string, ending: string,
+export function normalizeLink(linkToCheck: string, linkDomain: string, ending: string,
    linkPrefix: string, match: string, needToCreateLinkNode: boolean):
    [boolean, string | string[]] {
    const isEndingPartOfDomain = characterRegExp.test(ending) && linkToCheck === linkPrefix;
