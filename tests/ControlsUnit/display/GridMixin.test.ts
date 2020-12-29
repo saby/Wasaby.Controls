@@ -65,7 +65,7 @@ describe('Controls/_display/GridMixin', () => {
     });
 
     describe('sorting', () => {
-        it('should', () => {
+        it('should set sorting to header cells', () => {
             const header = [{sortingProperty: 'count'}, {sortingProperty: 'price'}];
             const columns = [{width: '1px'}, {width: '1px'}];
             const grid = new GridCollection({
