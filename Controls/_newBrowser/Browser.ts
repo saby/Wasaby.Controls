@@ -1,15 +1,17 @@
 import {Logger} from 'UI/Utils';
+import {Record} from 'Types/entity';
+import {SyntheticEvent} from 'UI/Vdom';
 import {RecordSet} from 'Types/collection';
-import {ContextOptions} from 'Controls/context';
 import {Control, TemplateFunction} from 'UI/Base';
 import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
+import {ControllerClass as SearchController} from 'Controls/search';
 import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 import {CatalogDetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
-import {compileSourceOptions, getListConfiguration} from 'Controls/_newBrowser/utils';
 import {IListConfiguration} from 'Controls/_newBrowser/interfaces/IListConfiguration';
 import {IImageItemTemplateCfg} from 'Controls/_newBrowser/interfaces/IImageItemTemplateCfg';
+import {compileSourceOptions, getListConfiguration, TileConfig} from 'Controls/_newBrowser/utils';
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as ViewTemplate from 'wml!Controls/_newBrowser/Browser';
@@ -47,22 +49,23 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     /**
      * Текущий режим отображения списка в detail-колонке
      */
-    protected get currentViewMode(): CatalogDetailViewMode {
-        return this._permanentlyViewMode || this._defaultViewMode;
+    protected get currentViewMode(): CatalogDetailViewMode | 'search' {
+        return this._defaultViewMode === 'search'
+            ? this._defaultViewMode
+            : (this._permanentlyViewMode || this._defaultViewMode);
     }
-    protected set currentViewMode(value: CatalogDetailViewMode) {
+    protected set currentViewMode(value: CatalogDetailViewMode | 'search') {
         if (this._defaultViewMode === value) {
             return;
         }
 
         this._defaultViewMode = value;
-        if (this._isMounted) {
-            // Уведомляем о том, что изменился режим отображения списка в detail-колонке
-            this._notify('viewModeChanged', [value]);
-        }
+        // Уведомляем о том, что изменился режим отображения списка в detail-колонке
+        this._notify('viewModeChanged', [value]);
     }
-    private _defaultViewMode: CatalogDetailViewMode;
+    private _defaultViewMode: CatalogDetailViewMode | 'search';
     private _permanentlyViewMode: CatalogDetailViewMode;
+    private _prevViewMode: CatalogDetailViewMode | 'search';
 
     /**
      * Идентификатор корневого узла относитель которого показывается содержимое
@@ -94,10 +97,11 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         }
 
         this._masterMarkedKey = newRoot;
+        this._detailSourceOptions.root = newRoot;
+        this._detailSourceController.setRoot(newRoot);
+
         // Уведомляем о том, что изменилась корневая папка
         this._notify('detailRootChanged', [newRoot]);
-
-        this._detailSourceController.setRoot(newRoot);
         // Загрузим содержимое папки в detail-колонку
         this.loadDetailData().then();
     }
@@ -137,6 +141,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      */
     protected _listConfiguration: IListConfiguration;
 
+    protected _tileCfg: TileConfig;
+
     /**
      * Настройки отображения картники
      */
@@ -151,6 +157,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Опции для Controls/explorer:View в detail-колонке
      */
     protected _detailExplorerOptions: unknown;
+
+    /**
+     * Базовая часть уникального идентификатора контрола,
+     * по которому хранится конфигурация в хранилище данных.
+     */
+    protected _basePropStorageId: string;
     //endregion
 
     //region private fields
@@ -160,12 +172,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     private _isMounted: boolean = false;
 
     /**
-     * Базовая часть уникального идентификатора контрола,
-     * по которому хранится конфигурация в хранилище данных.
-     */
-    private _basePropStorageId: string;
-
-    /**
      * Идентификатор записи, выбранной в master списке
      */
     private _masterMarkedKey: string = null;
@@ -173,7 +179,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     /**
      * Контекст, через который синхронизируются итмы detail-списка
      */
-    private _dataOptionsContext: typeof ContextOptions;
+    // private _dataOptionsContext: typeof ContextOptions;
+
+    /**
+     * Контроллер поиска, который связывает строку поиска и detail-список
+     */
+    private _searchController: SearchController;
     //endregion
     //endregion
 
@@ -185,11 +196,14 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     ): Promise<IReceivedState> | void {
         let result = Promise.resolve(undefined);
 
+        // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
+        // об изменении значения, т.к. и так идет синхронизация опций
+        this._defaultViewMode = options.viewMode;
         this.updateState(options);
         // Создаем контекст, через который будем синхронизировать итемы detail-списка
-        this._dataOptionsContext = new ContextOptions(
+        /*this._dataOptionsContext = new ContextOptions(
             this._detailSourceController.getState()
-        );
+        );*/
 
         if (receivedState) {
             // Итемов master-списка может не быть если master-колонка скрыта
@@ -220,11 +234,13 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         }
 
         return result.then((state) => {
-            this.updateContext();
-            this._isMounted = true;
-
+            // this.updateContext();
             return state;
         });
+    }
+
+    protected _componentDidMount(options?: IOptions, contexts?: unknown): void {
+        this._isMounted = true;
     }
 
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
@@ -234,26 +250,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     protected _beforeUnmount(): void {
         this._masterSourceController.destroy();
         this._detailSourceController.destroy();
-    }
-    //endregion
 
-    //region context
-    _getChildContext(): object {
-        return {
-            dataOptions: this._dataOptionsContext
-        };
-    }
-
-    private updateContext(): void {
-        const curContext = this._dataOptionsContext;
-        const currState = this._detailSourceController.getState();
-
-        for (const i in currState) {
-            if (currState.hasOwnProperty(i)) {
-                curContext[i] = currState[i];
-            }
+        if (this._searchController) {
+            this._searchController.reset(true);
         }
-        curContext.updateConsumers();
     }
     //endregion
 
@@ -263,8 +263,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             .then((items: RecordSet) => {
                 // Применим новую конфигурацию к отображению detail-списка
                 this.applyListConfiguration(getListConfiguration(items), options);
+                // Выставим специальный костыльный флаг, который скажет _list/BaseControl
+                // отрисовать текущие итемы в _sourceController
+                (this._detailSourceController as any).forceApplyItems = true;
+
                 // Обновим данные detail-списка
-                this.updateContext();
+                // this.updateContext();
                 return items;
             })
             .catch((error) => {
@@ -285,6 +289,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         }
 
         this._listConfiguration = cfg;
+        this._tileCfg = new TileConfig(cfg, options);
         this._imageItemTemplateCfg = {};
         this.currentViewMode = cfg.settings.clientViewMode;
 
@@ -294,6 +299,71 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             this._imageItemTemplateCfg.imageProperty = options.detail.imageProperty;
         }
     }
+
+    //region events handlers
+    protected onDetailItemClick(
+        event: SyntheticEvent,
+        item: Record,
+        clickEvent: SyntheticEvent,
+        columnIndex?: number
+    ): boolean {
+        const isNode = item.get(this._detailSourceOptions.nodeProperty) !== null;
+        if (!isNode) {
+            return true;
+        }
+
+        this.detailRoot = item.get(this._detailSourceOptions.keyProperty);
+        return false;
+    }
+
+    protected onSearch(event: SyntheticEvent, validatedValue: string): void {
+        this.getSearchController()
+            .then((sc) => sc.search(validatedValue))
+            .then((result) => {
+                if (!(result instanceof RecordSet)) {
+                    return;
+                }
+
+                if (this.currentViewMode !== 'search') {
+                    this._prevViewMode = this.currentViewMode;
+                    this.currentViewMode = 'search';
+                }
+
+                this._detailSourceController.setItems(result);
+
+                if (validatedValue === '') {
+                    this.onSearchReset();
+                }
+            });
+    }
+
+    protected onSearchReset(): void {
+        this.currentViewMode = this._prevViewMode;
+        this._prevViewMode = null;
+    }
+    //endregion
+
+    //region search
+    private getSearchController(options: IOptions = this._options): Promise<SearchController> {
+        if (!this._searchController) {
+            return import('Controls/search').then((result) => {
+                return this._searchController = new result.ControllerClass({
+                    root: this.detailRoot,
+                    parentProperty: this._detailSourceOptions.parentProperty,
+                    sourceController: this._detailSourceController,
+                    searchValue: '',
+                    searchDelay: 300,
+                    minSearchLength: 3,
+                    startingWith: 'root',
+                    searchValueTrim: true,
+                    searchParam: 'SearchString',
+                    searchNavigationMode: 'open'
+                });
+            });
+        }
+        return Promise.resolve(this._searchController);
+    }
+    //endregion
 
     //region update state
     /**
@@ -312,9 +382,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             this._basePropStorageId = `Controls/newBrowser:Browser_${options.propStorageId}_`;
         }
 
-        // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
-        // об изменении значения, т.к. и так идет синхронизация опций
-        this._defaultViewMode = options.viewMode;
         // Обновляем root из опций только в том случае, если он задан,
         // в пртивном случае берем то, что лежит у нас в состоянии
         this._masterMarkedKey = options.root !== undefined ? this._detailSourceOptions.root : this.detailRoot;
@@ -381,6 +448,36 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             columns: options.detail.columns
         };
     }
+    //endregion
+
+    //region base control overrides
+    protected _notify(eventName: string, args?: unknown[], options?: { bubbling?: boolean }): unknown {
+        if (!this._isMounted) {
+            return;
+        }
+
+        return super._notify(eventName, args, options);
+    }
+    //endregion
+
+    //region context
+    /*_getChildContext(): object {
+        return {
+            dataOptions: this._dataOptionsContext
+        };
+    }
+
+    private updateContext(): void {
+        const curContext = this._dataOptionsContext;
+        const currState = this._detailSourceController.getState();
+
+        for (const i in currState) {
+            if (currState.hasOwnProperty(i)) {
+                curContext[i] = currState[i];
+            }
+        }
+        curContext.updateConsumers();
+    }*/
     //endregion
 
     //region static utils

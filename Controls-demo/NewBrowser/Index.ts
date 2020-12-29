@@ -60,7 +60,7 @@ export default class extends Control {
     /**
      * Флаг, идентифицирующий видна или нет master-колонка
      */
-    protected _isMasterVisible: boolean = true;
+    protected _isMasterVisible: boolean = false;
 
     /**
      * Набор колонок, отображаемый в master
