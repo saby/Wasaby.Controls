@@ -410,21 +410,19 @@ export default abstract class Row<T> {
         const changed = this._$columnSeparatorSize !== columnSeparatorSize;
         this._$columnSeparatorSize = columnSeparatorSize;
         if (changed && this._$columnItems) {
-            this._$columnItems.forEach((column, columnIndex) => {
-                column.setColumnSeparatorSize(this._getColumnSeparatorSizeForColumn(column.getColumnConfig(), columnIndex));
-                column.nextVersion();
-            });
+            this._updateColumnSeparatorSizeInColumns();
         }
         this._nextVersion();
     }
 
-    protected _getColumnSeparatorSizeForColumn(currentColumn: IColumn, columnIndex: number): TColumnSeparatorSize {
-        const columns = this.getColumnsConfig();
-        let previousColumn: IColumn;
-        if (columnIndex !== 0) {
-            previousColumn = columns[columnIndex - 1];
-        }
-        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    protected _updateColumnSeparatorSizeInColumns(): void {
+        this._$columns.forEach((column, columnIndex) => {
+            const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
+            const cell = this._$columnItems[columnIndex + multiSelectOffset];
+            cell.setColumnSeparatorSize(
+                this._getColumnSeparatorSizeForColumn(column, columnIndex)
+            );
+        });
     }
 
     protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
@@ -435,6 +433,15 @@ export default abstract class Row<T> {
             columnSeparatorSize = previousColumn.columnSeparatorSize.right;
         }
         return columnSeparatorSize;
+    }
+
+    private _getColumnSeparatorSizeForColumn(column: IColumn, columnIndex: number): TColumnSeparatorSize {
+        if (columnIndex > 0) {
+            const columns = this.getColumnsConfig();
+            const previousColumn = columns[columnIndex - 1];
+            return this._resolveColumnSeparatorSize(column, previousColumn);
+        }
+        return null;
     }
 
     abstract getContents(): T;
