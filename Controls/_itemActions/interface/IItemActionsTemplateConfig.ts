@@ -65,7 +65,7 @@ export interface IItemActionsTemplateConfig {
     actionAlignment?: TActionAlignment;
 
     /**
-     * @cfg {TActionCaptionPosition} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+     * @cfg {Controls/_itemActions/interface/IItemAction/TActionCaptionPosition.typedef} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
      */
     /*
      * @cfg {TActionCaptionPosition} Action caption position for swipe actions
