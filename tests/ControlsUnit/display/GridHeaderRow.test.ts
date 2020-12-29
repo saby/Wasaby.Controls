@@ -31,4 +31,8 @@ describe('Controls/_display:GridHeaderRow', () => {
         assert.equal(headerRow.getColumns().length, 2);
         assert.equal(headerRow.getColumns()[0].getRowspan(), 'grid-row: 1 / 3;');
     });
+
+    describe('sorting', () => {
+
+    });
 });

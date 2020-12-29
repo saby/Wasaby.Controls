@@ -22,6 +22,7 @@ import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    sorting?: string;
     cellPadding?: IItemPadding;
 }
 
@@ -36,6 +37,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
+    protected _$sorting?: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -206,6 +208,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return this._$column.sortingProperty;
     }
 
+    setSorting(sorting: string): void {
+        this._$sorting = sorting;
+        this._nextVersion();
+    }
+
+    getSorting(): string {
+        return this._$sorting;
+    }
+
     getAlign(): string {
         return this._$align;
     }
@@ -265,5 +276,6 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null
+    _$cellPadding: null,
+    _$sorting: null
 });

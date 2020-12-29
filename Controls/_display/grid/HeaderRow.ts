@@ -1,7 +1,9 @@
-import {THeader} from 'Controls/grid';
+import {IColumn, IHeaderCell, THeader} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import Header from './Header';
 import ItemActionsCell from './ItemActionsCell';
+import HeaderCell from 'Controls/_display/grid/HeaderCell';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends IRowOptions<T> {
     header: THeader;
@@ -12,6 +14,7 @@ export interface IOptions<T> extends IRowOptions<T> {
 export default class HeaderRow<T> extends Row<T> {
     protected _$header: THeader;
     protected _$headerModel: Header<T>;
+    protected _$sorting: Array<{[p: string]: string}>;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -48,6 +51,7 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
+                    sorting: this._getSortingBySortingProperty(column.sortingProperty),
                     cellPadding: this._$columns[typeof column.startColumn !== 'undefined' ? column.startColumn : index].cellPadding
                 });
             });
@@ -76,6 +80,27 @@ export default class HeaderRow<T> extends Row<T> {
                 isFixed: true
             }));
         }
+    }
+
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$sorting = sorting;
+        this.getColumns().forEach((cell: HeaderCell<Model>) => {
+            cell.setSorting(this._getSortingBySortingProperty(cell.getSortingProperty()));
+        });
+        this._nextVersion();
+    }
+
+    private _getSortingBySortingProperty(property: string): string {
+        const sorting = this._$sorting;
+        let sortingDirection;
+        if (sorting && property) {
+            sorting.forEach((elem) => {
+                if (elem[property]) {
+                    sortingDirection = elem[property];
+                }
+            });
+        }
+        return sortingDirection;
     }
 }
 

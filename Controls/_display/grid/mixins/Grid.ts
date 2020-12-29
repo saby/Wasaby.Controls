@@ -91,6 +91,7 @@ export interface IOptions {
     columnScroll?: boolean;
     stickyColumnsCount?: number;
     emptyTemplate?: TemplateFunction;
+    sorting?: Array<{[p: string]: string}>;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
 }
 
@@ -119,6 +120,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$stickyColumnsCount: number;
     protected _$emptyGridRow: EmptyRow<S>;
     protected _$emptyTemplate: TemplateFunction;
+    protected _$sorting: Array<{[p: string]: string}>;
     protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
@@ -240,7 +242,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             this._$header = this._initializeHeader({
                 columns: this._$columns,
                 owner: this,
-                header: header
+                header: header,
+                sorting: this._$sorting
             } as IOptions);
         }
     }
@@ -250,6 +253,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+    }
+
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$sorting = sorting;
+        this._nextVersion();
+        if (this.hasHeader()) {
+            this.getHeader().setSorting(sorting);
+        }
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
@@ -422,5 +433,6 @@ Object.assign(Grid.prototype, {
     _$columnScroll: false,
     _$stickyColumnsCount: 1,
     _$emptyTemplate: null,
+    _$sorting: null,
     _$emptyTemplateColumns: null
 });

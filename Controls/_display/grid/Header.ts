@@ -39,6 +39,12 @@ export default class Header<T> {
         return this._$owner.isStickyHeader() && this._$owner.isFullGridSupport();
     }
 
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$rows.forEach((row) => {
+            row.setSorting(sorting);
+        });
+    }
+
     protected _initializeRows(options: IOptions<T>): Array<HeaderRow<T>> {
         this._$headerBounds = this._getGridHeaderBounds(options);
         return this._buildRows(options);

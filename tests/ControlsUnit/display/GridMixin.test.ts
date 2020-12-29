@@ -62,4 +62,8 @@ describe('Controls/_display/GridMixin', () => {
             assert.isFalse(grid.hasMultiSelectColumn());
         });
     });
+
+    describe('sorting', () => {
+        
+    });
 });
