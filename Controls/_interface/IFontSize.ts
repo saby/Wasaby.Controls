@@ -1,5 +1,7 @@
+export type TFontSize = 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
+
 export interface IFontSizeOptions {
-   fontSize?: string;
+   fontSize?: TFontSize;
 }
 
 /**
