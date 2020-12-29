@@ -22,6 +22,7 @@
                     searchValue="{{_searchValue}}"
                     sourceController="{{_sourceController}}"
                     markerVisibility="{{_markerVisibility}}"
+                    filter="{{_filter}}"
         />
     </ws:template>
 
