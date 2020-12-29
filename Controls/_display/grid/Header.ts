@@ -5,7 +5,7 @@ import {TColumns, TColumnSeparatorSize} from 'Controls/_grid/interface/IColumn';
 
 export interface IOptions<T> extends IHeaderRowOptions<T> {}
 
-interface IHeaderBounds {
+export interface IHeaderBounds {
     row: {start: number, end: number},
     column: {start: number, end: number}
 }
@@ -49,6 +49,12 @@ export default class Header<T> {
     setColumns(newColumns: TColumns): void {
         this._$rows.forEach((row) => {
             row.setColumns(newColumns);
+        });
+    }
+
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$rows.forEach((row) => {
+            row.setSorting(sorting);
         });
     }
 

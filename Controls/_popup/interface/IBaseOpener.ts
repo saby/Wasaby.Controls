@@ -541,7 +541,7 @@ export interface IBaseOpener {
  */
 
 /**
- * @typedef {Object} EventHandlers
+ * @typedef {Object} Controls/_popup/interface/IBaseOpener/EventHandlers
  * @description Функции обратного вызова позволяют подписаться на события всплывающего окна, открытого через статические методы.
  * Когда {@link /doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
  * @property {Function} onOpen Функция обратного вызова, которая вызывается при открытии всплывающего окна.

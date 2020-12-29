@@ -22,6 +22,7 @@ import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    sorting?: string;
     cellPadding?: IItemPadding;
 }
 
@@ -36,6 +37,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
+    protected _$sorting?: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -149,10 +151,10 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
                           + ` ${this._getWrapperPaddingClasses(theme)}`
                           + ` ${this._getColumnSeparatorClasses(theme)}`;
 
-        const isMultiHeader = this._$owner.isMultiline();
+        const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
 
-        if (isMultiHeader) {
+        if (isMultilineHeader) {
             wrapperClasses += ` controls-Grid__multi-header-cell_min-height_theme-${theme}`;
         } else {
             wrapperClasses += ` controls-Grid__header-cell_min-height_theme-${theme}`;
@@ -179,10 +181,11 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     getContentClasses(theme: string): string {
-        const isMultiHeader = false;
+        const isMultiLineHeader = this._$owner.isMultiline();
         let contentClasses = 'controls-Grid__header-cell__content';
         contentClasses += ` controls-Grid__header-cell__content_theme-${theme}`;
-        if (isMultiHeader) {
+        contentClasses += this._getContentSeparatorClasses(theme);
+        if (isMultiLineHeader) {
             contentClasses += ` controls-Grid__row-multi-header__content_baseline_theme-${theme}`;
         } else {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
@@ -192,6 +195,18 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         }
 
         return contentClasses;
+    }
+
+    protected _getContentSeparatorClasses(theme: string): string {
+        let headerEndRow = this._$owner.getBounds().row.end;
+        const isMultiLineHeader = this._$owner.isMultiline();
+        let classes = '';
+        if (isMultiLineHeader) {
+            if (this._$column.endRow !== headerEndRow && this._$column.endRow - this._$column.startRow === 1) {
+                classes += ` controls-Grid__cell_header-content_border-bottom_theme-${theme}`;
+            }
+        }
+        return classes;
     }
 
     getTemplate(): TemplateFunction|string {
@@ -205,6 +220,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     getSortingProperty(): string {
         return this._$column.sortingProperty;
+    }
+
+    setSorting(sorting: string): void {
+        this._$sorting = sorting;
+        this._nextVersion();
+    }
+
+    getSorting(): string {
+        return this._$sorting;
     }
 
     getAlign(): string {
@@ -224,6 +248,20 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return this._$column;
     }
     // todo <<< END >>>
+
+    isLastColumn(): boolean {
+        const isMultilineHeader = this._$owner.isMultiline();
+        if (isMultilineHeader) {
+            let headerEndColumn = this._$owner.getBounds().column.end;
+            const currentEndColumn = this._getColspanParams().endColumn;
+            if (this._$owner.hasItemActionsSeparatedCell()) {
+                headerEndColumn -= 1;
+            }
+            return currentEndColumn === headerEndColumn;
+        } else {
+            return super.isLastColumn();
+        }
+    }
 
     protected _getWrapperPaddingClasses(theme: string): string {
         let paddingClasses = '';
@@ -266,5 +304,6 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null
+    _$cellPadding: null,
+    _$sorting: null
 });

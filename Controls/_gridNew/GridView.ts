@@ -76,6 +76,10 @@ const GridView = ListView.extend({
             this._listModel.setHeader(newOptions.header);
         }
 
+        if (newOptions.sorting !== this._options.sorting) {
+            this._listModel.setSorting(newOptions.sorting);
+        }
+
         if (this._isFooterChanged(this._options, newOptions) || columnsChanged) {
             this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
         }

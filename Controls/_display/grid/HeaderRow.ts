@@ -7,8 +7,10 @@ import {
     THeader
 } from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import Header from './Header';
+import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
+import HeaderCell from 'Controls/_display/grid/HeaderCell';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends IRowOptions<T> {
     header: THeader;
@@ -18,6 +20,7 @@ export interface IOptions<T> extends IRowOptions<T> {
 export default class HeaderRow<T> extends Row<T> {
     protected _$header: THeader;
     protected _$headerModel: Header<T>;
+    protected _$sorting: Array<{[p: string]: string}>;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -43,6 +46,10 @@ export default class HeaderRow<T> extends Row<T> {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
     }
 
+    getBounds(): IHeaderBounds {
+        return this._$headerModel.getBounds();
+    }
+
     protected _initializeColumns(): void {
         if (this._$header) {
             this._$columnItems = [];
@@ -54,9 +61,9 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
+                    sorting: this._getSortingBySortingProperty(column.sortingProperty),
                     cellPadding: this._getCellPaddingForHeaderColumn(column, index),
-                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
-                });
+                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)                });
             });
             this._addCheckBoxColumnIfNeed();
 
@@ -123,6 +130,27 @@ export default class HeaderRow<T> extends Row<T> {
             columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
         }
         return columnSeparatorSize;
+    }
+
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$sorting = sorting;
+        this.getColumns().forEach((cell: HeaderCell<Model>) => {
+            cell.setSorting(this._getSortingBySortingProperty(cell.getSortingProperty()));
+        });
+        this._nextVersion();
+    }
+
+    private _getSortingBySortingProperty(property: string): string {
+        const sorting = this._$sorting;
+        let sortingDirection;
+        if (sorting && property) {
+            sorting.forEach((elem) => {
+                if (elem[property]) {
+                    sortingDirection = elem[property];
+                }
+            });
+        }
+        return sortingDirection;
     }
 }
 
