@@ -4659,6 +4659,7 @@ define([
                      showType: 0
                   }]
                }),
+               isMarked: () => false,
                isSwiped: () => false
             };
             instance.saveOptions(cfg);
