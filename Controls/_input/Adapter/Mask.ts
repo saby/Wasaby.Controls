@@ -14,7 +14,7 @@ import {EventUtils} from 'UI/Events';
  * @extends UI/_base/Control
  * @mixes Controls/_decorator/resources/IMask
  * @public
- * @demo Controls-demo/Input/MaskAdapter/Index
+ * @demo Controls-demo/Input/AdapterMask/Index
  *
  * @author Красильников А.С.
  */
