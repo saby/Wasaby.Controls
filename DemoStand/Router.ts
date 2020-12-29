@@ -46,7 +46,7 @@ export default class RootRouterDemo extends Control<IControlOptions> {
         };
         this.sourceUrl = _state.sourceUrl;
 
-        return Promise.resolve(_state);
+        return Promise.resolve();
     }
 
     _afterMount(): void {
@@ -86,4 +86,6 @@ export default class RootRouterDemo extends Control<IControlOptions> {
 
         return null;
     }
+
+    static _styles: string[] = ['DemoStand/Router'];
 }
