@@ -7,7 +7,7 @@ import {
     THeader
 } from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import Header from './Header';
+import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
 
 export interface IOptions<T> extends IRowOptions<T> {
@@ -41,6 +41,10 @@ export default class HeaderRow<T> extends Row<T> {
 
     getItemClasses(params): string {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
+    }
+
+    getBounds(): IHeaderBounds {
+        return this._$headerModel.getBounds();
     }
 
     protected _initializeColumns(): void {

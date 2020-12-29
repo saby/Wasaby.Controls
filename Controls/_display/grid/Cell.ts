@@ -447,20 +447,20 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return this._$column;
     }
 
-    getColumnIndex(colspan?: boolean): number {
-        return this._$owner.getColumnIndex(this, colspan);
+    getColumnIndex(): number {
+        return this._$owner.getColumnIndex(this);
     }
 
-    isFirstColumn(colspan?: boolean): boolean {
-        return this.getColumnIndex(colspan) === 0;
+    isFirstColumn(): boolean {
+        return this.getColumnIndex() === 0;
     }
 
-    isLastColumn(colspan?: boolean): boolean {
-        let dataColumnsCount = this._$owner.getColumnsCount(colspan) - 1;
+    isLastColumn(): boolean {
+        let dataColumnsCount = this._$owner.getColumnsCount() - 1;
         if (this._$owner.hasItemActionsSeparatedCell()) {
             dataColumnsCount -= 1;
         }
-        return this.getColumnIndex(colspan) === dataColumnsCount;
+        return this.getColumnIndex() === dataColumnsCount;
     }
 
     // endregion
