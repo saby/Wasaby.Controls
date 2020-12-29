@@ -10,7 +10,8 @@
                     textOverflow="{{ (gridColumn || colData).getTextOverflow() }}"
                     caption="{{ (gridColumn || colData).getCaption() }}"
                     attr:class="controls-Grid__sorting-button"
-                    property="{{ (gridColumn || colData).getSortingProperty() }}"/>
+                    property="{{ (gridColumn || colData).getSortingProperty() }}"
+                    value="{{ (gridColumn || colData).getSorting() }}"/>
         </ws:if>
         <ws:else>
             <div title="{{ (gridColumn || colData).getCaption() }}"
