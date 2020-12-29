@@ -584,16 +584,16 @@ const _private = {
             if (sourceControllerState[optionName] &&
                 options[optionName] &&
                 sourceControllerState[optionName] !== options[optionName]) {
-                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option in one place`);
+                Logger.warn(`BaseControl: для корректной работы опцию ${optionName} необходимо задавать на Layout/browser:Browser (Controls/list:DataContainer)`);
             }
         };
         const validateIfOptionsIsSetOnlyOnList = (optionName) => {
             if (options[optionName] && !sourceControllerState[optionName]) {
-                Logger.warn(`BaseControl: It is necessary to set the ${optionName} option on Controls/list:DataContainer`);
+                Logger.warn(`BaseControl: для корректной работы опцию ${optionName} необходимо задавать на Layout/browser:Browser (Controls/list:DataContainer)`);
             }
         };
         const optionsToValidateOnBoth = ['source', 'navigation', 'sorting', 'root'];
-        const optionsToValidateOnlyOnList = ['source', 'navigation', 'sorting'];
+        const optionsToValidateOnlyOnList = ['source', 'navigation', 'sorting', 'dataLoadCallback'];
 
         optionsToValidateOnBoth.forEach(validateIfOptionsIsSetOnBothControls);
         optionsToValidateOnlyOnList.forEach(validateIfOptionsIsSetOnlyOnList);
