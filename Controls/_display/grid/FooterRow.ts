@@ -2,6 +2,7 @@ import { TemplateFunction } from 'UI/Base';
 import Row, {IOptions as IRowOptions} from './Row';
 import Collection from './Collection';
 import { IColspanParams } from '../../_grid/interface/IColumn';
+import { IItemTemplateParams } from './mixins/Row';
 
 export type TFooter = IFooter[];
 
@@ -31,21 +32,7 @@ export default class FooterRow<T> extends Row<T> {
         this._reinitializeColumns();
     }
 
-    // TODO: Переделать параметры на объект
-    getWrapperClasses(templateHighlightOnHover: boolean = true,
-                      theme?: string,
-                      cursor: string = 'pointer',
-                      backgroundColorStyle?: string,
-                      style: string = 'default'): string {
-        /* todo
-        // Для предотвращения скролла одной записи в таблице с экшнами.
-        // _options._needBottomPadding почему-то иногда не работает.
-        if ((this._listModel.getCount() || this._listModel.isEditing()) &&
-            this._options.itemActionsPosition === 'outside' &&
-            !this._options._needBottomPadding &&
-            this._options.resultsPosition !== 'bottom') {
-            classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
-        }*/
+    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         return 'controls-GridView__footer';
     }
 

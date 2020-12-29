@@ -16,8 +16,8 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = `controls-Grid__footer-cell`
-                          + ` controls-BaseControl__footer-content_theme-${theme}`
+        let wrapperClasses = 'controls-Grid__footer-cell'
+                          + ` controls-GridView__footer__cell_theme-${theme}`
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
         if (this.isMultiSelectColumn()) {
