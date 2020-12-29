@@ -7,42 +7,50 @@ import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpene
  */
 export interface IStackPopupOptions extends IBasePopupOptions {
     /**
+     * @name Controls/_popup/interface/IStackOpener#minWidth
      * @cfg {Number} Минимально допустимая ширина стековой панели.
      * @remark
      * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
      * Приоритетнее то, которое задано на Controls/popup:Stack.
      */
     /*
+     * @name Controls/_popup/interface/IStackOpener#minWidth
      * @cfg {Number} The minimum width of popup.
      */
     minWidth?: number;
     /**
+     * @name Controls/_popup/interface/IStackOpener#width
      * @cfg {Number} Текущая ширина стековой панели.
      * @remark
      * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
      * Приоритетнее то, которое задано на Controls/popup:Stack.
      */
     /*
+    * @name Controls/_popup/interface/IStackOpener#width
     * @cfg {Number} Width of popup.
     */
     width?: number;
     /**
+     * @name Controls/_popup/interface/IStackOpener#maxWidth
      * @cfg {Number} Максимально допустимая ширина стековой панели.
      * @remark
      * Значение может быть задано как на опциях Controls/popup:Stack, так и на дефолтных опциях шаблона {@link template}.
      * Приоритетнее то, которое задано на Controls/popup:Stack.
      */
     /*
+    * @name Controls/_popup/interface/IStackOpener#maxWidth
     * @cfg {Number} The maximum width of popup.
     */
     maxWidth?: number;
     /**
+     * @name Controls/_popup/interface/IStackOpener#propStorageId
      * @cfg {String} Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
      * С помощью этой опции включается функционал движения границ.
      * Помимо propStorageId необходимо задать опции {@link width}, {@link minWidth}, {@link maxWidth}.
      */
     propStorageId?: number;
     /**
+     * @name Controls/_popup/interface/IStackOpener#restrictiveContainer
      * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
      * @remark
      * Алгоритм поиска контейнера, внутри которого будут строиться окна:
@@ -95,7 +103,7 @@ export interface IStackOpener extends IOpener {
  * Метод открытия стековой панели.
  * Повторный вызов этого метода вызовет переририсовку контрола.
  * @function Controls/_popup/interface/IStackOpener#open
- * @param {PopupOptions} popupOptions Конфигурация стековой панели.
+ * @param {Controls/_popup/interface/IStackOpener/PopupOptions.typedef} popupOptions Конфигурация стековой панели.
  * @remark
  * Если требуется открыть окно, без создания popup:Stack в верстке, следует использовать статический метод {@link openPopup}.
  * @example
@@ -147,7 +155,7 @@ export interface IStackOpener extends IOpener {
  */
 
 /**
- * @typedef {Object} PopupOptions
+ * @typedef {Object} Controls/_popup/interface/IStackOpener/PopupOptions
  * @description Конфигурация стековой панели.
  * @property {Boolean} [autofocus=true] Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {Boolean} [modal=false] Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
@@ -159,11 +167,11 @@ export interface IStackOpener extends IOpener {
  * @property {Number} maxWidth Максимально допустимая ширина всплывающего окна. Значение указывается в px.
  * @property {Number} width Текущая ширина всплывающего окна. Значение указывается в px.
  * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link /doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
- * @property {Controls/_popup/interface/IBaseOpener.typedef} eventHandlers Функции обратного вызова на события стековой панели.
+ * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
  */
 
 /*
- * @typedef {Object} PopupOptions
+ * @typedef {Object} Controls/_popup/interface/IStackOpener/PopupOptions
  * @description Stack popup options.
  * @property {Boolean} [autofocus=true] Determines whether focus is set to the template when popup is opened.
  * @property {Boolean} [modal=false] Determines whether the window is modal.
@@ -175,5 +183,5 @@ export interface IStackOpener extends IOpener {
  * @property {Number} maxWidth The maximum width of popup.
  * @property {Number} width Width of popup.
  * @property {Node} opener Read more {@link /doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener there}.
- * @property {Controls/_popup/interface/IBaseOpener.typedef} eventHandlers Callback functions on popup events.
+ * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Callback functions on popup events.
  */

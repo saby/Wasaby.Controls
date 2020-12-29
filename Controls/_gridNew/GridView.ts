@@ -72,6 +72,10 @@ const GridView = ListView.extend({
             this._listModel.setHeader(newOptions.header);
         }
 
+        if (newOptions.sorting !== this._options.sorting) {
+            this._listModel.setSorting(newOptions.sorting);
+        }
+
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
         if (this._columnScrollViewController) {
@@ -83,6 +87,10 @@ const GridView = ListView.extend({
             }
         } else if (newOptions.columnScroll) {
             this._columnScrollViewController = this._createColumnScroll(newOptions);
+        }
+
+        if (this._options.columnSeparatorSize !== newOptions.columnSeparatorSize) {
+            this._listModel.setColumnSeparatorSize(newOptions.columnSeparatorSize);
         }
     },
 

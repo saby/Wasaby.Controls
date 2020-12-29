@@ -6,9 +6,6 @@
                     suggestDirectionChangedCallback="{{_suggestDirectionChangedCallback}}"
                     templateName="{{_options.suggestTemplate.templateName}}"
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
-                    searchEndCallback="{{_loadEnd}}"
-                    searchStartCallback="{{_loadStart}}"
-                    searchErrback="{{_searchErrbackHandler}}"
                     emptyTemplate="{{_emptyTemplate}}"
                     source="{{_options.source}}"
                     navigation="{{_options.navigation}}"
@@ -22,6 +19,7 @@
                     searchValue="{{_searchValue}}"
                     sourceController="{{_sourceController}}"
                     markerVisibility="{{_markerVisibility}}"
+                    filter="{{_filter}}"
         />
     </ws:template>
 

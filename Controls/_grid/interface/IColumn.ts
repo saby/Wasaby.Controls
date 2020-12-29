@@ -1,4 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
+import {TFontSize, TFontColorStyle} from 'Controls/interface';
 
 /**
  * @typedef {IColumn[]}
@@ -60,18 +61,24 @@ export type TOverflow = 'ellipsis' | 'none';
  * @variant s Размер тонкой линии-разделителя.
  * @variant null Без линии-разделителя.
  */
-type TColumnSeparatorSize = 's' | null;
+export type TColumnSeparatorSize = 's' | null;
 
 /**
- * @typedef {Object} TColumnSeparatorSizeConfig
- * @description Ширина линии-разделителя колонок слева и справа.
- * @property {TColumnSeparatorSize} [left=null] Ширина линии-разделителя колонок слева.
- * @property {TColumnSeparatorSize} [right=null] Ширина линии-разделителя колонок справа.
+ * Конфиг линии-разделителя колонок слева и справа.
+ * @interface Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig
+ * @public
+ * @author Аверкиев П.А.
  */
-type TColumnSeparatorSizeConfig = {
+export interface IColumnSeparatorSizeConfig {
+    /**
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок слева.
+     */
     left?: TColumnSeparatorSize;
+    /**
+     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок справа.
+     */
     right?: TColumnSeparatorSize;
-};
+}
 
 export interface IColspanParams {
     startColumn?: number;
@@ -104,6 +111,9 @@ export type TTagStyle = 'info' | 'danger' | 'primary' | 'success' | 'warning' | 
  * Интерфейс для конфигурации колонки в контроле {@link Controls/grid:View Таблица}.
  *
  * @interface Controls/_grid/interface/IColumn
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:ITooltip
  * @public
  * @author Авраменко А.С.
  */
@@ -343,7 +353,7 @@ export interface IColumn extends IColspanParams {
     textOverflow?: TOverflow;
     /**
      * @name Controls/_grid/interface/IColumn#columnSeparatorSize
-     * @cfg {TColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
+     * @cfg {Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
      * @default none
      * @remark
      * Ширину линии-разделителя между двумя колонками можно задать на любой из них (левую или правую соответственно).
@@ -371,7 +381,7 @@ export interface IColumn extends IColspanParams {
      * @see Controls/list:IList#rowSeparatorSize
      * @see Controls/grid:IGridControl#columnSeparatorSize
      */
-    columnSeparatorSize?: TColumnSeparatorSizeConfig;
+    columnSeparatorSize?: IColumnSeparatorSizeConfig;
     /**
      * @name Controls/_grid/interface/IColumn#cellPadding
      * @cfg {ICellPadding} Конфигурация левого и правого отступа в ячейках колонки, исключая левый отступ первой и правый последней ячейки.
@@ -414,4 +424,61 @@ export interface IColumn extends IColspanParams {
      * @cfg {String} Name of the property that contains tag style
      */
     tagStyleProperty?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#displayType
+     * @cfg {string} Тип отображаемых данных.
+     * @example
+     * В следующем примере показано как отобразить поле записи типа "число"
+     *
+     * TS:
+     * <pre class="brush: js">
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         displayProperty: 'price',
+     *         displayType: 'number'
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     */
+    displayType?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#displayTypeOptions
+     * @cfg {string} Настройки для типа отображаемых данных.
+     * @example
+     * В следующем примере показано как отобразить поле записи типа "деньги" без группировки триад цифр.
+     *
+     * TS:
+     * <pre class="brush: js">
+     * ...
+     * protected _columns: IColumn[] = [
+     *     {
+     *         displayProperty: 'price',
+     *         displayType: 'money',
+     *         displayTypeOptions: {
+     *             useGrouping: false
+     *         }
+     *     },
+     *     ...
+     * ]
+     * </pre>
+     */
+    displayTypeOptions?: object;
+    fontColorStyle?: TFontColorStyle;
+    /**
+     * @name Controls/_grid/interface/IColumn#backgroundColorStyle
+     * @cfg {string} Цвет колонки.
+     */
+    backgroundColorStyle?: string;
+    /**
+     * @name Controls/_grid/interface/IColumn#hoverBackgroundStyle
+     * @cfg {string} Цвет колонки при наведении мыши.
+     *
+     * @remark Для определения собственных цветов при наведении, необходимо указать специальный hoverBackgroundStyle, а
+     * также определить в своем less-файле стиль controls-Grid__item_background-hover_@{yourBackgroundStyle}_theme-@{themeName}
+     */
+    hoverBackgroundStyle?: string;
+    tooltip?: string;
+    fontSize?: TFontSize;
 }

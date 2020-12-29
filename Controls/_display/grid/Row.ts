@@ -5,6 +5,8 @@ import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
 import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
 import { IItemPadding } from 'Controls/list';
+import { IColumn, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
+import { IHeaderCell } from 'Controls/_grid/interface/IHeaderCell';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
@@ -63,7 +65,7 @@ export default class Row<T>
 
     setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
         super.setEditing(editing, editingContents, silent);
-        const colspanCallback = this._$owner.getColspanCallback();
+        const colspanCallback = this._$colspanCallback;
         if (colspanCallback) {
             this._reinitializeColumns();
         }

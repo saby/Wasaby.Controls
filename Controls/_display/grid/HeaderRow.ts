@@ -1,17 +1,26 @@
-import {THeader} from 'Controls/grid';
+import {
+    ICellPadding,
+    IColumn,
+    IColumnSeparatorSizeConfig,
+    IHeaderCell,
+    TColumnSeparatorSize,
+    THeader
+} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
-import Header from './Header';
+import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
+import HeaderCell from 'Controls/_display/grid/HeaderCell';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends IRowOptions<T> {
     header: THeader;
-    headerModel: Header<T>
+    headerModel: Header<T>;
 }
-
 
 export default class HeaderRow<T> extends Row<T> {
     protected _$header: THeader;
     protected _$headerModel: Header<T>;
+    protected _$sorting: Array<{[p: string]: string}>;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -30,11 +39,15 @@ export default class HeaderRow<T> extends Row<T> {
     }
 
     getContents(): T {
-        return 'header' as unknown as T
+        return 'header' as unknown as T;
     }
 
     getItemClasses(params): string {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
+    }
+
+    getBounds(): IHeaderBounds {
+        return this._$headerModel.getBounds();
     }
 
     protected _initializeColumns(): void {
@@ -48,8 +61,9 @@ export default class HeaderRow<T> extends Row<T> {
                 return factory({
                     column,
                     isFixed,
-                    cellPadding: this._$columns[typeof column.startColumn !== 'undefined' ? column.startColumn : index].cellPadding
-                });
+                    sorting: this._getSortingBySortingProperty(column.sortingProperty),
+                    cellPadding: this._getCellPaddingForHeaderColumn(column, index),
+                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)                });
             });
             this._addCheckBoxColumnIfNeed();
 
@@ -57,7 +71,7 @@ export default class HeaderRow<T> extends Row<T> {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,
                     column: {}
-                }))
+                }));
             }
         }
     }
@@ -76,6 +90,67 @@ export default class HeaderRow<T> extends Row<T> {
                 isFixed: true
             }));
         }
+    }
+
+    protected _getCellPaddingForHeaderColumn(headerColumn: IHeaderCell, columnIndex: number): ICellPadding {
+        const columns = this.getColumnsConfig();
+        const headerColumnIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        return columns[headerColumnIndex].cellPadding;
+    }
+
+    protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
+        const currentColumn = {
+            ...column,
+            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
+        } as IColumn;
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = {
+                ...this._$header[columnIndex - 1],
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1], columnIndex - 1)
+            } as IColumn;
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell, columnIndex: number): IColumnSeparatorSizeConfig {
+        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
+        const columns = this.getColumnsConfig();
+        const columnLeftIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        const columnRightIndex =
+            typeof headerColumn.endColumn !== 'undefined' ? headerColumn.endColumn - 2 : columnIndex;
+        const columnLeft = columns[columnLeftIndex];
+        const columnRight = columns[columnRightIndex];
+        if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
+        }
+        if (columnRight?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
+
+    setSorting(sorting: Array<{[p: string]: string}>): void {
+        this._$sorting = sorting;
+        this.getColumns().forEach((cell: HeaderCell<Model>) => {
+            cell.setSorting(this._getSortingBySortingProperty(cell.getSortingProperty()));
+        });
+        this._nextVersion();
+    }
+
+    private _getSortingBySortingProperty(property: string): string {
+        const sorting = this._$sorting;
+        let sortingDirection;
+        if (sorting && property) {
+            sorting.forEach((elem) => {
+                if (elem[property]) {
+                    sortingDirection = elem[property];
+                }
+            });
+        }
+        return sortingDirection;
     }
 }
 

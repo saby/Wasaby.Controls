@@ -8,13 +8,16 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
 import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
+const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
+const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
+const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
@@ -24,6 +27,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    columnSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -45,6 +49,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getInstanceId: () => string;
 
@@ -55,6 +60,23 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
         return this._$column.template || DEFAULT_CELL_TEMPLATE;
+    }
+
+    hasCellContentRender(): boolean {
+        return Boolean(
+            this._$column.displayType ||
+            this._$column.textOverflow ||
+            this._$column.fontColorStyle ||
+            this._$column.fontSize
+        );
+    }
+
+    getCellContentRender(): string {
+        switch (this._$column.displayType) {
+            case 'money': return MONEY_RENDER;
+            case 'number': return NUMBER_RENDER;
+            default: return STRING_RENDER;
+        }
     }
 
     shouldDisplayItemActions(): boolean {
@@ -251,10 +273,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     getContentClasses(theme: string,
-                      backgroundColorStyle: string,
+                      backgroundColorStyle: string = this._$column.backgroundColorStyle,
                       cursor: string = 'pointer',
                       templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
+        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let contentClasses = 'controls-Grid__row-cell__content';
 
@@ -297,6 +319,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getContentStyles(): string {
         return '';
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
@@ -347,15 +373,18 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
-            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
-
-            if (columnSeparatorSize !== null) {
-                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
-                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-            }
-        }*/
+        classes += this._getColumnSeparatorClasses(theme);
         return classes;
+    }
+
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
+                this._$columnSeparatorSize.toLowerCase() :
+                null;
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
@@ -418,20 +447,20 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return this._$column;
     }
 
-    getColumnIndex(colspan?: boolean): number {
-        return this._$owner.getColumnIndex(this, colspan);
+    getColumnIndex(): number {
+        return this._$owner.getColumnIndex(this);
     }
 
-    isFirstColumn(colspan?: boolean): boolean {
-        return this.getColumnIndex(colspan) === 0;
+    isFirstColumn(): boolean {
+        return this.getColumnIndex() === 0;
     }
 
-    isLastColumn(colspan?: boolean): boolean {
-        let dataColumnsCount = this._$owner.getColumnsCount(colspan) - 1;
+    isLastColumn(): boolean {
+        let dataColumnsCount = this._$owner.getColumnsCount() - 1;
         if (this._$owner.hasItemActionsSeparatedCell()) {
             dataColumnsCount -= 1;
         }
-        return this.getColumnIndex(colspan) === dataColumnsCount;
+        return this.getColumnIndex() === dataColumnsCount;
     }
 
     // endregion
@@ -489,5 +518,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
+    _$columnSeparatorSize: null,
     _$isFixed: null
 });
