@@ -278,6 +278,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _updateItemsColumns(): void {
+        if (this._$results) {
+            this._$results.setColumns(this._$columns);
+        }
+
         this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item.LadderSupport) {
                 item.setColumns(this._$columns);

@@ -43,4 +43,73 @@ describe('Controls/grid_clean/GridView', () => {
             });
         });
     });
+
+    describe('_getGridViewClasses', () => {
+        let options: {[p: string]: any};
+        let fakeFooter: object;
+        let fakeResults: object;
+        let resultsPosition: string;
+
+        async function getGridView(): typeof GridView {
+            const optionsWithModel = {
+                ...options,
+                listModel: {
+                    getFooter: () => fakeFooter,
+                    getResults: () => fakeResults,
+                    subscribe: () => {},
+                    setItemPadding: () => {},
+                    getResultsPosition: () => resultsPosition
+                }};
+            const grid = new GridView(optionsWithModel);
+            await grid._beforeMount(optionsWithModel);
+            return grid;
+        }
+
+        beforeEach(() => {
+            fakeFooter = null;
+            fakeResults = null;
+            resultsPosition = null;
+            options = {
+                itemActionsPosition: 'outside',
+                style: 'default',
+                theme: 'default'
+            };
+        });
+
+        it('should contain class for item actions padding when everything fine', async () => {
+            const grid = await getGridView();
+            const classes = grid._getGridViewClasses(options);
+            assert.include(classes, 'controls-GridView__paddingBottom__itemActionsV_outside_theme-default');
+        });
+
+        it('should contain class for item actions padding when results exists and position = \'top\'', async () => {
+            resultsPosition = 'top';
+            fakeResults = {};
+            const grid = await getGridView();
+            const classes = grid._getGridViewClasses(options);
+            assert.include(classes, 'controls-GridView__paddingBottom__itemActionsV_outside_theme-default');
+        });
+
+        it('shouldn\'t contain class for item actions padding when results exists and position = \'bottom\'', async () => {
+            resultsPosition = 'bottom';
+            fakeResults = {};
+            const grid = await getGridView();
+            const classes = grid._getGridViewClasses(options);
+            assert.notInclude(classes, 'controls-GridView__paddingBottom__itemActionsV_outside_theme-default');
+        });
+
+        it('shouldn\'t contain class for item actions padding when footer exists', async () => {
+            fakeFooter = {};
+            const grid = await getGridView();
+            const classes = grid._getGridViewClasses(options);
+            assert.notInclude(classes, 'controls-GridView__paddingBottom__itemActionsV_outside_theme-default');
+        });
+
+        it('shouldn\'t contain class for item actions padding when itemActionsPosition = \'inside\'', async () => {
+            options.itemActionsPosition = 'inside';
+            const grid = await getGridView();
+            const classes = grid._getGridViewClasses(options);
+            assert.notInclude(classes, 'controls-GridView__paddingBottom__itemActionsV_outside_theme-default');
+        });
+    });
 });
