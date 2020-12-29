@@ -162,7 +162,7 @@ const _private = {
         itemsModelCurrent.isAdd = itemsModelCurrent.dispItem.isAdd;
         itemsModelCurrent.addPosition = itemsModelCurrent.dispItem.addPosition;
 
-        itemsModelCurrent.isSticked = () => itemsModelCurrent.isStickedMasterItem;
+        itemsModelCurrent.isSticked = () => itemsModelCurrent.isStickedMasterItem || itemsModelCurrent.isGroup;
         itemsModelCurrent.isDragged = () => itemsModelCurrent.isDragging;
         itemsModelCurrent.getWrapperClasses = this.getWrapperClasses.bind(itemsModelCurrent);
         itemsModelCurrent.getContentClasses = () => {
@@ -247,7 +247,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
 
         const theme = this.getDisplay() ? this.getDisplay().getTheme() : self._options.theme;
-
+        // New Model compatibility
+        _private.addNewModelCompatibilityForItem(itemsModelCurrent);
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -275,9 +276,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             }
             return 'default';
         };
-
-        // New Model compatibility
-        _private.addNewModelCompatibilityForItem(itemsModelCurrent);
 
         itemsModelCurrent.getMarkerClasses = (markerClassName = 'default'): string => {
             const style = this._options.style || 'default';
