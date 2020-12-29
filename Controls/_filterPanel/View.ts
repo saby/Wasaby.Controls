@@ -25,8 +25,15 @@ import rk = require('i18n!Controls');
  * @demo Controls-demo/filterPanel/View/Index
  */
 
+/**
+ * @name Controls/_filterPanel/View#applyButtonCaption
+ * @cfg {String} Текст на кнопке применения фильтрации.
+ * @demo Controls-demo/filterPanel/View/Index
+ */
+
 interface IViewPanelOptions {
     source: IFilterItem[];
+    applyButtonCaption: string;
 }
 
 export default class View extends Control<IControlOptions> {
@@ -64,6 +71,9 @@ export default class View extends Control<IControlOptions> {
         this._editingObject = editingObject;
         this._updateSource(editingObject);
         this._updateFilterParams();
+        if (!this._options.applyButtonCaption) {
+            this._applyFilter();
+        }
     }
 
     protected _groupClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
