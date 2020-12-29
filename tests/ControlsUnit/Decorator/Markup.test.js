@@ -1300,7 +1300,7 @@ define([
          });
       });
 
-      describe('getCorrectLink', function() {
+      describe('normalizeLink', function() {
          var protocolNames = [
             'http:(?://|\\\\\\\\)',
             'https:(?://|\\\\\\\\)',
@@ -1323,7 +1323,7 @@ define([
             while (linkParseResult !== null) {
                var [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
                if (linkToCheck) {
-                  var checkResultNode = linkDecorateUtils.getCorrectLink(linkToCheck, linkDomain,
+                  var checkResultNode = linkDecorateUtils.normalizeLink(linkToCheck, linkDomain,
                      ending, linkPrefix, match, false);
                   assert.deepEqual(result, checkResultNode);
                }
@@ -1346,7 +1346,7 @@ define([
             while (linkParseResult !== null) {
                var [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
                if (linkToCheck) {
-                  var checkResultNode = linkDecorateUtils.getCorrectLink(linkToCheck, linkDomain,
+                  var checkResultNode = linkDecorateUtils.normalizeLink(linkToCheck, linkDomain,
                      ending, linkPrefix, match, true);
                   assert.deepEqual(result, checkResultNode);
                }
@@ -1361,7 +1361,7 @@ define([
             while (linkParseResult !== null) {
                var [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
                if (linkToCheck) {
-                  var checkResultNode = linkDecorateUtils.getCorrectLink(linkToCheck, linkDomain,
+                  var checkResultNode = linkDecorateUtils.normalizeLink(linkToCheck, linkDomain,
                      ending, linkPrefix, match, false);
                   assert.deepEqual(result, checkResultNode);
                }
@@ -1384,7 +1384,7 @@ define([
             while (linkParseResult !== null) {
                var [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
                if (linkToCheck) {
-                  var checkResultNode = linkDecorateUtils.getCorrectLink(linkToCheck, linkDomain,
+                  var checkResultNode = linkDecorateUtils.normalizeLink(linkToCheck, linkDomain,
                      ending, linkPrefix, match, true);
                   assert.deepEqual(result, checkResultNode);
                }
@@ -1399,7 +1399,7 @@ define([
             while (linkParseResult !== null) {
                var [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
                if (linkToCheck) {
-                  var checkResultNode = linkDecorateUtils.getCorrectLink(linkToCheck, linkDomain,
+                  var checkResultNode = linkDecorateUtils.normalizeLink(linkToCheck, linkDomain,
                      ending, linkPrefix, match, false);
                   assert.deepEqual(result, checkResultNode);
                }

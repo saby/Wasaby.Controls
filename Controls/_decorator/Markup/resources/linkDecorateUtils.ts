@@ -397,7 +397,7 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
             if (match.length >= linkMaxLenght) {
                 nodeToPush = match;
             } else if (link) {
-               [hasAnyLink, nodeToPush] = getCorrectLink(link, simpleLinkDomain, ending,
+               [hasAnyLink, nodeToPush] = normalizeLink(link, simpleLinkDomain, ending,
                   simpleLinkPrefix, match, true);
             } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
@@ -440,7 +440,7 @@ export function getLinks(string: string): string[] {
       let linkToPush: string[] | string;
 
       if (linkToCheck) {
-         [isCorrectLink, linkToPush] = getCorrectLink(linkToCheck, linkDomain, ending,
+         [isCorrectLink, linkToPush] = normalizeLink(linkToCheck, linkDomain, ending,
             linkPrefix, match, false);
 
          if (isCorrectLink && typeof linkToPush === 'string') {
@@ -466,7 +466,7 @@ export function getLinks(string: string): string[] {
  * @param {boolean} needToCreateLinkNode
  * @return {boolean, string | string[]}
  */
-export function getCorrectLink(linkToCheck: string, linkDomain: string, ending: string,
+export function normalizeLink(linkToCheck: string, linkDomain: string, ending: string,
    linkPrefix: string, match: string, needToCreateLinkNode: boolean):
    [boolean, string | string[]] {
    const isEndingPartOfDomain = characterRegExp.test(ending) && linkToCheck === linkPrefix;
