@@ -34,7 +34,8 @@ define([
                source: cfg.source,
                keyProperty: cfg.keyProperty || cfg.source.getKeyProperty(),
                navigation: cfg.navigation,
-               sorting: cfg.sorting
+               sorting: cfg.sorting,
+               dataLoadCallback: cfg.dataLoadCallback
             });
 
             if (cfg.source._$data) {
@@ -69,7 +70,8 @@ define([
                keyProperty: cfg.keyProperty || cfg.source.getKeyProperty(),
                navigation: cfg.navigation,
                sorting: cfg.sorting,
-               root: cfg.root !== undefined ? cfg.root : null
+               root: cfg.root !== undefined ? cfg.root : null,
+               dataLoadCallback: cfg.dataLoadCallback
             });
 
             await sourceController.load();
@@ -525,7 +527,6 @@ define([
                },
                afterReloadCallback: function() {
                   afterReloadCallbackCalled = true;
-                  assert.isFalse(dataLoadCallbackCalled, 'dataLoadCallback is called before afterReloadCallback.');
                }
             },
             ctrl = await correctCreateBaseControlAsync(cfg);
@@ -2515,41 +2516,6 @@ define([
                resolve();
             }, 100);
          });
-      });
-
-      it('_processError', function() {
-         let dataLoadErrbackCalled = false;
-         var self = {
-            _options: {},
-            _loadingState: 'all',
-            _notify: () => {
-            },
-            __errorController: {
-               process: () => {
-                  return new Promise(() => {
-                  });
-               }
-            },
-            _isMounted: true
-         };
-
-         lists.BaseControl._private.processError(self, {
-            error: {},
-            dataLoadErrback: () => {
-               dataLoadErrbackCalled = true;
-            }
-         });
-         assert.equal(self._loadingState, null);
-         assert.isTrue(dataLoadErrbackCalled);
-
-         dataLoadErrbackCalled = false;
-         lists.BaseControl._private.processError(self, {
-            error: {isCanceled: true},
-            dataLoadErrback: () => {
-               dataLoadErrbackCalled = true;
-            }
-         });
-         assert.isFalse(dataLoadErrbackCalled);
       });
 
       it('__needShowEmptyTemplate', async function() {
@@ -5842,7 +5808,8 @@ define([
             },
             viewModelConstructor: lists.ListViewModel,
             keyProperty: 'id',
-            source: source
+            source: source,
+            dataLoadCallback: sandbox.stub()
          };
          let instance = correctCreateBaseControl(cfg);
          let cfgClone = { ...cfg };
@@ -5863,7 +5830,6 @@ define([
          let clock = sandbox.useFakeTimers();
          let loadPromise;
 
-         cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.sorting = [{ title: 'ASC' }];
          loadPromise = instance._beforeUpdate(cfgClone);
          clock.tick(100);
@@ -5875,14 +5841,13 @@ define([
 
          portionSearchReseted = false;
          cfgClone = { ...cfg };
-         cfgClone.dataLoadCallback = sandbox.stub();
          cfgClone.filter = { test: 'test' };
          loadPromise = instance._beforeUpdate(cfgClone);
          instance._afterUpdate({});
          instance._componentDidUpdate();
          clock.tick(100);
          await loadPromise;
-         assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
+         assert.isTrue(cfgClone.dataLoadCallback.calledTwice);
          assert.isTrue(portionSearchReseted);
       });
 

@@ -188,7 +188,6 @@ interface ICrudResult extends IReceivedState {
 }
 
 interface IErrbackConfig {
-    dataLoadErrback?: (error: Error) => any;
     mode?: dataSourceError.Mode;
     templateOptions?: object;
     error: CancelableError;
@@ -401,10 +400,6 @@ const _private = {
 
                     _private.executeAfterReloadCallbacks(self, list, cfg);
 
-                    if (cfg.dataLoadCallback instanceof Function) {
-                        cfg.dataLoadCallback(list);
-                    }
-
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
@@ -452,8 +447,7 @@ const _private = {
             }).addErrback(function(error: Error) {
                 _private.hideIndicator(self);
                 return _private.processError(self, {
-                    error,
-                    dataLoadErrback: cfg.dataLoadErrback
+                    error
                 }).then(function(result: ICrudResult) {
                     if (!self._destroyed) {
                         if (cfg.afterReloadCallback) {
@@ -777,7 +771,7 @@ const _private = {
         }
     },
 
-    loadToDirection(self, direction, userCallback, userErrback, receivedFilter) {
+    loadToDirection(self, direction, receivedFilter) {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
         const isPortionedLoad = _private.isPortionedLoad(self);
@@ -845,7 +839,6 @@ const _private = {
                 }
                 return _private.crudErrback(self, {
                     error,
-                    dataLoadErrback: userErrback,
                     mode: dataSourceError.Mode.inlist,
                     templateOptions: {
                         /**
@@ -859,9 +852,7 @@ const _private = {
                             const afterActionCallback = () => _private.hideError(self);
                             const errorConfig = self.__error;
                             return _private.loadToDirection(
-                                self, direction,
-                                userCallback, userErrback,
-                                receivedFilter
+                                self, direction, receivedFilter
                             ).then(() => {
                                 _private.showError(self, errorConfig);
                                 return Promise.resolve(afterActionCallback);
@@ -1025,8 +1016,6 @@ const _private = {
             _private.setHasMoreData(self._listViewModel, hasMoreData);
             _private.loadToDirection(
                 self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback,
                 filter
             );
         }
@@ -2051,9 +2040,6 @@ const _private = {
      */
     processError(self: BaseControl, config: IErrbackConfig): Promise<ICrudResult> {
         if (!config.error.canceled && !config.error.isCanceled) {
-            if (config.dataLoadErrback instanceof Function) {
-                config.dataLoadErrback(config.error);
-            }
             _private.hideIndicator(self);
         }
         return self.__errorController.process({
@@ -2170,9 +2156,6 @@ const _private = {
         );
         if (this._options.serviceDataLoadCallback instanceof Function) {
             this._options.serviceDataLoadCallback(this._items, items);
-        }
-        if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(items, direction);
         }
 
         if (
@@ -3410,10 +3393,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
                 if (newOptions.serviceDataLoadCallback instanceof Function) {
                     newOptions.serviceDataLoadCallback(null, self._items);
-                }
-
-                if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
-                    newOptions.dataLoadCallback(receivedData);
                 }
 
                 _private.createScrollController(self, newOptions);
