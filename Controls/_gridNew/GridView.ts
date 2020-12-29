@@ -51,6 +51,10 @@ const GridView = ListView.extend({
             this._columnScrollViewController = this._createColumnScroll(options);
         }
 
+        if (options.footerTemplate || options.footer) {
+            this._listModel.setFooter(options.footerTemplate, options.footer);
+        }
+
         return result;
     },
 
@@ -70,6 +74,10 @@ const GridView = ListView.extend({
 
         if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
             this._listModel.setHeader(newOptions.header);
+        }
+
+        if (this._isFooterChanged(this._options, newOptions) || columnsChanged) {
+            this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
         }
 
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
@@ -371,6 +379,28 @@ const GridView = ListView.extend({
     _resizeHandler(): void {
         if (this._columnScrollViewController && this.isColumnScrollVisible()) {
             this._actualizeColumnScroll(this._options);
+        }
+    },
+
+    _isFooterChanged(oldOptions, newOptions): boolean {
+        if (
+           // Подвал появился/скрылся или индикатор загрузки в подвале появился, скрылся
+           (!oldOptions.footer && newOptions.footer) ||
+           (oldOptions.footer && !newOptions.footer) ||
+           (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
+           (oldOptions.footerTemplate && !newOptions.footerTemplate) ||
+           (!oldOptions._shouldShowLoadingIndicatorInFooter && newOptions._shouldShowLoadingIndicatorInFooter) ||
+           (oldOptions._shouldShowLoadingIndicatorInFooter && !newOptions._shouldShowLoadingIndicatorInFooter)
+        ) {
+            return true;
+        } else if (
+           // Подвала не было и нет
+           !oldOptions.footer && !newOptions.footer &&
+           !oldOptions.footerTemplate && !newOptions.footerTemplate
+        ) {
+            return false;
+        } else {
+            return false;
         }
     }
 

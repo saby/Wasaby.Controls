@@ -13,7 +13,7 @@ import Colgroup from '../Colgroup';
 import GridRow from '../Row';
 import HeaderRow from '../HeaderRow';
 import DataRow from '../DataRow';
-import FooterRow from '../FooterRow';
+import FooterRow, { TFooter } from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
 import EmptyRow from '../EmptyRow';
@@ -186,6 +186,15 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     getFooter(): FooterRow<S> {
         return this._$footer;
+    }
+
+    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+        if (this.getFooter()) {
+            this._$footer.setFooter(footerTemplate, footer);
+        } else {
+            this._$footer = this._initializeFooter({footerTemplate, footer, columns: this.getColumnsConfig()});
+        }
+        this._nextVersion();
     }
 
     getResults(): ResultsRow<S> {

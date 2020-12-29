@@ -5,8 +5,7 @@ import { IColspanParams } from '../../_grid/interface/IColumn';
 
 export type TFooter = IFooter[];
 
-interface IFooter extends IColspanParams {
-}
+interface IFooter extends IColspanParams {}
 
 export interface IOptions<T> extends IRowOptions<T> {
     owner: Collection<T>;
@@ -26,6 +25,12 @@ export default class FooterRow<T> extends Row<T> {
         return 'footer' as unknown as T
     }
 
+    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+        this._$footerTemplate = footerTemplate;
+        this._$footer = footer;
+        this._reinitializeColumns();
+    }
+
     // TODO: Переделать параметры на объект
     getWrapperClasses(templateHighlightOnHover: boolean = true,
                       theme?: string,
@@ -41,7 +46,7 @@ export default class FooterRow<T> extends Row<T> {
             this._options.resultsPosition !== 'bottom') {
             classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
         }*/
-        return `controls-GridView__footer`;
+        return 'controls-GridView__footer';
     }
 
     protected _getColspan(column: IFooter, columnIndex: number): number {
@@ -72,7 +77,7 @@ export default class FooterRow<T> extends Row<T> {
         return colspan;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this._$columns) {
             const factory = this._getColumnsFactory();
 
