@@ -98,7 +98,7 @@ describe('Controls/display/GridDataCell', () => {
             columns = [{ width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}];
         });
 
-        it('should calculate columnSeparatorSize based on grid\'s columnSeparatorSize', () => {
+        it('should add columnSeparatorSize based on grid\'s columnSeparatorSize', () => {
             const row = getGridRow();
             row.setColumnSeparatorSize('s');
             cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
@@ -106,7 +106,7 @@ describe('Controls/display/GridDataCell', () => {
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
         });
 
-        it('should calculate columnSeparatorSize based on current column\'s left columnSeparatorSize', () => {
+        it('should add columnSeparatorSize based on current column\'s left columnSeparatorSize', () => {
             columns[1].columnSeparatorSize = {left: 's', right: null};
             const row = getGridRow();
             cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
@@ -114,7 +114,7 @@ describe('Controls/display/GridDataCell', () => {
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
         });
 
-        it('should calculate columnSeparatorSize based on previous column\'s right columnSeparatorSize config', () => {
+        it('should add columnSeparatorSize based on previous column\'s right columnSeparatorSize config', () => {
             columns[1].columnSeparatorSize = {left: null, right: 's'};
             const row = getGridRow();
             let wrapperClasses: string;
@@ -124,6 +124,24 @@ describe('Controls/display/GridDataCell', () => {
 
             cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
             wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should add columnSeparatorSize based on grid\'s columnSeparatorSize when multiSelect', () => {
+            hasMultiSelectColumn = true;
+            const row = getGridRow();
+            row.setColumnSeparatorSize('s');
+            cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
+            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should add columnSeparatorSize based on current column config when multiSelect', () => {
+            hasMultiSelectColumn = true;
+            columns[1].columnSeparatorSize = {left: 's', right: null};
+            const row = getGridRow();
+            cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
+            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
         });
 
