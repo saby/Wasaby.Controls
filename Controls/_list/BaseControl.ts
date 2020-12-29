@@ -3262,6 +3262,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
+            this._sourceController.updateOptions(newOptions);
             _private.validateSourceControllerOptions(this, newOptions);
         }
 
