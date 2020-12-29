@@ -36,6 +36,11 @@ import 'Controls/decorator';
  * @author Красильников А.С.
  */
 
+/**
+ * @name Controls/_input/Area#textAlign
+ * @demo Controls-demo/Input/Area/TextAlign/Index
+ */
+
 export default class Area extends Text<IAreaOptions> {
     protected _template: TemplateFunction = template;
 
