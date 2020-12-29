@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import {IColumn, TColumns} from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 
 import { IViewIterator } from '../../Collection';
@@ -93,6 +93,7 @@ export interface IOptions {
     stickyColumnsCount?: number;
     emptyTemplate?: TemplateFunction;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
+    columnSeparatorSize?: TColumnSeparatorSize;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -142,6 +143,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
+        }
+
+        if (options.columnSeparatorSize) {
+            this.setColumnSeparatorSize(options.columnSeparatorSize);
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
@@ -251,6 +256,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+        const header = this.getHeader();
+        if (header) {
+            header.setColumns(newColumns);
+        }
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
@@ -258,6 +267,19 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        const header = this.getHeader();
+        if (header) {
+            header.setColumnSeparatorSize(columnSeparatorSize);
+        }
+        this._nextVersion();
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            if (item.LadderSupport) {
+                item.setColumnSeparatorSize(columnSeparatorSize);
+            }
+        });
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
@@ -281,6 +303,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _updateItemsColumns(): void {
+        if (this._$results) {
+            this._$results.setColumns(this._$columns);
+        }
+
         this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item.LadderSupport) {
                 item.setColumns(this._$columns);
