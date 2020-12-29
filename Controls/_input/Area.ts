@@ -37,9 +37,8 @@ import 'Controls/decorator';
  */
 
 /**
- * @name Controls/_input/interface/IBase#textAlign
- * @cfg {TextAlign} Выравнивание текста по горизонтали в поле.
- * @demo Controls-demo/Input/AreaAlignments/Index
+ * @name Controls/_input/Area#textAlign
+ * @demo Controls-demo/Input/Area/TextAlign/Index
  */
 
 export default class Area extends Text<IAreaOptions> {
