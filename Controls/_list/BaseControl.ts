@@ -5933,7 +5933,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
                 !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
             // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-            if (shouldShowIndicator && this._listViewModel.showLoadingIndicator) {
+            if (shouldShowIndicator && this._listViewModel && this._listViewModel.showLoadingIndicator) {
                 this._listViewModel.showLoadingIndicator();
             }
             return shouldShowIndicator;
