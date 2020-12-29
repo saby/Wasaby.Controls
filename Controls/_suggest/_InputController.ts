@@ -773,7 +773,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._searchValue = value;
          return this._getSearchController()
              .then((controller) => {
-                controller.search(value)
+                return controller.search(value)
                     .then((recordSet) => {
                        this._loadEnd(recordSet);
 
