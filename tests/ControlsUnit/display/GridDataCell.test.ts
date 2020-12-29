@@ -1,8 +1,8 @@
 import { assert } from 'chai';
-import { Model } from 'Types/entity';
+import { Model as EntityModel, Model } from 'Types/entity';
 
-import { GridDataCell, GridDataRow } from 'Controls/display';
-import {IColumn} from 'Controls/grid';
+import { GridCollection, GridDataCell, GridDataRow, TColspanCallback } from 'Controls/display';
+import { IColumn } from 'Controls/grid';
 
 describe('Controls/display/GridDataCell', () => {
     let owner: GridDataRow<Model>;
@@ -57,4 +57,75 @@ describe('Controls/display/GridDataCell', () => {
     });
 
     // endregion
+
+    describe('ColumnSeparatorSize', () => {
+        let columns: IColumn[];
+        let hasMultiSelectColumn: boolean;
+        let stickyColumnsCount: number;
+        let hasItemActionsSeparatedCell: boolean;
+        let hasColumnScroll: boolean;
+
+        function getGridRow(): GridDataRow<Model> {
+            const owner: GridCollection<Model> = {
+                hasMultiSelectColumn: () => hasMultiSelectColumn,
+                getStickyColumnsCount: () => stickyColumnsCount,
+                getColumnsConfig: () => columns,
+                hasItemActionsSeparatedCell: () => hasItemActionsSeparatedCell,
+                hasColumnScroll: () => hasColumnScroll,
+                getHoverBackgroundStyle: () => 'default',
+                getTopPadding: () => 'null',
+                getBottomPadding: () => 'null',
+                isEditing: () => false,
+                isDragging: () => false,
+                getEditingBackgroundStyle: () => 'default',
+                isActive: () => false,
+                getRowSeparatorSize: () => 's'
+            } as undefined as GridCollection<Model>;
+            return new GridDataRow({
+                columns,
+                owner,
+                colspanCallback: ((item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => {
+                    return null; // number | 'end'
+                }) as TColspanCallback
+            });
+        }
+
+        beforeEach(() => {
+            hasMultiSelectColumn = false;
+            stickyColumnsCount = 0;
+            hasItemActionsSeparatedCell = false;
+            hasColumnScroll = false;
+            columns = [{ width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}];
+        });
+
+        it('should calculate columnSeparatorSize based on grid\'s columnSeparatorSize', () => {
+            const row = getGridRow();
+            row.setColumnSeparatorSize('s');
+            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
+            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should calculate columnSeparatorSize based on current column\'s left columnSeparatorSize', () => {
+            columns[1].columnSeparatorSize = {left: 's', right: null};
+            const row = getGridRow();
+            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;;
+            const wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should calculate columnSeparatorSize based on previous column\'s right columnSeparatorSize config', () => {
+            columns[1].columnSeparatorSize = {left: null, right: 's'};
+            const row = getGridRow();
+            let wrapperClasses: string;
+            cell = row.getColumns()[1] as GridDataCell<Model, GridDataRow<Model>>;
+            wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.notInclude(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+
+            cell = row.getColumns()[2] as GridDataCell<Model, GridDataRow<Model>>;
+            wrapperClasses = cell.getWrapperClasses('default', 'default', 'default', true);
+            assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+    });
 });

@@ -10,6 +10,7 @@
                             on:dragEnd="_dragEnd()"
                             itemsReadyCallback="{{_itemsReadyCallback}}"
                             itemsDragNDrop="{{true}}"
+                            colspanCallback="{{_colspanCallback}}"
                             columns="{{_columns}}">
                         <ws:editingConfig editOnClick="{{true}}" sequentialEditing="{{true}}"
                                           toolbarVisibility="{{true}}"/>
@@ -24,12 +25,3 @@
         </Controls.operations:Controller>
     </Controls.list:DataContainer>
 </div>
-
-<!--
-<ws:itemTemplate>
-    <ws:partial template="wml!Controls-demo/gridNew/EditInPlace/DragNDrop/_rowEditor"
-                documentSignMemory="{{_documentSignMemory}}"
-                onChange="{{onChange}}"
-                selectedKey="{{selectedKey}}"/>
-</ws:itemTemplate>
--->

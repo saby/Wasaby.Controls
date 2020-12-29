@@ -302,6 +302,10 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                isNativeStopped = true;
             },
             target: {
+               getBoundingClientRect: () => ({
+                  left: 10,
+                  right: 100
+               }),
                closest: (selector) => {
                   if (selector === '.controls-Grid__row') {
                      return {
@@ -328,6 +332,11 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          };
          gridView.saveOptions(cfg);
          gridView._onItemClick(fakeEvent, fakeDispItem);
+         assert.deepEqual({
+            left: 10,
+            right: 100
+         }, gridView._targetPosition);
+
          assert.isTrue(isEventRaised);
          assert.isTrue(isNativeStopped);
       });

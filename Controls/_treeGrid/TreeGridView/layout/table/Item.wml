@@ -20,10 +20,11 @@
 </ws:template>
 
 <ws:template name="multiSelectTemplate">
-    <ws:partial template="{{multiSelectTpl}}" attr:class="{{ itemData.multiSelectClassList }}">
+    <ws:partial template="{{multiSelectTpl}}">
         <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                             readOnly="{{itemData.isAdd || checkboxReadOnly}}"
-                            item="{{ itemData.dispItem }}"/>
+                            item="{{ itemData.dispItem }}"
+                            itemData="{{itemData}}"/>
     </ws:partial>
 </ws:template>
 

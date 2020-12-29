@@ -5,7 +5,6 @@ import {IItemAction} from 'Controls/itemActions';
 import {Enum, RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
 import {default as IPropertyGridItem} from 'Controls/_propertyGrid/IProperty';
-import {getEditingObject, getSource} from 'Controls-demo/PropertyGridNew/resources/Data';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -14,6 +13,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _itemActions: IItemAction[];
 
     protected _beforeMount(): void {
+        this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
         this._editingObject = new Model<IPropertyGridItem>({
             rawData: {
                 description: 'This is http://mysite.com',
@@ -47,18 +47,8 @@ export default class Demo extends Control<IControlOptions> {
                     group: 'boolean'
                 },
                 {
-                    name: 'showBackgroundImage',
-                    caption: 'Показывать изображение',
-                    group: 'boolean'
-                },
-                {
                     caption: 'URL',
                     name: 'siteUrl',
-                    group: 'string'
-                },
-                {
-                    caption: 'Источник видео',
-                    name: 'videoSource',
                     group: 'string'
                 },
                 {
@@ -66,17 +56,6 @@ export default class Demo extends Control<IControlOptions> {
                     name: 'backgroundType',
                     group: 'enum',
                     editorClass: 'controls-demo-pg-enum-editor'
-                },
-                {
-                    name: 'function',
-                    caption: '',
-                    toggleEditorButtonIcon: 'icon-ArrangePreview',
-                    type: 'text',
-                    editorClass: 'controls-demo-pg-text-editor',
-                    editorOptions: {
-                        placeholder: 'Условие видимости поля',
-                        minLines: 3
-                    }
                 },
                 {
                     name: 'validate',
@@ -138,6 +117,15 @@ export default class Demo extends Control<IControlOptions> {
 
     protected _handleItemClick(event, item) {
         alert(`Clicked at ${item.getContents().getId()}`);
+    }
+
+    protected _itemActionVisibilityCallback(itemAction, item): boolean {
+        const index = this._getSourceItemIndex(this._source, item);
+        if (index === 0 && itemAction.title === 'Переместить вверх' ||
+            index === 4 && itemAction.title === 'Переместить вниз') {
+            return false;
+        }
+        return true;
     }
 
     static _styles: string[] = ['Controls-demo/PropertyGridNew/Editors/HighlightOnHover/Index',

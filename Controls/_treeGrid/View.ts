@@ -20,6 +20,7 @@ import { Model } from 'Types/entity';
     * @class Controls/_treeGrid/View
     * @extends Controls/_grid/Grid
     * @mixes Controls/_interface/ISource
+    * @mixes Controls/_list/interface/IClickableView
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedGrid
     * @mixes Controls/_interface/INavigation
@@ -119,6 +120,12 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
     */
    getPrevItem(key: CrudEntityKey): Model {
       return this._children.listControl.getPrevItem(key);
+   }
+
+   static getDefaultOptions(): object {
+      return {
+         root: null
+      };
    }
 }
 /**

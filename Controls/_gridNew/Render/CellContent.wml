@@ -23,6 +23,7 @@
                 column="{{ (gridColumn || itemData).getColumnConfig() }}"
                 itemData="{{ (gridColumn || itemData) }}"
                 item="{{ (gridColumn || itemData).getOwner() }}"
+                itemActionsTemplate="{{ itemActionsTemplate }}"
                 editArrowTemplate="{{ editArrowTemplate }}"/>
 
     </ws:if>

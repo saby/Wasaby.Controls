@@ -1,8 +1,9 @@
-import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { GridDataCell } from 'Controls/display';
 import { GridLayoutUtil } from 'Controls/grid';
+import TreeGridDataRow from './TreeGridDataRow';
+import { Model } from 'Types/entity';
 
-export default class TreeGridDataCell<T> extends GridDataCell<T, TreeGridDataRow<T>> {
+export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, TreeGridDataRow<T>> {
     readonly '[Controls/treeGrid:TreeGridDataCell]': boolean;
 
     protected _$owner: TreeGridDataRow<T>;

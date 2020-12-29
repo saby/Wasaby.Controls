@@ -351,10 +351,6 @@
       background-color: @item_hover_background-color_list;
    }
 
-   .controls-Grid__row_highlightOnHover_default_theme-@{themeName}:hover .controls-Grid__row-cell-background-hover-listEditor_theme-@{themeName} {
-      background-color: @list-editor_color-hover_filterViewPanel;
-   }
-
    .controls-BaseControl_showActions_delayed .controls-Grid__row:hover {
       > .controls-itemActionsV__container,
       > .controls-Grid__row-cell,
@@ -732,6 +728,10 @@
 
 .controls-GridView__footer__paddingLeft_withCheckboxes_theme-@{themeName} {
    padding-left: @click-area_width_checkbox;
+}
+
+.controls-GridView__paddingBottom__itemActionsV_outside_theme-@{themeName} {
+   padding-bottom: @height_outside_itemActions;
 }
 
 .controls-GridView__footer__itemActionsV_outside_theme-@{themeName} {

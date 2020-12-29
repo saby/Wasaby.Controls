@@ -41,11 +41,9 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCalculationCallback(item, column, columnIndex, isEditing) {
+    protected _colspanCallback(item, column, columnIndex, isEditing) {
         if (isEditing && columnIndex === 0) {
-            return {
-                colspan: 5
-            }
+            return 'end';
         }
     }
 

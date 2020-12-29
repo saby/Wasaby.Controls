@@ -363,7 +363,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
 /**
  * @name Controls/_tabs/ITabsTemplate#itemTemplate
  * @cfg {Function} Шаблон для рендеринга.
- * @default Base template 'Controls/tabs:buttonsItemTemplate'
+ * @default Controls/tabs:buttonsItemTemplate
+ * @demo Controls-demo/Tabs/Buttons/ItemTemplate/Index
  * @remark
  * Чтобы определить шаблон, следует вызвать базовый шаблон 'Controls/tabs:buttonsItemTemplate'.
  * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
@@ -373,7 +374,14 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  * <ul>
  * @example
  * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
+ * <pre class="brush: html">
+ * <Controls.tabs:Buttons
+ *          bind:selectedKey='SelectedKey1'
+ *          keyProperty="id"
+ *          items="{{_items1}}"/>
+ * </pre>
  *
+ * Вкладки с кастомным шаблоном элемента.
  * <pre class="brush: html; highlight: [6,7,8,9,10]">
  * <Controls.tabs:Buttons
  *     bind:selectedKey="SelectedKey3"
@@ -381,9 +389,11 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  *     style="additional"
  *     source="{{_source3}}">
  *     <ws:itemTemplate>
- *         <ws:partial template="Controls/tabs:buttonsItemTemplate"
- *                     item="{{itemTemplate.item}}"
- *                     displayProperty="caption" />
+ *         <div>
+ *              <ws:partial template="Controls/tabs:buttonsItemTemplate"
+ *                          item="{{itemTemplate.item}}"
+ *                          displayProperty="caption" />
+ *         </div>
  *     </ws:itemTemplate>
  * </Controls.tabs:Buttons>
  * </pre>

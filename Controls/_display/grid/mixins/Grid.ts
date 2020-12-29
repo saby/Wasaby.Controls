@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import {IColumn, TColumns} from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 
 import { IViewIterator } from '../../Collection';
@@ -92,6 +92,7 @@ export interface IOptions {
     stickyColumnsCount?: number;
     emptyTemplate?: TemplateFunction;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
+    columnSeparatorSize?: TColumnSeparatorSize;
 }
 
 export default abstract class Grid<S, T extends GridRowMixin<S>> {
@@ -122,13 +123,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$emptyTemplateColumns: IEmptyTemplateColumn[];
 
     protected constructor(options: IOptions) {
-        if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {
+        const supportLadder = GridLadderUtil.isSupportLadder(this._$ladderProperties);
+        if (supportLadder) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
         }
 
         this._$resultsPosition = options.resultsPosition;
 
-        if (this._headerIsVisible(options)) {
+        if (this._headerIsVisible(options.header)) {
             this._$headerConfig = options.header;
             this._$header = this._initializeHeader(options);
         }
@@ -142,12 +144,19 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             this._$colgroup = this._initializeColgroup(options);
         }
 
+        if (options.columnSeparatorSize) {
+            this.setColumnSeparatorSize(options.columnSeparatorSize);
+        }
+
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
             this._$emptyGridRow = new EmptyRow<S>({
                 owner: this,
                 emptyTemplate: this._$emptyTemplate,
                 emptyTemplateColumns: this._$emptyTemplateColumns
             });
+        }
+        if (supportLadder) {
+            this._updateItemsLadder();
         }
     }
 
@@ -229,11 +238,27 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
+    setHeader(header: THeader): void {
+        this._$headerConfig = header;
+        if (this._headerIsVisible(header)) {
+            this._$headerConfig = header;
+            this._$header = this._initializeHeader({
+                columns: this._$columns,
+                owner: this,
+                header: header
+            } as IOptions);
+        }
+    }
+
     setColumns(newColumns: TColumns): void {
         this._$columns = newColumns;
         this._$colgroup?.reBuild();
         this._nextVersion();
         this._updateItemsColumns();
+        const header = this.getHeader();
+        if (header) {
+            header.setColumns(newColumns);
+        }
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
@@ -241,6 +266,19 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             return this._$showEditArrow;
         }
         return this._$editArrowVisibilityCallback(item);
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        const header = this.getHeader();
+        if (header) {
+            header.setColumnSeparatorSize(columnSeparatorSize);
+        }
+        this._nextVersion();
+        this.getViewIterator().each((item: GridRowMixin<S>) => {
+            if (item.LadderSupport) {
+                item.setColumnSeparatorSize(columnSeparatorSize);
+            }
+        });
     }
 
     protected _prepareLadder(ladderProperties: string[], columns: TColumns): void {
@@ -262,6 +300,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _updateItemsColumns(): void {
+        if (this._$results) {
+            this._$results.setColumns(this._$columns);
+        }
+
         this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item.LadderSupport) {
                 item.setColumns(this._$columns);
@@ -269,8 +311,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
-    protected _headerIsVisible(options: IOptions): boolean {
-        const hasHeader = options.header && options.header.length;
+    protected _headerIsVisible(header: THeader): boolean {
+        const hasHeader = header && header.length;
         return hasHeader && (this._$headerVisibility === 'visible' || this.getCollectionCount() > 0);
     }
 
@@ -368,7 +410,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._nextVersion();
     }
 
-    protected hasItemActionsSeparatedCell(): boolean {
+    hasItemActionsSeparatedCell(): boolean {
         return !!this.getColumnsConfig() && this.hasColumnScroll() && (this.getActionsTemplateConfig()?.itemActionsPosition !== 'custom');
     }
 

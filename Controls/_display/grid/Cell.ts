@@ -8,7 +8,7 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
@@ -27,6 +27,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    columnSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -48,6 +49,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getInstanceId: () => string;
 
@@ -143,7 +145,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Стилевое оформление"
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hasColumnScroll = this._$owner.hasColumnScroll();
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
 
@@ -222,21 +224,26 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getBackgroundColorColumnScrollClasses(backgroundColorStyle: string, theme: string): string {
-        if (backgroundColorStyle) {
-            return `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`
-        }
-
         // TODO: Брать от родителя
         // return options.backgroundStyle || options.style || 'default';
         return `controls-background-${'default'}_theme-${theme}`;
     }
-    _getBackgroundColorWrapperClasses(theme: string, templateHighlightOnHover?: boolean, backgroundColorStyle?: string, hoverBackgroundStyle?: string) {
+    protected _getBackgroundColorWrapperClasses(
+       theme: string,
+       templateHighlightOnHover?: boolean,
+       backgroundColorStyle?: string,
+       hoverBackgroundStyle?: string
+    ): string {
         let wrapperClasses = '';
         if (this._$owner.isEditing()) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
-            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
         } else if (templateHighlightOnHover !== false) {
-            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
+
+            if (backgroundColorStyle !== 'default') {
+                wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
+            }
             if (this._$owner.hasColumnScroll()) {
                 wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
             }
@@ -269,7 +276,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
                       backgroundColorStyle: string = this._$column.backgroundColorStyle,
                       cursor: string = 'pointer',
                       templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || this._$column.hoverBackgroundStyle || 'default';
+        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let contentClasses = 'controls-Grid__row-cell__content';
 
@@ -312,6 +319,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getContentStyles(): string {
         return '';
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
@@ -362,15 +373,18 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
-            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
-
-            if (columnSeparatorSize !== null) {
-                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
-                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-            }
-        }*/
+        classes += this._getColumnSeparatorClasses(theme);
         return classes;
+    }
+
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
+                this._$columnSeparatorSize.toLowerCase() :
+                null;
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
@@ -399,12 +413,13 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         // left <-> right
         const cellPadding = this._$column.cellPadding;
 
+        const isFirstColumnAfterCheckbox = this.getColumnIndex() === 1 && this._$owner.hasMultiSelectColumn();
         if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
-        } else if (!this.isFirstColumn()) {
+        } else if (!this.isFirstColumn() && !isFirstColumnAfterCheckbox) {
             classes += ' controls-Grid__cell_spacingLeft';
             if (cellPadding?.left) {
-                classes += `_${cellPadding.left}`;
+                classes += `_${cellPadding.left.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         }
@@ -412,7 +427,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (!this.isLastColumn()) {
             classes += ' controls-Grid__cell_spacingRight';
             if (cellPadding?.right) {
-                classes += `_${cellPadding.right}`;
+                classes += `_${cellPadding.right.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         } else {
@@ -432,16 +447,20 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return this._$column;
     }
 
-    getColumnIndex(): number {
-        return this._$owner.getColumnIndex(this);
+    getColumnIndex(colspan?: boolean): number {
+        return this._$owner.getColumnIndex(this, colspan);
     }
 
-    isFirstColumn(): boolean {
-        return this.getColumnIndex() === 0;
+    isFirstColumn(colspan?: boolean): boolean {
+        return this.getColumnIndex(colspan) === 0;
     }
 
-    isLastColumn(): boolean {
-        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
+    isLastColumn(colspan?: boolean): boolean {
+        let dataColumnsCount = this._$owner.getColumnsCount(colspan) - 1;
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            dataColumnsCount -= 1;
+        }
+        return this.getColumnIndex(colspan) === dataColumnsCount;
     }
 
     // endregion
@@ -499,5 +518,6 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
+    _$columnSeparatorSize: null,
     _$isFixed: null
 });

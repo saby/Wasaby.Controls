@@ -18,6 +18,7 @@ import {detection} from 'Env/Env';
 import {VirtualScrollHideController, VirtualScrollController} from 'Controls/display';
 import { getDimensions as uDimension } from '../sizeUtils';
 import { getStickyHeadersHeight } from '../scroll';
+import {IVirtualScrollConfig} from 'Controls/_list/interface/IVirtualScroll';
 
 export interface IScrollParams {
     clientHeight: number;
@@ -32,13 +33,7 @@ interface ICompatibilityOptions {
 }
 
 export interface IOptions extends IControlOptions, ICompatibilityOptions {
-    virtualScrollConfig: {
-        pageSize?: number;
-        segmentSize?: number;
-        mode?: 'remove' | 'hide';
-        itemHeightProperty?: string;
-        viewportHeight?: number;
-    };
+    virtualScrollConfig: IVirtualScrollConfig;
     disableVirtualScroll: boolean;
     needScrollCalculation: boolean;
     collection: Collection<Record>;
@@ -587,7 +582,7 @@ export default class ScrollController {
         return !!this._virtualScroll;
     }
 
-    
+
     handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
         let result = {}
         if (!this._virtualScroll) {
@@ -655,11 +650,6 @@ export default class ScrollController {
     handleRemoveItems(removeIndex: number, items: object[]): IScrollControllerResult {
         if (this._virtualScroll) {
             const rangeShiftResult = this._virtualScroll.removeItems(removeIndex, items.length);
-
-            // todo временный фикс, убрать по 
-            // https://online.sbis.ru/opendoc.html?guid=5c0a021b-38a6-4d28-8c5c-cf9d9f27e651
-            this._setCollectionIndices(this._options.collection, rangeShiftResult.range, true,
-                this._options.needScrollCalculation);
             this.savePlaceholders(rangeShiftResult.placeholders);
             return {
                 placeholders: rangeShiftResult.placeholders,

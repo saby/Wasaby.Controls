@@ -1,13 +1,19 @@
-import {THeader} from 'Controls/grid';
+import {
+    ICellPadding,
+    IColumn,
+    IColumnSeparatorSizeConfig,
+    IHeaderCell,
+    TColumnSeparatorSize,
+    THeader
+} from 'Controls/grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import Header from './Header';
 import ItemActionsCell from './ItemActionsCell';
 
 export interface IOptions<T> extends IRowOptions<T> {
     header: THeader;
-    headerModel: Header<T>
+    headerModel: Header<T>;
 }
-
 
 export default class HeaderRow<T> extends Row<T> {
     protected _$header: THeader;
@@ -30,7 +36,7 @@ export default class HeaderRow<T> extends Row<T> {
     }
 
     getContents(): T {
-        return 'header' as unknown as T
+        return 'header' as unknown as T;
     }
 
     getItemClasses(params): string {
@@ -47,8 +53,10 @@ export default class HeaderRow<T> extends Row<T> {
 
                 return factory({
                     column,
-                    isFixed
-                })
+                    isFixed,
+                    cellPadding: this._getCellPaddingForHeaderColumn(column, index),
+                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
+                });
             });
             this._addCheckBoxColumnIfNeed();
 
@@ -56,7 +64,7 @@ export default class HeaderRow<T> extends Row<T> {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,
                     column: {}
-                }))
+                }));
             }
         }
     }
@@ -75,6 +83,46 @@ export default class HeaderRow<T> extends Row<T> {
                 isFixed: true
             }));
         }
+    }
+
+    protected _getCellPaddingForHeaderColumn(headerColumn: IHeaderCell, columnIndex: number): ICellPadding {
+        const columns = this.getColumnsConfig();
+        const headerColumnIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        return columns[headerColumnIndex].cellPadding;
+    }
+
+    protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
+        const currentColumn = {
+            ...column,
+            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
+        } as IColumn;
+        let previousColumn: IColumn;
+        if (columnIndex !== 0) {
+            previousColumn = {
+                ...this._$header[columnIndex - 1],
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1], columnIndex - 1)
+            } as IColumn;
+        }
+        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+    }
+
+    private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell, columnIndex: number): IColumnSeparatorSizeConfig {
+        const columnSeparatorSize: IColumnSeparatorSizeConfig = {};
+        const columns = this.getColumnsConfig();
+        const columnLeftIndex =
+            typeof headerColumn.startColumn !== 'undefined' ? headerColumn.startColumn - 1 : columnIndex;
+        const columnRightIndex =
+            typeof headerColumn.endColumn !== 'undefined' ? headerColumn.endColumn - 2 : columnIndex;
+        const columnLeft = columns[columnLeftIndex];
+        const columnRight = columns[columnRightIndex];
+        if (columnLeft?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize.left = columnLeft.columnSeparatorSize.left;
+        }
+        if (columnRight?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize.right = columnRight.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
     }
 }
 

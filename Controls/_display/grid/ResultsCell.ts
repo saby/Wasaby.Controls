@@ -56,8 +56,8 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
         let wrapperClasses = 'controls-Grid__results-cell'
                             + ` controls-Grid__cell_${style}`
-                            + ` controls-Grid__results-cell_theme-${theme}`;
-
+                            + ` controls-Grid__results-cell_theme-${theme}`
+                            + ` ${this._getColumnSeparatorClasses(theme)}`;
 
         if (this._$column.align) {
             wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;

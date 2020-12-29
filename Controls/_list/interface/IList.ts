@@ -98,7 +98,16 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
     pagingContentTemplate?: TemplateFunction | string;
     moreFontColorStyle?: IFontColorStyle;
+    stickyHeader?: boolean;
 }
+
+/**
+ * @name Controls/_list/interface/IList#stickyHeader
+ * @cfg {Boolean} Закрепляет заголовок списка.
+ * @demo Controls-demo/list_new/Grouped/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
+ * @demo Controls-demo/list_new/Grouped/Sticky/Index В демо-примере опция stickyHeader установлена в значение true.
+ * @default true
+ */
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
@@ -110,7 +119,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
  * @cfg {Function} Опция управляет отображением {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}
- * @demo Controls-demo/list_new/Navigation/Paging/Compact/ContentTemplate/Index
+ * @demo Controls-demo/list_new/Navigation/Paging/End/ContentTemplate/Index
  * @see pagingMode
  */
 
@@ -288,8 +297,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
  * @cfg {String} Имя свойства, содержащего информацию о доступности чекбокса элемента.
  * @remark Определяет возможность изменения состояния чекбокса и его видимость.
- * Для указания значения в {Types/entity:Record рекорде} рекомендуется использовать константу {@link Controls/list:MultiSelectAccessibility MultiSelectAccessibility}.
- * Возможные значения свойства {Types/entity:Record рекорда}:
+ * Для указания значения в {@link Types/entity:Record рекорде} рекомендуется использовать константу {@link Controls/list:MultiSelectAccessibility MultiSelectAccessibility}.
+ * Возможные значения свойства {@link Types/entity:Record рекорда}:
  * * {@link Controls/list:MultiSelectAccessibility#enabled enabled} Чекбокс виден и с ним можно взаимодействовать
  * * {@link Controls/list:MultiSelectAccessibility#disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
  * * {@link Controls/list:MultiSelectAccessibility#hidden hidden} Чекбокс скрыт

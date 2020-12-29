@@ -818,7 +818,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         this._$theme = options.theme;
 
-        this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        if (options.hoverBackgroundStyle) {
+            this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        }
 
         this._$collapsedGroups = options.collapsedGroups;
 
@@ -2274,8 +2276,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setDraggedItems(draggableItem: T, draggedItemsKeys: Array<number|string>): void {
         const draggableItemIndex = this.getIndex(draggableItem);
-        // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
-        const targetIndex = draggableItemIndex > -1 ? draggableItemIndex : this.getCount() - 1;
+
+        let targetIndex;
+        if (!this.getCount()) {
+            targetIndex = 0;
+        } else if (draggableItemIndex > -1) {
+            targetIndex = draggableItemIndex;
+        } else {
+            // когда перетаскиваем в другой список, изначальная позиция будет в конце списка
+            targetIndex = this.getCount() - 1;
+        }
 
         this.appendStrategy(this._dragStrategy as StrategyConstructor<any>, {
             draggedItemsKeys,
@@ -2813,10 +2823,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options: strategyOptions
         });
 
+        const session = this._startUpdateSession();
         if (this._composer) {
             this._composer.append(strategy, strategyOptions);
             this._reBuild();
         }
+        this._finishUpdateSession(session);
 
         this.nextVersion();
     }
@@ -2830,10 +2842,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         if (idx >= 0) {
             this._userStrategies.splice(idx, 1);
 
+            const session = this._startUpdateSession();
             if (this._composer) {
                 this._composer.remove(strategy);
                 this._reBuild();
             }
+            this._finishUpdateSession(session);
 
             this.nextVersion();
         }
@@ -3990,6 +4004,7 @@ Object.assign(Collection.prototype, {
     _$markerVisibility: 'onactivated',
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
+    _$hoverBackgroundStyle: 'default',
     _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

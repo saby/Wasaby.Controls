@@ -25,6 +25,8 @@ import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { Model } from 'Types/entity';
 import { IDragPosition } from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { isEqual } from 'Types/object';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -245,6 +247,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
      * @protected
      */
     protected _dragStrategy: StrategyConstructor<TreeDrag> = TreeDrag;
+    private _expandedItems: CrudEntityKey[] = [];
+    private _collapsedItems: CrudEntityKey[] = [];
 
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
@@ -335,9 +339,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition && currentPosition.dispItem.isDragTargetNode()) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            // Выполняем поиск, т.к. позиция может смениться сразу на несколько элементов
+            // и не факт, что в предыдущей позиции был targetNode
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
                 this._nextVersion();
             }
 
@@ -357,9 +363,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         const dragStrategy = this.getStrategyInstance(this._dragStrategy) as TreeDrag;
 
         if (dragStrategy) {
-            const currentPosition = dragStrategy.getCurrentPosition();
-            if (currentPosition) {
-                currentPosition.dispItem.setDragTargetNode(false);
+            const targetNode = this.find((item) => item.isDragTargetNode());
+            if (targetNode) {
+                targetNode.setDragTargetNode(false);
             }
             super.resetDraggedItems();
         }
@@ -369,6 +375,13 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     getNodeFooterTemplate(): TemplateFunction {
         return this._$nodeFooterTemplate;
+    }
+
+    setNodeFooterTemplate(nodeFooterTemplate: TemplateFunction): void {
+        if (this._$nodeFooterTemplate !== nodeFooterTemplate) {
+            this._$nodeFooterTemplate = nodeFooterTemplate;
+            this._nextVersion();
+        }
     }
 
     getIndexBySourceItem(item: any): number {
@@ -593,16 +606,24 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // region Expanded/Collapsed
 
     isExpandAll(): boolean {
-        // TODO нужна опция expandedItems
-        return false;
+        return this._expandedItems[0] === null;
     }
 
-    // TODO переделать на список элементов, т.к. мы по идее не знаем что в S
     getExpandedItems(): CrudEntityKey[] {
-        return this.getItems().filter((it) => it.isExpanded()).map((it) => it.getContents().getKey());
+        return this._expandedItems;
+    }
+
+    getCollapsedItems(): CrudEntityKey[] {
+        return this._collapsedItems;
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
+
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
+        diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(false));
+
+        this._expandedItems = expandedKeys;
         if (expandedKeys[0] === null) {
             const expandAllChildesNodes = (parent) => {
                 if (!parent['[Controls/_display/TreeItem]']) {
@@ -628,10 +649,16 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             });
         }
 
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
+        const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
+        diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(true));
+
+        this._collapsedItems = collapsedKeys;
+
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
             if (item) {
@@ -640,26 +667,48 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             }
         });
 
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     resetExpandedItems(): void {
         this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
-        this._reCountNodeFooters();
+        this._reBuildNodeFooters();
     }
 
     toggleExpanded(item: T): void {
+        // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
         const newExpandedState = !item.isExpanded();
+        const itemKey = item.getContents().getKey();
         item.setExpanded(newExpandedState);
 
-        this._reCountNodeFooters();
+        if (newExpandedState) {
+            if (!this._expandedItems.includes(itemKey)) {
+                this._expandedItems.push(itemKey);
+            }
+            if (this._collapsedItems.includes(itemKey)) {
+                this._collapsedItems.splice(this._collapsedItems.indexOf(itemKey), 1);
+            }
+        } else {
+            if (this._expandedItems.includes(itemKey)) {
+                this._expandedItems.splice(this._expandedItems.indexOf(itemKey), 1);
+            }
+
+            if (!this._collapsedItems.includes(itemKey)) {
+                this._collapsedItems.push(itemKey);
+            }
+        }
+
+        this._reBuildNodeFooters();
     }
 
     // endregion Expanded/Collapsed
 
     setHasMoreStorage(storage: Record<string, boolean>): void {
-        this._$hasMoreStorage = storage;
-        this._nextVersion();
+        if (!isEqual(this._$hasMoreStorage, storage)) {
+            this._$hasMoreStorage = storage;
+            this._nextVersion();
+            this._reBuildNodeFooters();
+        }
     }
 
     getHasMoreStorage(): Record<string, boolean> {
@@ -730,7 +779,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         this._childrenMap = {};
     }
 
-    protected _reCountNodeFooters(): void {
+    protected _reBuildNodeFooters(): void {
         const session = this._startUpdateSession();
         this.getStrategyInstance(NodeFooter)?.invalidate();
         this._reSort();

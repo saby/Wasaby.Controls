@@ -60,9 +60,9 @@ export default class ResultsRow<T> extends Row<T> {
             if (this._$resultsTemplate) {
                 this._$columnItems = [factory({
                     column: {
-                        resultTemplate: this._$resultsTemplate,
-                        colspan: this._$owner.getColumnsConfig().length
+                        resultTemplate: this._$resultsTemplate
                     },
+                    colspan: this._$owner.getColumnsConfig().length
                 })];
             } else {
                 this._$columnItems = this._prepareColumnItems(this._$columns, factory);

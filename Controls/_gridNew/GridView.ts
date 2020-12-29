@@ -68,6 +68,10 @@ const GridView = ListView.extend({
             this._listModel.setColumns(newOptions.columns, false);
         }
 
+        if (!GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
+            this._listModel.setHeader(newOptions.header);
+        }
+
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
         if (this._columnScrollViewController) {
@@ -79,6 +83,10 @@ const GridView = ListView.extend({
             }
         } else if (newOptions.columnScroll) {
             this._columnScrollViewController = this._createColumnScroll(newOptions);
+        }
+
+        if (this._options.columnSeparatorSize !== newOptions.columnSeparatorSize) {
+            this._listModel.setColumnSeparatorSize(newOptions.columnSeparatorSize);
         }
     },
 
@@ -142,6 +150,14 @@ const GridView = ListView.extend({
         if (GridLadderUtil.isSupportLadder(options.ladderProperties)) {
             classes += ' controls-Grid_support-ladder';
         }
+
+        if (options.itemActionsPosition === 'outside' &&
+            !this._listModel.getFooter() &&
+            !(this._listModel.getResults() && this._listModel.getResultsPosition() === 'bottom')
+        ) {
+            classes += ` controls-GridView__paddingBottom__itemActionsV_outside_theme-${options.theme}`;
+        }
+
         classes += ` ${this._columnScrollContentClasses}`;
         return classes;
     },
@@ -151,7 +167,7 @@ const GridView = ListView.extend({
     },
 
     _isEmpty(): boolean {
-        return !this._listModel?.getCount();
+        return this._options.needShowEmptyTemplate;
     },
 
     _onItemMouseMove(event, collectionItem) {

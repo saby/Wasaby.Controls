@@ -89,11 +89,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
-        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
-            this._listModel.setFilter(this._displayFilter.bind(this));
-        }
-
         if (newOptions.editingObject !== this._options.editingObject) {
             this._listModel.setEditingObject(newOptions.editingObject);
         }
@@ -108,6 +103,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             );
         } else if (newOptions.itemPadding !== this._options.itemPadding) {
             this._listModel.setItemPadding(newOptions.itemPadding);
+        }
+        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
+            this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
+            this._listModel.setFilter(this._displayFilter.bind(this));
         }
     }
 

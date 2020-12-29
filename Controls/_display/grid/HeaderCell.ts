@@ -15,15 +15,14 @@
     isActionCell Поле, для определения ячейки действий
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
-
-import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
+import {IColspanParams, IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize, IRowspanParams} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
 import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    cellPadding?: IItemPadding;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -147,7 +146,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
                           + ` controls-Grid__header-cell_theme-${theme}`
-                          + ` ${this._getWrapperPaddingClasses(theme)}`;
+                          + ` ${this._getWrapperPaddingClasses(theme)}`
+                          + ` ${this._getColumnSeparatorClasses(theme)}`;
 
         const isMultiHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
@@ -169,7 +169,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
             wrapperClasses += ` controls-Grid__header-cell__content_valign-${this._$valign}`;
         }
 
-        if (this._$owner.hasColumnScroll()){
+        if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
             wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
@@ -190,6 +190,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (this._$align) {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this._$align}`;
         }
+
         return contentClasses;
     }
 
@@ -236,8 +237,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding}` : (leftPadding === 'default' ? '' : leftPadding);
-        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding}` : (rightPadding === 'default' ? '' : rightPadding);
+        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : `_${leftPadding}`);
+        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : `_${rightPadding}`);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {

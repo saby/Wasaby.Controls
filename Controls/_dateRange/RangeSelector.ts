@@ -22,7 +22,6 @@ import {descriptor} from "Types/entity";
  * @class Controls/_dateRange/RangeSelector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
- * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
  * @mixes Controls/_interface/IDayTemplate
@@ -31,7 +30,7 @@ import {descriptor} from "Types/entity";
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
@@ -43,10 +42,9 @@ import {descriptor} from "Types/entity";
  * @class Controls/_dateRange/RangeSelector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
- * @mixes Controls/_dateRange/interfaces/ISelector
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Input/Date/RangeLink
@@ -100,10 +98,9 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
                 emptyCaption: this._options.emptyCaption,
                 closeButtonEnabled: true,
                 selectionType: this._options.selectionType,
-                quantum: this._options.ranges,
+                ranges: this._options.ranges,
                 minRange: this._options.minRange,
                 clearButtonVisible: this._options.clearButtonVisible || this._options.clearButtonVisibility,
-                range: this._options.range,
                 _displayDate: this._options._displayDate,
                 rangeSelectedCallback: this._options.rangeSelectedCallback
             }
