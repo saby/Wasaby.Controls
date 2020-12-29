@@ -216,7 +216,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
 
     hasMoreStorage(): boolean {
         const hasMoreStorage = this._$owner.getHasMoreStorage();
-        return !!hasMoreStorage[this.getContents().getKey()];
+        return !!(hasMoreStorage && hasMoreStorage[this.getContents().getKey()]);
     }
 
     // TODO есть ExpandableMixin, иконку тоже наверное нужно туда перенести

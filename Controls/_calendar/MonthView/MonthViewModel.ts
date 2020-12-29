@@ -22,9 +22,9 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
 
       // Нет необходимости каждый раз обовлять стили месяца при наведении,
       // если хавер работает только по одной ячейке дня, а не по нескольким.
-      const isQuantumSelection = cfg.selectionType === 'quantum' && cfg.quantum;
+      const isQuantumSelection = cfg.selectionType === 'quantum' && cfg.ranges;
       if (isQuantumSelection) {
-         const isSingleDayQuantum = 'days' in cfg.quantum && cfg.quantum.days.indexOf(1) !== -1;
+         const isSingleDayQuantum = 'days' in cfg.ranges && cfg.ranges.days.indexOf(1) !== -1;
          this._singleDayHover = isSingleDayQuantum;
       }
 
@@ -149,7 +149,7 @@ var ModuleClass = cExtend.extend([VersionableMixin], {
             if (scope.selectionProcessing) {
                backgroundColorClass += '-startend-unfinished';
             }
-            if (fontWeight !== 'unset') {
+            if (fontWeight !== 'normal') {
                css.push('controls-MonthView__fontWeight_theme-' + theme);
             }
          }

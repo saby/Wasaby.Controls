@@ -2823,10 +2823,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options: strategyOptions
         });
 
+        const session = this._startUpdateSession();
         if (this._composer) {
             this._composer.append(strategy, strategyOptions);
             this._reBuild();
         }
+        this._finishUpdateSession(session);
 
         this.nextVersion();
     }
@@ -2840,10 +2842,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         if (idx >= 0) {
             this._userStrategies.splice(idx, 1);
 
+            const session = this._startUpdateSession();
             if (this._composer) {
                 this._composer.remove(strategy);
                 this._reBuild();
             }
+            this._finishUpdateSession(session);
 
             this.nextVersion();
         }
