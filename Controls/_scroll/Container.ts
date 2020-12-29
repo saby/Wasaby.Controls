@@ -99,6 +99,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     private _isControllerInitialized: boolean;
     private _wasMouseEnter: boolean = false;
     private _gridAutoShadows: boolean = true;
+    private _updateShadowsTimeout: number;
 
     _beforeMount(options: IContainerOptions, context, receivedState) {
         this._shadows = new ShadowsModel(this._getShadowsModelOptions(options));
@@ -189,6 +190,8 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     protected _beforeUnmount(): void {
+        clearTimeout(this._updateShadowsTimeout);
+
         if (this._intersectionObserverController) {
             this._intersectionObserverController.destroy();
             this._intersectionObserverController = null;
@@ -534,15 +537,34 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._stickyHeaderController.setShadowVisibility(
             this._shadows.top.isStickyHeadersShadowsEnabled(),
             this._shadows.bottom.isStickyHeadersShadowsEnabled());
+
+        const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.fixed);
+        const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
+        this._notify('fixed', [stickyHeaderOffsetTop, stickyHeaderOffsetBottom]);
+
+        if (this._options.task1180722812 && !stickyHeaderOffsetTop && this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE) {
+            // Если отклеился последний заголовок, и списками установлено, что сверху еще есть данные, то единственный
+            // на данный момент известный сценарий, который может привести к этому, это полная перерисовка списка.
+            // В этом случае мигает тень над заголовками из-за того, что после отклеивания старых заголовков,
+            // скролл контейнер думает что заголовков нет и рисует тень. Затем инициализируются новые заголовки и
+            // скролл контейнер удаляет свою тень. В описанном выше сценарии можно вообще не обновлять тень, т.к.
+            // через мгновение инициализируются заголовки. Других сценриев вроде нет.
+            // Но для подстраховки обновим тень через 3 секунды. Списки могут обновляться достаточно долго.
+            // TODO https://online.sbis.ru/opendoc.html?guid=1529db8e-7105-45cc-97bf-430b9cd44ef9
+            this._updateShadowsTimeout = setTimeout(() => {
+                this._updateShadowsByStickyHeaderController();
+            }, 3000);
+        } else {
+            this._updateShadowsByStickyHeaderController();
+        }
+    }
+
+    _updateShadowsByStickyHeaderController(): void {
         const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
         this._shadows.setStickyFixed(
             this._stickyHeaderController.hasFixed(POSITION.TOP) && this._stickyHeaderController.hasShadowVisible(POSITION.TOP),
             this._stickyHeaderController.hasFixed(POSITION.BOTTOM) && this._stickyHeaderController.hasShadowVisible(POSITION.BOTTOM),
             needUpdate);
-
-        const stickyHeaderOffsetTop = this._stickyHeaderController.getHeadersHeight(POSITION.TOP, TYPE_FIXED_HEADERS.fixed);
-        const stickyHeaderOffsetBottom = this._stickyHeaderController.getHeadersHeight(POSITION.BOTTOM, TYPE_FIXED_HEADERS.fixed);
-        this._notify('fixed', [stickyHeaderOffsetTop, stickyHeaderOffsetBottom]);
     }
 
     _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
