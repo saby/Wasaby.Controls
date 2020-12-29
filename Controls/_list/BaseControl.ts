@@ -359,7 +359,7 @@ const _private = {
         const navigation = cClone(cfg.navigation);
         const resDeferred = new Deferred();
 
-        self._noDataBeforeReload = self._isMounted && (!self._listViewModel || !self._listViewModel.getCount());
+        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
         if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -447,17 +447,7 @@ const _private = {
                     });
 
                     _private.resetScrollAfterLoad(self);
-
-                    // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-                    if (_private.needLoadNextPageAfterLoad(list, self._listViewModel, navigation)) {
-                        if (self._isMounted) {
-                            _private.checkLoadToDirectionCapability(self, filter, navigation);
-                        }
-                    } else if (!self._wasScrollToEnd) {
-                        if (_private.attachLoadTopTriggerToNullIfNeed(self, cfg) && !self._isMounted) {
-                            self._hideTopTrigger = true;
-                        }
-                    }
+                    _private.resolveIsLoadNeededByNavigationAfterReload(self, cfg, list);
                 });
             }).addErrback(function(error: Error) {
                 _private.hideIndicator(self);
@@ -532,6 +522,24 @@ const _private = {
             self._resetScrollAfterReload = !self._keepScrollAfterReload;
             self._keepScrollAfterReload = false;
         }
+    },
+
+    resolveIsLoadNeededByNavigationAfterReload(self, options, loadedList): void {
+        // If received list is empty, make another request. If it’s not empty,
+        // the following page will be requested in resize event handler after current items are rendered on the page.
+        if (_private.needLoadNextPageAfterLoad(loadedList, self._listViewModel, options.navigation)) {
+            if (self._isMounted) {
+                _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            }
+        } else if (!self._wasScrollToEnd) {
+            if (_private.attachLoadTopTriggerToNullIfNeed(self, options) && !self._isMounted) {
+                self._hideTopTrigger = true;
+            }
+        }
+    },
+
+    hasDataBeforeLoad(self): boolean {
+        return self._isMounted && self._listViewModel && self._listViewModel.getCount();
     },
 
     resolveIndicatorStateAfterReload(self, list, navigation): void {
@@ -3272,8 +3280,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController as SourceController;
             _private.validateSourceControllerOptions(this, newOptions);
-        } else if (newOptions.source) {
-            this._sourceController = _private.getSourceController(this, newOptions);
         }
 
         if (this._sourceController) {
@@ -3347,11 +3353,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
         if (self._sourceController) {
-            if (receivedData) {
-                self._sourceController.setItems(receivedData);
-            } else {
-                receivedData = self._sourceController.getItems();
-            }
+            receivedData = self._sourceController.getItems();
         }
 
         if (collapsedGroups) {
@@ -3360,10 +3362,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.groupProperty) {
             self._groupingLoader = new GroupingLoader({});
-        }
-
-        if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
-            newOptions.dataLoadCallback(receivedData);
         }
 
         if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
@@ -3414,7 +3412,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     newOptions.serviceDataLoadCallback(null, self._items);
                 }
 
-                    _private.createScrollController(self, newOptions);
+                if (newOptions.source && receivedData && newOptions.dataLoadCallback instanceof Function) {
+                    newOptions.dataLoadCallback(receivedData);
+                }
+
+                _private.createScrollController(self, newOptions);
 
                 _private.prepareFooter(self, newOptions, self._sourceController);
 
@@ -3432,42 +3434,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve(_private.showError(self, receivedError));
             }
-            return _private.reload(self, newOptions).addCallback((result) => {
-
-                // FIXME: https://online.sbis.ru/opendoc.html?guid=1f6b4847-7c9e-4e02-878c-8457aa492078
-                const data = result.data || (new RecordSet<Model>({
-                    keyProperty: self._keyProperty,
-                    rawData: []
-                }));
-
-                this._sourceController.setItems(data);
-
-                if (newOptions.useNewModel && !self._listViewModel) {
-                    self._initNewModel(newOptions, data, viewModelConfig);
-                }
-
-                if (viewModelConfig.collapsedGroups) {
-                    self._listViewModel.setCollapsedGroups(viewModelConfig.collapsedGroups);
-                }
-                self._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
-
-                    _private.createScrollController(self, newOptions);
-
-                _private.initVisibleItemActions(self, newOptions);
-
-                    // TODO Kingo.
-                    // если в опции передан sourceController, не надо из _beforeMount
-                    // возврашать полученный recordSet, иначе он будет сериализоваться
-                    // и на уровне Container/Data и на уровне BaseControl'a
-                    if (result.errorConfig ||
-                        !(newOptions.sourceController ||
-                        // FIXME https://online.sbis.ru/opendoc.html?guid=fe106611-647d-4212-908f-87b81757327b
-                        // Иначе список построится по receivedState, а в PrefetchProxy останется кэш,
-                        // и любой запрос к источнику вернёт данные из кэша
-                        cInstance.instanceOfModule(newOptions.source, 'Types/source:PrefetchProxy'))) {
-                        return Promise.resolve(getState(result));
-                    }
-                });
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
@@ -3802,10 +3768,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // если есть в оциях sourceController, то при смене источника Container/Data загрузит данные
             (sourceChanged || filterChanged || sortingChanged || recreateSource);
 
-        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
         this._prevRootId = this._options.root;
         if (navigationChanged) {
-
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
@@ -3913,6 +3877,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._sourceController = newOptions.sourceController;
             }
 
+            if (newOptions.loading) {
+                this._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
+            }
+
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
@@ -3933,20 +3901,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
+                _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
             }
         }
+        this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
 
-        if ((recreateSource || sourceChanged) && !newOptions.sourceController) {
-            if (this._sourceController) {
-                this.updateSourceController(newOptions);
-            } else {
-                this._sourceController = _private.getSourceController(this, newOptions);
-            }
-        }
-
-        if (filterChanged && !newOptions.sourceController && this._sourceController) {
-            this.updateSourceController(newOptions);
-        }
         if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
         }
