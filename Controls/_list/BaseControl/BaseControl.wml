@@ -79,7 +79,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="emptyTemplateIf">
-    <ws:if data="{{__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel)}}">
+    <ws:if data="{{__needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _options.emptyTemplateColumns)}}">
         <div class="controls-BaseControl__emptyTemplate">
             <!-- Прокидываем items и filter в emptyTemplate для правильной работы системы помощи.
                  Прокидывание будет убрано по задаче https://online.sbis.ru/opendoc.html?guid=e5ae488e-f7ef-47fa-bc15-c544369cec53-->
@@ -102,7 +102,7 @@
                 scope="{{_options}}"
                 loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
-                needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel) }}"
+                needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _options.emptyTemplateColumns) }}"
                 listModel="{{_listViewModel}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                 preventServerSideColumnScroll="{{ !_useServerSideColumnScroll }}"

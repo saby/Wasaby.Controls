@@ -40,6 +40,7 @@ export default abstract class Row<T> {
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: TLadderElement<ILadderConfig>;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -415,18 +416,18 @@ export default abstract class Row<T> {
         const changed = this._$columnSeparatorSize !== columnSeparatorSize;
         this._$columnSeparatorSize = columnSeparatorSize;
         if (changed && this._$columnItems) {
-            this._updateColumnSeparatorSizeInColumns();
+            this._updateSeparatorSizeInColumns('Column');
         }
         this._nextVersion();
     }
 
-    protected _updateColumnSeparatorSizeInColumns(): void {
+    protected _updateSeparatorSizeInColumns(separatorName: 'Column' | 'Row'): void {
         const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
         this._$columnItems.forEach((cell, cellIndex) => {
             const column = cell.getColumnConfig();
             const columnIndex = cellIndex - multiSelectOffset;
-            cell.setColumnSeparatorSize(
-                this._getColumnSeparatorSizeForColumn(column, columnIndex)
+            cell[`set${separatorName}SeparatorSize`](
+                this[`_get${separatorName}SeparatorSizeForColumn`](column, columnIndex)
             );
         });
     }
@@ -438,6 +439,10 @@ export default abstract class Row<T> {
             return this._resolveColumnSeparatorSize(column, previousColumn);
         }
         return null;
+    }
+
+    protected _getRowSeparatorSizeForColumn(column: IColumn, columnIndex: number): string {
+        return this._$rowSeparatorSize;
     }
 
     protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
