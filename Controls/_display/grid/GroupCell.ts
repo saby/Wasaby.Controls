@@ -45,7 +45,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
             startColumn,
             endColumn
         };
-    };
+    }
     // endregion
 
     getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
