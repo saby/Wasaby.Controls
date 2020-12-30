@@ -30,7 +30,7 @@ const MAX_VISIBLE_YEARS = 14;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_shortDatePicker.less переменные тем оформления}
  *
  * @class Controls/shortDatePicker
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/shortDatePicker/IDateLitePopup
  * @mixes Controls/_interface/IDisplayedRanges
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter

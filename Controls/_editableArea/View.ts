@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import Deferred = require('Core/Deferred');
 import {editing as constEditing} from 'Controls/list';
 import template = require('wml!Controls/_editableArea/View');
@@ -74,7 +74,7 @@ var
  * Контроллер для <a href="/doc/platform/developmentapl/interface-development/controls/input/edit/">редактирования по месту в полях ввода</a>.
  *
  * @class Controls/_editableArea/View
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/editableArea:IView
  * @author Красильников А.С
  * @public

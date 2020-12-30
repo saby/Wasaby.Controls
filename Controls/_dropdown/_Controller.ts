@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as Control from 'Core/Control';
+import {Control} from 'UI/Base';
 // @ts-ignore
 import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
@@ -20,7 +20,7 @@ import * as Merge from 'Core/core-merge';
  * Контроллер для выпадающих списков.
  *
  * @class Controls/_dropdown/_Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  *
@@ -31,7 +31,7 @@ import * as Merge from 'Core/core-merge';
  * Controller for dropdown lists
  *
  * @class Controls/_dropdown/_Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  *

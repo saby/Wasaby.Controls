@@ -1,4 +1,4 @@
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -49,7 +49,7 @@ const _private = {
  * Component that allows you to select periods of multiple days.
  *
  * @class Controls/_datePopup/DateRange
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Красильников А.С.
  * @private

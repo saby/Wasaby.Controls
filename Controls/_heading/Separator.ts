@@ -19,7 +19,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * 
  *
  * @class Controls/_heading/Separator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ICaption
  * @public
  * @author Красильников А.С.
@@ -34,7 +34,7 @@ export interface ISeparatorOptions extends IControlOptions {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_heading/Separator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.

@@ -1,15 +1,15 @@
 define('Controls-demo/Explorer/Explorer', [
    'Env/Env',
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/Explorer/Explorer',
    'Controls/Utils/Toolbar',
    'Controls-demo/Explorer/ExplorerMemory',
    'Controls-demo/Explorer/ExplorerImages',
    'Controls/explorer'
-], function(Env, BaseControl, template, Toolbar, MemorySource, explorerImages) {
+], function(Env, Base, template, Toolbar, MemorySource, explorerImages) {
    'use strict';
    var
-      ModuleClass = BaseControl.extend({
+      ModuleClass = Base.Control.extend({
          _template: template,
          _viewSource: null,
          _viewColumns: null,

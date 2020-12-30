@@ -84,7 +84,7 @@ type TSuggestDirection = 'up' | 'down';
  * Контейнер для поля ввода с автодополнением.
  *
  * @class Controls/_suggest/_InputController
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged
@@ -98,7 +98,7 @@ type TSuggestDirection = 'up' | 'down';
  * Container for Input's that using suggest.
  *
  * @class Controls/_suggest/_InputController
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged

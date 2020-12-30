@@ -19,7 +19,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_heading.less переменные тем оформления}
  *
  * @class Controls/_heading/Counter
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ICaption
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
@@ -37,7 +37,7 @@ export interface ICounterOptions extends IControlOptions, IFontColorStyleOptions
  * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_heading/Counter
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @public

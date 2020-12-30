@@ -1,5 +1,5 @@
 define('Controls-demo/List/List/DocsBase', [
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/List/List/resources/DocsBase/DocsBase',
    'Types/source',
    'Controls-demo/List/List/resources/Navigation/Data',
@@ -10,7 +10,7 @@ define('Controls-demo/List/List/DocsBase', [
    'wml!Controls-demo/List/List/resources/BasePG/emptyTemplate',
    'wml!Controls-demo/List/List/resources/BasePG/footerTemplate',
    'wml!Controls-demo/List/List/resources/EditableListPG/itemTemplate'
-], function(BaseControl,
+], function(Base,
    template,
    source,
    data,
@@ -18,7 +18,7 @@ define('Controls-demo/List/List/DocsBase', [
    ControlsConstants) {
    'use strict';
 
-   var ModuleClass = BaseControl.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _eventsList: '',

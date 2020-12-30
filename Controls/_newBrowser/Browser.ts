@@ -27,7 +27,7 @@ interface IReceivedState {
  * и применяет полученную конфиругицию к списку.
  *
  * @class Controls/newBrowser:Browser
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @public
  * @author Уфимцев Д.Ю.
  */

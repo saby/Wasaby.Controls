@@ -14,7 +14,7 @@ export interface IMultiSelectorOptions extends IMultiSelectableOptions, IControl
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/MultiSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
  * @author Герасимов А.М.

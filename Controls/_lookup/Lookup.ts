@@ -34,7 +34,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  *
  *
  * @class Controls/_lookup/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/_interface/ISelectorDialog
@@ -71,7 +71,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * If you need a choice of several directories, one value from each, then {@link Controls / lookup: MultipleInput} is suitable for you.
  *
  * @class Controls/_lookup/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog

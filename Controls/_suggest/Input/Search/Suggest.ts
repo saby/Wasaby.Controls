@@ -1,4 +1,4 @@
-import * as Control from 'Core/Control';
+import {Control} from 'UI/Base';
 import * as template from 'wml!Controls/_suggest/Input/Search/Suggest';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import {constants} from 'Env/Env';

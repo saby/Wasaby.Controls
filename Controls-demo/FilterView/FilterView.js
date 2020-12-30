@@ -1,6 +1,6 @@
 define('Controls-demo/FilterView/FilterView',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/FilterView/FilterView',
       'Controls-demo/FilterView/resources/hierarchyHistoryMemory',
       'Controls-demo/FilterView/resources/hierarchyMemory',
@@ -15,7 +15,7 @@ define('Controls-demo/FilterView/FilterView',
 
    ],
    function (
-      Control,
+      Base,
       template,
       hierarchyHistoryMemory,
       hierarchyMemory,
@@ -58,7 +58,7 @@ define('Controls-demo/FilterView/FilterView',
        * @public
        */
 
-      var FilterView = Control.extend({
+      var FilterView = Base.Control.extend({
          _template: template,
          _defaultSource: null,
          _hierarchyItems: null,

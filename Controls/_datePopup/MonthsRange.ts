@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import {DateRangeModel} from 'Controls/dateRange';
@@ -11,7 +11,7 @@ import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
  * Component that allows you to select a period of multiple months.
  *
  * @class Controls/_datePopup/MonthsRange
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Красильников А.С.
  * @private
