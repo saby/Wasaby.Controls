@@ -345,10 +345,17 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         // Descendants of leaves should keep their level so that check the parent match and keep
                         // the level by set the origin as parent if necessary
                         const itsDescendant = item.getParent() !== breadcrumbsReference.last;
+
+                        let parent;
+                        if (itsDescendant) {
+                            parent = item.getParent();
+                        } else {
+                            parent = currentBreadcrumbs instanceof SearchSeparator ? display?.getRoot() : currentBreadcrumbs;
+                        }
+
                         decoratedItem = new TreeItemDecorator({
                             source: item,
-                            parent: itsDescendant ? item.getParent() :
-                                (currentBreadcrumbs instanceof SearchSeparator ? undefined : currentBreadcrumbs),
+                            parent,
                             multiSelectVisibility: display?.getMultiSelectVisibility()
                         });
                         treeItemToDecorator.set(item, decoratedItem);

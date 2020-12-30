@@ -4,6 +4,9 @@ import Search from 'Controls/_display/itemsStrategy/Search';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { TreeItem } from 'Controls/display';
+import Tree from 'Controls/_display/Tree';
+import { RecordSet } from 'Types/collection';
+import SearchSeparator from 'Controls/_display/SearchSeparator';
 
 describe('Controls/_display/itemsStrategy/Search', () => {
     class StringContents {
@@ -16,10 +19,10 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         }
     }
 
-    function getSource<T>(items: T[]): IItemsStrategy<T, T> {
+    function getSource<T>(items: T[], options: object = {}): IItemsStrategy<T, T> {
         return {
             '[Controls/_display/IItemsStrategy]': true,
-            options: {},
+            options,
             source: null,
             get count(): number {
                 return items.length;
@@ -655,5 +658,47 @@ describe('Controls/_display/itemsStrategy/Search', () => {
             strategy.reset();
             assert.strictEqual(strategy.items.length, 0);
         });
+    });
+
+    describe('right parent for items', () => {
+        const recordSet = new RecordSet({
+            rawData: [{
+                id: 1,
+                parent: null,
+                node: true,
+                hasChildren: true
+            }, {
+                id: 2,
+                parent: 1,
+                node: false,
+                hasChildren: false
+            }, {
+                id: 3,
+                parent: null,
+                node: null,
+                hasChildren: false
+            }],
+            keyProperty: 'id'
+        });
+
+        const tree = new Tree({
+            collection: recordSet,
+            root: null,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            nodeProperty: 'node',
+            hasChildrenProperty: 'hasChildren'
+        });
+
+        source = getSource(tree.getItems(), {display: tree});
+        strategy = new Search({
+            source
+        });
+
+        const items = strategy.items;
+        assert.isTrue(items[0].getParent().isRoot());
+        assert.equal(items[1].getParent(), items[0]);
+        assert.instanceOf(items[2], SearchSeparator);
+        assert.isTrue(items[3].getParent().isRoot());
     });
 });
