@@ -245,9 +245,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._loading = true;
             methodResult = sourceController.reload()
                .then((items) => {
-                   if (newOptions.dataLoadCallback instanceof Function) {
-                       newOptions.dataLoadCallback(items);
-                   }
                    this._items = sourceController.getItems();
 
                    this._afterSourceLoad(sourceController, newOptions);
@@ -671,10 +668,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _afterSearch(recordSet: RecordSet, value: string): void {
         this._updateParams(value);
         this._afterSourceLoad(this._sourceController, this._options);
-
-        if (this._options.dataLoadCallback instanceof Function) {
-            this._options.dataLoadCallback(recordSet);
-        }
         this._dataLoadCallback(recordSet);
 
         this._itemsChanged(null, recordSet);

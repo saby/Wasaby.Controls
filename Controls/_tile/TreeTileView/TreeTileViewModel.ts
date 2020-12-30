@@ -260,18 +260,6 @@ var TreeTileViewModel = TreeViewModel.extend({
     getItemsPaddingContainerClasses(): string {
         return this._tileModel.getItemsPaddingContainerClasses();
     },
-    getActionsMenuConfig(
-        item: Model,
-        clickEvent: SyntheticEvent,
-        opener,
-        templateOptions,
-        isActionMenu: boolean,
-        isContextMenu: boolean
-    ): Record<string, any> {
-        const itemData = this.getItemDataByItem(item);
-        return this._tileModel.getActionsMenuConfig(itemData,
-            clickEvent, opener, templateOptions, isActionMenu, isContextMenu);
-    },
 
     getRoundBorderClasses(): string {
         return this._tileModel.getRoundBorderClasses();
