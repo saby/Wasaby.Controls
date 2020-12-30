@@ -16,9 +16,7 @@
                         header="{{_header}}"
                         showEditArrow="{{true}}"
                         showActionButton="{{true}}"
-                        columns="{{_columns}}"
-                        theme="default"
-                >
+                        columns="{{_columns}}">
                 </Controls.explorer:View>
             </div>
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_backgroundStyle-second"
@@ -35,9 +33,7 @@
                         markerVisibility="hidden"
                         showEditArrow="{{true}}"
                         showActionButton="{{true}}"
-                        columns="{{_columns}}"
-                        theme="default"
-                >
+                        columns="{{_columns}}">
                 </Controls.explorer:View>
             </div>
             <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_fixedWidth800">
@@ -59,9 +55,7 @@
                                         viewMode="search"
                                         showEditArrow="{{true}}"
                                         showActionButton="{{true}}"
-                                        columns="{{_columns}}"
-                                        theme="default"
-                                >
+                                        columns="{{_columns}}">
                                 </Controls.explorer:View>
                             </Controls.list:Container>
                         </div>
