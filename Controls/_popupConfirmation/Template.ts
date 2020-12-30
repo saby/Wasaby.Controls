@@ -17,7 +17,7 @@ interface IConfirmationTemplate extends IControlOptions {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * 
  * @class Controls/_popupConfirmation/Template
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.

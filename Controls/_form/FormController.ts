@@ -89,7 +89,7 @@ export const enum INITIALIZING_WAY {
  * В случае, если он будет разрушен - операция автоматически удалится из списка зарегистрированных
  *
  * @class Controls/_form/FormController
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController
@@ -103,7 +103,7 @@ export const enum INITIALIZING_WAY {
  * Record editing controller. The control stores data about the record and can execute queries CRUD methods on the BL.
  * <a href="/doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/">More information and details.</a>.
  * @class Controls/_form/FormController
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_form/interface/IFormController
  * @implements Controls/_interface/IErrorController

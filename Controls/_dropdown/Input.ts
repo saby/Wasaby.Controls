@@ -44,7 +44,7 @@ interface IDropdownInputChildren {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
  * @class Controls/_dropdown/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_menu/interface/IMenuPopup
  * @mixes Controls/_menu/interface/IMenuControl
  * @mixes Controls/_menu/interface/IMenuBase
@@ -71,7 +71,7 @@ interface IDropdownInputChildren {
  *
  * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
  * @class Controls/_dropdown/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IFilterChanged

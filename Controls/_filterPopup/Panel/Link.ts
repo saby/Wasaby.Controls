@@ -9,7 +9,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления}
  * 
  * @class Controls/_filterPopup/Panel/Link
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @public
  * @author Золотова Э.Е.
  * 

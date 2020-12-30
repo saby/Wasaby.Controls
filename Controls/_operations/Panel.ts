@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_operations/Panel/Panel');
 import {error as loadDataError} from 'Controls/dataSource';
 
@@ -11,7 +11,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_operations.less переменные тем оформления}
  *
  * @class Controls/_operations/Panel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_toolbars/IToolbarSource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
@@ -28,7 +28,7 @@ import {error as loadDataError} from 'Controls/dataSource';
  * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo</a>.
  *
  * @class Controls/_operations/Panel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
  * 

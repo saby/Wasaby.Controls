@@ -87,5 +87,17 @@ export interface IDetailOptions extends ISourceOptions {
      */
     imageProperty?: string;
 
+    /**
+     * Имя поля записи в котором лежит описание итема и которое
+     * нужно вывести в области контента
+     */
+    descriptionProperty?: string;
+
+    /**
+     * Имя поля записи в котором лежит цвет градиента для итема.
+     * Можно указывать в любом формате, который поддерживается в CSS.
+     */
+    gradientColorProperty?: string;
+
     columns?: unknown;
 }

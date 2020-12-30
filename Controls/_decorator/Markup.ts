@@ -14,7 +14,7 @@ import {delay} from 'Types/function';
     * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_decorator.less переменные тем оформления}
     *
     * @class Controls/_decorator/Markup
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @author Угриновский Н.В.
     * @demo Controls-demo/Decorators/Markup/Markup
     * @public
@@ -24,7 +24,7 @@ import {delay} from 'Types/function';
     * Builds a control by data in Json array.
     *
     * @class Controls/_decorator/Markup
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @author Угриновский Н.В.
     * @public
     */

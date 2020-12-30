@@ -13,7 +13,7 @@ import template = require('wml!Controls/_search/Misspell');
   * 
   * @class Controls/_search/Misspell
   * @mixes Controls/_interface/ICaption
-  * @extends Core/Control
+  * @extends UI/Base:Control
   * 
   * @public
   * @author Крайнов Д.О.
@@ -22,7 +22,7 @@ import template = require('wml!Controls/_search/Misspell');
  * //TODO KONGO A control that displays a tooltip if misspell was in search text was found.
  * @class Controls/_search/Misspell
  * @mixes Controls/_interface/ICaption
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Крайнов Д.О.

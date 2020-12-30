@@ -1,9 +1,9 @@
 define('Controls-demo/RootTemplateWrapper', [
-   'Core/Control',
+   'UI/Base',
    'WasabyLoader/ModulesLoader',
    'Core/PromiseLib/PromiseLib',
    'wml!Controls-demo/RootTemplateWrapper'
-], function(BaseControl,
+], function(Base,
             ModulesLoader,
             PromiseLib,
             template
@@ -13,7 +13,7 @@ define('Controls-demo/RootTemplateWrapper', [
    /**
     * This control if the templated passed to props actually exists
     */
-   var ModuleClass = BaseControl.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _beforeMount: function(opts, _, receivedState) {

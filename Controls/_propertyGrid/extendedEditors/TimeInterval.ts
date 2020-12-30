@@ -7,7 +7,7 @@ import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 /**
  * Редактор для временного интервала.
  * @class Controls/_propertyGrid/extendedEditors/TimeInterval
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Мельникова Е.А.
  * @public
  */

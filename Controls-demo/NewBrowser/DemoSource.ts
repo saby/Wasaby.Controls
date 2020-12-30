@@ -13,6 +13,16 @@ export class DemoSource extends HierarchicalMemory {
 
         return super
             .query(query)
+            // Создаем небольшую задержку тем самым создавая условия, подобные боевым,
+            // когда выполняется настоящий запрос за данными.
+            // Иначе немного поменяется логика работы контролов и TreeControl будет
+            // делать reload списка, что вызовет дополнительный запрос к данными
+            .then((result) => {
+                return new Promise<DataSet>(
+                    (resolve) => setTimeout(() => resolve(result), 100)
+                );
+            })
+            // Подмешиваем в метаданные настройки конфигурации detail-списка
             .then((result) => {
                 const rawData = result.getRawData();
                 rawData.meta.listConfiguration = templateConfig;
