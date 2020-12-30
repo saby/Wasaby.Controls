@@ -10,6 +10,7 @@ import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
 import {IHeaderCell, THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
+import {ILadderConfig, TLadderElement} from 'Controls/_display/utils/GridLadderUtil';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -37,7 +38,7 @@ export default abstract class Row<T> {
     protected _$columns: TColumns;
     protected _$columnItems: Array<Cell<T, Row<T>>>;
     protected _$colspanCallback: TColspanCallback;
-    protected _$ladder: {};
+    protected _$ladder: TLadderElement<ILadderConfig>;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     getDefaultTemplate(): string {
@@ -99,7 +100,9 @@ export default abstract class Row<T> {
     }
 
     getColumnIndex(column: Cell<T, Row<T>>): number {
-        return this.getColumns().indexOf(column);
+        return this.getColumns().findIndex((columnItem) => {
+            return columnItem.getColumnConfig() === column.getColumnConfig();
+        });
     }
 
     getTopPadding(): string {
@@ -239,7 +242,7 @@ export default abstract class Row<T> {
         this._reinitializeColumns();
     }
 
-    getLadder(): {} {
+    getLadder(): TLadderElement<ILadderConfig> {
         let result;
         if (this._$ladder && this._$ladder.ladder) {
             result = this._$ladder.ladder[this._$owner.getIndex(this)];
@@ -298,47 +301,49 @@ export default abstract class Row<T> {
         return columnItems;
     }
 
-    protected _initializeColumns(): void {
-        if (this._$columns) {
-            const createMultiSelectColumn = this.hasMultiSelectColumn();
-            // todo Множественный stickyProperties можно поддержать здесь:
-            const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
-            const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
-                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
-            const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
-                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
-
-            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+    protected _processStickyLadderCells() {
+        // todo Множественный stickyProperties можно поддержать здесь:
+        const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
+            this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
+        const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
+            this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
 
 
-            if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
-                this._$columnItems[0].setHiddenForLadder(true);
-            }
+        if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
+            this._$columnItems[0].setHiddenForLadder(true);
+        }
 
-            if (stickyLadderStyleForSecondProperty) {
-                this._$columnItems.splice(1, 0, new StickyLadderCell({
+        if (stickyLadderStyleForSecondProperty) {
+            this._$columnItems.splice(1, 0, new StickyLadderCell({
+                column: this._$columns[0],
+                owner: this,
+                wrapperStyle: stickyLadderStyleForSecondProperty,
+                contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
+                stickyProperty: stickyLadderProperties[1],
+                stickyHeaderZIndex: 1
+            }));
+        }
+
+        if (stickyLadderStyleForFirstProperty) {
+            this._$columnItems = ([
+                new StickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
-                    wrapperStyle: stickyLadderStyleForSecondProperty,
-                    contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
-                    stickyProperty: stickyLadderProperties[1],
-                    stickyHeaderZIndex: 1
-                }));
-            }
+                    wrapperStyle: stickyLadderStyleForFirstProperty,
+                    contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
+                    stickyProperty: stickyLadderProperties[0],
+                    stickyHeaderZIndex: 2
+                })
+            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+        }
 
-            if (stickyLadderStyleForFirstProperty) {
-                this._$columnItems = ([
-                    new StickyLadderCell({
-                        column: this._$columns[0],
-                        owner: this,
-                        wrapperStyle: stickyLadderStyleForFirstProperty,
-                        contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
-                        stickyProperty: stickyLadderProperties[0],
-                        stickyHeaderZIndex: 2
-                    })
-                ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
-            }
-
+    }
+    protected _initializeColumns(): void {
+        if (this._$columns) {
+            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            const createMultiSelectColumn = this.hasMultiSelectColumn();
+            this._processStickyLadderCells();
             if (createMultiSelectColumn) {
                 this._$columnItems = ([
                     new CheckboxCell({

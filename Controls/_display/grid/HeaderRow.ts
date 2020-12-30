@@ -9,6 +9,8 @@ import {
 import Row, {IOptions as IRowOptions} from './Row';
 import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
+import StickyLadderCell from 'Controls/_display/grid/StickyLadderCell';
+import Cell from 'Controls/_display/grid/Cell';
 import HeaderCell from 'Controls/_display/grid/HeaderCell';
 import { Model } from 'Types/entity';
 
@@ -46,6 +48,33 @@ export default class HeaderRow<T> extends Row<T> {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
     }
 
+    protected _processStickyLadderCells(): void {
+        // todo Множественный stickyProperties можно поддержать здесь:
+        const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
+
+        if (stickyLadderCellsCount) {
+            this._$columnItems.splice(1, 0, new HeaderCell({
+                column: this._$header[0],
+                ladderCell: true,
+                owner: this,
+                backgroundStyle: 'transparent',
+                shadowVisibility: 'hidden'
+            }));
+        }
+
+        if (stickyLadderCellsCount === 2) {
+            this._$columnItems = ([
+                new HeaderCell({
+                    column: this._$header[0],
+                    ladderCell: true,
+                    owner: this,
+                    shadowVisibility: 'hidden',
+                    backgroundStyle: 'transparent'
+                })
+            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+        }
+    }
     getBounds(): IHeaderBounds {
         return this._$headerModel.getBounds();
     }
@@ -65,6 +94,8 @@ export default class HeaderRow<T> extends Row<T> {
                     cellPadding: this._getCellPaddingForHeaderColumn(column, index),
                     columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)                });
             });
+
+            this._processStickyLadderCells();
             this._addCheckBoxColumnIfNeed();
 
             if (this.hasItemActionsSeparatedCell()) {

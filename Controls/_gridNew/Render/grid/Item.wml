@@ -62,6 +62,7 @@
             <ws:for data="column in (item || itemData).getColumns()">
                 <Controls.scroll:StickyHeader position="topbottom"
                                               mode="stackable"
+                                              shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

@@ -8,6 +8,7 @@ import ITagCell from './interface/ITagCell';
 import IItemActionsCell from './interface/IItemActionsCell';
 import ILadderContentCell from './interface/ILadderContentCell';
 import DataCellCompatibility from './compatibility/DataCell';
+import {ILadderConfig, TLadderElement} from 'Controls/_display/utils/GridLadderUtil';
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
@@ -25,6 +26,9 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     readonly ItemActionsCell: boolean = true;
     readonly LadderContentCell: boolean = true;
 
+    get ladder(): TLadderElement<ILadderConfig> {
+        return this.getOwner().getLadder();
+    }
     // region Аспект "Рендер"
     getDefaultDisplayValue(): T {
         const itemModel = this._$owner.getContents();
