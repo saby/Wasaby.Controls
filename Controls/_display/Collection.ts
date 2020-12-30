@@ -1666,7 +1666,11 @@ export default class Collection<S, T extends CollectionItem<S> = CollectionItem<
     }
 
     setGroupProperty(groupProperty: string): void {
-        this._$groupProperty = groupProperty;
+        if (this._$groupProperty !== groupProperty) {
+            this._$groupProperty = groupProperty;
+            this._reBuild(true);
+            this._nextVersion();
+        }
     }
 
     getGroupProperty(): string {
