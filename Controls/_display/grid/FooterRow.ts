@@ -3,6 +3,7 @@ import Row, {IOptions as IRowOptions} from './Row';
 import Collection from './Collection';
 import { IColspanParams } from '../../_grid/interface/IColumn';
 import { IItemTemplateParams } from './mixins/Row';
+import { IItemActionsTemplateConfig } from 'Controls/_display/Collection';
 
 export type TFooter = IFooter[];
 
@@ -49,6 +50,9 @@ export default class FooterRow<T> extends Row<T> {
         this._nextVersion();
     }
 
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+        return this.getOwner().getActionsTemplateConfig();
+    }
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         return 'controls-GridView__footer';
     }

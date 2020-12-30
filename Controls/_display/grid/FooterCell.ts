@@ -36,6 +36,10 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
         }
 
+        if  (this.getOwner().getActionsTemplateConfig()?.itemActionsPosition === 'outside') {
+            wrapperClasses += ` controls-GridView__footer__itemActionsV_outside_theme-${theme}`;
+        }
+
         return wrapperClasses;
     }
 

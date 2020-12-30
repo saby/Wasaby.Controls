@@ -20,6 +20,7 @@ import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from 
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
+import Collection from 'Controls/_display/Collection';
 
 export interface IOptions<T extends Model = Model> {
     contents?: T;
@@ -87,7 +88,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Коллекция, которой принадлежит элемент
      */
-    protected _$owner: ICollection<T, CollectionItem<T>>;
+    protected _$owner: Collection;
 
     /**
      * Содержимое элемента коллекции
@@ -192,7 +193,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает коллекцию, которой принадлежит элемент
      */
-    getOwner(): ICollection<T, CollectionItem<T>> {
+    getOwner(): Collection {
         return this._$owner;
     }
 
@@ -200,7 +201,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * Устанавливает коллекцию, которой принадлежит элемент
      * @param owner Коллекция, которой принадлежит элемент
      */
-    setOwner(owner: ICollection<T, CollectionItem<T>>): void {
+    setOwner(owner: Collection): void {
         this._$owner = owner;
     }
 
