@@ -200,7 +200,7 @@ export default class ColumnScroll {
                     } else {
                         resolvePromise({ status: 'actual' });
                     }
-
+                    this._scrollBar.recalcSizes();
                     this._scrollBar.setPosition(this._columnScroll.getScrollPosition());
             }
         } else {
