@@ -325,6 +325,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
