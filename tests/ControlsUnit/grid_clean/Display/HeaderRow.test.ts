@@ -156,7 +156,7 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
     });
 
     describe('Controls/grid_clean/Display/HeaderRow/MultilineHeader', () => {
-        it('Build multiline cells', () => {
+        it('Simple multiline cells', () => {
             const columns = [{}, {}, {}];
 
             /* |             |   Two columns                                                |
@@ -209,6 +209,121 @@ describe('Controls/grid_clean/Display/HeaderRow', () => {
             assert.isTrue(columnItems[1].isLastColumn());
             assert.isFalse(columnItems[2].isLastColumn());
             assert.isTrue(columnItems[3].isLastColumn());
+        });
+
+        it('Difficult multiline cells', () => {
+            const columns = [{}, {}, {}, {}];
+
+            /* |             |   Two columns                                                |                 |
+               |  Two rows   |   --------------------------------------------------------   |   Two rows,     |
+               |             |   Second row, first column   |   Second row, second column   |   last column   | */
+            const header = [
+                { startRow: 1, endRow: 3, startColumn: 1, endColumn: 2, caption: 'Two rows' },
+                { startRow: 1, endRow: 2, startColumn: 2, endColumn: 4, caption: 'Two columns'},
+                { startRow: 2, endRow: 3, startColumn: 2, endColumn: 3, caption: 'Second row, first column' },
+                { startRow: 1, endRow: 3, startColumn: 3, endColumn: 4, caption: 'Second row, second column' },
+                { startRow: 1, endRow: 3, startColumn: 4, endColumn: 5, caption: 'Two rows, last column' }];
+
+            const mockedHeaderOwner = {
+                getStickyColumnsCount: () => 0,
+                hasMultiSelectColumn: () => false,
+                getColumnsConfig: () => columns,
+                getHeaderConfig: () => header,
+                hasItemActionsSeparatedCell: () => false,
+                getLeftPadding: () => 's',
+                getRightPadding: () => 's',
+                isStickyHeader: () => false,
+                hasColumnScroll: () => false
+            };
+
+            const mockedHeaderModel = {
+                isMultiline: () => true,
+                getBounds: () => {
+                    return {
+                        column: {
+                            start: 1,
+                            end: 5
+                        },
+                        row: {
+                            start: 1,
+                            end: 3
+                        }
+                    }
+                }
+            }
+
+            const headerRow = new GridHeaderRow({
+                header,
+                headerModel: mockedHeaderModel,
+                columns,
+                owner: mockedHeaderOwner
+            });
+            const columnItems = headerRow.getColumns();
+            assert.strictEqual(columnItems.length, 5);
+
+            assert.isFalse(columnItems[0].isLastColumn());
+            assert.isFalse(columnItems[1].isLastColumn());
+            assert.isFalse(columnItems[2].isLastColumn());
+            assert.isFalse(columnItems[3].isLastColumn());
+            assert.isTrue(columnItems[4].isLastColumn());
+        });
+
+        it('Difficult multiline cells with multiSelect', () => {
+            const columns = [{}, {}, {}, {}];
+
+            /* |             |   Two columns                                                |                 |
+               |  Two rows   |   --------------------------------------------------------   |   Two rows,     |
+               |             |   Second row, first column   |   Second row, second column   |   last column   | */
+            const header = [
+                { startRow: 1, endRow: 3, startColumn: 1, endColumn: 2, caption: 'Two rows' },
+                { startRow: 1, endRow: 2, startColumn: 2, endColumn: 4, caption: 'Two columns'},
+                { startRow: 2, endRow: 3, startColumn: 2, endColumn: 3, caption: 'Second row, first column' },
+                { startRow: 1, endRow: 3, startColumn: 3, endColumn: 4, caption: 'Second row, second column' },
+                { startRow: 1, endRow: 3, startColumn: 4, endColumn: 5, caption: 'Two rows, last column' }];
+
+            const mockedHeaderOwner = {
+                getStickyColumnsCount: () => 0,
+                hasMultiSelectColumn: () => true,
+                getColumnsConfig: () => columns,
+                getHeaderConfig: () => header,
+                hasItemActionsSeparatedCell: () => false,
+                getLeftPadding: () => 's',
+                getRightPadding: () => 's',
+                isStickyHeader: () => false,
+                hasColumnScroll: () => false
+            };
+
+            const mockedHeaderModel = {
+                isMultiline: () => true,
+                getBounds: () => {
+                    return {
+                        column: {
+                            start: 1,
+                            end: 5
+                        },
+                        row: {
+                            start: 1,
+                            end: 3
+                        }
+                    }
+                }
+            }
+
+            const headerRow = new GridHeaderRow({
+                header,
+                headerModel: mockedHeaderModel,
+                columns,
+                owner: mockedHeaderOwner
+            });
+            const columnItems = headerRow.getColumns();
+            assert.strictEqual(columnItems.length, 6);
+
+            assert.isFalse(columnItems[0].isLastColumn());
+            assert.isFalse(columnItems[1].isLastColumn());
+            assert.isFalse(columnItems[2].isLastColumn());
+            assert.isFalse(columnItems[3].isLastColumn());
+            assert.isFalse(columnItems[4].isLastColumn());
+            assert.isTrue(columnItems[5].isLastColumn());
         });
     });
 });
