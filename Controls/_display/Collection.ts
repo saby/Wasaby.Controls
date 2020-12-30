@@ -1714,7 +1714,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     setGroupProperty(groupProperty: string): void {
-        this._$groupProperty = groupProperty;
+        if (this._$groupProperty !== groupProperty) {
+            this._$groupProperty = groupProperty;
+            this._reBuild(true);
+            this._nextVersion();
+        }
     }
 
     getGroupProperty(): string {
