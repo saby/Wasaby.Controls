@@ -9,16 +9,16 @@
    width: 100%;
 }
 
+.controls-Dropdown__wrapper_theme_@{themeName}::before {
+   content: "\200b";
+   font-size: @font-size_default_dropdownSelector;
+}
+
 .controls-Dropdown__content-wrapper_theme-@{themeName} {
    .inline-flexbox();
    .align-items(baseline);
 
    width: 100%;
-}
-
-.controls-Dropdown__content-wrapper_theme-@{themeName}::before {
-   content: "\200b";
-   font-size: @font-size_default_dropdownSelector;
 }
 
 .controls-Dropdown-fontsize_theme-@{themeName} {
