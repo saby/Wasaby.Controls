@@ -3863,6 +3863,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (newOptions.sourceController) {
+            const items = newOptions.sourceController.getItems();
+
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
             }
@@ -3871,21 +3873,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
             }
 
-            const items = this._sourceController.getItems();
-            // TODO: Костыль для того, что бы применить текущие итемы из _sourceController
-            //  убрать когда сюда можно будет передавать данные сверху
-            const forceApplyItems = this._sourceController.forceApplyItems;
-
-            // Сбрасываем флаг, если он был выставлен
-            if (forceApplyItems) {
-                this._sourceController.forceApplyItems = false;
-            }
-
-            if (
-                items &&
-                (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items) ||
-                forceApplyItems
-            ) {
+            if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
@@ -3898,12 +3886,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
 
                 // TODO удалить когда полностью откажемся от старой модели
-                //  Если Items были обновлены, то в старой модели переинициализировался display
-                //  и этот параметр сбросился
+                //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
-            if (this._loadedBySourceController || forceApplyItems) {
+            if (this._loadedBySourceController) {
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
