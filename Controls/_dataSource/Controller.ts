@@ -384,7 +384,7 @@ export default class Controller {
             sorting: queryParams.sorting
         };
 
-        if (navigationConfig?.multiNavigation && this._isDeepReload() && this._expandedItems.length) {
+        if (navigationConfig?.multiNavigation && this._isDeepReload() && this._expandedItems?.length) {
             return navigationController.getQueryParamsForHierarchy(
                 userQueryParams,
                 navigationSourceConfig,
