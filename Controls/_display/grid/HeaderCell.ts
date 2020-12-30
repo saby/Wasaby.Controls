@@ -24,6 +24,7 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 export interface IOptions<T> extends ICellOptions<T> {
     shadowVisibility?: string;
     backgroundStyle?: string;
+    sorting?: string;
     cellPadding?: IItemPadding;
 }
 
@@ -40,6 +41,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$valign?: string;
     protected _$shadowVisibility?: string;
     protected _$backgroundStyle?: string;
+    protected _$sorting?: string;
 
     get shadowVisibility(): string {
         return this._$shadowVisibility;
@@ -230,6 +232,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         return this._$column.sortingProperty;
     }
 
+    setSorting(sorting: string): void {
+        this._$sorting = sorting;
+        this._nextVersion();
+    }
+
+    getSorting(): string {
+        return this._$sorting;
+    }
+
     getAlign(): string {
         return this._$align;
     }
@@ -305,5 +316,6 @@ Object.assign(HeaderCell.prototype, {
     _instancePrefix: 'grid-header-cell-',
     _$cellPadding: null,
     _$shadowVisibility: null,
-    _$backgroundStyle: null
+    _$backgroundStyle: null,
+    _$sorting: null
 });

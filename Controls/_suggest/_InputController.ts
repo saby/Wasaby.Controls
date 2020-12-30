@@ -314,6 +314,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (!error?.canceled && !error?.isCancelled ) {
          this._hideIndicator();
 
+         if (this._options.searchErrorCallback) {
+            this._options.searchErrorCallback(error);
+         }
+
          this.getErrorController().process({
             error,
             theme: this._options.theme,
@@ -773,31 +777,29 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._loadStart();
       if (value) {
          this._searchValue = value;
-         const searchController = await this._getSearchController();
+         return this._getSearchController()
+             .then((controller) => {
+                if (controller) {
+                   return controller.search(value)
+                       .then((recordSet) => {
+                          this._loadEnd(recordSet);
 
-         if (searchController instanceof SearchController) {
-            return searchController.search(value).then((recordSet) => {
-               this._loadEnd(recordSet);
+                          if (recordSet instanceof RecordSet && this._shouldShowSuggest(recordSet) && (this._inputActive || this._tabsSelectedKey !== null)) {
+                             this._setItems(recordSet);
+                             if (this._options.dataLoadCallback) {
+                                this._options.dataLoadCallback(recordSet);
+                             }
+                             this._setFilter(this._options.filter, this._options);
+                             this._open();
+                             this._markerVisibility = 'visible';
+                          }
 
-               if (recordSet instanceof RecordSet &&
-                  this._shouldShowSuggest(recordSet) &&
-                  (this._inputActive || this._tabsSelectedKey !== null)) {
-
-                  this._setItems(recordSet);
-                  if (this._options.dataLoadCallback) {
-                     this._options.dataLoadCallback(recordSet);
-                  }
-                  this._setFilter(this._options.filter, this._options);
-                  this._open();
-                  this._markerVisibility = 'visible';
-               }
-
-               return recordSet;
-            }, (error) => {
-               this._loadEnd();
-               return error;
-            });
-         }
+                          return recordSet;
+                       })
+                       .catch((error) => error);
+                }
+             })
+             .catch((error) => error);
       } else {
          return this._performLoad(options);
       }
@@ -989,13 +991,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._processResultData(result);
       if (this._options.searchEndCallback) {
          this._options.searchEndCallback();
-      }
-   }
-
-   _searchErrbackHandler(error: CancelableError): void {
-      this._searchErrback(error);
-      if (this._options.searchErrorCallback) {
-         this._options.searchErrorCallback();
       }
    }
 
