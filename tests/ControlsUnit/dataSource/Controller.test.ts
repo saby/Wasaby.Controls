@@ -106,11 +106,11 @@ function getMemoryWithHierarchyItems(): Memory {
     });
 }
 
-function getPagingNavigation(hasMore: boolean = false): INavigationOptionValue<INavigationPageSourceConfig> {
+function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): INavigationOptionValue<INavigationPageSourceConfig> {
     return {
         source: 'page',
         sourceConfig: {
-            pageSize: 1,
+            pageSize,
             page: 0,
             hasMore
         }
@@ -229,6 +229,15 @@ describe('Controls/dataSource:SourceController', () => {
             const loadedItems = await controller.reload();
             ok(loadedItems.getCount() === 4);
             sinonSandbox.restore();
+        });
+
+        it('load with multiNavigation and without extendedItems',  async () => {
+            const pageSize = 3;
+            const navigation = getPagingNavigation(false, pageSize);
+            navigation.sourceConfig.multiNavigation = true;
+            const controller = getController({...getControllerOptions(), navigation});
+            const loadedItems = await controller.reload();
+            ok((loadedItems as RecordSet).getCount() === pageSize);
         });
     });
 
