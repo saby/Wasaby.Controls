@@ -477,5 +477,6 @@ Object.assign(Cell.prototype, {
     _$colspan: null,
     _$isFixed: null,
     _$ladderCell: null,
-    _$columnSeparatorSize: null
+    _$columnSeparatorSize: null,
+    _$rowSeparatorSize: null
 });

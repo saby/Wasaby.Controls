@@ -833,6 +833,7 @@ Object.assign(CollectionItem.prototype, {
     _$dragged: false,
     _$checkboxState: true,
     _$multiSelectVisibility: null,
+    _$rowSeparatorSize: null,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null
