@@ -302,7 +302,7 @@ const GridView = ListView.extend({
             },
             hasMultiSelectColumn: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom',
             isActivated: !this._showFakeGridWithColumnScroll,
-        }, oldOptions).then((result) => {
+        }, oldOptions)?.then((result) => {
             if (result.status !== 'destroyed') {
                 this._applyColumnScrollChanges();
             }
