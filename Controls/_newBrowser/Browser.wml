@@ -19,50 +19,59 @@
    <ws:detail>
       <div class="controls-Catalog__detail">
 
+         <div class="controls-Catalog__toolbar">
+            <Controls.search:InputContainer
+               searchDelay="{{300}}"
+               minSearchLength="{{3}}"
+               on:search="onSearch()"
+               on:searchReset="onSearchReset()"
+            >
+               <Controls.search:Input/>
+            </Controls.search:InputContainer>
+         </div>
+
          <Controls.list:Container>
             <Controls.explorer:View
                bind:root="detailRoot"
                viewMode="{{currentViewMode}}"
                scope="{{_detailExplorerOptions}}"
+               sourceController="{{_detailSourceController}}"
+               on:itemClick="onDetailItemClick()"
+               backgroundStyle="gray"
             >
                <ws:itemTemplate>
-                  <ws:partial
-                     scope="{{itemTemplate}}"
-                     template="{{_listItemTemplate}}"
-                     imageCfg="{{_imageItemTemplateCfg}}"
-                     itemContent="{{_options.detail.itemContent}}"
-                     itemFooter="{{_options.detail.itemFooter}}"
-                  />
+                  <ws:if data="{{currentViewMode === _viewModeEnum.table || currentViewMode === 'search'}}">
+                     <Controls.grid:ItemTemplate
+                        scope="{{itemTemplate}}"
+                     />
+                  </ws:if>
+                  <ws:else>
+                     <ws:partial
+                        scope="{{itemTemplate}}"
+                        template="{{_listItemTemplate}}"
+                        imageCfg="{{_imageItemTemplateCfg}}"
+                        itemContent="{{_options.detail.itemContent}}"
+                        itemFooter="{{_options.detail.itemFooter}}"
+                     />
+                  </ws:else>
                </ws:itemTemplate>
                <ws:tileItemTemplate>
                   <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
                      <ws:partial
                         template="{{_tileItemTemplate}}"
                         scope="{{tileItemTemplate}}"
-                        imagePosition="{{_listConfiguration.tile.tile.imagePosition}}"
-                        imageViewMode="{{
-                           tileItemTemplate.itemData.dispItem.isNode()
-                              ? _listConfiguration.tile.photoNode.viewMode
-                              : _listConfiguration.tile.photoLeaf.viewMode
-                        }}"
-                        imageEffect="{{
-                           tileItemTemplate.itemData.dispItem.isNode()
-                              ? _listConfiguration.tile.photoNode.effect
-                              : _listConfiguration.tile.photoLeaf.effect
-                        }}"
-                        imageSize="{{_listConfiguration.tile.tile.size}}"
-                        description="{{tileItemTemplate.itemData.item.description}}"
-                        descriptionLines="{{
-                           tileItemTemplate.itemData.dispItem.isNode()
-                              ? _listConfiguration.tile.node.countLines
-                              : _listConfiguration.tile.leaf.countLines
-                        }}"
+                        imageSize="{{_tileCfg.imageSize}}"
+                        imagePosition="{{_tileCfg.imagePosition}}"
+                        imageEffect="{{_tileCfg.getImageEffect(tileItemTemplate.itemData)}}"
+                        imageViewMode="{{_tileCfg.getImageViewMode(tileItemTemplate.itemData)}}"
+                        gradientColor="{{_tileCfg.getGradientColor(tileItemTemplate.itemData)}}"
+                        description="{{_tileCfg.getDescription(tileItemTemplate.itemData)}}"
+                        descriptionLines="{{_tileCfg.getDescriptionLines(tileItemTemplate.itemData)}}"
                      />
                   </ws:if>
                   <ws:else>
                      <invisible-node/>
                   </ws:else>
-
                </ws:tileItemTemplate>
             </Controls.explorer:View>
          </Controls.list:Container>

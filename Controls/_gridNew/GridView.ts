@@ -92,6 +92,10 @@ const GridView = ListView.extend({
         if (this._options.columnSeparatorSize !== newOptions.columnSeparatorSize) {
             this._listModel.setColumnSeparatorSize(newOptions.columnSeparatorSize);
         }
+
+        if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
+            this._listModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
+        }
     },
 
     _afterUpdate(oldOptions): void {

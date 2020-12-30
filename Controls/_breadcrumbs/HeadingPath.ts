@@ -30,7 +30,7 @@ const SIZES = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less переменные тем оформления}
  *
  * @class Controls/_breadcrumbs/HeadingPath
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
@@ -45,7 +45,7 @@ const SIZES = {
  * Breadcrumbs with back button.
  *
  * @class Controls/_breadcrumbs/HeadingPath
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle

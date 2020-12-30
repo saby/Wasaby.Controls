@@ -19,7 +19,7 @@ export interface IOperationsPanelContainerOptions extends IControlOptions {
  *
  *
  * @class Controls/_operations/Panel/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  * 
  * @public

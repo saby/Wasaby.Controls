@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_operationsPanel/OperationsPanel/OperationsPanel');
 import toolbars = require('Controls/toolbars');
 import sourceLib = require('Types/source');
@@ -76,7 +76,7 @@ var _private = {
  * {@link /materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo демо-пример}.
  *
  * @class Controls/_operationsPanel/OperationsPanel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy
@@ -93,7 +93,7 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FOperationsPanel%2FDemo">Demo</a>.
  *
  * @class Controls/_operations/OperationsPanel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/_interface/IHierarchy

@@ -28,7 +28,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * @deprecated
  * @class Controls/_search/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged
@@ -55,7 +55,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * @deprecated
  * @class Controls/_search/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged

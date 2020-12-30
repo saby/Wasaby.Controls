@@ -1,5 +1,5 @@
 define('Controls-demo/Buttons/Menu/Menu', [
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/Buttons/Menu/Menu',
    'Types/source',
    'Controls/list',
@@ -7,10 +7,10 @@ define('Controls-demo/Buttons/Menu/Menu', [
 
    'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
    'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
-], function(Control, template, source, ControlsConstants, HistorySourceMenu) {
+], function(Base, template, source, ControlsConstants, HistorySourceMenu) {
    'use strict';
 
-   var ModuleClass = Control.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _oneItem: null,

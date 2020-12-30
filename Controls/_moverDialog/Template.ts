@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_moverDialog/Template/Template');
 import {Record} from 'Types/entity';
@@ -34,7 +34,7 @@ export interface IMoverDialogTemplateOptions extends IControlOptions {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_moveDialog.less переменные тем оформления}
  *
  * @class Controls/_moverDialog/Template
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_interface/ISource

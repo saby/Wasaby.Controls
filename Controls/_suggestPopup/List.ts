@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 18.04.2018.
  */
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_suggestPopup/List/List');
 import clone = require('Core/core-clone');
 import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
@@ -112,7 +112,7 @@ const _private = {
  * @demo Controls-demo/Input/Suggest/Suggest
  * @demo Controls-demo/LookupNew/Input/SuggestPopupOptions/Index
  * @class Controls/_suggestPopup/List
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  *
  * @public
@@ -123,7 +123,7 @@ const _private = {
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/suggest/'>here</a>.
  *
  * @class Controls/_suggestPopup/List
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов Александр
  *
  * @public

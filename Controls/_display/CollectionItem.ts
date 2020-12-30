@@ -34,6 +34,7 @@ export interface IOptions<T extends Model = Model> {
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
     checkboxState?: boolean|null;
+    rowSeparatorSize?: string;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
@@ -123,6 +124,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$rendered: boolean;
 
     protected _$multiSelectVisibility: string = 'hidden';
+
+    protected _$rowSeparatorSize: string;
 
     protected _$dragged: boolean;
 
@@ -691,6 +694,16 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getMultiSelectPosition();
     }
 
+    setRowSeparatorSize(rowSeparatorSize: string): boolean {
+        const changed = this._$rowSeparatorSize !== rowSeparatorSize;
+        if (changed) {
+            this._$rowSeparatorSize = rowSeparatorSize;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -821,6 +834,7 @@ Object.assign(CollectionItem.prototype, {
     _$dragged: false,
     _$checkboxState: true,
     _$multiSelectVisibility: null,
+    _$rowSeparatorSize: null,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null

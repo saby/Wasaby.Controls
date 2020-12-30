@@ -1,17 +1,17 @@
 define('Controls-demo/Utils/ScrollToElementDemo', [
-   'Core/Control',
+   'UI/Base',
    'Controls/scroll',
    'Types/source',
    'wml!Controls-demo/Utils/ScrollToElementDemo'
 ], function(
-   Control,
+   Base,
    scroll,
    source,
    template
 ) {
    'use strict';
 
-   var ScrollToElementDemo = Control.extend({
+   var ScrollToElementDemo = Base.Control.extend({
       _template: template,
 
       _beforeMount: function() {

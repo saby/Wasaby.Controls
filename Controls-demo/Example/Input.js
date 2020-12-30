@@ -1,7 +1,7 @@
 define('Controls-demo/Example/Input',
    [
       'Env/Env',
-      'Core/Control',
+      'UI/Base',
       'Controls/scroll',
       'wml!Controls-demo/Example/Input',
 
@@ -21,10 +21,10 @@ define('Controls-demo/Example/Input',
       'Controls-demo/Example/Input/Text',
       'Controls-demo/Example/Input/TimeInterval',
    ],
-   function(Env, Control, scroll, template) {
+   function(Env, BaseMod, scroll, template) {
       'use strict';
 
-      var ModuleClass = Control.extend({
+      var ModuleClass = BaseMod.Control.extend({
          _template: template,
 
          _afterMount: function() {

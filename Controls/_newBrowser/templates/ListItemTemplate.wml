@@ -9,8 +9,8 @@
       <Controls.heading:Title
          fontSize="4xl"
          fontColorStyle="default"
-         caption="{{_options.itemData.item.title}}"
-         tooltip="{{_options.itemData.item.title}}"
+         caption="{{captionTemplate.itemData.item.get(captionTemplate.itemData.displayProperty)}}"
+         tooltip="{{captionTemplate.itemData.item.get(captionTemplate.itemData.displayProperty)}}"
       />
    </ws:captionTemplate>
    <ws:contentTemplate>

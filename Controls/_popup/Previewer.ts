@@ -15,7 +15,7 @@ const CALM_DELAY: number = 300; // During what time should not move the mouse to
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  *
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @mixes Controls/_popup/interface/IPreviewer
  * @public

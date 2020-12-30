@@ -27,6 +27,7 @@ export interface IItemTemplateParams {
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
     colspanCallback: TColspanCallback;
+    columnSeparatorSize: TColumnSeparatorSize;
 }
 
 export default abstract class Row<T> {
@@ -40,6 +41,7 @@ export default abstract class Row<T> {
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: TLadderElement<ILadderConfig>;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -262,6 +264,14 @@ export default abstract class Row<T> {
         return this._$owner.editArrowIsVisible(item);
     }
 
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'topbottom';
+    }
+
     protected _reinitializeColumns(): void {
         if (this._$columnItems) {
             this._initializeColumns();
@@ -295,7 +305,8 @@ export default abstract class Row<T> {
                 column,
                 colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount(),
-                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex)
+                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
+                rowSeparatorSize: this._$rowSeparatorSize
             }));
         }
         return columnItems;
@@ -415,18 +426,18 @@ export default abstract class Row<T> {
         const changed = this._$columnSeparatorSize !== columnSeparatorSize;
         this._$columnSeparatorSize = columnSeparatorSize;
         if (changed && this._$columnItems) {
-            this._updateColumnSeparatorSizeInColumns();
+            this._updateSeparatorSizeInColumns('Column');
         }
         this._nextVersion();
     }
 
-    protected _updateColumnSeparatorSizeInColumns(): void {
+    protected _updateSeparatorSizeInColumns(separatorName: 'Column' | 'Row'): void {
         const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
         this._$columnItems.forEach((cell, cellIndex) => {
             const column = cell.getColumnConfig();
             const columnIndex = cellIndex - multiSelectOffset;
-            cell.setColumnSeparatorSize(
-                this._getColumnSeparatorSizeForColumn(column, columnIndex)
+            cell[`set${separatorName}SeparatorSize`](
+                this[`_get${separatorName}SeparatorSizeForColumn`](column, columnIndex)
             );
         });
     }
@@ -438,6 +449,10 @@ export default abstract class Row<T> {
             return this._resolveColumnSeparatorSize(column, previousColumn);
         }
         return null;
+    }
+
+    protected _getRowSeparatorSizeForColumn(column: IColumn, columnIndex: number): string {
+        return this._$rowSeparatorSize;
     }
 
     protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
@@ -466,5 +481,6 @@ Object.assign(Row.prototype, {
     _cellModule: null,
     _$columns: null,
     _$colspanCallback: null,
-    _$columnItems: null
+    _$columnItems: null,
+    _$columnSeparatorSize: null
 });
