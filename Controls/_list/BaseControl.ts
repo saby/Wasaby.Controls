@@ -3953,10 +3953,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setSorting(newOptions.sorting);
         }
 
+        const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
         const needGroupingLoader = !!newOptions.groupProperty && !_private.isDemandNavigation(newOptions.navigation);
         const hasGroupingLoader = !!this._groupingLoader;
+        if (groupPropertyChanged && this._listViewModel) {
+            this._listViewModel.setGroupProperty(newOptions.groupProperty);
+        }
         if (needGroupingLoader) {
-            const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
             if (hasGroupingLoader) {
                 if (groupPropertyChanged) {
                     this._groupingLoader.destroy();
