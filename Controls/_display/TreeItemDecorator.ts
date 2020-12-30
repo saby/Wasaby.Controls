@@ -2,6 +2,7 @@ import TreeItem from './TreeItem';
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {register} from 'Types/di';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> {
     source: TreeItem<T>;
@@ -16,7 +17,7 @@ export interface IOptions<T> {
  * @author Мальцев А.А.
  * @private
  */
-export default class TreeItemDecorator<T> extends TreeItem<T> {
+export default class TreeItemDecorator<T extends Model> extends TreeItem<T> {
     protected _$source: TreeItem<T>;
 
     constructor(options?: IOptions<T>) {

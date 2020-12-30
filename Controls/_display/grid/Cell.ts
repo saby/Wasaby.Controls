@@ -51,9 +51,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$colspan: number;
     protected _$isFixed: boolean;
     protected _$ladderCell: boolean;
-    protected _$columnSeparatorSize: TColumnSeparatorSize
-
-    getInstanceId: () => string;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
 
     constructor(options?: IOptions<T>) {
         super();

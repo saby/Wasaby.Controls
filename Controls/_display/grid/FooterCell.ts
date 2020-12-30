@@ -15,6 +15,10 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
         super(options);
     }
 
+    getInstanceId(): string {
+        return undefined;
+    }
+
     isLastColumn(): boolean {
         // В футере не создаются столбцы для ItemActions
         return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
