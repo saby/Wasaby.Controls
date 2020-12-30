@@ -73,7 +73,7 @@ export interface IItemActionsTemplateConfig {
     actionCaptionPosition?: TActionCaptionPosition;
 
     /**
-     * @cfg {String} CSS класс, позволяющий задать отступы и позицию панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ опциями записи} внутри элемента.
+     * @cfg {String} CSS класс, позволяющий задать отступы и позицию панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ опциями записи} внутри элемента.
      * @default controls-itemActionsV_position_bottomRight
      */
     /*
