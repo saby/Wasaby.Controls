@@ -131,12 +131,12 @@ export default class HeaderRow<T> extends Row<T> {
         return columns[headerColumnIndex].cellPadding;
     }
 
-    protected _updateColumnSeparatorSizeInColumns(): void {
+    protected _updateSeparatorSizeInColumns(separatorName: 'Column'): void {
         this._$header.forEach((column, columnIndex) => {
             const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
             const cell = this._$columnItems[columnIndex + multiSelectOffset];
-            cell.setColumnSeparatorSize(
-                this._getColumnSeparatorSizeForColumn(column, columnIndex)
+            cell[`set${separatorName}SeparatorSize`](
+                this[`_get${separatorName}SeparatorSizeForColumn`](column, columnIndex)
             );
         });
     }
