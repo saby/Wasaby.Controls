@@ -267,7 +267,7 @@ export default abstract class Row<T> {
     }
 
     getStickyHeaderPosition(): string {
-        return 'top';
+        return 'topbottom';
     }
 
     protected _reinitializeColumns(): void {

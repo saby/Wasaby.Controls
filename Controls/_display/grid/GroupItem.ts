@@ -80,7 +80,7 @@ export default class GroupItem<T> extends mixin<
     }
 
     getStickyHeaderPosition(): string {
-        return 'topbottom';
+        return 'top';
     }
 
     _initializeColumns(): void {
