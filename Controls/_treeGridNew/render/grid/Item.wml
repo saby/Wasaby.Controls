@@ -31,6 +31,7 @@
                style="{{ style }}"
                cursor="{{ cursor }}"
                itemActionsTemplate="{{ itemActionsTemplate }}"
+               itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
