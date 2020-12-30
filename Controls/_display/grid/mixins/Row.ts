@@ -262,6 +262,14 @@ export default abstract class Row<T> {
         return this._$owner.editArrowIsVisible(item);
     }
 
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'top';
+    }
+
     protected _reinitializeColumns(): void {
         if (this._$columnItems) {
             this._initializeColumns();

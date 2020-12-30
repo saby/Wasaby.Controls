@@ -75,6 +75,14 @@ export default class GroupItem<T> extends mixin<
                 (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group');
     }
 
+    getStickyHeaderMode(): string {
+        return 'replaceable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'topbottom';
+    }
+
     _initializeColumns(): void {
         if (this._$columns) {
             const columns = [];

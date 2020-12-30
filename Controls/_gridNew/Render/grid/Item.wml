@@ -60,7 +60,9 @@
                 'clickable': clickable
             }) }}">
             <ws:for data="column in (item || itemData).getColumns()">
-                <Controls.scroll:StickyHeader shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
+                <Controls.scroll:StickyHeader position="{{ (item || itemData).getStickyHeaderPosition() }}"
+                                              mode="{{ (item || itemData).getStickyHeaderMode() }}"
+                                              shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
