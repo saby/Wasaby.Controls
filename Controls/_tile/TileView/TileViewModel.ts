@@ -144,9 +144,7 @@ var TileViewModel = ListViewModel.extend({
                 imageWidth,
                 imageFit);
             baseUrl = getImageUrl(sizes.width, sizes.height, baseUrl, item, imageUrlResolver);
-            if (imageHeight && imageWidth) {
-                restrictions = getImageRestrictions(imageHeight, imageWidth, Number(itemsHeight), Number(itemWidth));
-            }
+            restrictions = getImageRestrictions(imageHeight, imageWidth, Number(itemsHeight), Number(itemWidth));
         }
         return {
             url: baseUrl,
