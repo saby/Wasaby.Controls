@@ -563,6 +563,10 @@ export default class Controller {
 
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
 
+        if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(result, direction);
+        }
+
         if (this._dataLoadCallback) {
             dataLoadCallbackResult = this._dataLoadCallback(result, direction);
         }
