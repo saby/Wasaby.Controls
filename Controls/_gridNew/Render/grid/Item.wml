@@ -60,8 +60,8 @@
                 'clickable': clickable
             }) }}">
             <ws:for data="column in (item || itemData).getColumns()">
-                <Controls.scroll:StickyHeader position="topbottom"
-                                              mode="stackable"
+                <Controls.scroll:StickyHeader position="{{ (item || itemData).getStickyHeaderPosition() }}"
+                                              mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
