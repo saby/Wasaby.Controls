@@ -33,7 +33,7 @@ interface ISelectedCollectionChildren {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_lookup.less переменные тем оформления}
  *
  * @class Controls/_lookup/SelectedCollection
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
  * @author Герасимов А.М.
@@ -42,7 +42,7 @@ interface ISelectedCollectionChildren {
  * Control, that display collection of items.
  *
  * @class Controls/_lookup/SelectedCollection
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Герасимов А.М.
  */

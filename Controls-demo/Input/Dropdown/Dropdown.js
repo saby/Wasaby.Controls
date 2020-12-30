@@ -1,5 +1,5 @@
 define('Controls-demo/Input/Dropdown/Dropdown', [
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'Types/source',
    'Controls/Utils/Toolbar',
@@ -15,11 +15,11 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/footerHierarchyItem',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
-], function(Control, template, source, Toolbar, historySource, ControlsConstants, SearchMemory, ExplorerMemory, MemorySourceFilter) {
+], function(Base, template, source, Toolbar, historySource, ControlsConstants, SearchMemory, ExplorerMemory, MemorySourceFilter) {
 
    'use strict';
 
-   var DropdownDemo = Control.extend({
+   var DropdownDemo = Base.Control.extend({
       _template: template,
       _simpleItems: null,
       _subItems: null,

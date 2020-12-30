@@ -42,7 +42,7 @@ export interface ISearchInputContainerOptions extends IControlOptions {
  *    }
  * </pre>
  * @class Controls/_search/Input/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index

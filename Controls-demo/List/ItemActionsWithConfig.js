@@ -3,13 +3,13 @@
  */
 define('Controls-demo/List/ItemActionsWithConfig', [
    'Env/Env',
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/List/ItemActions/ItemActionsWithConfig',
    'Types/source',
    'Controls/list',
 ], function(
    Env,
-   BaseControl,
+   Base,
    template,
    source,
    ControlsConstants
@@ -90,7 +90,7 @@ define('Controls-demo/List/ItemActionsWithConfig', [
          }
       ];
 
-   var ModuleClass = BaseControl.extend(
+   var ModuleClass = Base.Control.extend(
       {
          __lastClicked: false,
          _showAction: function(action, item) {

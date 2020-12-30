@@ -1,13 +1,13 @@
 define('Controls-demo/FilterView/lookupTemplate',
    [
-      'Core/Control',
+      'UI/Base',
       'wml!Controls-demo/FilterView/lookupTemplate/lookupTemplate',
    ],
 
-   function(Control, template) {
+   function(Base, template) {
 
       'use strict';
-      var LookupTemplate = Control.extend({
+      var LookupTemplate = Base.Control.extend({
 
          _template: template,
 

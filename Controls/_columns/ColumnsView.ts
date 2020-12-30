@@ -7,7 +7,7 @@
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less набор переменных list}
  *
  * @class Controls/columns:View
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/IErrorController
  * @implements Controls/_list/interface/IListNavigation
  * @mixes Controls/_interface/ISource

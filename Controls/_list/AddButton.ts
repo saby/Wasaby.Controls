@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_list/AddButton/AddButton');
 import entity = require('Types/entity');
 
@@ -11,7 +11,7 @@ import entity = require('Types/entity');
  *
  * @class Controls/_list/AddButton
  * @mixes Controls/_buttons/interface/IClick
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.
@@ -48,7 +48,7 @@ AddButton._theme = ['Controls/list'];
  * Specialized type of button.
  *
  * @class Controls/_list/AddButton
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.

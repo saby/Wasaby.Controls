@@ -42,7 +42,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  * Тогда окно закроется неожиданно для пользователя, который, возможно, не хотел его закрывать.
  *
  * @class Controls/Pending
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Красильников А.С.
  * @public

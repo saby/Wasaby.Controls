@@ -54,6 +54,14 @@ export default class TreeGridDataRow<T extends Model>
         }
     }
 
+    setRowSeparatorSize(rowSeparatorSize: string): boolean {
+        const changed = super.setRowSeparatorSize(rowSeparatorSize);
+        if (changed && this._$columnItems) {
+            this._updateSeparatorSizeInColumns('Row');
+        }
+        return changed;
+    }
+
     getMarkerClasses(
        theme: string,
        style: string = 'default',

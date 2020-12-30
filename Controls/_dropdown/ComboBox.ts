@@ -35,7 +35,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
  * @class Controls/_dropdown/ComboBox
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ISource
  * @implements Controls/_dropdown/interface/IBaseDropdown
  * @implements Controls/_menu/interface/IMenuBase
@@ -59,7 +59,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Demo-example</a>.
  * @class Controls/_dropdown/ComboBox
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/_interface/IFilterChanged

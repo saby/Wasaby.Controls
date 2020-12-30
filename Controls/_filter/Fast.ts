@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filter/Fast/Fast');
 import chain = require('Types/chain');
 import collection = require('Types/collection');
@@ -362,7 +362,7 @@ import {Model} from 'Types/entity';
        * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
        *
        * @class Controls/_filter/Fast
-       * @extends Core/Control
+       * @extends UI/Base:Control
        * @mixes Controls/_filter/interface/IFastFilter
        *
        * @public
@@ -376,7 +376,7 @@ import {Model} from 'Types/entity';
        *
        *
        * @class Controls/_filter/Fast
-       * @extends Core/Control
+       * @extends UI/Base:Control
        * @mixes Controls/_filter/interface/IFastFilter
        * @mixes Controls/_filter/Fast/FastStyles
        *

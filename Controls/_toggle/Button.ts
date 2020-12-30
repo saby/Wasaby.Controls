@@ -45,7 +45,7 @@ export interface IToggleButtonOptions extends
  *
  *
  * @class Controls/_toggle/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/IFontColorStyle
@@ -68,7 +68,7 @@ export interface IToggleButtonOptions extends
  * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">Demo-example</a>.
  *
  * @class Controls/_toggle/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
  * @implements Controls/_interface/IFontColorStyle
