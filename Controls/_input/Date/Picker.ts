@@ -16,7 +16,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_datePicker.less переменные тем оформления dateRange}
  *
  * @class Controls/_input/Date/Picker
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/interface/IInputTag

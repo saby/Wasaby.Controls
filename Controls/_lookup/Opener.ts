@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('tmpl!Controls/_lookup/Opener');
 
 /**

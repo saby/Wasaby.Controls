@@ -2,7 +2,7 @@
  * Created by as.krasilnikov on 29.10.2018.
  */
 
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import Controller from 'Controls/Popup/Compatible/ManagerWrapper/Controller';
 import template = require('wml!Controls/_compatiblePopup/ManagerWrapper/ManagerWrapper');
 import {Controller as ControllerPopup, ManagerClass} from 'Controls/popup';

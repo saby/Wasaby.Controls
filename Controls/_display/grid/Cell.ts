@@ -51,7 +51,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$colspan: number;
     protected _$isFixed: boolean;
     protected _$ladderCell: boolean;
-    protected _$columnSeparatorSize: TColumnSeparatorSize
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     constructor(options?: IOptions<T>) {
         super();
@@ -168,58 +169,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         }
 
-        /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
-        const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
-        const backgroundStyle = current.backgroundStyle || current.style || 'default';
-        const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
-
-        _private.prepareSeparatorClasses(current, classLists, theme);
-
-        if (current.isEditing()) {
-            classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
-        } else {
-            let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
-            classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
-        }
-
-        if (current.columnScroll && !current.isEditing()) {
-            classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
-        }
-
-        // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-        if (checkBoxCell) {
-            classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
-            classLists.padding = createClassListCollection('top', 'bottom');
-            classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
-            classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
-        } else {
-            classLists.padding = _private.getPaddingCellClasses(current, theme);
-        }
-
-        if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
-            style = current.style || 'default';
-            classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
-
-            // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
-            // нужно его принудительно установить как фон таблицы
-            if (!isFullGridSupport && !current.isEditing()) {
-                classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
-            }
-
-            if (current.columnIndex === 0) {
-                classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
-            }
-            if (current.columnIndex === current.getLastColumnIndex()) {
-                classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
-            }
-        } else if (current.columnIndex === current.getLastColumnIndex()) {
-            classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
-        }
-
-        if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
-            classLists.base += ' controls-Grid__row-cell__autoHeight';
-        }
-        return classLists;*/
         return wrapperClasses;
     }
 
@@ -253,7 +202,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     // Only for partial grid support
     getRelativeCellWrapperClasses(theme: string): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
+        const rowSeparatorSize = this._$rowSeparatorSize;
 
         // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
@@ -326,6 +275,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         this._nextVersion();
     }
 
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
+    }
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
 
@@ -362,7 +316,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getWrapperSeparatorClasses(theme: string): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
+        const rowSeparatorSize = this._$rowSeparatorSize;
         let classes = '';
 
         if (rowSeparatorSize) {
@@ -521,5 +475,6 @@ Object.assign(Cell.prototype, {
     _$colspan: null,
     _$isFixed: null,
     _$ladderCell: null,
-    _$columnSeparatorSize: null
+    _$columnSeparatorSize: null,
+    _$rowSeparatorSize: null
 });

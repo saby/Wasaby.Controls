@@ -22,7 +22,7 @@ interface IDataContext {
  * * {@link Controls/list:DataContainer}
  *
  * @class Controls/_list/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  * @public
  */
@@ -33,7 +33,7 @@ interface IDataContext {
  * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/component-kinds/'>here</a>.
  *
  * @class Controls/_list/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Герасимов А.М.
  * @public
  */

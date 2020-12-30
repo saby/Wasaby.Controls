@@ -4,7 +4,7 @@ import * as template from 'wml!Controls/_filterPanel/View/Container';
 /**
  * Контрол используют в качестве контейнера для {@link Controls/filterPanel:View}. Обеспечивает передачу параметров фильтрации между {@link Controls/filter:Controller} и {@link Controls/filterPanel:View}.
  * @class Controls/_filterPanel/View/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Мельникова Е.А.
  *
  * @public

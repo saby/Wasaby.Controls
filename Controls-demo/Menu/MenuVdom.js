@@ -1,5 +1,5 @@
 define('Controls-demo/Menu/MenuVdom', [
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/Menu/MenuVdom',
    'Core/core-clone',
    'Types/collection',
@@ -9,9 +9,9 @@ define('Controls-demo/Menu/MenuVdom', [
    'Core/Deferred',
    'Types/entity',
    'wml!Controls-demo/Menu/DemoGroupTemplate',
-], function(Control, template, cClone, collection, history, ControlsConstants, source, Deferred, entity) {
+], function(Base, template, cClone, collection, history, ControlsConstants, source, Deferred, entity) {
    'use strict';
-   var ModuleClass = Control.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _itemsGroup: null,

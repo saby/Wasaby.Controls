@@ -24,7 +24,7 @@ export interface IScrollBarOptions extends IControlOptions {
  * Thin scrollbar.
  *
  * @class Controls/_scroll/resources/Scrollbar
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
  * 

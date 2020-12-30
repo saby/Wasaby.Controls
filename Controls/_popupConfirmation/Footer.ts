@@ -14,7 +14,7 @@ export interface IFooterOptions extends IControlOptions, IConfirmationFooterOpti
  *
  * @class Controls/_popupConfirmation/Footer
  * @implements Controls/_popup/interface/IConfirmationFooter
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @public
  * @author Красильников А.С.

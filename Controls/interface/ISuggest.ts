@@ -179,7 +179,7 @@ interface ISuggest {
        *
        * <pre class="brush: js">
        * // myFooter.js
-       * define('myFooter', ['Core/Control'], function(Control) {
+       * define('myFooter', ['UI/Base:Control'], function(Control) {
        *    return Control.extend({
        *       _showTasksClick: function() {
        *          stackOpener.open();
@@ -210,7 +210,7 @@ interface ISuggest {
        *
        * <pre class="brush: js">
        * // myFooter.js
-       * define('myFooter', ['Core/Control'], function(Control) {
+       * define('myFooter', ['UI/Base:Control'], function(Control) {
        *    return Control.extend({
        *       _showTasksClick: function() {
        *          stackOpener.open();
@@ -276,7 +276,7 @@ interface ISuggest {
        * В этом примере автодополнение будет открыто вверх.
        * <pre class="brush: js">
        * // myModule.js
-       * define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       * define('myModule', ['UI/Base:Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
        *    return Control.extend({
        *       _template: template,
        *       _suggestPopupOptions: null,
@@ -310,7 +310,7 @@ interface ISuggest {
        * In this example, suggest will open up.
        * <pre class="brush: js">
        * // myModule.js
-       * define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       * define('myModule', ['UI/Base:Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
        *    return Control.extend({
        *       _template: template,
        *       _suggestPopupOptions: null,

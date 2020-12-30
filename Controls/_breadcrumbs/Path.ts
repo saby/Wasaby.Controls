@@ -16,7 +16,7 @@ interface IReceivedState {
  * * {@link /doc/platform/developmentapl/interface-development/controls/content-managment/bread-crumbs/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less переменные тем оформления}
  * @class Controls/_breadcrumbs/Path
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
@@ -31,7 +31,7 @@ interface IReceivedState {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FBreadCrumbs%2FScenarios">Demo</a>.
  *
  * @class Controls/_breadcrumbs/Path
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize

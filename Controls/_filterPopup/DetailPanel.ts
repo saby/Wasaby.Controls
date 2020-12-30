@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import chain = require('Types/chain');
 import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
@@ -217,7 +217,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
     *
     * @class Controls/_filterPopup/DetailPanel
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @mixes Controls/_filterPopup/interface/IFilterPanel
     * @public
     * @author Золотова Э.Е.
@@ -239,7 +239,7 @@ import {_scrollContext as ScrollData} from 'Controls/scroll';
     *
     *
     * @class Controls/_filterPopup/DetailPanel
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @mixes Controls/_filterPopup/interface/IFilterPanel
     * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
     * @public

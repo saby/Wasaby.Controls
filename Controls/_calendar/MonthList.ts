@@ -56,7 +56,7 @@ const SCALE_ROUNDING_ERROR_FIX = 1.5;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less переменные тем оформления}
  *
  * @class Controls/_calendar/MonthList
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_calendar/interfaces/IMonthListSource
  * @mixes Controls/_interface/IDayTemplate
  *

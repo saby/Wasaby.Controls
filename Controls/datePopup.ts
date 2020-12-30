@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import {descriptor, Date as WSDate} from 'Types/entity';
 import {IRangeSelectable} from 'Controls/dateRange';
@@ -62,7 +62,7 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  * Диалоговое окно, которое позволяет выбрать даты и периоды произвольной длительности.
  *
  * @class Controls/datePopup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IDateMask
@@ -80,7 +80,7 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  * A dialog that allows you to choose dates and periods of arbitrary duration.
  *
  * @class Controls/datePopup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IDateMask

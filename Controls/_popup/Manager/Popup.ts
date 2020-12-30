@@ -19,7 +19,7 @@ interface IPopupControlOptions extends IPopupOptions, IControlOptions {}
  * @class Controls/_popup/Manager/Popup
  * @mixes Controls/interface/IOpenerOwner
  * @mixes Controls/_interface/ICanBeDefaultOpener
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @private
  * @author Красильников А.С.

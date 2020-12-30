@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import {debounce as cDebounce} from 'Types/function';
 import {Logger} from 'UI/Utils';
 import ListViewTpl = require('wml!Controls/_list/ListView/ListView');

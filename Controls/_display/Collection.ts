@@ -2385,6 +2385,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     setRowSeparatorSize(rowSeparatorSize: string): void {
         this._$rowSeparatorSize = rowSeparatorSize;
         this._nextVersion();
+        this.getViewIterator().each((item: CollectionItem<S>) => {
+            item.setRowSeparatorSize(rowSeparatorSize);
+        });
     }
 
     getMultiSelectVisibility(): string {
