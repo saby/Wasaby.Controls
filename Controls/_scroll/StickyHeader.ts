@@ -149,6 +149,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     private _needUpdateObserver: boolean = false;
 
+    // Если заголовок сконфигурариован так что при построении отображется тень, то установим true.
+    // Сбросим обратно только, когда отработает обсервер и мы узнаем настоящее положение заголовка.
+    // До этого момента будем отображать тень.
+    // TODO https://online.sbis.ru/opendoc.html?guid=1529db8e-7105-45cc-97bf-430b9cd44ef9
+    private _initialShowShadow: boolean = false;
+
     // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
     // До этого не синхронизируем дом дерево при изменении состояния.
     private _initialized: boolean = false;
@@ -161,6 +167,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
         this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
+        if (options.shadowVisibility === SHADOW_VISIBILITY.initial) {
+            this._initialShowShadow = true;
+        }
         this._updateStyles(options);
     }
 
@@ -439,6 +448,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
 
+        if (!this._model.fixedPosition) {
+            this._initialShowShadow = false;
+        }
+
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
             if (this._canScroll && this._initialized) {
@@ -635,12 +648,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isShadowVisible(shadowPosition: POSITION, mode: MODE, shadowVisibility: SHADOW_VISIBILITY): boolean {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+        const shadowVisibility = this._options.shadowVisibility;
+
+        if (this._initialShowShadow && this._options.position === fixedPosition) {
+            return true;
+        }
 
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
         return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
-            (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
+            (shadowVisibility === SHADOW_VISIBILITY.visible ||
+                shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                shadowVisibility === SHADOW_VISIBILITY.initial) &&
             (mode === MODE.stackable || this._isFixed));
     }
 
@@ -724,7 +744,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             shadowVisibility: descriptor(String).oneOf([
                 SHADOW_VISIBILITY.visible,
                 SHADOW_VISIBILITY.hidden,
-                SHADOW_VISIBILITY.lastVisible
+                SHADOW_VISIBILITY.lastVisible,
+                SHADOW_VISIBILITY.initial
             ]),
             backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([
