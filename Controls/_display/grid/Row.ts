@@ -5,8 +5,6 @@ import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
 import { TemplateFunction } from 'UI/Base';
 import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
 import { IItemPadding } from 'Controls/list';
-import { IColumn, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
-import { IHeaderCell } from 'Controls/_grid/interface/IHeaderCell';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;
