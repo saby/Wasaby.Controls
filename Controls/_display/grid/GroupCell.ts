@@ -23,7 +23,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     }
 
     getWrapperStyles(): string {
-       return isFullGridSupport() ? 'display: contents; ' : '';
+        return this.getColspan();
     }
 
     getContentClasses(): string {
@@ -47,10 +47,6 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
         };
     };
     // endregion
-
-    getGroupWrapperStyles() {
-        return this.getColspan();
-    }
 
     getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
         const leftPadding = this._$owner.getLeftPadding().toLowerCase();

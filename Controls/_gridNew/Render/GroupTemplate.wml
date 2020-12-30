@@ -1,4 +1,4 @@
-<div class="{{ gridColumn.getGroupWrapperClasses(expanderVisible, theme) }}" style="{{ gridColumn.getGroupWrapperStyles() }}">
+<div class="{{ gridColumn.getGroupWrapperClasses(expanderVisible, theme) }}">
     <div class="controls-ListView__groupSeparator-left_theme-{{theme}}">&nbsp;</div>
     <div class="{{ gridColumn.getCaptionClasses(expanderAlign, expanderVisible, theme) }}">
         <ws:if data="{{contentTemplate}}">
