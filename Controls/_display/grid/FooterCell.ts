@@ -25,7 +25,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
         if (!this.getOwner().hasMultiSelectColumn() && this.isFirstColumn()) {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
+            wrapperClasses += ` controls-GridView__footer__cell__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
         if (this.isLastColumn()) {

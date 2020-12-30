@@ -19,7 +19,8 @@ export default class FooterRow<T> extends Row<T> {
     protected _$footerTemplate: TemplateFunction;
     protected _$footer: TFooter;
 
-    private _$hasMoreData: boolean;
+    private _hasMoreData: boolean;
+    private _loadingIndicatorVisible: boolean;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -36,10 +37,16 @@ export default class FooterRow<T> extends Row<T> {
     }
 
     setHasMoreData(hasMoreData: boolean): void {
-        if (this._$hasMoreData !== hasMoreData) {
-            this._$hasMoreData = hasMoreData;
+        if (this._hasMoreData !== hasMoreData) {
+            this._hasMoreData = hasMoreData;
             this._nextVersion();
         }
+    }
+
+    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+    setLoadingIndicatorVisibility(visible: boolean): void {
+        this._loadingIndicatorVisible = visible;
+        this._nextVersion();
     }
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {

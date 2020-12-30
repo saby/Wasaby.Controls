@@ -189,11 +189,18 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
         if (this.getFooter()) {
-            this._$footer.setFooter(footerTemplate, footer);
+            this.getFooter().setFooter(footerTemplate, footer);
         } else {
             this._$footer = this._initializeFooter({footerTemplate, footer, columns: this.getColumnsConfig()});
         }
         this._nextVersion();
+    }
+
+    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+    setLoadingIndicatorVisibility(visible: boolean): void {
+        if (this.getFooter()) {
+            this._$footer.setLoadingIndicatorVisibility(visible);
+        }
     }
 
     getFooter(): FooterRow<S> {
