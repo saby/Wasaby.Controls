@@ -23,7 +23,13 @@ export default class FooterRow<T> extends Row<T> {
     }
 
     getContents(): T {
-        return 'footer' as unknown as T
+        return 'footer' as unknown as T;
+    }
+
+    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+        this._$footerTemplate = footerTemplate;
+        this._$footer = footer;
+        this._reinitializeColumns();
     }
 
     // TODO: Переделать параметры на объект
@@ -72,7 +78,7 @@ export default class FooterRow<T> extends Row<T> {
         return colspan;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this._$columns) {
             const factory = this._getColumnsFactory();
 

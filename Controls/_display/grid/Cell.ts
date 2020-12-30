@@ -53,8 +53,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$ladderCell: boolean;
     protected _$columnSeparatorSize: TColumnSeparatorSize
 
-    getInstanceId: () => string;
-
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
