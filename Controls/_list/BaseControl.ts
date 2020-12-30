@@ -3957,7 +3957,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const needGroupingLoader = !!newOptions.groupProperty && !_private.isDemandNavigation(newOptions.navigation);
         const hasGroupingLoader = !!this._groupingLoader;
         if (groupPropertyChanged && this._listViewModel) {
-            this._listViewMode.setGroupProperty(newOptions.groupProperty);
+            this._listViewModel.setGroupProperty(newOptions.groupProperty);
         }
         if (needGroupingLoader) {
             if (hasGroupingLoader) {
