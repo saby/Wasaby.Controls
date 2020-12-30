@@ -118,10 +118,6 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
         return this._$source && this._$source.getChildrenProperty();
     }
 
-    getParent(): TreeItem<T> {
-        return this._$source && this._$source.getParent();
-    }
-
     // endregion
 }
 
