@@ -27,6 +27,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    ladderCell?: boolean;
     columnSeparatorSize?: string;
 }
 
@@ -49,7 +50,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$endColumn: number;
     protected _$colspan: number;
     protected _$isFixed: boolean;
-    protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$ladderCell: boolean;
+    protected _$columnSeparatorSize: TColumnSeparatorSize
 
     getInstanceId: () => string;
 
@@ -323,6 +325,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
@@ -518,6 +521,7 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
-    _$columnSeparatorSize: null,
-    _$isFixed: null
+    _$isFixed: null,
+    _$ladderCell: null,
+    _$columnSeparatorSize: null
 });

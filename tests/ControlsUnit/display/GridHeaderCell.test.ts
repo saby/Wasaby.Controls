@@ -97,6 +97,7 @@ describe('Controls/display:HeaderCell', () => {
 
         function getGridHeader(): GridHeader<Model> {
             const owner: GridCollection<Model> = {
+                getHeaderConfig: () => header,
                 hasMultiSelectColumn: () => hasMultiSelectColumn,
                 getStickyColumnsCount: () => stickyColumnsCount,
                 getColumnsConfig: () => columns,
@@ -130,17 +131,18 @@ describe('Controls/display:HeaderCell', () => {
             stickyColumnsCount = 0;
             hasItemActionsSeparatedCell = false;
             hasColumnScroll = false;
-            columns = [{ width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}];
+            columns = [{ width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}, { width: '1px'}];
             header = [
-                {startColumn: 1, startRow: 1, endColumn: 2, endRow: 3},
-                {startColumn: 2, startRow: 1, endColumn: 4, endRow: 2},
-                {startColumn: 2, startRow: 2, endColumn: 3, endRow: 3},
-                {startColumn: 3, startRow: 2, endColumn: 4, endRow: 3},
-                {startColumn: 4, startRow: 1, endColumn: 4, endRow: 3}
+                { startRow: 1, endRow: 3, startColumn: 1, endColumn: 2},
+                { startRow: 1, endRow: 3, startColumn: 2, endColumn: 3},
+                { startRow: 1, endRow: 2, startColumn: 3, endColumn: 5},
+                { startRow: 2, endRow: 3, startColumn: 3, endColumn: 4},
+                { startRow: 2, endRow: 3, startColumn: 4, endColumn: 5},
+                { startRow: 1, endRow: 3, startColumn: 5, endColumn: 6}
             ];
         });
         it('should add separatorClass according to default separatorSize', () => {
-            const headerModel =  getGridHeader();
+            const headerModel = getGridHeader();
             headerModel.setColumnSeparatorSize('s');
             const cells = headerModel.getRow().getColumns();
             const wrapperClasses = cells[1].getWrapperClasses('default', 'default', 'default', false);
@@ -157,8 +159,47 @@ describe('Controls/display:HeaderCell', () => {
         it('should add separatorClass according to the previous column right columnSeparatorSize config', () => {
             columns[1].columnSeparatorSize = {left: null, right: 's'};
             const cells = getGridHeader().getRow().getColumns();
-            const wrapperClasses = cells[3].getWrapperClasses('default', 'default', 'default', false);
+            const wrapperClasses = cells[2].getWrapperClasses('default', 'default', 'default', false);
             assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default');
+        });
+
+        it('should add separatorClass to the correct column when multiselect', () => {
+            columns[2].columnSeparatorSize = {right: null};
+            columns[3].columnSeparatorSize = {left: null};
+            hasMultiSelectColumn = true;
+            const headerModel = getGridHeader();
+            headerModel.setColumnSeparatorSize('s');
+            const cells = headerModel.getRow().getColumns();
+            let wrapperClasses: string;
+            [2, 3, 4, 6].forEach((index) => {
+                wrapperClasses = cells[index].getWrapperClasses('default', 'default', 'default', false);
+                assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default',
+                    `column at index ${index} should include separator`);
+            });
+            [1, 5].forEach((index) => {
+                wrapperClasses = cells[index].getWrapperClasses('default', 'default', 'default', false);
+                assert.notInclude(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default',
+                    `column at index ${index} should not include separator`);
+            });
+        });
+
+        it('should add separatorClass to the correct column when no multiselect', () => {
+            columns[2].columnSeparatorSize = {right: null};
+            columns[3].columnSeparatorSize = {left: null};
+            const headerModel = getGridHeader();
+            headerModel.setColumnSeparatorSize('s');
+            const cells = headerModel.getRow().getColumns();
+            let wrapperClasses: string;
+            [1, 2, 3, 5].forEach((index) => {
+                wrapperClasses = cells[index].getWrapperClasses('default', 'default', 'default', false);
+                assert.include(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default',
+                    `column at index ${index} should include separator`);
+            });
+            [0, 4].forEach((index) => {
+                wrapperClasses = cells[index].getWrapperClasses('default', 'default', 'default', false);
+                assert.notInclude(wrapperClasses, 'controls-Grid__columnSeparator_size-s_theme-default',
+                    `column at index ${index} should not include separator`);
+            });
         });
     });
 });

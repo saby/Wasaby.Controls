@@ -9,6 +9,8 @@ import {
 import Row, {IOptions as IRowOptions} from './Row';
 import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
+import StickyLadderCell from 'Controls/_display/grid/StickyLadderCell';
+import Cell from 'Controls/_display/grid/Cell';
 import HeaderCell from 'Controls/_display/grid/HeaderCell';
 import { Model } from 'Types/entity';
 
@@ -46,6 +48,33 @@ export default class HeaderRow<T> extends Row<T> {
         return `controls-Grid__header controls-Grid__header_theme-${params.theme}`;
     }
 
+    protected _processStickyLadderCells(): void {
+        // todo Множественный stickyProperties можно поддержать здесь:
+        const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
+
+        if (stickyLadderCellsCount) {
+            this._$columnItems.splice(1, 0, new HeaderCell({
+                column: this._$header[0],
+                ladderCell: true,
+                owner: this,
+                backgroundStyle: 'transparent',
+                shadowVisibility: 'hidden'
+            }));
+        }
+
+        if (stickyLadderCellsCount === 2) {
+            this._$columnItems = ([
+                new HeaderCell({
+                    column: this._$header[0],
+                    ladderCell: true,
+                    owner: this,
+                    shadowVisibility: 'hidden',
+                    backgroundStyle: 'transparent'
+                })
+            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+        }
+    }
     getBounds(): IHeaderBounds {
         return this._$headerModel.getBounds();
     }
@@ -63,8 +92,11 @@ export default class HeaderRow<T> extends Row<T> {
                     isFixed,
                     sorting: this._getSortingBySortingProperty(column.sortingProperty),
                     cellPadding: this._getCellPaddingForHeaderColumn(column, index),
-                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)                });
+                    columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, index)
+                });
             });
+
+            this._processStickyLadderCells();
             this._addCheckBoxColumnIfNeed();
 
             if (this.hasItemActionsSeparatedCell()) {
@@ -99,19 +131,29 @@ export default class HeaderRow<T> extends Row<T> {
         return columns[headerColumnIndex].cellPadding;
     }
 
+    protected _updateColumnSeparatorSizeInColumns(): void {
+        this._$header.forEach((column, columnIndex) => {
+            const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
+            const cell = this._$columnItems[columnIndex + multiSelectOffset];
+            cell.setColumnSeparatorSize(
+                this._getColumnSeparatorSizeForColumn(column, columnIndex)
+            );
+        });
+    }
+
     protected _getColumnSeparatorSizeForColumn(column: IHeaderCell, columnIndex: number): TColumnSeparatorSize {
-        const currentColumn = {
-            ...column,
-            columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
-        } as IColumn;
-        let previousColumn: IColumn;
-        if (columnIndex !== 0) {
-            previousColumn = {
+        if (columnIndex > 0) {
+            const currentColumn = {
+                ...column,
+                columnSeparatorSize: this._getHeaderColumnSeparatorSize(column, columnIndex)
+            } as IColumn;
+            const previousColumn: IColumn = {
                 ...this._$header[columnIndex - 1],
                 columnSeparatorSize: this._getHeaderColumnSeparatorSize(this._$header[columnIndex - 1], columnIndex - 1)
             } as IColumn;
+            return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
         }
-        return this._resolveColumnSeparatorSize(currentColumn, previousColumn);
+        return null;
     }
 
     private _getHeaderColumnSeparatorSize(headerColumn: IHeaderCell, columnIndex: number): IColumnSeparatorSizeConfig {
