@@ -232,6 +232,19 @@ const getData = (crudResult: ICrudResult): Promise<any> => {
 };
 
 const _private = {
+    getItemActionsMenuConfig(self, item, event, action, isContextMenu): Record<string, any> {
+        const itemActionsController = _private.getItemActionsController(self, self._options);
+        const defaultMenuConfig = itemActionsController.prepareActionsMenuConfig(item, event, action, self, isContextMenu);
+        const menuConfig = self._notify('getActionsMenuConfig', [
+            item,
+            event,
+            action,
+            isContextMenu,
+            defaultMenuConfig,
+            self._listViewModel?.getItemDataByItem?.(item)
+        ]);
+        return menuConfig || defaultMenuConfig;
+    },
     getItemActionsController(self, options: IList): ItemActionsController {
         // При существующем контроллере нам не нужны дополнительные проверки как при инициализации.
         // Например, может потребоваться продолжение работы с контроллером после показа ошибки в Popup окне,
@@ -1878,8 +1891,7 @@ const _private = {
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
         isContextMenu: boolean): Promise<void> {
-        const itemActionsController = _private.getItemActionsController(self, self._options);
-        const menuConfig = itemActionsController.prepareActionsMenuConfig(item, clickEvent, action, self, isContextMenu);
+        const menuConfig = _private.getItemActionsMenuConfig(self, item, clickEvent, action, isContextMenu);
         if (!menuConfig) {
             return Promise.resolve();
         }
@@ -1903,7 +1915,7 @@ const _private = {
             self._itemActionsMenuId = popupId;
             // Нельзя устанавливать activeItem раньше, иначе при автокликах
             // робот будет открывать меню раньше, чем оно закрылось
-            itemActionsController.setActiveItem(item);
+            _private.getItemActionsController(self, self._options).setActiveItem(item);
             RegisterUtil(self, 'scroll', self._scrollHandler.bind(self));
         });
     },

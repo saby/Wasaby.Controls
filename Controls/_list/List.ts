@@ -112,6 +112,10 @@ export default class List extends Control/** @lends Controls/_list/List.prototyp
         }
     }
 
+    protected _getActionsMenuConfig(e, item, clickEvent, action, isContextMenu) {
+        // for override
+    }
+
     protected _getModelConstructor(): string|Function {
         return 'Controls/display:Collection';
     }

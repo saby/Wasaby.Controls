@@ -284,16 +284,6 @@ export class Controller {
         const target = isContextMenu ? null : this._cloneMenuTarget(clickEvent.target as HTMLElement);
         const isActionMenu = !!parentAction && !parentAction.isMenu;
         const templateOptions = this._getActionsMenuTemplateConfig(item, isActionMenu, parentAction, menuActions);
-        const actionMenuConfig = this._collection?.getActionsMenuConfig?.(item,
-            clickEvent,
-            opener,
-            templateOptions,
-            isActionMenu,
-            isContextMenu
-        );
-        if (actionMenuConfig) {
-            return actionMenuConfig;
-        }
 
         let menuConfig: IStickyPopupOptions = {
             // @ts-ignore
