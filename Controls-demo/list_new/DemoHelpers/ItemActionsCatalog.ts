@@ -50,42 +50,6 @@ function getActionsForContacts(): IItemAction[] {
         }
     ];
 }
-
-function getActionsWithParent(parent: boolean = true): IItemAction[] {
-    return [
-        {
-            id: 1,
-            icon: 'icon-EmptyMessage',
-            title: 'Написать',
-            'parent@': true,
-            showType: showType.TOOLBAR
-        },
-        {
-            id: 2,
-            icon: 'icon-Chat',
-            title: 'Диалог',
-            showType: showType.MENU_TOOLBAR,
-            'parent@': parent,
-            parent: 1
-        },
-        {
-            id: 3,
-            icon: 'icon-Email',
-            title: 'Email',
-            showType: showType.MENU,
-            'parent@': parent,
-            parent: 1
-        },
-        {
-            id: 4,
-            title: 'Удалить',
-            showType: showType.MENU,
-            icon: 'icon-Erase',
-            iconStyle: 'danger'
-        }
-    ];
-}
-
 function getActionsWithDisplayMode(): IItemAction[] {
     return [
         {

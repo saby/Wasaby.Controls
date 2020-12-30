@@ -1,23 +1,8 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow controlsDemo__childMinWidth400">
     <div class="controlsDemo__cell controlsDemo__mr4">
-        <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__maxWidth200">Parent true</div>
         <Controls.list:View
                 keyProperty="id"
                 source="{{_viewSource}}"
-                itemActions="{{_itemActionsTrue}}"/>
-    </div>
-    <div class="controlsDemo__cell controlsDemo__mr4">
-        <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__maxWidth200">Parent false</div>
-        <Controls.list:View
-                keyProperty="id"
-                source="{{_viewSource}}"
-                itemActions="{{_itemActionsFalse}}"/>
-    </div>
-    <div class="controlsDemo__cell controlsDemo__mr4">
-        <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__maxWidth200">Parent null</div>
-        <Controls.list:View
-                keyProperty="id"
-                source="{{_viewSource}}"
-                itemActions="{{_itemActionsNull}}"/>
+                itemActions="{{_itemActions}}"/>
     </div>
 </div>
