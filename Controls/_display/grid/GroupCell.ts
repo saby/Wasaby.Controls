@@ -52,7 +52,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
         return this.getColspan();
     }
 
-    getGroupWrapperClasses(expanderVisible?: boolean, theme): string {
+    getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
         const leftPadding = this._$owner.getLeftPadding().toLowerCase();
         const rightPadding = this._$owner.getRightPadding().toLowerCase();
 

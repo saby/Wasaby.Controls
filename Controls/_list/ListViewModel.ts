@@ -161,9 +161,47 @@ const _private = {
         itemsModelCurrent.getSwipeAnimation = (): string => itemsModelCurrent.dispItem.getSwipeAnimation();
         itemsModelCurrent.isAdd = itemsModelCurrent.dispItem.isAdd;
         itemsModelCurrent.addPosition = itemsModelCurrent.dispItem.addPosition;
+
+        itemsModelCurrent.isSticked = () => itemsModelCurrent.isStickedMasterItem || itemsModelCurrent.isGroup;
+        itemsModelCurrent.isDragged = () => itemsModelCurrent.isDragging;
+        itemsModelCurrent.getWrapperClasses = this.getWrapperClasses.bind(itemsModelCurrent);
+        itemsModelCurrent.getContentClasses = () => {
+            return `${itemsModelCurrent.spacingClassList} ${itemsModelCurrent.isRightSwiped?.() ? 'controls-ListView__item_rightSwipeAnimation' : ''}`;
+        };
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;
+    },
+
+    getWrapperClasses(templateHighlightOnHover: boolean = true,
+                      theme?: string,
+                      cursor: string = 'pointer',
+                      backgroundColorStyle?: string,
+                      style: string = 'default'): string {
+        const hoverBackgroundStyle = this.hoverBackgroundStyle || style;
+        const editingBackgroundStyle = this.getEditingBackgroundStyle();
+        let wrapperClasses = `controls-ListView__itemV ${this.calcCursorClasses(cursor)}`;
+        wrapperClasses += ` controls-ListView__item_${style}`;
+        wrapperClasses += ` controls-ListView__item_${style}_theme-${theme}`;
+        wrapperClasses += ' controls-ListView__item_showActions';
+        wrapperClasses += ' js-controls-ItemActions__swipeMeasurementContainer';
+        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
+        if (templateHighlightOnHover && !this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}`;
+        }
+        if (this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
+        }
+        if (this.isDragged()) {
+            wrapperClasses += ` controls-ListView__item_dragging_theme-${theme}`;
+        }
+        if (backgroundColorStyle) {
+            wrapperClasses += ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}`;
+        }
+        if (templateHighlightOnHover && this.isActive()) {
+            wrapperClasses += ` controls-ListView__item_active_theme-${theme}`;
+        }
+        return wrapperClasses;
     }
 };
 
@@ -211,7 +249,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         const theme = this.getDisplay() ? this.getDisplay().getTheme() : self._options.theme;
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
-
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -232,6 +269,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
+        itemsModelCurrent.getEditingBackgroundStyle = () => {
+            const editingConfig = this.getEditingConfig();
+            if (editingConfig) {
+                return editingConfig.backgroundStyle || 'default';
+            }
+            return 'default';
+        };
 
         itemsModelCurrent.getMarkerClasses = (markerClassName = 'default'): string => {
             const style = this._options.style || 'default';

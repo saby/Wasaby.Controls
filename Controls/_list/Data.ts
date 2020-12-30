@@ -98,7 +98,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
-
       this._errorRegister = new RegisterClass({register: 'dataError'});
 
       if (receivedState && options.source instanceof PrefetchProxy) {
@@ -118,7 +117,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (options.sourceController) {
          this._setItemsAndUpdateContext();
-      } else if (receivedState && isNewEnvironment()) {
+      } else if (receivedState instanceof RecordSet && isNewEnvironment()) {
+         if (options.source && options.dataLoadCallback) {
+            options.dataLoadCallback(receivedState);
+         }
          this._sourceController.setItems(receivedState);
          this._setItemsAndUpdateContext();
       } else if (options.source) {
@@ -179,10 +181,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
              .then((reloadResult) => {
                 if (!newOptions.hasOwnProperty('root')) {
                    this._sourceController.setRoot(currentRoot);
-                }
-
-                if (newOptions.dataLoadCallback instanceof Function) {
-                   newOptions.dataLoadCallback(reloadResult);
                 }
                 this._items = this._sourceController.getItems();
 

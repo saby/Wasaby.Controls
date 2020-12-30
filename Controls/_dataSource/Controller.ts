@@ -384,7 +384,7 @@ export default class Controller {
             sorting: queryParams.sorting
         };
 
-        if (navigationConfig?.multiNavigation && this._isDeepReload() && this._expandedItems.length) {
+        if (navigationConfig?.multiNavigation && this._isDeepReload() && this._expandedItems?.length) {
             return navigationController.getQueryParamsForHierarchy(
                 userQueryParams,
                 navigationSourceConfig,
@@ -562,6 +562,10 @@ export default class Controller {
         let dataLoadCallbackResult;
 
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+
+        if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback(result, direction);
+        }
 
         if (this._dataLoadCallback) {
             dataLoadCallbackResult = this._dataLoadCallback(result, direction);

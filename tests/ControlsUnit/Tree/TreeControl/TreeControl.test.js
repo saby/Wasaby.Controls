@@ -96,7 +96,8 @@ define([
             expandedItems: cloneCfg.expandedItems,
             parentProperty: cloneCfg.parentProperty,
             root: cloneCfg.root,
-            keyProperty: cloneCfg.keyProperty || (cloneCfg.source && cloneCfg.source.getKeyProperty())
+            keyProperty: cloneCfg.keyProperty || (cloneCfg.source && cloneCfg.source.getKeyProperty()),
+            dataLoadCallback: cloneCfg.dataLoadCallback
          });
 
          await cloneCfg.sourceController.reload();

@@ -31,6 +31,7 @@
                style="{{ style }}"
                cursor="{{ cursor }}"
                itemActionsTemplate="{{ itemActionsTemplate }}"
+               itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
@@ -80,6 +81,7 @@
          <ws:for data="column in item.getColumns()">
             <Controls.scroll:StickyHeader position="topbottom"
                                           mode="stackable"
+                                          shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                           attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                           attr:style="{{ column.getWrapperStyles() }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

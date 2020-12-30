@@ -1052,8 +1052,8 @@
 }
 
 .controls-TileView__item_withoutBorder_theme-@{themeName} {
-   border: none;
-   margin: @item_border-thickness_tile;
+   border: @item_border-thickness_tile solid transparent;
+   background-clip: padding-box;
 }
 
 .controls-TileView__item_withMarker_theme-@{themeName} {
