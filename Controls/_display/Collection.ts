@@ -2553,7 +2553,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     setHasMoreData(hasMoreData: boolean): void {
-        this._$hasMoreData = hasMoreData;
+        if (this._$hasMoreData !== hasMoreData) {
+            this._$hasMoreData = hasMoreData;
+            this._nextVersion();
+        }
     }
 
     setMetaResults(metaResults: EntityModel): void {

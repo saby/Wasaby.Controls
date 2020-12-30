@@ -20,13 +20,11 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = 'controls-Grid__footer-cell'
-                          + ` controls-BaseControl__footer-content_theme-${theme}`
+        let wrapperClasses = 'controls-GridView__footer-cell'
+                          + ` controls-GridView__footer__cell_theme-${theme}`
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
-        if (this.isMultiSelectColumn()) {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_withCheckboxes_theme-${theme}`;
-        } else if (this.isFirstColumn()) {
+        if (!this.getOwner().hasMultiSelectColumn() && this.isFirstColumn()) {
             wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
