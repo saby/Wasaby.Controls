@@ -409,19 +409,20 @@
 }
 
 .controls-Button_functionalButton_style-primary_theme-@{themeName} {
-   background-color: @primary_background-color_button_functionalButton;
+   background-color: var(--primary_background-color_button_functionalButton);
 }
 
 .controls-Button_functionalButton_style-secondary_theme-@{themeName} {
    background-color: @secondary_background-color_button_functionalButton;
+   background-color: var(--secondary_background-color_button_functionalButton, @secondary_background-color_button_functionalButton);
 }
 
 .controls-Button_functionalButton_style-success_theme-@{themeName} {
-   background-color: @success_background-color_button_functionalButton;
+   background-color: var(--success_background-color_button_functionalButton);
 }
 
 .controls-Button_functionalButton_style-danger_theme-@{themeName} {
-   background-color: @danger_color;
+   background-color: var(--danger_color, @danger_color);
 }
 
 .controls-Button_functionalButton_style-warning_theme-@{themeName} {
@@ -438,7 +439,7 @@
 
 .ws-is-hover {
    .controls-Button_functionalButton_style-success_theme-@{themeName}:hover {
-      background-color: @success_hover_background-color_button_functionalButton;
+      background-color: var(--success_hover_background-color_button_functionalButton);
    }
    .controls-Button_functionalButton_style-danger_theme-@{themeName}:hover {
       background-color: @danger_hover_background-color_button_functionalButton;

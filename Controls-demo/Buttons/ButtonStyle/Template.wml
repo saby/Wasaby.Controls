@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controls_theme-default">
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=button, buttonStyle=[primary, secondary]</div>
         <Controls.buttons:Button caption="Button" buttonStyle="primary"></Controls.buttons:Button>{{' '}}
@@ -18,5 +18,5 @@
         <Controls.buttons:Button viewMode="functionalButton" icon="icon-Yes" iconSize="m" iconStyle="contrast" inlineHeight="l" buttonStyle="danger"></Controls.buttons:Button>{{' '}}
         <Controls.buttons:Button viewMode="functionalButton" icon="icon-Yes" iconSize="m" iconStyle="contrast" inlineHeight="l" buttonStyle="unaccented"></Controls.buttons:Button>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/gh/nuxodin/ie11CustomProperties@4.1.0/ie11CustomProperties.min.js1"></script>
 </div>
