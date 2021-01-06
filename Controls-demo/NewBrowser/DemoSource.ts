@@ -1,11 +1,19 @@
 import {DataSet, HierarchicalMemory, Query} from 'Types/source';
 import {
-    BackgroundStyle,
-    CatalogDetailViewMode,
-    IListConfiguration, ImageEffect,
-    ImagePosition, ImageViewMode,
-    ItemViewMode, TileSize
+    DetailViewMode,
+    IBrowserViewConfig,
+    IListConfig,
+    ImageGradient,
+    ImageViewMode,
+    ITableConfig,
+    ITileConfig,
+    ListImagePosition,
+    NodesPosition,
+    TileImagePosition,
+    TileSize
 } from 'Controls/newBrowser';
+
+const QUERY_DELAY = 100;
 
 export class DemoSource extends HierarchicalMemory {
     query(query?: Query): Promise<DataSet> {
@@ -19,7 +27,7 @@ export class DemoSource extends HierarchicalMemory {
             // делать reload списка, что вызовет дополнительный запрос к данными
             .then((result) => {
                 return new Promise<DataSet>(
-                    (resolve) => setTimeout(() => resolve(result), 100)
+                    (resolve) => setTimeout(() => resolve(result), QUERY_DELAY)
                 );
             })
             // Подмешиваем в метаданные настройки конфигурации detail-списка
@@ -32,66 +40,54 @@ export class DemoSource extends HierarchicalMemory {
     }
 }
 
-const LIST_CFG = {
-    leaf: {
-        countLines: '3',
-        viewMode: ItemViewMode.description
-    },
+const LIST_CFG: IListConfig = {
     list: {
-        backgroundStyle: BackgroundStyle.gray
+        imagePosition: ListImagePosition.left
     },
     node: {
-        viewMode: ItemViewMode.description
+        descriptionLines: 4,
+        position: NodesPosition.top
     },
-    photo: {
-        imagePosition: ImagePosition.left,
-        viewMode: ImageViewMode.ellipse
+    leaf: {
+        descriptionLines: 3
     }
 };
 
-const TILE_CFG = {
-    leaf: {
-        countLines: '3',
-        viewMode: ItemViewMode.description
-    },
-    node: {
-        countLines: '5',
-        viewMode: ItemViewMode.default
-    },
-    photoLeaf: {
-        height: '50',
-        effect: ImageEffect.default,
-        viewMode: ImageViewMode.circle
-    },
-    photoNode: {
-        height: '100',
-        effect: ImageEffect.default,
-        viewMode: ImageViewMode.circle
-    },
+const TILE_CFG: ITileConfig = {
     tile: {
-        backgroundStyle: BackgroundStyle.gray,
-        imagePosition: ImagePosition.top,
-        size: TileSize.m
-    }
-};
-
-const TABLE_CFG = {
-    leaf: {
-        countLines: '2',
-        viewMode: ItemViewMode.default
+        size: TileSize.m,
+        imagePosition: TileImagePosition.top
     },
-    photo: {
-        viewMode: ImageViewMode.rectangle
+    node: {
+        descriptionLines: 3,
+        position: NodesPosition.top,
+        imageGradient: ImageGradient.custom,
+        imageViewMode: ImageViewMode.rectangle
+    },
+    leaf: {
+        descriptionLines: 3,
+        imageGradient: ImageGradient.custom,
+        imageViewMode: ImageViewMode.rectangle
     }
 };
 
-function getFolderConfig(query?: Query): IListConfiguration {
-    const filter = query.getWhere() as any;
+const TABLE_CFG: ITableConfig = {
+    node: {
+        position: NodesPosition.left
+    },
+    leaf: {
+        descriptionLines: 2,
+        imageViewMode: ImageViewMode.circle
+    }
+};
+
+function getFolderConfig(query?: Query): IBrowserViewConfig {
+    const filter = query.getWhere() as {parent: unknown};
     const result = {
         settings: {
             access: 'global',
-            accountViewMode: CatalogDetailViewMode.list,
-            clientViewMode: CatalogDetailViewMode.list
+            accountViewMode: DetailViewMode.list,
+            clientViewMode: DetailViewMode.list
         },
         list: LIST_CFG,
         tile: TILE_CFG,
@@ -99,12 +95,12 @@ function getFolderConfig(query?: Query): IListConfiguration {
     };
 
     if (filter.parent == null) {
-        result.settings.clientViewMode = CatalogDetailViewMode.tile;
+        result.settings.clientViewMode = DetailViewMode.list;
         return result;
     }
 
     if (filter.parent === 1) {
-        result.settings.clientViewMode = CatalogDetailViewMode.list;
+        result.settings.clientViewMode = DetailViewMode.tile;
         return result;
     }
 }
