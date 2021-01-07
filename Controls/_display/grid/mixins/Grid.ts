@@ -115,6 +115,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$colspanCallback: TColspanCallback;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
     protected _$isFullGridSupport: boolean;
@@ -145,10 +146,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
-        }
-
-        if (options.columnSeparatorSize) {
-            this.setColumnSeparatorSize(options.columnSeparatorSize);
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
@@ -297,11 +294,13 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
+
         const header = this.getHeader();
         if (header) {
             header.setColumnSeparatorSize(columnSeparatorSize);
         }
-        this._nextVersion();
         this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item.LadderSupport) {
                 item.setColumnSeparatorSize(columnSeparatorSize);
@@ -475,6 +474,7 @@ Object.assign(Grid.prototype, {
     _$editArrowVisibilityCallback: null,
     _$colspanCallback: null,
     _$resultsColspanCallback: null,
+    _$columnSeparatorSize: null,
     _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,

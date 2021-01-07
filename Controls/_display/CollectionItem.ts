@@ -35,6 +35,7 @@ export interface IOptions<T extends Model = Model> {
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
     checkboxState?: boolean|null;
+    rowSeparatorSize?: string;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {

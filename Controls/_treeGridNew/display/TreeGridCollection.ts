@@ -101,6 +101,8 @@ export default class TreeGridCollection<
         return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
             options.columns = this._$columns;
             options.colspanCallback = this._$colspanCallback;
+            options.columnSeparatorSize = this._$columnSeparatorSize;
+            options.rowSeparatorSize = this._$rowSeparatorSize;
             return superFactory.call(this, options);
         };
     }

@@ -170,6 +170,28 @@ define(
             });
          });
 
+         it('_beforeUpdate filter changed, sourceController in options', async() => {
+            let filter = {};
+            let options = {
+               source,
+               keyProperty: 'id',
+               filter
+            };
+            const sourceController = new dataSourceLib.NewSourceController(options);
+            options = {...options, sourceController};
+            const data = getDataWithConfig(options);
+            await sourceController.reload();
+            await data._beforeMount(options);
+            data.saveOptions(options);
+
+            options = {...options};
+            filter = {...filter};
+            filter.test = '123';
+
+            data._beforeUpdate(options);
+            assert.deepEqual(options.filter, data._filter);
+         });
+
          it('_beforeMount with receivedState', function() {
             let data = getDataWithConfig({source: source, keyProperty: 'id'});
             let newSource = new sourceLib.Memory({

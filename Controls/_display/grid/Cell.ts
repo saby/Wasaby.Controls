@@ -29,6 +29,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     isFixed?: boolean;
     ladderCell?: boolean;
     columnSeparatorSize?: string;
+    rowSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
