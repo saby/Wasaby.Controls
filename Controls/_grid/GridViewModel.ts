@@ -1619,6 +1619,13 @@ var
                 columns: this._columns
             });
 
+            // TODO: https://online.sbis.ru/opendoc.html?guid=1529db8e-7105-45cc-97bf-430b9cd44ef9
+            // начало
+            if (this._options.task1180722812 && current.isGroup && current.index === 0 && this.isStickyHeader() && this.getHasMoreData()) {
+                current.shadowVisibility = 'initial';
+            }
+
+            // конец
             current.showEditArrow = this._options.showEditArrow;
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
