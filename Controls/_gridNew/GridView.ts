@@ -60,7 +60,7 @@ const GridView = ListView.extend({
 
     _afterMount(): void {
         GridView.superclass._afterMount.apply(this, arguments);
-        this._actualizeColumnScroll(this._options);
+        this._actualizeColumnScroll(this._options, this._options);
         this._isFullMounted = true;
     },
 
@@ -87,7 +87,7 @@ const GridView = ListView.extend({
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
         if (this._columnScrollViewController) {
-            const action = this._columnScrollViewControlle?.updateControllers(newOptions);
+            const action = this._columnScrollViewController?.updateControllers(newOptions);
             if (action === 'columnScrollDisabled') {
                 this._columnScrollViewController.destroy();
                 this._applyColumnScrollChanges();
@@ -108,7 +108,7 @@ const GridView = ListView.extend({
 
     _afterUpdate(oldOptions): void {
         GridView.superclass._afterUpdate.apply(this, arguments);
-        this._actualizeColumnScroll(this._options);
+        this._actualizeColumnScroll(this._options, oldOptions);
     },
 
     _beforeUnmount(): void {
@@ -298,7 +298,7 @@ const GridView = ListView.extend({
         });
     },
 
-    _actualizeColumnScroll(options) {
+    _actualizeColumnScroll(options, oldOptions) {
         return this._columnScrollViewController?.actualizeColumnScroll({
             ...options,
             scrollBar: this._children.horizontalScrollBar,
@@ -310,8 +310,8 @@ const GridView = ListView.extend({
             },
             hasMultiSelectColumn: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom',
             isActivated: !this._showFakeGridWithColumnScroll,
-        }).then((result) => {
-            if (result.status === 'created') {
+        }, oldOptions)?.then((result) => {
+            if (result.status !== 'destroyed') {
                 this._applyColumnScrollChanges();
             }
         });
@@ -386,7 +386,7 @@ const GridView = ListView.extend({
 
     _resizeHandler(): void {
         if (this._columnScrollViewController && this.isColumnScrollVisible()) {
-            this._actualizeColumnScroll(this._options);
+            this._actualizeColumnScroll(this._options, this._options);
         }
     },
 
