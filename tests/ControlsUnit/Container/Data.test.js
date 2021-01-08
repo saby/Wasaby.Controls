@@ -7,7 +7,7 @@ define(
       'Types/collection',
       'Application/Initializer',
       'Application/Env',
-      'Env/Config',
+      'EnvConfig/Config',
       'Controls/dataSource'
    ],
    function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config, dataSourceLib) {
