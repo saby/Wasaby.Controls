@@ -1,5 +1,5 @@
 import rk = require('i18n!Controls');
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filter/View/View');
 import CoreClone = require('Core/core-clone');
 import Merge = require('Core/core-merge');
@@ -661,7 +661,7 @@ var _private = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
  *
  * @class Controls/_filter/View
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_filter/View/interface/IFilterItem
  * @public
  * @author Золотова Э.Е.
@@ -681,7 +681,7 @@ var _private = {
  * Here you can see <a href="/materials/Controls-demo/app/Controls-demo%2FFilterView%2FFilterView">demo-example</a>.
  *
  * @class Controls/_filter/View
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_filter/interface/IFilterView
  *
  * @public

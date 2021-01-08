@@ -54,7 +54,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Герасимов А.М.
@@ -70,7 +70,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Герасимов А.М.
@@ -212,7 +212,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       const sourceControllerState = this._sourceController.getState();
 
       if (!isEqual(sourceControllerState, this._sourceControllerState)) {
-         this._sourceControllerState = sourceControllerState;
+         this._filter = sourceControllerState.filter;
+         this._updateContext(sourceControllerState);
       }
    }
 

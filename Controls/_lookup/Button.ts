@@ -28,7 +28,7 @@ import {IHashMap} from 'Types/declarations';
  *
  *
  * @class Controls/_lookup/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
@@ -48,7 +48,7 @@ import {IHashMap} from 'Types/declarations';
  * Button link with the specified text, on clicking on which a selection window opens.
  *
  * @class Controls/_lookup/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/_interface/ITextValue

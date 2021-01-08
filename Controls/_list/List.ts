@@ -25,7 +25,7 @@ import { RecordSet } from 'Types/collection';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less переменные тем оформления}
  *
  * @class Controls/_list/List
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/IErrorController
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
@@ -60,7 +60,7 @@ import { RecordSet } from 'Types/collection';
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/'>here</a>.
  *
  * @class Controls/_list/List
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/IErrorController
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate

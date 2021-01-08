@@ -13,7 +13,7 @@ import Colgroup from '../Colgroup';
 import GridRow from '../Row';
 import HeaderRow from '../HeaderRow';
 import DataRow from '../DataRow';
-import FooterRow from '../FooterRow';
+import FooterRow, { TFooter } from '../FooterRow';
 import ResultsRow, { TResultsPosition } from '../ResultsRow';
 import GridRowMixin from './Row';
 import EmptyRow from '../EmptyRow';
@@ -115,6 +115,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
     protected _$colspanCallback: TColspanCallback;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$resultsColspanCallback: TResultsColspanCallback;
     protected _$resultsTemplate: TemplateFunction;
     protected _$isFullGridSupport: boolean;
@@ -145,10 +146,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
-        }
-
-        if (options.columnSeparatorSize) {
-            this.setColumnSeparatorSize(options.columnSeparatorSize);
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
@@ -185,6 +182,22 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     getEmptyGridRow(): EmptyRow<S> {
         return this._$emptyGridRow;
+    }
+
+    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+        if (this.getFooter()) {
+            this.getFooter().setFooter(footerTemplate, footer);
+        } else {
+            this._$footer = this._initializeFooter({footerTemplate, footer, columns: this.getColumnsConfig()});
+        }
+        this._nextVersion();
+    }
+
+    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+    setLoadingIndicatorVisibility(visible: boolean): void {
+        if (this.getFooter()) {
+            this._$footer.setLoadingIndicatorVisibility(visible);
+        }
     }
 
     getFooter(): FooterRow<S> {
@@ -281,11 +294,13 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
+
         const header = this.getHeader();
         if (header) {
             header.setColumnSeparatorSize(columnSeparatorSize);
         }
-        this._nextVersion();
         this.getViewIterator().each((item: GridRowMixin<S>) => {
             if (item.LadderSupport) {
                 item.setColumnSeparatorSize(columnSeparatorSize);
@@ -350,7 +365,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             ...options,
             owner: this,
             footer: options.footer,
-            footerTemplate: options.footerTemplate
+            footerTemplate: options.footerTemplate,
+            multiSelectVisibility: this.getMultiSelectVisibility()
         });
     }
 
@@ -458,6 +474,7 @@ Object.assign(Grid.prototype, {
     _$editArrowVisibilityCallback: null,
     _$colspanCallback: null,
     _$resultsColspanCallback: null,
+    _$columnSeparatorSize: null,
     _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,

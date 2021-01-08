@@ -20,7 +20,7 @@ export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyl
  * A link button that displays the period. Supports the change of periods to adjacent.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FLinkView">Demo examples.</a>.
  * @class Controls/_dateRange/LinkView
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter

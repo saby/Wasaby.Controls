@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_explorer/PathController/HeadingPathBack');
 import {calculatePath} from 'Controls/dataSource';
 

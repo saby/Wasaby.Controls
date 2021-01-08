@@ -35,7 +35,7 @@ interface IRangeShortSelectorOptions extends IControlOptions {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_shortDatePicker.less набор переменных shortDatePicker}
  *
  * @class Controls/_dateRange/RangeShortSelector
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @mixes Controls/_dateRange/interfaces/IDateRange

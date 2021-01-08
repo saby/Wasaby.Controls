@@ -17,7 +17,7 @@ export interface IBarOptions extends IControlOptions {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_progress.less переменные тем оформления}
  * 
  * @class Controls/_progress/Bar
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Колесов В.А.
  *
  * @public
@@ -29,7 +29,7 @@ export interface IBarOptions extends IControlOptions {
 /*
  * Control that renders progress bar
  * @class Controls/_progress/Bar
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Колесов В.А.
  *
  * @public

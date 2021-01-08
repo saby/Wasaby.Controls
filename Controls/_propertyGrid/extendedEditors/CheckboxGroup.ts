@@ -7,7 +7,7 @@ import IEditorOptions from 'Controls/_propertyGrid/IEditorOptions';
 /**
  * Редактор для массива в виде группы чекбоксов.
  * @class Controls/_propertyGrid/extendedEditors/CheckboxGroup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Мельникова Е.А.
  * @public
  */

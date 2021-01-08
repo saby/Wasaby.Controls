@@ -9,7 +9,7 @@ import template = require('wml!Controls/_popupTemplate/CloseButton/CloseButton')
     * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
     *
     * @class Controls/_popupTemplate/CloseButton
-    * @extends Core/Control
+    * @extends UI/Base:Control
     *
     * @public
     * @author Красильников А.С.

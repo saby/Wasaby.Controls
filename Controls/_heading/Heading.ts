@@ -30,7 +30,7 @@ export interface IHeadingOptions
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_heading.less переменные тем оформления}
  *
  * @class Controls/_heading/Heading
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/ICaption
  * @implements Controls/_interface/IFontColorStyle

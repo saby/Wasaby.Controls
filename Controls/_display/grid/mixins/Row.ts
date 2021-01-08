@@ -27,6 +27,7 @@ export interface IItemTemplateParams {
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
     colspanCallback: TColspanCallback;
+    columnSeparatorSize: TColumnSeparatorSize;
 }
 
 export default abstract class Row<T> {
@@ -263,6 +264,14 @@ export default abstract class Row<T> {
         return this._$owner.editArrowIsVisible(item);
     }
 
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'topbottom';
+    }
+
     protected _reinitializeColumns(): void {
         if (this._$columnItems) {
             this._initializeColumns();
@@ -296,7 +305,8 @@ export default abstract class Row<T> {
                 column,
                 colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount(),
-                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex)
+                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
+                rowSeparatorSize: this._$rowSeparatorSize
             }));
         }
         return columnItems;
@@ -471,5 +481,6 @@ Object.assign(Row.prototype, {
     _cellModule: null,
     _$columns: null,
     _$colspanCallback: null,
-    _$columnItems: null
+    _$columnItems: null,
+    _$columnSeparatorSize: null
 });

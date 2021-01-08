@@ -1,4 +1,4 @@
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import coreMerge = require('Core/core-merge');
 import monthTmpl = require('wml!Controls/_calendar/Month/Month');
 import IMonth from 'Controls/_calendar/interfaces/IMonth';
@@ -13,7 +13,7 @@ import MonthViewModel from 'Controls/_calendar/Month/Model';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_calendar.less переменные тем оформления}
  *
  * @class Controls/_calendar/Month
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_calendar/interfaces/IMonth
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_dateRange/interfaces/IRangeSelectable

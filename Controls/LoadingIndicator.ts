@@ -29,7 +29,7 @@ let ManagerController;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less переменные тем оформления}
  *
  * @class Controls/LoadingIndicator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
@@ -65,7 +65,7 @@ let ManagerController;
  *
  *
  * @class Controls/LoadingIndicator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * 
  * @author Красильников А.С.

@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_suggest/Input/Input');
 import {EventUtils} from 'UI/Events';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
@@ -12,7 +12,7 @@ import {generateStates} from 'Controls/input';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggest.less переменные тем оформления}
  *
  * @class Controls/_suggest/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/interface/IBorderStyle
@@ -39,7 +39,7 @@ import {generateStates} from 'Controls/input';
  * Here you can see the <a href="/materials/Controls-demo/app/Controls-demo%2FSuggest%2FSuggest">demo examples</a>.
  *
  * @class Controls/_suggest/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource

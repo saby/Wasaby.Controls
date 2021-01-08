@@ -29,6 +29,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     isFixed?: boolean;
     ladderCell?: boolean;
     columnSeparatorSize?: string;
+    rowSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -53,8 +54,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$ladderCell: boolean;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$rowSeparatorSize: string;
-
-    getInstanceId: () => string;
 
     constructor(options?: IOptions<T>) {
         super();

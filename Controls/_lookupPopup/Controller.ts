@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_lookupPopup/Controller');
 import Utils = require('Types/util');
 import SelectorContext = require('Controls/_lookupPopup/__ControllerContext');
@@ -70,7 +70,7 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Пример</a> использования контрола.
  *
  * @class Controls/_lookupPopup/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Герасимов А.М.
@@ -87,7 +87,7 @@ var _private = {
  * <a href="/materials/Controls-demo/app/Engine-demo%2FSelector">Here</a> you can see a demo.
  *
  * @class Controls/_lookupPopup/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Герасимов Александр Максимович

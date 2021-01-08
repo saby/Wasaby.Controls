@@ -16,7 +16,7 @@ interface INumberRange {
 /**
  * Контрол используют в качестве редактора для выбора диапазона чисел на {@link Controls/filterPanel:View панели фильтров}.
  * @class Controls/_filterPanel/Editors/NumberRange
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @author Мельникова Е.А.
  * @public
  */
