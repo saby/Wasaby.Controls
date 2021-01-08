@@ -20,7 +20,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = 'controls-GridView__footer-cell'
+        let wrapperClasses = 'controls-GridView__footer__cell'
                           + ` controls-GridView__footer__cell_theme-${theme}`
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
@@ -43,8 +43,8 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
         return wrapperClasses;
     }
 
-    getWrapperStyles(): string {
-        return `${this.getColspan()}`;
+    getWrapperStyles(containerSize?: number): string {
+        return `${this.getColspan()} ${containerSize ? `width:${containerSize}px;` : ''}`;
     }
 
     getContentClasses(theme: string): string {
