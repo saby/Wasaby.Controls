@@ -177,6 +177,8 @@ export default class ColumnScroll {
                             scrollPosition: this._columnScroll.getScrollPosition()
                         });
                         resolvePromise({ status: 'created' });
+                        this._scrollBar.recalcSizes();
+                        this._scrollBar.setPosition(this._columnScroll.getScrollPosition());
                     }, true);
             } else {
                     const stickyColumnsCountChanged = oldOptions.stickyColumnsCount !== options.stickyColumnsCount;
