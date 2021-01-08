@@ -331,6 +331,7 @@ const GridView = ListView.extend({
         }
 
         const sizes = this._columnScrollViewController.getSizes();
+        this._containerSize = sizes.containerSize;
         this._contentSizeForHScroll = sizes.contentSizeForHScroll;
         this._horizontalScrollWidth = sizes.scrollWidth;
         this._fixedColumnsWidth = sizes.fixedColumnsWidth;

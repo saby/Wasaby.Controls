@@ -4,6 +4,7 @@ import Collection from './Collection';
 import { IColspanParams } from '../../_grid/interface/IColumn';
 import { IItemTemplateParams } from './mixins/Row';
 import { IItemActionsTemplateConfig } from 'Controls/_display/Collection';
+import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
 
 export type TFooter = IFooter[];
 
@@ -104,6 +105,12 @@ export default class FooterRow<T> extends Row<T> {
                 this._$columnItems.unshift(factory({
                     column: {},
                     isFixed: true
+                }));
+            }
+            if (this._$columns && this.hasItemActionsSeparatedCell()) {
+                this._$columnItems.push(new ItemActionsCell({
+                    owner: this,
+                    column: {}
                 }));
             }
         }
