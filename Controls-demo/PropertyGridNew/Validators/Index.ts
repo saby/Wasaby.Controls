@@ -12,7 +12,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _source: RecordSet;
     protected _itemActions: IItemAction[];
 
-    protected _defaultValidator(value: any): boolean | string {
+    protected _defaultValidator({value, item, items}: any): boolean | string {
         return !!value || 'Значение обязательно для заполнения';
     }
     protected _beforeMount(): void {
