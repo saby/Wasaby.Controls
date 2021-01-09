@@ -301,11 +301,7 @@ export default class ColumnScroll {
 
     private _getColumnScrollShadowClasses(position: 'start' | 'end', options?: {needBottomPadding: boolean}): string {
         if (this._options.isActivated && this._options.columnScrollStartPosition === 'end') {
-            let classes = '';
-            if (this._options.hasMultiSelectColumn) {
-                //classes += `controls-Grid__ColumnScroll__shadow_withMultiselect_theme-${this._options.theme} `;
-            }
-            return classes + ColumnScrollController.getShadowClasses(position, {
+            return ColumnScrollController.getShadowClasses(position, {
                 isVisible: position === 'start',
                 theme: this._options.theme,
                 backgroundStyle: this._options.backgroundStyle,

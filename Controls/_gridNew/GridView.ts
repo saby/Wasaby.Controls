@@ -129,7 +129,7 @@ const GridView = ListView.extend({
     _resolveBaseItemTemplate(options): TemplateFunction {
         return GridItem;
     },
-
+    _gridNew/ViewControllers/ColumnScroll.ts
     _getGridTemplateColumns(options): string {
         const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
