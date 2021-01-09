@@ -504,13 +504,13 @@ export default class ColumnScrollController {
 
     getSizes() {
         return {
-            // containerSize: this._containerSize,
+            containerSize: this._containerSize,
             // contentSize: this._contentSize,
             fixedColumnsWidth: this._fixedColumnsWidth,
             scrollableColumnsWidth: this._containerSize - this._fixedColumnsWidth,
             contentSizeForHScroll: this._contentSizeForHScroll,
             scrollWidth: this._scrollWidth
-        }
+        };
     }
 
     /**

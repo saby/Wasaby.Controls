@@ -110,7 +110,7 @@ export default class ColumnScroll {
                 }
             }
 
-            return `left: ${offsetLeft}px; z-index: 5;`
+            return `left: ${offsetLeft}px; z-index: 5;`;
         }
         return '';
     }
@@ -151,7 +151,7 @@ export default class ColumnScroll {
         };
     }
 
-    actualizeColumnScroll(options: IActualizeOptions & IColumnScrollOptions): Promise<{ status: 'actual' | 'destroyed' | 'created' }> {
+    actualizeColumnScroll(options: IActualizeOptions & IColumnScrollOptions, oldOptions: IActualizeOptions & IColumnScrollOptions): Promise<{ status: 'actual' | 'destroyed' | 'created' }> {
         this._scrollBar = options.scrollBar;
         this._header = options.containers.header;
 
@@ -177,12 +177,14 @@ export default class ColumnScroll {
                             scrollPosition: this._columnScroll.getScrollPosition()
                         });
                         resolvePromise({ status: 'created' });
+                        this._scrollBar.recalcSizes();
+                        this._scrollBar.setPosition(this._columnScroll.getScrollPosition());
                     }, true);
             } else {
-                    const stickyColumnsCountChanged = this._options.stickyColumnsCount !== options.stickyColumnsCount;
-                    const multiSelectVisibilityChanged = this._options.hasMultiSelectColumn !== options.hasMultiSelectColumn;
-                    const dragScrollingChanged = this._options.dragScrolling !== options.dragScrolling;
-                    const columnsChanged = !GridIsEqualUtil.isEqualWithSkip(this._options.columns, options.columns, { template: true, resultTemplate: true });
+                    const stickyColumnsCountChanged = oldOptions.stickyColumnsCount !== options.stickyColumnsCount;
+                    const multiSelectVisibilityChanged = oldOptions.hasMultiSelectColumn !== options.hasMultiSelectColumn;
+                    const dragScrollingChanged = oldOptions.dragScrolling !== options.dragScrolling;
+                    const columnsChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, options.columns, { template: true, resultTemplate: true });
 
                     if (stickyColumnsCountChanged || multiSelectVisibilityChanged || columnsChanged) {
                         // Смена колонок может не вызвать событие resize на обёртке грида(ColumnScroll), если общая ширина колонок до обновления и после одинакова.
@@ -200,6 +202,8 @@ export default class ColumnScroll {
                     } else {
                         resolvePromise({ status: 'actual' });
                     }
+                    this._scrollBar.recalcSizes();
+                    this._scrollBar.setPosition(this._columnScroll.getScrollPosition());
             }
         } else {
             this._options = this._updateOptions(options);

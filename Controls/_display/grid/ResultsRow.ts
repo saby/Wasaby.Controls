@@ -6,6 +6,7 @@ import { IColumn } from 'Controls/grid';
 import { TColspanCallbackResult, TResultsColspanCallback } from './mixins/Grid';
 import ResultsCell from 'Controls/_display/grid/ResultsCell';
 import Cell from 'Controls/_display/grid/Cell';
+import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
 
 
 export type TResultsPosition = 'top' | 'bottom';
@@ -94,6 +95,12 @@ export default class ResultsRow<T> extends Row<T> {
             }
 
             this._processStickyLadderCells();
+            if (this._$columns && this.hasItemActionsSeparatedCell()) {
+                this._$columnItems.push(new ItemActionsCell({
+                    owner: this,
+                    column: {}
+                }));
+            }
             if (this._$owner.hasMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}
