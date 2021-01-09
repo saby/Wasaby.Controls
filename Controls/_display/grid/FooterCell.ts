@@ -44,7 +44,7 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
     }
 
     getWrapperStyles(containerSize?: number): string {
-        return `${this.getColspan()} ${containerSize ? `width:${containerSize}px;` : ''}`;
+        return `${this.getColspan()} ${(this.getColspan() && containerSize) ? `width:${containerSize}px;` : ''}`;
     }
 
     getContentClasses(theme: string): string {

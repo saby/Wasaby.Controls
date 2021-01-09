@@ -95,7 +95,8 @@ export default class FooterRow<T> extends Row<T> {
                     column: {
                         template: this._$footerTemplate
                     },
-                    colspan: this._$owner.getColumnsConfig().length
+                    colspan: this._$owner.getColumnsConfig().length,
+                    isFixed: true
                 })];
             } else {
                 this._$columnItems = this._prepareColumnItems(this._$footer, factory);
@@ -110,7 +111,8 @@ export default class FooterRow<T> extends Row<T> {
             if (this._$columns && this.hasItemActionsSeparatedCell()) {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,
-                    column: {}
+                    column: {},
+                    isFixed: true
                 }));
             }
         }
