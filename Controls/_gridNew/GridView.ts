@@ -60,7 +60,10 @@ const GridView = ListView.extend({
 
     _afterMount(): void {
         GridView.superclass._afterMount.apply(this, arguments);
-        this._actualizeColumnScroll(this._options, this._options);
+        this._actualizeColumnScroll({
+            ...this._options,
+            isOnMount: true
+        }, this._options);
         this._isFullMounted = true;
     },
 
@@ -126,7 +129,6 @@ const GridView = ListView.extend({
     _resolveBaseItemTemplate(options): TemplateFunction {
         return GridItem;
     },
-
     _getGridTemplateColumns(options): string {
         const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
