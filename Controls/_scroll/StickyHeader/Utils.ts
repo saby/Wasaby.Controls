@@ -139,16 +139,22 @@ export function isHidden(element: HTMLElement): boolean {
  */
 
 const GAP_FIX_OFFSET: number = 1;
-const PIXEL_RATIO_BUG = 1.25;
+const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
 
 export function getGapFixSize(): number {
     let offset: number = 0;
-    if (detection.isMobilePlatform && !detection.isMobileAndroid) {
-        offset = GAP_FIX_OFFSET;
-    }
-    // Щель над прилипающим заголовком появляется на десктопах на масштабе 125%
-    if (detection.isDesktop && window.devicePixelRatio === PIXEL_RATIO_BUG) {
-        offset = GAP_FIX_OFFSET;
+    if (detection.isMobilePlatform) {
+        if (!detection.isMobileAndroid) {
+            offset = GAP_FIX_OFFSET;
+        }
+    } else {
+        // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
+        for (const pixelRatio of DESKTOP_PIXEL_RATIOS_BUG) {
+            if (window.devicePixelRatio === pixelRatio) {
+                offset = GAP_FIX_OFFSET;
+                break;
+            }
+        }
     }
     return offset;
 }
