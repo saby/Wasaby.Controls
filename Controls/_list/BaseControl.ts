@@ -2844,7 +2844,7 @@ const _private = {
 
     // region Drag-N-Drop
 
-    startDragNDrop(self, domEvent, item, event): boolean {
+    startDragNDrop(self, domEvent, item, event): void {
         let hasDragScrolling = false;
         if (self._options.columnScroll) {
             // Не должно быть завязки на горизонтальный скролл.
@@ -2908,8 +2908,6 @@ const _private = {
                     }
                 });
         }
-
-        return canStartDnd;
     },
 
     // TODO dnd когда будет наследование TreeControl <- BaseControl, правильно указать тип параметров
