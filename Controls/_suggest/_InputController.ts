@@ -306,6 +306,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _searchErrback(error: CancelableError & {
       isCancelled?: boolean;
    }): void {
+      if (this._options.searchErrorCallback) {
+         this._options.searchErrorCallback();
+      }
       // aborting of the search may be caused before the search start, because of the delay before searching
       if (this._loading !== null) {
          this._loading = false;
@@ -796,10 +799,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
                           return recordSet;
                        })
-                       .catch((error) => error);
+                       .catch((error) => this._searchErrback(error));
                 }
              })
-             .catch((error) => error);
+             .catch((error) => this._searchErrback(error));
       } else {
          return this._performLoad(options);
       }
