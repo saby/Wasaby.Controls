@@ -30,20 +30,15 @@ describe('Controls/scroll:ContainerBase', () => {
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children,
                getBoundingClientRect: () => {}
             },
             userContent: {
-               children: [{
-                  classList: {
-                     contains: () => true
-                  }
-               }]
+               children: children
             }
          };
          control._afterMount();
          sinon.assert.called(control._resizeObserver.observe);
-         assert.sameMembers(control._observedElements, children);
+         assert.isEmpty(control._observedElements);
          sinon.restore();
       });
    });
@@ -134,15 +129,15 @@ describe('Controls/scroll:ContainerBase', () => {
       });
 
       it('should update observed containers', () => {
-         const children = [ { classList: {contains} }, { classList: {contains} } ];
+         const children = [ { classList: {contains: () => true} }, { classList: {contains} } ];
          control._beforeMount(options);
          control._resizeObserverSupported = true;
 
          sinon.stub(control._resizeObserver, 'observe');
          sinon.stub(control._resizeObserver, 'unobserve');
-         control._children.content.children = children;
+         control._children.userContent.children = children;
          control._observedElements = [children[0], 'children3'];
-
+         control._contentType = 'restricted';
          control._afterUpdate();
 
          assert.sameMembers(control._observedElements, children);
