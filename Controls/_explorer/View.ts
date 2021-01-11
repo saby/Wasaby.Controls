@@ -4,7 +4,6 @@ import cInstance = require('Core/core-instance');
 import {EventUtils} from 'UI/Events';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
-import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
