@@ -631,6 +631,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _search(event: SyntheticEvent, validatedValue: string): void {
+        this._inputSearchValue = validatedValue;
         this._startSearch(validatedValue).then((result) => {
             this._searchDataLoad(result, validatedValue);
         }).catch((error: Error & {
