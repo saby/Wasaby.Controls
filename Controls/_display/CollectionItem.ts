@@ -429,7 +429,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     shouldDisplayActions(): boolean {
-        return this.hasVisibleActions() || this.isEditing();
+        const editingConfig = this._$owner.getEditingConfig();
+        return this.hasVisibleActions() || (this.isEditing() && editingConfig.toolbarVisibility !== false);
     }
 
     hasActionWithIcon(): boolean {
