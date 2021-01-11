@@ -14,6 +14,8 @@ export interface IOptions<T> extends ICellOptions<T> {
 }
 
 export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends DataCell<T, TOwner> {
+    readonly Markable: boolean = false;
+
     protected _$wrapperStyle: string;
     protected _$contentStyle: string;
     protected _$stickyProperty: string;
