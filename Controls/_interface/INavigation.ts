@@ -80,11 +80,15 @@ export enum CursorDirection {
 export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
 
 /*
- * @typedef {Object} IBasePositionSourceConfig
+ * @name Controls/_interface/INavigation/IBasePositionSourceConfig
  * @description Конфигурация источника данных для перезагрузки при навигации по курсору.
  * Подробнее о данном типе навигации читайте {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  */
-
+/**
+ * @name Controls/_interface/INavigation/IBasePositionSourceConfig
+ * @description Конфигурация источника данных для перезагрузки при навигации по курсору.
+ * Подробнее о данном типе навигации читайте {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
+ */
 export interface IBasePositionSourceConfig {
     position?: unknown[] | unknown;
     direction?: TNavigationDirection;
@@ -109,16 +113,16 @@ export interface IBasePositionSourceConfig {
  */
 /**
  * @name Controls/_interface/INavigation/INavigationPositionSourceConfig#field
- * @cfg {String|Array.<String>} field field Имя поля или массив с именами полей, для которых в целевой таблице БД создан индекс.
+ * @cfg {String|Array.<String>} field Имя поля или массив с именами полей, для которых в целевой таблице БД создан индекс.
  * Подробнее об использовании свойства <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source-field">здесь</a>.
  */
 
 /**
- * @typedef {Object} INavigationPositionSourceConfig
+ * @name Controls/_interface/INavigation/INavigationPositionSourceConfig
  * @description Параметры работы с источником данных для режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source">Навигация по курсору</a>.
  */
 /*
- * @typedef {Object} INavigationPositionSourceConfig
+ * @name Controls/_interface/INavigation/INavigationPositionSourceConfig
  * @description Source configuration for position-based (cursor) navigation.
  */
 
@@ -133,12 +137,17 @@ export interface INavigationPositionSourceConfig extends IBasePositionSourceConf
  */
 
 /*
- * @typedef {Object} IBasePageSourceConfig
+ * @name Controls/_interface/INavigation/IBasePageSourceConfig
  * @description Конфигурация для постраничной навигации.
  * @property {Number} page Номер загружаемой страницы.
  * @property {Number} pageSize Размер загружаемой страницы.
  */
 
+/**
+ * @name Controls/_interface/INavigation/IBasePageSourceConfig
+ * @cfg {Number} page Номер загружаемой страницы.
+ * @cfg {Number} pageSize Размер загружаемой страницы.
+ */
 export interface IBasePageSourceConfig {
     page?: number;
     pageSize: number;
@@ -146,15 +155,12 @@ export interface IBasePageSourceConfig {
 }
 
 /**
- * @typedef {Object} INavigationPageSourceConfig
+ * @name Controls/_interface/INavigation/INavigationPageSourceConfig
  * @description Параметры работы с источником данных для режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#page">Навигация с фиксированным количеством загружаемых записей</a>.
- * @property {Number} page Номер загружаемой страницы.
- * @property {Number} pageSize Размер загружаемой страницы.
- * @property {Boolean} hasMore Признак наличия записей для загрузки. Подробнее об использовании параметра читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#data-parametr-hasmore">здесь</a>.
  */
 
 /*
- * @typedef {Object} INavigationPageSourceConfig
+ * @name Controls/_interface/INavigation/INavigationPageSourceConfig
  * @description Source configuration for page-based navigation.
  * @property {Number} page Loading page number.
  * @property {Number} pageSize Loading page size.
@@ -163,15 +169,20 @@ export interface IBasePageSourceConfig {
 export interface INavigationPageSourceConfig extends IBasePageSourceConfig {
     hasMore?: boolean;
 }
+/**
+ * @name Controls/_interface/INavigation/INavigationPageSourceConfig#hasMore
+ * @cfg {Boolean} hasMore Признак наличия записей для загрузки. Подробнее об использовании параметра читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#data-parametr-hasmore">здесь</a>.
+ */
 
 /**
- * @typedef {Object} INavigationSourceConfig
+ * @name Controls/_interface/INavigation/INavigationSourceConfig
+ * @cfg {INavigationPositionSourceConfig|INavigationPageSourceConfig} INavigationSourceConfig
  * @description Параметры режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/">работы с источником данных</a>.
  * Параметры для режима {@link Controls/interface:INavigation/INavigationPositionSourceConfig.typedef Навигация по курсору}.
  * Параметры для режима {@link Controls/interface:INavigation/INavigationPageSourceConfig.typedef Навигация с фиксированным количеством загружаемых записей}.
  */
 /*
- * @typedef {Object} INavigationSourceConfig
+ * @name Controls/_interface/INavigation/INavigationSourceConfig
  * @description Source configuration for both page-based and position-based (cursor) navigation.
  */
 export type INavigationSourceConfig = INavigationPositionSourceConfig | INavigationPageSourceConfig;
@@ -211,7 +222,7 @@ type TNavigationPagingPadding = 'default' | 'null';
 type TNavigationPagingPosition= 'left' | 'right';
 
 /**
- * @typedef {Object} INavigationViewConfig
+ * @name Controls/_interface/INavigation/INavigationViewConfig
  * @description Конфигурация <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/">визуального представления навигации</a>.
  */
 export interface INavigationViewConfig {
@@ -254,13 +265,13 @@ export interface INavigationViewConfig {
  */
 
 /**
- * @typedef {Object} INavigationOptionValue
+ * @name Controls/_interface/INavigation/INavigationOptionValue
  * @description Конфигурация навигации в <a href="/doc/platform/developmentapl/interface-development/controls/list/">списке</a>.
  * Подробнее о настройке навигации читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/">здесь</a>.
  */
 
 /*
- * @typedef {Object} INavigationOptionValue
+ * @name Controls/_interface/INavigation/INavigationOptionValue
  */
 export interface INavigationOptionValue<U> {
     source?: TNavigationSource;
