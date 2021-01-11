@@ -54,5 +54,5 @@ export default class FooterTemplate extends Control<IControlOptions> {
       });
    }
 
-   static _styles: string[] = ['Controls-demo/list_new/ItemActions/ContextMenuConfig/FooterTemplate/FooterTemplate'];
+   static _styles: string[] = ['Controls-demo/list_new/ItemActions/ContextMenuVisibility/ContextMenuVisibility'];
 }
