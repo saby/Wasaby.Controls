@@ -15,8 +15,9 @@ var TreeTileViewModel = TreeViewModel.extend({
         /* itemsReadyCallback вызывается из itemsViewModel и вызовется из конструктора этой модели
            т.к tileViewModel также наследник itemsViewModel, то callback вызовется дважды
          */
-        cfg.itemsReadyCallback = null;
-        this._tileModel = new TileViewModel(cfg);
+        const tileModelConfig = {...cfg};
+        tileModelConfig.itemsReadyCallback = null;
+        this._tileModel = new TileViewModel(tileModelConfig);
         this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
             this._resetCacheOnChange(changesType);
