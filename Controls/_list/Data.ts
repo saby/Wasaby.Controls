@@ -295,7 +295,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    static getDefaultOptions(): IDataOptions {
       return {
-         keyProperty: null,
          filter: {}
       };
    }
