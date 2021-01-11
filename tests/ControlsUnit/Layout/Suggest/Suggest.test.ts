@@ -338,7 +338,12 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_searchErrback', () => {
-         const inputContainer = getComponentObject();
+         let isErrorCallbackCalled = false;
+         const inputContainer = getComponentObject({
+            searchErrorCallback: () => {
+               isErrorCallbackCalled = true;
+            }
+         });
          let isIndicatorVisible = true;
          inputContainer._forceUpdate = () => {};
          inputContainer._children = {};
@@ -351,6 +356,7 @@ describe('Controls/suggest', () => {
          inputContainer._loading = null;
          inputContainer._searchErrback({canceled: true});
          assert.isTrue(inputContainer._loading === null);
+         assert.isTrue(isErrorCallbackCalled);
 
          inputContainer._loading = true;
          inputContainer._searchErrback({canceled: true});
