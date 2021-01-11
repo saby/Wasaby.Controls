@@ -293,7 +293,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._errorRegister.start(errbackConfig);
    }
 
-   static getDefaultOptions(): IDataOptions {
+   static getDefaultOptions(): object {
       return {
          filter: {}
       };
