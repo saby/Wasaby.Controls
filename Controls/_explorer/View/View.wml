@@ -1,5 +1,5 @@
 <div class="controls-Explorer" on:keyDown="_onExternalKeyDown()">
-   <Controls._list.Data scope="{{_options}}" root="{{_getRoot()}}">
+   <Controls.list:DataContainer scope="{{_options}}" root="{{_getRoot()}}">
       <Controls.dragnDrop:Container on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
          <Controls._explorer.PathController
                                     scope="{{_options}}"
@@ -76,5 +76,5 @@
                                        _needSetMarkerCallback="{{_needSetMarkerCallback}}"/>
          </Controls._explorer.PathController>
       </Controls.dragnDrop:Container>
-   </Controls._list.Data>
+   </Controls.list:DataContainer>
 </div>
