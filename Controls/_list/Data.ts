@@ -42,7 +42,7 @@ export interface IDataContextOptions extends ISourceOptions,
  *
  * @remark
  * Поле контекста "dataOptions" ожидает Controls/list:Container, который лежит внутри.
- * 
+ *
  * Полезные ссылки:
  * * <a href="/materials/Controls-demo/app/Controls-demo%2FFilterSearch%2FFilterSearch">демо-пример</a>
  * * <a href="https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_list.less">переменные тем оформления</a>
@@ -54,7 +54,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -70,7 +70,7 @@ export interface IDataContextOptions extends ISourceOptions,
  * @mixes Controls/_interface/IHierarchy
  * @mixes Controls/_interface/ISource
  * @extends Core/Control
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -291,6 +291,13 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    _onDataError(event, errbackConfig): void {
       this._errorRegister.start(errbackConfig);
+   }
+
+   static getDefaultOptions(): IDataOptions {
+      return {
+         keyProperty: null,
+         filter: {}
+      };
    }
 }
 
