@@ -449,7 +449,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             if (entry.target === this._children.content) {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
-            } else if (entry.target === this._children.userContent) {
+            } else {
                 this._updateContentType();
                 newState.scrollWidth = entry.contentRect.width;
 
@@ -510,7 +510,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     _getElementsForHeightCalculation(container?: HTMLElement): HTMLElement[] {
         const elements: HTMLElement[] = [];
-        const _container: HTMLElement = container || this._children.content;
+        const _container: HTMLElement = container || this._children.userContent;
 
         for (const child of _container.children) {
             const ignoredChild = this._getIgnoredChild(child);
