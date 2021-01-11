@@ -141,6 +141,10 @@ export function isHidden(element: HTMLElement): boolean {
 const GAP_FIX_OFFSET: number = 1;
 const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
 
+function getDevicePixelRatio(): number {
+        return window ? window.devicePixelRatio : 1;
+}
+
 export function getGapFixSize(): number {
     let offset: number = 0;
     if (detection.isMobilePlatform) {
@@ -149,11 +153,8 @@ export function getGapFixSize(): number {
         }
     } else {
         // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
-        for (const pixelRatio of DESKTOP_PIXEL_RATIOS_BUG) {
-            if (window.devicePixelRatio === pixelRatio) {
-                offset = GAP_FIX_OFFSET;
-                break;
-            }
+        if (DESKTOP_PIXEL_RATIOS_BUG.indexOf(getDevicePixelRatio()) !== -1) {
+            offset = GAP_FIX_OFFSET;
         }
     }
     return offset;
