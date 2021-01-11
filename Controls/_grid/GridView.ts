@@ -755,7 +755,10 @@ var
             this._updateColumnScrollData();
         },
         _columnScrollWheelHandler(e): void {
-            if (this._isColumnScrollVisible()) {
+            // Костыль только для старого грида, в новой реализации уже учтено.
+            const isHorizontalWheelScrolling = e.nativeEvent.shiftKey || e.nativeEvent.deltaX;
+
+            if (this._isColumnScrollVisible() && isHorizontalWheelScrolling) {
                 this._columnScrollController.scrollByWheel(e);
                 _private.scrollToColumn(this);
             }
