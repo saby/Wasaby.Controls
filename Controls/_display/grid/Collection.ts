@@ -23,7 +23,19 @@ export default class Collection<
 
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
+
+        if (this.getFooter()) {
+            this.getFooter().setMultiSelectVisibility(visibility);
+        }
+
         this._$colgroup?.reBuild();
+    }
+
+    setHasMoreData(hasMoreData: boolean): void {
+        super.setHasMoreData(hasMoreData);
+        if (this.getFooter()) {
+            this.getFooter().setHasMoreData(hasMoreData);
+        }
     }
 
     protected _reBuild(reset?: boolean): void {

@@ -2,6 +2,9 @@ import { TemplateFunction } from 'UI/Base';
 import Row, {IOptions as IRowOptions} from './Row';
 import Collection from './Collection';
 import { IColspanParams } from '../../_grid/interface/IColumn';
+import { IItemTemplateParams } from './mixins/Row';
+import { IItemActionsTemplateConfig } from 'Controls/_display/Collection';
+import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
 
 export type TFooter = IFooter[];
 
@@ -18,30 +21,41 @@ export default class FooterRow<T> extends Row<T> {
     protected _$footerTemplate: TemplateFunction;
     protected _$footer: TFooter;
 
+    private _hasMoreData: boolean;
+    private _loadingIndicatorVisible: boolean;
+
     constructor(options?: IOptions<T>) {
         super(options);
     }
 
     getContents(): T {
-        return 'footer' as unknown as T
+        return 'footer' as unknown as T;
     }
 
-    // TODO: Переделать параметры на объект
-    getWrapperClasses(templateHighlightOnHover: boolean = true,
-                      theme?: string,
-                      cursor: string = 'pointer',
-                      backgroundColorStyle?: string,
-                      style: string = 'default'): string {
-        /* todo
-        // Для предотвращения скролла одной записи в таблице с экшнами.
-        // _options._needBottomPadding почему-то иногда не работает.
-        if ((this._listModel.getCount() || this._listModel.isEditing()) &&
-            this._options.itemActionsPosition === 'outside' &&
-            !this._options._needBottomPadding &&
-            this._options.resultsPosition !== 'bottom') {
-            classList = classList.add(`controls-GridView__footer__itemActionsV_outside_theme-${this._options.theme}`);
-        }*/
-        return `controls-GridView__footer`;
+    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+        this._$footerTemplate = footerTemplate;
+        this._$footer = footer;
+        this._reinitializeColumns();
+    }
+
+    setHasMoreData(hasMoreData: boolean): void {
+        if (this._hasMoreData !== hasMoreData) {
+            this._hasMoreData = hasMoreData;
+            this._nextVersion();
+        }
+    }
+
+    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+    setLoadingIndicatorVisibility(visible: boolean): void {
+        this._loadingIndicatorVisible = visible;
+        this._nextVersion();
+    }
+
+    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+        return this.getOwner().getActionsTemplateConfig();
+    }
+    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        return 'controls-GridView__footer';
     }
 
     protected _getColspan(column: IFooter, columnIndex: number): number {
@@ -72,7 +86,7 @@ export default class FooterRow<T> extends Row<T> {
         return colspan;
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         if (this._$columns) {
             const factory = this._getColumnsFactory();
 
@@ -81,7 +95,8 @@ export default class FooterRow<T> extends Row<T> {
                     column: {
                         template: this._$footerTemplate
                     },
-                    colspan: this._$owner.getColumnsConfig().length
+                    colspan: this._$owner.getColumnsConfig().length,
+                    isFixed: true
                 })];
             } else {
                 this._$columnItems = this._prepareColumnItems(this._$footer, factory);
@@ -89,6 +104,13 @@ export default class FooterRow<T> extends Row<T> {
 
             if (this._$owner.hasMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
+                    column: {},
+                    isFixed: true
+                }));
+            }
+            if (this._$columns && this.hasItemActionsSeparatedCell()) {
+                this._$columnItems.push(new ItemActionsCell({
+                    owner: this,
                     column: {},
                     isFixed: true
                 }));
