@@ -18,23 +18,42 @@ export default class EmptyCell<T> extends mixin<Cell<T, EmptyRow<T>>, CellCompat
     getTemplate(): TemplateFunction|string {
         return this._$column.template || DEFAULT_CELL_TEMPLATE;
     }
-    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', highlightOnHover: boolean): string {
-        return this._$isFullColspan ? '' : `${super.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover)}` +
-            ` controls-Grid__row-cell-background-editing_default_theme-${theme}`;
+    getWrapperClasses(theme: string, backgroundColorStyle: string = 'default', style: string = 'default', highlightOnHover?: boolean): string {
+        let classes;
+
+        if (this._$isFullColspan) {
+            classes = '';
+        } else if (this.isMultiSelectColumn()) {
+            classes = `controls-GridView__emptyTemplate__checkBoxCell ` +
+                `controls-Grid__row-cell-editing_theme-${theme} ` +
+                `controls-Grid__row-cell-background-editing_${backgroundColorStyle}_theme-${theme} `
+        } else {
+            classes = super.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) +
+                ` controls-Grid__row-cell-background-editing_default_theme-${theme}`
+        }
+
+        return classes;
     }
     getContentClasses(theme: string, topSpacing: string = 'default', bottomSpacing: string = 'default'): string {
+        let classes;
+
         if (this._$isFullColspan) {
-            return `controls-ListView__empty`
+            classes = `controls-ListView__empty`
                 + ` controls-ListView__empty_theme-${theme}`
                 + ` controls-ListView__empty_topSpacing_${topSpacing}_theme-${theme}`
                 + ` controls-ListView__empty_bottomSpacing_${bottomSpacing}_theme-${theme}`;
+        } else if (this.isMultiSelectColumn()) {
+            classes = '';
+        } else {
+            classes = this._getContentPaddingClasses(theme)
+                + ` controls-Grid__row-cell__content`
+                + ` controls-GridView__emptyTemplate__cell`
+                + ` controls-Grid__row-cell-editing_theme-${theme}`
+                + ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`
+                + ` controls-Grid__row-cell-background-editing_default_theme-${theme}`;
         }
-        return `${this._getContentPaddingClasses(theme)}`
-            + ` controls-Grid__row-cell__content`
-            + ` controls-GridView__emptyTemplate__cell`
-            + ` controls-Grid__row-cell-editing_theme-${theme}`
-            + ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`
-            + ` controls-Grid__row-cell-background-editing_default_theme-${theme}`;
+
+        return classes;
     }
 }
 

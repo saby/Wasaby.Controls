@@ -55,8 +55,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$rowSeparatorSize: string;
 
-    getInstanceId: () => string;
-
     constructor(options?: IOptions<T>) {
         super();
         OptionsToPropertyMixin.call(this, options);
