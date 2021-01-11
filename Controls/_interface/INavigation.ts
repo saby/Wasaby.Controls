@@ -80,7 +80,7 @@ export enum CursorDirection {
 export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
 
 /*
- * @name Controls/_interface/INavigation/IBasePositionSourceConfig
+ * @typedef {Object} Controls/_interface/INavigation/IBasePositionSourceConfig
  * @description Конфигурация источника данных для перезагрузки при навигации по курсору.
  * Подробнее о данном типе навигации читайте {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  */
@@ -88,6 +88,7 @@ export type TNavigationDirection = 'backward' | 'forward' | 'bothways';
  * @description Конфигурация источника данных для перезагрузки при навигации по курсору.
  * Подробнее о данном типе навигации читайте {@link /doc/platform/developmentapl/service-development/service-contract/objects/blmethods/bllist/cursor/ здесь}.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface IBasePositionSourceConfig {
     /**
@@ -115,6 +116,7 @@ export interface IBasePositionSourceConfig {
 /**
  * @description Параметры работы с источником данных для режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#parametr-source">Навигация по курсору</a>.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface INavigationPositionSourceConfig extends IBasePositionSourceConfig {
     /**
@@ -125,14 +127,16 @@ export interface INavigationPositionSourceConfig extends IBasePositionSourceConf
 }
 
 /*
- * @name Controls/_interface/INavigation/IBasePageSourceConfig
+ * @typedef {Object} Controls/_interface/INavigation/IBasePageSourceConfig
  * @description Конфигурация для постраничной навигации.
  * @property {Number} page Номер загружаемой страницы.
  * @property {Number} pageSize Размер загружаемой страницы.
  */
 
 /**
+ * @description Конфигурация для постраничной навигации.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface IBasePageSourceConfig {
     /**
@@ -147,7 +151,7 @@ export interface IBasePageSourceConfig {
 }
 
 /*
- * @name Controls/_interface/INavigation/INavigationPageSourceConfig
+ * @typedef {Object} Controls/_interface/INavigation/INavigationPageSourceConfig
  * @description Source configuration for page-based navigation.
  * @property {Number} page Loading page number.
  * @property {Number} pageSize Loading page size.
@@ -156,6 +160,7 @@ export interface IBasePageSourceConfig {
 /**
  * @description Параметры работы с источником данных для режима <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#page">Навигация с фиксированным количеством загружаемых записей</a>.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface INavigationPageSourceConfig extends IBasePageSourceConfig {
     /**
@@ -165,7 +170,7 @@ export interface INavigationPageSourceConfig extends IBasePageSourceConfig {
 }
 
 /*
- * @name Controls/_interface/INavigation/INavigationSourceConfig
+ * @typedef {Object} Controls/_interface/INavigation/INavigationSourceConfig
  * @description Source configuration for both page-based and position-based (cursor) navigation.
  */
 /**
@@ -212,6 +217,7 @@ type TNavigationPagingPosition= 'left' | 'right';
 /**
  * @description Конфигурация <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/">визуального представления навигации</a>.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface INavigationViewConfig {
     /**
@@ -257,6 +263,7 @@ export interface INavigationViewConfig {
  * @description Конфигурация навигации в <a href="/doc/platform/developmentapl/interface-development/controls/list/">списке</a>.
  * Подробнее о настройке навигации читайте <a href="/doc/platform/developmentapl/interface-development/controls/list/navigation/">здесь</a>.
  * @public
+ * @author Крайнов Д.О.
  */
 export interface INavigationOptionValue<U> {
     /**
