@@ -31,7 +31,7 @@ export default class Flat<
 
         // getIndexBySourceItem - т.к. draggableItem это avatar и его нет в коллекции
         this._startPosition = {
-            index: this._model.getIndexBySourceItem(draggableItem.getContents()),
+            index: this._model.getIndexBySourceItem(draggableItem?.getContents()),
             position: 'before',
             dispItem: this._draggableItem
         };

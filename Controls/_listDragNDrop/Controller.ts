@@ -31,26 +31,17 @@ export default class Controller<P> {
    /**
     * Запускает отображение в списке начала драг н дропа.
     * Позволяет отобразить перетаскиеваемый элемент особым образом, отличным от остальных элементов.
-    * @param draggableItem - ключ записи, за которую осуществляется перетаскивание
-    * @param entity - сущность перемещения, содержит весь список перемещаемых записей
+    * @param {IDraggableItem} draggableItem - запись, за которую осуществляется перетаскивание
+    * @param {ItemsEntity} entity - сущность перемещения, содержит весь список перемещаемых записей
     */
    startDrag(draggableItem: IDraggableItem, entity: ItemsEntity): void {
-      this.setDraggedItems(entity, draggableItem);
-      this._strategy = new this._strategyConstructor(this._model, draggableItem);
-   }
-
-   /**
-    * Отображает перетаскивание в списке.
-    * Позволяет отобразить перетаскиеваемые элементы особым образом, отличным от остальных элементов.
-    * @param entity - сущность перемещения, содержит весь список перемещаемых записей
-    * @param draggableItem - запись, за которую осуществляется перетаскивание
-    */
-   setDraggedItems(entity: ItemsEntity, draggableItem: IDraggableItem = null): void {
       this._entity = entity;
       if (draggableItem) {
          this._draggableItem = draggableItem;
          this._model.setDraggedItems(draggableItem, entity.getItems());
       }
+
+      this._strategy = new this._strategyConstructor(this._model, draggableItem);
    }
 
    /**
@@ -110,6 +101,10 @@ export default class Controller<P> {
     * @param params
     */
    calculateDragPosition(params: IDragStrategyParams<P>): P {
+      if (!this._strategy) {
+         throw new Error('Strategy was not created. Should be called Controller::startDrag');
+      }
+
       return this._strategy.calculatePosition({ ...params, currentPosition: this._dragPosition });
    }
 
