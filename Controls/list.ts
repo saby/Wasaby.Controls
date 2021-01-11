@@ -81,6 +81,10 @@ export {IMoveItemsParams, IMover, IRemover, BEFORE_ITEMS_MOVE_RESULT} from 'Cont
 
 // endregion @deprecated
 
+// New "for" template that has used in new lists
+import * as ForTemplate from 'wml!Controls/_list/Render/For';
+export {ForTemplate};
+
 export {MoveController, IMoveControllerOptions}  from 'Controls/_list/Controllers/MoveController';
 export {IMovableList, IMoveDialogTemplate, IMovableOptions} from 'Controls/_list/interface/IMovableList';
 
