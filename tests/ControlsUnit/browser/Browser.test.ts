@@ -354,6 +354,23 @@ describe('Controls/browser:Browser', () => {
             sandbox.restore();
         });
 
+        it('update viewMode', async () => {
+            const sandbox = sinon.createSandbox();
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            options.viewMode = 'table';
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            assert.equal(browser._viewMode, 'table');
+
+            options = {...options, viewMode: 'tile'};
+            browser._beforeUpdate(options);
+
+            assert.equal(browser._viewMode, 'tile');
+        });
+
     });
 
     describe('_updateSearchController', () => {
