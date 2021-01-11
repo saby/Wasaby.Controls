@@ -42,3 +42,13 @@
       overflow-anchor: none;
    }
 }
+
+.ws-is-ie11 {
+   .controls-Scroll-ContainerBase__content {
+      // На этом контейнере высота устнавлиается через min-height: 100%. Из-за бага ie считает, что высота
+      // не установлена, и на внутренних контейнерах высота через проценты не устанавливается.
+      // height: 0; почему то решает эту проблему.
+      // https://www.xspdf.com/resolution/50139210.html
+      height: 0;
+   }
+}
