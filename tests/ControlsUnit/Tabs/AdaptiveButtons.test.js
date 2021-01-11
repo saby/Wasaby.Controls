@@ -2,8 +2,9 @@ define([
     'Controls/tabs',
     'Types/source',
     'Types/entity',
-    'Types/collection'
-], function(tabsMod, sourceLib, entity, collection) {
+    'Types/collection',
+    'Controls/Utils/getFontWidth'
+], function(tabsMod, sourceLib, entity, collection, getFontWidthUtil) {
     describe('Controls/_tabs/AdaptiveButtons', function() {
         const data = [
             {
@@ -86,6 +87,18 @@ define([
             assert.equal(notifyCorrectCalled, true);
 
             buttons.destroy();
+        });
+        it('_getTextWidth', function() {
+            let sandbox = sinon.createSandbox();
+            sandbox.replace(getFontWidthUtil, 'getFontWidth', () => 31.2);
+            let maxWidth = adaptiveButtons._getTextWidth('text');
+            assert.equal(maxWidth, 32);
+            sandbox.restore();
+
+            sandbox.replace(getFontWidthUtil, 'getFontWidth', () => 31.8);
+            maxWidth = adaptiveButtons._getTextWidth('text');
+            assert.equal(maxWidth, 32);
+            sandbox.restore();
         });
     });
 });
