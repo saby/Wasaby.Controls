@@ -2516,7 +2516,7 @@ const _private = {
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
             }
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected()], {bubbling: true});
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected(true, selection)], {bubbling: true});
         };
 
         if (result instanceof Promise) {
