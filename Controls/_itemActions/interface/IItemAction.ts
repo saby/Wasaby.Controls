@@ -80,7 +80,7 @@ export type TMenuButtonVisibility = 'visible' | 'adaptive';
 /**
  * @typedef {Function} TItemActionHandler
  * @description
- * Обработчик опции записи. См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
+ * Обработчик опции записи. См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ пример обработчика}.
  * @param item Corresponding list item.
  */
 export type TItemActionHandler = (item: Model) => void;
@@ -90,7 +90,7 @@ export type TItemActionHandler = (item: Model) => void;
  * @interface Controls/_itemActions/interface/IItemAction
  * @remark
  * Опции записи могут быть использованы в следующих вариантах:
- * 
+ *
  * 1. Панель опций записи, отображаемая в desktop браузерах
  * 2. Панель опций записи, появляющаяся при свайпе по записи влево.
  * 3. Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
@@ -180,7 +180,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#handler
      * @cfg {TItemActionHandler} Обработчик опции записи.
      * @remark
-     * См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
+     * См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ пример обработчика}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#handler

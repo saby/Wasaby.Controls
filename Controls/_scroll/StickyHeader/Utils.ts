@@ -139,12 +139,24 @@ export function isHidden(element: HTMLElement): boolean {
  * This fix does't work on android platform
  */
 
-const MOBILE_GAP_FIX_OFFSET: number = 1;
+const GAP_FIX_OFFSET: number = 1;
+const DESKTOP_PIXEL_RATIOS_BUG = [0.75, 1.25, 1.75];
+
+function getDevicePixelRatio(): number {
+        return window ? window.devicePixelRatio : 1;
+}
 
 export function getGapFixSize(): number {
     let offset: number = 0;
-    if (detection.isMobilePlatform && !detection.isMobileAndroid) {
-        offset = MOBILE_GAP_FIX_OFFSET;
+    if (detection.isMobilePlatform) {
+        if (!detection.isMobileAndroid) {
+            offset = GAP_FIX_OFFSET;
+        }
+    } else {
+        // Щель над прилипающим заголовком появляется на десктопах на масштабе 75%, 125% и 175%
+        if (DESKTOP_PIXEL_RATIOS_BUG.indexOf(getDevicePixelRatio()) !== -1) {
+            offset = GAP_FIX_OFFSET;
+        }
     }
     return offset;
 }

@@ -110,6 +110,11 @@ describe('Controls/_multiselection/Controller', () => {
          const result = controller.isAllSelected(false);
          assert.isTrue(result);
       });
+
+      it('is all selected in new selection', () => {
+         const result = controller.isAllSelected(true, {selected: [null], excluded: []});
+         assert.isTrue(result);
+      });
    });
 
    it('selectAll', () => {

@@ -153,7 +153,7 @@ export default interface IDraggable {
  * // JavaScript
  * _viewSource: null,
  * _dragStart: function(event, items) {
- *    var eventResult;
+ *    var eventResult = false;
  *    if (this._isSameTypes(items)) {
  *       eventResult = new ItemsEntity({
  *          items: items
@@ -190,7 +190,7 @@ export default interface IDraggable {
  *    Control.extend({
  *       ...
  *       _dragStart: function(event, items) {
- *          var eventResult;
+ *          var eventResult = false;
  *          if (this._isSameTypes(items)) {
  *             eventResult = new ItemsEntity({
  *                items: items

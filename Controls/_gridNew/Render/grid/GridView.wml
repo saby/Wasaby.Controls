@@ -32,7 +32,7 @@
         <!-- Items -->
         <div name="itemsContainer" class="controls-GridViewV__itemsContainer">
             <ws:partial
-                    template="wml!Controls/_list/Render/For"
+                    template="Controls/list:ForTemplate"
                     itemTemplate="{{ _itemTemplate }}"
                     collection="{{ _listModel }}"
                     keyPrefix="gridView-item"

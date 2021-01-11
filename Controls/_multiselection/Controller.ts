@@ -133,7 +133,7 @@ export class Controller {
 
    /**
     * Возвращает количество выбранных элементов
-    * @param {ISelection} selection Список выбранных записей, по которому посчитать кол-во выбранных элементов.
+    * @param {ISelection} selection Список выбранных записей, по которому посчитаем кол-во выбранных элементов.
     * Если не передан то будет считать по состоянию контроллера
     */
    getCountOfSelected(selection?: ISelection): number|null {
@@ -144,11 +144,12 @@ export class Controller {
     * Проверяет, что были выбраны все записи.
     * @param {boolean} [byEveryItem = true] true - проверять выбранность каждого элемента по отдельности.
     *  false - проверка происходит по наличию единого признака выбранности всех элементов.
+    * @param {ISelection} selection Список выбранных записей, по которому посчитаем признак isAllSelected.
     * @return {ISelection}
     */
-   isAllSelected(byEveryItem: boolean = true): boolean {
+   isAllSelected(byEveryItem: boolean = true, selection?: ISelection): boolean {
       return this._strategy.isAllSelected(
-         this._selection,
+         selection || this._selection,
          this._model.getHasMoreData(),
          this._model.getCount(),
          byEveryItem
