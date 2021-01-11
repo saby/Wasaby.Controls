@@ -189,6 +189,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
 /**
  * @event Происходит при сбросе поиска
- * @name Controls/_search/Input/Container#resetSearch
+ * @name Controls/_search/Input/Container#searchReset
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
