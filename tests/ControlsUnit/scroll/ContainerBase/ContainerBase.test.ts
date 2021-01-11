@@ -78,7 +78,7 @@ describe('Controls/scroll:ContainerBase', () => {
             userContent: {
                children: [{
                   classList: {
-                     contains: () => true
+                     contains: () => false
                   }
                }]
             }
