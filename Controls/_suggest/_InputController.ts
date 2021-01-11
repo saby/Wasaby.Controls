@@ -799,7 +799,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
                           return recordSet;
                        })
-                       .catch((error) => this._searchErrback(error));
+                       .catch((error) => error);
                 }
              })
              .catch((error) => this._searchErrback(error));
