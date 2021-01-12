@@ -868,7 +868,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         e.stopPropagation();
         const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
         const dndListController = this._children.baseControl.getDndListController();
-        if (dispItem.isNode() && dndListController.getDraggableItem().getContents().getKey() !== dispItem.getContents().getKey()) {
+        const targetIsNotDraggableItem = dndListController.getDraggableItem()?.getContents() !== dispItem.getContents();
+        if (dispItem.isNode() && targetIsNotDraggableItem) {
             const dndListController = this._children.baseControl.getDndListController();
             const targetElement = _private.getTargetRow(this, nativeEvent);
             const mouseOffsetInTargetItem = this._calculateOffset(nativeEvent, targetElement);
@@ -891,7 +892,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             }
 
-            if (!dispItem.isExpanded() && dndListController.getDraggableItem().getContents() !== dispItem.getContents() && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
+            if (!dispItem.isExpanded() && targetIsNotDraggableItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
                 this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }
