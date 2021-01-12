@@ -169,7 +169,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
+    * @event Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или добавления по месту.
     * @name Controls/interface/IEditableList#beforeBeginEdit
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {ItemEditOptions} options Параметры редактирования.
