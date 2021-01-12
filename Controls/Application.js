@@ -7,6 +7,7 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
+      'Env/Touch',
       'Env/Event',
       'UI/Base',
       'Controls/scroll',
@@ -15,9 +16,9 @@ define('Controls/Application',
       'Controls/event',
       'Controls/popup',
       'UI/HotKeys',
-      'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
+      'Controls/context',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -58,6 +59,7 @@ define('Controls/Application',
       template,
       cBodyClasses,
       Env,
+      Touch,
       EnvEvent,
       UIBase,
       scroll,
@@ -66,9 +68,9 @@ define('Controls/Application',
       ControlsEvent,
       popup,
       HotKeys,
-      TouchDetector,
       dragnDrop,
-      TimeTesterInv) {
+      TimeTesterInv,
+      cContext) {
       'use strict';
 
       var _private;
@@ -145,7 +147,6 @@ define('Controls/Application',
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
-            this._touchDetector.moveHandler();
             this._updateClasses();
          },
          _mouseupPage: function(ev) {
@@ -173,7 +174,6 @@ define('Controls/Application',
          },
 
          _touchStartPage: function() {
-            this._touchDetector.touchHandler();
             this._updateClasses();
          },
          _updateClasses: function() {
@@ -377,8 +377,15 @@ define('Controls/Application',
          },
 
          _createTouchDetector: function() {
-            this._touchDetector = new TouchDetector();
-            this._touchObjectContext = this._touchDetector.createContext();
+            this._touchDetector = Touch.TouchDetect.getInstance();
+            this._touchObjectContext = new cContext.TouchContextField(this._touchDetector.isTouch());
+            this._touchChangeHandler();
+         },
+
+         _touchChangeHandler: function(){
+            this._touchDetector.subscribe('touchChanged', function(event, isTouch){
+               this._touchObjectContext.setIsTouch(isTouch);
+            }.bind(this));
          },
 
          _createDragnDropController: function() {
