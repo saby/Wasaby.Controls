@@ -68,10 +68,8 @@ const getCompatibleConfig = (BaseOpenerCompat: any, config: INotificationPopupOp
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * 
  * @extends Controls/_popup/Opener/BaseOpener
- * @implements Controls/popup:IBaseOpener
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Popup/Opener/NotificationPG
  */
 class Notification extends BaseOpener<INotificationOpenerOptions> implements INotificationOpener {
     readonly '[Controls/_popup/interface/INotificationOpener]': boolean;
