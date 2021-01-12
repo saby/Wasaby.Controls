@@ -7,7 +7,7 @@ import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {isLeftMouseButton} from 'Controls/popup';
-import {IItems, IHeight} from 'Controls/interface';
+import {IItems, IItemTemplateOptions} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 import {constants} from 'Env/Env';
 import {adapter} from 'Types/entity';
@@ -15,8 +15,6 @@ import {factory} from 'Types/chain';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
-
-import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
 
 interface ITabButtonItem {
     isMainTab?: boolean;
@@ -33,7 +31,7 @@ export interface ITabsTemplate {
  * @interface Controls/_tabs/ITabsTemplate
  * @public
  */
-export interface ITabsTemplateOptions extends IItemTemplateOptions, IHeightOptions {
+export interface ITabsTemplateOptions extends IItemTemplateOptions {
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
     tabSpaceTemplate?: TemplateFunction;
@@ -75,7 +73,6 @@ const isTemplateObject = (tmpl: any): boolean => {
  * @mixes Controls/interface:ISingleSelectable
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
- * @mixes Controls/interface:IHeight
  * @mixes Controls/_tabs/interface/ITabsButtons
  * @mixes Controls/tabs:ITabsTemplateOptions
  *
@@ -85,10 +82,9 @@ const isTemplateObject = (tmpl: any): boolean => {
  * @cssModifier controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
  */
 
-class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate, IHeight {
+class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
-    readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_tabs/ITabsTemplate]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
