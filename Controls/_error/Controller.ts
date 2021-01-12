@@ -12,10 +12,22 @@ import {
 import Mode from './Mode';
 import Popup, { IPopupHelper } from './Popup';
 
-export type Config = {
+/**
+ * Параметры конструктора контроллера ошибок.
+ * @public
+ */
+export interface Config { // tslint:disable-line: interface-name
+    /**
+     * Пользовательские обработчики ошибок.
+     */
     handlers?: Handler[];
+
+    /**
+     * Конфигурация для отображения ошибки по умолчанию.
+     * Эта конфигурация объединится с той, которую вернёт обработчик ошибки.
+     */
     viewConfig?: Partial<ViewConfig>;
-};
+}
 
 type CanceledError = Error & { canceled?: boolean; };
 
@@ -38,7 +50,6 @@ export function getPopupHelper(): IPopupHelper {
  * Класс для выбора обработчика ошибки и формирования объекта с данными для шаблона ошибки.
  * Передаёт ошибку по цепочке функций-обработчиков.
  * Обработчики предоставляются пользователем или берутся из настроек приложения.
- * @class Controls/_dataSource/_error/Controller
  * @public
  * @author Северьянов А.А.
  * @example
@@ -72,6 +83,9 @@ export default class ErrorController {
     private __controller: ParkingController<ViewConfig>;
     private _mode?: Mode;
 
+    /**
+     * @param options Параметры контроллера.
+     */
     constructor(options: Config, private _popupHelper: IPopupHelper = getPopupHelper()) {
         this._mode = options?.viewConfig?.mode;
         this.__controller = new ParkingController<ViewConfig>({
@@ -88,9 +102,8 @@ export default class ErrorController {
 
     /**
      * Добавить обработчик ошибки.
-     * @param {Controls/_dataSource/_error/Handler} handler
+     * @param handler Обработчик ошибки.
      * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
-     * @public
      */
     addHandler(handler: Handler, isPostHandler?: boolean): void {
         this.__controller.addHandler(handler, isPostHandler);
@@ -98,9 +111,8 @@ export default class ErrorController {
 
     /**
      * Убрать обработчик ошибки.
-     * @param {Controls/_dataSource/_error/Handler} handler
-     * @param isPostHandler Выполнять ли обработчик после обработчиков уровня приложения.
-     * @public
+     * @param handler Обработчик ошибки.
+     * @param isPostHandler Был ли обработчик добавлен для выполнения после обработчиков уровня приложения.
      */
     removeHandler(handler: Handler, isPostHandler?: boolean): void {
         this.__controller.removeHandler(handler, isPostHandler);
@@ -111,11 +123,8 @@ export default class ErrorController {
      * Передаёт ошибку по цепочке функций-обработчиков, пока какой-нибудь обработчик не вернёт результат.
      * @remark
      * Если ни один обработчик не вернёт результат, будет показан диалог с сообщением об ошибке.
-     * @method
-     * @name Controls/_dataSource/_error/Controller#process
-     * @public
-     * @param {Error | Controls/_dataSource/_error/HandlerConfig} config Обрабатываемая ошибки или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
-     * @return {void | Controls/_dataSource/_error/ViewConfig} Данные для отображения сообщения об ошибке.
+     * @param config Обрабатываемая ошибка или объект, содержащий обрабатываемую ошибку и предпочитаемый режим отображения.
+     * @return Промис с данными для отображения сообщения об ошибке или промис без данных, если ошибка не распознана.
      */
     process<TError extends ProcessedError = ProcessedError>(
         config: HandlerConfig<TError> | TError
