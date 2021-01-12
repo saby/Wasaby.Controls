@@ -1,7 +1,8 @@
 /**
  * Библиотека компонентов для обработки ошибок.
+ * Вместо этой библиотеки следует использовать библиотеку {@link Controls/dataSource:error}.
  * @library Controls/error
- * @private
+ * @public
  * @author Северьянов А.А.
  */
 
