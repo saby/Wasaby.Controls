@@ -29,6 +29,10 @@ export default class extends Control {
                     key: '4',
                     title: 'News',
                     readOnly: true
+                },
+                {
+                    key: null,
+                    title: 'Note'
                 }
             ]
         });
