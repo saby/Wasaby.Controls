@@ -14,17 +14,9 @@ define('Controls/Application/TouchDetector', [
 
       _beforeMount: function() {
          this._touchDetector = Env.TouchDetect.getInstance();
-         this._touchObjectContext = new cContext.TouchContextField(this._touchDetector.isTouch());
-         this._touchChangedHandler = this._touchChangedHandler.bind(this);
-         this._touchDetector.subscribe('touchChanged', this._touchChangedHandler);
+         this._touchObjectContext = new cContext.TouchContextField.create();
       },
-      _beforeUnmount: function() {
-         this._touchDetector.unsibescribe('touchChanged', this._touchChangedHandler);
-      },
-      _touchChangedHandler: function(event, value){
-         this._touchObjectContext.setIsTouch(value);
-      },
-
+       
       isTouch: function() {
          return this._touchDetector.isTouch();
       },
