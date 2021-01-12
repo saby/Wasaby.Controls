@@ -378,14 +378,7 @@ define('Controls/Application',
 
          _createTouchDetector: function() {
             this._touchController = Touch.TouchDetect.getInstance();
-            this._touchObjectContext = new cContext.TouchContextField(this._touchController.isTouch());
-            this._touchChangeHandler();
-         },
-
-         _touchChangeHandler: function(){
-            this._touchController.subscribe('touchChanged', function(event, isTouch){
-               this._touchObjectContext.setIsTouch(isTouch);
-            }.bind(this));
+            this._touchObjectContext = new cContext.TouchContextField.create();
          },
 
          _createDragnDropController: function() {
