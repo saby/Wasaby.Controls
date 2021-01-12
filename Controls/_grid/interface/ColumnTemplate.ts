@@ -69,7 +69,7 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
     *
     * * **columnIndex** — порядковый номер колонки. Отсчет от 0.
     * * **index** — порядковый номер строки. Отсчет от 0.
-    * * **isEditing()** — возвращает true, если для записи выполняется {@link /doc/platform/developmentapl/interface-development/controls/list/grid/edit/ редактирование по месту}.
+    * * **isEditing()** — возвращает true, если для записи выполняется {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
     * * **item** (тип {@link Types/entity:Record}) — элемент, данные которого отображаются в колонке.
     * * **column** (тип {@link Controls/grid:IColumn IColumn}) — объект с конфигурацией колонки.
     *
