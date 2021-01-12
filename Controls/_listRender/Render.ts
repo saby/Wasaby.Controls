@@ -139,6 +139,14 @@ export default class Render extends Control<IRenderOptions> {
         e.stopPropagation();
     }
 
+    _handleMenuActionMouseEnter(event: SyntheticEvent): void {
+        this._notify('menuActionMouseEnter');
+    }
+
+    _handleMenuActionMouseLeave(event: SyntheticEvent): void {
+        this._notify('menuActionMouseLeave');
+    }
+
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<unknown>): void {
         this._notify('itemMouseEnter', [item, e]);
     }

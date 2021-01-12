@@ -269,11 +269,19 @@ export default class View extends Control<IViewOptions> {
         }
     }
 
+    protected _onMenuActionMouseEnter(event: SyntheticEvent): void {
+        this._itemActionsController.startMenuDependenciesTimer();
+    }
+
+    protected _onMenuActionMouseLeave(event: SyntheticEvent): void {
+        this._itemActionsController.stopMenuDependenciesTimer();
+    }
+
     /**
      * Возвращает видимость опций записи.
      * @private
      */
-    _isVisibleItemActions(itemActionsMenuId: number): boolean {
+    protected _isVisibleItemActions(itemActionsMenuId: number): boolean {
         return !itemActionsMenuId || this._options.itemActionsVisibility === 'visible';
     }
 
