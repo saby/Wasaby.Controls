@@ -1,4 +1,5 @@
 import INavigationStore from './interface/INavigationStore';
+import {TNavigationDirection} from 'Controls/interface';
 
 interface IPositionHasMore {
     backward: boolean;
@@ -24,35 +25,16 @@ type TPositionValue = any[];
 type TField = string | string[];
 type TFieldValue = string[];
 
-/**
- * @typedef {Enum} CursorDirection
- * @description Направление выборки при навигации по курсору.
- * @variant forward Вниз.
- * @variant backward Вверх.
- * @variant bothways В обоих направлениях.
- */
-
-/*
- * @typedef {Enum} CursorDirection
- * @variant forward loading data after positional record.
- * @variant backward loading data before positional record.
- * @variant bothways loading data in both directions relative to the positional record.
- */
-export enum CursorDirection {
-    backward = 'backward',
-    forward = 'forward',
-    bothways = 'bothways'
-}
 export interface IPositionNavigationStoreOptions {
     field: TField;
     position: TPosition;
-    direction: CursorDirection;
+    direction: TNavigationDirection;
     limit: number;
 }
 export interface IPositionNavigationState {
     field: TField;
     position: TPosition;
-    direction: CursorDirection;
+    direction: TNavigationDirection;
     limit: number;
     backwardPosition: TPosition;
     forwardPosition: TPosition;
@@ -61,7 +43,7 @@ export interface IPositionNavigationState {
 class PositionNavigationStore implements INavigationStore {
     private _field: TFieldValue;
     private _position: TPositionValue;
-    private _direction: CursorDirection;
+    private _direction: TNavigationDirection;
     private _limit: number;
     private _iterative: boolean = false;
 
@@ -165,11 +147,11 @@ class PositionNavigationStore implements INavigationStore {
      * TODO Необходимо убрать этот метод, когда своместимость более не понадобится
      * @param position
      */
-    private static _convertDirection(position: CursorDirection | 'before' | 'after' | 'both'): CursorDirection {
+    private static _convertDirection(position: TNavigationDirection | 'before' | 'after' | 'both'): TNavigationDirection {
         const map = {
-            before: CursorDirection.backward,
-            after: CursorDirection.forward,
-            both: CursorDirection.bothways
+            before: 'backward',
+            after: 'forward',
+            both: 'bothways'
         };
         return map[position] ? map[position] : position;
     }
