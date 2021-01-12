@@ -102,11 +102,9 @@ export default class extends Control {
     }
 
     private _toggleNodes(tree) {
-        tree.toggleExpanded(1);
-        setTimeout(() => {
-            tree.toggleExpanded(11);
-            tree.toggleExpanded(12);
-        }, 50);
+        tree.toggleExpanded(1)
+            .then(() => tree.toggleExpanded(11))
+            .then(() => tree.toggleExpanded(12));
     };
 
     // tslint:disable-next-line
