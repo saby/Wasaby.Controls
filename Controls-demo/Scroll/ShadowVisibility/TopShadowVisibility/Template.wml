@@ -1,9 +1,9 @@
-<div class="ControlsDemo-Wrap">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
     <div class="wrap-container">
         <div class="options-value">topShadowVisibility = auto</div>
-        <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
+        <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    topShadowVisibility="auto">
-            <div class="text-wrapper">
+            <div class="controlsDemo__mr4">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
@@ -14,9 +14,9 @@
     </div>
     <div class="wrap-container">
         <div class="options-value">topShadowVisibility = visible</div>
-        <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
+        <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    topShadowVisibility="visible">
-            <div class="text-wrapper">
+            <div class="controlsDemo__mr4">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
@@ -27,9 +27,9 @@
     </div>
     <div class="wrap-container">
         <div class="options-value">topShadowVisibility = hidden</div>
-        <Controls.scroll:Container attr:class="ControlsDemo-scroll_container"
+        <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    topShadowVisibility="hidden">
-            <div class="text-wrapper">
+            <div class="controlsDemo__mr4">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
                 ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
