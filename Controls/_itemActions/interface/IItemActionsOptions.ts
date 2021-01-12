@@ -44,7 +44,7 @@ export interface IItemActionsOptions {
     contextMenuVisibility?: boolean;
 
     /**
-     * @cfg {Controls/menu:IMenuControlOptions} Конфигурация для меню опции записи.
+     * @cfg {Controls/itemActions:IContextMenuConfig} Конфигурация для меню опции записи.
      * @remark
      * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
      * В качестве ключей можно использовать следующие свойства:
@@ -58,8 +58,7 @@ export interface IItemActionsOptions {
      */
 
     /*ENG
-     * @cfg {Object} Determines whether context menu should be shown on right-click.
-     * <a href="/materials/Controls-demo/app/Controls-demo%2FList%2FList%2FItemActionsPG">Example</a>.
+     * @cfg {Controls/itemActions:IContextMenuConfig} item actions menu config
      * @default true
      */
     contextMenuConfig?: IContextMenuConfig;
