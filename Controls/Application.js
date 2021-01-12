@@ -179,8 +179,8 @@ define('Controls/Application',
          _updateClasses: function() {
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            if (this._touchDetector) {
-               this._touchClass = this._touchDetector.getClass();
+            if (this._touchController) {
+               this._touchClass = this._touchController.getClass();
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
@@ -377,13 +377,13 @@ define('Controls/Application',
          },
 
          _createTouchDetector: function() {
-            this._touchDetector = Touch.TouchDetect.getInstance();
-            this._touchObjectContext = new cContext.TouchContextField(this._touchDetector.isTouch());
+            this._touchController = Touch.TouchDetect.getInstance();
+            this._touchObjectContext = new cContext.TouchContextField(this._touchController.isTouch());
             this._touchChangeHandler();
          },
 
          _touchChangeHandler: function(){
-            this._touchDetector.subscribe('touchChanged', function(event, isTouch){
+            this._touchController.subscribe('touchChanged', function(event, isTouch){
                this._touchObjectContext.setIsTouch(isTouch);
             }.bind(this));
          },
