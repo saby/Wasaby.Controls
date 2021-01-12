@@ -8,7 +8,6 @@
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
                     searchEndCallback="{{_loadEnd}}"
                     searchStartCallback="{{_loadStart}}"
-                    searchErrback="{{_searchErrbackHandler}}"
                     emptyTemplate="{{_emptyTemplate}}"
                     source="{{_options.source}}"
                     navigation="{{_options.navigation}}"
