@@ -1259,6 +1259,9 @@ define([
             ];
          tests.forEach(function (test, index) {
             baseControl._options.groupingKeyCallback = undefined;
+            baseControl._items = {
+               getCount: () => test.data[2].getLoadedDataCount()
+            };
             baseControl._listViewModel = {
                getCount: () => test.data[2].getLoadedDataCount(),
                getCollection: () => ({
