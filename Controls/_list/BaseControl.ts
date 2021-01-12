@@ -6055,7 +6055,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
-                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+                this._dndListController.startDrag(draggingItemProjection, dragObject.entity);
 
                 let startPosition;
                 if (this._listViewModel.getCount()) {
@@ -6076,7 +6076,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // задаем изначальную позицию в другом списке
                 this._dndListController.setDragPosition(startPosition);
             } else if (dragEnterResult === true) {
-                this._dndListController.setDraggedItems(dragObject.entity);
+                this._dndListController.startDrag(null, dragObject.entity);
             }
         }
     },
