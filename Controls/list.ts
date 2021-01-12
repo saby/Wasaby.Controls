@@ -152,6 +152,6 @@ const editing = {
 
 import {groupConstants} from './display';
 import {MultiSelectAccessibility} from './display';
-import {CursorDirection} from './interface';
+import {CursorDirection} from './source';
 
 export {CursorDirection, groupConstants, editing, MultiSelectAccessibility};

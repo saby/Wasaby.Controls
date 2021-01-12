@@ -1,7 +1,7 @@
 import {QueryNavigationType} from 'Types/source';
-import {default as PositionNavigationStore, IPositionNavigationState} from './PositionNavigationStore';
+import {default as PositionNavigationStore, IPositionNavigationState, CursorDirection} from './PositionNavigationStore';
 import {IBasePositionSourceConfig, IBaseSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
-import {TNavigationDirection, TNavigationPagingMode, CursorDirection, IQueryParams} from 'Controls/interface';
+import {TNavigationDirection, TNavigationPagingMode, IQueryParams} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {Record, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';

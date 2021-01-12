@@ -1,4 +1,3 @@
-import {CursorDirection} from 'Controls/interface';
 import INavigationStore from './interface/INavigationStore';
 
 interface IPositionHasMore {
@@ -25,6 +24,25 @@ type TPositionValue = any[];
 type TField = string | string[];
 type TFieldValue = string[];
 
+/**
+ * @typedef {Enum} CursorDirection
+ * @description Направление выборки при навигации по курсору.
+ * @variant forward Вниз.
+ * @variant backward Вверх.
+ * @variant bothways В обоих направлениях.
+ */
+
+/*
+ * @typedef {Enum} CursorDirection
+ * @variant forward loading data after positional record.
+ * @variant backward loading data before positional record.
+ * @variant bothways loading data in both directions relative to the positional record.
+ */
+export enum CursorDirection {
+    backward = 'backward',
+    forward = 'forward',
+    bothways = 'bothways'
+}
 export interface IPositionNavigationStoreOptions {
     field: TField;
     position: TPosition;
