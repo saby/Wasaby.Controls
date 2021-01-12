@@ -1691,12 +1691,7 @@ const _private = {
                         newSelection = selectionController.onCollectionReset(entryPath);
                         break;
                     case IObservable.ACTION_REMOVE:
-                        /* Когда в цикле удаляют записи из рекордсета по одному и eventRaising=false, то
-                        * после eventRaising=true нам последовательно прилетают события удаления с отдельными записями.
-                        * Т.к. селекшин меняется в _beforeUpdate, то учитывается только последнее событие.
-                        * Чтобы учитывались все события, обрабатываем удаление всех записей на afterCollectionChanged
-                        */
-                        self._removedItems.push(...removedItems);
+                        newSelection = _private.getSelectionController(self).onCollectionRemove(removedItems);
                         break;
                     case IObservable.ACTION_REPLACE:
                         selectionController.onCollectionReplace(newItems);
@@ -1762,15 +1757,6 @@ const _private = {
         }
     },
 
-    onAfterCollectionChanged(self: typeof BaseControl): void {
-        if (_private.hasSelectionController(self) && self._removedItems.length) {
-            const newSelection = _private.getSelectionController(self).onCollectionRemove(self._removedItems);
-            _private.changeSelection(self, newSelection);
-        }
-
-        self._removedItems = [];
-    },
-
     /**
      * Возвращает boolean, надо ли обновлять проинициализированные ранее ItemActions, основываясь на newItems.properties.
      * Возвращается true, если newItems или newItems.properties не заданы
@@ -1796,20 +1782,8 @@ const _private = {
                     ]
                 );
             });
-            model.subscribe('onAfterCollectionChange', (...args: any[]) => {
-                _private.onAfterCollectionChanged.apply(
-                    null,
-                    [
-                        self,
-                        args[0], // event
-                        null, // changes type
-                        ...args.slice(1) // the rest of the arguments
-                    ]
-                );
-            });
         } else {
             model.subscribe('onListChange', _private.onCollectionChanged.bind(null, self));
-            model.subscribe('onAfterCollectionChange', _private.onAfterCollectionChanged.bind(null, self));
         }
 
         if (!useNewModel) {
@@ -3226,7 +3200,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // Контроллер для удаления элементов из источника
     _removeController: null,
-    _removedItems: [],
     _keyProperty: null,
 
     // callback'ки передаваемые в sourceController
@@ -6127,6 +6100,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const draggedKey = draggableItem.getContents().getKey();
                     _private.changeMarkedKey(this, draggedKey);
                 }
+            }
+
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
             }
 
             this._dndListController = null;

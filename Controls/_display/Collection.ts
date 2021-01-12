@@ -247,7 +247,7 @@ function normalizeHandlers<T>(handlers: T | T[]): T[] {
  * @param oldItemsIndex Индекс, в котором удалены элементы.
  * @param reason Причина перерисовки, в качестве причины передаётся название метода, которым был изменён RecordSet.
  */
-function onCollectionChange<T>(
+function onCollectionChange<T extends EntityModel>(
     event: EventObject,
     action: string,
     newItems: T[],
@@ -315,6 +315,27 @@ function onCollectionChange<T>(
             break;
 
         case IObservable.ACTION_REMOVE:
+
+            const removedItems = [];
+            oldItems.forEach((removedRecord) => {
+                const removedKey = removedRecord.getKey && removedRecord.getKey();
+                const enumerator = this.getEnumerator();
+                if (enumerator.isHiddenItem(removedKey, this.isDragging())) {
+                    removedItems.push(this.createItem({
+                        contents: removedRecord
+                    }));
+                }
+            });
+            if (removedItems.length) {
+                this._notifyCollectionChange(
+                   IObservable.ACTION_REMOVE,
+                   [],
+                   0,
+                   removedItems,
+                   -1
+                );
+            }
+
             // FIXME: oldItems.length - FIXME[OrderMatch]
             this._removeItems(oldItemsIndex, oldItems.length);
             this._reSort();

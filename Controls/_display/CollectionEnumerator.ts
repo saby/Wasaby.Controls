@@ -1,6 +1,7 @@
 import {DestroyableMixin, OptionsToPropertyMixin} from 'Types/entity';
 import {IEnumerator, IndexedEnumeratorMixin} from 'Types/collection';
 import {mixin} from 'Types/util';
+import { CrudEntityKey } from 'Types/source';
 
 /**
  * Энумератор для проекции коллекции
@@ -259,6 +260,12 @@ export default class CollectionEnumerator<T> extends mixin<
         }
         this._initInternalMap();
         return this._internalToSource[internal];
+    }
+
+    isHiddenItem(key: CrudEntityKey, isDragging: boolean = false): boolean {
+        const item = this.items.find((it) => it.key === key);
+        const itemIndex = this.items.indexOf(item);
+        return isDragging && itemIndex === -1 || this._$filterMap[itemIndex] === false;
     }
 
     // endregion
