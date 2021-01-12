@@ -26,6 +26,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * Для открытия стековых окон из кода используйте {@link Controls/popup:StackOpener}.
+ * @implements Controls/_interface/IPropStorage
  * @author Красильников А.С.
  * @implements Controls/popup:IBaseOpener
  * @demo Controls-demo/Popup/Opener/StackDemo
@@ -35,7 +36,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:StackController';
 /*
  * Component that opens the popup to the right of content area at the full height of the screen.
  * {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ See more}.
- *
+ * @implements Controls/_interface/IPropStorage
  * @demo Controls-demo/Popup/Opener/StackDemo
  * @author Красильников А.С.
  * @mixes Controls/popup:IBaseOpener
