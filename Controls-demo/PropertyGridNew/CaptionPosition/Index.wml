@@ -3,8 +3,7 @@
         <div class="controls-text-label_theme-{{_options.theme}}">captionPosition = left</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
-                on:itemClick="_handleItemClick()">
+                source="{{_source}}">
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
                             class="controls-demo-pg-highlightOnHover-editor-padding"
@@ -18,8 +17,7 @@
         <div class="controls-text-label_theme-{{_options.theme}}">captionPosition = top</div>
         <Controls.propertyGrid:PropertyGrid
                 bind:editingObject="_editingObject"
-                source="{{_source}}"
-                on:itemClick="_handleItemClick()">
+                source="{{_source}}">
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
                             class="controls-demo-pg-highlightOnHover-editor-padding"
