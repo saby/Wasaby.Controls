@@ -1,9 +1,8 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 
 /**
- * Интерфейс для опций диалоговых окон.
- *
- * @interface Controls/_popup/interface/IDialog
+ * 
+ * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IDialogOpener здесь}.
  * @public
  * @author Красильников А.С.
  */
@@ -21,6 +20,11 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     restrictiveContainer?: string;
 }
 
+/**
+ * Интерфейс для опций диалоговых окон.
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IDialogOpener extends IOpener {
     readonly '[Controls/_popup/interface/IDialogOpener]': boolean;
 }
@@ -28,44 +32,60 @@ export interface IDialogOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IDialogOpener#height
  * @cfg {Number} Текущая высота диалогового окна.
+ * @see maxHeight
+ * @see minHeight
  */
 
 /**
  * @name Controls/_popup/interface/IDialogOpener#width
  * @cfg {Number} Текущая ширина диалогового окна.
+ * @see maxWidth
+ * @see minWidth
  */
 
 /**
  * @name Controls/_popup/interface/IDialogOpener#maxHeight
  * @cfg {Number} Максимально допустимая высота диалогового окна.
+ * @see height
+ * @see minHeight
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#minHeight
  * @cfg {Number} Минимально допустимая высота диалогового окна.
+ * @see height
+ * @see maxHeight
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#maxWidth
  * @cfg {Number} Максимально допустимая ширина диалогового окна.
+ * @see width
+ * @see minWidth
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#minWidth
  * @cfg {Number} Минимально допустимая ширина диалогового окна.
+ * @see width
+ * @see maxWidth
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#top
  * @cfg {Number} Distance from the window to the top of the screen.
+ * @see left
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#top
  * @cfg {Number} Расстояние от диалогового окна до верхнего края экрана.
+ * @see left
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#left
  * @cfg {Number} Distance from the window to the left border of the screen.
+ * @see top
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#left
  * @cfg {Number} Расстояние от диалогового окна до левого края экрана.
+ * @see top
  */
 
 /**
@@ -75,26 +95,26 @@ export interface IDialogOpener extends IOpener {
 
 /**
  * @name Controls/_popup/interface/IDialogOpener#restrictiveContainer
- * @cfg {String} Опция задает контейнер (через <b>селектор</b>), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
+ * @cfg {String} Опция задает контейнер (через селектор), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
  * @remark
  * Алгоритм поиска контейнера, внутри которого будут строиться окна:
- * <ol>
- *     <li>Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
- *     Если ничего не нашли или опция не задана см. следующий шаг</li>
- *     <li>Если опция не задана, то ищем глобальным селектором класс <b>controls-Popup__dialog-target-container</b></li>
- *     <li>Если ничего не нашли, позиционируемся по body
- * </ol>
+ * 
+ * * Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
+ * Если ничего не нашли или опция не задана см. следующий шаг.
+ * * Если опция не задана, то ищем глобальным селектором класс "controls-Popup__dialog-target-container".
+ * * Если ничего не нашли, позиционируемся по body.
  *
  * Класс controls-Popup__dialog-target-container является зарезервированным и должен быть объявлен на странице только 1 раз.
  * Классом должен быть добавлен на контейнер, по которому позиционируются стековые окна по умолчанию.
  * @example
- * wml
- * <pre>
- *     <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
- *     <Controls.buttons:Button caption="open dialog" on:click="_openDialog()"/>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <div class='myRestrictiveContainer'>Контейнер со своими размерами</div>
+ * <Controls.buttons:Button caption="open dialog" on:click="_openDialog()"/>
  * </pre>
  *
  * <pre class="brush: js">
+ * // TypeScript
  * import {DialogOpener} from 'Controls/popup';
  * _beforeMount(): void{
  *    this._dialogOpener = new DialogOpener();
@@ -114,7 +134,7 @@ export interface IDialogOpener extends IOpener {
  */
 
 /**
- * @typedef {Object} PopupOptions
+ * @typedef {Object} Controls/_popup/interface/IDialogOpener/PopupOptions
  * @description Конфигурация диалогового окна.
  * @property {Boolean} autofocus Определяет, установится ли фокус на шаблон попапа после его открытия.
  * @property {Boolean} modal Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
@@ -140,32 +160,32 @@ export interface IDialogOpener extends IOpener {
  * @description Метод закрытия диалогового окна.
  * @returns {Undefined}
  * @example
- * wml
- * <pre>
- *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
- *          <ws:templateOptions key="111"/>
- *    </Controls.popup:Dialog>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
+ *    <ws:templateOptions key="111"/>
+ * </Controls.popup:Dialog>
  *
- *    <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
- *    <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+ * <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+ * <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
  * </pre>
- * js
- * <pre>
- *   Control.extend({
- *      ...
+ * <pre class="brush: js">
+ * // JavaScript
+ * Control.extend({
+ *    ...
  *
- *       _openDialog() {
- *          var popupOptions = {
- *              autofocus: true
- *          }
- *          this._children.dialog.open(popupOptions)
+ *    _openDialog() {
+ *       var popupOptions = {
+ *          autofocus: true
  *       }
+ *       this._children.dialog.open(popupOptions)
+ *    }
  *
- *       _closeDialog() {
- *          this._children.dialog.close()
- *       }
- *       ...
- *   });
+ *    _closeDialog() {
+ *       this._children.dialog.close()
+ *    }
+ *    ...
+ * });
  * </pre>
  * @see open
  */
@@ -174,36 +194,36 @@ export interface IDialogOpener extends IOpener {
  * Метод открытия диалогового окна.
  * Повторный вызов этого метода инициирует перерисовку окна с новыми опциями.
  * @function Controls/_popup/interface/IDialogOpener#open
- * @param {PopupOptions} popupOptions Конфигурация диалогового окна.
+ * @param {Controls/_popup/interface/IDialogOpener/PopupOptions.typedef} popupOptions Конфигурация диалогового окна.
  * @remark
  * Если требуется открыть окно, без создания popup:Dialog в верстке, следует использовать статический метод {@link openPopup}.
  * @example
- * wml
- * <pre>
- *    <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
- *          <ws:templateOptions key="111"/>
- *    </Controls.popup:Dialog>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.popup:Dialog name="dialog" template="Controls-demo/Popup/TestDialog" modal="{{true}}">
+ *    <ws:templateOptions key="111"/>
+ * </Controls.popup:Dialog>
  *
- *    <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
- *    <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+ * <Controls.buttons:Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
+ * <Controls.buttons:Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
  * </pre>
- * js
- * <pre>
- *   Control.extend({
- *      ...
+ * <pre class="brush: js">
+ * // JavaScript
+ * Control.extend({
+ *    ...
  *
- *       _openDialog() {
- *          var popupOptions = {
- *              autofocus: true
- *          }
- *          this._children.dialog.open(popupOptions)
+ *    _openDialog() {
+ *       var popupOptions = {
+ *          autofocus: true
  *       }
+ *       this._children.dialog.open(popupOptions)
+ *    }
  *
- *       _closeDialog() {
- *          this._children.dialog.close()
- *       }
- *       ...
- *   });
+ *    _closeDialog() {
+ *       this._children.dialog.close()
+ *    }
+ *    ...
+ * });
  * </pre>
  * @see close
  */

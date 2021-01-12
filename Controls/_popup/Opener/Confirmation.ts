@@ -21,7 +21,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * 
  * @extends Controls/_popup/Opener/BaseOpener
- * @implements Controls/_popup/interface/IConfirmationFooter
+ * @implements Controls/popup:IConfirmationFooter
  * 
  * @public
  * @author Красильников А.С.
