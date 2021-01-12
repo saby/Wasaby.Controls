@@ -269,7 +269,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (newOptions.searchValue !== undefined) {
+        if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
