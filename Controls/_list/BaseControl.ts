@@ -6117,6 +6117,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.changeMarkedKey(this, draggedKey);
                 }
             }
+
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
+            }
         };
 
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
