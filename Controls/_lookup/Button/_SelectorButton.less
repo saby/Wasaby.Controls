@@ -42,18 +42,10 @@
    text-decoration: underline;
 }
 
-.controls-Selectorbutton_selectedItem_single {
-   color: @text-color_lookupSelector;
-}
-
 .ws-is-hover {
-   .controls-Selectorbutton_selectedItem_single:hover {
+   .controls-Selectorbutton_selectedItem_single:hover .controls-text-link_theme-@{themeName} {
       color: @text-color_hover_lookupSelector;
    }
-}
-
-.controls-Selectorbutton_selectedItem_single:active {
-   color: @text-color_active_lookupSelector;
 }
 
 .controls-Selectorbutton_button-select_readOnly {
