@@ -16,7 +16,7 @@ export interface IEditOptions {
 }
 
 /**
- * Интерфейс для опций окна редактирования
+ * Интерфейс для опций окна редактирования.
  * @public
  * @author Красильников А.С.
  */
@@ -44,22 +44,22 @@ export interface IEditOpener {
  * @function Controls/_popup/interface/IEditOpener#open
  * @param {Object} meta Данные, по которым определяется, откуда диалог получит редактируемую запись. В объект можно передать свойства key и record. Политика обработки свойств подробно описана {@link /doc/platform/developmentapl/interface-development/forms-and-validation/editing-dialog/#step4 здесь}.
  * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
- * В зависимости от значения опции 'mode':
- * * 'stack' — смотреть {@link Controls/_popup/interface/IStack/PopupOptions.typedef popupOptions стекового окна}
- * * 'dialog' — смотреть {@link Controls/_popup/interface/IDialog/PopupOptions.typedef popupOptions диалогового окна}
- * * 'sticky' — смотреть {@link Controls/_popup/interface/ISticky/PopupOptions.typedef popupOptions окна прилипающего блока}
+ * В зависимости от значения опции {@link Controls/_popup/interface/IEditOpener#mode mode}:
+ * * "stack" — смотреть {@link Controls/_popup/interface/IStack/PopupOptions.typedef popupOptions стекового окна}
+ * * "dialog" — смотреть {@link Controls/_popup/interface/IDialog/PopupOptions.typedef popupOptions диалогового окна}
+ * * "sticky" — смотреть {@link Controls/_popup/interface/ISticky/PopupOptions.typedef popupOptions окна прилипающего блока}
  * @returns {undefined}
  * @example
- * * WML
- * <pre>
- *     <Controls.popup:Edit name="EditOpener">
- *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
- *           <ws:templateOptions source="{{_viewSource}}" />
- *        </ws:popupOptions>
- *     </Controls.popup:Edit>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.popup:Edit name="EditOpener">
+ *    <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
+ *       <ws:templateOptions source="{{_viewSource}}" />
+ *    </ws:popupOptions>
+ * </Controls.popup:Edit>
  * </pre>
- * * JavaScript
- * <pre>
+ * <pre class="brush: js">
+ * // JavaScript
  * Control.extend({
  *    ...
  *    _itemClick(event, record) {
@@ -70,6 +70,8 @@ export interface IEditOpener {
  *    }
  * });
  * </pre>
+ * @see close
+ * @see isOpened
  */
 /*
  * Open edit popup.
@@ -83,53 +85,58 @@ export interface IEditOpener {
  * </ul>
  * @returns {undefined}
  * @example
- * WML
- * <pre>
- *     <Controls.popup:Edit name="EditOpener">
- *        <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
- *           <ws:templateOptions source="{{_viewSource}}" />
- *        </ws:popupOptions>
- *     </Controls.popup:Edit>
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.popup:Edit name="EditOpener">
+ *    <ws:popupOptions template="Controls-demo/Popup/Edit/MyFormController">
+ *       <ws:templateOptions source="{{_viewSource}}" />
+ *    </ws:popupOptions>
+ * </Controls.popup:Edit>
  * </pre>
- * JavaScript
- * <pre>
- *   Control.extend({
- *        ...
- *
- *        _itemClick(event, record) {
- *           var popupOptions = {
- *              closeOnOutsideClick: false,
- *           };
- *
- *           var meta = {
- *              record: record,
- *          };
- *
- *           this._children.EditOpener.open(meta, popupOptions);
- *       }
- *    });
+ * <pre class="brush: js">
+ * // JavaScript
+ * Control.extend({
+ *    ...
+ *    _itemClick(event, record) {
+ *       var popupOptions = {
+ *          closeOnOutsideClick: false,
+ *       };
+ *       this._children.EditOpener.open({record: record}, popupOptions);
+ *    }
+ * });
  * </pre>
+ * @see close
+ * @see isOpened
  */
 
 /**
  * Закрывает всплывающее окно диалога редактирования.
  * @function
  * @name Controls/_popup/interface/IEditOpener#close
+ * @see open
+ * @see isOpened
  */
 /*
  * Close popup
  * @function Controls/_popup/interface/IEditOpener#close
+ * @see open
+ * @see isOpened
  */
 
 /**
  * Возвращает информацию о том, открыто ли всплывающее окно.
  * @function
  * @name Controls/_popup/interface/IEditOpener#isOpened
+ * @returns {Boolean}
+ * @see open
+ * @see close
  */
 /*
  * Popup opened status
  * @function Controls/_popup/interface/IEditOpener#isOpened
  * @returns {Boolean} is popup opened
+ * @see open
+ * @see close
  */
 
 /**
@@ -149,14 +156,14 @@ export interface IEditOpener {
 
 /**
  * @name Controls/_popup/interface/IEditOpener#mode
- * @cfg {Object} Режим отображения диалога редактирования.
+ * @cfg {String} Режим отображения диалога редактирования.
  * @variant stack Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/stack/ стековом окне}. Для открытия диалога редактирования используйте класс {@link Controls/popup:Stack}.
  * @variant dialog Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/dialog/ диалоговом окне}. Для открытия диалога редактирования используйте класс {@link Controls/popup:Dialog}.
  * @variant sticky Отображение диалога в {@link /doc/platform/developmentapl/interface-development/controls/openers/sticky/ окне прилипающего блока}. Для открытия диалога редактирования используйте класс {@link Controls/popup:Sticky}.
  */
 /*
  * @name Controls/_popup/interface/IEditOpener#mode
- * @cfg {Object} Sets the display mode of the dialog.
+ * @cfg {String} Sets the display mode of the dialog.
  * @variant stack Open edit dialog in the stack panel.
  * @variant dialog Open edit dialog in the dialog popup.
  * @variant sticky Open edit dialog in the sticky popup.
