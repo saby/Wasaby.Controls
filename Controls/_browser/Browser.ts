@@ -289,7 +289,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _updateSearchController(newOptions: IBrowserOptions): Promise<void> {
-        return this._getSearchController().then((searchController) => {
+        return this._getSearchController(this._options).then((searchController) => {
             const updateResult = searchController.update(this._getSearchControllerOptions(newOptions));
 
             if (updateResult instanceof Promise) {
