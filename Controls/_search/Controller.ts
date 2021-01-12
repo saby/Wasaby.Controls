@@ -184,6 +184,12 @@ export default class Container extends Control<IContainerOptions> {
             }
             sourceController.setItems(result);
          }
+      }).catch((error: Error & {
+         isCancelled?: boolean;
+      }) => {
+         if (!error.isCancelled) {
+            return error;
+         }
       });
    }
 

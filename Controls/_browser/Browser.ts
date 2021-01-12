@@ -8,7 +8,7 @@ import {
     SearchResolver as SearchResolverController
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
-import { IFilterControllerOptions } from 'Controls/_filter/ControllerClass';
+import {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {EventUtils} from 'UI/Events';
 import {RecordSet} from 'Types/collection';
 import {ContextOptions} from 'Controls/context';
@@ -20,14 +20,20 @@ import {
     ISourceControllerOptions,
     NewSourceController as SourceController
 } from 'Controls/dataSource';
-import {IFilterOptions, IHierarchyOptions, ISearchOptions, ISourceOptions, TSelectionType, Direction} from 'Controls/interface';
+import {
+    Direction,
+    IFilterOptions,
+    IHierarchyOptions,
+    ISearchOptions,
+    ISourceOptions,
+    TSelectionType
+} from 'Controls/interface';
 import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
 import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
-import {IFilterHistoryData} from 'Controls/_filter/ControllerClass';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
@@ -60,8 +66,7 @@ interface IDataChildContext {
     dataOptions: IBrowserOptions;
 }
 
-type IFilterControllerOptions = Pick<IBrowserOptions,
-   'filter' | 'minSearchLength' | 'filterButtonSource' | 'parentProperty' | 'searchParam' | 'searchValue'>;
+type TErrbackConfig = dataSourceError.ViewConfig & { error: Error };
 
 /**
  * Контрол "Браузер" обеспечивает связь между списком (см. {@link Controls/list:View Плоский список}, {@link Controls/grid:View Таблица}, {@link Controls/treeGrid:View Дерево}, {@link Controls/tile:View Плитка} и {@link Controls/explorer:View Иерархический проводник}) и контролами его окружения, таких как {@link Controls/search:Input Строка поиска}, {@link Controls/breadcrumbs:Path Хлебные крошки}, {@link Controls/operations:Panel Панель действий} и {@link Controls/filter:View Объединенный фильтр}.
@@ -118,8 +123,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
-    private _topShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
-    private _bottomShadowVisibility: SHADOW_VISIBILITY = SHADOW_VISIBILITY.AUTO;
+    private _topShadowVisibility: SHADOW_VISIBILITY | 'gridauto' = SHADOW_VISIBILITY.AUTO;
+    private _bottomShadowVisibility: SHADOW_VISIBILITY | 'gridauto' = SHADOW_VISIBILITY.AUTO;
 
     protected _beforeMount(options: IBrowserOptions,
                            context?: typeof ContextOptions,
@@ -155,7 +160,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._searchValue = options.searchValue;
         }
 
-        const controllerState = this._getSourceController(this._getSourceControllerOptions(options)).getState();
+        const controllerState = this._getSourceController(
+           this._getSourceControllerOptions(options as ISourceControllerOptions)).getState();
         this._dataOptionsContext = this._createContext(controllerState);
 
         this._previousViewMode = this._viewMode = options.viewMode;
@@ -187,9 +193,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _getSourceController(options?: IBrowserOptions): SourceController {
+    private _getSourceController(options?: IBrowserOptions | ISourceControllerOptions): SourceController {
         if (!this._sourceController) {
-            this._sourceController = new SourceController(options ?? this._options);
+            this._sourceController = new SourceController((options ?? this._options) as ISourceControllerOptions);
         }
 
         return this._sourceController;
@@ -246,7 +252,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         const sourceController = this._getSourceController(newOptions);
-        const isChanged = sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
+        const isChanged = sourceController.updateOptions(
+           this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
 
         if (sourceChanged) {
             this._loading = true;
@@ -269,7 +276,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (newOptions.searchValue !== undefined) {
+        if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
@@ -512,10 +519,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._onDataError(null, {
             error,
             mode: dataSourceError.Mode.include
-        });
+        } as TErrbackConfig);
     }
 
-    protected _onDataError(event: SyntheticEvent, errbackConfig: dataSourceError.ViewConfig): void {
+    protected _onDataError(event: SyntheticEvent, errbackConfig: TErrbackConfig): void {
         this._getErrorRegister().start(errbackConfig);
     }
 
@@ -567,7 +574,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._getOperationsController().setOperationsPanelVisible(false);
     }
 
-    private _createOperationsController(options) {
+    private _createOperationsController(options: IBrowserOptions): OperationsController {
         const controllerOptions = {
             ...options,
             ...{
@@ -617,15 +624,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         };
     }
 
-    private _getFilterControllerOptions(options): IFilterControllerOptions {
+    private _getFilterControllerOptions(options: IBrowserOptions): IFilterControllerOptions {
        return {
            ...options,
            searchValue: options.hasOwnProperty('searchValue') ? options.searchValue : this._searchValue,
            historySaveCallback: this._historySaveCallback.bind(this)
-        };
+        } as IFilterControllerOptions;
     }
 
-    private _notifyNavigationParamsChanged(params): void {
+    private _notifyNavigationParamsChanged(params: unknown): void {
         if (this._isMounted) {
             this._notify('navigationParamsChanged', [params]);
         }
@@ -644,7 +651,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }).catch((error: Error & {
             isCancelled?: boolean;
         }) => {
-            if (!error?.isCancelled) {
+            if (!error.isCancelled) {
                 return error;
             }
         });

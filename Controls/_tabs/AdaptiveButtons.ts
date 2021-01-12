@@ -49,7 +49,7 @@ export interface ITabsAdaptiveButtonsOptions extends ITabsButtonsOptions {
  * @mixes Controls/tabs:ITabsAdaptiveButtonsOptions
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Tabs/AdaptiveButtons/Index
@@ -284,7 +284,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {
-       return getFontWidth(text, size);
+       return Math.ceil(getFontWidth(text, size));
     }
 
     static getDefaultOptions(): Partial<ITabsAdaptiveButtonsOptions> {
