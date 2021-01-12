@@ -359,6 +359,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             changed = true;
         }
 
+        if (!scrollState.hasUnrenderedContent.top && this._initialized) {
+            this._initialShowShadow = false;
+        }
+
         this._scrollState = scrollState;
 
         if (changed && this._initialized) {
