@@ -76,6 +76,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._value = newOptions.inputSearchValue;
+         this._getSearchResolverController().setSearchStarted(true);
       }
    }
 
