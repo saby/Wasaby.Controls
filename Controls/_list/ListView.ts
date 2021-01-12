@@ -1,6 +1,3 @@
-/**
- * Created by kraynovdo on 22.09.2017.
- */
 import {Control as BaseControl} from 'UI/Base';
 import {debounce as cDebounce} from 'Types/function';
 import {Logger} from 'UI/Utils';

@@ -7,6 +7,42 @@ import ErrorController, { getPopupHelper } from './Controller';
 import { IPopupHelper, PopupId } from './Popup';
 
 /**
+ * Парамертры показа дружелюбного диалога.
+ * @public
+ * @author Северьянов А.А.
+ */
+export interface IProcessOptions {
+    /**
+     * Ошибка, которую надо обработать.
+     */
+    error: Error;
+
+    /**
+     * Дополнительные обработчики ошибки, которые вызываются перед платформенными.
+     */
+    handlers?: Handler[];
+    opener?: Control;
+    dialogEventHandlers?: Record<string, Function>;
+
+    /**
+     * Параметры открываемого диалогового окна.
+     */
+    dialogOptions?: IBasePopupOptions;
+
+    /**
+     * Дополнительные обработчики ошибки, которые вызываются после платформенных.
+     */
+    postHandlers?: Handler[];
+
+    /**
+     * Функция, в которую передаётся конфиг для показа ошибки.
+     * Функция вызывается перед показом диалога, в ней можно поменять конфигурацию для показа ошибки.
+     */
+    beforeOpenDialogCallback?: (viewConfig: ViewConfig) => void;
+    _popupHelper?: IPopupHelper;
+}
+
+/**
  * Показать диалог с дружелюбным сообщением об ошибке.
  * @remark
  * <b>Функция работает только в браузере</b>, при выполнении на сервере в логи будет записана ошибка.
@@ -40,22 +76,9 @@ import { IPopupHelper, PopupId } from './Popup';
  * }
  * </pre>
  *
- * @class Controls/_dataSource/_error/process
  * @public
  * @author Северьянов А.А.
  */
-
-export interface IProcessOptions {
-    error: Error;
-    handlers?: Handler[];
-    opener?: Control;
-    dialogEventHandlers?: Record<string, Function>;
-    dialogOptions?: IBasePopupOptions;
-    postHandlers?: Handler[];
-    beforeOpenDialogCallback?: (viewConfig: ViewConfig) => void;
-    _popupHelper?: IPopupHelper;
-}
-
 export default function process(options: IProcessOptions): Promise<PopupId | void> {
     const {
         error,

@@ -2,7 +2,7 @@
 /**
  * Компоненты для обработки и отображения ошибок.
  * {@link /doc/platform/developmentapl/interface-development/application-architecture/error-handling/}
- * @library Controls/dataSource/error
+ * @library Controls/dataSource:error
  * @includes Controller Controls/_dataSource/_error/Controller
  * @includes Container Controls/_dataSource/_error/Container
  * @includes DataLoader Controls/_dataSource/_error/DataLoader
@@ -22,6 +22,7 @@ export {
     Controller,
     Handler,
     HandlerConfig,
+    IProcessOptions,
     Mode,
     Popup,
     process,

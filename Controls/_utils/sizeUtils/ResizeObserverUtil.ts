@@ -41,7 +41,7 @@ export default class ResizeObserverUtil {
         }
     }
 
-    isResizeObserverSupported(): void {
+    isResizeObserverSupported(): boolean {
         return this._resizeObserverSupported;
     }
 
@@ -51,7 +51,7 @@ export default class ResizeObserverUtil {
             this._resizeObserver = null;
         } else {
             if (this._control) {
-                UnregisterUtil(this._control, 'controlResize');
+                UnregisterUtil(this._control, 'controlResize', { listenAll: true });
             }
         }
     }
