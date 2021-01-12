@@ -98,6 +98,15 @@ define(
             assert.isTrue(suggest._suggestState);
          });
 
+         it('_beforeUpdate new suggestTemplate', function() {
+            let newConfig = Clone(config);
+            newConfig.suggestTemplate = { name: 'newTestTemplate'};
+            let suggest = getSuggest(config);
+            suggest._options.suggestTemplate = { name: 'testTemplate'};
+            suggest._beforeUpdate(newConfig);
+            assert.deepEqual(suggest._suggestTemplate.name, 'newTestTemplate');
+         });
+
          it('_beforeUpdate new selectedKey', function(done) {
             let newConfig = Clone(config);
             newConfig.selectedKey = '3';
