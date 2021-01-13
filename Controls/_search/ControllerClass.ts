@@ -234,7 +234,7 @@ export default class ControllerClass {
       return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
          if (recordSet instanceof RecordSet) {
             this._path = recordSet.getMetaData().path;
-
+            this._sourceController.setFilter(filter);
             return recordSet as RecordSet;
          }
       });
