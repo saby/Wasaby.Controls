@@ -49,7 +49,6 @@ export interface IView extends IHeading {
  * @extends UI/Base:Control
  * @implements Controls/interface:IExpandable
  * @implements Controls/spoiler:IHeading
- * @implements Controls/spoiler:IView
  *
  * @public
  * @author Красильников А.С.
