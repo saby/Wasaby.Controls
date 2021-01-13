@@ -1716,7 +1716,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     setGroupProperty(groupProperty: string): void {
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
-            this._reBuild(true);
+            this.setGroup((item) => {
+                return item.get(this._$groupProperty);
+            });
             this._nextVersion();
         }
     }
