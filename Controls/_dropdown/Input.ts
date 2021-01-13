@@ -177,7 +177,7 @@ export default class Input extends BaseDropdown {
          this._selectedItems = items;
          this._needInfobox = options.readOnly && this._selectedItems.length > 1;
          this._item = items[0];
-         this._isEmptyItem = isEmptyItem(this._item, options.emptyText, options.keyProperty);
+         this._isEmptyItem = isEmptyItem(this._item, options.emptyText, options.keyProperty, options.emptyKey);
          this._icon = this._isEmptyItem ? null : getPropValue(this._item, 'icon');
          this._text = this._getText(items[0], options);
          this._hasMoreText = this._getMoreText(items);
@@ -264,9 +264,9 @@ export default class Input extends BaseDropdown {
    }
 
    private _getText(item: Model,
-                    {emptyText, keyProperty, displayProperty}: Partial<IInputOptions>): string {
+                    {emptyText, emptyKey, keyProperty, displayProperty}: Partial<IInputOptions>): string {
       let text = '';
-      if (isEmptyItem(item, emptyText, keyProperty)) {
+      if (isEmptyItem(item, emptyText, keyProperty, emptyKey)) {
          text = prepareEmpty(emptyText);
       } else {
          text = getPropValue(item, displayProperty);
@@ -290,7 +290,8 @@ export default class Input extends BaseDropdown {
 
    static getDefaultOptions(): Partial<IBaseDropdownOptions> {
       return {
-         iconSize: 's'
+         iconSize: 's',
+         emptyKey: null
       };
    }
 }

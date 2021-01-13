@@ -4,6 +4,7 @@ import {ICrudPlus} from 'Types/source';
 import {Model} from 'Types/entity';
 import {DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
 import {error as dataSourceError} from 'Controls/dataSource';
+import {TKey} from '../interface';
 
 export function prepareEmpty(emptyText) {
    if (emptyText) {
@@ -11,8 +12,8 @@ export function prepareEmpty(emptyText) {
    }
 }
 
-export function isEmptyItem(item: Model, emptyText: string, keyProperty: string): boolean {
-   return emptyText && (!item || item.get(keyProperty) === null);
+export function isEmptyItem(item: Model, emptyText: string, keyProperty: string, emptyKey: TKey = null): boolean {
+   return emptyText && (!item || item.get(keyProperty) === emptyKey);
 }
 
 export function loadItems(
