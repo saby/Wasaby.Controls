@@ -118,7 +118,6 @@
    width: @item_icon-size_itemActions;
    height: @item_icon-size_itemActions;
    justify-content: center;
-   align-items: baseline;
 }
 .controls-itemActionsV__action {
   cursor: pointer;
@@ -152,11 +151,13 @@
 }
 
 .controls-itemActionsV__action_icon_size_m_theme-@{themeName} {
-  .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
+   .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
+   align-items: baseline;
 }
 
 .controls-itemActionsV__action_icon_size_s_theme-@{themeName} {
    .icon-with-size(@item_icon-size_editing_itemActions, @item_icon_font-family_editing_itemsActions, @item_icon-size_itemActions);
+   align-items: center;
 }
 
 .controls-itemActionsV__action_title_theme-@{themeName} {
