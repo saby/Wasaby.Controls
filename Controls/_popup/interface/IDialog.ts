@@ -1,4 +1,5 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
+import {IPopupDirection} from 'Controls/_popup/interface/IDirection';
 
 /**
  * Интерфейс для опций диалоговых окон.
@@ -16,7 +17,10 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     height?: number;
     maxHeight?: number;
     top?: number;
+    bottom?: number;
     left?: number;
+    right?: number;
+    direction?: IPopupDirection;
     maximize?: boolean;
     restrictiveContainer?: string;
 }
