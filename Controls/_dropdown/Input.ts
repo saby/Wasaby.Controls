@@ -465,7 +465,7 @@ export default class Input extends BaseDropdown {
  * @default undefined
  * @remark
  * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
- * @demo Controls-demo/dropdown_new/Button/Source/Index
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
  * @example
  * Записи будут отображены из источника _source.
  * <pre class="brush: html">
