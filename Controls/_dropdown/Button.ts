@@ -291,10 +291,10 @@ export default class Button extends BaseDropdown {
 
 /**
  * @name Controls/_dropdown/Button#source
- * @cfg {Controls/_dropdown/Button/SourceCfg.typedef}
+ * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
  * @default undefined
  * @remark
- * Запись может иметь следующие {@link Controls/_dropdown/Button/Item.typedef свойства}.
+ * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @example
  * Записи будут отображены из источника _source.
@@ -319,27 +319,4 @@ export default class Button extends BaseDropdown {
  *    ]
  * })
  * </pre>
- */
-
-
- /**
- * @typedef {Object} Controls/_dropdown/Button/Item
- * @property {Boolean} [readOnly] Определяет, может ли пользователь изменить значение контрола. {@link UI/_base/Control#readOnly Подробнее}
- * @property {String} [iconStyle] Определяет цвет иконки элемента.{@link Controls/_interface/IIconStyle#iconStyle Подробнее}
- * @property {String} [icon] Определяет иконку элемента. {@link Controls/_interface/IIcon#icon Подробнее}
- * @property {String} [title] Определеяет текст элемента.
- * @property {String} [tooltip] Определеяет текст всплывающей подсказки, появляющейся при наведении на элемент, если он отличается от title.
- * @property {String} [pinned] Определеяет является ли пункт закрепленным.
- * Пункт будет отображен на той же позиции, на которой он находится в загруженном рекордсете. В меню с множественным выбором клик по такому пункту сбрасывает выделение.
- *
- */
-
-/**
- * @typedef {Object} Controls/_dropdown/Button/SourceCfg
- * @property {Controls/_dropdown/Button/Item.typedef} [item] Формат исходной записи.
- */
-
-/*
- * @typedef {Object} Controls/_dropdown/Button/SourceCfg
- * @property {Controls/_dropdown/Button/Item.typedef} [item] Format of source record.
  */

@@ -461,16 +461,16 @@ export default class Input extends BaseDropdown {
 
  /**
  * @name Controls/_dropdown/Input#source
- * @cfg {Controls/_dropdown/Input/SourceCfg.typedef}
+ * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
  * @default undefined
  * @remark
- * Запись может иметь следующие {@link Controls/_dropdown/Input/Item.typedef свойства}.
+ * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @example
  * Записи будут отображены из источника _source.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Button
+ * <Controls.dropdown:Input
  *    keyProperty="key"
  *    source="{{_source}}"
  *    caption="Create"
@@ -489,27 +489,4 @@ export default class Input extends BaseDropdown {
  *    ]
  * })
  * </pre>
- */
-
-
- /**
- * @typedef {Object} Controls/_dropdown/Input/Item
- * @property {Boolean} [readOnly] Определяет, может ли пользователь изменить значение контрола. {@link UI/_base/Control#readOnly Подробнее}
- * @property {String} [iconStyle] Определяет цвет иконки элемента.{@link Controls/interface:IIconStyle#iconStyle Подробнее}
- * @property {String} [icon] Определяет иконку элемента. {@link Controls/interface:IIcon#icon Подробнее}
- * @property {String} [title] Определеяет текст элемента.
- * @property {String} [tooltip] Определеяет текст всплывающей подсказки, появляющейся при наведении на элемент, если он отличается от title.
- * @property {String} [pinned] Определеяет является ли пункт закрепленным.
- * Пункт будет отображен на той же позиции, на которой он находится в загруженном рекордсете. В меню с множественным выбором клик по такому пункту сбрасывает выделение.
- *
- */
-
-/**
- * @typedef {Object} Controls/_dropdown/Input/SourceCfg
- * @property {Controls/_dropdown/Input/Item.typedef} [item] Формат исходной записи.
- */
-
-/*
- * @typedef {Object} Controls/_dropdown/Input/SourceCfg
- * @property {Controls/_dropdown/Input/Item.typedef} [item] Format of source record.
  */
