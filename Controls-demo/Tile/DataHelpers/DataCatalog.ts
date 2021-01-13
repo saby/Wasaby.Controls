@@ -242,6 +242,38 @@ export const Gadgets = {
     }
     ],
 
+    getPreviewActionItems: (): IData[] => [    {
+        id: 11,
+        parent: null,
+        type: null,
+        title: 'С тремя экшенами',
+        itemActions: Gadgets.getPreviewActions().slice(3),
+        image: Images.LION_3,
+        imageWidth: 300,
+        imageHeight: 168,
+        titleStyle: 'light',
+        gradientType: 'dark',
+        gradientColor: '#E0E0E8',
+        isDocument: true,
+        width: 300,
+        isShadow: true
+    },
+    {
+        id: 12,
+        parent: null,
+        type: null,
+        title: 'с большим количеством экшенов',
+        image: Images.MEDVED,
+        itemActions: Gadgets.getPreviewActions().slice(7),
+        imageWidth: 300,
+        imageHeight: 168,
+        titleStyle: 'light',
+        gradientType: 'dark',
+        gradientColor: '#E0E0E8',
+        isDocument: true,
+        width: 300,
+        isShadow: true
+    }],
     getRichItems: (): IData[] => [
         {
             id: 0,
