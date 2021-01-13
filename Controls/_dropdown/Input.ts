@@ -45,20 +45,19 @@ interface IDropdownInputChildren {
  *
  * @class Controls/_dropdown/Input
  * @extends UI/Base:Control
- * @mixes Controls/_menu/interface/IMenuPopup
- * @mixes Controls/_menu/interface/IMenuControl
- * @mixes Controls/_menu/interface/IMenuBase
- * @mixes Controls/_interface/IMultiSelectable
- * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/_dropdown/interface/IBaseDropdown
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/Input/interface/IValidation
+ * @mixes Controls/menu:IMenuPopup
+ * @mixes Controls/menu:IMenuControl
+ * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/dropdown:IBaseDropdown
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:IMultiSelectable
+ * @mixes Controls/interface:IFilterChanged
  * @mixes Controls/interface/ISelectorDialog
- * @mixes Controls/_interface/IIconSize
- * @mixes Controls/_interface/ITextValue
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/ISearch
+ * @mixes Controls/interface:IIconSize
+ * @mixes Controls/interface:ITextValue
+ * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IFontColorStyle
+ * @mixes Controls/interface:ISearch
  * 
  * @public
  * @author Золотова Э.Е.
@@ -306,19 +305,18 @@ export default class Input extends BaseDropdown {
  * @demo Controls-demo/dropdown_new/Input/ContentTemplate/Index
  * @example
  * Отображение иконки и текста.
- *
- * WML:
- * <pre>
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.dropdown:Input
- *       bind:selectedKeys="_selectedKeys"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source)}}"
- *       contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source)}}"
+ *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Input>
  * </pre>
- * JS:
- * <pre>
+ * <pre class="brush: js">
+ * // JavaScript
  * this._source = new Memory({
  *    keyProperty: 'id',
  *    data: [
@@ -340,19 +338,19 @@ export default class Input extends BaseDropdown {
  * To display the icon and text, use the "Controls/dropdown:defaultContentTemplateWithIcon" template.
  * @example
  * Display text and icon
- *
- * WML:
- * <pre>
+ * Отображение иконки и текста.
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.dropdown:Input
- *       bind:selectedKeys="_selectedKeys"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source)}}"
- *       contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source)}}"
+ *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
  * </Controls.dropdown:Input>
  * </pre>
- * JS:
- * <pre>
+ * <pre class="brush: js">
+ * // JavaScript
  * this._source = new Memory({
  *    keyProperty: 'id',
  *    data: [
@@ -371,18 +369,17 @@ export default class Input extends BaseDropdown {
  * @demo Controls-demo/dropdown_new/Input/MultiSelect/PinnedItems/Index
  * @example
  * Множественный выбор установлен.
- * WML:
- * <pre>
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.dropdown:Input
- *       bind:selectedKeys="_selectedKeys"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       multiSelect="{{true}}">
- * </Controls.dropdown:Input>
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source}}"
+ *    multiSelect="{{true}}" />
  * </pre>
- * JS:
- * <pre>
+ * <pre class="brush: js">
+ * // JavaScript
  * this._source = new Memory({
  *    keyProperty: 'id',
  *    data: [
@@ -401,18 +398,17 @@ export default class Input extends BaseDropdown {
  * @default false
  * @example
  * Multiple selection is set.
- * WML:
- * <pre>
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.dropdown:Input
- *       bind:selectedKeys="_selectedKeys"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source}}"
- *       multiSelect="{{true}}">
- * </Controls.dropdown:Input>
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source}}"
+ *    multiSelect="{{true}}" />
  * </pre>
- * JS:
- * <pre>
+ * <pre class="brush: js">
+ * // JavaScript
  * this._source = new Memory({
  *    keyProperty: 'id',
  *    data: [
@@ -461,4 +457,36 @@ export default class Input extends BaseDropdown {
  * @name Controls/_dropdown/Input#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Input/FontSize/Index
+ */
+
+ /**
+ * @name Controls/_dropdown/Input#source
+ * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
+ * @default undefined
+ * @remark
+ * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
+ * @demo Controls-demo/dropdown_new/Input/Source/Simple/Index
+ * @example
+ * Записи будут отображены из источника _source.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Input
+ *    keyProperty="key"
+ *    source="{{_source}}"
+ *    caption="Create"
+ *    viewMode="link"
+ *    iconSize="m" />
+ * </pre>
+ * <pre class="brush: js">
+ * // JavaScript
+ * _source: new source.Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: '1', icon: 'icon-EmptyMessage', iconStyle: 'info', title: 'Message'},
+ *       {key: '2', icon: 'icon-TFTask', title: 'Task'},
+ *       {key: '3', title: 'Report'},
+ *       {key: '4', title: 'News', readOnly: true}
+ *    ]
+ * })
+ * </pre>
  */
