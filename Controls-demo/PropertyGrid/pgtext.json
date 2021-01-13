@@ -690,13 +690,13 @@
       }
     }
   },
-  "Controls/filter:Selector": {
-    "name": "Controls/filter:Selector",
+  "Controls/deprecatedFilter:Selector": {
+    "name": "Controls/deprecatedFilter:Selector",
     "title": "Component for data filtering",
-    "className": "Controls/filter:Selector",
+    "className": "Controls/deprecatedFilter:Selector",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/filter:Selector",
+    "fullname": "Controls/deprecatedFilter:Selector",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -964,13 +964,13 @@
       }
     }
   },
-  "Controls/filter:Fast": {
-    "name": "Controls/filter:Fast",
+  "Controls/deprecatedFilter:Fast": {
+    "name": "Controls/deprecatedFilter:Fast",
     "title": "Control \"Fast Filter\".",
-    "className": "Controls/filter:Fast",
+    "className": "Controls/deprecatedFilter:Fast",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/filter:Fast",
+    "fullname": "Controls/deprecatedFilter:Fast",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
