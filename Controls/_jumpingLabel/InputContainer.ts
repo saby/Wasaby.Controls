@@ -30,7 +30,7 @@ class InputContainer extends Base<IInputContainerOptions> {
     protected _template: TemplateFunction = template;
 
     protected _setShowFromAbove(options: IInputContainerOptions): void {
-        this._showFromAbove = options.value !== null;
+        this._showFromAbove = options.value !== null && options.value !== undefined && options.value !== '';
     }
 
     private _valueChangedHandler(event: SyntheticEvent, inputValue: any, inputDisplayValue: string): void {

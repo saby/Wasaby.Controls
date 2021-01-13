@@ -12,6 +12,12 @@ describe('Controls/_jumpingLabel/InputContainer', () => {
         }, {
             value: '0',
             result: true
+        }, {
+            value: undefined,
+            result: false
+        }, {
+            value: '',
+            result: false
         }].forEach((item) => {
             it('_showFromAbove after use _setShowFromAbove', () => {
                 const inputContainer = new InputContainer();
