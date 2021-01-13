@@ -129,7 +129,7 @@ import {TemplateFunction} from 'UI/Base';
 
 /**
  * @typedef {String} PropertyType
- * @variant int
+ * @variant number
  * @variant boolean
  * @variant string
  * @variant text
