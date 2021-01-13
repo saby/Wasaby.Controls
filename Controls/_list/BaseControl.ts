@@ -519,8 +519,13 @@ const _private = {
             }
             self._items = listModel.getCollection();
         } else {
+            const wasItemsReplaced = listModel.getCollection() && !_private.isEqualItemsFormat(listModel.getCollection(), items);
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
+
+            if (wasItemsReplaced && self._options.itemsReadyCallback) {
+                self._options.itemsReadyCallback(self._items);
+            }
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
