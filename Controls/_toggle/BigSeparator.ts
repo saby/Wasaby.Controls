@@ -34,6 +34,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/toggle/BigSeparator/Index
+ * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
  */
 
 /*
