@@ -46,6 +46,25 @@ define(
             assert.equal(promise, 'promise');
             Popup.destroy();
          });
+         it('_preparePrefetchData', () => {
+            const prefetchPromise = new Promise((resolve) => {
+               const promise1 = new Promise(resolve1 => setTimeout(() => { resolve1('data1') }, 1));
+               const promise2 = new Promise(resolve2 => setTimeout(() => { resolve2('data2') }, 10));
+               resolve({
+                  'loader1': promise1,
+                  'loader2': promise2
+               });
+            });
+            const Popup = new PopupClass.default();
+            const prefetchData = {
+               'loader1': 'data1',
+               'loader2': 'data2'
+            };
+            return Popup._preparePrefetchData(prefetchPromise).then((data) => {
+               assert.deepEqual(data, prefetchData);
+               Popup.destroy();
+            });
+         });
       });
    }
 );

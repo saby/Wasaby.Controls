@@ -13,7 +13,15 @@ import * as PopupContent from 'wml!Controls/_popup/Manager/PopupContent';
 
 const RESIZE_DELAY = 10;
 
-interface IPopupControlOptions extends IPopupOptions, IControlOptions {}
+interface IPopupControlOptions extends IPopupOptions, IControlOptions {
+    _prefetchPromise?: Promise<IPrefetchPromises>; // TODO: Compatible предзагрузка
+}
+interface IPrefetchPromises {  // TODO: Compatible предзагрузка
+    [key: string]: Promise<unknown>;
+}
+interface IPrefetchData {  // TODO: Compatible предзагрузка
+    [key: string]: unknown;
+}
 /**
  * Control Popup
  * @class Controls/_popup/Manager/Popup
@@ -29,13 +37,14 @@ class Popup extends Control<IPopupControlOptions> {
     protected _template: TemplateFunction = template;
     protected _stringTemplate: boolean;
     protected _resizeObserver: ResizeObserverUtil;
-    protected waitForPopupCreated: boolean; // TODO: COMPATBILE
-    protected callbackCreated: Function|null; // TODO: COMPATBILE
+    protected _isEscDown: boolean = false;
+    protected waitForPopupCreated: boolean; // TODO: COMPATIBLE
+    protected callbackCreated: Function|null; // TODO: COMPATIBLE
+    protected _compatibleTemplateName: string; // TODO: COMPATIBLE
+    protected _prefetchData: IPrefetchData; // TODO: COMPATIBLE предзагрузка
+    protected _isPrefetchDataMode: boolean = false; // TODO: COMPATIBLE предзагрузка
 
     private _isPopupMounted: boolean = false;
-
-    protected _isEscDown: boolean = false;
-
     private _resizeRegister: RegisterClass;
     private _isDragStarted: boolean;
 
@@ -55,6 +64,12 @@ class Popup extends Control<IPopupControlOptions> {
         this._resizeRegister = new RegisterClass({register: 'controlResize'});
 
         this._controlResizeHandler = debounce(this._controlResizeHandler.bind(this), RESIZE_DELAY, true);
+
+        if (options._prefetchPromise) {
+            this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
+                this._prefetchData = data;
+            });
+        }
     }
 
     //TODO: https://online.sbis.ru/opendoc.html?guid=728a9f94-c360-40b1-848c-e2a0f8fd6d17
@@ -85,6 +100,11 @@ class Popup extends Control<IPopupControlOptions> {
 
     protected _beforeUpdate(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
+        if (options._prefetchPromise !== this._options._prefetchPromise) {
+            this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
+                this._prefetchData = data;
+            });
+        }
     }
 
     protected _afterRender(oldOptions: IPopupOptions): void {
@@ -94,6 +114,39 @@ class Popup extends Control<IPopupControlOptions> {
             this._startResizeRegister();
             this._checkResizeObserver();
         }
+    }
+
+    private _preparePrefetchData(prefetchPromise: Promise<IPrefetchPromises>): Promise<IPrefetchData> {
+        this._isPrefetchDataMode = true;
+        return prefetchPromise.then((prefetchPromiseData: IPrefetchPromises) => {
+            const promiseArray = Object.values(prefetchPromiseData);
+            if (Promise.allSettled) {
+                return Promise.allSettled(promiseArray).then(
+                    (dataArray: Array<{status: string, value?: unknown, reason?: unknown}>) => {
+                        const keys = Object.keys(prefetchPromiseData);
+                        const data = {};
+                        let i = 0;
+                        for (const key of keys) {
+                            data[key] = dataArray[i].value || dataArray[i].reason;
+                            i++;
+                        }
+                        return data;
+                    });
+            } else {
+                // Для IE. Пока не долетел полифилл
+                // https://online.sbis.ru/opendoc.html?guid=7af4063f-b866-4b97-9485-0f820b023d9b
+                // После весь else можно удалить
+                return Promise.all(promiseArray).then((dataArray: unknown[]) => {
+                    const keys = Object.keys(prefetchPromiseData);
+                    const data = {};
+                    let i = 0;
+                    for (const key of keys) {
+                        data[key] = dataArray[i++];
+                    }
+                    return data;
+                });
+            }
+        });
     }
 
     private _startResizeRegister(event?: SyntheticEvent): void {
