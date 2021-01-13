@@ -115,10 +115,10 @@
   display: flex;
 }
 .controls-itemActionsV__action_icon_theme-@{themeName} {
-  width: @item_icon-size_itemActions;
-  height: @item_icon-size_itemActions;
-  justify-content: center;
-  align-items: center;
+   width: @item_icon-size_itemActions;
+   height: @item_icon-size_itemActions;
+   justify-content: center;
+   align-items: baseline;
 }
 .controls-itemActionsV__action {
   cursor: pointer;
@@ -212,4 +212,11 @@
    width: 100%;
    flex-shrink: 1;
    flex-grow: 1;
+}
+
+.ws-is-firefox {
+   .icon-SettingsNew.controls-itemActionsV__action_icon_theme-@{themeName}::before {
+      line-height: @item_icon-size_itemActions - 1;
+      transform: rotate(360deg);
+   }
 }
