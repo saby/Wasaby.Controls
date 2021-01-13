@@ -46,7 +46,25 @@ define([
                   res(null);
                })
             });
-            assert.isOk(instance._header);
+            assert.deepEqual(instance._header, [{
+               title: '123'
+            }]);
+         });
+         it('with header, first item has caption', function() {
+            var
+               instance = new PathController(),
+               header = [{
+                  caption: '123'
+               }];
+            instance._beforeMount({
+               header: header,
+               itemsPromise: new Promise((res) => {
+                  res(null);
+               })
+            });
+            assert.deepEqual(instance._header, [{
+               caption: '123'
+            }]);
          });
          it('with header, first item has template', function() {
             var
