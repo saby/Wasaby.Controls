@@ -1,6 +1,0 @@
-<div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell">
-        <div class="controls-text-label_theme-{{_options.theme}}">Несколько кнопок с минимальным количеством текста</div>
-        <Controls.toggle:ButtonGroup bind:selectedKey="_selectedKey" items="{{_items}}"/>
-    </div>
-</div>
