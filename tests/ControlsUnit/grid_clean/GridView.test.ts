@@ -1,8 +1,36 @@
 import { GridView } from 'Controls/gridNew';
 import { assert } from 'chai';
+import { RecordSet } from 'Types/collection';
+import { GridCollection } from 'Controls/display';
 
 
 describe('Controls/grid_clean/GridView', () => {
+
+    describe('Mount', () => {
+        it('Check gridCollection version after mount', async () => {
+            const collectionOptions = {
+                collection: new RecordSet({
+                    rawData: [{
+                        key: 1,
+                        title: 'item_1'
+                    }],
+                    keyProperty: 'key'
+                }),
+                keyProperty: 'key',
+                columns: [{}],
+            };
+            const gridOptions = {
+                listModel: new GridCollection(collectionOptions),
+                keyProperty: 'key',
+                footerTemplate: () => '',
+                footer: () => '',
+                itemPadding: {}
+            };
+            let gridView = new GridView(gridOptions);
+            await gridView._beforeMount(gridOptions);
+            assert.strictEqual(gridView.getListModel().getVersion(), 0, 'Version must be equals zero! No other variants!');
+        });
+    });
 
     describe('ColumnScroll', () => {
         let gridView: typeof GridView;

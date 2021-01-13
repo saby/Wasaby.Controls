@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -52,7 +52,7 @@ const GridView = ListView.extend({
         }
 
         if (options.footerTemplate || options.footer) {
-            this._listModel.setFooter(options.footerTemplate, options.footer);
+            this._listModel.setFooter(options.footerTemplate, options.footer, true);
         }
 
         return result;
@@ -120,6 +120,10 @@ const GridView = ListView.extend({
             this._columnScrollViewController.destroy();
             this._columnScrollViewController = null;
         }
+    },
+
+    getListModel(): GridCollection<any> {
+        return this._listModel;
     },
 
     _resolveItemTemplate(options): TemplateFunction {

@@ -2434,9 +2434,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._$rightPadding = itemPadding.right || 'default';
     }
 
-    setItemPadding(itemPadding: IItemPadding): void {
+    setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
         this._setItemPadding(itemPadding);
-        this._nextVersion();
+        if (!silent) {
+            this._nextVersion();
+        }
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
