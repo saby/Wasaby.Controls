@@ -5022,11 +5022,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beginEdit(options) {
+    _beginEdit(options, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().edit(options).then((result) => {
-            if (!(result && result.canceled)) {
+            if (shouldActivateInput && !(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
             }
             return result;
@@ -5035,14 +5035,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _beginAdd(options, addPosition) {
+    _beginAdd(options, addPosition, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
             }
-            this._editInPlaceInputHelper.shouldActivate();
+            if (shouldActivateInput) {
+                this._editInPlaceInputHelper.shouldActivate();
+            }
             if (!this._isMounted) {
                 return addResult;
             }
@@ -5103,8 +5105,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!item) {
                 return Promise.resolve();
             }
-            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            return this._beginEdit({ item });
+            const collection = this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay();
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, collection.getIndexBySourceItem(item));
+            return this._beginEdit({ item }, false);
         };
 
         switch (nativeEvent.keyCode) {
