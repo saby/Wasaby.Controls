@@ -230,10 +230,7 @@ export default class ControllerClass {
       return this._searchValue;
    }
 
-   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error|RecordSet> {
-      this._sourceController.setFilter(filter);
-
-      // TODO: Без прямой передачи фильтра в load фильтр не учитывается в sourceController (setFilter тут бесполезен)
+   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
       return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
          if (recordSet instanceof RecordSet) {
             this._path = recordSet.getMetaData().path;
