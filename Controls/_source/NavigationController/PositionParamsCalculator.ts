@@ -1,7 +1,7 @@
 import {QueryNavigationType} from 'Types/source';
 import {default as PositionNavigationStore, IPositionNavigationState} from './PositionNavigationStore';
 import {IBasePositionSourceConfig, IBaseSourceConfig, INavigationPositionSourceConfig} from 'Controls/interface';
-import {TNavigationDirection, TNavigationPagingMode, CursorDirection, IQueryParams} from 'Controls/interface';
+import {TNavigationDirection, TNavigationPagingMode, IQueryParams} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {Record, Model} from 'Types/entity';
 import {Logger} from 'UI/Utils';
@@ -51,13 +51,13 @@ class PositionParamsCalculator implements IParamsCalculator {
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
         let sign;
         switch (queryDirection) {
-            case CursorDirection.forward:
+            case 'forward':
                 sign = '>=';
                 break;
-            case CursorDirection.backward:
+            case 'backward':
                 sign = '<=';
                 break;
-            case CursorDirection.bothways:
+            case 'bothways':
                 sign = '~';
                 break;
         }
@@ -92,14 +92,14 @@ class PositionParamsCalculator implements IParamsCalculator {
         const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
 
         if (typeof metaMore === 'boolean') {
-            if (queryDirection !== CursorDirection.bothways) {
+            if (queryDirection !== 'bothways') {
                 store.updateMetaMoreToDirection(queryDirection, metaMore);
             } else {
                 Logger.error('NavigationController: Wrong type of \"more\" value. Must be Object');
             }
         } else {
             if (metaMore instanceof Object) {
-                if (queryDirection === CursorDirection.bothways) {
+                if (queryDirection === 'bothways') {
                     store.setMetaMore(metaMore);
                 } else {
                     Logger.error('NavigationController: Wrong type of \"more\" value. Must be boolean');
@@ -115,17 +115,17 @@ class PositionParamsCalculator implements IParamsCalculator {
 
         if (metaNextPosition) {
             if (metaNextPosition instanceof Array) {
-                if (queryDirection !== CursorDirection.bothways) {
-                    if (queryDirection === CursorDirection.forward) {
+                if (queryDirection !== 'bothways') {
+                    if (queryDirection === 'forward') {
                         store.setForwardPosition(metaNextPosition);
-                    } else if (queryDirection === CursorDirection.backward) {
+                    } else if (queryDirection === 'backward') {
                         store.setBackwardPosition(metaNextPosition);
                     }
                 } else {
                     Logger.error('NavigationController: Wrong type of \"nextPosition\" value. Must be object');
                 }
             } else {
-                if (queryDirection === CursorDirection.bothways) {
+                if (queryDirection === 'bothways') {
                     if (metaNextPosition.before && metaNextPosition.before instanceof Array
                         && metaNextPosition.after && metaNextPosition.after instanceof Array) {
                         store.setBackwardPosition(metaNextPosition.before);
@@ -230,13 +230,13 @@ class PositionParamsCalculator implements IParamsCalculator {
 
     private static _resolveDirection(
         loadDirection: TNavigationDirection,
-        optDirection: CursorDirection
-    ): CursorDirection {
-        let navDirection: CursorDirection;
+        optDirection: TNavigationDirection
+    ): TNavigationDirection {
+        let navDirection: TNavigationDirection;
         if (loadDirection === 'forward') {
-            navDirection = CursorDirection.forward;
+            navDirection = 'forward';
         } else if (loadDirection === 'backward') {
-            navDirection = CursorDirection.backward;
+            navDirection = 'backward';
         } else {
             navDirection = optDirection;
         }
