@@ -237,7 +237,7 @@ export class Controller {
     /**
      * Деактивирует Swipe для меню операций с записью
      */
-    deactivateSwipe(): void {
+    deactivateSwipe(resetActiveItem: boolean = true): void {
         const currentSwipedItem = this.getSwipeItem();
         if (currentSwipedItem) {
             currentSwipedItem.setSwipeAnimation(null);
@@ -245,7 +245,9 @@ export class Controller {
                 this._restoreItemActions(currentSwipedItem);
             }
             this._setSwipeItem(null);
-            this._collection.setActiveItem(null);
+            if (resetActiveItem) {
+                this._collection.setActiveItem(null);
+            }
             this._collection.setSwipeConfig(null);
             this._collection.nextVersion();
         }
