@@ -97,6 +97,8 @@ export default class ControllerClass {
     * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
     * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
     */
+   reset(): Promise<RecordSet | Error>;
+   reset(dontLoad: boolean): QueryWhereExpression<unknown>;
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
 
