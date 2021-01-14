@@ -839,26 +839,27 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
    }
 
-   private _searchResetCallback(): Promise<void> {
-      return this._getSearchController()
-          .then((searchController) => {
-             if (searchController) {
-                if (this._updateSuggestState() || this._options.autoDropDown) {
-                   searchController.reset()
-                       .then((items) => {
-                          if (items instanceof RecordSet) {
-                             this._setItems(items);
-                          }
-                       })
-                       .catch((error) => {
-                          if (!error.isCancelled) {
-                             return error;
-                          }
-                       });
-                }
-             }
-          })
-          .catch((error) => error);
+   private async _searchResetCallback(): Promise<void> {
+      const searchController = await this._getSearchController();
+
+      if (searchController) {
+         if (this._updateSuggestState() || this._options.autoDropDown) {
+            return new Promise((resolve) => {
+               const resetResult =  searchController.reset();
+               if (resetResult instanceof Promise) {
+                  resetResult.then((recordSet) => {
+                     if (recordSet instanceof RecordSet) {
+                        this._setItems(recordSet);
+                     }
+                  }).catch((e) => {
+                     if (!e.isCanceled) {
+                        return e;
+                     }
+                  }).finally(() => resolve());
+               }
+            });
+         }
+      }
    }
 
    protected _getSearchController(): Promise<SearchController | void> {
