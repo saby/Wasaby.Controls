@@ -37,7 +37,7 @@ export default interface IBaseDropdown {
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input historyId="myHistoryId"/>
+ * <Controls.dropdown:Selector historyId="myHistoryId"/>
  * </pre>
  */
 
