@@ -193,6 +193,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null]);
       });
+
+      it('select all after change root', () => {
+         strategy.update({
+            selectDescendants: false,
+            selectAncestors: false,
+            rootId: 5,
+            selectionType: 'all',
+            model
+         });
+         let selection = { selected: [2], excluded: [] };
+         selection = strategy.selectAll(selection);
+         assert.deepEqual(selection.selected, [5]);
+         assert.deepEqual(selection.excluded, [5]);
+         strategy.reset();
+      });
    });
 
    describe('unselectAll', () => {
@@ -267,6 +282,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
          assert.deepEqual(selection.selected, [null]);
          assert.deepEqual(selection.excluded, [null, 20]);
+      });
+
+      it('after change root', () => {
+         strategy.update({
+            selectDescendants: false,
+            selectAncestors: false,
+            rootId: 2,
+            selectionType: 'all',
+            model
+         });
+         let selection = { selected: [6, 3], excluded: [] };
+         selection = strategy.toggleAll(selection);
+         assert.deepEqual(selection.selected, [2]);
+         assert.deepEqual(selection.excluded, [2, 3]);
+         strategy.reset();
       });
    });
 
@@ -566,6 +596,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             rootId: 5,
             model: model
          });
+         assert.isTrue(strategy._rootChanged);
          assert.isTrue(strategy.isAllSelected(selection, false, 7));
          assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
       });
