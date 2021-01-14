@@ -1,0 +1,171 @@
+import {Model} from 'Types/entity';
+import {CrudEntityKey} from 'Types/source';
+import {IBaseCollection, ICollectionItem} from 'Controls/display';
+import {SyntheticEvent} from 'UI/Vdom';
+
+// Collection interface:
+// getItemHoveredContainerSelector
+// getDisplayItemActionsOutsideStyles
+// getItemFreezeHoverStyles
+// getIndex
+
+const HOVER_FREEZE_TIMEOUT: number = 400;
+const HOVER_UNFREEZE_TIMEOUT: number = 400;
+
+const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';
+
+interface IMouseMoveArea {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+}
+
+export interface IHoverFreezeOptions {
+    uniqueClass: string;
+    collection: IBaseCollection<Model, ICollectionItem>;
+    stylesContainer: HTMLElement;
+    viewContainer: HTMLElement;
+    freezeHoverCallback: () => void;
+    unFreezeHoverCallback: () => void;
+}
+
+export default class HoverFreeze {
+    private _itemKey: CrudEntityKey = null;
+    private _uniqueClass: string;
+    private _collection: IBaseCollection<Model, ICollectionItem>;
+    private _stylesContainer: HTMLElement;
+    private _viewContainer: HTMLElement;
+    private _freezeHoverCallback: () => void;
+    private _unFreezeHoverCallback: () => void;
+    private _moveArea: IMouseMoveArea;
+    private _itemFreezeHoverTimeout: number;
+    private _itemUnfreezeTimeout: number;
+
+    constructor(options: IHoverFreezeOptions) {
+        this.updateOptions(options);
+    }
+
+    updateOptions(options: IHoverFreezeOptions): void {
+        this._uniqueClass = options.uniqueClass;
+        this._collection = options.collection;
+        this._stylesContainer = options.stylesContainer;
+        this._viewContainer = options.viewContainer;
+        this._freezeHoverCallback = options.freezeHoverCallback;
+        this._unFreezeHoverCallback = options.unFreezeHoverCallback;
+    }
+
+    /**
+     * Возвращает ключ "замороженного" элемента.
+     * Если возвращается null, значит ни один элемент не "заморожен"
+     */
+    getCurrentItemKey(): CrudEntityKey | null {
+        return this._itemKey;
+    }
+
+    startFreezeHoverTimeout(item?: ICollectionItem): void {
+        const itemKey = item.getContents().getKey();
+        const itemIndex = (item.index !== undefined ? item.index : this._collection.getIndex(item)) + 1;
+        // если уже были таймеры разлипания/залипания, то глушим их
+        this._clearUnfreezeHoverTimeout();
+        this._clearFreezeHoverTimeout();
+
+        if (this._itemKey !== itemKey) {
+            // Стартуем новый таймер залипания.
+            this._itemFreezeHoverTimeout = setTimeout(() => {
+                // Если есть залипшая запись, то надо понять это та же запись, по которой мы сейчас сделали ховер
+                // или нет. Если нет, то всё надо сбросить.
+                if (this._itemKey !== null) {
+                    // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
+                    this._unfreezeHover();
+                }
+
+                // Далее, выставляем новую запись как залипшую:
+                this._freezeHover(itemIndex);
+                // сохранили текущее наведённое значение
+                this._itemKey = itemKey;
+            }, HOVER_FREEZE_TIMEOUT);
+        }
+    }
+
+    startUnfreezeHoverTimeout(event: SyntheticEvent): void {
+        // если уже были таймеры разлипания/залипания, то глушим их
+        this._clearUnfreezeHoverTimeout();
+        this._clearFreezeHoverTimeout();
+
+        const x = (event.nativeEvent as MouseEvent).clientX;
+        const y = (event.nativeEvent as MouseEvent).clientY;
+
+        if (this._isCursorInsideOfMouseMoveArea(x, y)) {
+            this._itemUnfreezeTimeout = setTimeout(() => {
+                // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
+                this._unfreezeHover();
+            }, HOVER_UNFREEZE_TIMEOUT);
+        } else {
+            this._unfreezeHover();
+        }
+    }
+
+    private _isCursorInsideOfMouseMoveArea(x: number, y: number): boolean {
+        if (!this._moveArea) {
+            return false;
+        }
+        return x < this._moveArea.right && x > this._moveArea.left &&
+            y < this._moveArea.bottom && y > this._moveArea.top;
+    }
+
+    private _clearFreezeHoverTimeout(): void {
+        if (this._itemFreezeHoverTimeout) {
+            clearTimeout(this._itemFreezeHoverTimeout);
+        }
+    }
+
+    private _clearUnfreezeHoverTimeout(): void {
+        if (this._itemUnfreezeTimeout) {
+            clearTimeout(this._itemUnfreezeTimeout);
+        }
+    }
+
+    private _freezeHover(index: number): void {
+        const hoveredContainer = this._getHoveredItemContainer(index);
+        const backgroundColor = getComputedStyle(hoveredContainer).backgroundColor;
+        this._moveArea = this._calculateMouseMoveArea(hoveredContainer);
+        this._stylesContainer.innerHTML = this._collection.getDisplayItemActionsOutsideStyles(this._uniqueClass, index);
+        this._stylesContainer.innerHTML += this._collection.getItemFreezeHoverStyles(this._uniqueClass, index, backgroundColor);
+        if (this._freezeHoverCallback) {
+            this._freezeHoverCallback();
+        }
+    }
+
+    private _unfreezeHover(): void {
+        // Сбрасываем текущий ховер
+        this._itemKey = null;
+        this._moveArea = null;
+        this._stylesContainer.innerHTML = '';
+        if (this._freezeHoverCallback) {
+            this._unFreezeHoverCallback();
+        }
+    }
+
+    // current hovered item
+    private _getHoveredItemContainer(index: number): HTMLElement {
+        const hoveredContainerSelector = this._collection.getItemHoveredContainerSelector(this._uniqueClass, index);
+        return this._viewContainer.querySelector(hoveredContainerSelector) as HTMLElement;
+    }
+
+    // Calculate move area as item area considering itemActions height
+    private _calculateMouseMoveArea(hoveredContainer: HTMLElement): IMouseMoveArea {
+        const itemActionsContainer = hoveredContainer.querySelector(ITEM_ACTIONS_SELECTOR);
+        const hoveredRect = hoveredContainer.getBoundingClientRect();
+        let itemActionsHeight = 0;
+        if (itemActionsContainer) {
+            itemActionsHeight = (itemActionsContainer as HTMLElement).offsetHeight;
+        }
+        return {
+            bottom: hoveredRect.top + hoveredRect.height + itemActionsHeight,
+            left: hoveredRect.left,
+            right: hoveredRect.left + hoveredRect.width,
+            top: hoveredRect.top
+        };
+    }
+}

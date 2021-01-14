@@ -5585,7 +5585,7 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         }
         const hoverFreezeController = _private.getHoverFreezeController(this);
         if (hoverFreezeController) {
-            hoverFreezeController.startUnfreezeHoverTimeout();
+            hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     },
     _sortingChanged(event, propName) {
