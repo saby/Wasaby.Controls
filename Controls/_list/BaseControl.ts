@@ -5305,6 +5305,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else if (eventName === 'menuOpened') {
             _private.removeShowActionsClass(this);
+            _private.getItemActionsController(this, this._options).deactivateSwipe(false);
         }
     },
 

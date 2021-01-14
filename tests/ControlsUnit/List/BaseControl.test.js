@@ -4530,6 +4530,7 @@ define([
       });
 
       describe('ItemActions menu', () => {
+         let cfg;
          let instance;
          let item;
          let outgoingEventsMap;
@@ -4569,7 +4570,7 @@ define([
 
          beforeEach(async() => {
             outgoingEventsMap = {};
-            const cfg = {
+            cfg = {
                items: new collection.RecordSet({
                   rawData: [
                      {
@@ -4781,6 +4782,19 @@ define([
             instance._onItemActionsMenuClose({id: 'popupId_1'});
             sinon.assert.called(spyShowActions);
             spyShowActions.restore();
+         });
+
+         // Скрытие Swipe ItemActions должно происходить после открытия меню (событие menuOpened)
+         it('should hide Swipe ItemActions on menuOpened event', () => {
+            const fakeEvent = initFakeEvent();
+            const itemActionsController = lists.BaseControl._private.getItemActionsController(instance, cfg);
+            const spyDeactivateSwipe = sinon.spy(itemActionsController, 'deactivateSwipe');
+            const spySetActiveItem = sinon.spy(itemActionsController, 'setActiveItem');
+            instance._onItemActionsMenuResult('menuOpened', null, fakeEvent);
+            sinon.assert.called(spyDeactivateSwipe);
+            sinon.assert.notCalled(spySetActiveItem);
+            spyDeactivateSwipe.restore();
+            spySetActiveItem.restore();
          });
 
          // должен открывать меню, соответствующее новому id Popup
