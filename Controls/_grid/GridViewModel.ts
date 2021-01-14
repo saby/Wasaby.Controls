@@ -1752,8 +1752,9 @@ var
 
             current.columnIndex = 0;
 
+            const origGetVersion = current.getVersion;
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key, current.index);
+                return origGetVersion() + self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
