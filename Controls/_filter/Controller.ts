@@ -17,7 +17,7 @@ export interface IFilterContainerOptions extends IControlOptions {
    minSearchLength: number;
 }
 
-export default class Container extends Control<IFilterContainerOptions> {
+export default class Container extends Control<IFilterContainerOptions, IFilterHistoryData | IFilterItem[]> {
    protected _template: TemplateFunction = template;
 
    protected _filterController: FilterController = null;
@@ -32,7 +32,7 @@ export default class Container extends Control<IFilterContainerOptions> {
    }
 
    protected _beforeMount(options: IFilterContainerOptions, context: object,
-                          receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void | IFilterHistoryData|{}> {
+                          receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void | IFilterHistoryData> {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._dataLoadErrback = this._dataLoadErrback.bind(this);
 
