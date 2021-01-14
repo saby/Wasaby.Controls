@@ -5,7 +5,7 @@ export interface IDropdownSourceOptions {
 }
 
 /**
- * Интерфейс для источника данных, который возвращает данные в формате, необходимом для контролов {@link Controls/dropdown:Input} и {@link Controls/dropdown:Button}.
+ * Интерфейс для источника данных, который возвращает данные в формате, необходимом для контролов {@link Controls/dropdown:Selector} и {@link Controls/dropdown:Button}.
  *
  * @interface Controls/_dropdown/interface/IDropdownSource
  * @public
