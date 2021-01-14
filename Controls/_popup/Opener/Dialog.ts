@@ -25,8 +25,7 @@ const POPUP_CONTROLLER = 'Controls/popupTemplate:DialogController';
  * * {@link /doc/platform/developmentapl/interface-development/controls/openers/dialog/#open-popup руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_popupTemplate.less переменные тем оформления}
  * Для открытия диалоговых окон из кода используйте {@link Controls/popup:DialogOpener}.
- * @mixes Controls/_popup/interface/IBaseOpener
- * 
+ * @implements Controls/popup:IBaseOpener
  * @author Красильников А.С.
  * @demo Controls-demo/Popup/Opener/StackDemo
  * @public

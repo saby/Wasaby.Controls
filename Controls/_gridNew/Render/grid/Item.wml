@@ -26,13 +26,7 @@
                         attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
         </ws:ladderWrapper>
         <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
-                            key="{{ (item || itemData).key }}"
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
-        <ws:multiSelectTemplate>
-            <ws:partial template="{{multiSelectTpl}}">
-                <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
-            </ws:partial>
-        </ws:multiSelectTemplate>
     </ws:partial>
 
     <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
@@ -60,8 +54,8 @@
                 'clickable': clickable
             }) }}">
             <ws:for data="column in (item || itemData).getColumns()">
-                <Controls.scroll:StickyHeader position="topbottom"
-                                              mode="stackable"
+                <Controls.scroll:StickyHeader position="{{ (item || itemData).getStickyHeaderPosition() }}"
+                                              mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
@@ -81,7 +75,7 @@
             }) }}">
         <ws:for data="column in (item || itemData).getColumns()">
             <div class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
-                 style="{{ column.getWrapperStyles() }}">
+                 style="{{ column.getWrapperStyles(containerSize) }}">
                 <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </div>
         </ws:for>

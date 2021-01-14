@@ -85,10 +85,6 @@
    min-height: @item_height_menu;
 }
 
-.controls-Menu__emptyItem_theme-@{themeName} {
-   color: @empty-item_text-color_menu;
-}
-
 .controls-Menu__row-checkbox_active {
    visibility: visible;
 }
@@ -142,13 +138,17 @@
    flex-shrink: 1;
 }
 
+.controls-Menu__emptyItem_theme-@{themeName} {
+   color: @empty-item_text-color_menu;
+}
+
+.controls-Menu__defaultItem_theme-@{themeName} {
+   color: @item_text-color_menu;
+}
+
 .controls-Menu__defaultItem_theme-@{themeName},
 .controls-Menu__emptyItem_theme-@{themeName} {
    font-size: @item_font-size_menu;
-}
-
-.controls-Menu__content_default_theme-@{themeName} {
-   color: @item_text-color_menu;
 }
 
 .controls-Menu__content_readOnly_theme-@{themeName} {

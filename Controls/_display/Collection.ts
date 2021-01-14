@@ -1716,7 +1716,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     setGroupProperty(groupProperty: string): void {
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
-            this._reBuild(true);
+            this.setGroup((item) => {
+                return item.get(this._$groupProperty);
+            });
             this._nextVersion();
         }
     }
@@ -2434,9 +2436,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._$rightPadding = itemPadding.right || 'default';
     }
 
-    setItemPadding(itemPadding: IItemPadding): void {
+    setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
         this._setItemPadding(itemPadding);
-        this._nextVersion();
+        if (!silent) {
+            this._nextVersion();
+        }
     }
 
     setMarkedKey(key: string|number, status: boolean): void {
@@ -2560,7 +2564,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     setHasMoreData(hasMoreData: boolean): void {
-        this._$hasMoreData = hasMoreData;
+        if (this._$hasMoreData !== hasMoreData) {
+            this._$hasMoreData = hasMoreData;
+            this._nextVersion();
+        }
     }
 
     setMetaResults(metaResults: EntityModel): void {

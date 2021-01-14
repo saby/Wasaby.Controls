@@ -3,7 +3,8 @@
       templateName="{{collectionItem.getValidateTemplateName()}}">
       <ws:content>
          <ws:partial
-            template="{{content.resolvedTemplate}}">
+            template="{{content.resolvedTemplate}}"
+            scope="{{collectionItem.getValidateTemplateOptions()}}">
             <ws:validators>
                <ws:Function
                   item="{{collectionItem}}">

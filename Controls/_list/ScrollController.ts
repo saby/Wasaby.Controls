@@ -270,7 +270,7 @@ export default class ScrollController {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve(null);
-                } else if (force) {
+                } else if (force || this._virtualScroll.rangeChanged) {
                     this._inertialScrolling.callAfterScrollStopped(() => {
                         if (this._virtualScroll && this._virtualScroll.rangeChanged) {
                             // Нельзя менять диапазон отображемых элементов во время перерисовки

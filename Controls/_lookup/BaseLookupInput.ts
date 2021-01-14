@@ -18,6 +18,7 @@ import {IHashMap} from 'Types/declarations';
 import InputRenderLookup from './BaseLookupView/InputRender';
 import {DependencyTimer} from 'Controls/popup';
 import {_InputController as LayoutInputContainer} from 'Controls/suggest';
+import {load} from 'WasabyLoader/Library';
 
 const KEY_CODE_F2 = 113;
 
@@ -253,7 +254,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
         if (!this._loadSelectorTemplatePromise && selectorTemplate) {
             this._loadSelectorTemplatePromise = (typeof selectorTemplate.templateName === 'string') ?
-               import(selectorTemplate.templateName) : null;
+                load(selectorTemplate.templateName) : null;
         }
         return this._loadSelectorTemplatePromise;
     }

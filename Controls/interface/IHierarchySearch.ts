@@ -1,6 +1,6 @@
 export interface IHierarchySearchOptions {
-    startingWith: string;
-    searchNavigationMode: string;
+    startingWith?: string;
+    searchNavigationMode?: string;
 }
 /**
  * Интерфейс для контролов, реализующих поиск в иерархических списках.

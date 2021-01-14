@@ -13,5 +13,8 @@
       on:closeSwipe="_onCloseSwipe()"
       on:itemActionMouseDown="_onItemActionMouseDown()"
       on:itemContextMenu="_onItemContextMenu()"
-      on:itemKeyDown="_onItemKeyDown()"/>
+      on:itemKeyDown="_onItemKeyDown()"
+      on:menuActionMouseEnter="_onMenuActionMouseEnter()"
+      on:menuActionMouseLeave="_onMenuActionMouseLeave()"
+   />
 </div>

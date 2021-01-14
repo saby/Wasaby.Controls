@@ -17,6 +17,7 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
     style?: string;
     separatorVisible?: boolean;
     borderVisible?: boolean;
+    inlineHeight?: string;
     markerThickness?: string;
     displayProperty?: string;
 
@@ -33,6 +34,19 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
 /**
  * @name Controls/_tabs/interface/ITabsButtons#markerThickness
  * @cfg {MarkerThickness} Определяет толщину подчеркивания вкладок
+ * @default s
+ * @demo Controls-demo/Tabs/Buttons/MarkerThickness/Index
+ */
+
+/**
+ * @typedef {String} inlineHeight
+ * @variant s
+ * @variant l
+ */
+
+/**
+ * @name Controls/_tabs/interface/ITabsButtons#inlineHeight
+ * @cfg {inlineHeight} Определяет высоту вкладок
  * @default s
  * @demo Controls-demo/Tabs/Buttons/MarkerThickness/Index
  */

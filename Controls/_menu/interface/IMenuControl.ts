@@ -88,7 +88,7 @@ export default interface IMenuControl {
  * @property {String} iconStyle Стиль иконки {@link Controls/_interface/IIconStyle}.
  * Каждому значению свойства соответствует стиль, который определяется {@link /doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
  * @property {Function} handler Обработчик опции записи.
- * См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/handler/ пример обработчика}.
+ * См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ пример обработчика}.
  */
 
 /**

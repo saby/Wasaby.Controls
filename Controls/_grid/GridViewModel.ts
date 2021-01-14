@@ -692,6 +692,9 @@ var
         },
         resolveEditArrowVisibility(item, options) {
             let contents = item.getContents();
+            if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+                return;
+            }
             if (!options.editArrowVisibilityCallback) {
                 return options.showEditArrow;
             }
@@ -1634,6 +1637,13 @@ var
                 columns: this._columns
             });
 
+            // TODO: https://online.sbis.ru/opendoc.html?guid=1529db8e-7105-45cc-97bf-430b9cd44ef9
+            // начало
+            if (this._options.task1180722812 && current.isGroup && current.index === 0 && this.isStickyHeader() && this.getHasMoreData()) {
+                current.shadowVisibility = 'initial';
+            }
+
+            // конец
             current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
@@ -1742,8 +1752,9 @@ var
 
             current.columnIndex = 0;
 
+            const origGetVersion = current.getVersion;
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key, current.index);
+                return origGetVersion() + self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {

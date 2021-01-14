@@ -19,10 +19,10 @@ type TSelectedKeys = Array<string | number>;
  * @author Золотова Э.Е.
  *
  * @example
- * Пример использования с контролом {@link Controls.dropdown:Input}
+ * Пример использования с контролом {@link Controls.dropdown:Selector}
  * <pre>
  * <Controls.source:SelectedKey bind:selectedKey="_value">
- *    <Controls.dropdown:Input keyProperty='key'
+ *    <Controls.dropdown:Selector keyProperty='key'
  *                             displayProperty='title'
  *                             source='{{_source}}'/>
  * </Controls.source:SelectedKey>

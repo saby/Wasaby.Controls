@@ -11,7 +11,7 @@ import { Model } from 'Types/entity';
     * @remark
     * Дополнительно о контроле:
     * * {@link /doc/platform/developmentapl/interface-development/controls/list/tree/ руководство разработчика}
-    * * {@link http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html Спецификация Axure}
+    * * {@link http://axure.tensor.ru/StandardsV8/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE.html Спецификация Axure}
     * * {@link /materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FSingleExpand демо-пример с множественным выбором элементов и с единичным раскрытием содержимого папок}
     * * {@link /materials/Controls-demo/app/Controls-demo%2FList%2FTree%2FTreeWithPhoto демо-пример с пользовательским шаблоном элемента списка с фото}
     * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_treeGrid.less переменные тем оформления treeGred}
@@ -38,7 +38,7 @@ import { Model } from 'Types/entity';
     *
     * @mixes Controls/_list/interface/IVirtualScrollConfig
     *
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     * @demo Controls-demo/treeGrid/Base/TreeGridView/Index
@@ -74,7 +74,7 @@ import { Model } from 'Types/entity';
     * @mixes Controls/_list/interface/IVirtualScrollConfig
     * @mixes Controls/_treeGrid/interface/IReloadableTreeGrid
     *
-    * 
+    *
     * @public
     * @author Авраменко А.С.
     * @demo Controls-demo/treeGrid/Base/TreeGridView/Index
@@ -99,7 +99,7 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
    // todo removed or documented by task:
    // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
    toggleExpanded(id) {
-      this._children.listControl.toggleExpanded(id);
+      return this._children.listControl.toggleExpanded(id);
    }
 
    /**
@@ -139,10 +139,10 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @cfg {Position} Расположение иконки для узла и скрытого узла.
  * @remark
  * Чтобы разместить иконку узла в произвольном месте пользовательского шаблона, сделайте следующее:
- * 
+ *
  * 1. Опцию **expanderPosition** установите в значение "custom".
  * 2. В пользовательском шаблоне отображения элемента в опции contentTemplate укажите позицию для отображения иконки узла. Для этого поместите директиву {@link /doc/platform/developmentapl/interface-development/ui-library/template-engine/#ws-partial ws:partial} и в качестве встраиваемого шаблона укажите **expanderTemplate**.
- * 
+ *
  * Пример этого функционала показан в первом демо-примере.
  * @default default
  * @demo Controls-demo/treeGrid/Expander/ExpanderPosition/Custom/Index В следующем примере для контрола опция expanderPosition установлена в значение custom.

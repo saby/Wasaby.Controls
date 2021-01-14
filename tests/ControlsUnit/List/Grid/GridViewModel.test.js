@@ -2567,17 +2567,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       describe('getitemDataByItem should resolve showEditArrow', () => {
          let gridViewModel;
          let contentsKey;
+         let editArrowCfg;
 
          beforeEach(() => {
             contentsKey = null;
-            gridViewModel = new gridMod.GridViewModel({
+            editArrowCfg = {
                ...cfg,
                showEditArrow: true,
                editArrowVisibilityCallback: function(contents) {
                   contentsKey = contents.getKey();
                   return false;
                }
-            });
+            };
+            gridViewModel = new gridMod.GridViewModel(editArrowCfg);
          });
 
          it('should resolve showEditArrow', () => {
@@ -2604,6 +2606,28 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const data = gridViewModel.getItemDataByItem(dispItem);
             assert.equal(contentsKey, '123');
             assert.isFalse(data.showEditArrow);
+         });
+
+         it('should not call visibilityCallback for GroupItem', () => {
+            const item = {
+               '[Controls/_display/GroupItem]': true,
+               getContents: () => null
+            };
+            const spyEditArrowVisibilityCallback = sinon.spy(editArrowCfg, 'editArrowVisibilityCallback');
+            gridMod.GridViewModel._private.resolveEditArrowVisibility(item, editArrowCfg);
+            sinon.assert.notCalled(spyEditArrowVisibilityCallback);
+            spyEditArrowVisibilityCallback.restore();
+         });
+
+         it('should not call visibilityCallback for SearchSeparator', () => {
+            const item = {
+               '[Controls/_display/SearchSeparator]': true,
+               getContents: () => null
+            };
+            const spyEditArrowVisibilityCallback = sinon.spy(editArrowCfg, 'editArrowVisibilityCallback');
+            gridMod.GridViewModel._private.resolveEditArrowVisibility(item, editArrowCfg);
+            sinon.assert.notCalled(spyEditArrowVisibilityCallback);
+            spyEditArrowVisibilityCallback.restore();
          });
       });
 

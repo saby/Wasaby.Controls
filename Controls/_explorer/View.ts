@@ -4,7 +4,6 @@ import cInstance = require('Core/core-instance');
 import {EventUtils} from 'UI/Events';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
-import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
@@ -739,7 +738,7 @@ var
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
-         this._children.treeControl.toggleExpanded(id);
+         return this._children.treeControl.toggleExpanded(id);
       },
 
       // region mover

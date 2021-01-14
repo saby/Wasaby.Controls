@@ -276,8 +276,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (!itemActions) {
             return;
         }
-
-        const editingConfig = listModel.getEditingConfig();
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
@@ -290,10 +288,15 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
+        const validatorArgs = {
+            value: item.getPropertyValue(),
+            item: item.getContents(),
+            items: item.getOwner().getCollection()
+        };
         if (validators.length) {
             validators.some((validator) => {
                 if (typeof validator === 'function') {
-                    validatorResult = validator(item.getPropertyValue());
+                    validatorResult = validator(validatorArgs);
                     if (typeof validatorResult === 'string') {
                         return true;
                     }

@@ -8,7 +8,7 @@ import HeadingPathBack = require('Controls/_explorer/HeadingPathBack');
       getHeader: function(self, options, items) {
          var newHeader;
 
-         if (options.header && options.header.length && !options.header[0].title && !options.header[0].template) {
+         if (options.header && options.header.length && !(options.header[0].title || options.header[0].caption) && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
                ...options.header[0],

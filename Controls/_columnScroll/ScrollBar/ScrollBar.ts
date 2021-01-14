@@ -28,6 +28,9 @@ export default class ScrollBar extends Control<IScrollBarOptions> {
         }
     }
 
+    recalcSizes(): void {
+        this._children.scrollbar.recalcSizes();
+    }
     _onPositionChanged(e, newPosition): void {
         e.stopPropagation();
         this._position = newPosition;

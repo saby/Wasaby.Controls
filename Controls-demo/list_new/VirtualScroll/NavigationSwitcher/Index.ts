@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/VirtualScroll/NavigationSwitcher/NavigationSwitcher';
-import {CursorDirection} from 'Controls/list';
+import {TNavigationDirection} from 'Controls/list';
 import { INavigation } from 'Controls-demo/types';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -9,7 +9,7 @@ export interface INavigationSwitcherOptions extends IControlOptions {
     pageSize?: number;
     page?: number;
     totalCount: number;
-    direction?: CursorDirection;
+    direction?: TNavigationDirection;
 }
 
 export class NavigationSwitcher extends Control<INavigationSwitcherOptions> {

@@ -64,6 +64,13 @@ export default class TreeGridCollection<
         this._$colgroup?.reBuild();
     }
 
+    setHasMoreData(hasMoreData: boolean): void {
+        super.setHasMoreData(hasMoreData);
+        if (this.getFooter()) {
+            this.getFooter().setHasMoreData(hasMoreData);
+        }
+    }
+
     protected _reBuild(reset?: boolean): void {
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties) && !!this._$ladder) {
             this._prepareLadder(this._$ladderProperties, this._$columns);
@@ -94,6 +101,8 @@ export default class TreeGridCollection<
         return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
             options.columns = this._$columns;
             options.colspanCallback = this._$colspanCallback;
+            options.columnSeparatorSize = this._$columnSeparatorSize;
+            options.rowSeparatorSize = this._$rowSeparatorSize;
             return superFactory.call(this, options);
         };
     }

@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -51,12 +51,19 @@ const GridView = ListView.extend({
             this._columnScrollViewController = this._createColumnScroll(options);
         }
 
+        if (options.footerTemplate || options.footer) {
+            this._listModel.setFooter(options.footerTemplate, options.footer, true);
+        }
+
         return result;
     },
 
     _afterMount(): void {
         GridView.superclass._afterMount.apply(this, arguments);
-        this._actualizeColumnScroll(this._options);
+        this._actualizeColumnScroll({
+            ...this._options,
+            isOnMount: true
+        }, this._options);
         this._isFullMounted = true;
     },
 
@@ -76,10 +83,14 @@ const GridView = ListView.extend({
             this._listModel.setSorting(newOptions.sorting);
         }
 
+        if (this._isFooterChanged(this._options, newOptions) || columnsChanged) {
+            this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
+        }
+
         // Создание или разрушение контроллеров горизонтального скролла и скроллирования мышкой при изменении опций
         // columnScroll и dragScroll.
         if (this._columnScrollViewController) {
-            const action = this._columnScrollViewControlle?.updateControllers(newOptions);
+            const action = this._columnScrollViewController?.updateControllers(newOptions);
             if (action === 'columnScrollDisabled') {
                 this._columnScrollViewController.destroy();
                 this._applyColumnScrollChanges();
@@ -100,7 +111,7 @@ const GridView = ListView.extend({
 
     _afterUpdate(oldOptions): void {
         GridView.superclass._afterUpdate.apply(this, arguments);
-        this._actualizeColumnScroll(this._options);
+        this._actualizeColumnScroll(this._options, oldOptions);
     },
 
     _beforeUnmount(): void {
@@ -111,6 +122,10 @@ const GridView = ListView.extend({
         }
     },
 
+    getListModel(): GridCollection<any> {
+        return this._listModel;
+    },
+
     _resolveItemTemplate(options): TemplateFunction {
         return options.itemTemplate || this._resolveBaseItemTemplate(options);
     },
@@ -118,7 +133,6 @@ const GridView = ListView.extend({
     _resolveBaseItemTemplate(options): TemplateFunction {
         return GridItem;
     },
-
     _getGridTemplateColumns(options): string {
         const hasMultiSelect = options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom';
 
@@ -290,7 +304,7 @@ const GridView = ListView.extend({
         });
     },
 
-    _actualizeColumnScroll(options) {
+    _actualizeColumnScroll(options, oldOptions) {
         return this._columnScrollViewController?.actualizeColumnScroll({
             ...options,
             scrollBar: this._children.horizontalScrollBar,
@@ -302,8 +316,8 @@ const GridView = ListView.extend({
             },
             hasMultiSelectColumn: options.multiSelectVisibility !== 'hidden' && options.multiSelectPosition !== 'custom',
             isActivated: !this._showFakeGridWithColumnScroll,
-        }).then((result) => {
-            if (result.status === 'created') {
+        }, oldOptions)?.then((result) => {
+            if (result.status !== 'destroyed') {
                 this._applyColumnScrollChanges();
             }
         });
@@ -323,6 +337,7 @@ const GridView = ListView.extend({
         }
 
         const sizes = this._columnScrollViewController.getSizes();
+        this._containerSize = sizes.containerSize;
         this._contentSizeForHScroll = sizes.contentSizeForHScroll;
         this._horizontalScrollWidth = sizes.scrollWidth;
         this._fixedColumnsWidth = sizes.fixedColumnsWidth;
@@ -378,7 +393,27 @@ const GridView = ListView.extend({
 
     _resizeHandler(): void {
         if (this._columnScrollViewController && this.isColumnScrollVisible()) {
-            this._actualizeColumnScroll(this._options);
+            this._actualizeColumnScroll(this._options, this._options);
+        }
+    },
+
+    _isFooterChanged(oldOptions, newOptions): boolean {
+        if (
+           // Подвал появился/скрылся или индикатор загрузки в подвале появился, скрылся
+           (!oldOptions.footer && newOptions.footer) ||
+           (oldOptions.footer && !newOptions.footer) ||
+           (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
+           (oldOptions.footerTemplate && !newOptions.footerTemplate)
+        ) {
+            return true;
+        } else if (
+           // Подвала не было и нет
+           !oldOptions.footer && !newOptions.footer &&
+           !oldOptions.footerTemplate && !newOptions.footerTemplate
+        ) {
+            return false;
+        } else {
+            return false;
         }
     }
 

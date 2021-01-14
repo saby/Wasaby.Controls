@@ -63,11 +63,11 @@ define(
 
 
          let getDropdown = function(config) {
-            let dropdownList = new dropdown.Input(config);
+            let dropdownList = new dropdown.Selector(config);
             dropdownList.saveOptions(config);
             return dropdownList;
          };
-         let dropdownList = new dropdown.Input(config);
+         let dropdownList = new dropdown.Selector(config);
 
          it('data load callback', () => {
             let ddl = getDropdown(config);

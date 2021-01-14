@@ -76,6 +76,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._value = newOptions.inputSearchValue;
+         this._getSearchResolverController().setSearchStarted(true);
       }
    }
 
@@ -189,6 +190,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
 /**
  * @event Происходит при сбросе поиска
- * @name Controls/_search/Input/Container#resetSearch
+ * @name Controls/_search/Input/Container#searchReset
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */

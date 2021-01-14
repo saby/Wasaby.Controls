@@ -498,8 +498,13 @@ const _private = {
                 }
             }
         } else {
+            const wasItemsReplaced = listModel.getCollection() && !isEqualItems(listModel.getCollection(), items);
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
+
+            if (wasItemsReplaced && self._options.itemsReadyCallback) {
+                self._options.itemsReadyCallback(self._items);
+            }
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -769,8 +774,8 @@ const _private = {
                 // TODO: должно быть убрано после того, как TreeControl будет наследоваться от BaseControl
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
-                    self._listViewModel.getChildren(options.useNewModel ? display.getRoot() : options.root).length :
-                    self._listViewModel.getCount();
+                    display.getChildren(display.getRoot()).getCount() :
+                    self._items.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -2516,7 +2521,7 @@ const _private = {
             if (!self._options.hasOwnProperty('selectedKeys')) {
                 controller.setSelection(selection);
             }
-            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected()], {bubbling: true});
+            self._notify('listSelectedKeysCountChanged', [controller.getCountOfSelected(selection), controller.isAllSelected(true, selection)], {bubbling: true});
         };
 
         if (result instanceof Promise) {
@@ -5022,11 +5027,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _beginEdit(options) {
+    _beginEdit(options, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().edit(options).then((result) => {
-            if (!(result && result.canceled)) {
+            if (shouldActivateInput && !(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
             }
             return result;
@@ -5035,14 +5040,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _beginAdd(options, addPosition) {
+    _beginAdd(options, addPosition, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
             }
-            this._editInPlaceInputHelper.shouldActivate();
+            if (shouldActivateInput) {
+                this._editInPlaceInputHelper.shouldActivate();
+            }
             if (!this._isMounted) {
                 return addResult;
             }
@@ -5103,8 +5110,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (!item) {
                 return Promise.resolve();
             }
-            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, direction);
-            return this._beginEdit({ item });
+            const collection = this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay();
+            this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, collection.getIndexBySourceItem(item));
+            return this._beginEdit({ item }, false);
         };
 
         switch (nativeEvent.keyCode) {
@@ -5302,6 +5310,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else if (eventName === 'menuOpened') {
             _private.removeShowActionsClass(this);
+            _private.getItemActionsController(this, this._options).deactivateSwipe(false);
         }
     },
 
@@ -5924,9 +5933,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         } else if (position === 'afterList') {
             return this._loadingIndicatorState === 'down';
         } else if (position === 'inFooter') {
-            return this._loadingIndicatorState === 'all' &&
+            const showLoadingIndicator = this._loadingIndicatorState === 'all' &&
                 !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
                 !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
+
+            // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
+            if (this._listViewModel && this._listViewModel.setLoadingIndicatorVisibility) {
+                this._listViewModel.setLoadingIndicatorVisibility(showLoadingIndicator);
+            }
+
+            return showLoadingIndicator;
         }
         return false;
     },
@@ -6048,7 +6064,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                 const draggingItemProjection = this._listViewModel.createItem({contents: dragEnterResult});
-                this._dndListController.setDraggedItems(dragObject.entity, draggingItemProjection);
+                this._dndListController.startDrag(draggingItemProjection, dragObject.entity);
 
                 let startPosition;
                 if (this._listViewModel.getCount()) {
@@ -6069,7 +6085,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // задаем изначальную позицию в другом списке
                 this._dndListController.setDragPosition(startPosition);
             } else if (dragEnterResult === true) {
-                this._dndListController.setDraggedItems(dragObject.entity);
+                this._dndListController.startDrag(null, dragObject.entity);
             }
         }
     },

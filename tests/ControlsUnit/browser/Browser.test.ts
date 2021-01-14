@@ -334,24 +334,43 @@ describe('Controls/browser:Browser', () => {
 
         it('if searchValue is empty, then the same field i filter must be reset', async () => {
             const sandbox = sinon.createSandbox();
-            const options = getBrowserOptions();
             const browser = getBrowser();
-            browser.saveOptions({...options, searchValue: '123'});
+            const filter = {
+                payload: 'something'
+            };
+            let options = {...getBrowserOptions(), searchValue: '123', filter};
+            browser.saveOptions(options);
 
             await browser._beforeMount(options);
+            browser.saveOptions(options);
 
             const sourceController = browser._getSourceController(options);
-            sourceController.setFilter({
-                name: 'test123',
-                payload: 'something'
-            });
+            sourceController.setFilter({...filter, name: 'test123'});
             const filterChangedStub = sandbox.stub(browser, '_filterChanged');
 
+            options = {...options};
             options.searchValue = '';
 
             await browser._beforeUpdate(options);
             assert.isTrue(filterChangedStub.withArgs( null, {payload: 'something'}).calledOnce);
             sandbox.restore();
+        });
+
+        it('update viewMode', async () => {
+            const sandbox = sinon.createSandbox();
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            options.viewMode = 'table';
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            assert.equal(browser._viewMode, 'table');
+
+            options = {...options, viewMode: 'tile'};
+            browser._beforeUpdate(options);
+
+            assert.equal(browser._viewMode, 'tile');
         });
 
     });

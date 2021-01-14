@@ -40,7 +40,7 @@ export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
 export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
-export {IBasePopupOptions} from './_popup/interface/IBaseOpener';
+export {IBasePopupOptions, IBaseOpener} from './_popup/interface/IBaseOpener';
 export {IStackPopupOptions, IStackOpener} from './_popup/interface/IStack';
 export {IStickyPopupOptions, IStickyPosition, IStickyPositionOffset, IStickyOpener} from './_popup/interface/ISticky';
 export {IDialogPopupOptions, IDialogOpener} from './_popup/interface/IDialog';
@@ -49,13 +49,13 @@ export {INotificationPopupOptions, INotificationOpener} from './_popup/interface
 export {IPreviewerOptions, IPreviewer} from './_popup/interface/IPreviewer';
 export {IInfoBoxOptions, IInfoBox} from './_popup/interface/IInfoBox';
 export {IInfoBoxPopupOptions, IInfoBoxOpener} from './_popup/interface/IInfoBoxOpener';
+export {IEditOptions, IEditOpener} from './_popup/interface/IEdit';
 
 export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
 
 export {isMouseEvent, MouseUp, MouseButtons} from './_popup/fastOpenUtils/MouseEventHelper';
 export {isLeftMouseButton, DependencyTimer} from './_popup/fastOpenUtils/FastOpen';
 
-export {IEditOptions} from './_popup/interface/IEdit';
 
 // TODO Compatible
 import GlobalTemplate = require('wml!Controls/_popup/Global/Global');

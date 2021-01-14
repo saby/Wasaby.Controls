@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/Validators/Validators';
-import {showType} from 'Controls/Utils/Toolbar';
+import {showType} from 'Controls/toolbars';
 import {IItemAction} from 'Controls/itemActions';
 import {Enum, RecordSet} from 'Types/collection';
 import { Model } from 'Types/entity';
@@ -12,7 +12,7 @@ export default class Demo extends Control<IControlOptions> {
     protected _source: RecordSet;
     protected _itemActions: IItemAction[];
 
-    protected _defaultValidator(value: any): boolean | string {
+    protected _defaultValidator({value, item, items}: any): boolean | string {
         return !!value || 'Значение обязательно для заполнения';
     }
     protected _beforeMount(): void {

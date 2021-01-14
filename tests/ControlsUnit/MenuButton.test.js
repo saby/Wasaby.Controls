@@ -151,13 +151,12 @@ define(
             });
          });
 
-         it('received state, selectedItems = [null], emptyText is set', () => {
+         it('received state, selectedItems = [null]', () => {
             let selectedItemsChangeCalled = false,
                selectedItems = [];
             const config = {
                selectedKeys: [null],
                keyProperty: 'id',
-               emptyText: '123',
                selectedItemsChangedCallback: function(items) {
                   selectedItems = items;
                   selectedItemsChangeCalled = true;
@@ -168,7 +167,7 @@ define(
                })
             };
             return menu._beforeMount(config, {}, { items: itemsRecords.clone() }).then(() => {
-               assert.deepEqual(selectedItems, [null]);
+               assert.deepEqual(selectedItems, []);
                assert.isTrue(selectedItemsChangeCalled);
             });
          });

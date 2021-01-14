@@ -133,6 +133,14 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+         } else if (updateResult instanceof Promise) {
+            updateResult.catch((error: Error & {
+               isCancelled?: boolean;
+            }) => {
+               if (!error.isCancelled) {
+                  return error;
+               }
+            });
          }
       }
    }
@@ -182,7 +190,12 @@ export default class Container extends Control<IContainerOptions> {
             if (this._options.dataLoadCallback) {
                this._options.dataLoadCallback(result);
             }
-            sourceController.setItems(result);
+         }
+      }).catch((error: Error & {
+         isCancelled?: boolean;
+      }) => {
+         if (!error.isCancelled) {
+            return error;
          }
       });
    }

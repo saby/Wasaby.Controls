@@ -38,6 +38,7 @@ export interface IControllerState {
 
     items: RecordSet;
     sourceController: Controller;
+    dataLoadCallback: Function;
 }
 
 export interface IControllerOptions extends
@@ -108,7 +109,10 @@ export default class Controller {
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<RecordSet|Error>;
+
     private _dataLoadCallback: Function;
+    // Необходимо для совместимости в случае, если dataLoadCallback задают на списке, а где-то сверху есть dataContainer
+    private _dataLoadCallbackFromOptions: Function;
 
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
@@ -126,6 +130,9 @@ export default class Controller {
 
         if (cfg.root !== undefined) {
             this.setRoot(cfg.root);
+        }
+        if (cfg.dataLoadCallback !== undefined) {
+            this._setDataLoadCallbackFromOptions(cfg.dataLoadCallback);
         }
         this.setParentProperty(cfg.parentProperty);
         this._resolveNavigationParamsChangedCallback(cfg);
@@ -206,6 +213,9 @@ export default class Controller {
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
         const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
+        const dataLoadCallbackChanged =
+            newOptions.dataLoadCallback !== undefined &&
+            newOptions.dataLoadCallback !== this._options.dataLoadCallback;
         this._resolveNavigationParamsChangedCallback(newOptions);
 
         if (isFilterChanged) {
@@ -218,6 +228,10 @@ export default class Controller {
 
         if (rootChanged) {
             this.setRoot(newOptions.root);
+        }
+
+        if (dataLoadCallbackChanged) {
+            this._setDataLoadCallbackFromOptions(newOptions.dataLoadCallback);
         }
 
         if (newOptions.expandedItems !== undefined && newOptions.expandedItems !== this._options.expandedItems) {
@@ -268,7 +282,8 @@ export default class Controller {
             items: this._items,
             // FIXME sourceController не должен создаваться, если нет source
             // https://online.sbis.ru/opendoc.html?guid=3971c76f-3b07-49e9-be7e-b9243f3dff53
-            sourceController: source ? this : null
+            sourceController: source ? this : null,
+            dataLoadCallback: this._options.dataLoadCallback
         };
     }
 
@@ -563,8 +578,8 @@ export default class Controller {
 
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
 
-        if (this._options.dataLoadCallback) {
-            this._options.dataLoadCallback(result, direction);
+        if (this._dataLoadCallbackFromOptions) {
+            this._dataLoadCallbackFromOptions(result, direction);
         }
 
         if (this._dataLoadCallback) {
@@ -666,6 +681,10 @@ export default class Controller {
     private _hasNavigationBySource(navigation?: INavigationOptionValue<unknown>): boolean {
         const navigationOption = navigation || this._options.navigation;
         return Boolean(navigationOption && navigationOption.source);
+    }
+
+    private _setDataLoadCallbackFromOptions(dataLoadCallback: Function): void {
+        this._dataLoadCallbackFromOptions = dataLoadCallback;
     }
 
     private static _getFilterForCollapsedGroups(

@@ -605,6 +605,39 @@ define([
          assert.deepEqual(ctrl._loadedItems, loadedItems);
       });
 
+      it('call itemsReadyCallback on recreation RS', async function () {
+         var source = new sourceLib.Memory({});
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet());
+         let isItemsReadyCallbackSetted = false;
+         const itemsReadyCallback = () => {
+            isItemsReadyCallbackSetted = true;
+         };
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: source,
+                sourceController: sourceController,
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                itemsReadyCallback
+             },
+             ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         lists.BaseControl._private.assignItemsToModel(ctrl, new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: [ { id: 2, title: 'qwe' } ]
+         }), cfg);
+
+         assert.isTrue(isItemsReadyCallbackSetted);
+      });
+
       it('_private.checkPortionedSearchByScrollTriggerVisibility', () => {
          const self = {};
          lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);
@@ -1259,6 +1292,9 @@ define([
             ];
          tests.forEach(function (test, index) {
             baseControl._options.groupingKeyCallback = undefined;
+            baseControl._items = {
+               getCount: () => test.data[2].getLoadedDataCount()
+            };
             baseControl._listViewModel = {
                getCount: () => test.data[2].getLoadedDataCount(),
                getCollection: () => ({
@@ -4527,6 +4563,7 @@ define([
       });
 
       describe('ItemActions menu', () => {
+         let cfg;
          let instance;
          let item;
          let outgoingEventsMap;
@@ -4566,7 +4603,7 @@ define([
 
          beforeEach(async() => {
             outgoingEventsMap = {};
-            const cfg = {
+            cfg = {
                items: new collection.RecordSet({
                   rawData: [
                      {
@@ -4778,6 +4815,19 @@ define([
             instance._onItemActionsMenuClose({id: 'popupId_1'});
             sinon.assert.called(spyShowActions);
             spyShowActions.restore();
+         });
+
+         // Скрытие Swipe ItemActions должно происходить после открытия меню (событие menuOpened)
+         it('should hide Swipe ItemActions on menuOpened event', () => {
+            const fakeEvent = initFakeEvent();
+            const itemActionsController = lists.BaseControl._private.getItemActionsController(instance, cfg);
+            const spyDeactivateSwipe = sinon.spy(itemActionsController, 'deactivateSwipe');
+            const spySetActiveItem = sinon.spy(itemActionsController, 'setActiveItem');
+            instance._onItemActionsMenuResult('menuOpened', null, fakeEvent);
+            sinon.assert.called(spyDeactivateSwipe);
+            sinon.assert.notCalled(spySetActiveItem);
+            spyDeactivateSwipe.restore();
+            spySetActiveItem.restore();
          });
 
          // должен открывать меню, соответствующее новому id Popup

@@ -18,11 +18,6 @@ import {RecordSet} from 'Types/collection';
  */
 export interface IContextMenuConfig {
     /**
-     * @name Controls/_itemActions/interface/IContextMenuConfig#items
-     * @cfg {Types/collection:RecordSet} Набор элементов для замены в контекстном меню.
-     */
-    items?: RecordSet;
-    /**
      * @name Controls/_itemActions/interface/IContextMenuConfig#groupTemplate
      * @cfg {UI/Base:TemplateFunction|string} Шаблон для установки группировки.
      */
