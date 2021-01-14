@@ -40,7 +40,7 @@ import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     Collection,
     CollectionItem,
-    GroupItem, IEditableCollectionItem,
+    IEditableCollectionItem,
     TItemKey,
     TreeItem
 } from 'Controls/display';
@@ -60,6 +60,7 @@ import ScrollPagingController from 'Controls/_list/Controllers/ScrollPaging';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import HoverFreeze from 'Controls/_list/Controllers/HoverFreeze';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {
@@ -3074,6 +3075,31 @@ const _private = {
 
     getViewUniqueClass(self): string {
         return `controls-BaseControl__View_${self._uniqueId}`;
+    },
+
+    getHoverFreezeController(self): HoverFreeze {
+        // Если _itemActionsController не может быть инициализирован - нет смысла и в hoverFreezeController
+        if (self.__error ||
+            !self._listViewModel ||
+            self._options.itemActionsPosition !== 'outside' ||
+            (!self._options.itemActions && !self._options.itemActionsProperty)) {
+            return;
+        }
+        if (!self._hoverFreezeController) {
+            self._hoverFreezeController = new HoverFreeze({
+                collection: self._listViewModel,
+                uniqueClass: _private.getViewUniqueClass(self),
+                stylesContainer: self._children.itemActionsOutsideStyle as HTMLElement,
+                viewContainer: self._container,
+                freezeHoverCallback: () => {
+                    _private.removeShowActionsClass(self);
+                },
+                unFreezeHoverCallback: () => {
+                    _private.addShowActionsClass(self);
+                }
+            });
+        }
+        return self._hoverFreezeController;
     }
 };
 
@@ -5509,72 +5535,10 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         return classes.join(' ');
     },
 
-    _freezeHover(itemData: CollectionItem<Model>): void {
-        const stylesContainer = this._children.itemActionsOutsideStyle as HTMLDivElement;
-        const uniqueClass = _private.getViewUniqueClass(this);
-        const index = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
-        const hoveredContainer = this._listViewModel.getItemHoveredContainerSelector(uniqueClass, index);
-        const itemContainer = (this._container as HTMLDivElement).querySelector(hoveredContainer) as HTMLDivElement;
-        const backgroundColor = getComputedStyle(itemContainer).backgroundColor;
-        stylesContainer.innerHTML = this._listViewModel.getDisplayItemActionsOutsideStyles(uniqueClass, index);
-        stylesContainer.innerHTML += this._listViewModel.getItemFreezeHoverStyles(uniqueClass, index, backgroundColor);
-        _private.removeShowActionsClass(this);
-        this._isItemHoverFrozen = true;
-    },
-
-    _unfreezeHover(): void {
-        _private.addShowActionsClass(this);
-        this._isItemHoverFrozen = false;
-        const stylesContainer = this._children.itemActionsOutsideStyle as HTMLDivElement;
-        stylesContainer.innerHTML = '';
-    },
-
-    _clearFreezeHoverTimeout(): void {
-        if (this._itemFreezeHoverTimeout) {
-            clearTimeout(this._itemFreezeHoverTimeout);
-        }
-    },
-
-    _clearUnfreezeHoverTimeout(): void {
-        if (this._itemUnfreezeTimeout) {
-            clearTimeout(this._itemUnfreezeTimeout);
-        }
-    },
-
-    _startUnfreezeHoverTimeout(): void {
-        this._itemUnfreezeTimeout = setTimeout(() => {
-            // Сбрасываем текущий ховер
-            this._hoveredItemKey = null;
-            // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
-            this._unfreezeHover();
-        }, 100);
-    },
-
-    _startFreezeHoverTimeout(itemData: CollectionItem<Model>): void {
-        // если уже был таймер залипания, то глушим его
-        this._clearFreezeHoverTimeout();
-
-        // Стартуем новый таймер залипания.
-        this._itemFreezeHoverTimeout = setTimeout(() => {
-            // Если есть залипшая запись, то надо понять это та же запись, по которой мы сейчас сделали ховер
-            // или нет. Если нет, то всё надо сбросить.
-            if (this._isItemHoverFrozen && this._hoveredItemKey !== itemData.getContents().getKey()) {
-                // Сбрасываем текущий ховер
-                this._hoveredItemKey = null;
-                // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
-                this._unfreezeHover();
-            }
-
-            // Далее, выставляем новую запись как залипшую:
-            this._freezeHover(itemData);
-            // сохранили текущее наведённое значение
-            this._hoveredItemKey = itemData.getContents().getKey();
-        }, 400);
-    },
-
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
-        if (this._options.itemActionsPosition === 'outside') {
-            this._startFreezeHoverTimeout(itemData);
+        const hoverFreezeController = _private.getHoverFreezeController(this);
+        if (hoverFreezeController) {
+            hoverFreezeController.startFreezeHoverTimeout(itemData);
         }
     },
 
@@ -5583,20 +5547,22 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
-        if (this._options.itemActionsPosition === 'outside') {
+        const hoverFreezeController = _private.getHoverFreezeController(this);
+        if (hoverFreezeController && !hoverFreezeController.isItemHoverFrozen()) {
             // Очищаем таймаут разморозки, чтобы не было асинхронных нежданчиков
-            this._clearUnfreezeHoverTimeout();
-            this._startFreezeHoverTimeout(itemData);
+            hoverFreezeController.clearUnfreezeHoverTimeout();
+            hoverFreezeController.startFreezeHoverTimeout(itemData);
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+        const hoverFreezeController = _private.getHoverFreezeController(this);
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
             !this._itemActionsMenuId &&
-            !this._isItemHoverFrozen) {
+            (!hoverFreezeController || !hoverFreezeController.isItemHoverFrozen())) {
             _private.addShowActionsClass(this);
         }
 
@@ -5615,9 +5581,10 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
                 this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
             }
         }
-        if (this._options.itemActionsPosition === 'outside') {
-            this._clearFreezeHoverTimeout();
-            this._startUnfreezeHoverTimeout();
+        const hoverFreezeController = _private.getHoverFreezeController(this);
+        if (hoverFreezeController) {
+            hoverFreezeController.clearFreezeHoverTimeout();
+            hoverFreezeController.startUnfreezeHoverTimeout();
         }
     },
     _sortingChanged(event, propName) {
