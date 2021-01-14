@@ -1,4 +1,4 @@
-<ws:partial template="Controls/buttons:ButtonTemplate"
+<ws:partial attr:class="controls_theme-{{_options.theme}}" template="Controls/buttons:ButtonTemplate"
             _viewMode="{{_viewMode}}"
             _options="{{_options}}"
             _buttonStyle="{{_buttonStyle}}"
