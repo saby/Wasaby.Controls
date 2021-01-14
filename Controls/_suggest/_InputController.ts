@@ -31,6 +31,7 @@ import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
 import {DependencyTimer} from 'Controls/popup';
+import {ISearchControllerOptions} from "../_search/ControllerClass";
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -849,7 +850,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                              this._setItems(items);
                           }
                        })
-                       .catch((error) => error);
+                       .catch((error) => {
+                          if (!error.isCancelled) {
+                             return error;
+                          }
+                       });
                 }
              }
           })
@@ -865,7 +870,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                searchDelay: this._options.searchDelay as number,
                searchParam: this._options.searchParam,
                searchValueTrim: this._options.trim
-            });
+            } as ISearchControllerOptions);
             return this._searchController;
          }).catch((error) => this._searchErrback(error));
       }
