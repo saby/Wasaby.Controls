@@ -856,7 +856,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
           .catch((error) => error);
    }
 
-   protected async _getSearchController(): Promise<SearchController | void> {
+   protected _getSearchController(): Promise<SearchController | void> {
       if (!this._searchController) {
          return this._getSearchLibrary().then((result) => {
             this._searchController = new result.ControllerClass({
@@ -869,7 +869,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             return this._searchController;
          }).catch((error) => this._searchErrback(error));
       }
-      return this._searchController;
+      return Promise.resolve(this._searchController);
    }
 
    protected _getSourceController(options?: IInputControllerOptions): SourceController {
