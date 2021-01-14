@@ -30,6 +30,9 @@ export interface IHoverFreezeOptions {
     unFreezeHoverCallback: () => void;
 }
 
+/**
+ * Контроллер, позволяющий "замораживать" текущее состояние hover с itemActionsPosition=outside для записи под курсором.
+ */
 export default class HoverFreeze {
     private _itemKey: CrudEntityKey = null;
     private _uniqueClass: string;
