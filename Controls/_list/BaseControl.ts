@@ -5917,6 +5917,24 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
+    _getTopLoadingIndicatorStyles(): string {
+        let styles = '';
+
+        if (!this._shouldDisplayTopLoadingIndicator()) {
+            styles += 'display: none; ';
+        }
+
+        if (this._attachLoadTopTriggerToNull) {
+            styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px; `;
+        }
+
+        return styles;
+    },
+
+    _getBottomLoadingIndicatorStyles(): string {
+        return this._shouldDisplayBottomLoadingIndicator() ? '' : 'display: none;';
+    },
+
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
         const indicatorState = state || this._loadingIndicatorState;
